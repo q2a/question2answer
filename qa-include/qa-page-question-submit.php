@@ -273,8 +273,11 @@
 		$errors=array();
 		
 		$filtermodules=qa_load_modules_with('filter', 'filter_answer');
-		foreach ($filtermodules as $filtermodule)
+		foreach ($filtermodules as $filtermodule) {
+			$oldin=$in;
 			$filtermodule->filter_answer($in, $errors, $question, null);
+			qa_update_post_text($in, $oldin);
+		}
 		
 		if ($usecaptcha)
 			qa_captcha_validate_post($errors);
@@ -326,8 +329,11 @@
 		$errors=array();
 		
 		$filtermodules=qa_load_modules_with('filter', 'filter_comment');
-		foreach ($filtermodules as $filtermodule)
+		foreach ($filtermodules as $filtermodule) {
+			$oldin=$in;
 			$filtermodule->filter_comment($in, $errors, $question, $parent, null);
+			qa_update_post_text($in, $oldin);
+		}
 		
 		if ($usecaptcha)
 			qa_captcha_validate_post($errors);

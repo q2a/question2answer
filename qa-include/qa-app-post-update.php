@@ -62,7 +62,7 @@
 		}
 		
 		if ($oldquestion['type']=='Q') // not hidden or queued
-			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $title, $content, $format, $text, $tagstring);
+			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $title, $content, $format, $text, $tagstring, $oldquestion['categoryid']);
 
 		qa_report_event('q_edit', $userid, $handle, $cookieid, array(
 			'postid' => $oldquestion['postid'],
@@ -180,7 +180,7 @@
 		qa_db_posts_calc_category_path($postid);
 		
 		if ($oldquestion['type']=='Q')
-			qa_post_index($postid, 'NOTE', $oldquestion['postid'], $oldquestion['postid'], null, $note, '', $note, null);
+			qa_post_index($postid, 'NOTE', $oldquestion['postid'], $oldquestion['postid'], null, $note, '', $note, null, $oldquestion['categoryid']);
 		
 		qa_db_post_set_closed($oldquestion['postid'], $postid, $userid, qa_remote_ip_address());
 		
@@ -233,13 +233,13 @@
 		qa_db_unupaqcount_update();
 		
 		if (!$hidden) {
-			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $oldquestion['title'],
-				$oldquestion['content'], $oldquestion['format'], qa_viewer_text($oldquestion['content'], $oldquestion['format']), $oldquestion['tags']);
+			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $oldquestion['title'], $oldquestion['content'],
+				$oldquestion['format'], qa_viewer_text($oldquestion['content'], $oldquestion['format']), $oldquestion['tags'], $oldquestion['categoryid']);
 
 			foreach ($answers as $answer)
 				if ($answer['type']=='A') // even if question visible, don't index hidden or queued answers
 					qa_post_index($answer['postid'], $answer['type'], $oldquestion['postid'], $answer['parentid'], null,
-						$answer['content'], $answer['format'], qa_viewer_text($answer['content'], $answer['format']), null);
+						$answer['content'], $answer['format'], qa_viewer_text($answer['content'], $answer['format']), null, $answer['categoryid']);
 					
 			foreach ($commentsfollows as $comment)
 				if ($comment['type']=='C') {
@@ -247,12 +247,12 @@
 					
 					if ( (!isset($answer)) || ($answer['type']=='A') ) // don't index comment if it or its parent is hidden
 						qa_post_index($comment['postid'], $comment['type'], $oldquestion['postid'], $comment['parentid'], null,
-							$comment['content'], $comment['format'], qa_viewer_text($comment['content'], $comment['format']), null);
+							$comment['content'], $comment['format'], qa_viewer_text($comment['content'], $comment['format']), null, $comment['categoryid']);
 				}
 							
 			if ($closepost['parentid']==$oldquestion['postid'])
 				qa_post_index($closepost['postid'], $closepost['type'], $oldquestion['postid'], $closepost['parentid'], null,
-					$closepost['content'], $closepost['format'], qa_viewer_text($closepost['content'], $closepost['format']), null);
+					$closepost['content'], $closepost['format'], qa_viewer_text($closepost['content'], $closepost['format']), null, $closepost['categoryid']);
 		}
 
 		qa_report_event($wasqueued ? ($hidden ? 'q_reject' : 'q_approve') : ($hidden ? 'q_hide' : 'q_reshow'), $userid, $handle, $cookieid, array(
@@ -313,6 +313,13 @@
 			$otherpostids[]=$closepost['postid'];
 				
 		qa_db_posts_set_category_path($otherpostids, $newpath);
+
+		$searchmodules=qa_load_modules_with('search', 'move_post');
+		foreach ($searchmodules as $searchmodule) {
+			$searchmodule->move_post($oldquestion['postid'], $categoryid);
+			foreach ($otherpostids as $otherpostid)
+				$searchmodule->move_post($otherpostid, $categoryid);
+		}
 
 		qa_report_event('q_move', $userid, $handle, $cookieid, array(
 			'postid' => $oldquestion['postid'],
@@ -397,9 +404,9 @@
 			
 	//	Send through to any search modules for unindexing
 	
-		$searches=qa_load_modules_with('search', 'unindex_post');
-		foreach ($searches as $search)
-			$search->unindex_post($postid);
+		$searchmodules=qa_load_modules_with('search', 'unindex_post');
+		foreach ($searchmodules as $searchmodule)
+			$searchmodule->unindex_post($postid);
 	}
 
 	
@@ -419,7 +426,7 @@
 			$contentchanged ? $userid : null, $contentchanged ? qa_remote_ip_address() : null);
 		
 		if ( ($oldanswer['type']=='A') && ($question['type']=='Q') ) // don't index if question or answer are hidden/queued
-			qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $content, $format, $text, null);
+			qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $content, $format, $text, null, $oldanswer['categoryid']);
 
 		qa_report_event('a_edit', $userid, $handle, $cookieid, array(
 			'postid' => $oldanswer['postid'],
@@ -467,13 +474,13 @@
 		qa_db_unupaqcount_update();
 		
 		if (($question['type']=='Q') && !$hidden) { // even if answer visible, don't index if question is hidden or queued
-			qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null,
-				$oldanswer['content'], $oldanswer['format'], qa_viewer_text($oldanswer['content'], $oldanswer['format']), null);
+			qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $oldanswer['content'],
+				$oldanswer['format'], qa_viewer_text($oldanswer['content'], $oldanswer['format']), null, $oldanswer['categoryid']);
 			
 			foreach ($commentsfollows as $comment)
 				if ( ($comment['type']=='C') && ($comment['parentid']==$oldanswer['postid']) ) // and don't index hidden/queued comments
-					qa_post_index($comment['postid'], $comment['type'], $question['postid'], $comment['parentid'], null,
-						$comment['content'], $comment['format'], qa_viewer_text($comment['content'], $comment['format']), null);
+					qa_post_index($comment['postid'], $comment['type'], $question['postid'], $comment['parentid'], null, $comment['content'],
+						$comment['format'], qa_viewer_text($comment['content'], $comment['format']), null, $comment['categoryid']);
 		}
 
 		qa_report_event($wasqueued ? ($hidden ? 'a_reject' : 'a_approve') : ($hidden ? 'a_hide' : 'a_reshow'), $userid, $handle, $cookieid, array(
@@ -583,7 +590,7 @@
 			$contentchanged ? $userid : null, $contentchanged ? qa_remote_ip_address() : null);
 	
 		if ( ($oldcomment['type']=='C') && ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) ) // all must be visible
-			qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $content, $format, $text, null);
+			qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $content, $format, $text, null, $oldcomment['categoryid']);
 
 		qa_report_event('c_edit', $userid, $handle, $cookieid, array(
 			'postid' => $oldcomment['postid'],
@@ -636,7 +643,7 @@
 		qa_db_unupaqcount_update();
 	
 		if ( ($oldanswer['type']=='A') && ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) ) // only if all fully visible
-			qa_post_index($oldanswer['postid'], 'C', $question['postid'], $parentid, null, $content, $format, $text, null);
+			qa_post_index($oldanswer['postid'], 'C', $question['postid'], $parentid, null, $content, $format, $text, null, $oldanswer['categoryid']);
 
 		qa_report_event('a_to_c', $userid, $handle, $cookieid, array(
 			'postid' => $oldanswer['postid'],
@@ -680,8 +687,8 @@
 		qa_db_ccount_update();
 		
 		if ( ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) && !$hidden) // only index if none of the things it depends on are hidden or queued
-			qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null,
-				$oldcomment['content'], $oldcomment['format'], qa_viewer_text($oldcomment['content'], $oldcomment['format']), null);
+			qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $oldcomment['content'],
+				$oldcomment['format'], qa_viewer_text($oldcomment['content'], $oldcomment['format']), null, $oldcomment['categoryid']);
 
 		qa_report_event($wasqueued ? ($hidden ? 'c_reject' : 'c_approve') : ($hidden ? 'c_hide' : 'c_reshow'), $userid, $handle, $cookieid, array(
 			'postid' => $oldcomment['postid'],

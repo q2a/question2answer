@@ -104,8 +104,11 @@
 		{
 			global $qa_cached_logged_in_points;
 			
-			if (!isset($qa_cached_logged_in_points))
+			if (!isset($qa_cached_logged_in_points)) {
+				require_once QA_INCLUDE_DIR.'qa-db-selects.php'; 
+				
 				$qa_cached_logged_in_points=qa_db_select_with_pending(qa_db_user_points_selectspec(qa_get_logged_in_userid(), true));
+			}
 			
 			return $qa_cached_logged_in_points['points'];
 		}
@@ -564,6 +567,63 @@
 	}
 
 	
+	function qa_userids_to_handles($userids)
+/*
+	Return an array mapping each userid in $userids to that user's handle (public username), or to null if not found
+*/
+	{
+		if (QA_FINAL_EXTERNAL_USERS)
+			$rawuseridhandles=qa_get_public_from_userids($userids);
+		
+		else {
+			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			$rawuseridhandles=qa_db_user_get_userid_handles($userids);
+		}
+		
+		$gotuseridhandles=array();
+		foreach ($userids as $userid)
+			$gotuseridhandles[$userid]=@$rawuseridhandles[$userid];
+			
+		return $gotuseridhandles;
+	}
+	
+	
+	function qa_handles_to_userids($handles, $exactonly=false)
+/*
+	Return an array mapping each handle in $handles the user's userid, or null if not found. If $exactonly is true then
+	$handles must have the correct case and accents. Otherwise, handles are case- and accent-insensitive, and the keys
+	of the returned array will match the $handles provided, not necessary those in the DB.
+*/
+	{
+		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		
+		if (QA_FINAL_EXTERNAL_USERS)
+			$rawhandleuserids=qa_get_userids_from_public($handles);
+
+		else {
+			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			$rawhandleuserids=qa_db_user_get_handle_userids($handles);
+		}
+		
+		$gothandleuserids=array();
+
+		if ($exactonly) { // only take the exact matches
+			foreach ($handles as $handle)
+				$gothandleuserids[$handle]=@$rawhandleuserids[$handle];
+		
+		} else { // normalize to lowercase without accents, and then find matches
+			$normhandleuserids=array();
+			foreach ($rawhandleuserids as $handle => $userid)
+				$normhandleuserids[qa_string_remove_accents(qa_strtolower($handle))]=$userid;
+			
+			foreach ($handles as $handle)
+				$gothandleuserids[$handle]=@$normhandleuserids[qa_string_remove_accents(qa_strtolower($handle))];
+		}
+		
+		return $gothandleuserids;
+	}
+	
+	
 	function qa_user_permit_error($permitoption=null, $limitaction=null)
 /*
 	Check whether the logged in user has permission to perform $permitoption. If $permitoption is null, this simply
@@ -679,25 +739,21 @@
 	}
 	
 	
-	function qa_user_use_captcha($captchaoption)
+	function qa_user_use_captcha()
 /*
-	Return whether a captcha should be presented to the current user for operation specified by $captchaoption
+	Return whether a captcha should be presented to the current user for writing posts
 */
 	{
 		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
 		
 		$usecaptcha=false;
 		
-		if (qa_opt($captchaoption)) {
+		if (qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT) { // experts and above aren't shown captchas
 			$userid=qa_get_logged_in_userid();
 			
-			if ( (!isset($userid)) || !(
-				QA_FINAL_EXTERNAL_USERS ||
-				(!qa_opt('captcha_on_unconfirmed')) || // we might not care about unconfirmed users
-				(!qa_opt('confirm_user_emails')) || // if this option off, we can't ask it of the user
-				(qa_get_logged_in_level()>=QA_USER_LEVEL_EXPERT) || // if assigned to a higher level, no need
-				(qa_get_logged_in_flags() & QA_USER_FLAGS_EMAIL_CONFIRMED) // actual confirmation
-			))
+			if (qa_opt('captcha_on_anon_post') && !isset($userid))
+				$usecaptcha=true;
+			elseif (qa_opt('confirm_user_emails') && qa_opt('captcha_on_unconfirmed') && !(qa_get_logged_in_flags() & QA_USER_FLAGS_EMAIL_CONFIRMED) )
 				$usecaptcha=true;
 		}
 		
@@ -718,20 +774,17 @@
 		
 		$reason=false;
 		
-		$maxpermitpost=max(qa_opt('permit_post_q'), qa_opt('permit_post_a'), qa_opt('permit_post_c')); // used to see which options are shown in admin
-		
 		if (
-			(qa_opt('moderate_anon_post') || ($maxpermitpost <= QA_PERMIT_USERS)) && // no one is moderated if anons can post unmoderated
 			(qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT) && // experts and above aren't moderated
 			qa_user_permit_error('permit_moderate') // if the user can approve posts, no point in moderating theirs
 		) {
 			$userid=qa_get_logged_in_userid();
 
-			if ( ($maxpermitpost > QA_PERMIT_USERS) && !isset($userid) )
+			if (qa_opt('moderate_anon_post') && !isset($userid))
 				$reason='login';
-			elseif ( ($maxpermitpost > QA_PERMIT_CONFIRMED) && qa_opt('confirm_user_emails') && qa_opt('moderate_unconfirmed') && !(qa_get_logged_in_flags() & QA_USER_FLAGS_EMAIL_CONFIRMED) )
+			elseif (qa_opt('confirm_user_emails') && qa_opt('moderate_unconfirmed') && !(qa_get_logged_in_flags() & QA_USER_FLAGS_EMAIL_CONFIRMED) )
 				$reason='confirm';
-			elseif ( ($maxpermitpost > QA_PERMIT_EXPERTS) && qa_opt('moderate_by_points') && (qa_get_logged_in_points() < qa_opt('moderate_points_limit') ))
+			elseif (qa_opt('moderate_by_points') && (qa_get_logged_in_points() < qa_opt('moderate_points_limit')))
 				$reason='points';
 		}
 		

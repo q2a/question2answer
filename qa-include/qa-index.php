@@ -30,14 +30,6 @@
 		define('QA_BASE_DIR', dirname(empty($_SERVER['SCRIPT_FILENAME']) ? dirname(__FILE__) : $_SERVER['SCRIPT_FILENAME']).'/');
 
 
-//	Start performance monitoring
-
-	if (QA_DEBUG_PERFORMANCE) {
-		require_once 'qa-util-debug.php';
-		qa_usage_init();
-	}
-	
-
 //	If this is an special non-page request, branch off here
 
 	if (@$_POST['qa']=='ajax')

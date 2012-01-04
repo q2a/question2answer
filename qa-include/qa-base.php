@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5-beta-1'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2011-12-14');
+	define('QA_VERSION', '1.5-beta-2'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2012-01-04');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -134,6 +134,13 @@
 		@define('QA_PERSISTENT_CONN_DB', false);
 		@define('QA_DEBUG_PERFORMANCE', false);
 		
+	//	Start performance monitoring
+	
+		if (QA_DEBUG_PERFORMANCE) {
+			require_once 'qa-util-debug.php';
+			qa_usage_init();
+		}
+		
 	//	More for WordPress integration
 		
 		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
@@ -216,9 +223,15 @@
 
 		foreach ($pluginfiles as $pluginfile)
 			if (file_exists($pluginfile)) {
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*Question2Answer[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', file_get_contents($pluginfile), $matches))
+				$contents=file_get_contents($pluginfile);
+				
+				if (preg_match('/Plugin[ \t]*Minimum[ \t]*Question2Answer[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
 					if ( ((float)QA_VERSION>0) && ($matches[1]>(float)QA_VERSION) )
-						continue; // skip plugin which requires a later version
+						continue; // skip plugin which requires a later version of Q2A
+				
+				if (preg_match('/Plugin[ \t]*Minimum[ \t]*PHP[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
+					if ( ((float)phpversion()>0) && ($matches[1]>(float)phpversion()) )
+						continue; // skip plugin which requires a later version of PHP
 				
 				$qa_plugin_directory=dirname($pluginfile).'/';
 				$qa_plugin_urltoroot=substr($qa_plugin_directory, strlen(QA_BASE_DIR));
@@ -362,7 +375,6 @@
 //	Function for registering varieties of Q2A modularity, which are (only) called from qa-plugin.php files	
 
 	function qa_register_plugin_module($type, $include, $class, $name)
-
 /*
 	Register a plugin module of $type named $name, whose class named $class is defined in file $include (or null if no include necessary)
 	This function relies on some global variable values and can only be called from a plugin's qa-plugin.php file
@@ -399,7 +411,7 @@
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
 
 		if (empty($qa_plugin_directory) || empty($qa_plugin_urltoroot))
-			qa_fatal_error('qa_register_plugin_layer() can only be called from a plugin qa-plugin.php file');
+			qa_fatal_error('qa_register_plugin_overrides() can only be called from a plugin qa-plugin.php file');
 			
 		qa_register_overrides($include, $qa_plugin_directory, $qa_plugin_urltoroot);
 	}
@@ -422,6 +434,9 @@
 //	Low-level functions used throughout Q2A
 
 	function qa_call($function, $args)
+/*
+	Call $function with the arguments in the $args array (doesn't work with call-by-reference functions)
+*/
 	{
 		switch (count($args)) { // call_user_func_array(...) is very slow, so we break out most cases
 			case 0: return $function();
@@ -437,6 +452,10 @@
 
 	
 	function qa_to_override($function)
+/*
+	If $function has been overridden by a plugin override, return the name of the overriding function, otherwise return
+	null. But if the function is being called with the _base suffix, any override will be bypassed due to $qa_direct
+*/
 	{
 		global $qa_overrides, $qa_direct;
 		
@@ -455,6 +474,9 @@
 	
 	
 	function qa_call_override($function, $args)
+/*
+	Call the function which immediately overrides $function with the arguments in the $args array
+*/
 	{
 		global $qa_overrides;
 		
@@ -469,6 +491,9 @@
 	
 	
 	function qa_exit($reason=null)
+/*
+	Exit PHP immediately after reporting a shutdown with $reason to any installed process modules
+*/
 	{
 		qa_report_process_stage('shutdown', $reason);
 		exit;
@@ -778,7 +803,7 @@
 	
 	function qa_remote_ip_address()
 /*
-	Return the remote IP (v4) address of the user accessing the site, if it's available, or null otherwise
+	Return the remote IP address of the user accessing the site, if it's available, or null otherwise
 */
 	{
 		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());

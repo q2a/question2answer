@@ -27,8 +27,8 @@
 /*
 	A full list of redundant (non-normal) information in the database that can be recalculated:
 	
-	Recalculated in doreindexposts:
-	===============================
+	Recalculated in doreindexcontent:
+	================================
 	^titlewords (all): index of words in titles of posts
 	^contentwords (all): index of words in content of posts
 	^tagwords (all): index of words in tags of posts (a tag can contain multiple words)
@@ -86,19 +86,50 @@
 		@list($operation, $length, $next, $done)=explode(',', $state);
 		
 		switch ($operation) {
-			case 'doreindexposts':
-				qa_recalc_transition($state, 'doreindexposts_postcount');
+			case 'doreindexcontent':
+				qa_recalc_transition($state, 'doreindexcontent_pagereindex');
 				break;
 				
-			case 'doreindexposts_postcount':
+			case 'doreindexcontent_pagereindex':
+				$pages=qa_db_pages_get_for_reindexing($next, 10);
+				
+				if (count($pages)) {
+					require_once QA_INCLUDE_DIR.'qa-app-format.php';
+					
+					$lastpageid=max(array_keys($pages));
+					
+					foreach ($pages as $pageid => $page)
+						if (!($page['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
+							$searchmodules=qa_load_modules_with('search', 'unindex_page');
+							foreach ($searchmodules as $searchmodule)
+								$searchmodule->unindex_page($pageid);
+								
+							$searchmodules=qa_load_modules_with('search', 'index_page');
+							if (count($searchmodules)) {
+								$indextext=qa_viewer_text($page['content'], 'html');
+
+								foreach ($searchmodules as $searchmodule)
+									$searchmodule->index_page($pageid, $page['tags'], $page['heading'], $page['content'], 'html', $indextext);
+							}
+						}
+						
+					$next=1+$lastpageid;
+					$done+=count($pages);
+					$continue=true;
+				
+				} else
+					qa_recalc_transition($state, 'doreindexcontent_postcount');
+				break;
+			
+			case 'doreindexcontent_postcount':
 				qa_db_qcount_update();
 				qa_db_acount_update();
 				qa_db_ccount_update();
 
-				qa_recalc_transition($state, 'doreindexposts_reindex');
+				qa_recalc_transition($state, 'doreindexcontent_postreindex');
 				break;
 				
-			case 'doreindexposts_reindex':
+			case 'doreindexcontent_postreindex':
 				$posts=qa_db_posts_get_for_reindexing($next, 10);
 				
 				if (count($posts)) {
@@ -109,9 +140,11 @@
 					qa_db_prepare_for_reindexing($next, $lastpostid);
 					qa_suspend_update_counts();
 		
-					foreach ($posts as $postid => $post)
+					foreach ($posts as $postid => $post) {
+						qa_post_unindex($postid);
 						qa_post_index($postid, $post['type'], $post['questionid'], $post['parentid'], $post['title'], $post['content'],
-							$post['format'], qa_viewer_text($post['content'], $post['format']), $post['tags']);
+							$post['format'], qa_viewer_text($post['content'], $post['format']), $post['tags'], $post['categoryid']);
+					}
 					
 					$next=1+$lastpostid;
 					$done+=count($posts);
@@ -455,7 +488,11 @@
 */
 	{
 		switch ($operation) {
-			case 'doreindexposts_reindex':
+			case 'doreindexcontent_pagereindex':
+				$length=qa_db_count_pages();
+				break;
+			
+			case 'doreindexcontent_postreindex':
 				$length=qa_opt('cache_qcount')+qa_opt('cache_acount')+qa_opt('cache_ccount');
 				break;
 			
@@ -514,14 +551,21 @@
 		$length=(int)$length;
 		
 		switch ($operation) {
-			case 'doreindexposts_postcount':
+			case 'doreindexcontent_postcount':
 			case 'dorecountposts_postcount':
 			case 'dorecalccategories_postcount':
 			case 'dorefillevents_qcount':
 				$message=qa_lang('admin/recalc_posts_count');
 				break;
 				
-			case 'doreindexposts_reindex':
+			case 'doreindexcontent_pagereindex':
+				$message=strtr(qa_lang('admin/reindex_pages_reindexed'), array(
+					'^1' => number_format($done),
+					'^2' => number_format($length)
+				));
+				break;
+
+			case 'doreindexcontent_postreindex':
 				$message=strtr(qa_lang('admin/reindex_posts_reindexed'), array(
 					'^1' => number_format($done),
 					'^2' => number_format($length)

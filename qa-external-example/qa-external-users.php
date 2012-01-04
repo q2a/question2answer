@@ -317,8 +317,9 @@
 	qa_get_userids_from_public($publicusernames)
 	
 	You should take the array of public usernames in $publicusernames, and return an array which
-	maps those usernames to internal user ids. For each element of this array, the username you
-	were given should be in the key, with the corresponding user id in the value.
+	maps valid usernames to internal user ids. For each element of this array, the username should be
+	in the key, with the corresponding user id in the value. If your usernames are case- or accent-
+	insensitive, keys should contain the usernames as stored, not necessarily as in $publicusernames.
 	
 	Call qa_db_connection() to get the connection to the Q2A database. If your database is shared with
 	Q2A, you can use this with PHP's MySQL functions such as mysql_query() to run queries. If you
@@ -384,8 +385,8 @@
 	
 	This is exactly like qa_get_userids_from_public(), but works in the other direction.
 	
-	You should take the array of user identifiers in $userids, and return an array which maps
-	those to public usernames. For each element of this array, the userid you were given should
+	You should take the array of user identifiers in $userids, and return an array which maps valid
+	userids to public usernames. For each element of this array, the userid you were given should
 	be in the key, with the corresponding username in the value.
 	
 	Call qa_db_connection() to get the connection to the Q2A database. If your database is shared with

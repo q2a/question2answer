@@ -90,7 +90,7 @@
 
 //	Process input
 	
-	$usecaptcha=qa_user_use_captcha('captcha_on_anon_post');
+	$usecaptcha=qa_user_use_captcha();
 	
 	$in['title']=qa_post_text('title'); // allow title and tags to be posted by an external form
 	$in['extra']=qa_opt('extra_field_active') ? qa_post_text('extra') : null;
@@ -109,8 +109,11 @@
 		$errors=array();
 		
 		$filtermodules=qa_load_modules_with('filter', 'filter_question');
-		foreach ($filtermodules as $filtermodule)
+		foreach ($filtermodules as $filtermodule) {
+			$oldin=$in;
 			$filtermodule->filter_question($in, $errors, null);
+			qa_update_post_text($in, $oldin);
+		}
 		
 		if (qa_using_categories() && count($categories) && (!qa_opt('allow_no_category')) && !isset($in['categoryid']))
 			$errors['categoryid']=qa_lang_html('question/category_required'); // check this here because we need to know count($categories)
@@ -175,6 +178,7 @@
 		
 		'buttons' => array(
 			'ask' => array(
+				'tags' => method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script('content').'"') : '',
 				'label' => qa_lang_html('question/ask_button'),
 			),
 		),

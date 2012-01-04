@@ -34,6 +34,7 @@
 	Plugin Author URI: http://www.question2answer.org/
 	Plugin License: GPLv2
 	Plugin Minimum Question2Answer Version: 1.3
+	Plugin Minimum PHP Version: 5
 	Plugin Update Check URI: 
 */
 

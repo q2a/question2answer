@@ -74,6 +74,11 @@
 		if (qa_clicked('doblock')) {
 			$oldblocked=qa_opt('block_ips_write');
 			qa_set_option('block_ips_write', (strlen($oldblocked) ? ($oldblocked.' , ') : '').$ip);
+			
+			qa_report_event('ip_block', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
+				'ip' => $ip,
+			));
+			
 			qa_redirect(qa_request());
 		}
 		
@@ -87,6 +92,11 @@
 					unset($blockipclauses[$key]);
 					
 			qa_set_option('block_ips_write', implode(' , ', $blockipclauses));
+
+			qa_report_event('ip_unblock', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
+				'ip' => $ip,
+			));
+
 			qa_redirect(qa_request());
 		}
 		

@@ -615,14 +615,14 @@
 				
 			$this->output('<H1>');
 
-			if (isset($title))
-				$this->output($title);
-
 			if (isset($favorite)) {
 				$this->output('<DIV CLASS="qa-favoriting" '.@$favorite['favorite_tags'].'>');
 				$this->favorite_inner_html($favorite);
 				$this->output('</DIV>');
 			}
+
+			if (isset($title))
+				$this->output($title);
 
 			if (isset($this->content['error'])) {
 				$this->output('</H1>');

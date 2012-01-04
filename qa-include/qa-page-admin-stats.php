@@ -215,10 +215,10 @@
 				'note' => '<SPAN ID="recount_posts_note">'.qa_lang_html('admin/recount_posts_note').'</SPAN>',
 			),
 	
-			'reindex_posts' => array(
-				'label' => qa_lang_html('admin/reindex_posts'),
-				'tags' => 'NAME="doreindexposts" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/reindex_posts_stop')).', \'reindex_posts_note\');"',
-				'note' => '<SPAN ID="reindex_posts_note">'.qa_lang_html('admin/reindex_posts_note').'</SPAN>',
+			'reindex_content' => array(
+				'label' => qa_lang_html('admin/reindex_content'),
+				'tags' => 'NAME="doreindexcontent" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/reindex_content_stop')).', \'reindex_content_note\');"',
+				'note' => '<SPAN ID="reindex_content_note">'.qa_lang_html('admin/reindex_content_note').'</SPAN>',
 			),
 			
 			'recalc_points' => array(

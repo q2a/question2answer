@@ -43,7 +43,7 @@
 			qa_db_user_profile_selectspec($userid, true)
 		);
 
-	$usecaptcha=qa_user_use_captcha('captcha_on_feedback');
+	$usecaptcha=qa_opt('captcha_on_feedback') && qa_user_use_captcha();
 
 
 //	Check feedback is enabled

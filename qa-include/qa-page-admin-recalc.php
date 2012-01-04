@@ -43,7 +43,7 @@
 
 	$allowstates=array(
 		'dorecountposts',
-		'doreindexposts',
+		'doreindexcontent',
 		'dorecalcpoints',
 		'dorefillevents',
 		'dorecalccategories',

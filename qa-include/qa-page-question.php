@@ -81,7 +81,7 @@
 		}
 	}
 	
-	$usecaptcha=qa_user_use_captcha('captcha_on_anon_post');
+	$usecaptcha=qa_user_use_captcha();
 
 
 //	Deal with question not found or not viewable, otherwise report the view event

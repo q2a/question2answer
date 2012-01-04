@@ -141,11 +141,11 @@
             status     : true, 
             cookie     : true,
             xfbml      : true,
-            oauth      : true,
+            oauth      : true
           });
 
          FB.Event.subscribe('<?php echo $logout ? 'auth.logout' : 'auth.login'?>', function(response) {
-           window.location=<?php echo qa_js($tourl)?>;
+           setTimeout("window.location=<?php echo qa_js($tourl)?>", 100);
          });
         };
         (function(d){

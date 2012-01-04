@@ -398,7 +398,7 @@
 
 			} elseif (@$post['uservote']>0) {
 				$fields['vote_state']='voted_up';
-				$fields['vote_up_tags']='TITLE="'.qa_lang_html('main/voted_up_popup').'" NAME="'.qa_html('vote_'.$postid.'_0_'.$elementid).'"'.$onclick;
+				$fields['vote_up_tags']='TITLE="'.qa_lang_html('main/voted_up_popup').'" NAME="'.qa_html('vote_'.$postid.'_0_'.$elementid).'" '.$onclick;
 				$fields['vote_down_tags']=' ';
 
 			} elseif (@$post['uservote']<0) {
@@ -460,9 +460,9 @@
 				$fields['who']['level']=qa_html(qa_user_level_string($post['level']));
 		}
 
-		if ((!QA_FINAL_EXTERNAL_USERS) && (@$options['avatarsize']>0) && isset($post['flags']))
-			$fields['avatar']=qa_get_user_avatar_html($post['flags'], $post['email'], $post['handle'],
-				$post['avatarblobid'], $post['avatarwidth'], $post['avatarheight'], $options['avatarsize']);
+		if ((!QA_FINAL_EXTERNAL_USERS) && (@$options['avatarsize']>0))
+			$fields['avatar']=qa_get_user_avatar_html(@$post['flags'], @$post['email'], @$post['handle'],
+				@$post['avatarblobid'], @$post['avatarwidth'], @$post['avatarheight'], $options['avatarsize']);
 
 	//	Updated when and by whom
 		
@@ -1354,7 +1354,7 @@
 				'<SPAN ID="'.$fieldprefix.'email_shown">'.$labelaskemail.'</SPAN>'.
 				'<SPAN ID="'.$fieldprefix.'email_hidden" STYLE="display:none;">'.$labelonly.'</SPAN>';
 			
-			$fields['notify']['tags'].='ID="'.$fieldprefix.'notify" onclick="if (document.getElementById(\''.$fieldprefix.'notify\').checked) document.getElementById(\''.$fieldprefix.'email\').focus();"';
+			$fields['notify']['tags'].=' ID="'.$fieldprefix.'notify" onclick="if (document.getElementById(\''.$fieldprefix.'notify\').checked) document.getElementById(\''.$fieldprefix.'email\').focus();"';
 			$fields['notify']['tight']=true;
 			
 			$fields['email']=array(
@@ -1578,6 +1578,21 @@
 		$incontent=$readdata['content'];
 		$informat=$readdata['format'];
 		$intext=qa_viewer_text($incontent, $informat);
+	}
+	
+	
+	function qa_update_post_text(&$fields, $oldfields)
+/*
+	Check if any of the 'content', 'format' or 'text' elements have changed between $oldfields and $fields
+	If so, recalculate $fields['text'] based on $fields['content'] and $fields['format']
+*/
+	{
+		if (
+			strcmp($oldfields['content'], $fields['content']) ||
+			strcmp($oldfields['format'], $fields['format']) ||
+			strcmp($oldfields['text'], $fields['text'])
+		)
+			$fields['text']=qa_viewer_text($fields['content'], $fields['format']);
 	}
 	
 	

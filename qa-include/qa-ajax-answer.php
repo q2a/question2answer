@@ -42,7 +42,7 @@
 
 	//	Load relevant information about this question and check it exists
 	
-		$usecaptcha=qa_user_use_captcha('captcha_on_anon_post');
+		$usecaptcha=qa_user_use_captcha();
 		$questionid=qa_post_text('a_questionid');
 		$userid=qa_get_logged_in_userid();
 		

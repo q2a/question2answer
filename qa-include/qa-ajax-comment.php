@@ -40,11 +40,10 @@
 		require_once QA_INCLUDE_DIR.'qa-page-question-submit.php';
 		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
-		$usecaptcha=qa_user_use_captcha('captcha_on_anon_post');
-
 
 	//	Load relevant information about this question and check it exists
 	
+		$usecaptcha=qa_user_use_captcha();
 		$questionid=qa_post_text('c_questionid');
 		$parentid=qa_post_text('c_parentid');
 		$userid=qa_get_logged_in_userid();

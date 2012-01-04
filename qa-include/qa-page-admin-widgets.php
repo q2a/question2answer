@@ -93,6 +93,8 @@
 		'login' => 'users/login_title',
 		'register' => 'users/register_title',
 		'account' => 'profile/my_account_title',
+		'favorites' => 'misc/my_favorites_title',
+		'updates' => 'misc/recent_updates_title',
 
 		'ip' => 'admin/ip_address_pages',
 		'admin' => 'admin/admin_title',

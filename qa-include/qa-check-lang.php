@@ -52,8 +52,8 @@
 		return $substitutions;
 	}
 	
-	echo '<font color="#c00"><code>Dark red = important to review.</code></font><br>';
-	echo '<font color="#c99"><code>Light red = probably safe to ignore.</code></font>';
+	echo '<font color="#cc0000"><code>Dark red = important to review.</code></font><br>';
+	echo '<font color="#cc9999"><code>Light red = probably safe to ignore.</code></font>';
 	
 	echo '<H1>Checking US English files in <code>qa-include</code>...</H1>';
 	
@@ -207,7 +207,7 @@
 	
 	function output_lang_issue($prefix, $key, $issue, $error=true)
 	{
-		echo '<font color="'.($error ? '#c00' : '#c99').'"><code>';
+		echo '<font color="'.($error ? '#cc0000' : '#cc9999').'"><code>';
 
 		echo 'qa-lang-<B>'.qa_html($prefix).'</B>.php:';
 

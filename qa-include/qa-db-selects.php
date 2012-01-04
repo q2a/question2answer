@@ -775,13 +775,12 @@
 		if (strlen($handle)) { // to allow searching for multi-word usernames (only works if search query contains full username and nothing else)
 			if (QA_FINAL_EXTERNAL_USERS) {
 				$userids=qa_get_userids_from_public(array($handle));
-				$userid=@$userids[$handle];
 				
-				if (strlen($userid)) {
+				if (count($userids)) {
 					$selectspec['source'].=($selectparts++ ? " UNION ALL " : "").
 						"(SELECT postid AS questionid, LOG(#/qposts) AS score, 'Q' AS matchposttype, postid AS matchpostid FROM ^posts JOIN ^userpoints ON ^posts.userid=^userpoints.userid WHERE ^posts.userid=$ AND type='Q')";
 					
-					array_push($selectspec['arguments'], QA_IGNORED_WORDS_FREQ, $userid);
+					array_push($selectspec['arguments'], QA_IGNORED_WORDS_FREQ, reset($userids));
 				}
 
 			} else {
@@ -931,7 +930,8 @@
 */
 	{
 		$selectspec=array(
-			'columns' => array('pageid', 'title', 'flags', 'permit', 'nav', 'tags', 'position', 'heading'),
+			'columns' => array('pageid', 'title', 'flags', 'permit' => 'permit+0', 'nav', 'tags', 'position', 'heading'),
+				// +0 required to work around MySQL bug where by permit value is mis-read as signed, e.g. -106 instead of 150
 			'arraykey' => 'pageid',
 			'sortasc' => 'position',
 		);

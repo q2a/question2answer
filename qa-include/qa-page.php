@@ -222,10 +222,15 @@
 		
 	//	Set appropriate selected flags for navigation (not done in qa_content_prepare() since it also applies to sub-navigation)
 		
+		$selfpathhtml=qa_path_html($requestlower);
+		
 		foreach ($qa_content['navigation'] as $navtype => $navigation)
 			if (is_array($navigation) && ($navtype!='cat'))
 				foreach ($navigation as $navprefix => $navlink)
-					if (substr($requestlower.'$', 0, strlen($navprefix)) == $navprefix)
+					if (
+						(substr($requestlower.'$', 0, strlen($navprefix)) == $navprefix) ||
+						(strtolower(@$navlink['url'])==$selfpathhtml) // this check is needed for custom links that go to Q2A pages
+					)
 						$qa_content['navigation'][$navtype][$navprefix]['selected']=true;
 	
 	//	Slide down notifications
@@ -664,12 +669,17 @@
 				$qa_content['notices'][]=qa_notice_form($notice['noticeid'], qa_viewer_html($notice['content'], $notice['format']), $notice);
 			
 		} else {
+			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			
 			$loginmodules=qa_load_modules_with('login', 'login_html');
 			
 			foreach ($loginmodules as $tryname => $module) {
 				ob_start();
 				$module->login_html(isset($topath) ? (qa_opt('site_url').$topath) : qa_path($request, $_GET, qa_opt('site_url')), 'menu');
-				$qa_content['navigation']['user'][$tryname]=array('label' => ob_get_clean());
+				$label=ob_get_clean();
+
+				if (strlen($label))
+					$qa_content['navigation']['user'][implode('-', qa_string_to_words($tryname))]=array('label' => $label);
 			}
 			
 			if (!empty($userlinks['login']))

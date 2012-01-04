@@ -768,7 +768,7 @@
 				case 5:
 					qa_db_upgrade_query('ALTER TABLE ^contentwords ADD COLUMN (type '.$definitions['contentwords']['type'].', questionid '.$definitions['contentwords']['questionid'].')');
 					qa_db_upgrade_query($locktablesquery);
-					$keyrecalc['doreindexposts']=true;
+					$keyrecalc['doreindexcontent']=true;
 					break;
 					
 			//	Up to here: Version 1.0 beta 2
@@ -803,6 +803,7 @@
 					break;
 				
 				case 10:
+					qa_db_upgrade_query('UNLOCK TABLES');
 					qa_db_upgrade_query(qa_db_create_table_sql('categories', array(
 						'categoryid' => $definitions['categories']['categoryid'],
 						'title' => $definitions['categories']['title'],
@@ -825,6 +826,7 @@
 					break;
 					
 				case 12:
+					qa_db_upgrade_query('UNLOCK TABLES');
 					qa_db_upgrade_query(qa_db_create_table_sql('pages', array(
 						'pageid' => $definitions['pages']['pageid'],
 						'title' => $definitions['pages']['title'],
@@ -872,7 +874,7 @@
 				case 16:
 					qa_db_upgrade_table_columns($definitions, 'posts', array('format'));
 					qa_db_upgrade_query($locktablesquery);
-					$keyrecalc['doreindexposts']=true; // because of new treatment of apostrophes in words
+					$keyrecalc['doreindexcontent']=true; // because of new treatment of apostrophes in words
 					break;
 					
 				case 17:
@@ -891,6 +893,8 @@
 					
 					// hard-code list of columns and indexes to ensure we ignore any added at a later stage
 
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('blobs', array(
 						'blobid' => $definitions['blobs']['blobid'],
 						'format' => $definitions['blobs']['format'],
@@ -914,6 +918,8 @@
 					
 				case 20:
 					if (!QA_FINAL_EXTERNAL_USERS) {
+						qa_db_upgrade_query('UNLOCK TABLES');
+						
 						qa_db_upgrade_query(qa_db_create_table_sql('userlogins', array(
 							'userid' => $definitions['userlogins']['userid'],
 							'source' => $definitions['userlogins']['source'],
@@ -933,6 +939,8 @@
 					
 				case 21:
 					if (!QA_FINAL_EXTERNAL_USERS) {
+						qa_db_upgrade_query('UNLOCK TABLES');
+						
 						qa_db_upgrade_query(qa_db_create_table_sql('userfields', array(
 							'fieldid' => $definitions['userfields']['fieldid'],
 							'title' => $definitions['userfields']['title'],
@@ -961,6 +969,8 @@
 			//	Up to here: Version 1.3 beta 2 and release
 			
 				case 23:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('widgets', array(
 						'widgetid' => $definitions['widgets']['widgetid'],
 						'place' => $definitions['widgets']['place'],
@@ -976,6 +986,8 @@
 					break;
 					
 				case 24:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('tagwords', array(
 						'postid' => $definitions['tagwords']['postid'],
 						'wordid' => $definitions['tagwords']['wordid'],
@@ -990,7 +1002,7 @@
 					qa_db_upgrade_query('ALTER TABLE ^words ADD COLUMN tagwordcount '.$definitions['words']['tagwordcount']);
 					qa_db_upgrade_query($locktablesquery);
 					
-					$keyrecalc['doreindexposts']=true;
+					$keyrecalc['doreindexcontent']=true;
 					break;
 					
 			//	Up to here: Version 1.4 developer preview
@@ -1084,6 +1096,8 @@
 							qa_db_upgrade_progress('Skipping messages table since it was already added by another Q2A site sharing these users.');
 						
 						else {
+							qa_db_upgrade_query('UNLOCK TABLES');
+							
 							qa_db_upgrade_query(qa_db_create_table_sql('messages', array(
 								'messageid' => $definitions['messages']['messageid'],
 								'fromuserid' => $definitions['messages']['fromuserid'],
@@ -1102,6 +1116,8 @@
 					break;
 					
 				case 35:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('userfavorites', array(
 						'userid' => $definitions['userfavorites']['userid'],
 						'entitytype' => $definitions['userfavorites']['entitytype'],
@@ -1118,6 +1134,8 @@
 					break;
 					
 				case 36:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('userevents', array(
 						'userid' => $definitions['userevents']['userid'],
 						'entitytype' => $definitions['userevents']['entitytype'],
@@ -1139,6 +1157,8 @@
 					break;
 					
 				case 37:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('sharedevents', array(
 						'entitytype' => $definitions['sharedevents']['entitytype'],
 						'entityid' => $definitions['sharedevents']['entityid'],
@@ -1178,6 +1198,8 @@
 					break;
 					
 				case 42:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('usermetas', array(
 						'userid' => $definitions['usermetas']['userid'],
 						'title' => $definitions['usermetas']['title'],
@@ -1191,6 +1213,8 @@
 					break;
 					
 				case 43:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('postmetas', array(
 						'postid' => $definitions['postmetas']['postid'],
 						'title' => $definitions['postmetas']['title'],
@@ -1204,6 +1228,8 @@
 					break;
 					
 				case 44:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('categorymetas', array(
 						'categoryid' => $definitions['categorymetas']['categoryid'],
 						'title' => $definitions['categorymetas']['title'],
@@ -1217,6 +1243,8 @@
 					break;
 					
 				case 45:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('tagmetas', array(
 						'tag' => $definitions['tagmetas']['tag'],
 						'title' => $definitions['tagmetas']['title'],
@@ -1236,6 +1264,8 @@
 					break;
 					
 				 case 47:
+					qa_db_upgrade_query('UNLOCK TABLES');
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('usernotices', array(
 						'noticeid' => $definitions['usernotices']['noticeid'],
 						'userid' => $definitions['usernotices']['userid'],

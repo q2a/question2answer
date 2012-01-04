@@ -30,115 +30,115 @@
 	}
 
 
-	function qa_db_usermeta_set($userid, $title, $content)
+	function qa_db_usermeta_set($userid, $key, $value)
 /*
-	Set the metadata for user $userid with key $title to value $content
+	Set the metadata for user $userid with $key to $value. Keys beginning qa_ are reserved for the Q2A core.
 */
 	{
-		qa_db_meta_set('usermetas', 'userid', $userid, $title, $content);
+		qa_db_meta_set('usermetas', 'userid', $userid, $key, $value);
 	}
 
 	
-	function qa_db_usermeta_clear($userid, $title)
+	function qa_db_usermeta_clear($userid, $key)
 /*
-	Clear the metadata for user $userid with key $title ($title can also be an array of keys)
+	Clear the metadata for user $userid with $key ($key can also be an array of keys)
 */
 	{
-		qa_db_meta_clear('usermetas', 'userid', $userid, $title);
+		qa_db_meta_clear('usermetas', 'userid', $userid, $key);
 	}
 
 	
-	function qa_db_usermeta_get($userid, $title)
+	function qa_db_usermeta_get($userid, $key)
 /*
-	Return the metadata value for user $userid with key $title ($title can also be an array of keys in which case this
+	Return the metadata value for user $userid with $key ($key can also be an array of keys in which case this
 	returns an array of metadata key => value).
 */
 	{
-		return qa_db_meta_get('usermetas', 'userid', $userid, $title);
+		return qa_db_meta_get('usermetas', 'userid', $userid, $key);
 	}
 	
 
-	function qa_db_postmeta_set($postid, $title, $content)
+	function qa_db_postmeta_set($postid, $key, $value)
 /*
-	Set the metadata for post $postid with key $title to value $content
+	Set the metadata for post $postid with $key to $value. Keys beginning qa_ are reserved for the Q2A core.
 */
 	{
-		qa_db_meta_set('postmetas', 'postid', $postid, $title, $content);
+		qa_db_meta_set('postmetas', 'postid', $postid, $key, $value);
 	}
 
 	
-	function qa_db_postmeta_clear($postid, $title)
+	function qa_db_postmeta_clear($postid, $key)
 /*
-	Clear the metadata for post $postid with key $title ($title can also be an array of keys)
+	Clear the metadata for post $postid with $key ($key can also be an array of keys)
 */
 	{
-		qa_db_meta_clear('postmetas', 'postid', $postid, $title);
+		qa_db_meta_clear('postmetas', 'postid', $postid, $key);
 	}
 
 	
-	function qa_db_postmeta_get($postid, $title)
+	function qa_db_postmeta_get($postid, $key)
 /*
-	Return the metadata value for post $postid with key $title ($title can also be an array of keys in which case this
+	Return the metadata value for post $postid with $key ($key can also be an array of keys in which case this
 	returns an array of metadata key => value).
 */
 	{
-		return qa_db_meta_get('postmetas', 'postid', $postid, $title);
+		return qa_db_meta_get('postmetas', 'postid', $postid, $key);
 	}
 
 
-	function qa_db_categorymeta_set($categoryid, $title, $content)
+	function qa_db_categorymeta_set($categoryid, $key, $value)
 /*
-	Set the metadata for category $categoryid with key $title to value $content
+	Set the metadata for category $categoryid with $key to $value. Keys beginning qa_ are reserved for the Q2A core.
 */
 	{
-		qa_db_meta_set('categorymetas', 'categoryid', $categoryid, $title, $content);
+		qa_db_meta_set('categorymetas', 'categoryid', $categoryid, $key, $value);
 	}
 
 	
-	function qa_db_categorymeta_clear($categoryid, $title)
+	function qa_db_categorymeta_clear($categoryid, $key)
 /*
-	Clear the metadata for category $categoryid with key $title ($title can also be an array of keys)
+	Clear the metadata for category $categoryid with $key ($key can also be an array of keys)
 */
 	{
-		qa_db_meta_clear('categorymetas', 'categoryid', $categoryid, $title);
+		qa_db_meta_clear('categorymetas', 'categoryid', $categoryid, $key);
 	}
 
 	
-	function qa_db_categorymeta_get($categoryid, $title)
+	function qa_db_categorymeta_get($categoryid, $key)
 /*
-	Return the metadata value for category $categoryid with key $title ($title can also be an array of keys in which
+	Return the metadata value for category $categoryid with $key ($key can also be an array of keys in which
 	case this returns an array of metadata key => value).
 */
 	{
-		return qa_db_meta_get('categorymetas', 'categoryid', $categoryid, $title);
+		return qa_db_meta_get('categorymetas', 'categoryid', $categoryid, $key);
 	}
 	
 
-	function qa_db_tagmeta_set($tag, $title, $content)
+	function qa_db_tagmeta_set($tag, $key, $value)
 /*
-	Set the metadata for tag $tag with key $title to value $content
+	Set the metadata for tag $tag with $key to $value. Keys beginning qa_ are reserved for the Q2A core.
 */
 	{
-		qa_db_meta_set('tagmetas', 'tag', $tag, $title, $content);
+		qa_db_meta_set('tagmetas', 'tag', $tag, $key, $value);
 	}
 
 	
-	function qa_db_tagmeta_clear($tag, $title)
+	function qa_db_tagmeta_clear($tag, $key)
 /*
-	Clear the metadata for tag $tag with key $title ($title can also be an array of keys)
+	Clear the metadata for tag $tag with $key ($key can also be an array of keys)
 */
 	{
-		qa_db_meta_clear('tagmetas', 'tag', $tag, $title);
+		qa_db_meta_clear('tagmetas', 'tag', $tag, $key);
 	}
 
 	
-	function qa_db_tagmeta_get($tag, $title)
+	function qa_db_tagmeta_get($tag, $key)
 /*
-	Return the metadata value for tag $tag with key $title ($title can also be an array of keys in which case this
+	Return the metadata value for tag $tag with $key ($key can also be an array of keys in which case this
 	returns an array of metadata key => value).
 */
 	{
-		return qa_db_meta_get('tagmetas', 'tag', $tag, $title);
+		return qa_db_meta_get('tagmetas', 'tag', $tag, $key);
 	}
 
 

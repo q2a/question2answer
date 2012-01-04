@@ -62,7 +62,7 @@ p {margin-top:0;}
 h1 {margin:1em 0 0.5em 0; color:#c659ab; font-size:28px; font-weight:bold;}
 h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
-.qa-favoriting {float:right; margin-right:16px;}
+.qa-favoriting {float:right; padding-right:16px;}
 
 .qa-favorite-button,.qa-favorite-hover,.qa-unfavorite-button,.qa-unfavorite-hover {background:url(favorite-heart.png) no-repeat; border:0; height:49px; width:50px;}
 	.qa-favorite-button {background-position: 0 -49px;}
@@ -447,6 +447,9 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-favorite-image {background:url(favorite-heart.png) no-repeat; background-position: 0 0px; border:0; height:49px; width:50px; vertical-align:middle; display:inline-block;}
 
 /* IE6 friendly versions of icons with binary alpha channel */
+* html .qa-favorite-button {background:url(favorite-heart-ie6.png) no-repeat 0 -49px;}
+* html .qa-favorite-hover,* html .qa-unfavorite-hover {background:url(favorite-heart-ie6.png) no-repeat 0 0px;}
+* html .qa-unfavorite-button {background:url(favorite-heart-ie6.png) no-repeat 0 -98px;}
 * html .qa-form-light-button-edit,* html .qa-form-light-hover-edit,* html .qa-form-light-button-retagcat,* html .qa-form-light-hover-retagcat
 	{background:url(edit-icon-ie6.png) no-repeat left center;}
 * html .qa-form-light-button-flag,* html .qa-form-light-hover-flag {background:url(flag-icon-ie6.png) no-repeat left center;}
@@ -459,6 +462,10 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 * html .qa-form-light-button-reshow,* html .qa-form-light-hover-reshow {background:url(reshow-icon-ie6.png) no-repeat left center;}
 * html .qa-form-light-button-claim,* html .qa-form-light-hover-claim {background:url(claim-icon-ie6.png) no-repeat left center;}
 * html .qa-form-light-button-delete,* html .qa-form-light-hover-delete {background:url(delete-icon-ie6.png) no-repeat left center;}
+* html .qa-form-light-button-approve,* html .qa-form-light-hover-approve {background:url(approve-icon-ie6.png) no-repeat left center;}
+* html .qa-form-light-button-reject,* html .qa-form-light-hover-reject {background:url(reject-icon-ie6.png) no-repeat left center;}
+* html .qa-form-light-button-close,* html .qa-form-light-hover-close {background:url(close-icon-ie6.png) no-repeat left center;}
+* html .qa-form-light-button-reopen,* html .qa-form-light-hover-reopen {background:url(reopen-icon-ie6.png) no-repeat left center;}
 * html .qa-vote-up-button {background:url(vote-buttons-ie6.png) no-repeat 0 0;}
 * html .qa-vote-up-hover {background:url(vote-buttons-ie6.png) no-repeat 0 -29px;}
 * html .qa-vote-up-disabled {background:url(vote-buttons-ie6.png) no-repeat 0 -116px;}
@@ -471,3 +478,4 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 * html .qa-voted-down-hover {background:url(vote-buttons-ie6.png) no-repeat -27px -29px;}
 * html .qa-tag-link {background:url(tag-icon-ie6.png) no-repeat left center;}
 * html .qa-a-count {background:url(a-count-icon-ie6.png) no-repeat 32px 13px;}
+* html .qa-favorite-image {background:url(favorite-heart-ie6.png) no-repeat 0 0px;}

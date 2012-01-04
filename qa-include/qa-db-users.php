@@ -106,6 +106,36 @@
 		));
 	}
 	
+	
+	function qa_db_user_get_userid_handles($userids)
+/*
+	Return an array mapping mapping each userid in $userids that can be found to that user's handle
+*/
+	{
+		if (count($userids))
+			return qa_db_read_all_assoc(qa_db_query_sub(
+				'SELECT userid, handle FROM ^users WHERE userid IN (#)',
+				$userids
+			), 'userid', 'handle');
+		else
+			return array();
+	}
+	
+
+	function qa_db_user_get_handle_userids($handles)
+/*
+	Return an array mapping mapping each handle in $handle that can be found to that user's userid
+*/
+	{
+		if (count($handles))
+			return qa_db_read_all_assoc(qa_db_query_sub(
+				'SELECT handle, userid FROM ^users WHERE handle IN ($)',
+				$handles
+			), 'handle', 'userid');
+		else
+			return array();
+	}
+	
 
 	function qa_db_user_set($userid, $field, $value)
 /*

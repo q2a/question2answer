@@ -94,7 +94,7 @@
 				);
 				
 				$options=qa_post_html_defaults('Q');
-				$usershtml=qa_userids_handles_html(qa_userids_handles_html($questions));
+				$usershtml=qa_userids_handles_html($questions);
 				
 				foreach ($questions as $question)
 					$q_list['qs'][]=qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, $options);

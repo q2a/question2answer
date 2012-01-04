@@ -32,6 +32,31 @@
 	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
 
 	
+//	For reindexing pages...
+
+	function qa_db_count_pages()
+/*
+	Return the number of custom pages currently in the database
+*/
+	{
+		return qa_db_read_one_value(qa_db_query_sub(
+			'SELECT COUNT(*) FROM ^pages'
+		));
+	}
+
+	
+	function qa_db_pages_get_for_reindexing($startpageid, $count)
+/*
+	Return the information to reindex up to $count pages starting from $startpageid in the database
+*/
+	{
+		return qa_db_read_all_assoc(qa_db_query_sub(
+			'SELECT pageid, flags, tags, heading, content FROM ^pages WHERE pageid>=# ORDER BY pageid LIMIT #',
+			$startpageid, $count
+		), 'pageid');
+	}
+	
+
 //	For reindexing posts...
 	
 	function qa_db_posts_get_for_reindexing($startpostid, $count)
@@ -40,7 +65,7 @@
 */
 	{
 		return qa_db_read_all_assoc(qa_db_query_sub(
-			"SELECT ^posts.postid, ^posts.title, ^posts.content, ^posts.format, ^posts.tags, ^posts.type, IF (^posts.type='Q', ^posts.postid, IF(parent.type='Q', parent.postid, grandparent.postid)) AS questionid, ^posts.parentid FROM ^posts LEFT JOIN ^posts AS parent ON ^posts.parentid=parent.postid LEFT JOIN ^posts as grandparent ON parent.parentid=grandparent.postid WHERE ^posts.postid>=# AND ( (^posts.type='Q') OR (^posts.type='A' AND parent.type<=>'Q') OR (^posts.type='C' AND parent.type<=>'Q') OR (^posts.type='C' AND parent.type<=>'A' AND grandparent.type<=>'Q') ) ORDER BY postid LIMIT #",
+			"SELECT ^posts.postid, ^posts.title, ^posts.content, ^posts.format, ^posts.tags, ^posts.categoryid, ^posts.type, IF (^posts.type='Q', ^posts.postid, IF(parent.type='Q', parent.postid, grandparent.postid)) AS questionid, ^posts.parentid FROM ^posts LEFT JOIN ^posts AS parent ON ^posts.parentid=parent.postid LEFT JOIN ^posts as grandparent ON parent.parentid=grandparent.postid WHERE ^posts.postid>=# AND ( (^posts.type='Q') OR (^posts.type='A' AND parent.type<=>'Q') OR (^posts.type='C' AND parent.type<=>'Q') OR (^posts.type='C' AND parent.type<=>'A' AND grandparent.type<=>'Q') ) ORDER BY postid LIMIT #",
 			$startpostid, $count
 		), 'postid');
 	}

@@ -359,6 +359,8 @@
 			$form['fields']['content']=array_merge($form['fields']['content'],
 				qa_editor_load_field($editor, $qa_content, $content, $format, 'q_content', 12, true));
 				
+			$form['buttons']['save']['tags']=method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script('q_content').'"') : '';
+			
 			$form['hidden']['q_editor']=qa_html($editorname);
 		
 		} else
@@ -420,8 +422,13 @@
 		$errors=array();
 		
 		$filtermodules=qa_load_modules_with('filter', 'filter_question');
-		foreach ($filtermodules as $filtermodule)
+		foreach ($filtermodules as $filtermodule) {
+			$oldin=$in;
 			$filtermodule->filter_question($in, $errors, $question);
+			
+			if ($question['editable'])
+				qa_update_post_text($in, $oldin);
+		}
 		
 		if (empty($errors)) {
 			$userid=qa_get_logged_in_userid();
@@ -445,14 +452,14 @@
 			if (!isset($in['categoryid']))
 				$in['categoryid']=$question['categoryid'];
 			
-			if (qa_using_categories() && strcmp($in['categoryid'], $question['categoryid']))
-				qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
-			
 			$setnotify=$question['isbyuser'] ? qa_combine_notify_email($question['userid'], $in['notify'], $in['email']) : $question['notify'];
 						
 			qa_question_set_content($question, $in['title'], $in['content'], $in['format'], $in['text'],
 				qa_tags_to_tagstring($in['tags']), $setnotify, $userid, $handle, $cookieid, $in['extra']);
 
+			if (qa_using_categories() && strcmp($in['categoryid'], $question['categoryid']))
+				qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
+			
 			return true;
 		}
 		
@@ -611,6 +618,7 @@
 			
 			'buttons' => array(
 				'save' => array(
+					'tags' => method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script($prefix.'content').'"') : '',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
@@ -707,8 +715,11 @@
 		$errors=array();
 		
 		$filtermodules=qa_load_modules_with('filter', 'filter_answer');
-		foreach ($filtermodules as $filtermodule)
+		foreach ($filtermodules as $filtermodule) {
+			$oldin=$in;
 			$filtermodule->filter_answer($in, $errors, $question, $answer);
+			qa_update_post_text($in, $oldin);
+		}
 		
 		if (empty($errors)) {
 			$userid=qa_get_logged_in_userid();
@@ -822,6 +833,7 @@
 			
 			'buttons' => array(
 				'save' => array(
+					'tags' => method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script($prefix.'content').'"') : '',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
@@ -866,8 +878,11 @@
 		$errors=array();
 		
 		$filtermodules=qa_load_modules_with('filter', 'filter_comment');
-		foreach ($filtermodules as $filtermodule)
+		foreach ($filtermodules as $filtermodule) {
+			$oldin=$in;
 			$filtermodule->filter_comment($in, $errors, $question, $parent, $comment);
+			qa_update_post_text($in, $oldin);
+		}
 
 		if (empty($errors)) {
 			$userid=qa_get_logged_in_userid();

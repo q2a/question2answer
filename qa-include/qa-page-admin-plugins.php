@@ -99,6 +99,7 @@
 				'author_uri' => 'Plugin Author URI',
 				'license' => 'Plugin License',
 				'min_q2a' => 'Plugin Minimum Question2Answer Version',
+				'min_php' => 'Plugin Minimum PHP Version',
 				'update' => 'Plugin Update Check URI',
 			));
 			
@@ -153,6 +154,10 @@
 			if (is_numeric(@$metadata['min_q2a']) && ((float)QA_VERSION>0) && $metadata['min_q2a']>(float)QA_VERSION)
 				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
 					qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</SPAN>';
+					
+			elseif (is_numeric(@$metadata['min_php']) && ((float)phpversion()>0) && $metadata['min_php']>(float)phpversion())
+				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
+					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</SPAN>';
 				
 			$qa_content['form']['fields'][]=array(
 				'type' => 'custom',

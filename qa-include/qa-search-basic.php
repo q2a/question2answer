@@ -32,7 +32,7 @@
 
 	class qa_search_basic {
 	
-		function index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring)
+		function index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
 			
@@ -104,7 +104,13 @@
 		}
 
 		
-		function index_page($pageid, $title, $content, $format, $text)
+		function move_post($postid, $categoryid)
+		{
+			// for now, the built-in search engine ignores categories
+		}
+		
+		
+		function index_page($pageid, $request, $title, $content, $format, $text)
 		{
 			// for now, the built-in search engine ignores custom pages
 		}

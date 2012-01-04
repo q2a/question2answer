@@ -62,9 +62,9 @@ p {margin-top:0;}
 h1 {font-size:22px; margin:22px 0;}
 h2 {font-size:16px; padding-top:12px; clear:both;}
 
-.qa-favoriting {float:right; margin-right:48px; margin-top:4px;}
+.qa-favoriting {float:right; padding-right:48px; padding-top:4px;}
 
-.qa-favorite-button,.qa-favorite-hover,.qa-unfavorite-button,.qa-unfavorite-hover {background:url(favorite-plus.png) no-repeat; border:0; height:26px; width:26px;}
+.qa-favorite-button,.qa-favorite-hover,.qa-unfavorite-button,.qa-unfavorite-hover {background:url(favorite-plus.gif) no-repeat; border:0; height:26px; width:26px;}
 	.qa-favorite-button {background-position: 0 -26px;}
 	.qa-favorite-hover,.qa-favorite-button:hover {background-position: 0 0px;}
 	.qa-unfavorite-button {background-position: 0 -52px;}
@@ -413,4 +413,4 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 	.qa-tag-link:hover {text-decoration:none; background-color:#235272;}
 .qa-avatar-image {border:0; vertical-align:middle;}
 .qa-avatar-link,.qa-avatar-link:hover {text-decoration:none;}
-.qa-favorite-image {background:url(favorite-plus.png) no-repeat; background-position: 0 -26px; border:0; margin:2px; height:26px; width:26px; vertical-align:middle; display:inline-block;}
+.qa-favorite-image {background:url(favorite-plus.gif) no-repeat; background-position: 0 -26px; border:0; margin:2px; height:26px; width:26px; vertical-align:middle; display:inline-block;}

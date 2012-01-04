@@ -68,7 +68,7 @@
 		
 		if (!$queued) {
 			qa_db_category_path_qcount_update(qa_db_post_get_category_path($postid));
-			qa_post_index($postid, 'Q', $postid, @$followanswer['postid'], $title, $content, $format, $text, $tagstring);
+			qa_post_index($postid, 'Q', $postid, @$followanswer['postid'], $title, $content, $format, $text, $tagstring, $categoryid);
 			qa_db_points_update_ifuser($userid, 'qposts');
 			qa_db_qcount_update();
 			qa_db_unaqcount_update();
@@ -122,10 +122,10 @@
 	}
 	
 	
-	function qa_post_index($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring)
+	function qa_post_index($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
 /*
-	Add post $postid (which comes under $questionid) of $type (Q/A/C) to the database index, with $title, $text
-	and $tagstring. Calls through to all installed search modules.
+	Add post $postid (which comes under $questionid) of $type (Q/A/C) to the database index, with $title, $text,
+	$tagstring and $categoryid. Calls through to all installed search modules.
 */
 	{
 		global $qa_post_indexing_suspended;
@@ -137,7 +137,7 @@
 	
 		$searches=qa_load_modules_with('search', 'index_post');
 		foreach ($searches as $search)
-			$search->index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring);
+			$search->index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid);
 	}
 
 		
@@ -155,7 +155,7 @@
 		
 		if (!$queued) {
 			if ($question['type']=='Q') // don't index answer if parent question is hidden or queued
-				qa_post_index($postid, 'A', $question['postid'], $question['postid'], null, $content, $format, $text, null);
+				qa_post_index($postid, 'A', $question['postid'], $question['postid'], null, $content, $format, $text, null, $question['categoryid']);
 			
 			qa_db_post_acount_update($question['postid']);
 			qa_db_hotness_update($question['postid']);
@@ -205,7 +205,7 @@
 		
 		if (!$queued) {
 			if ( ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) ) // only index if antecedents fully visible
-				qa_post_index($postid, 'C', $question['postid'], $parent['postid'], null, $content, $format, $text, null);
+				qa_post_index($postid, 'C', $question['postid'], $parent['postid'], null, $content, $format, $text, null, $question['categoryid']);
 			
 			qa_db_points_update_ifuser($userid, 'cposts');
 			qa_db_ccount_update();

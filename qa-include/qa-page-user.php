@@ -43,11 +43,11 @@
 
 	if (QA_FINAL_EXTERNAL_USERS) {
 		$publictouserid=qa_get_userids_from_public(array($handle));
-		$userid=@$publictouserid[$handle];
 		
-		if (!isset($userid))
+		if (!count($publictouserid))
 			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 		
+		$userid=reset($publictouserid); // don't use $publictouserid[$handle] since $handle capitalization might be different
 		$usershtml=qa_get_users_html(array($userid), false, qa_path_to_root(), true);
 		$userhtml=@$usershtml[$userid];
 

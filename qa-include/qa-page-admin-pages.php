@@ -222,13 +222,13 @@
 
 				else {
 					$setheading=isset($errors['heading']) ? $editpage['heading'] : $inheading;
+					$setslug=isset($errors['slug']) ? $editpage['tags'] : $inslug;
 					$setcontent=isset($errors['content']) ? $editpage['content'] : $incontent;
 					
 					qa_db_page_set_fields($editpage['pageid'],
 						isset($errors['name']) ? $editpage['title'] : $inname,
 						0,
-						isset($errors['slug']) ? $editpage['tags'] : $inslug,
-						$setheading, $setcontent, $inpermit);
+						$setslug, $setheading, $setcontent, $inpermit);
 
 					$searchmodules=qa_load_modules_with('search', 'unindex_page');
 					foreach ($searchmodules as $searchmodule)
@@ -238,7 +238,7 @@
 					
 					$searchmodules=qa_load_modules_with('search', 'index_page');
 					foreach ($searchmodules as $searchmodule)
-						$searchmodule->index_page($editpage['pageid'], $setheading, $setcontent, 'html', $indextext);
+						$searchmodule->index_page($editpage['pageid'], $setslug, $setheading, $setcontent, 'html', $indextext);
 				}
 				
 				qa_db_page_move($editpage['pageid'], substr($inposition, 0, 1), substr($inposition, 1));
@@ -261,7 +261,7 @@
 						
 						$searchmodules=qa_load_modules_with('search', 'index_page');
 						foreach ($searchmodules as $searchmodule)
-							$searchmodule->index_page($pageid, $inheading, $incontent, 'html', $indextext);
+							$searchmodule->index_page($pageid, $inslug, $inheading, $incontent, 'html', $indextext);
 					}
 					
 					qa_db_page_move($pageid, substr($inposition, 0, 1), substr($inposition, 1));

@@ -501,7 +501,9 @@
 			if (!QA_FINAL_EXTERNAL_USERS)
 				array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'suspend_register_users', '');
 			
-			$maxpermitpost=max($getoptions['permit_post_q'], $getoptions['permit_post_a'], $getoptions['permit_post_c']);
+			$maxpermitpost=max($getoptions['permit_post_q'], $getoptions['permit_post_a']);
+			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
+				$maxpermitpost=max($maxpermitpost, $getoptions['permit_post_c']);
 			
 			$captchamodules=qa_list_modules('captcha');
 			
@@ -534,51 +536,42 @@
 			
 			array_push($showoptions, 'flagging_of_posts', 'flagging_notify_first', 'flagging_notify_every', 'flagging_hide_after', '');
 			
+			array_push($showoptions, 'block_ips_write', '');
+
+			if (!QA_FINAL_EXTERNAL_USERS)
+				array_push($showoptions, 'max_rate_ip_registers', 'max_rate_ip_logins', '');
+			
+			array_push($showoptions, 'max_rate_ip_qs', 'max_rate_user_qs', 'max_rate_ip_as', 'max_rate_user_as');
+
+			if (qa_opt('comment_on_qs') || qa_opt('command_on_as'))
+				array_push($showoptions, 'max_rate_ip_cs', 'max_rate_user_cs');
+			
+			$showoptions[]='';
+			
+			if (qa_opt('voting_on_qs') || qa_opt('voting_on_as'))
+				array_push($showoptions, 'max_rate_ip_votes', 'max_rate_user_votes');
+
+			array_push($showoptions, 'max_rate_ip_flags', 'max_rate_user_flags', 'max_rate_ip_uploads', 'max_rate_user_uploads');
+			
+			if (qa_opt('allow_private_messages'))
+				array_push($showoptions, 'max_rate_ip_messages', 'max_rate_user_messages');
+			
+			$formstyle='wide';
+
 			$checkboxtodisplay=array(
 				'confirm_user_required' => 'option_confirm_user_emails',
+				'captcha_on_unconfirmed' => 'option_confirm_user_emails',
+				'captcha_module' => 'option_captcha_on_register || option_captcha_on_anon_post || (option_confirm_user_emails && option_captcha_on_unconfirmed) || option_captcha_on_reset_password || option_captcha_on_feedback',
+				'moderate_unconfirmed' => 'option_confirm_user_emails',
+				'moderate_points_limit' => 'option_moderate_by_points',
+				'moderate_points_label_off' => '!option_moderate_by_points',
+				'moderate_points_label_on' => 'option_moderate_by_points',
 				'flagging_hide_after' => 'option_flagging_of_posts',
 				'flagging_notify_every' => 'option_flagging_of_posts',
 				'flagging_notify_first' => 'option_flagging_of_posts',
 				'max_rate_ip_flags' =>  'option_flagging_of_posts',
 				'max_rate_user_flags' => 'option_flagging_of_posts',
 			);
-
-			array_push($showoptions, 'block_ips_write', '');
-
-			if (!QA_FINAL_EXTERNAL_USERS)
-				array_push($showoptions, 'max_rate_ip_registers', 'max_rate_ip_logins', '');
-			
-			array_push($showoptions,
-				'max_rate_ip_qs', 'max_rate_user_qs', 'max_rate_ip_as', 'max_rate_user_as', 'max_rate_ip_cs', 'max_rate_user_cs', '',
-				'max_rate_ip_votes', 'max_rate_user_votes', 'max_rate_ip_flags', 'max_rate_user_flags', 'max_rate_ip_uploads', 'max_rate_user_uploads'
-			);
-			
-			if (qa_opt('allow_private_messages')) {
-				$showoptions[]='max_rate_ip_messages';
-				$showoptions[]='max_rate_user_messages';
-			}
-			
-			$formstyle='wide';
-
-			if ($maxpermitpost > QA_PERMIT_USERS)
-				$checkboxtodisplay=array_merge($checkboxtodisplay, array(
-					'captcha_on_unconfirmed' => 'option_confirm_user_emails && option_captcha_on_anon_post',
-					'captcha_module' => 'option_captcha_on_register || option_captcha_on_anon_post || option_captcha_on_reset_password || option_captcha_on_feedback',
-					'moderate_unconfirmed' => 'option_confirm_user_emails && option_moderate_anon_post',
-					'moderate_by_points' => 'option_moderate_anon_post',
-					'moderate_points_limit' => 'option_moderate_anon_post && option_moderate_by_points',
-					'moderate_points_label_off' => 'option_moderate_anon_post && !option_moderate_by_points',
-					'moderate_points_label_on' => 'option_moderate_anon_post && option_moderate_by_points',
-				));
-			else
-				$checkboxtodisplay=array_merge($checkboxtodisplay, array(
-					'captcha_on_unconfirmed' => 'option_confirm_user_emails',
-					'captcha_module' => 'option_captcha_on_register || option_captcha_on_unconfirmed || option_captcha_on_reset_password || option_captcha_on_feedback',
-					'moderate_unconfirmed' => 'option_confirm_user_emails',
-					'moderate_points_limit' => 'option_moderate_by_points',
-					'moderate_points_label_off' => '!option_moderate_by_points',
-					'moderate_points_label_on' => 'option_moderate_by_points',
-				));
 			break;
 		
 		case 'mailing':
