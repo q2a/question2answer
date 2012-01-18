@@ -64,7 +64,7 @@
 	Return a sorted array of available languages, [short code] => [long name]
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$codetolanguage=array( // 2-letter language codes as per ISO 639-1
 			'ar' => 'Arabic - العربية',
@@ -132,7 +132,7 @@
 	Return a sorted array of available themes, [theme name] => [theme name]
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$options=array();
 
@@ -251,109 +251,109 @@
 	Return the sub navigation structure common to admin pages
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$navigation=array();
 		
 		if (qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
 			$navigation['admin/general']=array(
-				'label' => qa_lang('admin/general_title'),
+				'label' => qa_lang_html('admin/general_title'),
 				'url' => qa_path_html('admin/general'),
 			);
 			
 			$navigation['admin/emails']=array(
-				'label' => qa_lang('admin/emails_title'),
+				'label' => qa_lang_html('admin/emails_title'),
 				'url' => qa_path_html('admin/emails'),
 			);
 			
 			$navigation['admin/user']=array(
-				'label' => qa_lang('admin/users_title'),
+				'label' => qa_lang_html('admin/users_title'),
 				'url' => qa_path_html('admin/users'),
 			);
 			
 			$navigation['admin/layout']=array(
-				'label' => qa_lang('admin/layout_title'),
+				'label' => qa_lang_html('admin/layout_title'),
 				'url' => qa_path_html('admin/layout'),
 			);
 			
 			$navigation['admin/posting']=array(
-				'label' => qa_lang('admin/posting_title'),
+				'label' => qa_lang_html('admin/posting_title'),
 				'url' => qa_path_html('admin/posting'),
 			);
 			
 			$navigation['admin/viewing']=array(
-				'label' => qa_lang('admin/viewing_title'),
+				'label' => qa_lang_html('admin/viewing_title'),
 				'url' => qa_path_html('admin/viewing'),
 			);
 			
 			$navigation['admin/lists']=array(
-				'label' => qa_lang('admin/lists_title'),
+				'label' => qa_lang_html('admin/lists_title'),
 				'url' => qa_path_html('admin/lists'),
 			);
 			
 			if (qa_using_categories())
 				$navigation['admin/categories']=array(
-					'label' => qa_lang('admin/categories_title'),
+					'label' => qa_lang_html('admin/categories_title'),
 					'url' => qa_path_html('admin/categories'),
 				);
 			
 			$navigation['admin/permissions']=array(
-				'label' => qa_lang('admin/permissions_title'),
+				'label' => qa_lang_html('admin/permissions_title'),
 				'url' => qa_path_html('admin/permissions'),
 			);
 			
 			$navigation['admin/pages']=array(
-				'label' => qa_lang('admin/pages_title'),
+				'label' => qa_lang_html('admin/pages_title'),
 				'url' => qa_path_html('admin/pages'),
 			);
 			
 			$navigation['admin/feeds']=array(
-				'label' => qa_lang('admin/feeds_title'),
+				'label' => qa_lang_html('admin/feeds_title'),
 				'url' => qa_path_html('admin/feeds'),
 			);
 			
 			$navigation['admin/points']=array(
-				'label' => qa_lang('admin/points_title'),
+				'label' => qa_lang_html('admin/points_title'),
 				'url' => qa_path_html('admin/points'),
 			);
 			
 			$navigation['admin/spam']=array(
-				'label' => qa_lang('admin/spam_title'),
+				'label' => qa_lang_html('admin/spam_title'),
 				'url' => qa_path_html('admin/spam'),
 			);
 
 			$navigation['admin/stats']=array(
-				'label' => qa_lang('admin/stats_title'),
+				'label' => qa_lang_html('admin/stats_title'),
 				'url' => qa_path_html('admin/stats'),
 			);
 
 			if (!QA_FINAL_EXTERNAL_USERS)
 				$navigation['admin/mailing']=array(
-					'label' => qa_lang('admin/mailing_title'),
+					'label' => qa_lang_html('admin/mailing_title'),
 					'url' => qa_path_html('admin/mailing'),
 				);
 			
 			$navigation['admin/plugins']=array(
-				'label' => qa_lang('admin/plugins_title'),
+				'label' => qa_lang_html('admin/plugins_title'),
 				'url' => qa_path_html('admin/plugins'),
 			);
 		}
 			
 		if (!qa_user_permit_error('permit_moderate'))
 			$navigation['admin/moderate']=array(
-				'label' => qa_lang('admin/moderate_title'),
+				'label' => qa_lang_html('admin/moderate_title'),
 				'url' => qa_path_html('admin/moderate'),
 			);
 		
 		if (qa_opt('flagging_of_posts') && !qa_user_permit_error('permit_hide_show'))
 			$navigation['admin/flagged']=array(
-				'label' => qa_lang('admin/flagged_title'),
+				'label' => qa_lang_html('admin/flagged_title'),
 				'url' => qa_path_html('admin/flagged'),
 			);
 		
 		if ( (!qa_user_permit_error('permit_hide_show')) || (!qa_user_permit_error('permit_delete_hidden')) )
 			$navigation['admin/hidden']=array(
-				'label' => qa_lang('admin/hidden_title'),
+				'label' => qa_lang_html('admin/hidden_title'),
 				'url' => qa_path_html('admin/hidden'),
 			);
 		

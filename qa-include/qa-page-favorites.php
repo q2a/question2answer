@@ -64,6 +64,8 @@
 
 	$qa_content['q_list']=array(
 		'title' => count($questions) ? qa_lang_html('main/nav_qs') : qa_lang_html('misc/no_favorite_qs'),
+		
+		'qs' => array(),
 	);
 	
 	if (count($questions)) {
@@ -71,8 +73,6 @@
 			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
 		);
 		
-		$qa_content['q_list']['qs']=array();
-	
 		$options=qa_post_html_defaults('Q');
 			
 		foreach ($questions as $question)

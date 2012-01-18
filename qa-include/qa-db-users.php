@@ -35,7 +35,7 @@
 	Return the expected value for the passcheck column given the $password and password $salt
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return sha1(substr($salt, 0, 8).$password.substr($salt, 8));
 	}
@@ -154,7 +154,7 @@
 	Set the password of $userid to $password, and reset their salt at the same time
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
@@ -184,7 +184,7 @@
 	Return a random string to be used for a user's emailcode column
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
@@ -197,7 +197,7 @@
 	Return a random string to be used for a user's sessioncode column (for browser session cookies)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		

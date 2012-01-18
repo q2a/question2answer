@@ -38,7 +38,7 @@
 	Return textual representation of $seconds
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$seconds=max($seconds, 1);
 		
@@ -133,7 +133,7 @@
 	Convert textual $tag to HTML representation
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return '<A HREF="'.qa_path_html('tag/'.$tag).'"'.($microformats ? ' rel="tag"' : '').' CLASS="qa-tag-link">'.qa_html($tag).'</A>';
 	}
@@ -191,7 +191,7 @@
 	Return HTML to use for $ip address, which links to appropriate page with $anchorhtml
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (!strlen($anchorhtml))
 			$anchorhtml=qa_html($ip);
@@ -210,7 +210,7 @@
 	If something is missing from $post (e.g. ['content']), correponding HTML also omitted.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 		
@@ -532,7 +532,7 @@
 	Return array of split HTML (prefix, data, suffix) to represent author of post
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (isset($postuserid) && isset($usershtml[$postuserid])) {
 			$whohtml=$usershtml[$postuserid];
@@ -559,7 +559,7 @@
 	more than $fulldatedays ago
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$interval=qa_opt('db_time')-$timestamp;
 		
@@ -587,7 +587,7 @@
 	$userid, $cookieid, $usershtml, $options are passed through to qa_post_html_fields().
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 		
@@ -727,7 +727,7 @@
 	Return it sorted by the date appropriate for each element, without removing duplicate references to the same question.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 		
@@ -746,7 +746,7 @@
 	Return it sorted by the date appropriate for each element, and keep only the first item related to each question.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 		
@@ -818,7 +818,7 @@
 	So this is something quick and dirty that should do the trick in most cases
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return trim(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>"\'\.])+\.([^\s&<>"\']|&amp;)+)/i', '\1<A HREF="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</A>', ' '.$html.' '));
 	}
@@ -829,7 +829,7 @@
 	Return HTML representation of $url (if it appears to be an URL), linked with nofollow and in a new window if $newwindow
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (is_numeric(strpos($url, '.'))) {
 			$linkurl=$url;
@@ -876,7 +876,7 @@
 	Show links to $prevnext pages before and after this one and include $params in the URLs.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$thispage=1+floor($start/$pagesize);
 		$lastpage=ceil(min($count, 1+QA_MAX_LIMIT_START)/$pagesize);
@@ -934,7 +934,7 @@
 	it's not null) and also popular tags if $usingtags is true
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$hascategory=strlen($categoryrequest);
 		
@@ -959,7 +959,7 @@
 	Return HTML that suggest getting things started by asking a question, in $categoryid if not null
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$htmlmessage=qa_lang_html('main/suggest_ask');
 		
@@ -980,7 +980,7 @@
 	and links beginning with $pathprefix, and showing question counts if $showqcount
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$parentcategories=array();
 		
@@ -998,7 +998,7 @@
 	Recursion function used by qa_category_navigation(...) to build hierarchical category menu.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$navigation=array();
 		
@@ -1382,7 +1382,7 @@
 	Return the theme that should be used for displaying the page
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return qa_opt(qa_is_mobile_probably() ? 'site_theme_mobile' : 'site_theme');
 	}
@@ -1394,7 +1394,7 @@
 	Also applies any registered plugin layers.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_layers;
 		
@@ -1602,7 +1602,7 @@
 	Constrain the image to $size (width AND height) and pad it to that size if $padding is true
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-image.php';
 		
@@ -1632,7 +1632,7 @@
 	Return the <IMG...> HTML to display the Gravatar for $email, constrained to $size
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if ($size>0)
 			return '<IMG SRC="http://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.

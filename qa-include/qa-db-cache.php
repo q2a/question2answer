@@ -37,7 +37,7 @@
 	Create (or replace) the item ($type, $cacheid) in the database cache table with $content
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		qa_db_query_sub(
 			'DELETE FROM ^cache WHERE lastread<NOW()-INTERVAL # SECOND',
@@ -56,7 +56,7 @@
 	Retrieve the item ($type, $cacheid) from the database cache table
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$content=qa_db_read_one_value(qa_db_query_sub(
 			'SELECT content FROM ^cache WHERE type=$ AND cacheid=#',

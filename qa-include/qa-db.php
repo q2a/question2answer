@@ -36,7 +36,7 @@
 	(before this point, some plugins may not have had a chance to override some database access functions)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_db_allow_connect;
 
@@ -49,7 +49,7 @@
 	Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_db_connection, $qa_db_fail_handler, $qa_db_allow_connect;
 		
@@ -100,7 +100,7 @@
 	If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_db_fail_handler;
 		
@@ -121,7 +121,7 @@
 	Return the current connection to the Q2A database, connecting if necessary and $connect is true
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_db_connection;
 		
@@ -141,7 +141,7 @@
 	Disconnect from the Q2A database
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_db_connection;
 		
@@ -163,7 +163,7 @@
 	If appropriate, also track the resources used by database queries, and the queries themselves, for performance debugging.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (QA_DEBUG_PERFORMANCE) {
 			global $qa_database_usage, $qa_database_queries;
@@ -207,7 +207,7 @@
 	Lower-level function to execute a query, which automatically retries if there is a MySQL deadlock error
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$db=qa_db_connection();
 		
@@ -229,7 +229,7 @@
 	Return $string escaped for use in queries to the Q2A database (to which a connection must have been made)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return mysql_real_escape_string($string, qa_db_connection());
 	}
@@ -270,7 +270,7 @@
 	Return the full name (with prefix) of database table $rawname, usually if it used after a ^ symbol
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$prefix=QA_MYSQL_TABLE_PREFIX;
 		

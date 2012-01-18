@@ -91,7 +91,8 @@
 		Output each passed parameter on a separate line - see output_array() comments
 	*/
 		{
-			$this->output_array(func_get_args());
+			$args=func_get_args();
+			$this->output_array($args);
 		}
 
 		

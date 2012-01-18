@@ -119,7 +119,7 @@
 	If $user is true, get information about the user who wrote the post (or cookie if anonymous).
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$selectspec=array(
 			'columns' => array(

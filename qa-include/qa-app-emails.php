@@ -51,7 +51,7 @@
 	corresponding value, plus applying some standard substitutions such as ^site_title, ^handle and ^email.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_notifications_suspended;
 		
@@ -117,7 +117,7 @@
 	fromname, toemail, toname, subject, body, html
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-class.phpmailer.php';
 		

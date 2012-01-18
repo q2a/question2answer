@@ -43,7 +43,7 @@
 	Standard database failure handler function which bring up the install/repair/upgrade page
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$pass_failure_type=$type;
 		$pass_failure_errno=$errno;
@@ -61,7 +61,7 @@
 	Queue any pending requests which are required independent of which page will be shown
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		qa_preload_options();
 		$loginuserid=qa_get_logged_in_userid();
@@ -113,7 +113,7 @@
 	If the user has Javascript on, these should come through Ajax rather than here.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_vote_error_html;
 		
@@ -176,7 +176,7 @@
 	Run the appropriate qa-page-*.php file for this request and return back the $qa_content it passed 
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$requestlower=strtolower(qa_request());
 		$requestparts=qa_request_parts();
@@ -214,7 +214,7 @@
 	Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_template;
 		
@@ -362,7 +362,7 @@
 	If the key of an element ends in /, it should be used for any request with that key as its prefix
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return array(
 			'account' => 'qa-page-account.php',
@@ -426,7 +426,7 @@
 	in the context of the categories in $categoryids (if not null)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_template, $qa_vote_error_html;
 		

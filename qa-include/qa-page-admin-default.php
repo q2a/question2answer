@@ -134,6 +134,7 @@
 		
 		'allow_change_usernames' => 'checkbox',
 		'allow_close_questions' => 'checkbox',
+		'allow_login_email_only' => 'checkbox',
 		'allow_multi_answers' => 'checkbox',
 		'allow_private_messages' => 'checkbox',
 		'allow_self_answer' => 'checkbox',
@@ -291,7 +292,7 @@
 				
 				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 			
-				array_push($showoptions, '' ,'allow_change_usernames', 'allow_private_messages', 'show_message_history', '', 'avatar_allow_gravatar');
+				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', '', 'avatar_allow_gravatar');
 				
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');

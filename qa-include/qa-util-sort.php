@@ -67,12 +67,8 @@
 	{
 		if (is_numeric($a) && is_numeric($b)) // straight subtraction won't work for floating bits
 			return ($a==$b) ? 0 : (($a<$b) ? -1 : 1);
-
-		else {
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
-		
+		else
 			return strcasecmp($a, $b); // doesn't do UTF-8 right but it will do for now
-		}
 	}
 	
 	

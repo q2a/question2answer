@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5-beta-2'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2012-01-04');
+	define('QA_VERSION', '1.5'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2012-01-18');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -484,7 +484,7 @@
 			qa_fatal_error('Override functions should not be calling qa_call_override()!');
 		
 		if (!function_exists($function.'_base')) // define the base function the first time that it's needed
-			eval('function '.$function.'_base() { global $qa_direct; $qa_direct[\''.$function.'\']=true; return qa_call(\''.$function.'\', $args=func_get_args()); }');
+			eval('function '.$function.'_base() { global $qa_direct; $qa_direct[\''.$function.'\']=true; $args=func_get_args(); return qa_call(\''.$function.'\', $args); }');
 		
 		return qa_call($qa_overrides[$function], $args);
 	}
@@ -505,7 +505,7 @@
 	Display $message in the browser, write it to server error log, and then stop abruptly
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		echo 'Question2Answer fatal error:<P><FONT COLOR="red">'.qa_html($message, true).'</FONT></P>';
 		@error_log('PHP Question2Answer fatal error: '.$message);
@@ -633,7 +633,7 @@
 	Links open in a new window if $linksnewwindow is true
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once 'qa-htmLawed.php';
 		
@@ -704,7 +704,7 @@
 	that the relative path to the Q2A root apperas to be $relativeroot, and the url scheme appears to be $usedformat
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_request, $qa_root_url_relative, $qa_used_url_format;
 		
@@ -719,7 +719,7 @@
 	Returns the current Q2A request (slash-separated, independent of the url scheme chosen)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_request;
 		return $qa_request;
@@ -750,7 +750,7 @@
 	Return string for incoming GET/POST/COOKIE value, stripping slashes if appropriate
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return get_magic_quotes_gpc() ? stripslashes($string) : $string;
 	}
@@ -761,7 +761,7 @@
 	Return string with slashes added, if appropriate for later removal by qa_gpc_to_string()
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return get_magic_quotes_gpc() ? addslashes($string) : $string;
 	}
@@ -772,7 +772,7 @@
 	Return string for incoming GET field, or null if it's not defined
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return isset($_GET[$field]) ? qa_gpc_to_string($_GET[$field]) : null;
 	}
@@ -784,7 +784,7 @@
 	While we're at it, trim() surrounding white space and converted to Unix line endings.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return isset($_POST[$field]) ? preg_replace('/\r\n?/', "\n", trim(qa_gpc_to_string($_POST[$field]))) : null;
 	}
@@ -795,7 +795,7 @@
 	Return true if form button $name was clicked (as TYPE=SUBMIT/IMAGE) to create this page request.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return isset($_POST[$name]) || isset($_POST[$name.'_x']);
 	}
@@ -806,7 +806,7 @@
 	Return the remote IP address of the user accessing the site, if it's available, or null otherwise
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return @$_SERVER['REMOTE_ADDR'];
 	}
@@ -817,7 +817,7 @@
 	Return true if we are responding to an HTTP POST request
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return ($_SERVER['REQUEST_METHOD']=='POST') || !empty($_POST);
 	}
@@ -828,7 +828,7 @@
 	Return true if we appear to be responding to a secure HTTP request (but hard to be sure)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return (@$_SERVER['HTTPS'] && ($_SERVER['HTTPS']!='off')) || (@$_SERVER['SERVER_PORT']==443);
 	}
@@ -840,7 +840,7 @@
 	or other bot. Based on a whitelist of terms in user agents, this can easily be tricked by a scraper or bad bot.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
@@ -858,7 +858,7 @@
 	Return true if it appears that the page request is coming from a mobile client rather than a desktop/laptop web browser
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
@@ -894,7 +894,7 @@
 	part after the / is the key of the array element to be taken from that file's returned result.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_lang_file_pattern, $qa_phrases_custom, $qa_phrases_lang, $qa_phrases_default;
 		
@@ -1001,7 +1001,7 @@
 	Return the relative path to the Q2A root (if it's was previously set by qa_set_request())
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_root_url_relative;
 		return $qa_root_url_relative;
@@ -1013,7 +1013,7 @@
 	Return an array of mappings of Q2A requests, as defined in the qa-config.php file
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_request_map;
 		return $qa_request_map;
@@ -1028,7 +1028,7 @@
 	that as the root of the Q2A site, otherwise use path to root which was set elsewhere.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (!isset($neaturls)) {
 			require_once QA_INCLUDE_DIR.'qa-app-options.php';
@@ -1099,7 +1099,7 @@
 	shortened if necessary by removing shorter words which are generally less meaningful.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
@@ -1138,7 +1138,7 @@
 	Return the HTML anchor that should be used for post $postid with $basetype (Q/A/C)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return strtolower($basetype).$postid; // used to be $postid only but this violated HTML spec
 	}
@@ -1150,7 +1150,7 @@
 	To link to a specific answer or comment in a question, set $showtype and $showid accordingly.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if ( (($showtype=='A') || ($showtype=='C')) && isset($showid))  {
 			$params=array('show' => $showid); // due to pagination
@@ -1179,7 +1179,7 @@
 	Return the request for the specified $feed
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return 'feed/'.$feed.'.rss';
 	}
@@ -1190,7 +1190,7 @@
 	Return an HTML-ready relative URL for the current page, preserving GET parameters - this is useful for ACTION in FORMs
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_used_url_format;
 		
@@ -1204,7 +1204,7 @@
 	This is needed because any parameters on the URL will be lost when the form is submitted.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$path=qa_path($request, $params, $rooturl, $neaturls, $anchor);
 		$formhtml='';
@@ -1227,7 +1227,7 @@
 	Redirect the user's web browser to $request and then we're done - see qa_path() for other parameters
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		qa_redirect_raw(qa_path($request, $params, $rooturl, $neaturls, $anchor));
 	}
@@ -1238,7 +1238,7 @@
 	Redirect the user's web browser to page $path which is already a URL
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		header('Location: '.$url);
 		qa_exit('redirect');
@@ -1252,7 +1252,7 @@
 	Return the contents of remote $url, using file_get_contents() if possible, otherwise curl functions
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$contents=@file_get_contents($url);
 		
@@ -1308,7 +1308,7 @@
 	Send a notification of event $event by $userid, $handle and $cookieid to all event modules, with extra $params
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_event_reports_suspended;
 		
@@ -1330,7 +1330,8 @@
 			
 		$qa_process_reports_suspended=true; // prevent loop, e.g. because of an error
 		
-		$args=array_slice(func_get_args(), 1);
+		$args=func_get_args();
+		$args=array_slice($args, 1);
 		
 		$processmodules=qa_load_modules_with('process', $method);
 		foreach ($processmodules as $processmodule)

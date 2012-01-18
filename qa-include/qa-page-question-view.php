@@ -91,7 +91,7 @@
 	posts retrieved from the database, and these will be ignored.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$userid=qa_get_logged_in_userid();
 		$cookieid=qa_cookie_get();
@@ -624,7 +624,7 @@
 				
 			if ($parent['commentbutton'] && qa_opt('show_c_reply_buttons') && ($comment['type']=='C'))
 				$buttons['comment']=array(
-					'tags' => 'NAME="'.(($parent['basetype']=='Q') ? 'q' : 'a').qa_html($parent['postid']).
+					'tags' => 'NAME="'.(($parent['basetype']=='Q') ? 'q' : ('a'.qa_html($parent['postid']))).
 						'_docomment" onClick="return qa_toggle_element(\'c'.qa_html($parent['postid']).'\')"',
 					'label' => qa_lang_html('question/reply_button'),
 					'popup' => qa_lang_html('question/reply_c_popup'),
@@ -716,12 +716,12 @@
 	}
 	
 
-	function qa_page_q_add_a_form(&$qa_content, $formid, $usecaptcha, $questionid, $in, $errors, $loadfocusnow, $formrequested)
+	function qa_page_q_add_a_form(&$qa_content, $formid, $usecaptcha, $questionid, $in, $errors, $loadnow, $formrequested)
 /*
 	Return a $qa_content form for adding an answer to $questionid. Pass an HTML element id to use for the form in
 	$formid and $usecaptcha if it should contain a captcha. Pass previous inputs from a submitted version of this form
-	in the array $in and resulting errors in $errors. If $loadfocusnow is true, the form will be loaded and focused
-	immediately. Set $formrequested to true if the user explicitly requested it, as opposed being shown automatically.
+	in the array $in and resulting errors in $errors. If $loadnow is true, the form will be loaded immediately. Set
+	$formrequested to true if the user explicitly requested it, as opposed being shown automatically.
 */
 	{
 		switch (qa_user_permit_error('permit_post_a')) {
@@ -772,7 +772,7 @@
 						),
 						
 						'content' => array_merge(
-							qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'a_content', 12, $loadfocusnow, $loadfocusnow),
+							qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'a_content', 12, $formrequested, $loadnow),
 							array(
 								'error' => qa_html(@$errors['content']),
 							)
@@ -795,7 +795,7 @@
 				if (!strlen($custom))
 					unset($form['fields']['custom']);
 
-				if ($formrequested || !$loadfocusnow)
+				if ($formrequested || !$loadnow)
 					$form['buttons']['cancel']=array(
 						'tags' => 'NAME="docancel"',
 						'label' => qa_lang_html('main/cancel_button'),
@@ -816,13 +816,16 @@
 						$onloads[]='document.getElementById('.qa_js($formid).').qa_show=function() { '.$captchaloadscript.' }';
 				}
 
-				if (!$loadfocusnow) {
+				if (!$loadnow) {
 					if (method_exists($editor, 'load_script'))
 						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script('a_content').' }';
-					if (method_exists($editor, 'focus_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script('a_content').' }';
 						
 					$form['buttons']['cancel']['tags'].=' onClick="return qa_toggle_element();"';
+				}
+				
+				if (!$formrequested) {
+					if (method_exists($editor, 'focus_script'))
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script('a_content').' }';
 				}
 
 				if (count($onloads))
@@ -831,7 +834,7 @@
 		}
 		
 		$form['id']=$formid;
-		$form['collapse']=!$loadfocusnow;
+		$form['collapse']=!$loadnow;
 		$form['style']='tall';
 		
 		return $form;

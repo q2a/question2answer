@@ -35,7 +35,7 @@
 	Returns an array of option names required to perform calculations in userpoints table
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return array(
 			'points_post_q', 'points_select_a', 'points_per_q_voted_up', 'points_per_q_voted_down', 'points_q_voted_max_gain', 'points_q_voted_max_loss',
@@ -56,7 +56,7 @@
 	The element 'multiple' specifies what to multiply each column by to create the final sum in the points column.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
 		
@@ -146,7 +146,7 @@
 	This dynamically builds some fairly crazy looking SQL, but it works, and saves repeat calculations.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (qa_should_update_counts() && isset($userid)) {
 			require_once QA_INCLUDE_DIR.'qa-app-options.php';

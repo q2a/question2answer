@@ -155,7 +155,7 @@
 	Load the options from the $results of the database selectspecs defined in qa_preload_options()
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_options_cache, $qa_options_loaded;
 	
@@ -173,7 +173,7 @@
 	$todatabase=false, in which case set it in the cache only
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_options_cache;
 		
@@ -189,7 +189,7 @@
 	Reset the options in $names to their defaults
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		foreach ($names as $name)
 			qa_set_option($name, qa_default_option($name));
@@ -201,7 +201,7 @@
 	Return the default value for option $name
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$fixed_defaults=array(
 			'allow_change_usernames' => 1,
@@ -398,7 +398,7 @@
 					break;
 					
 				case 'custom_sidebar':
-					$value=qa_lang_sub('options/default_sidebar', qa_html(qa_opt('site_title')));
+					$value=qa_lang_html_sub('options/default_sidebar', qa_html(qa_opt('site_title')));
 					break;
 					
 				case 'editor_for_qs':
@@ -513,7 +513,7 @@
 	Return an array of defaults for the $options parameter passed to qa_post_html_fields() and its ilk
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-users.php';
 		
@@ -549,7 +549,7 @@
 	with buttons enabled if appropriate (based on whether $full post shown) unless $enabledif is false.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$disabledsuffix='';
 		
@@ -612,7 +612,7 @@
 	Return the regular expression fragment to match the blocked words options set in the database
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_blockwordspreg, $qa_blockwordspreg_set;
 		
@@ -667,7 +667,7 @@
 	Return an array of relevant permissions settings, based on other options
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$permits=array('permit_view_q_page', 'permit_post_q', 'permit_post_a');
 		

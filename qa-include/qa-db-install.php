@@ -67,7 +67,7 @@
 	and the value is an array of column definitions, [column name] => [definition]. The column name is omitted for indexes.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
 		require_once QA_INCLUDE_DIR.'qa-app-users.php';

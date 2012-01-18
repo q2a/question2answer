@@ -47,7 +47,7 @@
 	where $action is one of the QA_LIMIT_* constants defined above.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
 		require_once QA_INCLUDE_DIR.'qa-db-limits.php';
@@ -118,7 +118,7 @@
 	Return whether the requesting IP address has been blocked from write operations
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$blockipclauses=qa_block_ips_explode(qa_opt('block_ips_write'));
 		
@@ -178,7 +178,7 @@
 	where $action is one of the QA_LIMIT_* constants defined above.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-limits.php';
 

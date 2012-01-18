@@ -250,7 +250,10 @@ function qa_form_params(formname)
 	
 	for (var i=0; i<es.length; i++) {
 		var e=es[i];
-		params[e.name]=e.value;
+		var t=(e.type || '').toLowerCase();
+		
+		if ( ((t!='checkbox') && (t!='radio')) || e.checked)
+			params[e.name]=e.value;
 	}
 	
 	return params;

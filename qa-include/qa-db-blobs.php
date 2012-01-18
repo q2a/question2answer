@@ -35,7 +35,7 @@
 	Create a new blob in the database with $content and $format, returning its blobid
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		for ($attempt=0; $attempt<10; $attempt++) {
 			$blobid=qa_db_random_bigint();
@@ -60,7 +60,7 @@
 	Get the content of blob $blobid from the database
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return qa_db_read_one_assoc(qa_db_query_sub(
 			'SELECT content, format, filename FROM ^blobs WHERE blobid=#',
@@ -74,7 +74,7 @@
 	Delete blob $blobid in the database
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		qa_db_query_sub(
 			'DELETE FROM ^blobs WHERE blobid=#',
@@ -88,7 +88,7 @@
 	Check if blob $blobid exists in the database
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return qa_db_read_one_value(qa_db_query_sub(
 			'SELECT COUNT(*) FROM ^blobs WHERE blobid=#',

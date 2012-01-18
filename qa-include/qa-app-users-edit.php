@@ -116,7 +116,7 @@
 			}
 		}
 		
-		qa_fatal_error('Could not create a valid and unique handle');
+		qa_fatal_error('Could not create a valid and unique handle from: '.$handle);
 	}
 
 
@@ -155,7 +155,7 @@
 	Handles user points, notification and optional email confirmation.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		require_once QA_INCLUDE_DIR.'qa-db-points.php';
@@ -207,7 +207,7 @@
 	Handles recalculations of votes and flags for posts this user has affected.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
@@ -235,7 +235,7 @@
 	Set a new email confirmation code for the user and send it out
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
@@ -255,7 +255,7 @@
 	Set a new email confirmation code for the user and return the corresponding link
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		
@@ -271,7 +271,7 @@
 	Complete the email confirmation process for the user
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
@@ -291,7 +291,7 @@
 	Start the 'I forgot my password' process for $userid, sending reset code
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
@@ -315,7 +315,7 @@
 	Successfully finish the 'I forgot my password' process for $userid, sending new password
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
@@ -358,7 +358,7 @@
 	Set the avatar of $userid to the image in $imagedata, and remove $oldblobid from the database if not null
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-util-image.php';
 		

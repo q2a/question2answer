@@ -50,10 +50,10 @@
 		
 		$errors=array();
 		
-		if (strpos($inemailhandle, '@')===false) // handles can't contain @ symbol
-			$matchusers=qa_db_user_find_by_handle($inemailhandle);
-		else
+		if (qa_opt('allow_login_email_only') || (strpos($inemailhandle, '@')!==false)) // handles can't contain @ symbols
 			$matchusers=qa_db_user_find_by_email($inemailhandle);
+		else
+			$matchusers=qa_db_user_find_by_handle($inemailhandle);
 
 		if (count($matchusers)==1) { // if match more than one (should be impossible), consider it a non-match
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
@@ -98,7 +98,7 @@
 		
 		'fields' => array(
 			'email_handle' => array(
-				'label' => qa_lang_html('users/email_handle_label'),
+				'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
 				'tags' => 'NAME="emailhandle" ID="emailhandle"',
 				'value' => qa_html(@$inemailhandle),
 				'error' => qa_html(@$errors['emailhandle']),
@@ -125,7 +125,7 @@
 		),
 	);
 	
-	$qa_content['focusid']=isset($errors['emailhandle']) ? 'emailhandle' : 'code';
+	$qa_content['focusid']=(isset($errors['emailhandle']) || !strlen(@$inemailhandle)) ? 'emailhandle' : 'code';
 
 	
 	return $qa_content;

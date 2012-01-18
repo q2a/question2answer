@@ -52,7 +52,7 @@
 		
 		function qa_index_set_request()
 		{
-			if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 			$relativedepth=0;
 			

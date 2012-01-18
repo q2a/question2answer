@@ -36,7 +36,7 @@
 	If $viewincrement is true, also increment the views counter for the post, and include that in the hotness calculation
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (qa_should_update_counts()) {
 			if (!isset($lastpostid))

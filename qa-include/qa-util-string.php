@@ -37,7 +37,7 @@
 	Set up some global tables to be used by other functions in this file
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_utf8punctuation, $qa_utf8removeaccents;
 		
@@ -426,7 +426,7 @@
 	splitting with $splitideographs and $splithyphens.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_utf8punctuation;
 		
@@ -459,7 +459,7 @@
 	Return UTF-8 input $string with all accents (on Roman characters) removed
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_utf8removeaccents;
 		
@@ -472,7 +472,7 @@
 	Convert an array of tags into a string for storage in the database
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return implode(',', $tags);
 	}
@@ -483,7 +483,7 @@
 	Convert a tag string as stored in the database into an array of tags
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return empty($tagstring) ? array() : explode(',', $tagstring);
 	}
@@ -495,7 +495,7 @@
 	removing words from the middle (and especially towards the end)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$string=strtr($string, "\r\n\t", '   ');
 		
@@ -539,7 +539,7 @@
 	Return an array of the words within $wordstring, each of which can contain asterisks
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return preg_split('/'.QA_PREG_BLOCK_WORD_SEPARATOR.'+/', $wordstring, -1, PREG_SPLIT_NO_EMPTY);
 	}
@@ -550,7 +550,7 @@
 	Return a regular expression fragment corresponding to the block words $wordstring
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$blockwords=qa_block_words_explode($wordsstring);
 		$patterns=array();
@@ -567,7 +567,7 @@
 	Return an array of matches of the regular expression fragment $wordspreg in $string, [offset] => [length]
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		global $qa_utf8punctuation, $qa_utf8punctuation_keeplength;
 		
@@ -602,7 +602,7 @@
 	Return $string with any words matching the regular expression fragment $wordspreg replaced with repeated $character
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if (strlen($wordspreg)) {
 			$matches=qa_block_words_match_all($string, $wordspreg);
@@ -635,7 +635,7 @@
 	Return true or false to indicate whether $email is a valid email (this is pretty flexible compared to most real emails out there)
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return preg_match("/^[\-\!\#\$\%\&\'\*\+\/\=\?\_\`\{\|\}\~a-zA-Z0-9\.\^]+\@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\.\-]+$/", $email) ? true : false;
 	}
@@ -646,7 +646,7 @@
 	Return the number of characters in $string, preferably using PHP's multibyte string functions
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return function_exists('mb_strlen') ? mb_strlen($string, 'UTF-8') : strlen($string);
 	}
@@ -657,7 +657,7 @@
 	Return a lower case version of $string, preferably using PHP's multibyte string functions
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return function_exists('mb_strtolower') ? mb_strtolower($string, 'UTF-8') : strtolower($string);
 	}
@@ -668,7 +668,7 @@
 	Return $length characters from $string, starting from $start, preferably using PHP's multibyte string functions
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		return function_exists('mb_substr') ? mb_substr($string, $start, $length, 'UTF-8') : substr($string, $start, $length);
 	}

@@ -36,7 +36,7 @@
 	Return an HTML error to display if there was a problem, or false if it's OK.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-app-users.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
@@ -85,7 +85,7 @@
 	Handles user points, recounting and event reports as appropriate.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-points.php';
 		require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
@@ -142,7 +142,7 @@
 	Return an HTML error to display if there was a problem, or false if it's OK.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
@@ -188,7 +188,7 @@
 	Returns true if the post should now be hidden because it has accumulated enough flags.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
@@ -230,7 +230,7 @@
 	Handles recounting and event reports as appropriate.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
@@ -265,7 +265,7 @@
 	Handles recounting and event reports as appropriate.
 */
 	{
-		if (qa_to_override(__FUNCTION__)) return qa_call_override(__FUNCTION__, $args=func_get_args());
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
