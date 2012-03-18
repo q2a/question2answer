@@ -563,7 +563,10 @@
 	Return flags (see QA_USER_FLAGS_*) of currently logged in user, or null if none
 */
 	{
-		return QA_FINAL_EXTERNAL_USERS ? 0 : qa_get_logged_in_user_field('flags');
+		if (QA_FINAL_EXTERNAL_USERS)
+			return qa_get_logged_in_user_field('blocked') ? QA_USER_FLAGS_USER_BLOCKED : 0;
+		else
+			return qa_get_logged_in_user_field('flags');
 	}
 
 	

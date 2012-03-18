@@ -175,6 +175,18 @@
 	}
 	
 	
+	function qa_db_post_set_created($postid, $created)
+/*
+	Set the created date of $postid to $created, which is a unix timestamp
+*/
+	{
+		qa_db_query_sub(
+			'UPDATE ^posts SET created=FROM_UNIXTIME(#) WHERE postid=#',
+			$created, $postid
+		);
+	}
+	
+	
 	function qa_db_post_delete($postid)
 /*
 	Deletes post $postid from the database (will also delete any votes on the post due to foreign key cascading)

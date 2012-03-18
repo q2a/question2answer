@@ -28,14 +28,14 @@
 	Plugin Name: Facebook Login
 	Plugin URI: 
 	Plugin Description: Allows users to log in via Facebook
-	Plugin Version: 1.1
-	Plugin Date: 2011-12-14
+	Plugin Version: 1.1.1
+	Plugin Date: 2012-03-13
 	Plugin Author: Question2Answer
 	Plugin Author URI: http://www.question2answer.org/
 	Plugin License: GPLv2
 	Plugin Minimum Question2Answer Version: 1.3
 	Plugin Minimum PHP Version: 5
-	Plugin Update Check URI: 
+	Plugin Update Check URI:
 */
 
 
@@ -45,7 +45,8 @@
 	}
 
 
-	qa_register_plugin_module('login', 'qa-facebook-login.php', 'qa_facebook_login', 'Facebook Login');
+	if (!QA_FINAL_EXTERNAL_USERS) // login modules don't work with external user integration
+		qa_register_plugin_module('login', 'qa-facebook-login.php', 'qa_facebook_login', 'Facebook Login');
 	
 
 /*

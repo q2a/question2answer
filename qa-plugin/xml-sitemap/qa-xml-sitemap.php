@@ -179,7 +179,7 @@
 	
 					foreach ($questions as $question) {
 						$this->sitemap_output(qa_q_request($question['postid'], $question['title']),
-							0.1+0.9*($question['hotness']-$hotstats['base'])/$hotstats['spread']);
+							0.1+0.9*($question['hotness']-$hotstats['base'])/(1+$hotstats['spread']));
 						$nextpostid=max($nextpostid, $question['postid']+1);
 					}
 				}

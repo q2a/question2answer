@@ -867,11 +867,16 @@
 			
 			$this->output('<TD CLASS="qa-form-'.$style.'-label"'.$extratags.'>');
 			
-			if ($prefixed)
+			if ($prefixed) {
+				$this->output('<LABEL>');
 				$this->form_field($field, $style);
+			}
 					
 			$this->output(@$field['label']);
 			
+			if ($prefixed)
+				$this->output('</LABEL>');
+
 			if ($suffixed) {
 				$this->output('&nbsp;');
 				$this->form_field($field, $style);

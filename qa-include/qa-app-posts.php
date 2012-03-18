@@ -234,6 +234,27 @@
 	}
 
 	
+	function qa_post_set_created($postid, $created)
+/*
+	Set the created date of $postid to $created, which is a unix timestamp.
+*/
+	{
+		$oldpost=qa_post_get_full($postid);
+		
+		qa_db_post_set_created($postid, $created);
+		
+		switch ($oldpost['basetype']) {
+			case 'Q':
+				qa_db_hotness_update($postid);
+				break;
+				
+			case 'A':
+				qa_db_hotness_update($oldpost['parentid']);
+				break;
+		}
+	}
+	
+	
 	function qa_post_delete($postid)
 /*
 	Delete $postid from the database, hiding it first if appropriate.

@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2012-01-18');
+	define('QA_VERSION', '1.5.1'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2012-03-18');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -47,6 +47,54 @@
 	qa_db_allow_connect();
 	
 
+//	Version comparison functions
+
+	function qa_version_to_float($version)
+/*
+	Converts the $version string (e.g. 1.6.2.2) to a floating point that can be used for greater/lesser comparisons
+	(PHP's version_compare() function is not quite suitable for our needs)
+*/
+	{
+		$value=0.0;
+
+		if (preg_match('/[0-9\.]+/', $version, $matches)) {
+			$parts=explode('.', $matches[0]);
+			$units=1.0;
+			
+			foreach ($parts as $part) {
+				$value+=min($part, 999)*$units;
+				$units/=1000;
+			}
+		}
+
+		return $value;
+	}
+	
+	
+	function qa_qa_version_below($version)
+/*
+	Returns true if the current Q2A version is lower than $version, if both are valid version strings for qa_version_to_float()
+*/
+	{
+		$minqa=qa_version_to_float($version);
+		$thisqa=qa_version_to_float(QA_VERSION);
+		
+		return $minqa && $thisqa && ($thisqa<$minqa);
+	}
+	
+	
+	function qa_php_version_below($version)
+/*
+	Returns true if the current PHP version is lower than $version, if both are valid version strings for qa_version_to_float()
+*/
+	{
+		$minphp=qa_version_to_float($version);
+		$thisphp=qa_version_to_float(phpversion());
+		
+		return $minphp && $thisphp && ($thisphp<$minphp);
+	}
+	
+
 //	Initialization functions called above
 
 	function qa_initialize_php()
@@ -54,7 +102,7 @@
 	Set up and verify the PHP environment for Q2A, including unregistering globals if necessary
 */
 	{
-		if ( ((float)phpversion()) < 4.3 )
+		if (qa_php_version_below('4.3'))
 			qa_fatal_error('This requires PHP 4.3 or later');
 	
 		error_reporting(E_ALL); // be ultra-strict about error checking
@@ -151,12 +199,24 @@
 			define('QA_FINAL_EXTERNAL_USERS', true);
 			
 			// Undo WordPress's addition of magic quotes to various things (leave $_COOKIE as is since WP code might need that)
-			foreach ($_GET as $key => $value)
-				$_GET[$key]=strtr(stripslashes($value), array('\\\'' => '\'', '\"' => '"')); // also compensate for WordPress's .htaccess file
-	
-			foreach ($_POST as $key => $value)
-				$_POST[$key]=stripslashes($value);
+
+			function qa_undo_wordpress_quoting($param, $isget)
+			{
+				if (is_array($param)) { // 
+					foreach ($param as $key => $value)
+						$param[$key]=qa_undo_wordpress_quoting($value, $isget);
+					
+				} else {
+					$param=stripslashes($param);
+					if ($isget)
+						$param=strtr($param, array('\\\'' => '\'', '\"' => '"')); // also compensate for WordPress's .htaccess file
+				}
 				
+				return $param;
+			}
+			
+			$_GET=qa_undo_wordpress_quoting($_GET, true);
+			$_POST=qa_undo_wordpress_quoting($_POST, false);
 			$_SERVER['PHP_SELF']=stripslashes($_SERVER['PHP_SELF']);
 		
 		} else {
@@ -226,11 +286,11 @@
 				$contents=file_get_contents($pluginfile);
 				
 				if (preg_match('/Plugin[ \t]*Minimum[ \t]*Question2Answer[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if ( ((float)QA_VERSION>0) && ($matches[1]>(float)QA_VERSION) )
+					if (qa_qa_version_below($matches[1]))
 						continue; // skip plugin which requires a later version of Q2A
 				
 				if (preg_match('/Plugin[ \t]*Minimum[ \t]*PHP[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if ( ((float)phpversion()>0) && ($matches[1]>(float)phpversion()) )
+					if (qa_php_version_below($matches[1]))
 						continue; // skip plugin which requires a later version of PHP
 				
 				$qa_plugin_directory=dirname($pluginfile).'/';

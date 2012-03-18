@@ -347,7 +347,7 @@
 			
 			array_push($showoptions, 'show_user_points', '', 'sort_answers_by', 'show_selected_first', 'page_size_q_as', 'show_a_form_immediate');
 			
-			if (qa_opt('comment_on_qs') || qa_opt('command_on_as'))
+			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
 				array_push($showoptions, 'show_fewer_cs_from', 'show_fewer_cs_count', 'show_c_reply_buttons');
 				
 			$showoptins[]='';
@@ -544,7 +544,7 @@
 			
 			array_push($showoptions, 'max_rate_ip_qs', 'max_rate_user_qs', 'max_rate_ip_as', 'max_rate_user_as');
 
-			if (qa_opt('comment_on_qs') || qa_opt('command_on_as'))
+			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
 				array_push($showoptions, 'max_rate_ip_cs', 'max_rate_user_cs');
 			
 			$showoptions[]='';
@@ -970,7 +970,7 @@
 						$updatehtml='(<SPAN ID="'.$elementid.'">...</SPAN>)';
 						
 						$qa_content['script_onloads'][]=array(
-							"qa_version_check(".qa_js($metadata['update']).", 'Theme Version', ".qa_js($metadata['version']).", 'Theme URI', ".qa_js($elementid).");"
+							"qa_version_check(".qa_js($metadata['update']).", 'Theme Version', ".qa_js($metadata['version'], true).", 'Theme URI', ".qa_js($elementid).");"
 						);
 
 					} else

@@ -67,7 +67,7 @@
 	
 	$qa_content['ranking']=array(
 		'items' => array(),
-		'rows' => ceil(qa_opt('page_size_users')/qa_opt('columns_users')),
+		'rows' => ceil(count($users)/qa_opt('columns_users')),
 		'type' => 'users'
 	);
 	

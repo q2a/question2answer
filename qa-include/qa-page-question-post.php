@@ -449,7 +449,7 @@
 			if (!isset($in['tags']))
 				$in['tags']=qa_tagstring_to_tags($question['tags']);
 				
-			if (!isset($in['categoryid']))
+			if (!array_key_exists('categoryid', $in))
 				$in['categoryid']=$question['categoryid'];
 			
 			$setnotify=$question['isbyuser'] ? qa_combine_notify_email($question['userid'], $in['notify'], $in['email']) : $question['notify'];

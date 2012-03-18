@@ -434,7 +434,7 @@
 			$fields['what']=qa_lang_html($isquestion ? 'main/asked' : ($isanswer ? 'main/answered' : 'main/commented'));
 				
 			if (@$options['whatlink'] && !$isquestion)
-				$fields['what_url']='?show='.qa_html($postid).'#'.qa_html($anchor);
+				$fields['what_url']=qa_path_html(qa_request(), array('show' => $postid), null, null, qa_anchor($post['basetype'], $postid));
 		}
 		
 		if (isset($post['created']) && @$options['whenview']) {
@@ -1091,13 +1091,17 @@
 	{
 		if (
 			(!qa_permit_value_error($page['permit'], qa_get_logged_in_userid(), qa_get_logged_in_level(), qa_get_logged_in_flags())) || !isset($page['permit'])
-		)
+		) {
+			$url=qa_custom_page_url($page);
+			
 			$navigation[($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) ? ('custom-'.$page['pageid']) : $page['tags']]=array(
-				'url' => qa_html(qa_custom_page_url($page)),
+				'url' => qa_html($url),
 				'label' => qa_html($page['title']),
 				'opposite' => ($page['nav']=='O'),
 				'target' => ($page['flags'] & QA_PAGE_FLAGS_NEW_WINDOW) ? '_blank' : null,
+				'selected' => ($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) && ( ($url==qa_path(qa_request())) || ($url==qa_self_html()) ),
 			);
+		}
 	}
 
 
@@ -1635,7 +1639,8 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if ($size>0)
-			return '<IMG SRC="http://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
+			return '<IMG SRC="'.(qa_is_https_probably() ? 'https' : 'http').
+				'://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
 				'" WIDTH="'.(int)$size.'" HEIGHT="'.(int)$size.'" CLASS="qa-avatar-image"/>';
 		else
 			return null;

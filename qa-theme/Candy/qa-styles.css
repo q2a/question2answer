@@ -421,7 +421,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-related-qs {font-size:14px;}
 .qa-related-qs h2 {font-size:18px;}
 .qa-related-q-list {list-style-type:none; padding:0;}
-.qa-related-q-item {margin:0.5em 0;}
+.qa-related-q-item {margin:0.5em 0; word-wrap: break-word;}
 .qa-activity-count {font-size:14px;}
 .qa-activity-count-item {margin:0.5em 0;}
 .qa-activity-count-data {font-size:24px; font-weight:bold;}

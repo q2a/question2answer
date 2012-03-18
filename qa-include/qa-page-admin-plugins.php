@@ -133,7 +133,7 @@
 				$updatehtml='(<SPAN ID="'.$elementid.'">...</SPAN>)';
 				
 				$qa_content['script_onloads'][]=array(
-					"qa_version_check(".qa_js($metadata['update']).", 'Plugin Version', ".qa_js($metadata['version']).", 'Plugin URI', ".qa_js($elementid).");"
+					"qa_version_check(".qa_js($metadata['update']).", 'Plugin Version', ".qa_js($metadata['version'], true).", 'Plugin URI', ".qa_js($elementid).");"
 				);
 
 			} else
@@ -151,11 +151,11 @@
 			$pluginhtml=$namehtml.' '.$authorhtml.' '.$updatehtml.'<BR>'.$deschtml.(strlen($deschtml) ? '<BR>' : '').
 				'<SMALL STYLE="color:#666">'.qa_html($plugindirectory).'</SMALL>';
 				
-			if (is_numeric(@$metadata['min_q2a']) && ((float)QA_VERSION>0) && $metadata['min_q2a']>(float)QA_VERSION)
+			if (qa_qa_version_below(@$metadata['min_q2a']))
 				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
 					qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</SPAN>';
 					
-			elseif (is_numeric(@$metadata['min_php']) && ((float)phpversion()>0) && $metadata['min_php']>(float)phpversion())
+			elseif (qa_php_version_below(@$metadata['min_php']))
 				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
 					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</SPAN>';
 				

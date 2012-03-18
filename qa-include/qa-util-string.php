@@ -640,7 +640,7 @@
 		return preg_match("/^[\-\!\#\$\%\&\'\*\+\/\=\?\_\`\{\|\}\~a-zA-Z0-9\.\^]+\@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\.\-]+$/", $email) ? true : false;
 	}
 	
-
+	
 	function qa_strlen($string)
 /*
 	Return the number of characters in $string, preferably using PHP's multibyte string functions

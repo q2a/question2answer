@@ -87,6 +87,7 @@
 	{
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		
 		if (!strlen($handle))
 			$handle=qa_lang('users/registered_user');
@@ -99,12 +100,12 @@
 
 			$filtermodules=qa_load_modules_with('filter', 'filter_handle');
 			foreach ($filtermodules as $filtermodule)
-				$filtermodule->filter_handle($handle, null); // filter first without worrying about errors, since our goal is to get a valid one
+				$filtermodule->filter_handle($tryhandle, null); // filter first without worrying about errors, since our goal is to get a valid one
 			
 			$haderror=false;
 			
 			foreach ($filtermodules as $filtermodule) {
-				$error=$filtermodule->filter_handle($handle, null); // now check for errors after we've filtered
+				$error=$filtermodule->filter_handle($tryhandle, null); // now check for errors after we've filtered
 				if (isset($error))
 					$haderror=true;
 			}

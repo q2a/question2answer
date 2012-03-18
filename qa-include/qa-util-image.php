@@ -68,8 +68,10 @@
 				if (is_array($imagesize)) { // if image can't be parsed, don't worry about anything else
 					$width=$imagesize[0];
 					$height=$imagesize[1];
+					$bits=isset($imagesize['bits']) ? $imagesize['bits'] : 8; // these elements can be missing (PHP bug) so assume this as default
+					$channels=isset($imagesize['channels']) ? $imagesize['channels'] : 3; // for more info: http://gynvael.coldwind.pl/?id=223
 					
-					$needbytes+=$width*$height*$imagesize['bits']*$imagesize['channels']/8*2; // memory to load original image
+					$needbytes+=$width*$height*$bits*$channels/8*2; // memory to load original image
 					
 					if (isset($size) && qa_image_constrain($width, $height, $size)) // memory for constrained image
 						$needbytes+=$width*$height*3*2; // *2 here and above based on empirical tests
@@ -93,11 +95,15 @@
 		$inimage=@imagecreatefromstring($imagedata);
 		
 		if (is_resource($inimage)) {
-			$width=imagesx($inimage);
-			$height=imagesy($inimage);
+			$inwidth=imagesx($inimage);
+			$inheight=imagesy($inimage);
 			
-			if (qa_image_constrain($width, $height, $size))
-				qa_gd_image_resize($inimage, $width, $height);
+			$outwidth=$inwidth;
+			$outheight=$inheight;
+			
+			// always call qa_gd_image_resize(), even if the size is the same, to take care of possible PNG transparency
+			qa_image_constrain($outwidth, $outheight, $size);
+			qa_gd_image_resize($inimage, $outwidth, $outheight);
 		}
 		
 		if (is_resource($inimage)) {
@@ -137,7 +143,9 @@
 		$image=null;
 
 		$newimage=imagecreatetruecolor($width, $height);
-		
+		$white=imagecolorallocate($newimage, 255, 255, 255); // fill with white first in case we have a transparent PNG
+		imagefill($newimage, 0, 0, $white);
+
 		if (is_resource($newimage)) {
 			if (imagecopyresampled($newimage, $oldimage, 0, 0, 0, 0, $width, $height, imagesx($oldimage), imagesy($oldimage)))
 				$image=$newimage;

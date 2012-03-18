@@ -247,6 +247,8 @@
 		'users_title' => 'Users',
 		'users_voted' => 'Users who voted:',
 		'version_get_x' => 'get ^',
+		'version_requires_php' => '^1 requires PHP ^2', 
+		'version_requires_q2a' => '^1 requires Q2A ^2', 
 		'version_latest_unknown' => 'latest unknown',
 		'version_latest' => 'latest',
 		'viewing_title' => 'Viewing',

@@ -180,6 +180,9 @@
 	
 	QA_USER_LEVEL_BASIC, QA_USER_LEVEL_EDITOR, QA_USER_LEVEL_ADMIN, QA_USER_LEVEL_SUPER
 	
+	To indicate that the user is blocked you can also add an element 'blocked' with the value true.
+	Blocked users are not allowed to perform any write actions such as voting or posting.
+	
 	The result of this function will be passed to your other function qa_get_logged_in_user_html()
 	so you may add any other elements to the returned array if they will be useful to you.
 

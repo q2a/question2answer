@@ -390,7 +390,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 /* Related questions and activity count widgets */
 
 .qa-related-q-list {list-style-type:none; padding:0;}
-.qa-related-q-item {margin:0.5em 0;}
+.qa-related-q-item {margin:0.5em 0; word-wrap: break-word;}
 .qa-activity-count {font-size:150%;}
 .qa-activity-count-item {margin:0.25em 0;}
 .qa-activity-count-data {font-weight:bold;}
