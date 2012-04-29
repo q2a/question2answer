@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5.1'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2012-03-18');
+	define('QA_VERSION', '1.5.2'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2012-04-29');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -924,13 +924,18 @@
 		
 		// inspired by: http://dangerousprototypes.com/docs/PhpBB3_MOD:_Replacement_mobile_browser_detection_for_mobile_themes
 		
+		$loweragent=strtolower(@$_SERVER['HTTP_USER_AGENT']);
+		
+		if (strpos($loweragent, 'ipad')!==false) // consider iPad as desktop
+			return false;
+		
 		$mobileheaders=array('HTTP_X_OPERAMINI_PHONE', 'HTTP_X_WAP_PROFILE', 'HTTP_PROFILE');
 		
 		foreach ($mobileheaders as $header)
 			if (isset($_SERVER[$header]))
 				return true;
-		
-		if (qa_string_matches_one(strtolower(@$_SERVER['HTTP_USER_AGENT']), array(
+				
+		if (qa_string_matches_one($loweragent, array(
 			'android', 'phone', 'mobile', 'windows ce', 'palm', ' mobi', 'wireless', 'blackberry', 'opera mini', 'symbian',
 			'nokia', 'samsung', 'ericsson,', 'vodafone/', 'kindle', 'ipod', 'wap1.', 'wap2.', 'sony', 'sanyo', 'sharp',
 			'panasonic', 'philips', 'pocketpc', 'avantgo', 'blazer', 'ipaq', 'up.browser', 'up.link', 'mmp', 'smartphone', 'midp'
@@ -1104,8 +1109,14 @@
 		$requestparts=explode('/', $request);
 		$pathmap=qa_get_request_map();
 		
-		if (isset($pathmap[$requestparts[0]]))
-			$requestparts[0]=$pathmap[$requestparts[0]];
+		if (isset($pathmap[$requestparts[0]])) {
+			$newpart=$pathmap[$requestparts[0]];
+			
+			if (strlen($newpart))
+				$requestparts[0]=$newpart;
+			elseif (count($requestparts)==1)
+				array_shift($requestparts);
+		}
 		
 		foreach ($requestparts as $index => $requestpart)
 			$requestparts[$index]=urlencode($requestpart);

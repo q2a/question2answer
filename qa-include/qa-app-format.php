@@ -1614,7 +1614,7 @@
 			qa_image_constrain($width, $height, $size);
 			
 			$html='<IMG SRC="'.qa_path('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
-				'" WIDTH="'.$width.'" HEIGHT="'.$height.'" CLASS="qa-avatar-image"/>';
+				'"'.(($width && $height) ? (' WIDTH="'.$width.'" HEIGHT="'.$height.'"') : '').' CLASS="qa-avatar-image"/>';
 				
 			if ($padding) {
 				$padleft=floor(($size-$width)/2);

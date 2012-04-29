@@ -95,15 +95,12 @@
 		$inimage=@imagecreatefromstring($imagedata);
 		
 		if (is_resource($inimage)) {
-			$inwidth=imagesx($inimage);
-			$inheight=imagesy($inimage);
-			
-			$outwidth=$inwidth;
-			$outheight=$inheight;
+			$width=imagesx($inimage);
+			$height=imagesy($inimage);
 			
 			// always call qa_gd_image_resize(), even if the size is the same, to take care of possible PNG transparency
-			qa_image_constrain($outwidth, $outheight, $size);
-			qa_gd_image_resize($inimage, $outwidth, $outheight);
+			qa_image_constrain($width, $height, $size);
+			qa_gd_image_resize($inimage, $width, $height);
 		}
 		
 		if (is_resource($inimage)) {
