@@ -611,7 +611,7 @@
 			$qa_content['logo']='<A HREF="'.qa_path_html('').'" CLASS="qa-logo-link" TITLE="'.qa_html(qa_opt('site_title')).'">'.
 				'<IMG SRC="'.qa_html(is_numeric(strpos($logourl, '://')) ? $logourl : qa_path_to_root().$logourl).'"'.
 				($logowidth ? (' WIDTH="'.$logowidth.'"') : '').($logoheight ? (' HEIGHT="'.$logoheight.'"') : '').
-				' BORDER="0"/></A>';
+				' BORDER="0" ALT="'.qa_html(qa_opt('site_title')).'"/></A>';
 		else
 			$qa_content['logo']='<A HREF="'.qa_path_html('').'" CLASS="qa-logo-link">'.qa_html(qa_opt('site_title')).'</A>';
 
@@ -704,7 +704,7 @@
 					$qa_content['notices'][]=qa_notice_form('welcome', qa_opt('notice_welcome'));
 		}
 		
-		$qa_content['script_rel']=array('qa-content/jquery-1.7.1.min.js');
+		$qa_content['script_rel']=array('qa-content/jquery-1.7.2.min.js');
 		$qa_content['script_rel'][]='qa-content/qa-page.js?'.QA_VERSION;
 		
 		if ($voting)

@@ -343,7 +343,7 @@
 			'show_user_points' => 1,
 			'show_user_titles' => 1,
 			'show_when_created' => 1,
-			'site_theme' => 'Default',
+			'site_theme' => 'Snow',
 			'smtp_port' => 25,
 			'sort_answers_by' => 'created',
 			'tags_or_categories' => 'tc',
@@ -453,6 +453,8 @@
 					$captchamodules=qa_list_modules('captcha');
 					if (count($captchamodules))
 						$value=reset($captchamodules);
+					else
+						$value='';
 					break;
 				
 				case 'mailing_from_name':
@@ -556,20 +558,20 @@
 		if ($basetype=='Q') {
 			$view=qa_opt('voting_on_qs');
 			
-			if (qa_user_permit_error('permit_vote_q')=='level')
-				$disabledsuffix='-disabled-level';
-			elseif (!($enabledif && ($full || !qa_opt('voting_on_q_page_only'))))
+			if (!($enabledif && ($full || !qa_opt('voting_on_q_page_only'))))
 				$disabledsuffix='-disabled-page';
+			elseif (qa_user_permit_error('permit_vote_q')=='level')
+				$disabledsuffix='-disabled-level';
 			elseif (qa_user_permit_error('permit_vote_down')=='level')
 				$disabledsuffix='-uponly-level';
 
 		} elseif ($basetype=='A') {
 			$view=qa_opt('voting_on_as');
 			
-			if (qa_user_permit_error('permit_vote_a')=='level')
-				$disabledsuffix='-disabled-level';
-			elseif (!$enabledif)
+			if (!$enabledif)
 				$disabledsuffix='-disabled-page';
+			elseif (qa_user_permit_error('permit_vote_a')=='level')
+				$disabledsuffix='-disabled-level';
 			elseif (qa_user_permit_error('permit_vote_down')=='level')
 				$disabledsuffix='-uponly-level';
 			

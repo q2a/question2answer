@@ -240,6 +240,7 @@
 		'flagging_notify_every' => 1,
 		'flagging_notify_first' => 1,
 		'max_num_q_tags' => 2,
+		'max_rate_ip_logins' => 1,
 		'page_size_activity' => 1,
 		'page_size_ask_check_qs' => 3,
 		'page_size_ask_tags' => 3,
@@ -296,9 +297,14 @@
 				
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');
-					
-				array_push($showoptions, '', 'avatar_profile_size', 'avatar_users_size', 'avatar_q_page_q_size', 'avatar_q_page_a_size', 'avatar_q_page_c_size', 'avatar_q_list_size', '');
 			}
+			
+			$showoptions[]='';
+			
+			if (!QA_FINAL_EXTERNAL_USERS)
+				$showoptions[]='avatar_profile_size';
+			
+			array_push($showoptions, 'avatar_users_size', 'avatar_q_page_q_size', 'avatar_q_page_a_size', 'avatar_q_page_c_size', 'avatar_q_list_size');
 
 			$checkboxtodisplay=array(
 				'custom_register' => 'option_show_custom_register',
@@ -308,13 +314,17 @@
 				'show_message_history' => 'option_allow_private_messages',
 				'avatar_store_size' => 'option_avatar_allow_upload',
 				'avatar_default_show' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_profile_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_users_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_q_page_q_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_q_page_a_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_q_page_c_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_q_list_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 			);
+			
+			if (!QA_FINAL_EXTERNAL_USERS)
+				$checkboxtodisplay=array_merge($checkboxtodisplay, array(
+					'avatar_profile_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+					'avatar_users_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+					'avatar_q_page_q_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+					'avatar_q_page_a_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+					'avatar_q_page_c_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+					'avatar_q_list_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+				));
 	
 			$formstyle='wide';
 			break;
@@ -925,9 +935,9 @@
 				case 'site_theme_mobile':
 					$themeoptions=qa_admin_theme_options();
 					if (!isset($themeoptions[$value]))
-						$value='Default'; // check here because we also need $value for qa_admin_addon_metadata()
+						$value='Classic'; // check here because we also need $value for qa_admin_addon_metadata()
 					
-					qa_optionfield_make_select($optionfield, $themeoptions, $value, 'Default');
+					qa_optionfield_make_select($optionfield, $themeoptions, $value, 'Classic');
 					
 					$contents=file_get_contents(QA_THEME_DIR.$value.'/qa-styles.css');
 
@@ -1436,6 +1446,8 @@
 				
 				$listhtml.='<LI><B><A HREF="'.qa_path_html('admin/userfields').'">'.qa_lang_html('admin/add_new_field').'</A></B></LI>';
 	
+				$qa_content['form']['fields'][]=array('type' => 'blank');
+				
 				$qa_content['form']['fields']['userfields']=array(
 					'label' => qa_lang_html('admin/profile_fields'),
 					'style' => 'tall',

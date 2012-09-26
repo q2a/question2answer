@@ -25,10 +25,11 @@
 /*
 	Theme URI: 
 	Theme Version: 1.5
-	Theme Date: 2011-12-14
+	Theme Date: 2012-09-11
 	Theme Author: Question2Answer
 	Theme Author URI: http://www.question2answer.org/
 	Theme License: GPLv2
+	Theme Update Check URI: 
 */
 
 
@@ -36,15 +37,20 @@
 
 body {background:#bddb62 url(page-background.png) repeat-x left top; margin:0; padding:0; text-align:center;}
 body,td,input,textarea {font-size:12px; font-family: "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;}
-a:link,a:active,a:visited {text-decoration:none;/* outline:none;*/}
+a:link,a:active,a:visited {text-decoration:none;}
 a:hover {text-decoration:underline;}
-/*table {border-collapse:collapse;}*/
 input {outline:none;}
 p {margin-top:0;}
 
 .qa-notice {background:#ebc5e2 url(suggest-bg.png) repeat-x left bottom; border-bottom:1px solid #597700; color:#5c0045; font-size:14px; padding:12px 32px; font-weight:bold; position:relative;}
 .qa-notice-close-button, .qa-notice-close-hover {font-family:"Arial Black"; color:#5c0045; font-size:18px; background:none; cursor:pointer; position:absolute; height:24px; border:none; top:4px; right:6px}
 .qa-body-wrapper {background:#fff; border:1px solid #597700; width:980px; margin:0 auto; margin-top:-1px; text-align:left;}
+
+/* Ajax loading spinner */
+
+.qa-waiting {background:url(spinner-icon-14x14.gif) no-repeat center; width:14px; height:14px; display:inline-block; font-size:0; margin:0px 8px 0px 4px; vertical-align:middle;}
+.qa-favoriting .qa-waiting {position:absolute; padding:18px 0;}
+.qa-a-selection .qa-waiting {position:absolute; padding:18px 0; margin-left:-32px;}
 
 /* Clearing classes */
 

@@ -276,6 +276,7 @@
 				'categoryid' => $oldquestion['categoryid'],
 				'notify' => isset($oldquestion['notify']),
 				'email' => qa_email_validate($oldquestion['notify']) ? $oldquestion['notify'] : null,
+				'delayed' => $oldquestion['created'],
 			));
 		}
 	}
@@ -502,6 +503,7 @@
 				'categoryid' => $oldanswer['categoryid'],
 				'notify' => isset($oldanswer['notify']),
 				'email' => qa_email_validate($oldanswer['notify']) ? $oldanswer['notify'] : null,
+				'delayed' => $oldanswer['created'],
 			));
 		}
 	}
@@ -723,6 +725,7 @@
 				'categoryid' => $oldcomment['categoryid'],
 				'notify' => isset($oldcomment['notify']),
 				'email' => qa_email_validate($oldcomment['notify']) ? $oldcomment['notify'] : null,
+				'delayed' => $oldcomment['created'],
 			));
 		}
 	}

@@ -56,7 +56,7 @@
 		function get_html($content, $format, $options)
 		{
 			if ($format=='html') {
-				$html=qa_sanitize_html($content, @$options['linksnewwindow']); // sanitize again for display, for extra safety, and due to new window setting
+				$html=qa_sanitize_html($content, @$options['linksnewwindow'], false); // sanitize again for display, for extra safety, and due to new window setting
 
 				if (isset($options['blockwordspreg'])) { // filtering out blocked words inline within HTML is pretty complex, e.g. p<B>oo</B>p must be caught
 					require_once QA_INCLUDE_DIR.'qa-util-string.php';
@@ -99,7 +99,27 @@
 							$nexttagmatch=array_shift($tagmatches);
 						}
 					}
-				}					
+				}
+				
+				if (@$options['showurllinks']) { // we need to ensure here that we don't put new links inside existing ones
+					require_once QA_INCLUDE_DIR.'qa-util-string.php';
+					
+					$htmlunlinkeds=array_reverse(preg_split('|<[Aa]\s+[^>]+>.*</[Aa]\s*>|', $html, -1, PREG_SPLIT_OFFSET_CAPTURE)); // start from end so we substitute correctly
+					
+					foreach ($htmlunlinkeds as $htmlunlinked) { // and that we don't detect links inside HTML, e.g. <IMG SRC="http://...">
+						$thishtmluntaggeds=array_reverse(preg_split('/<[^>]*>/', $htmlunlinked[0], -1, PREG_SPLIT_OFFSET_CAPTURE)); // again, start from end
+						
+						foreach ($thishtmluntaggeds as $thishtmluntagged) {
+							$innerhtml=$thishtmluntagged[0];
+							
+							if (is_numeric(strpos($innerhtml, '://'))) { // quick test first
+								$newhtml=qa_html_convert_urls($innerhtml, qa_opt('links_in_new_window'));
+								
+								$html=substr_replace($html, $newhtml, $htmlunlinked[1]+$thishtmluntagged[1], strlen($innerhtml));
+							}
+						}
+					}
+				}
 				
 			} elseif ($format=='') {
 				if (isset($options['blockwordspreg'])) {

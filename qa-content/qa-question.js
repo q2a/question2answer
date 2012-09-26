@@ -70,7 +70,7 @@ function qa_toggle_element(elem)
 	return !(e||!elem); // failed to find item
 }
 
-function qa_submit_answer(questionid)
+function qa_submit_answer(questionid, elem)
 {
 	var params=qa_form_params('a_form');
 	
@@ -114,10 +114,12 @@ function qa_submit_answer(questionid)
 		}
 	);
 	
+	qa_show_waiting_after(elem, false);
+	
 	return false;
 }
 
-function qa_submit_comment(questionid, parentid)
+function qa_submit_comment(questionid, parentid, elem)
 {
 	var params=qa_form_params('c_form_'+parentid);
 
@@ -154,6 +156,8 @@ function qa_submit_comment(questionid, parentid)
 		}
 	);
 	
+	qa_show_waiting_after(elem, false);
+	
 	return false;
 }
 
@@ -186,6 +190,8 @@ function qa_answer_click(answerid, questionid, target)
 		}
 	);
 	
+	qa_show_waiting_after(target, false);
+	
 	return false;
 }
 
@@ -217,10 +223,12 @@ function qa_comment_click(commentid, questionid, parentid, target)
 		}
 	);
 	
+	qa_show_waiting_after(target, false);
+	
 	return false;
 }
 
-function qa_show_comments(parentid)
+function qa_show_comments(parentid, elem)
 {
 	var params={};
 	
@@ -239,6 +247,8 @@ function qa_show_comments(parentid)
 			}
 		}
 	);
+	
+	qa_show_waiting_after(elem, true);
 	
 	return false;
 }

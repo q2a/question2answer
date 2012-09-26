@@ -48,6 +48,25 @@ function qa_set_outer_html(elem, type, html)
 	}
 }
 
+function qa_show_waiting_after(elem, inside)
+{
+	if (elem && !elem.qa_waiting_shown) {
+		elem.qa_waiting_shown=true;
+		
+		var w=document.getElementById('qa-waiting-template');
+	
+		if (w) {
+			var c=w.cloneNode(true);
+			c.id=null;
+			
+			if (inside)
+				elem.insertBefore(c, null);
+			else
+				elem.parentNode.insertBefore(c, elem.nextSibling);
+		}
+	}
+}
+
 function qa_vote_click(elem)
 {
 	var ens=elem.name.split('_');
@@ -111,6 +130,8 @@ function qa_favorite_click(elem)
 				qa_ajax_error();
 		}
 	);
+	
+	qa_show_waiting_after(elem, false);
 	
 	return false;
 }

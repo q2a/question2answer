@@ -172,29 +172,29 @@
 				$request.='/'.$slug;
 		
 		$navigation=array(
-			'answers' => array(
+			'by-answers' => array(
 				'label' => qa_lang('main/nav_no_answer'),
 				'url' => qa_path_html($request),
 			),
 			
-			'selected' => array(
+			'by-selected' => array(
 				'label' => qa_lang('main/nav_no_selected_answer'),
 				'url' => qa_path_html($request, array('by' => 'selected')),
 			),
 			
-			'upvotes' => array(
+			'by-upvotes' => array(
 				'label' => qa_lang('main/nav_no_upvoted_answer'),
 				'url' => qa_path_html($request, array('by' => 'upvotes')),
 			),
 		);
 		
-		if (isset($navigation[$by]))
-			$navigation[$by]['selected']=true;
+		if (isset($navigation['by-'.$by]))
+			$navigation['by-'.$by]['selected']=true;
 		else
-			$navigation['answers']['selected']=true;
+			$navigation['by-answers']['selected']=true;
 			
 		if (!qa_opt('voting_on_as'))
-			unset($navigation['upvotes']);
+			unset($navigation['by-upvotes']);
 
 		return $navigation;
 	}

@@ -4,9 +4,9 @@
 	http://www.question2answer.org/
 
 	
-	File: qa-theme/Default/qa-styles.css
+	File: qa-theme/Classic/qa-styles.css
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: CSS file for included Default theme
+	Description: CSS file for included Classic theme
 
 
 	This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 /*
 	Theme URI: 
 	Theme Version: 1.5
-	Theme Date: 2011-12-01
+	Theme Date: 2012-09-11
 	Theme Author: Question2Answer
 	Theme Author URI: http://www.question2answer.org/
 	Theme License: GPLv2
@@ -44,6 +44,12 @@ p {margin-top:0;}
 .qa-notice {background:#fdd; border-bottom:2px solid #293d39; color:#b00; font-size:18px; padding:.5em 32px; font-weight:bold; position:relative;}
 .qa-notice-close-button, .qa-notice-close-hover {font-family:"Arial Black"; color:#c00; font-size:20px; background:none; cursor:pointer; position:absolute; height:24px; border:none; top:4px; right:6px}
 .qa-body-wrapper {background:#fff; border:1px solid #293d39; width:980px; margin:0 auto; margin-top:-1px; text-align:left;}
+
+/* Ajax loading spinner */
+
+.qa-waiting {background:url(spinner-icon-14x14.gif) no-repeat center; width:14px; height:14px; display:inline-block; font-size:0; margin:0px 8px 0px 4px; vertical-align:middle;}
+.qa-favoriting .qa-waiting {position:absolute; padding:6px 4px;}
+.qa-a-selection .qa-waiting {position:absolute; padding:7px 0;}
 
 /* Clearing classes */
 

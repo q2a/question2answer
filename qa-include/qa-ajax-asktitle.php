@@ -79,7 +79,7 @@
 
 	echo "QA_AJAX_RESPONSE\n1\n";
 	
-	echo strtr(implode(',', $exampletags), "\r\n", '  ')."\n";
+	echo strtr(qa_html(implode(',', $exampletags)), "\r\n", '  ')."\n";
 	
 
 //	Collect and output the list of related questions

@@ -598,6 +598,49 @@
 	}
 
 
+	function qa_avatar_html_from_userid($userid, $size, $padding)
+/*
+	==========================================================================
+	     YOU MAY MODIFY THIS FUNCTION, BUT THE DEFAULT BELOW WILL WORK OK
+	==========================================================================
+	
+	qa_avatar_html_from_userid($userid, $size, $padding)
+	
+	You should return some HTML for displaying the avatar of $userid on the page.
+	If you do not wish to show an avatar for this user, return null.
+	
+	$size contains the maximum width and height of the avatar to be displayed, in pixels.
+
+	If $padding is true, the HTML you return should render to a square of $size x $size pixels,
+	even if the avatar is not square. This can be achieved using CSS padding - see function
+	qa_get_avatar_blob_html(...) in qa-app-format.php for an example. If $padding is false,
+	the HTML can render to anything which would fit inside a square of $size x $size pixels.
+	
+	Note that this function may be called many times to render an individual page, so it is not
+	a good idea to perform a database query each time it is called. Instead, you can use the fact
+	that before qa_avatar_html_from_userid(...) is called, qa_get_users_html(...) will have been
+	called with all the relevant users in the array $userids. So you can pull out the information
+	you need in qa_get_users_html(...) and cache it in a global variable, for use in this function.
+*/
+	{
+		return null; // show no avatars by default
+
+	/*
+		Example 1 - suitable if:
+		
+		* All your avatars are square
+		* Your Q2A site:       http://www.mysite.com/qa/
+		* Your avatar images:  http://www.mysite.com/avatar/[userid]-[size]x[size].jpg
+		
+		$htmlsize=(int)$size;
+		
+		return '<IMG SRC="http://www.mysite.com/avatar/'.htmlspecialchars($userid).'-'.$htmlsize.'x'.$htmlsize.'.jpg" '.
+			'WIDTH="'.$htmlsize.'" HEIGHT="'.$htmlsize.'" CLASS="qa-avatar-image" ALT=""/>';
+	*/
+
+	}
+	
+	
 	function qa_user_report_action($userid, $action)
 /*
 	==========================================================================

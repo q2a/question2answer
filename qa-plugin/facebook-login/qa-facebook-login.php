@@ -111,7 +111,7 @@
 			if (!strlen($app_id))
 				return;
 				
-			$this->facebook_html($tourl, false);
+			$this->facebook_html($tourl, false, $context);
 		}
 
 		
@@ -123,14 +123,18 @@
 				return;
 				
 			if (isset($_COOKIE['fbsr_'.$app_id])) // check we still have a Facebook cookie ...
-				$this->facebook_html($tourl, true);
+				$this->facebook_html($tourl, true, 'menu');
 			else // ... if not, show a standard logout link, since sometimes the redirect to Q2A's logout page doesn't complete
 				echo '<A HREF="'.qa_html($tourl).'">'.qa_lang_html('main/nav_logout').'</A>';
 		}
 		
 
-		function facebook_html($tourl, $logout)
+		function facebook_html($tourl, $logout, $context)
 		{
+			if (($context=='login') || ($context=='register'))
+				$size='large';
+			else
+				$size='medium';
 
 ?>
       <div id="fb-root" style="display:inline;"></div>
@@ -155,8 +159,7 @@
            d.getElementsByTagName('head')[0].appendChild(js);
          }(document));
       </script>
-      <div class="fb-login-button" style="display:inline;" <?php echo $logout ? 'autologoutlink="true"' : 'scope="email,user_about_me,user_location,user_website"'?>>
-      	<?php echo qa_lang_html($logout ? 'main/nav_logout' : 'main/nav_login')?>
+      <div class="fb-login-button" style="display:inline; vertical-align:middle;" size="<?php echo $size?>" <?php echo $logout ? 'autologoutlink="true"' : 'scope="email,user_about_me,user_location,user_website"'?>>
       </div>
 
 <?php

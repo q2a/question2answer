@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5.2'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2012-04-29');
+	define('QA_VERSION', '1.5.3'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2012-09-26');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -687,10 +687,11 @@
 	}
 
 	
-	function qa_sanitize_html($html, $linksnewwindow=false)
+	function qa_sanitize_html($html, $linksnewwindow=false, $storage=false)
 /*
 	Return $html after ensuring it is safe, i.e. removing Javascripts and the like - uses htmLawed library
-	Links open in a new window if $linksnewwindow is true
+	Links open in a new window if $linksnewwindow is true. Set $storage to true if sanitization is for
+	storing in the database, rather than immediate display to user - some think this should be less strict.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }

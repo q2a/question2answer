@@ -114,6 +114,18 @@
 		}
 		
 		
+		function qa_get_external_avatar_html($userid, $size, $padding=false)
+	/*
+		Return HTML to display for the avatar of $userid, constrained to $size pixels, with optional $padding to that size
+	*/
+		{
+			if (function_exists('qa_avatar_html_from_userid'))
+				return qa_avatar_html_from_userid($userid, $size, $padding);
+			else
+				return null;
+		}
+		
+		
 	} else {
 		
 		function qa_start_session()

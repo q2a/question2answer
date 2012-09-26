@@ -46,10 +46,16 @@
 	$usecaptcha=qa_opt('captcha_on_feedback') && qa_user_use_captcha();
 
 
-//	Check feedback is enabled
+//	Check feedback is enabled and the person isn't blocked
 
 	if (!qa_opt('feedback_enabled'))
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
+
+	if (qa_user_permit_error()) {
+		$qa_content=qa_content_prepare();
+		$qa_content['error']=qa_lang_html('users/no_permission');
+		return $qa_content;
+	}
 
 
 //	Send the feedback form

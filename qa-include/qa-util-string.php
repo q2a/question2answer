@@ -555,8 +555,17 @@
 		$blockwords=qa_block_words_explode($wordsstring);
 		$patterns=array();
 		
-		foreach ($blockwords as $blockword) // * in rule maps to [^ ]* in regular expression
-			$patterns[]=str_replace('\\*', '[^ ]*', preg_quote(qa_strtolower($blockword)));
+		foreach ($blockwords as $blockword) { // * in rule maps to [^ ]* in regular expression
+			$pattern=str_replace('\\*', '[^ ]*', preg_quote(qa_strtolower($blockword), '/'));
+			
+			if (!preg_match('/^('.QA_PREG_CJK_IDEOGRAPHS_UTF8.')/', $blockword))
+				$pattern='(?<= )'.$pattern; // assert leading word delimiter if pattern does not start with CJK
+				
+			if (!preg_match('/('.QA_PREG_CJK_IDEOGRAPHS_UTF8.')$/', $blockword))
+				$pattern=$pattern.'(?= )'; // assert trailing word delimiter if pattern does not end with CJK
+				
+			$patterns[]=$pattern;
+		}
 		
 		return implode('|', $patterns);
 	}
@@ -584,10 +593,10 @@
 				// assumes UTF-8 case conversion in qa_strtolower does not change byte length
 			$string=preg_replace('/'.QA_PREG_BLOCK_WORD_SEPARATOR.'/', ' ', $string);
 			
-			preg_match_all('/(?<= )('.$wordspreg.') /', ' '.$string.' ', $pregmatches, PREG_OFFSET_CAPTURE);
+			preg_match_all('/'.$wordspreg.'/', ' '.$string.' ', $pregmatches, PREG_OFFSET_CAPTURE);
 			
 			$outmatches=array();
-			foreach ($pregmatches[1] as $pregmatch)
+			foreach ($pregmatches[0] as $pregmatch)
 				$outmatches[$pregmatch[1]-1]=strlen($pregmatch[0]);
 				
 			return $outmatches;

@@ -43,7 +43,7 @@
 	{
 		qa_db_event_create_for_entity(QA_ENTITY_QUESTION, $questionid, $questionid, $lastpostid, $updatetype, $lastuserid, $timestamp); // anyone who favorited the question
 
-		if (isset($lastuserid))
+		if (isset($lastuserid) && !QA_FINAL_EXTERNAL_USERS)
 			qa_db_event_create_for_entity(QA_ENTITY_USER, $lastuserid, $questionid, $lastpostid, $updatetype, $lastuserid, $timestamp); // anyone who favorited the user who did it
 
 		if (isset($otheruserid) && ($otheruserid!=$lastuserid))

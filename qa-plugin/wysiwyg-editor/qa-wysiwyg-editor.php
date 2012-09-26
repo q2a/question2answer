@@ -198,7 +198,7 @@
 			if (preg_match('/<.+>/', $htmlformatting)) // if still some other tags, it's worth keeping in HTML
 				return array(
 					'format' => 'html',
-					'content' => qa_sanitize_html($html), // qa_sanitize_html() is ESSENTIAL for security
+					'content' => qa_sanitize_html($html, false, true), // qa_sanitize_html() is ESSENTIAL for security
 				);
 			
 			else { // convert to text

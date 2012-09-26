@@ -253,7 +253,7 @@
 						foreach ($modules as $modulename => $module) {
 							$queries=$module->init_queries($tables);
 							if (!empty($queries)) { // also allows single query to be returned
-								$errorhtml.=strtr(qa_lang_html('admin/module_x_database_init'), array(
+								$errorhtml=strtr(qa_lang_html('admin/module_x_database_init'), array(
 									'^1' => qa_html($modulename),
 									'^2' => qa_html($moduletype),
 									'^3' => '',

@@ -127,6 +127,8 @@ function qa_admin_click(target)
 		}
 	);
 	
+	qa_show_waiting_after(target, false);
+	
 	return false;
 }
 

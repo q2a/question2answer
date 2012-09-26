@@ -216,8 +216,6 @@
 
 		$qa_content['description']=qa_html(qa_shorten_string_line(qa_viewer_text($question['content'], $question['format']), 150));
 		
-		$qa_content['canonical']=qa_q_path_html($question['postid'], $question['title'], true);
-		
 		$categorykeyword=@$categories[$question['categoryid']]['title'];
 		
 		$qa_content['keywords']=qa_html(implode(',', array_merge(
@@ -338,6 +336,11 @@
 			$pagestart=floor($position/$pagesize)*$pagesize;
 	}
 	
+	// set the canonical url based on possible pagination
+	
+	$qa_content['canonical']=qa_path_html(qa_q_request($question['postid'], $question['title']),
+		($pagestart>0) ? array('start' => $pagestart) : null, qa_opt('site_url'));
+		
 	// build the actual answer list
 
 	$answerids=array_slice($answerids, $pagestart, $pagesize);

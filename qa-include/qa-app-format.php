@@ -311,7 +311,7 @@
 			));
 			
 			if ($microformats)
-				$fields['content']='<SPAN CLASS="entry-content">'.$fields['content'].'</SPAN>';
+				$fields['content']='<DIV CLASS="entry-content">'.$fields['content'].'</DIV>';
 			
 			$fields['content']='<A NAME="'.qa_html($postid).'"></A>'.$fields['content'];
 				// this is for backwards compatibility with any existing links using the old style of anchor
@@ -357,10 +357,12 @@
 		//	Pass information on vote viewing
 		
 		//	$voteview will be one of:
-		//	updown, updown-disabled-level, updown-disabled-page, updown-uponly-level
-		//	net, net-disabled-level, net-disabled-page, net-uponly-level
+		//	updown, updown-disabled-page, updown-disabled-level, updown-uponly-level
+		//	net, net-disabled-page, net-disabled-level, net-uponly-level
 				
 			$fields['vote_view']=(substr($voteview, 0, 6)=='updown') ? 'updown' : 'net';
+			
+			$fields['vote_on_page']=strpos($voteview, '-disabled-page') ? 'disabled' : 'enabled';
 			
 			$fields['upvotes_view']=($upvotes==1) ? qa_lang_html_sub_split('main/1_liked', $upvoteshtml, '1')
 				: qa_lang_html_sub_split('main/x_liked', $upvoteshtml);
@@ -460,9 +462,13 @@
 				$fields['who']['level']=qa_html(qa_user_level_string($post['level']));
 		}
 
-		if ((!QA_FINAL_EXTERNAL_USERS) && (@$options['avatarsize']>0))
-			$fields['avatar']=qa_get_user_avatar_html(@$post['flags'], @$post['email'], @$post['handle'],
-				@$post['avatarblobid'], @$post['avatarwidth'], @$post['avatarheight'], $options['avatarsize']);
+		if (@$options['avatarsize']>0) {
+			if (QA_FINAL_EXTERNAL_USERS)
+				$fields['avatar']=qa_get_external_avatar_html($post['userid'], $options['avatarsize'], false);
+			else
+				$fields['avatar']=qa_get_user_avatar_html(@$post['flags'], @$post['email'], @$post['handle'],
+					@$post['avatarblobid'], @$post['avatarwidth'], @$post['avatarheight'], $options['avatarsize']);
+		}
 
 	//	Updated when and by whom
 		
@@ -698,9 +704,13 @@
 				: qa_lang_html_sub_split('main/x_flags', $question['oflagcount']);
 
 		unset($fields['avatar']);
-		if ((!QA_FINAL_EXTERNAL_USERS) && (@$options['avatarsize']>0))
-			$fields['avatar']=qa_get_user_avatar_html($question['oflags'], $question['oemail'], $question['ohandle'],
-				$question['oavatarblobid'], $question['oavatarwidth'], $question['oavatarheight'], $options['avatarsize']);
+		if (@$options['avatarsize']>0) {
+			if (QA_FINAL_EXTERNAL_USERS)
+				$fields['avatar']=qa_get_external_avatar_html($post['ouserid'], $options['avatarsize'], false);
+			else
+				$fields['avatar']=qa_get_user_avatar_html($question['oflags'], $question['oemail'], $question['ohandle'],
+					$question['oavatarblobid'], $question['oavatarwidth'], $question['oavatarheight'], $options['avatarsize']);
+		}
 		
 		return $fields;
 	}
@@ -820,7 +830,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		return trim(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>"\'\.])+\.([^\s&<>"\']|&amp;)+)/i', '\1<A HREF="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</A>', ' '.$html.' '));
+		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>"\'\.])+\.([^\s&<>"\']|&amp;)+)/i', '\1<A HREF="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</A>', ' '.$html.' '), 1, -1);
 	}
 
 	
@@ -1094,7 +1104,7 @@
 		) {
 			$url=qa_custom_page_url($page);
 			
-			$navigation[($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) ? ('custom-'.$page['pageid']) : $page['tags']]=array(
+			$navigation[($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) ? ('custom-'.$page['pageid']) : ($page['tags'].'$')]=array(
 				'url' => qa_html($url),
 				'label' => qa_html($page['title']),
 				'opposite' => ($page['nav']=='O'),
@@ -1408,10 +1418,10 @@
 		
 		$classname='qa_html_theme_base';
 		
-	//	Then load the selected theme if valid, otherwise load the default theme
+	//	Then load the selected theme if valid, otherwise load the Classic theme
 	
 		if (!file_exists(QA_THEME_DIR.$theme.'/qa-styles.css'))
-			$theme='Default';
+			$theme='Classic';
 
 		$themeroothtml=qa_html(qa_path_to_root().'qa-theme/'.$theme.'/');
 		
@@ -1613,10 +1623,10 @@
 		if (strlen($blobid) && ($size>0)) {
 			qa_image_constrain($width, $height, $size);
 			
-			$html='<IMG SRC="'.qa_path('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
-				'"'.(($width && $height) ? (' WIDTH="'.$width.'" HEIGHT="'.$height.'"') : '').' CLASS="qa-avatar-image"/>';
+			$html='<IMG SRC="'.qa_path_html('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
+				'"'.(($width && $height) ? (' WIDTH="'.$width.'" HEIGHT="'.$height.'"') : '').' CLASS="qa-avatar-image" ALT=""/>';
 				
-			if ($padding) {
+			if ($padding && $width && $height) {
 				$padleft=floor(($size-$width)/2);
 				$padright=$size-$width-$padleft;
 				$padtop=floor(($size-$height)/2);
@@ -1641,7 +1651,7 @@
 		if ($size>0)
 			return '<IMG SRC="'.(qa_is_https_probably() ? 'https' : 'http').
 				'://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
-				'" WIDTH="'.(int)$size.'" HEIGHT="'.(int)$size.'" CLASS="qa-avatar-image"/>';
+				'" WIDTH="'.(int)$size.'" HEIGHT="'.(int)$size.'" CLASS="qa-avatar-image" ALT=""/>';
 		else
 			return null;
 	}

@@ -207,9 +207,7 @@
 		if ($full) {
 			$selectspec['columns']['ocontent']=$poststable.'.content';
 			$selectspec['columns']['oformat']=$poststable.'.format';
-			
-			if (!$fromupdated)
-				$selectspec['columns']['oupdated']='UNIX_TIMESTAMP('.$poststable.'.updated)';
+			$selectspec['columns']['oupdated']='UNIX_TIMESTAMP('.$poststable.'.updated)';
 		}
 	}
 
@@ -1123,7 +1121,7 @@
 	from offset $start. The selectspec will produce a sorted array with tags in the key, and counts in the values.
 */
 	{
-		$count=isset($count) ? min($count, QA_DB_RETRIEVE_TAGS) : QA_DB_RETRIEVE_TAGS;
+		$count=isset($count) ? $count : QA_DB_RETRIEVE_TAGS;
 		
 		return array(
 			'columns' => array('word', 'tagcount'),
@@ -1448,7 +1446,7 @@
 		
 		$selectspec['source'].=
 			" JOIN ^posts AS updateposts ON updateposts.postid=fullevents.lastpostid AND updateposts.type IN ('Q', 'A', 'C')".
-			" AND (^posts.selchildid=fullevents.lastpostid OR NOT fullevents.updatetype<=>$) AND ^posts.type IN ('Q', 'A', 'C')".
+			" AND (^posts.selchildid=fullevents.lastpostid OR NOT fullevents.updatetype<=>$) AND ^posts.type='Q'".
 			(QA_FINAL_EXTERNAL_USERS ? '' : ' LEFT JOIN ^users AS eventusers ON fullevents.lastuserid=eventusers.userid').
 			' LEFT JOIN ^userpoints AS eventuserpoints ON fullevents.lastuserid=eventuserpoints.userid';
 		$selectspec['arguments'][]=QA_UPDATE_SELECTED;

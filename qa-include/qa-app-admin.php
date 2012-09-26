@@ -445,7 +445,7 @@
 			switch ($action) {
 				case 'approve':
 					if ($queued && !qa_user_permit_error('permit_moderate')) {
-						qa_post_set_hidden($postid, false, null);
+						qa_post_set_hidden($postid, false, $userid);
 						return true;
 					}
 					break;

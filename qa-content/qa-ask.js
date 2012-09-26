@@ -28,7 +28,7 @@ function qa_title_change(value)
 		if (lines[0]=='1') {
 			if (lines[1].length) {
 				qa_tags_examples=lines[1];
-				qa_tag_hints();
+				qa_tag_hints(true);
 			}
 			
 			if (lines.length>2) {
@@ -42,6 +42,18 @@ function qa_title_change(value)
 		else
 			qa_ajax_error();
 	});
+	
+	qa_show_waiting_after(document.getElementById('similar'), true);
+}
+
+function qa_html_unescape(html)
+{
+	return html.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+}
+
+function qa_html_escape(text)
+{
+	return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function qa_tag_click(link)
@@ -50,7 +62,7 @@ function qa_tag_click(link)
 	var parts=qa_tag_typed_parts(elem);
 	
 	// removes any HTML tags and ampersand
-	var tag=link.innerHTML.replace(/<[^>]*>/g, '').replace('&amp;', '&');
+	var tag=qa_html_unescape(link.innerHTML.replace(/<[^>]*>/g, ''));
 	
 	var separator=qa_tag_onlycomma ? ', ' : ' ';
 	
@@ -73,19 +85,22 @@ function qa_tag_click(link)
 function qa_tag_hints(skipcomplete)
 {
 	var elem=document.getElementById('tags');
-	var parts=qa_tag_typed_parts(elem);
 	var html='';
 	var completed=false;
 			
 	// first try to auto-complete
-	if (parts.typed && qa_tags_complete) {
-		html=qa_tags_to_html((qa_tags_examples+','+qa_tags_complete).split(','), parts.typed.toLowerCase().replace('&', '&amp;'));
-		completed=html ? true : false;
+	if (qa_tags_complete && !skipcomplete) {
+		var parts=qa_tag_typed_parts(elem);
+	
+		if (parts.typed) {
+			html=qa_tags_to_html((qa_html_unescape(qa_tags_examples+','+qa_tags_complete)).split(','), parts.typed.toLowerCase());
+			completed=html ? true : false;
+		}
 	}
 	
 	// otherwise show examples
 	if (qa_tags_examples && !completed)
-		html=qa_tags_to_html(qa_tags_examples.split(','), null);
+		html=qa_tags_to_html((qa_html_unescape(qa_tags_examples)).split(','), null);
 	
 	// set title visiblity and hint list
 	document.getElementById('tag_examples_title').style.display=(html && !completed) ? '' : 'none';
@@ -110,10 +125,10 @@ function qa_tags_to_html(tags, matchlc)
 				if (matchlc) { // if matching, show appropriate part in bold
 					var matchstart=taglc.indexOf(matchlc);
 					var matchend=matchstart+matchlc.length;
-					inner='<SPAN STYLE="font-weight:normal;">'+tag.substring(0, matchstart)+'<B>'+
-						tag.substring(matchstart, matchend)+'</B>'+tag.substring(matchend)+'</SPAN>';
+					inner='<SPAN STYLE="font-weight:normal;">'+qa_html_escape(tag.substring(0, matchstart))+'<B>'+
+						qa_html_escape(tag.substring(matchstart, matchend))+'</B>'+qa_html_escape(tag.substring(matchend))+'</SPAN>';
 				} else // otherwise show as-is
-					inner=tag;
+					inner=qa_html_escape(tag);
 					
 				html+=qa_tag_template.replace(/\^/g, inner.replace('$', '$$$$'))+' '; // replace ^ in template, escape $s
 				
@@ -194,7 +209,7 @@ function qa_category_select(idprefix, startpath)
 				if (val.length || (l==0)) {
 					subelem=elem.parentNode.insertBefore(document.createElement('span'), elem.nextSibling);
 					subelem.id=idprefix+'_'+l+'_sub';
-					subelem.innerHTML=' ...';
+					qa_show_waiting_after(subelem, true);
 					
 					qa_ajax_post('category', {categoryid:val},
 						(function(elem, l) {
@@ -227,7 +242,7 @@ function qa_category_select(idprefix, startpath)
 											if (String(qa_cat_exclude).length && (String(qa_cat_exclude)==parts[0]))
 												continue;
 												
-											newelem.options[newelem.options.length]=new Option(parts[1], parts[0]);
+											newelem.options[newelem.options.length]=new Option(parts.slice(1).join('/'), parts[0]);
 											addedoption=true;
 										}
 										

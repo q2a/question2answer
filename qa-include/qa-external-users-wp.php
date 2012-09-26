@@ -97,14 +97,25 @@
 
 	function qa_get_public_from_userids($userids)
 	{
-		global $wpdb;
+		global $wpdb, $qa_cache_wp_user_emails;
 		
-		if (count($userids))
-			return qa_db_read_all_assoc(qa_db_query_sub(
-				'SELECT user_nicename, ID FROM '.$wpdb->base_prefix.'users WHERE ID IN (#)',
+		if (count($userids)) {
+			$useridtopublic=array();
+			$qa_cache_wp_user_emails=array();
+			
+			$userfields=qa_db_read_all_assoc(qa_db_query_sub(
+				'SELECT ID, user_nicename, user_email FROM '.$wpdb->base_prefix.'users WHERE ID IN (#)',
 				$userids
-			), 'ID', 'user_nicename');
-		else
+			), 'ID');
+			
+			foreach ($userfields as $id => $fields) {
+				$useridtopublic[$id]=$fields['user_nicename'];
+				$qa_cache_wp_user_emails[$id]=$fields['user_email'];
+			}
+			
+			return $useridtopublic;
+
+		} else
 			return array();
 	}
 
@@ -135,6 +146,19 @@
 		}
 			
 		return $usershtml;
+	}
+	
+	
+	function qa_avatar_html_from_userid($userid, $size, $padding)
+	{
+		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		
+		global $qa_cache_wp_user_emails;
+		
+		if (isset($qa_cache_wp_user_emails[$userid]))
+			return qa_get_gravatar_html($qa_cache_wp_user_emails[$userid], $size);
+		
+		return null;
 	}
 
 

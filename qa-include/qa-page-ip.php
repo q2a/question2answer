@@ -200,7 +200,7 @@
 			
 			$hasother=isset($question['opostid']);
 			
-			if ($question[$hasother ? 'ohidden' : 'hidden']) {
+			if ($question[$hasother ? 'ohidden' : 'hidden'] && !isset($question[$hasother ? 'oupdatetype' : 'updatetype'])) {
 				$htmlfields['what_2']=qa_lang_html('main/hidden');
 
 				if (@$htmloptions['whenview'])

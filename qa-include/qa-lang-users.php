@@ -98,6 +98,7 @@
 		'register_title' => 'Register as a new user',
 		'registered_user' => 'Registered user',
 		'remember_label' => 'Remember me on this computer',
+		'remember' => 'Remember',
 		'remove_avatar' => 'Remove avatar:',
 		'reset_code_another' => 'send another',
 		'reset_code_emailed' => 'You have been emailed your reset code',

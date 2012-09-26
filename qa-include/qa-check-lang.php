@@ -27,6 +27,10 @@
 	define('QA_BASE_DIR', dirname(dirname(empty($_SERVER['SCRIPT_FILENAME']) ? __FILE__ : $_SERVER['SCRIPT_FILENAME'])).'/');
 
 	require 'qa-base.php';
+	require_once QA_INCLUDE_DIR.'qa-app-users.php';
+	
+	if (qa_get_logged_in_level() < QA_USER_LEVEL_ADMIN)
+		qa_redirect('admin/general', null, qa_opt('site_url'));
 	
 	header('Content-type: text/html; charset=utf-8');
 ?>
@@ -193,7 +197,7 @@
 		foreach ($langnewphrases as $prefix => $phrases) {
 			echo '<H2>'.$language.' phrases to add to <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code>:</H2>';
 			
-			echo 'Copy and paste this into the middle of <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code> then translate the right-hand sides after the <code>=></code> symbol.';
+			echo 'Copy and paste this into the middle of <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code> then translate the right-hand side after the <code>=></code> symbol.';
 			
 			echo '<PRE>';
 			

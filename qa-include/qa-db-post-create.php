@@ -221,7 +221,7 @@
 				if (!isset($wordtoid[$word]))
 					$rowstoadd[]=array($word);
 				
-			qa_db_query_sub('INSERT INTO ^words (word) VALUES $', $rowstoadd);
+			qa_db_query_sub('INSERT IGNORE INTO ^words (word) VALUES $', $rowstoadd);
 			
 			qa_db_query_sub('UNLOCK TABLES');
 			
