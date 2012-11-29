@@ -150,8 +150,10 @@
 	*/
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-		
-			return md5(QA_FINAL_MYSQL_HOSTNAME.'/'.QA_FINAL_MYSQL_USERNAME.'/'.QA_FINAL_MYSQL_PASSWORD.'/'.QA_FINAL_MYSQL_DATABASE.'/'.QA_MYSQL_TABLE_PREFIX);
+			
+			$prefix=defined('QA_MYSQL_USERS_PREFIX') ? QA_MYSQL_USERS_PREFIX : QA_MYSQL_TABLE_PREFIX;
+			
+			return md5(QA_FINAL_MYSQL_HOSTNAME.'/'.QA_FINAL_MYSQL_USERNAME.'/'.QA_FINAL_MYSQL_PASSWORD.'/'.QA_FINAL_MYSQL_DATABASE.'/'.$prefix);
 		}
 		
 		
@@ -303,6 +305,14 @@
 				
 				} else {
 					$handle=qa_handle_make_valid(@$fields['handle']);
+				
+					if (strlen(@$fields['email'])) { // remove email address if it will cause a duplicate
+						$emailusers=qa_db_user_find_by_email($fields['email']);
+						if (count($emailusers)) {
+							unset($fields['email']);
+							unset($fields['confirmed']);
+						}
+					}
 					
 					$userid=qa_create_new_user((string)@$fields['email'], null /* no password */, $handle,
 						isset($fields['level']) ? $fields['level'] : QA_USER_LEVEL_BASIC, @$fields['confirmed']);

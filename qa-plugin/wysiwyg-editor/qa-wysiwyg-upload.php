@@ -80,7 +80,7 @@
 					$maxsize=min(qa_opt('wysiwyg_editor_upload_max_size'), qa_get_max_upload_size());
 					
 					if ( ($filesize<=0) || ($filesize>$maxsize) ) // if file was too big for PHP, $filesize will be zero
-						$message='Maximum upload size is '.number_format($maxsize/1048576, 1).'MB';
+						$message=qa_lang_sub('main/max_upload_size_x', number_format($maxsize/1048576, 1).'MB');
 				}
 				
 			//	If it's only allowed to be an image, check it's an image
@@ -88,11 +88,14 @@
 				if (empty($message))
 					if (qa_get('qa_only_image') || !qa_opt('wysiwyg_editor_upload_all')) // check if we need to confirm it's an image
 						switch ($extension) {
-							case 'png':
+							case 'png': // these are allowed image extensions
 							case 'gif':
 							case 'jpeg':
 							case 'jpg':
-								break; // these are allowed image extensions
+								if (function_exists('getimagesize')) // getimagesize() does not require GD library
+									if (!is_array(@getimagesize($file['tmp_name'])))
+										$message=qa_lang_sub('main/image_not_read', 'GIF, JPG, PNG');
+								break;
 								
 							default:
 								$message=qa_lang_sub('main/image_not_read', 'GIF, JPG, PNG');

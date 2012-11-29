@@ -220,10 +220,15 @@
 		if (@$closepost['parentid']==$oldquestion['postid'])
 			qa_post_unindex($closepost['postid']);
 				
-		$setupdated=$hidden || !$wasqueued; // don't record approval of a post as an update action
+		$setupdated=$hidden || !$wasqueued; // don't record approval of a post as an update action...
 			
 		qa_db_post_set_type($oldquestion['postid'], $hidden ? 'Q_HIDDEN' : 'Q',
 			$setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_VISIBLE);
+		
+		if (!$setupdated) { // ... for approval of a post, set created time to now instead
+			qa_db_post_set_created($oldquestion['postid'], null);
+			qa_db_hotness_update($oldquestion['postid']);
+		}
 		
 		qa_db_category_path_qcount_update(qa_db_post_get_category_path($oldquestion['postid']));
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
@@ -462,11 +467,14 @@
 			if ( ($comment['basetype']=='C') && ($comment['parentid']==$oldanswer['postid']) )
 				qa_post_unindex($comment['postid']);
 		
-		$setupdated=$hidden || !$wasqueued; // don't record approval of a post as an update action
+		$setupdated=$hidden || !$wasqueued; // don't record approval of a post as an update action...
 		
 		qa_db_post_set_type($oldanswer['postid'], $hidden ? 'A_HIDDEN' : 'A',
 			$setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_VISIBLE);
 
+		if (!$setupdated) // ... for approval of a post, set created time to now instead
+			qa_db_post_set_created($oldanswer['postid'], null);
+		
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 		qa_db_post_acount_update($question['postid']);
 		qa_db_hotness_update($question['postid']);
@@ -680,11 +688,14 @@
 		
 		qa_post_unindex($oldcomment['postid']);
 		
-		$setupdated=$hidden || !$wasqueued; // don't record approval of a post as an update action
+		$setupdated=$hidden || !$wasqueued; // don't record approval of a post as an update action...
 		
 		qa_db_post_set_type($oldcomment['postid'], $hidden ? 'C_HIDDEN' : 'C',
 			$setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_VISIBLE);
 
+		if (!$setupdated) // ... for approval of a post, set created time to now instead
+			qa_db_post_set_created($oldcomment['postid'], null);
+			
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 		qa_db_ccount_update();
 		

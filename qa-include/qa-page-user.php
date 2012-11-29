@@ -475,6 +475,7 @@
 				
 				$qa_content['form_profile']['buttons']=array(
 					'save' => array(
+						'tags' => 'onClick="qa_show_waiting_after(this, false);"',
 						'label' => qa_lang_html('users/save_user'),
 					),
 					
@@ -505,13 +506,13 @@
 						
 						if (count($questions) && !qa_user_permit_error('permit_hide_show'))
 							$qa_content['form_profile']['buttons']['hideall']=array(
-								'tags' => 'NAME="dohideall"',
+								'tags' => 'NAME="dohideall" onClick="qa_show_waiting_after(this, false);"',
 								'label' => qa_lang_html('users/hide_all_user_button'),
 							);
 							
 						if ($loginlevel>=QA_USER_LEVEL_ADMIN)
 							$qa_content['form_profile']['buttons']['delete']=array(
-								'tags' => 'NAME="dodelete"',
+								'tags' => 'NAME="dodelete" onClick="qa_show_waiting_after(this, false);"',
 								'label' => qa_lang_html('users/delete_user_button'),
 							);
 						

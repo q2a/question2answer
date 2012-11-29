@@ -207,8 +207,10 @@
 		if ($full) {
 			$selectspec['columns']['ocontent']=$poststable.'.content';
 			$selectspec['columns']['oformat']=$poststable.'.format';
-			$selectspec['columns']['oupdated']='UNIX_TIMESTAMP('.$poststable.'.updated)';
 		}
+		
+		if ($fromupdated || $full)
+			$selectspec['columns']['oupdated']='UNIX_TIMESTAMP('.$poststable.'.updated)';
 	}
 
 	

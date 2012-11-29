@@ -140,6 +140,7 @@
 		
 		'buttons' => array(
 			'register' => array(
+				'tags' => 'onClick="qa_show_waiting_after(this, false);"',
 				'label' => qa_lang_html('users/register_button'),
 			),
 		),

@@ -177,13 +177,19 @@
 	
 	function qa_db_post_set_created($postid, $created)
 /*
-	Set the created date of $postid to $created, which is a unix timestamp
+	Set the created date of $postid to $created, which is a unix timestamp. If created is NULL, set to now.
 */
 	{
-		qa_db_query_sub(
-			'UPDATE ^posts SET created=FROM_UNIXTIME(#) WHERE postid=#',
-			$created, $postid
-		);
+		if (isset($created))
+			qa_db_query_sub(
+				'UPDATE ^posts SET created=FROM_UNIXTIME(#) WHERE postid=#',
+				$created, $postid
+			);
+		else
+			qa_db_query_sub(
+				'UPDATE ^posts SET created=NOW() WHERE postid=#',
+				$postid
+			);
 	}
 	
 	

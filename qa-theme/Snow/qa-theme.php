@@ -50,8 +50,8 @@
 						'<form id="qa-loginform" action="'.$login['url'].'" method="post">',
 							'<input type="text" id="qa-userid" name="emailhandle" placeholder="'.trim(qa_lang_html('users/email_handle_label'), ':').'" />',
 							'<input type="password" id="qa-password" name="password" placeholder="'.trim(qa_lang_html('users/password_label'), ':').'" />',
-							'<div id="qa-rememberbox"><input type="checkbox" name="rememberme" id="qa-rememberme" />',
-							'<label for="rememberme" id="qa-remember">'.qa_lang_html('users/remember').'</label></div>',
+							'<div id="qa-rememberbox"><input type="checkbox" name="remember" id="qa-rememberme" value="1"/>',
+							'<label for="qa-rememberme" id="qa-remember">'.qa_lang_html('users/remember').'</label></div>',
 							'<input type="submit" value="'.$login['label'].'" id="qa-login" name="dologin" />',
 						'</form>',				
 						'<!--[End: login form]-->'

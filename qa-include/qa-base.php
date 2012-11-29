@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5.3'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2012-09-26');
+	define('QA_VERSION', '1.5.4'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2012-11-29');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -715,13 +715,16 @@
 	}
 	
 	
-	function qa_sanitize_html_hook_tag($element, $attributes)
+	function qa_sanitize_html_hook_tag($element, $attributes=null)
 /*
 	htmLawed hook function used to process tags in qa_sanitize_html(...)
 */
 	{
 		global $qa_sanitize_html_newwindow;
 
+		if (!isset($attributes)) // it's a closing tag
+			return '</'.$element.'>';
+		
 		if ( ($element=='param') && (trim(strtolower(@$attributes['name']))=='allowscriptaccess') )
 			$attributes['name']='allowscriptaccess_denied';
 			

@@ -168,7 +168,7 @@
 			
 			if (count($questions) && !qa_user_permit_error('permit_hide_show'))
 				$qa_content['form']['buttons']['hideall']=array(
-					'tags' => 'NAME="dohideall"',
+					'tags' => 'NAME="dohideall" onClick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('misc/hide_all_ip_button'),
 				);
 

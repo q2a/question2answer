@@ -220,7 +220,7 @@
 				break;
 				
 			case 'non-users-missing':
-				$errorhtml='This Question2Answer site is sharing its users with another Q2A site, but it needs some additional database tables for its own content. Click below to create them.';
+				$errorhtml='This Question2Answer site is sharing its users with another Q2A site, but it needs some additional database tables for its own content. Please click below to create them.';
 				$buttons=array('nonuser' => 'Create Tables');
 				break;
 				

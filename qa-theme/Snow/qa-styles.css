@@ -25,8 +25,8 @@
 /*
 	Theme Name: Snow
 	Theme URI: 
-	Theme Version: 1.0
-	Theme Date: 2012-09-25
+	Theme Version: 1.1
+	Theme Date: 2012-11-14
 	Theme Author: Q2A Market
 	Theme Author URI: http://www.q2amarket.com/
 	Theme License: GPLv2
@@ -76,14 +76,14 @@
 	line-height:20px;
 }
 body {
-	background:#fafafa;
+	background:#efefef;
 	text-align:center;
 	margin:0;
 	padding:0;
 }
 body,td,input,textarea {
-	font:12px/1.5 Helvetica, Arial, Sens-serif;
-	color:#666;
+	font:14px/1.5 Helvetica, Arial, Sens-serif;
+	color:#333;
 }
 a:link, a:visited {
 	text-decoration:none;
@@ -106,22 +106,19 @@ input[type="text"],input[type="password"],textarea,select,checkbox,radio{
 	border:1px solid #ddd;
 	padding:5px;
 	color:#777;
-	font-size:12px;
-	-moz-transition:all ease-in-out 0.5s;
-	-webkit-transition:all ease-in-out 0.5s;
-	-o-transition:all ease-in-out 0.5s;
-	-ms-transition:all ease-in-out 0.5s;
-	transition:all ease-in-out 0.5s;
+	-moz-transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
+	-webkit-transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
+	-o-transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
+	transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
 }
 input[type="text"]:focus,input[type="password"]:focus,textarea:focus{
 	box-shadow:0 2px 2px 0 rgba(0,0,0,0.3) inset;	
 	border:1px solid #aaa;
 	color:#333;
-	-moz-transition:all ease-in-out 0.2s;
-	-webkit-transition:all ease-in-out 0.2s;
-	-o-transition:all ease-in-out 0.2s;
-	-ms-transition:all ease-in-out 0.2s;
-	transition:all ease-in-out 0.2s;
+	-moz-transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
+	-webkit-transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
+	-o-transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
+	transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
 }
 input {
 	outline:none;
@@ -143,7 +140,7 @@ table {border-collapse:collapse;}
 /* Headings */
 h1 {
 	color:#444;
-	font-size:16px;
+	font-size:20px;
 	font-weight:700;
 	margin:0.5em 0 25px;
 	font-family:Arial,Helvetica,sans-serif;
@@ -167,36 +164,15 @@ h3{
 	color:#111;
 }
 blockquote{
-	background:#f4f4f4;
-	padding:15px 15px 15px 50px;
+	background:#eee;
+	padding:15px;
 	margin:30px auto;
-	border:1px solid #e5e5e5;
-	border-left:5px solid #aaa;
-	font-family:'Times New Roman', Georgia;
-	font-size:22px;
+	border:1px solid #aaa;
+	font-size:16px;
 	font-style:italic;
-	color:#777;
-	position:relative;
-	-moz-transition:color ease-in-out 0.25s;
-	-webkit-transition:color ease-in-out 0.25s;
-	-o-transition:color ease-in-out 0.25s;
-	transition:color ease-in-out 0.25s;
-}
-blockquote:hover{
 	color:#000;
-	-moz-transition:color ease-in-out 0.25s;
-	-webkit-transition:color ease-in-out 0.25s;
-	-o-transition:color ease-in-out 0.25s;
-	transition:color ease-in-out 0.25s;
-}
-blockquote:before{
-	position:absolute;
-	top:0;
-	left:0;
-	content:open-quote;
-	font-size:3em;
-	line-height:normal;
-	color:#ccc;
+	position:relative;
+
 }
 blockquote p{
 	margin:0;
@@ -649,8 +625,8 @@ div.header-banner{
 	float:left;
 }
 .qa-voting {
-	background:#fff;
-	border:1px solid #ddd;
+	background:#e2eef4;
+	border:1px solid #c5d6df;
 	float:left;
 	width:60px;
 	height:60px;
@@ -663,25 +639,28 @@ div.header-banner{
 	width:16px;
 	float:left;
 }
+.qa-vote-up-button,.qa-vote-up-hover,.qa-vote-down-button,.qa-vote-down-hover,.qa-vote-one-button{
+	text-indent:9999px;
+}
 .qa-q-list-vote-disabled .qa-vote-buttons {display:none;}
 .qa-vote-up-button,.qa-vote-up-hover,.qa-vote-up-disabled {
 	background:url(images/vote-buttons.png) no-repeat;
 	border:0;
 	color:#f1c96b;
 	font-size:1px;
-	height:16px;
-	width:13px;
+	height:20px;
+	width:16px;
 }
 .qa-vote-up-button {
 	background-position:0 0;
 	color:#f1c96b;
 }
 .qa-vote-up-disabled {
-	background-position:0 -64px;
+	background-position:0 -80px;
 	color:#CCC;
 }
 .qa-vote-up-hover,.qa-vote-up-button:hover {
-	background-position:0 -16px;
+	background-position:0 -20px;
 	color:#f1c96b;
 }
 .qa-vote-down-button,.qa-vote-down-hover,.qa-vote-down-disabled {
@@ -689,19 +668,19 @@ div.header-banner{
 	border:0;
 	color:#f1c96b;
 	font-size:1px;
-	height:16px;
-	width:13px;
+	height:20px;
+	width:16px;
 }
 .qa-vote-down-button {
-	background-position:-13px 0;
+	background-position:-16px 0;
 	color:#f1c96b;
 }
 .qa-vote-down-disabled {
-	background-position:-13px -64px;
+	background-position:-16px -80px;
 	color:#CCC;
 }
 .qa-vote-down-hover,.qa-vote-down-button:hover {
-	background-position:-13px -16px;
+	background-position:-16px -20px;
 	color:#f1c96b;
 }
 .qa-voted-up-button,.qa-voted-up-hover {
@@ -709,15 +688,15 @@ div.header-banner{
 	border:0;
 	color:#f1c96b;
 	font-size:1px;
-	height:16px;
-	width:13px;
+	height:20px;
+	width:16px;
 }
 .qa-voted-up-button {
-background-position:0 -32px;
+background-position:0 -40px;
 color:#f1c96b;
 }
 .qa-voted-up-hover,.qa-voted-up-button:hover {
-background-position:0 -48px;
+background-position:0 -60px;
 color:#f1c96b;
 }
 .qa-voted-down-button,.qa-voted-down-hover {
@@ -725,31 +704,31 @@ background:url(images/vote-buttons.png);
 border:0;
 color:#f1c96b;
 font-size:1px;
-height:16px;
-width:13px;
+height:20px;
+width:16px;
 }
 .qa-voted-down-button {
-background-position:-13px -32px;
+background-position:-16px -40px;
 color:#f1c96b;
 }
 .qa-voted-down-hover,.qa-voted-down-button:hover {
-background-position:-13px -48px;
+background-position:-16px -60px;
 color:#f1c96b;
 }
 .qa-vote-one-button {
-position:absolute;
-left:2px;
-top:22px;
+	position:absolute;
+	left:2px;
+	top:20px;
 }
 .qa-vote-first-button {
 	position:absolute;
 	left:2px;
-	top:10px;
+	top:6px;
 }
 .qa-vote-second-button {
 	position:absolute;
 	left:2px;
-	bottom:10px;
+	bottom:6px;
 }
 .qa-netvote-count {
 	text-align:center;
@@ -851,7 +830,7 @@ font-size:12px;
 	margin-right:8px; */
 	position:absolute;
 	right:0;
-	bottom:5px;
+	bottom:24px;
 }
 .qa-favorite-button,.qa-favorite-hover,.qa-unfavorite-button,.qa-unfavorite-hover {
 	background:url(images/favorite-heart.png) no-repeat;
@@ -877,14 +856,8 @@ font-size:12px;
 	color:#c00;
 	font-size:18px;
 	margin:1em 0;
-	padding:.5em;
-}
-.qa-error a {
-	color:#900;
-	text-decoration:underline;
-}
-.qa-error a:hover {
-	color:red;
+	padding:5px 15px;
+	
 }
 /* Page sections */
 .qa-sidepanel {
@@ -1442,7 +1415,7 @@ padding:4px;
 	display:block;
 }
 .qa-q-item-avatar-meta{
-	margin:15px 0 0;
+	margin:10px 0 0;
 }
 .qa-q-item-avatar {
 	display:inline-block;
@@ -1497,6 +1470,7 @@ font-size:14px;
 text-align:center;
 clear:both;
 padding:8px;
+margin-top:16px;
 }
 .qa-suggest-next a {
 font-weight:700;
@@ -1624,7 +1598,6 @@ width:620px;
 padding-left:10px;
 }
 .qa-q-view-content {
-font-size:13px;
 margin-bottom:16px;
 }
 .qa-q-view-avatar {
@@ -1716,15 +1689,15 @@ opacity:0.5px;
 /* Answer view  */
 .qa-a-list-item {
 background:#fff;
-margin-bottom:10px;
 zoom:1;
 position:relative;
-padding:10px;
-border:1px solid #eee;
+padding:20px 10px;
+border-top:1px solid #eee;
+border-bottom:1px solid #ccc;
 }
 /* zoom for IE, padding for early FF */
 .qa-a-list-item-selected {
-background:#eef4f6!important;
+background:#f1f7f3!important;
 border:1px solid #89BF65;
 box-shadow:0 3px 3px 0 rgba(0,0,0,0.1);
 }
@@ -1754,7 +1727,6 @@ padding-left:10px;
 }
 /* inline-block for IE */
 .qa-a-item-content {
-font-size:13px;
 margin-bottom:16px;
 }
 .qa-a-item-avatar {
@@ -1795,7 +1767,7 @@ margin:24px 0 0;
 .qa-a-selection {
 position:absolute;
 left:12px;
-top:80px;
+top:85px;
 width:60px;
 text-align:center;
 }
@@ -1840,11 +1812,11 @@ line-height:6px;
 /* Comments */
 .qa-c-list-item {
 background:#fff;
-border-bottom:1px solid #ddd;
+border-bottom:1px solid #ccc;
 padding:8px 0 8px 8px;
 }
 .qa-c-list-item:nth-child(odd){
-	background:#f4f4f4;
+	background:#fafafa;
 }
 .qa-c-list-item:last-child{
 	border-bottom:none;
@@ -1879,8 +1851,8 @@ margin:2px 0;
 }
 .qa-c-item-content {
 display:block;
-color:#666;
 margin-bottom:6px;
+font-size:12px; 
 }
 .qa-c-item-footer {
 position:relative;
@@ -2013,10 +1985,9 @@ padding:10px;
 	color:#666 !important;
 	font-size:11px;
 	font-family:Arial, Tahoma, sans-serif;
-	text-transform:uppercase;
 	display:inline-block;
 	text-decoration:none !important;
-	padding:4px 8px;
+	padding:2px 8px;
 	border-bottom:1px solid #ccc;
 	border-right:1px solid #ccc;
 	-moz-transition:all ease-in-out 0.75s;
@@ -2035,7 +2006,6 @@ padding:10px;
 	background:none;
 	border:none;
 	text-transform:none;
-	font-size:13px;
 }
 
 .qa-tag-link:hover,.qa-q-view-tag-item:hover,.qa-widget-side > div > a:hover{

@@ -1605,15 +1605,15 @@
 		{
 			$this->output('<UL CLASS="'.$class.'-tag-list">');
 			
-			foreach ($post['q_tags'] as $tag)
-				$this->post_tag_item($tag, $class);
+			foreach ($post['q_tags'] as $taghtml)
+				$this->post_tag_item($taghtml, $class);
 				
 			$this->output('</UL>');
 		}
 		
-		function post_tag_item($tag, $class)
+		function post_tag_item($taghtml, $class)
 		{
-			$this->output('<LI CLASS="'.$class.'-tag-item">'.$tag.'</LI>');
+			$this->output('<LI CLASS="'.$class.'-tag-item">'.$taghtml.'</LI>');
 		}
 	
 		function page_links()

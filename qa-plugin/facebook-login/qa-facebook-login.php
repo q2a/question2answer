@@ -89,7 +89,7 @@
 							'location' => @$user['location']['name'],
 							'website' => @$user['website'],
 							'about' => @$user['bio'],
-							'avatar' => strlen(@$user['picture']) ? qa_retrieve_url($user['picture']) : null,
+							'avatar' => strlen(@$user['picture']['data']['url']) ? qa_retrieve_url($user['picture']['data']['url']) : null,
 						));
 
 				} catch (FacebookApiException $e) {

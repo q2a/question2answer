@@ -95,6 +95,7 @@
 		'me' => 'me',
 		'meta_order' => '^what^when^where^who', // you can reorder but DO NOT translate! e.g. <answered> <15 hours ago> <in Problems> <by me (500 points)>
 		'min_length_x' => 'Please provide more information - at least ^ characters',
+		'max_upload_size_x' => 'Maximum upload size is ^',
 		'moved' => 'moved',
 		'nav_account' => 'My Account',
 		'nav_activity' => 'All Activity',

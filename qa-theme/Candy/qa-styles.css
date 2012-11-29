@@ -35,7 +35,7 @@
 
 /* General page layout */
 
-body {background:#bddb62 url(page-background.png) repeat-x left top; margin:0; padding:0; text-align:center;}
+body {background:#bddb62 url(page-bg.png) repeat-x left top; margin:0; padding:0; text-align:center;}
 body,td,input,textarea {font-size:12px; font-family: "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;}
 a:link,a:active,a:visited {text-decoration:none;}
 a:hover {text-decoration:underline;}

@@ -335,6 +335,7 @@
 			
 			'buttons' => array(
 				'save' => array(
+					'tags' => 'onClick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
@@ -359,7 +360,8 @@
 			$form['fields']['content']=array_merge($form['fields']['content'],
 				qa_editor_load_field($editor, $qa_content, $content, $format, 'q_content', 12, true));
 				
-			$form['buttons']['save']['tags']=method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script('q_content').'"') : '';
+			if (method_exists($editor, 'update_script'))
+				$form['buttons']['save']['tags']='onClick="qa_show_waiting_after(this, false); '.$editor->update_script('q_content').'"';
 			
 			$form['hidden']['q_editor']=qa_html($editorname);
 		
@@ -502,6 +504,7 @@
 			
 			'buttons' => array(
 				'close' => array(
+					'tags' => 'onClick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('question/close_form_button'),
 				),
 				
@@ -615,10 +618,11 @@
 					)
 				),
 			),
-			
+
 			'buttons' => array(
 				'save' => array(
-					'tags' => method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script($prefix.'content').'"') : '',
+					'tags' => 'onClick="qa_show_waiting_after(this, false); '.
+						(method_exists($editor, 'update_script') ? $editor->update_script($prefix.'content') : '').'"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
@@ -833,7 +837,8 @@
 			
 			'buttons' => array(
 				'save' => array(
-					'tags' => method_exists($editor, 'update_script') ? ('onClick="'.$editor->update_script($prefix.'content').'"') : '',
+					'tags' => 'onClick="qa_show_waiting_after(this, false); '.
+						(method_exists($editor, 'update_script') ? $editor->update_script($prefix.'content') : '').'"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
