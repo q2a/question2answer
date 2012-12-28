@@ -70,13 +70,7 @@
 					
 					$questionpos=strpos($origpath, '?');
 					if (is_numeric($questionpos)) {
-						$params=explode('&', substr($origpath, $questionpos+1));
-						
-						foreach ($params as $param)
-							if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-								$qarg = str_replace('.', '_', urldecode($matches[1]));
-								$_GET[$qarg]=qa_string_to_gpc(urldecode(@$matches[3]));
-		
+						$_GET=parse_str(substr($origpath, $questionpos+1));
 						$origpath=substr($origpath, 0, $questionpos);
 					}
 					
