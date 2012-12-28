@@ -74,7 +74,8 @@
 						
 						foreach ($params as $param)
 							if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-								$_GET[urldecode($matches[1])]=qa_string_to_gpc(urldecode(@$matches[3]));
+								$qarg = str_replace('.', '_', urldecode($matches[1]));
+								$_GET[$qarg]=qa_string_to_gpc(urldecode(@$matches[3]));
 		
 						$origpath=substr($origpath, 0, $questionpos);
 					}
