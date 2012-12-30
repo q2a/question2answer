@@ -190,7 +190,7 @@
 		function html()
 		{
 			$this->output(
-				'<HTML>',
+				'<html>',
 				'<!-- Powered by Question2Answer - http://www.question2answer.org/ -->'
 			);
 			
@@ -199,7 +199,7 @@
 			
 			$this->output(
 				'<!-- Powered by Question2Answer - http://www.question2answer.org/ -->',
-				'</HTML>'
+				'</html>'
 			);
 		}
 		
