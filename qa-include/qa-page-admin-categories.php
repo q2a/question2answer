@@ -493,7 +493,7 @@
 						$childrenhtml=qa_lang_html('admin/category_no_subs');
 					
 					$childrenhtml.=' - <a href="'.qa_path_html(qa_request(), array('addsub' => $editcategory['categoryid'])).
-						'" style="white-space: nowrap;"><b>'.qa_lang_html('admin/category_add_sub').'</b></a>';
+						'" style="white-space: nowrap;"><strong>'.qa_lang_html('admin/category_add_sub').'</strong></a>';
 					
 					$qa_content['form']['fields']['children']=array(
 						'id' => 'children_display',

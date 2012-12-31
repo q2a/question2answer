@@ -98,7 +98,7 @@
 */
 	{
 		return sprintf(
-			"%s &ndash; <b>%.1fms</b> (%d%%) &ndash; PHP %.1fms (%d%%), MySQL %.1fms (%d%%), Other %.1fms (%d%%) &ndash; %d PHP %s, %d DB %s, %dk RAM (%d%%)",
+			"%s &ndash; <strong>%.1fms</strong> (%d%%) &ndash; PHP %.1fms (%d%%), MySQL %.1fms (%d%%), Other %.1fms (%d%%) &ndash; %d PHP %s, %d DB %s, %dk RAM (%d%%)",
 			$stage, $usage['clock']*1000, $usage['clock']*100/$totalusage['clock'],
 			$usage['cpu']*1000, $usage['cpu']*100/$totalusage['clock'],
 			$usage['mysql']*1000, $usage['mysql']*100/$totalusage['clock'],

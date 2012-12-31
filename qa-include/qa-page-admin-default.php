@@ -1434,7 +1434,7 @@
 				$listhtml='';
 				
 				foreach ($userfields as $userfield) {
-					$listhtml.='<li><b>'.qa_html(qa_user_userfield_label($userfield)).'</b>';
+					$listhtml.='<li><strong>'.qa_html(qa_user_userfield_label($userfield)).'</strong>';
 	
 					$listhtml.=strtr(qa_lang_html('admin/edit_field'), array(
 						'^1' => '<a href="'.qa_path_html('admin/userfields', array('edit' => $userfield['fieldid'])).'">',
@@ -1444,7 +1444,7 @@
 					$listhtml.='</li>';
 				}
 				
-				$listhtml.='<li><b><a href="'.qa_path_html('admin/userfields').'">'.qa_lang_html('admin/add_new_field').'</a></b></li>';
+				$listhtml.='<li><strong><a href="'.qa_path_html('admin/userfields').'">'.qa_lang_html('admin/add_new_field').'</a></strong></li>';
 	
 				$qa_content['form']['fields'][]=array('type' => 'blank');
 				
@@ -1463,7 +1463,7 @@
 			$listhtml='';
 			
 			foreach ($pointstitle as $points => $title) {
-				$listhtml.='<li><b>'.$title.'</b> - '.(($points==1) ? qa_lang_html_sub('main/1_point', '1', '1')
+				$listhtml.='<li><strong>'.$title.'</strong> - '.(($points==1) ? qa_lang_html_sub('main/1_point', '1', '1')
 				: qa_lang_html_sub('main/x_points', qa_html(number_format($points))));
 
 				$listhtml.=strtr(qa_lang_html('admin/edit_title'), array(
@@ -1474,7 +1474,7 @@
 				$listhtml.='</li>';
 			}
 
-			$listhtml.='<li><b><a href="'.qa_path_html('admin/usertitles').'">'.qa_lang_html('admin/add_new_title').'</a></b></li>';
+			$listhtml.='<li><strong><a href="'.qa_path_html('admin/usertitles').'">'.qa_lang_html('admin/add_new_title').'</a></strong></li>';
 
 			$qa_content['form']['fields']['usertitles']=array(
 				'label' => qa_lang_html('admin/user_titles'),
@@ -1491,7 +1491,7 @@
 			
 			foreach ($widgetmodules as $tryname => $trywidget)
 				if (method_exists($trywidget, 'allow_region')) {
-					$listhtml.='<li><b>'.qa_html($tryname).'</b>';
+					$listhtml.='<li><strong>'.qa_html($tryname).'</strong>';
 					
 					$listhtml.=strtr(qa_lang_html('admin/add_widget_link'), array(
 						'^1' => '<a href="'.qa_path_html('admin/layoutwidgets', array('title' => $tryname)).'">',
@@ -1522,7 +1522,7 @@
 			$placeoptions=qa_admin_place_options();
 			
 			foreach ($widgets as $widget) {
-				$listhtml.='<li><b>'.qa_html($widget['title']).'</b> - '.
+				$listhtml.='<li><strong>'.qa_html($widget['title']).'</strong> - '.
 					'<a href="'.qa_path_html('admin/layoutwidgets', array('edit' => $widget['widgetid'])).'">'.
 					@$placeoptions[$widget['place']].'</a>';
 			

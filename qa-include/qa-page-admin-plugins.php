@@ -111,7 +111,7 @@
 			if (strlen(@$metadata['uri']))
 				$namehtml='<a href="'.qa_html($metadata['uri']).'">'.$namehtml.'</a>';
 			
-			$namehtml='<b>'.$namehtml.'</b>';
+			$namehtml='<strong>'.$namehtml.'</strong>';
 				
 			if (strlen(@$metadata['version']))
 				$namehtml.=' v'.qa_html($metadata['version']);

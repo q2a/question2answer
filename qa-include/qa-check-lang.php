@@ -213,10 +213,10 @@
 	{
 		echo '<font color="'.($error ? '#cc0000' : '#cc9999').'"><code>';
 
-		echo 'qa-lang-<b>'.qa_html($prefix).'</b>.php:';
+		echo 'qa-lang-<strong>'.qa_html($prefix).'</strong>.php:';
 
 		if (strlen($key))
-			echo "'<b>".qa_html($key)."</b>'";
+			echo "'<strong>".qa_html($key)."</strong>'";
 		
 		echo '</code></font> &nbsp; '.qa_html($issue).'<br />';
 	}

@@ -514,7 +514,7 @@
 			$suggestrequests=$trypage->suggest_requests();
 		
 			foreach ($suggestrequests as $suggestrequest) {
-				$listhtml.='<li><b><a href="'.qa_path_html($suggestrequest['request']).'">'.qa_html($suggestrequest['title']).'</a></b>';
+				$listhtml.='<li><strong><a href="'.qa_path_html($suggestrequest['request']).'">'.qa_html($suggestrequest['title']).'</a></strong>';
 				
 				$listhtml.=qa_lang_html_sub('admin/plugin_module', qa_html($tryname));
 
@@ -542,7 +542,7 @@
 		$listhtml='';
 		
 		foreach ($pages as $page) {
-			$listhtml.='<li><b><a href="'.qa_custom_page_url($page).'">'.qa_html($page['title']).'</a></b>';
+			$listhtml.='<li><strong><a href="'.qa_custom_page_url($page).'">'.qa_html($page['title']).'</a></strong>';
 			
 			$listhtml.=strtr(qa_lang_html(($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) ? 'admin/edit_link' : 'admin/edit_page'), array(
 				'^1' => '<a href="'.qa_path_html('admin/pages', array('edit' => $page['pageid'])).'">',
