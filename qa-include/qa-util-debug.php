@@ -119,15 +119,15 @@
 		
 		echo '<p><br /><table bgcolor="#CCCCCC" cellpadding="8" cellspacing="0" width="100%">';
 	
-		echo '<tr><td COLSPAN="2">';
+		echo '<tr><td colspan="2">';
 		
 		$totaldelta=qa_usage_delta($qa_usage_start, qa_usage_get());
 		
-		echo qa_usage_line('Total', $totaldelta, $totaldelta).'<BR>';
+		echo qa_usage_line('Total', $totaldelta, $totaldelta).'<br />';
 		
 		foreach ($qa_usage_stages as $stage => $stagedelta)
 			
-		echo '<BR>'.qa_usage_line(ucfirst($stage), $stagedelta, $totaldelta);
+		echo '<br />'.qa_usage_line(ucfirst($stage), $stagedelta, $totaldelta);
 		
 		echo '</td></tr><tr valign="bottom"><td width="30%"><textarea cols="40" rows="20" style="width:100%;">';
 		

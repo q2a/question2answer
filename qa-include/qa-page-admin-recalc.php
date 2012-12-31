@@ -74,7 +74,7 @@
 			while ( qa_recalc_perform_step($state) && (time()<$stoptime) )
 				;
 			
-			echo qa_html(qa_recalc_get_message($state)).str_repeat('    ', 1024)."<BR>\n";
+			echo qa_html(qa_recalc_get_message($state)).str_repeat('    ', 1024)."<br />\n";
 
 			flush();
 			sleep(1); // ... then rest for one

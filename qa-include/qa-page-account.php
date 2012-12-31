@@ -268,7 +268,7 @@
 		$avataroptions=array();
 		
 		if (qa_opt('avatar_default_show') && strlen(qa_opt('avatar_default_blobid'))) {
-			$avataroptions['']='<SPAN style="margin:2px 0; display:inline-block;">'.
+			$avataroptions['']='<span style="margin:2px 0; display:inline-block;">'.
 				qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), 32).
 				'</span> '.qa_lang_html('users/avatar_default');
 		} else
@@ -277,7 +277,7 @@
 		$avatarvalue=$avataroptions[''];
 	
 		if (qa_opt('avatar_allow_gravatar')) {
-			$avataroptions['gravatar']='<SPAN style="margin:2px 0; display:inline-block;">'.
+			$avataroptions['gravatar']='<span style="margin:2px 0; display:inline-block;">'.
 				qa_get_gravatar_html($useraccount['email'], 32).' '.strtr(qa_lang_html('users/avatar_gravatar'), array(
 					'^1' => '<a href="http://www.gravatar.com/" target="_blank">',
 					'^2' => '</a>',
@@ -291,7 +291,7 @@
 			$avataroptions['uploaded']='<input name="file" type="file">';
 
 			if (isset($useraccount['avatarblobid']))
-				$avataroptions['uploaded']='<SPAN style="margin:2px 0; display:inline-block;">'.
+				$avataroptions['uploaded']='<span style="margin:2px 0; display:inline-block;">'.
 					qa_get_avatar_blob_html($useraccount['avatarblobid'], $useraccount['avatarwidth'], $useraccount['avatarheight'], 32).
 					'</span>'.$avataroptions['uploaded'];
 

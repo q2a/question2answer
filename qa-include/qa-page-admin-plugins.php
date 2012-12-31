@@ -148,15 +148,15 @@
 				foreach ($pluginoptionanchors[$plugindirectory] as $anchor)
 					$deschtml.=(strlen($deschtml) ? ' - ' : '').'<a href="#'.qa_html($anchor).'">'.qa_lang_html('admin/options').'</a>';
 				
-			$pluginhtml=$namehtml.' '.$authorhtml.' '.$updatehtml.'<BR>'.$deschtml.(strlen($deschtml) ? '<BR>' : '').
-				'<SMALL style="color:#666">'.qa_html($plugindirectory).'</SMALL>';
+			$pluginhtml=$namehtml.' '.$authorhtml.' '.$updatehtml.'<br />'.$deschtml.(strlen($deschtml) ? '<br />' : '').
+				'<small style="color:#666">'.qa_html($plugindirectory).'</small>';
 				
 			if (qa_qa_version_below(@$metadata['min_q2a']))
-				$pluginhtml='<STRIKE style="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN style="color:#f00">'.
+				$pluginhtml='<strike style="color:#999">'.$pluginhtml.'</strike><br /><span style="color:#f00">'.
 					qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</span>';
 					
 			elseif (qa_php_version_below(@$metadata['min_php']))
-				$pluginhtml='<STRIKE style="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN style="color:#f00">'.
+				$pluginhtml='<strike style="color:#999">'.$pluginhtml.'</strike><br /><span style="color:#f00">'.
 					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
 				
 			$qa_content['form']['fields'][]=array(

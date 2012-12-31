@@ -171,7 +171,7 @@
 			if ($this->indent)
 				echo "<!--\nIt's no big deal, but your HTML could not be indented properly. To fix, please:\n".
 					"1. Use this->output() to output all HTML.\n".
-					"2. Balance all paired tags like <td>...</td> or <DIV>...</div>.\n".
+					"2. Balance all paired tags like <td>...</td> or <div>...</div>.\n".
 					"3. Use a slash at the end of unpaired tags like <img/> or <input/>.\n".
 					"Thanks!\n-->\n";
 		}
@@ -1102,7 +1102,7 @@
 			
 			foreach ($field['options'] as $tag => $value) {
 				if ($radios++)
-					$this->output('<br/>');
+					$this->output('<br//>');
 					
 				$this->output('<input '.@$field['tags'].' type="radio" value="'.$tag.'"'.(($value==@$field['value']) ? ' checked="checked"' : '').' class="qa-form-'.$style.'-radio"//> '.$value);
 			}

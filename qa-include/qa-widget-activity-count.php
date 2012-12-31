@@ -50,7 +50,7 @@
 			
 			$this->output_count($themeobject, qa_opt('cache_userpointscount'), 'main/1_user', 'main/x_users');
 			
-			$themeobject->output('</DIV>');
+			$themeobject->output('</div>');
 		}
 		
 

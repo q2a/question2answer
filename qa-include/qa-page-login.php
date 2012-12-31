@@ -160,7 +160,7 @@
 		$html=ob_get_clean();
 		
 		if (strlen($html))
-			@$qa_content['custom'].='<BR>'.$html.'<BR>';
+			@$qa_content['custom'].='<br />'.$html.'<br />';
 	}
 
 	$qa_content['focusid']=(isset($inemailhandle) && !isset($errors['emailhandle'])) ? 'password' : 'emailhandle';

@@ -574,7 +574,7 @@
 		$backtrace=array_reverse(array_slice(debug_backtrace(), 1));
 		foreach ($backtrace as $trace)
 			echo '<<font color="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
-				qa_html(@$trace['function'].'() '.@$trace['file'].':'.@$trace['line']).'</font><BR>';
+				qa_html(@$trace['function'].'() '.@$trace['file'].':'.@$trace['line']).'</font><br />';
 		
 		
 		qa_exit('error');

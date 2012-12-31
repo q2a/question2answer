@@ -311,7 +311,7 @@
 			));
 			
 			if ($microformats)
-				$fields['content']='<div class="entry-content">'.$fields['content'].'</DIV>';
+				$fields['content']='<div class="entry-content">'.$fields['content'].'</div>';
 			
 			$fields['content']='<a name="'.qa_html($postid).'"></a>'.$fields['content'];
 				// this is for backwards compatibility with any existing links using the old style of anchor
@@ -1159,7 +1159,7 @@
 			
 		foreach ($effects as $target => $sources) {
 			$funcscript[]="\tvar e=document.getElementById(".qa_js($target).");";
-			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='SPAN')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
+			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='span')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
 		}
 		
 		$funcscript[]="}";
@@ -1305,7 +1305,7 @@
 				$field['options'][$keycategoryid]=qa_category_path_html($navcategories, $keycategoryid);
 			
 		$field['value']=@$field['options'][$categoryid];
-		$field['note']='<div id="'.$fieldname.'_note"><NOSCRIPT style="color:red;">'.qa_lang_html('question/category_js_note').'</NOSCRIPT></DIV>';
+		$field['note']='<div id="'.$fieldname.'_note"><noscript style="color:red;">'.qa_lang_html('question/category_js_note').'</noscript></div>';
 	}
 	
 	

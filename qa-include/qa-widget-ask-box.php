@@ -97,7 +97,7 @@
 		</table>
 		<input type="hidden" name="doask1" value="1" />
 	</form>
-</DIV>
+</div>
 <?php
 		}
 	

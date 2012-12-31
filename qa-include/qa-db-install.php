@@ -1339,7 +1339,7 @@
 	Output $text to the browser (after converting to HTML) and do all we can to get it displayed
 */
 	{
-		echo qa_html($text).str_repeat('    ', 1024)."<BR><BR>\n";
+		echo qa_html($text).str_repeat('    ', 1024)."<br /><br />\n";
 		flush();
 	}
 

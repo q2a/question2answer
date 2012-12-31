@@ -195,16 +195,16 @@
 		}
 		
 		foreach ($langnewphrases as $prefix => $phrases) {
-			echo '<H2>'.$language.' phrases to add to <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code>:</H2>';
+			echo '<h2>'.$language.' phrases to add to <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code>:</h2>';
 			
 			echo 'Copy and paste this into the middle of <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code> then translate the right-hand side after the <code>=></code> symbol.';
 			
-			echo '<PRE>';
+			echo '<pre>';
 			
 			foreach ($phrases as $key => $value)
-				echo '<SPAN style="font-size:25%;">'."\t\t</span>'".$key."' => \"".strtr($value, array('\\' => '\\\\', '"' => '\"', '$' => '\$', "\n" => '\n', "\t" => '\t'))."\",\n";
+				echo '<span style="font-size:25%;">'."\t\t</span>'".$key."' => \"".strtr($value, array('\\' => '\\\\', '"' => '\"', '$' => '\$', "\n" => '\n', "\t" => '\t'))."\",\n";
 				
-			echo '</PRE>';
+			echo '</pre>';
 		}
 	}
 
@@ -218,7 +218,7 @@
 		if (strlen($key))
 			echo "'<b>".qa_html($key)."</b>'";
 		
-		echo '</code></font> &nbsp; '.qa_html($issue).'<BR>';
+		echo '</code></font> &nbsp; '.qa_html($issue).'<br />';
 	}
 
 

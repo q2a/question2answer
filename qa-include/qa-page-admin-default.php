@@ -1072,7 +1072,7 @@
 
 				case 'avatar_default_show';
 					$qa_content['form']['tags'].='ENCtype="multipart/form-data"';
-					$optionfield['label'].=' <SPAN style="margin:2px 0; display:inline-block;">'.
+					$optionfield['label'].=' <span style="margin:2px 0; display:inline-block;">'.
 						qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), 32).
 						'</span> <input name="avatar_default_file" type="file" style="width:16em;"/>';
 					break;

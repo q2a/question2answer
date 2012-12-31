@@ -158,11 +158,11 @@
 				break;
 				
 			default:
-				$prefix='<SPAN style="visibility:hidden;">+</span>'; // for even alignment
+				$prefix='<span style="visibility:hidden;">+</span>'; // for even alignment
 				break;
 		}
 		
-		$optionfield['prefix']='<SPAN style="width:1em; display:inline-block; display:-moz-inline-stack;">'.$prefix.'</span>';
+		$optionfield['prefix']='<span style="width:1em; display:inline-block; display:-moz-inline-stack;">'.$prefix.'</span>';
 		
 		$qa_content['form']['fields'][$optionname]=$optionfield;
 	}

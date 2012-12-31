@@ -437,7 +437,7 @@
 				if (isset($editcategory['categoryid']))
 					$qa_content['form']['fields']['parent']['value'].=' - '.
 						'<a href="'.qa_path_html(qa_request(), array('edit' => $editcategory['categoryid'], 'setparent' => 1)).
-						'" style="white-space: nowrap;"><SPAN>'.qa_lang_html('admin/category_move_parent').'</a>';
+						'" style="white-space: nowrap;"><span>'.qa_lang_html('admin/category_move_parent').'</a>';
 			}
 
 			$positionoptions=array();

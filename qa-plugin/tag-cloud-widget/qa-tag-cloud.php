@@ -131,12 +131,12 @@
 			$maxcount=current($populartags);
 			
 			$themeobject->output(
-				'<H2 style="margin-top:0; padding-top:0;">',
+				'<h2 style="margin-top:0; padding-top:0;">',
 				qa_lang_html('main/popular_tags'),
-				'</H2>'
+				'</h2>'
 			);
 			
-			$themeobject->output('<DIV style="font-size:10px;">');
+			$themeobject->output('<div style="font-size:10px;">');
 			
 			$maxsize=qa_opt('tag_cloud_font_size');
 			$scale=qa_opt('tag_cloud_size_popular');
@@ -148,7 +148,7 @@
 					$themeobject->output('<a href="'.qa_path_html('tag/'.$tag).'" style="font-size:'.$size.'px; vertical-align:baseline;">'.qa_html($tag).'</a>');
 			}
 			
-			$themeobject->output('</DIV>');
+			$themeobject->output('</div>');
 		}
 	
 	}

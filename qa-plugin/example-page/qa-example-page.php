@@ -98,7 +98,7 @@
 				),
 			);
 
-			$qa_content['custom_2']='<p><BR>More <I>custom html</I></p>';
+			$qa_content['custom_2']='<p><br />More <I>custom html</I></p>';
 			
 			return $qa_content;
 		}

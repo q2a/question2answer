@@ -63,9 +63,9 @@
 			if ($region=='side') {
 				$themeobject->output(
 					'<div class="qa-related-qs">',
-					'<H2 style="margin-top:0; padding-top:0;">',
+					'<h2 style="margin-top:0; padding-top:0;">',
 					$titlehtml,
-					'</H2>'
+					'</h2>'
 				);
 				
 				$themeobject->output('<ul class="qa-related-q-list">');
@@ -75,14 +75,14 @@
 
 				$themeobject->output(
 					'</ul>',
-					'</DIV>'
+					'</div>'
 				);
 
 			} else {
 				$themeobject->output(
-					'<H2>',
+					'<h2>',
 					$titlehtml,
-					'</H2>'
+					'</h2>'
 				);
 
 				$q_list=array(
