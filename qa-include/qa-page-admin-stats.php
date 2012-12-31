@@ -78,7 +78,7 @@
 				'label' => qa_lang_html('admin/q2a_latest_version'),
 				'type' => 'custom',
 				'html' => '<iframe src="http://www.question2answer.org/question2answer-latest.php?version='.urlencode(QA_VERSION).'&language='.urlencode(qa_opt('site_language')).
-					'" width="100" height="16" style="vertical-align:middle; border:0; background:transparent;" allowTransparency="true" scrolling="no" frameborder="0"></iframe>',
+					'" width="100" height="16" style="vertical-align:middle; border:0; background:transparent;" allowtransparency="true" scrolling="no" frameborder="0"></iframe>',
 			),
 			
 			'break0' => array(

@@ -1038,7 +1038,7 @@
 					'<span class="qa-form-'.$style.'-note">',
 					$button['note'],
 					'</span>',
-					'<br/>'
+					'<br //>'
 				);
 		}
 		
@@ -1102,7 +1102,7 @@
 			
 			foreach ($field['options'] as $tag => $value) {
 				if ($radios++)
-					$this->output('<br//>');
+					$this->output('<br //>');
 					
 				$this->output('<input '.@$field['tags'].' type="radio" value="'.$tag.'"'.(($value==@$field['value']) ? ' checked="checked"' : '').' class="qa-form-'.$style.'-radio"//> '.$value);
 			}
@@ -1468,7 +1468,7 @@
 				$this->output('<input '.$post[$element].' type="submit" value="'.$value.'" class="'.$class.'-disabled" disabled="disabled"//> ');
 		}
 		
-		function post_avatar_meta($post, $class, $avatarprefix=null, $metaprefix=null, $metaseparator='<br/>')
+		function post_avatar_meta($post, $class, $avatarprefix=null, $metaprefix=null, $metaseparator='<br />')
 		{
 			$this->output('<span class="'.$class.'-avatar-meta">');
 			$this->post_avatar($post, $class, $avatarprefix);
@@ -1486,7 +1486,7 @@
 			}
 		}
 		
-		function post_meta($post, $class, $prefix=null, $separator='<br/>')
+		function post_meta($post, $class, $prefix=null, $separator='<br />')
 		{
 			$this->output('<span class="'.$class.'-meta">');
 			
