@@ -40,7 +40,7 @@
 		
 		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
-			$themeobject->output('<DIV CLASS="qa-activity-count">');
+			$themeobject->output('<div class="qa-activity-count">');
 			
 			$this->output_count($themeobject, qa_opt('cache_qcount'), 'main/1_question', 'main/x_questions');
 			$this->output_count($themeobject, qa_opt('cache_acount'), 'main/1_answer', 'main/x_answers');
@@ -56,14 +56,14 @@
 
 		function output_count($themeobject, $value, $langsingular, $langplural)
 		{
-			$themeobject->output('<P CLASS="qa-activity-count-item">');
+			$themeobject->output('<P class="qa-activity-count-item">');
 			
 			if ($value==1)
-				$themeobject->output(qa_lang_html_sub($langsingular, '<SPAN CLASS="qa-activity-count-data">1</SPAN>', '1'));
+				$themeobject->output(qa_lang_html_sub($langsingular, '<span class="qa-activity-count-data">1</span>', '1'));
 			else
-				$themeobject->output(qa_lang_html_sub($langplural, '<SPAN CLASS="qa-activity-count-data">'.number_format((int)$value).'</SPAN>'));
+				$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.number_format((int)$value).'</span>'));
 
-			$themeobject->output('</P>');
+			$themeobject->output('</p>');
 		}
 	
 	}

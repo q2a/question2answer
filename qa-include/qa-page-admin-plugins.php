@@ -109,9 +109,9 @@
 				$namehtml=qa_lang_html('admin/unnamed_plugin');
 				
 			if (strlen(@$metadata['uri']))
-				$namehtml='<A HREF="'.qa_html($metadata['uri']).'">'.$namehtml.'</A>';
+				$namehtml='<a href="'.qa_html($metadata['uri']).'">'.$namehtml.'</a>';
 			
-			$namehtml='<B>'.$namehtml.'</B>';
+			$namehtml='<b>'.$namehtml.'</b>';
 				
 			if (strlen(@$metadata['version']))
 				$namehtml.=' v'.qa_html($metadata['version']);
@@ -120,7 +120,7 @@
 				$authorhtml=qa_html($metadata['author']);
 				
 				if (strlen(@$metadata['author_uri']))
-					$authorhtml='<A HREF="'.qa_html($metadata['author_uri']).'">'.$authorhtml.'</A>';
+					$authorhtml='<a href="'.qa_html($metadata['author_uri']).'">'.$authorhtml.'</a>';
 					
 				$authorhtml=qa_lang_html_sub('main/by_x', $authorhtml);
 				
@@ -130,7 +130,7 @@
 			if (strlen(@$metadata['version']) && strlen(@$metadata['update'])) {
 				$elementid='version_check_'.md5($plugindirectory);
 				
-				$updatehtml='(<SPAN ID="'.$elementid.'">...</SPAN>)';
+				$updatehtml='(<span id="'.$elementid.'">...</span>)';
 				
 				$qa_content['script_onloads'][]=array(
 					"qa_version_check(".qa_js($metadata['update']).", 'Plugin Version', ".qa_js($metadata['version'], true).", 'Plugin URI', ".qa_js($elementid).");"
@@ -146,18 +146,18 @@
 			
 			if (isset($pluginoptionanchors[$plugindirectory]))
 				foreach ($pluginoptionanchors[$plugindirectory] as $anchor)
-					$deschtml.=(strlen($deschtml) ? ' - ' : '').'<A HREF="#'.qa_html($anchor).'">'.qa_lang_html('admin/options').'</A>';
+					$deschtml.=(strlen($deschtml) ? ' - ' : '').'<a href="#'.qa_html($anchor).'">'.qa_lang_html('admin/options').'</a>';
 				
 			$pluginhtml=$namehtml.' '.$authorhtml.' '.$updatehtml.'<BR>'.$deschtml.(strlen($deschtml) ? '<BR>' : '').
-				'<SMALL STYLE="color:#666">'.qa_html($plugindirectory).'</SMALL>';
+				'<SMALL style="color:#666">'.qa_html($plugindirectory).'</SMALL>';
 				
 			if (qa_qa_version_below(@$metadata['min_q2a']))
-				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
-					qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</SPAN>';
+				$pluginhtml='<STRIKE style="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN style="color:#f00">'.
+					qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</span>';
 					
 			elseif (qa_php_version_below(@$metadata['min_php']))
-				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
-					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</SPAN>';
+				$pluginhtml='<STRIKE style="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN style="color:#f00">'.
+					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
 				
 			$qa_content['form']['fields'][]=array(
 				'type' => 'custom',
@@ -181,10 +181,10 @@
 			
 			$identifierhtml=qa_html(md5($type.'/'.$name));
 			
-			$form['title']='<A NAME="'.$identifierhtml.'">'.$form['title'].'</A>';
+			$form['title']='<a name="'.$identifierhtml.'">'.$form['title'].'</a>';
 				
 			if (!isset($form['tags']))
-				$form['tags']='METHOD="POST" ACTION="'.qa_self_html().'#'.$identifierhtml.'"';
+				$form['tags']='method="post" action="'.qa_self_html().'#'.$identifierhtml.'"';
 			
 			if (!isset($form['style']))
 				$form['style']='tall';
@@ -208,8 +208,8 @@
 					$qa_content['error']=strtr(qa_lang_html('admin/module_x_database_init'), array(
 						'^1' => qa_html($name),
 						'^2' => qa_html($type),
-						'^3' => '<A HREF="'.qa_path_html('install').'">',
-						'^4' => '</A>',
+						'^3' => '<a href="'.qa_path_html('install').'">',
+						'^4' => '</a>',
 					));
 			}
 		}

@@ -110,7 +110,7 @@
 			$qa_db_fail_handler($type, $errno, $error, $query);
 		
 		else {
-			echo '<HR><FONT COLOR="red">Database '.htmlspecialchars($type.' error '.$errno).'<P>'.nl2br(htmlspecialchars($error."\n\n".$query));
+			echo '<HR><<font color="red">Database '.htmlspecialchars($type.' error '.$errno).'<p>'.nl2br(htmlspecialchars($error."\n\n".$query));
 			qa_exit('error');
 		}
 	}

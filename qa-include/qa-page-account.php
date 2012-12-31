@@ -188,7 +188,7 @@
 	$qa_content['title']=qa_lang_html('profile/my_account_title');
 	
 	$qa_content['form_profile']=array(
-		'tags' => 'ENCTYPE="multipart/form-data" METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'ENCtype="multipart/form-data" method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'wide',
 		
@@ -207,7 +207,7 @@
 			
 			'handle' => array(
 				'label' => qa_lang_html('users/handle_label'),
-				'tags' => 'NAME="handle"',
+				'tags' => 'name="handle"',
 				'value' => qa_html(isset($inhandle) ? $inhandle : $useraccount['handle']),
 				'error' => qa_html(@$errors['handle']),
 				'type' => $changehandle ? 'text' : 'static',
@@ -215,7 +215,7 @@
 			
 			'email' => array(
 				'label' => qa_lang_html('users/email_label'),
-				'tags' => 'NAME="email"',
+				'tags' => 'name="email"',
 				'value' => qa_html(isset($inemail) ? $inemail : $useraccount['email']),
 				'error' => isset($errors['email']) ? qa_html($errors['email']) :
 					(($doconfirms && !$isconfirmed) ? qa_insert_login_links(qa_lang_html('users/email_please_confirm')) : null),
@@ -223,7 +223,7 @@
 			
 			'messages' => array(
 				'label' => qa_lang_html('users/private_messages'),
-				'tags' => 'NAME="messages"',
+				'tags' => 'name="messages"',
 				'type' => 'checkbox',
 				'value' => !($useraccount['flags'] & QA_USER_FLAGS_NO_MESSAGES),
 				'note' => qa_lang_html('users/private_messages_explanation'),
@@ -231,7 +231,7 @@
 			
 			'mailings' => array(
 				'label' => qa_lang_html('users/mass_mailings'),
-				'tags' => 'NAME="mailings"',
+				'tags' => 'name="mailings"',
 				'type' => 'checkbox',
 				'value' => !($useraccount['flags'] & QA_USER_FLAGS_NO_MAILINGS),
 				'note' => qa_lang_html('users/mass_mailings_explanation'),
@@ -242,7 +242,7 @@
 		
 		'buttons' => array(
 			'save' => array(
-				'tags' => 'onClick="qa_show_waiting_after(this, false);"',
+				'tags' => 'onclick="qa_show_waiting_after(this, false);"',
 				'label' => qa_lang_html('users/save_profile'),
 			),
 		),
@@ -268,32 +268,32 @@
 		$avataroptions=array();
 		
 		if (qa_opt('avatar_default_show') && strlen(qa_opt('avatar_default_blobid'))) {
-			$avataroptions['']='<SPAN STYLE="margin:2px 0; display:inline-block;">'.
+			$avataroptions['']='<SPAN style="margin:2px 0; display:inline-block;">'.
 				qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), 32).
-				'</SPAN> '.qa_lang_html('users/avatar_default');
+				'</span> '.qa_lang_html('users/avatar_default');
 		} else
 			$avataroptions['']=qa_lang_html('users/avatar_none');
 
 		$avatarvalue=$avataroptions[''];
 	
 		if (qa_opt('avatar_allow_gravatar')) {
-			$avataroptions['gravatar']='<SPAN STYLE="margin:2px 0; display:inline-block;">'.
+			$avataroptions['gravatar']='<SPAN style="margin:2px 0; display:inline-block;">'.
 				qa_get_gravatar_html($useraccount['email'], 32).' '.strtr(qa_lang_html('users/avatar_gravatar'), array(
-					'^1' => '<A HREF="http://www.gravatar.com/" TARGET="_blank">',
-					'^2' => '</A>',
-				)).'</SPAN>';
+					'^1' => '<a href="http://www.gravatar.com/" target="_blank">',
+					'^2' => '</a>',
+				)).'</span>';
 
 			if ($useraccount['flags'] & QA_USER_FLAGS_SHOW_GRAVATAR)
 				$avatarvalue=$avataroptions['gravatar'];
 		}
 
 		if (qa_has_gd_image() && qa_opt('avatar_allow_upload')) {
-			$avataroptions['uploaded']='<INPUT NAME="file" TYPE="file">';
+			$avataroptions['uploaded']='<input name="file" type="file">';
 
 			if (isset($useraccount['avatarblobid']))
-				$avataroptions['uploaded']='<SPAN STYLE="margin:2px 0; display:inline-block;">'.
+				$avataroptions['uploaded']='<SPAN style="margin:2px 0; display:inline-block;">'.
 					qa_get_avatar_blob_html($useraccount['avatarblobid'], $useraccount['avatarwidth'], $useraccount['avatarheight'], 32).
-					'</SPAN>'.$avataroptions['uploaded'];
+					'</span>'.$avataroptions['uploaded'];
 
 			if ($useraccount['flags'] & QA_USER_FLAGS_SHOW_AVATAR)
 				$avatarvalue=$avataroptions['uploaded'];
@@ -302,7 +302,7 @@
 		$qa_content['form_profile']['fields']['avatar']=array(
 			'type' => 'select-radio',
 			'label' => qa_lang_html('users/avatar_label'),
-			'tags' => 'NAME="avatar"',
+			'tags' => 'name="avatar"',
 			'options' => $avataroptions,
 			'value' => $avatarvalue,
 			'error' => qa_html(@$errors['avatar']),
@@ -325,7 +325,7 @@
 			
 		$qa_content['form_profile']['fields'][$userfield['title']]=array(
 			'label' => qa_html($label),
-			'tags' => 'NAME="field_'.$userfield['fieldid'].'"',
+			'tags' => 'name="field_'.$userfield['fieldid'].'"',
 			'value' => qa_html($value),
 			'error' => qa_html(@$errors[$userfield['fieldid']]),
 			'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
@@ -343,7 +343,7 @@
 //	Change password form
 
 	$qa_content['form_password']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'wide',
 		
@@ -352,7 +352,7 @@
 		'fields' => array(
 			'old' => array(
 				'label' => qa_lang_html('users/old_password'),
-				'tags' => 'NAME="oldpassword"',
+				'tags' => 'name="oldpassword"',
 				'value' => qa_html(@$inoldpassword),
 				'type' => 'password',
 				'error' => qa_html(@$errors['oldpassword']),
@@ -360,14 +360,14 @@
 		
 			'new_1' => array(
 				'label' => qa_lang_html('users/new_password_1'),
-				'tags' => 'NAME="newpassword1"',
+				'tags' => 'name="newpassword1"',
 				'type' => 'password',
 				'error' => qa_html(@$errors['password']),
 			),
 
 			'new_2' => array(
 				'label' => qa_lang_html('users/new_password_2'),
-				'tags' => 'NAME="newpassword2"',
+				'tags' => 'name="newpassword2"',
 				'type' => 'password',
 				'error' => qa_html(@$errors['newpassword2']),
 			),

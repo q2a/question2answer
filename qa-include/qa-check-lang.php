@@ -34,15 +34,15 @@
 	
 	header('Content-type: text/html; charset=utf-8');
 ?>
-<HTML>
-	<HEAD>
-		<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=utf-8"/>
-		<TITLE>Question2Answer Language Check</TITLE>
-		<STYLE>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+		<title>Question2Answer Language Check</title>
+		<style>
 			code {font-size:125%;}
-		</STYLE>
-	</HEAD>
-	<BODY STYLE="font-family:arial; font-size:12px;">
+		</style>
+	</head>
+	<body style="font-family:arial; font-size:12px;">
 <?php
 
 	function get_phrase_substitutions($phrase)
@@ -56,7 +56,7 @@
 		return $substitutions;
 	}
 	
-	echo '<font color="#cc0000"><code>Dark red = important to review.</code></font><br>';
+	echo '<font color="#cc0000"><code>Dark red = important to review.</code></font><br />';
 	echo '<font color="#cc9999"><code>Light red = probably safe to ignore.</code></font>';
 	
 	echo '<H1>Checking US English files in <code>qa-include</code>...</H1>';
@@ -202,7 +202,7 @@
 			echo '<PRE>';
 			
 			foreach ($phrases as $key => $value)
-				echo '<SPAN STYLE="font-size:25%;">'."\t\t</SPAN>'".$key."' => \"".strtr($value, array('\\' => '\\\\', '"' => '\"', '$' => '\$', "\n" => '\n', "\t" => '\t'))."\",\n";
+				echo '<SPAN style="font-size:25%;">'."\t\t</span>'".$key."' => \"".strtr($value, array('\\' => '\\\\', '"' => '\"', '$' => '\$', "\n" => '\n', "\t" => '\t'))."\",\n";
 				
 			echo '</PRE>';
 		}
@@ -213,10 +213,10 @@
 	{
 		echo '<font color="'.($error ? '#cc0000' : '#cc9999').'"><code>';
 
-		echo 'qa-lang-<B>'.qa_html($prefix).'</B>.php:';
+		echo 'qa-lang-<b>'.qa_html($prefix).'</b>.php:';
 
 		if (strlen($key))
-			echo "'<B>".qa_html($key)."</B>'";
+			echo "'<b>".qa_html($key)."</b>'";
 		
 		echo '</code></font> &nbsp; '.qa_html($issue).'<BR>';
 	}
@@ -228,7 +228,7 @@
 		
 		$oneread=false;
 		
-		echo '<P STYLE="font-size:80%; color:#999;">Reading: ';
+		echo '<P style="font-size:80%; color:#999;">Reading: ';
 	}
 
 	
@@ -245,7 +245,7 @@
 	
 	function output_finish_includes()
 	{
-		echo '</P>';
+		echo '</p>';
 	}
 
 	
@@ -253,5 +253,5 @@
 
 ?>
 
-	</BODY>
-</HTML>
+	</body>
+</html>

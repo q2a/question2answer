@@ -125,8 +125,8 @@ function qa_tags_to_html(tags, matchlc)
 				if (matchlc) { // if matching, show appropriate part in bold
 					var matchstart=taglc.indexOf(matchlc);
 					var matchend=matchstart+matchlc.length;
-					inner='<SPAN STYLE="font-weight:normal;">'+qa_html_escape(tag.substring(0, matchstart))+'<B>'+
-						qa_html_escape(tag.substring(matchstart, matchend))+'</B>'+qa_html_escape(tag.substring(matchend))+'</SPAN>';
+					inner='<span style="font-weight:normal;">'+qa_html_escape(tag.substring(0, matchstart))+'<strong>'+
+						qa_html_escape(tag.substring(matchstart, matchend))+'</strong>'+qa_html_escape(tag.substring(matchend))+'</span>';
 				} else // otherwise show as-is
 					inner=qa_html_escape(tag);
 					

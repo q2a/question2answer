@@ -66,7 +66,7 @@
 					array(
 						'label' => 'AdSense Publisher ID:',
 						'value' => qa_html(qa_opt('adsense_publisher_id')),
-						'tags' => 'NAME="adsense_publisher_id_field"',
+						'tags' => 'name="adsense_publisher_id_field"',
 						'note' => 'Example: <I>pub-1234567890123456</I>',
 					),
 				),
@@ -74,7 +74,7 @@
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="adsense_save_button"',
+						'tags' => 'name="adsense_save_button"',
 					),
 				),
 			);

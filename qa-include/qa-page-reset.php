@@ -90,7 +90,7 @@
 		$forgotpath=qa_path('forgot',  array('e' => $inemailhandle));
 	
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
@@ -99,18 +99,18 @@
 		'fields' => array(
 			'email_handle' => array(
 				'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
-				'tags' => 'NAME="emailhandle" ID="emailhandle"',
+				'tags' => 'name="emailhandle" id="emailhandle"',
 				'value' => qa_html(@$inemailhandle),
 				'error' => qa_html(@$errors['emailhandle']),
 			),
 
 			'code' => array(
 				'label' => qa_lang_html('users/reset_code_label'),
-				'tags' => 'NAME="code" ID="code"',
+				'tags' => 'name="code" id="code"',
 				'value' => qa_html(@$incode),
 				'error' => qa_html(@$errors['code']),
 				'note' => qa_lang_html('users/reset_code_emailed').' - '.
-					'<A HREF="'.qa_html($forgotpath).'">'.qa_lang_html('users/reset_code_another').'</A>',
+					'<a href="'.qa_html($forgotpath).'">'.qa_lang_html('users/reset_code_another').'</a>',
 			),
 		),
 		

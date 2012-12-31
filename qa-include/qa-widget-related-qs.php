@@ -62,19 +62,19 @@
 			
 			if ($region=='side') {
 				$themeobject->output(
-					'<DIV CLASS="qa-related-qs">',
-					'<H2 STYLE="margin-top:0; padding-top:0;">',
+					'<div class="qa-related-qs">',
+					'<H2 style="margin-top:0; padding-top:0;">',
 					$titlehtml,
 					'</H2>'
 				);
 				
-				$themeobject->output('<UL CLASS="qa-related-q-list">');
+				$themeobject->output('<ul class="qa-related-q-list">');
 
 				foreach ($questions as $question)
-					$themeobject->output('<LI CLASS="qa-related-q-item"><A HREF="'.qa_q_path_html($question['postid'], $question['title']).'">'.qa_html($question['title']).'</A></LI>');
+					$themeobject->output('<li class="qa-related-q-item"><a href="'.qa_q_path_html($question['postid'], $question['title']).'">'.qa_html($question['title']).'</a></li>');
 
 				$themeobject->output(
-					'</UL>',
+					'</ul>',
 					'</DIV>'
 				);
 
@@ -87,7 +87,7 @@
 
 				$q_list=array(
 					'form' => array(
-						'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+						'tags' => 'method="post" action="'.qa_self_html().'"',
 					),
 					
 					'qs' => array(),

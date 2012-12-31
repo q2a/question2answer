@@ -42,7 +42,7 @@ function qa_set_inner_html(elem, type, html)
 function qa_set_outer_html(elem, type, html)
 {
 	if (elem) {
-		var e=document.createElement('DIV');
+		var e=document.createElement('div');
 		e.innerHTML=html;
 		elem.parentNode.replaceChild(e.firstChild, elem);
 	}

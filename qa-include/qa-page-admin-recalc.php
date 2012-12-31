@@ -83,7 +83,7 @@
 ?>
 		</TT>
 		
-		<A HREF="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></A>
+		<a href="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></a>
 	</BODY>
 </HTML>
 

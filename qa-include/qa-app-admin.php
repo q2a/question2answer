@@ -373,8 +373,8 @@
 				qa_lang_html('admin/upgrade_db'),
 				
 				array(
-					'^1' => '<A HREF="'.qa_path_html('install').'">',
-					'^2' => '</A>',
+					'^1' => '<a href="'.qa_path_html('install').'">',
+					'^2' => '</a>',
 				)
 			);
 		else

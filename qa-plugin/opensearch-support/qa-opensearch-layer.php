@@ -30,7 +30,7 @@
 		{
 			qa_html_theme_base::head_links();
 			
-			$this->output('<LINK REL="search" TYPE="application/opensearchdescription+xml" TITLE="'.qa_html(qa_opt('site_title')).'" HREF="'.qa_path_html('opensearch.xml').'"/>');
+			$this->output('<link rel="search" type="application/opensearchdescription+xml" title="'.qa_html(qa_opt('site_title')).'" href="'.qa_path_html('opensearch.xml').'"//>');
 		}
 
 	}

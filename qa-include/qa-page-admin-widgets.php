@@ -221,7 +221,7 @@
 	$positionvalue=@$positionoptions[$editwidget['place'].$editwidget['position']];
 	
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
+		'tags' => 'method="post" action="'.qa_path_html(qa_request()).'"',
 		
 		'style' => 'tall',
 		
@@ -234,7 +234,7 @@
 			
 			'position' => array(
 				'id' => 'position_display',
-				'tags' => 'NAME="position"',
+				'tags' => 'name="position"',
 				'label' => qa_lang_html('admin/position'),
 				'type' => 'select',
 				'options' => $positionoptions,
@@ -242,7 +242,7 @@
 			),
 			
 			'delete' => array(
-				'tags' => 'NAME="dodelete" ID="dodelete"',
+				'tags' => 'name="dodelete" id="dodelete"',
 				'label' => qa_lang_html('admin/delete_widget_position'),
 				'value' => 0,
 				'type' => 'checkbox',
@@ -252,7 +252,7 @@
 				'id' => 'all_display',
 				'label' => qa_lang_html('admin/widget_all_pages'),
 				'type' => 'checkbox',
-				'tags' => 'NAME="template_all" ID="template_all"',
+				'tags' => 'name="template_all" id="template_all"',
 				'value' => is_numeric(strpos(','.@$editwidget['tags'].',', ',all,')),
 			),
 
@@ -270,7 +270,7 @@
 			),
 			
 			'cancel' => array(
-				'tags' => 'NAME="docancel"',
+				'tags' => 'name="docancel"',
 				'label' => qa_lang_html('main/cancel_button'),
 			),
 		),
@@ -284,9 +284,9 @@
 	
 	foreach ($templateoptions as $template => $optionhtml)
 		$qa_content['form']['fields']['templates']['html'].=
-			'<INPUT TYPE="checkbox" NAME="template_'.qa_html($template).'"'.
-			(is_numeric(strpos(','.@$editwidget['tags'].',', ','.$template.',')) ? ' CHECKED' : '').
-			'/> '.$optionhtml.'<BR/>';
+			'<input type="checkbox" name="template_'.qa_html($template).'"'.
+			(is_numeric(strpos(','.@$editwidget['tags'].',', ','.$template.',')) ? ' checked="checked"' : '').
+			'/> '.$optionhtml.'<br/>';
 			
 	if (isset($editwidget['widgetid']))
 		qa_set_display_rules($qa_content, array(
