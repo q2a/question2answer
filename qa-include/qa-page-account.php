@@ -188,7 +188,7 @@
 	$qa_content['title']=qa_lang_html('profile/my_account_title');
 	
 	$qa_content['form_profile']=array(
-		'tags' => 'ENCtype="multipart/form-data" method="post" action="'.qa_self_html().'"',
+		'tags' => 'enctype="multipart/form-data" method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'wide',
 		

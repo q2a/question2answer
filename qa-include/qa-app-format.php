@@ -1624,7 +1624,7 @@
 			qa_image_constrain($width, $height, $size);
 			
 			$html='<img src="'.qa_path_html('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
-				'"'.(($width && $height) ? (' width="'.$width.'" HEIGHT="'.$height.'"') : '').' class="qa-avatar-image" alt=""//>';
+				'"'.(($width && $height) ? (' width="'.$width.'" height="'.$height.'"') : '').' class="qa-avatar-image" alt=""//>';
 				
 			if ($padding && $width && $height) {
 				$padleft=floor(($size-$width)/2);
@@ -1651,7 +1651,7 @@
 		if ($size>0)
 			return '<img src="'.(qa_is_https_probably() ? 'https' : 'http').
 				'://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
-				'" width="'.(int)$size.'" HEIGHT="'.(int)$size.'" class="qa-avatar-image" alt=""//>';
+				'" width="'.(int)$size.'" height="'.(int)$size.'" class="qa-avatar-image" alt=""//>';
 		else
 			return null;
 	}
