@@ -207,7 +207,7 @@
 		{
 			$this->output(
 				'<head>',
-				'<meta http-equiv="Content-type" content="'.$this->content['content_type'].'"//>'
+				'<meta http-equiv="Content-type" content="'.$this->content['content_type'].'"/>'
 			);
 			
 			$this->head_title();
@@ -232,26 +232,26 @@
 		function head_metas()
 		{
 			if (strlen(@$this->content['description']))
-				$this->output('<meta name="description" content="'.$this->content['description'].'"//>');
+				$this->output('<meta name="description" content="'.$this->content['description'].'"/>');
 			
 			if (strlen(@$this->content['keywords'])) // as far as I know, META keywords have zero effect on search rankings or listings
-				$this->output('<meta name="keywords" content="'.$this->content['keywords'].'"//>');
+				$this->output('<meta name="keywords" content="'.$this->content['keywords'].'"/>');
 		}
 		
 		function head_links()
 		{
 			if (isset($this->content['canonical']))
-				$this->output('<link rel="canonical" href="'.$this->content['canonical'].'"//>');
+				$this->output('<link rel="canonical" href="'.$this->content['canonical'].'"/>');
 				
 			if (isset($this->content['feed']['url']))
-				$this->output('<link rel="alternate" type="application/rss+xml" href="'.$this->content['feed']['url'].'" title="'.@$this->content['feed']['label'].'"//>');
+				$this->output('<link rel="alternate" type="application/rss+xml" href="'.$this->content['feed']['url'].'" title="'.@$this->content['feed']['label'].'"/>');
 				
 			if (isset($this->content['page_links']['items'])) // convert page links to rel=prev and rel=next tags
 				foreach ($this->content['page_links']['items'] as $page_link)
 					if ($page_link['type']=='prev')
-						$this->output('<link rel="prev" href="'.$page_link['url'].'"//>');
+						$this->output('<link rel="prev" href="'.$page_link['url'].'"/>');
 					elseif ($page_link['type']=='next')
-						$this->output('<link rel="next" href="'.$page_link['url'].'"//>');
+						$this->output('<link rel="next" href="'.$page_link['url'].'"/>');
 		}
 		
 		function head_script()
@@ -263,11 +263,11 @@
 		
 		function head_css()
 		{
-			$this->output('<link rel="stylesheet" type="text/css" href="'.$this->rooturl.$this->css_name().'"//>');
+			$this->output('<link rel="stylesheet" type="text/css" href="'.$this->rooturl.$this->css_name().'"/>');
 			
 			if (isset($this->content['css_src']))
 				foreach ($this->content['css_src'] as $css_src)
-					$this->output('<link rel="stylesheet" type="text/css" href="'.$css_src.'"//>');
+					$this->output('<link rel="stylesheet" type="text/css" href="'.$css_src.'"/>');
 					
 			if (!empty($this->content['notices']))
 				$this->output(
@@ -401,7 +401,7 @@
 			
 			$this->output_raw($notice['content']);
 			
-			$this->output('<input '.$notice['close_tags'].' type="submit" value="X" class="qa-notice-close-button"//> ');
+			$this->output('<input '.$notice['close_tags'].' type="submit" value="X" class="qa-notice-close-button"/> ');
 			
 			if (isset($notice['form_tags']))
 				$this->output('</form>');
@@ -463,12 +463,12 @@
 		
 		function search_field($search)
 		{
-			$this->output('<input type="text" '.$search['field_tags'].' value="'.@$search['value'].'" class="qa-search-field"//>');
+			$this->output('<input type="text" '.$search['field_tags'].' value="'.@$search['value'].'" class="qa-search-field"/>');
 		}
 		
 		function search_button($search)
 		{
-			$this->output('<input type="submit" value="'.$search['button_label'].'" class="qa-search-button"//>');
+			$this->output('<input type="submit" value="'.$search['button_label'].'" class="qa-search-button"/>');
 		}
 		
 		function nav($navtype, $level=null)
@@ -678,7 +678,7 @@
 		{
 			if (isset($tags))
 				$this->output('<input '.$tags.' type="submit" value="" class="'.$class.
-					'-button" onmouseover="this.className=\''.$class.'-hover\';" onmouseout="this.className=\''.$class.'-button\';"//> ');
+					'-button" onmouseover="this.className=\''.$class.'-hover\';" onmouseout="this.className=\''.$class.'-button\';"/> ');
 		}
 		
 		function error($error)
@@ -1028,7 +1028,7 @@
 			$hoverclass='qa-form-'.$style.'-hover qa-form-'.$style.'-hover-'.$key;
 			
 			$this->output('<input'.rtrim(' '.@$button['tags']).' value="'.@$button['label'].'" title="'.@$button['popup'].'" type="submit"'.
-				(isset($style) ? (' class="'.$baseclass.'" onmouseover="this.className=\''.$hoverclass.'\';" onmouseout="this.className=\''.$baseclass.'\';"') : '').'//>');
+				(isset($style) ? (' class="'.$baseclass.'" onmouseover="this.className=\''.$hoverclass.'\';" onmouseout="this.className=\''.$baseclass.'\';"') : '').'/>');
 		}
 		
 		function form_button_note($button, $style)
@@ -1038,7 +1038,7 @@
 					'<span class="qa-form-'.$style.'-note">',
 					$button['note'],
 					'</span>',
-					'<br //>'
+					'<br />'
 				);
 		}
 		
@@ -1051,7 +1051,7 @@
 		{
 			if (!empty($form['hidden']))
 				foreach ($form['hidden'] as $name => $value)
-					$this->output('<input type="hidden" name="'.$name.'" value="'.$value.'"//>');
+					$this->output('<input type="hidden" name="'.$name.'" value="'.$value.'"/>');
 		}
 		
 		function form_prefix($field, $style)
@@ -1068,7 +1068,7 @@
 		
 		function form_checkbox($field, $style)
 		{
-			$this->output('<input '.@$field['tags'].' type="checkbox" value="1"'.(@$field['value'] ? ' checked="checked"' : '').' class="qa-form-'.$style.'-checkbox"//>');
+			$this->output('<input '.@$field['tags'].' type="checkbox" value="1"'.(@$field['value'] ? ' checked="checked"' : '').' class="qa-form-'.$style.'-checkbox"/>');
 		}
 		
 		function form_static($field, $style)
@@ -1078,12 +1078,12 @@
 		
 		function form_password($field, $style)
 		{
-			$this->output('<input '.@$field['tags'].' type="password" value="'.@$field['value'].'" class="qa-form-'.$style.'-text"//>');
+			$this->output('<input '.@$field['tags'].' type="password" value="'.@$field['value'].'" class="qa-form-'.$style.'-text"/>');
 		}
 		
 		function form_number($field, $style)
 		{
-			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-number"//>');
+			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-number"/>');
 		}
 		
 		function form_select($field, $style)
@@ -1102,9 +1102,9 @@
 			
 			foreach ($field['options'] as $tag => $value) {
 				if ($radios++)
-					$this->output('<br //>');
+					$this->output('<br />');
 					
-				$this->output('<input '.@$field['tags'].' type="radio" value="'.$tag.'"'.(($value==@$field['value']) ? ' checked="checked"' : '').' class="qa-form-'.$style.'-radio"//> '.$value);
+				$this->output('<input '.@$field['tags'].' type="radio" value="'.$tag.'"'.(($value==@$field['value']) ? ' checked="checked"' : '').' class="qa-form-'.$style.'-radio"/> '.$value);
 			}
 		}
 		
@@ -1115,7 +1115,7 @@
 		
 		function form_text_single_row($field, $style)
 		{
-			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-text"//>');
+			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-text"/>');
 		}
 		
 		function form_text_multi_row($field, $style)
@@ -1459,13 +1459,13 @@
 		{
 			if (isset($post[$element]))
 				$this->output('<input '.$post[$element].' type="submit" value="'.$value.'" class="'.$class.
-					'-button" onmouseover="this.className=\''.$class.'-hover\';" onmouseout="this.className=\''.$class.'-button\';"//> ');
+					'-button" onmouseover="this.className=\''.$class.'-hover\';" onmouseout="this.className=\''.$class.'-button\';"/> ');
 		}
 		
 		function post_disabled_button($post, $element, $value, $class)
 		{
 			if (isset($post[$element]))
-				$this->output('<input '.$post[$element].' type="submit" value="'.$value.'" class="'.$class.'-disabled" disabled="disabled"//> ');
+				$this->output('<input '.$post[$element].' type="submit" value="'.$value.'" class="'.$class.'-disabled" disabled="disabled"/> ');
 		}
 		
 		function post_avatar_meta($post, $class, $avatarprefix=null, $metaprefix=null, $metaseparator='<br />')

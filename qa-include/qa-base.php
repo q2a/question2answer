@@ -1290,7 +1290,7 @@
 			
 			foreach ($params as $param)
 				if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-					$formhtml.='<input type="hidden" name="'.qa_html(urldecode($matches[1])).'" VALUE="'.qa_html(urldecode(@$matches[3])).'"//>';
+					$formhtml.='<input type="hidden" name="'.qa_html(urldecode($matches[1])).'" VALUE="'.qa_html(urldecode(@$matches[3])).'"/>';
 		}
 		
 		return $formhtml;

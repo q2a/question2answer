@@ -128,7 +128,7 @@
 			$feed=@$this->content['feed'];
 			
 			if (!empty($feed))
-				$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" class="qa-rss-icon"//></a>');
+				$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" class="qa-rss-icon"/></a>');
 		}
 		
 		function q_item_stats($q_item) // add view count to question list
