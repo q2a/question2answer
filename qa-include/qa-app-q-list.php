@@ -69,7 +69,7 @@
 		$qa_content=qa_content_prepare(true, array_keys(qa_category_path($navcategories, $categoryid)));
 	
 		$qa_content['q_list']['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 		);
 		
 		$qa_content['q_list']['qs']=array();

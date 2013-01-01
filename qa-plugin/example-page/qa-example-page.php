@@ -78,7 +78,7 @@
 				'fields' => array(
 					'request' => array(
 						'label' => 'The request',
-						'tags' => 'NAME="request"',
+						'tags' => 'name="request"',
 						'value' => qa_html($request),
 						'error' => qa_html('Another error'),
 					),
@@ -87,7 +87,7 @@
 				
 				'buttons' => array(
 					'ok' => array(
-						'tags' => 'NAME="okthen"',
+						'tags' => 'name="okthen"',
 						'label' => 'OK then',
 						'value' => '1',
 					),
@@ -98,7 +98,7 @@
 				),
 			);
 
-			$qa_content['custom_2']='<P><BR>More <I>custom html</I></P>';
+			$qa_content['custom_2']='<p><br />More <I>custom html</I></p>';
 			
 			return $qa_content;
 		}

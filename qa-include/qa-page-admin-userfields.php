@@ -158,13 +158,13 @@
 	);
 	
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
+		'tags' => 'method="post" action="'.qa_path_html(qa_request()).'"',
 		
 		'style' => 'tall',
 		
 		'fields' => array(
 			'name' => array(
-				'tags' => 'NAME="name" ID="name"',
+				'tags' => 'name="name" id="name"',
 				'label' => qa_lang_html('admin/field_name'),
 				'value' => qa_html(isset($inname) ? $inname : qa_user_userfield_label($editfield)),
 				'error' => qa_html(@$errors['name']),
@@ -172,7 +172,7 @@
 			
 			'type' => array(
 				'id' => 'type_display',
-				'tags' => 'NAME="flags"',
+				'tags' => 'name="flags"',
 				'label' => qa_lang_html('admin/field_type'),
 				'type' => 'select',
 				'options' => $typeoptions,
@@ -180,7 +180,7 @@
 			),
 			
 			'delete' => array(
-				'tags' => 'NAME="dodelete" ID="dodelete"',
+				'tags' => 'name="dodelete" id="dodelete"',
 				'label' => qa_lang_html('admin/delete_field'),
 				'value' => 0,
 				'type' => 'checkbox',
@@ -188,7 +188,7 @@
 			
 			'position' => array(
 				'id' => 'position_display',
-				'tags' => 'NAME="position"',
+				'tags' => 'name="position"',
 				'label' => qa_lang_html('admin/position'),
 				'type' => 'select',
 				'options' => $positionoptions,
@@ -202,7 +202,7 @@
 			),
 			
 			'cancel' => array(
-				'tags' => 'NAME="docancel"',
+				'tags' => 'name="docancel"',
 				'label' => qa_lang_html('main/cancel_button'),
 			),
 		),

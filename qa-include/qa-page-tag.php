@@ -68,7 +68,7 @@
 		$qa_content['q_list']['title']=qa_lang_html('main/no_questions_found');
 
 	$qa_content['q_list']['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 	);
 
 	$qa_content['q_list']['qs']=array();

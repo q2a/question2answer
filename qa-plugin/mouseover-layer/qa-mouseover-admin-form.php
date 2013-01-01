@@ -55,7 +55,7 @@
 						'label' => 'Show content preview on mouseover in question lists',
 						'type' => 'checkbox',
 						'value' => qa_opt('mouseover_content_on'),
-						'tags' => 'NAME="mouseover_content_on_field" ID="mouseover_content_on_field"',
+						'tags' => 'name="mouseover_content_on_field" ID="mouseover_content_on_field"',
 					),
 					
 					array(
@@ -64,14 +64,14 @@
 						'suffix' => 'characters',
 						'type' => 'number',
 						'value' => (int)qa_opt('mouseover_content_max_len'),
-						'tags' => 'NAME="mouseover_content_max_len_field"',
+						'tags' => 'name="mouseover_content_max_len_field"',
 					),
 				),
 				
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="mouseover_save_button"',
+						'tags' => 'name="mouseover_save_button"',
 					),
 				),
 			);

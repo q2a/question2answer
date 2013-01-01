@@ -98,7 +98,7 @@
 */
 	{
 		return sprintf(
-			"%s &ndash; <B>%.1fms</B> (%d%%) &ndash; PHP %.1fms (%d%%), MySQL %.1fms (%d%%), Other %.1fms (%d%%) &ndash; %d PHP %s, %d DB %s, %dk RAM (%d%%)",
+			"%s &ndash; <strong>%.1fms</strong> (%d%%) &ndash; PHP %.1fms (%d%%), MySQL %.1fms (%d%%), Other %.1fms (%d%%) &ndash; %d PHP %s, %d DB %s, %dk RAM (%d%%)",
 			$stage, $usage['clock']*1000, $usage['clock']*100/$totalusage['clock'],
 			$usage['cpu']*1000, $usage['cpu']*100/$totalusage['clock'],
 			$usage['mysql']*1000, $usage['mysql']*100/$totalusage['clock'],
@@ -117,28 +117,28 @@
 	{
 		global $qa_usage_start, $qa_usage_stages, $qa_database_queries;
 		
-		echo '<P><BR><TABLE BGCOLOR="#CCCCCC" CELLPADDING="8" CELLSPACING="0" WIDTH="100%">';
+		echo '<p><br /><table bgcolor="#CCCCCC" cellpadding="8" cellspacing="0" width="100%">';
 	
-		echo '<TR><TD COLSPAN="2">';
+		echo '<tr><td colspan="2">';
 		
 		$totaldelta=qa_usage_delta($qa_usage_start, qa_usage_get());
 		
-		echo qa_usage_line('Total', $totaldelta, $totaldelta).'<BR>';
+		echo qa_usage_line('Total', $totaldelta, $totaldelta).'<br />';
 		
 		foreach ($qa_usage_stages as $stage => $stagedelta)
 			
-		echo '<BR>'.qa_usage_line(ucfirst($stage), $stagedelta, $totaldelta);
+		echo '<br />'.qa_usage_line(ucfirst($stage), $stagedelta, $totaldelta);
 		
-		echo '</TD></TR><TR VALIGN="bottom"><TD WIDTH="30%"><TEXTAREA COLS="40" ROWS="20" STYLE="width:100%;">';
+		echo '</td></tr><tr valign="bottom"><td width="30%"><textarea cols="40" rows="20" style="width:100%;">';
 		
 		foreach (get_included_files() as $file)
 			echo qa_html(implode('/', array_slice(explode('/', $file), -3)))."\n";
 		
-		echo '</TEXTAREA></TD>';
+		echo '</textarea></td>';
 		
-		echo '<TD WIDTH="70%"><TEXTAREA COLS="40" ROWS="20" STYLE="width:100%;">'.qa_html($qa_database_queries).'</TEXTAREA></TD>';
+		echo '<td width="70%"><textarea cols="40" rows="20" style="width:100%;">'.qa_html($qa_database_queries).'</textarea></td>';
 		
-		echo '</TR></TABLE>';
+		echo '</tr></table>';
 	}
 
 

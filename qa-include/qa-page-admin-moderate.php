@@ -79,7 +79,7 @@
 	
 	$qa_content['q_list']=array(
 		'form' => array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 		),
 		
 		'qs' => array(),
@@ -107,12 +107,12 @@
 
 				'buttons' => array(
 					'approve' => array(
-						'tags' => 'NAME="admin_'.$postid.'_approve" onclick="return qa_admin_click(this);"',
+						'tags' => 'name="admin_'.$postid.'_approve" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/approve_button'),
 					),
 	
 					'reject' => array(
-						'tags' => 'NAME="admin_'.$postid.'_reject" onclick="return qa_admin_click(this);"',
+						'tags' => 'name="admin_'.$postid.'_reject" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/reject_button'),
 					),
 				),

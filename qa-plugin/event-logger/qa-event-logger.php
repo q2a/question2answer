@@ -98,14 +98,14 @@
 				'fields' => array(
 					array(
 						'label' => 'Log events to <code>'.QA_MYSQL_TABLE_PREFIX.'eventlog</code> database table',
-						'tags' => 'NAME="event_logger_to_database_field"',
+						'tags' => 'name="event_logger_to_database_field"',
 						'value' => qa_opt('event_logger_to_database'),
 						'type' => 'checkbox',
 					),
 
 					array(
 						'label' => 'Log events to daily log files',
-						'tags' => 'NAME="event_logger_to_files_field" ID="event_logger_to_files_field"',
+						'tags' => 'name="event_logger_to_files_field" ID="event_logger_to_files_field"',
 						'value' => qa_opt('event_logger_to_files'),
 						'type' => 'checkbox',
 					),
@@ -114,7 +114,7 @@
 						'id' => 'event_logger_directory_display',
 						'label' => 'Directory for log files - enter full path:',
 						'value' => qa_html($directory),
-						'tags' => 'NAME="event_logger_directory_field"',
+						'tags' => 'name="event_logger_directory_field"',
 						'note' => $note,
 						'error' => qa_html($error),
 					),
@@ -123,7 +123,7 @@
 						'id' => 'event_logger_hide_header_display',
 						'label' => 'Include header lines at top of each log file',
 						'type' => 'checkbox',
-						'tags' => 'NAME="event_logger_hide_header_field"',
+						'tags' => 'name="event_logger_hide_header_field"',
 						'value' => !qa_opt('event_logger_hide_header'),
 					),
 				),
@@ -131,7 +131,7 @@
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="event_logger_save_button"',
+						'tags' => 'name="event_logger_save_button"',
 					),
 				),
 			);

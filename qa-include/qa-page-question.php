@@ -183,7 +183,7 @@
 	$qa_content['script_rel'][]='qa-content/qa-question.js?'.QA_VERSION;
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="q_page_form"',
+		'tags' => 'method="post" action="'.qa_self_html().'" name="q_page_form"',
 		'hidden' => array(
 			'qa_click' => '', // for simulating clicks in Javascript
 		),
@@ -278,7 +278,7 @@
 //	Prepare content for existing answers (could be added to by Ajax)
 
 	$qa_content['a_list']=array(
-		'tags' => 'ID="a_list"',
+		'tags' => 'id="a_list"',
 		'as' => array(),
 	);
 	
@@ -384,7 +384,7 @@
 	elseif ($countfortitle>0)
 		$qa_content['a_list']['title']=qa_lang_html_sub('question/x_answers_title', $countfortitle);
 
-	$qa_content['a_list']['title']='<SPAN ID="a_list_title">'.@$qa_content['a_list']['title'].'</SPAN>';
+	$qa_content['a_list']['title']='<span id="a_list_title">'.@$qa_content['a_list']['title'].'</span>';
 
 	if (!$formrequested)
 		$qa_content['page_links']=qa_html_page_links(qa_request(), $pagestart, $pagesize, $countforpages, qa_opt('pages_prev_next'), array(), false, 'a_list_title');

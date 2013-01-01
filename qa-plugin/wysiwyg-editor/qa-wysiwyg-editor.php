@@ -76,7 +76,7 @@
 						'label' => 'Allow images to be uploaded',
 						'type' => 'checkbox',
 						'value' => (int)qa_opt('wysiwyg_editor_upload_images'),
-						'tags' => 'NAME="wysiwyg_editor_upload_images_field" ID="wysiwyg_editor_upload_images_field"',
+						'tags' => 'name="wysiwyg_editor_upload_images_field" ID="wysiwyg_editor_upload_images_field"',
 					),
 
 					array(
@@ -84,7 +84,7 @@
 						'label' => 'Allow other content to be uploaded, e.g. Flash, PDF',
 						'type' => 'checkbox',
 						'value' => (int)qa_opt('wysiwyg_editor_upload_all'),
-						'tags' => 'NAME="wysiwyg_editor_upload_all_field"',
+						'tags' => 'name="wysiwyg_editor_upload_all_field"',
 					),
 					
 					array(
@@ -93,14 +93,14 @@
 						'suffix' => 'MB (max '.$this->bytes_to_mega_html(qa_get_max_upload_size()).')',
 						'type' => 'number',
 						'value' => $this->bytes_to_mega_html(qa_opt('wysiwyg_editor_upload_max_size')),
-						'tags' => 'NAME="wysiwyg_editor_upload_max_size_field"',
+						'tags' => 'name="wysiwyg_editor_upload_max_size_field"',
 					),
 				),
 				
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="wysiwyg_editor_save_button"',
+						'tags' => 'name="wysiwyg_editor_save_button"',
 					),
 				),
 			);
@@ -164,7 +164,7 @@
 				$html=qa_html($content, true);
 			
 			return array(
-				'tags' => 'NAME="'.$fieldname.'"',
+				'tags' => 'name="'.$fieldname.'"',
 				'value' => qa_html($html),
 				'rows' => $rows,
 			);

@@ -88,7 +88,7 @@ function qa_submit_answer(questionid, elem)
 			
 				qa_set_inner_html(document.getElementById('a_list_title'), 'a_list_title', lines[2]);
 				
-				var e=document.createElement('DIV');
+				var e=document.createElement('div');
 				e.innerHTML=lines.slice(3).join("\n");
 				
 				var c=e.firstChild;

@@ -52,7 +52,7 @@
 		{
 			return array(
 				'type' => 'textarea',
-				'tags' => 'NAME="'.$fieldname.'" ID="'.$fieldname.'"',
+				'tags' => 'name="'.$fieldname.'" id="'.$fieldname.'"',
 				'value' => qa_html($content),
 				'rows' => $rows,
 			);

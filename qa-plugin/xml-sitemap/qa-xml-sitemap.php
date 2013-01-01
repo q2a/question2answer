@@ -81,14 +81,14 @@
 						'label' => 'Include question pages',
 						'type' => 'checkbox',
 						'value' => (int)qa_opt('xml_sitemap_show_questions'),
-						'tags' => 'NAME="xml_sitemap_show_questions_field"',
+						'tags' => 'name="xml_sitemap_show_questions_field"',
 					),
 				),
 				
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="xml_sitemap_save_button"',
+						'tags' => 'name="xml_sitemap_save_button"',
 					),
 				),
 			);
@@ -98,7 +98,7 @@
 					'label' => 'Include user pages',
 					'type' => 'checkbox',
 					'value' => (int)qa_opt('xml_sitemap_show_users'),
-					'tags' => 'NAME="xml_sitemap_show_users_field"',
+					'tags' => 'name="xml_sitemap_show_users_field"',
 				);
 			
 			if (qa_using_tags())
@@ -106,7 +106,7 @@
 					'label' => 'Include question list for each tag',
 					'type' => 'checkbox',
 					'value' => (int)qa_opt('xml_sitemap_show_tag_qs'),
-					'tags' => 'NAME="xml_sitemap_show_tag_qs_field"',
+					'tags' => 'name="xml_sitemap_show_tag_qs_field"',
 				);
 
 			if (qa_using_categories()) {
@@ -114,14 +114,14 @@
 					'label' => 'Include question list for each category',
 					'type' => 'checkbox',
 					'value' => (int)qa_opt('xml_sitemap_show_category_qs'),
-					'tags' => 'NAME="xml_sitemap_show_category_qs_field"',
+					'tags' => 'name="xml_sitemap_show_category_qs_field"',
 				);
 
 				$form['fields']['categories']=array(
 					'label' => 'Include category browser',
 					'type' => 'checkbox',
 					'value' => (int)qa_opt('xml_sitemap_show_categories'),
-					'tags' => 'NAME="xml_sitemap_show_categories_field"',
+					'tags' => 'name="xml_sitemap_show_categories_field"',
 				);
 			}
 

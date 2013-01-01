@@ -27,12 +27,12 @@
 	if (qa_gpc_to_string(@$_GET['param'])==QA_URL_TEST_STRING) {
 		require_once QA_INCLUDE_DIR.'qa-app-admin.php';
 	
-		echo '<HTML><BODY STYLE="margin:0; padding:0;">';
-		echo '<TABLE WIDTH="100%" HEIGHT="100%" CELLSPACING="0" CELLPADDING="0">';
-		echo '<TR VALIGN="middle"><TD ALIGN="center" STYLE="border-style:solid; border-width:1px; background-color:#fff; ';
+		echo '<html><body style="margin:0; padding:0;">';
+		echo '<table width="100%" height="100%" cellspacing="0" cellpadding="0">';
+		echo '<tr valign="middle"><td align="center" style="border-style:solid; border-width:1px; background-color:#fff; ';
 		echo qa_admin_url_test_html();
-		echo 'TD></TR></TABLE>';
-		echo '</BODY></HTML>';
+		echo 'TD></tr></table>';
+		echo '</body></html>';
 	}
 
 

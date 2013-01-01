@@ -124,7 +124,7 @@
 	
 	function qa_post_index($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
 /*
-	Add post $postid (which comes under $questionid) of $type (Q/A/C) to the database index, with $title, $text,
+	Add post $postid (which comes under $questionid) of $type (Q/a/C) to the database index, with $title, $text,
 	$tagstring and $categoryid. Calls through to all installed search modules.
 */
 	{

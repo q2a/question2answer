@@ -125,7 +125,7 @@
 			if (isset($_COOKIE['fbsr_'.$app_id])) // check we still have a Facebook cookie ...
 				$this->facebook_html($tourl, true, 'menu');
 			else // ... if not, show a standard logout link, since sometimes the redirect to Q2A's logout page doesn't complete
-				echo '<A HREF="'.qa_html($tourl).'">'.qa_lang_html('main/nav_logout').'</A>';
+				echo '<a href="'.qa_html($tourl).'">'.qa_lang_html('main/nav_logout').'</a>';
 		}
 		
 
@@ -186,21 +186,21 @@
 					array(
 						'label' => 'Facebook App ID:',
 						'value' => qa_html(qa_opt('facebook_app_id')),
-						'tags' => 'NAME="facebook_app_id_field"',
+						'tags' => 'name="facebook_app_id_field"',
 					),
 
 					array(
 						'label' => 'Facebook App Secret:',
 						'value' => qa_html(qa_opt('facebook_app_secret')),
-						'tags' => 'NAME="facebook_app_secret_field"',
-						'error' => $ready ? null : 'To use Facebook Login, please <A HREF="http://developers.facebook.com/setup/" TARGET="_blank">set up a Facebook application</A>.',
+						'tags' => 'name="facebook_app_secret_field"',
+						'error' => $ready ? null : 'To use Facebook Login, please <a href="http://developers.facebook.com/setup/" TARGET="_blank">set up a Facebook application</a>.',
 					),
 				),
 				
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="facebook_save_button"',
+						'tags' => 'name="facebook_save_button"',
 					),
 				),
 			);

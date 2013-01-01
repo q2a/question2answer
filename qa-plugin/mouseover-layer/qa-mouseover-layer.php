@@ -57,7 +57,7 @@
 						if (isset($thispost)) {
 							$text=qa_viewer_text($thispost['content'], $thispost['format'], array('blockwordspreg' => $blockwordspreg));
 							$text=qa_shorten_string_line($text, $maxlength);
-							$q_list['qs'][$index]['title']='<SPAN TITLE="'.qa_html($text).'">'.@$question['title'].'</SPAN>';
+							$q_list['qs'][$index]['title']='<span title="'.qa_html($text).'">'.@$question['title'].'</span>';
 						}
 					}
 				}

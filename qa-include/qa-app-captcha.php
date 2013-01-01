@@ -61,7 +61,7 @@
 			$fields['captcha']=array(
 				'type' => 'custom',
 				'label' => qa_lang_html('misc/captcha_label'),
-				'html' => '<DIV ID="qa_captcha_div_'.$count.'">'.$html.'</DIV>',
+				'html' => '<div id="qa_captcha_div_'.$count.'">'.$html.'</div>',
 				'error' => @array_key_exists('captcha', $errors) ? qa_lang_html('misc/captcha_error') : null,
 				'note' => $note,
 			);

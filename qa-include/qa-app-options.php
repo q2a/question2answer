@@ -547,7 +547,7 @@
 
 	function qa_get_vote_view($basetype, $full=false, $enabledif=true)
 /*
-	Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php for posts of $basetype (Q/A/C),
+	Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php for posts of $basetype (Q/a/C),
 	with buttons enabled if appropriate (based on whether $full post shown) unless $enabledif is false.
 */
 	{

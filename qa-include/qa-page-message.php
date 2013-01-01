@@ -154,7 +154,7 @@
 	$qa_content['error']=@$page_error;
 
 	$qa_content['form_message']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
@@ -162,7 +162,7 @@
 			'message' => array(
 				'type' => $messagesent ? 'static' : '',
 				'label' => qa_lang_html_sub('misc/message_for_x', qa_get_one_user_html($handle, false)),
-				'tags' => 'NAME="message" ID="message"',
+				'tags' => 'name="message" id="message"',
 				'value' => qa_html(@$inmessage, $messagesent),
 				'rows' => 8,
 				'note' => qa_lang_html_sub('misc/message_explanation', qa_html(qa_opt('site_title'))),
@@ -172,7 +172,7 @@
 		
 		'buttons' => array(
 			'send' => array(
-				'tags' => 'onClick="qa_show_waiting_after(this, false);"',
+				'tags' => 'onclick="qa_show_waiting_after(this, false);"',
 				'label' => qa_lang_html('main/send_button'),
 			),
 		),

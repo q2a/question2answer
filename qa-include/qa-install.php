@@ -200,7 +200,7 @@
 
 				if (QA_FINAL_EXTERNAL_USERS) {
 					if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH'))
-						$errorhtml.="\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your WordPress site <A HREF=\"".qa_html(get_option('home'))."\" TARGET=\"_blank\">".qa_html(get_option('blogname'))."</A>. Please consult the online documentation for more information.";
+						$errorhtml.="\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your WordPress site <a href=\"".qa_html(get_option('home'))."\" target=\"_blank\">".qa_html(get_option('blogname'))."</a>. Please consult the online documentation for more information.";
 					else
 						$errorhtml.="\n\nWhen you click below, your Question2Answer site will be set up to integrate with your existing user database and management. Users will be referenced with database column type ".qa_html(qa_get_mysql_user_column_type()).". Please consult the online documentation for more information.";
 					
@@ -277,49 +277,49 @@
 		if (empty($success))
 			$success='Your Question2Answer database has been checked with no problems.';
 		
-		$suggest='<A HREF="'.qa_path_html('admin', null, null, QA_URL_FORMAT_SAFEST).'">Go to admin center</A>';
+		$suggest='<a href="'.qa_path_html('admin', null, null, QA_URL_FORMAT_SAFEST).'">Go to admin center</a>';
 	}
 
 ?>
 
-		<FORM METHOD="POST" ACTION="<?php echo qa_path_html('install', null, null, QA_URL_FORMAT_SAFEST)?>">
+		<FORM method="post" action="<?php echo qa_path_html('install', null, null, QA_URL_FORMAT_SAFEST)?>">
 
 <?php
 
 	if (strlen($success))
-		echo '<P><FONT COLOR="#006600">'.nl2br(qa_html($success)).'</FONT></P>'; // green
+		echo '<p><<font color="#006600">'.nl2br(qa_html($success)).'</font></p>'; // green
 		
 	if (strlen($errorhtml))
-		echo '<P><FONT COLOR="#990000">'.nl2br($errorhtml).'</FONT></P>'; // red
+		echo '<p><<font color="#990000">'.nl2br($errorhtml).'</font></p>'; // red
 		
 	if (strlen($suggest))
-		echo '<P>'.$suggest.'</P>';
+		echo '<p>'.$suggest.'</p>';
 
 
 //	Very simple general form display logic (we don't use theme since it depends on tons of DB options)
 
 	if (count($fields)) {
-		echo '<TABLE>';
+		echo '<table>';
 		
 		foreach ($fields as $name => $prompt) {
-			echo '<TR><TD>'.qa_html($prompt).'</TD><TD><INPUT TYPE="text" SIZE="24" NAME="'.qa_html($name).'" VALUE="'.qa_html(@${'in'.$name}).'"></TD>';
+			echo '<tr><td>'.qa_html($prompt).'</td><td><input type="text" SIZE="24" name="'.qa_html($name).'" VALUE="'.qa_html(@${'in'.$name}).'"></td>';
 			if (isset($fielderrors[$name]))
-				echo '<TD><FONT COLOR="#990000"><SMALL>'.qa_html($fielderrors[$name]).'</SMALL></FONT></TD>';
-			echo '</TR>';
+				echo '<td><font color="#990000"><small>'.qa_html($fielderrors[$name]).'</small></font></td>';
+			echo '</tr>';
 		}
 		
-		echo '</TABLE>';
+		echo '</table>';
 	}
 	
 	foreach ($buttons as $name => $value)
-		echo '<INPUT TYPE="submit" NAME="'.qa_html($name).'" VALUE="'.qa_html($value).'">';
+		echo '<input type="submit" name="'.qa_html($name).'" VALUE="'.qa_html($value).'">';
 		
 	foreach ($hidden as $name => $value)
-		echo '<INPUT TYPE="hidden" NAME="'.qa_html($name).'" VALUE="'.qa_html($value).'">';
+		echo '<input type="hidden" name="'.qa_html($name).'" VALUE="'.qa_html($value).'">';
 
 	qa_db_disconnect();
 ?>
 
-		</FORM>
+		</form>
 	</BODY>
 </HTML>

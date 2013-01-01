@@ -135,7 +135,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		return '<A HREF="'.qa_path_html('tag/'.$tag).'"'.($microformats ? ' rel="tag"' : '').' CLASS="qa-tag-link">'.qa_html($tag).'</A>';
+		return '<a href="'.qa_path_html('tag/'.$tag).'"'.($microformats ? ' rel="tag"' : '').' class="qa-tag-link">'.qa_html($tag).'</a>';
 	}
 
 	
@@ -196,7 +196,7 @@
 		if (!strlen($anchorhtml))
 			$anchorhtml=qa_html($ip);
 		
-		return '<A HREF="'.qa_path_html('ip/'.$ip).'" TITLE="'.qa_lang_html_sub('main/ip_address_x', qa_html($ip)).'" CLASS="qa-ip-link">'.$anchorhtml.'</A>';
+		return '<a href="'.qa_path_html('ip/'.$ip).'" title="'.qa_lang_html_sub('main/ip_address_x', qa_html($ip)).'" class="qa-ip-link">'.$anchorhtml.'</a>';
 	}
 	
 	
@@ -234,7 +234,7 @@
 	//	High level information
 
 		$fields['hidden']=@$post['hidden'];
-		$fields['tags']='ID="'.qa_html($elementid).'"';
+		$fields['tags']='id="'.qa_html($elementid).'"';
 		
 		if ($microformats)
 			$fields['classes']='hentry '.($isquestion ? 'question' : ($isanswer ? ($isselected ? 'answer answer-selected' : 'answer') : 'comment'));
@@ -250,7 +250,7 @@
 				
 				$fields['title']=qa_html($post['title']);
 				if ($microformats)
-					$fields['title']='<SPAN CLASS="entry-title">'.$fields['title'].'</SPAN>';
+					$fields['title']='<span class="entry-title">'.$fields['title'].'</span>';
 					
 				/*if (isset($post['score'])) // useful for setting match thresholds
 					$fields['title'].=' <SMALL>('.$post['score'].')</SMALL>';*/
@@ -286,8 +286,8 @@
 
 			if (@$options['categoryview'] && isset($post['categoryname']) && isset($post['categorybackpath']))
 				$fields['where']=qa_lang_html_sub_split('main/in_category_x',
-					'<A HREF="'.qa_path_html(@$options['categorypathprefix'].implode('/', array_reverse(explode('/', $post['categorybackpath'])))).
-					'" CLASS="qa-category-link">'.qa_html($post['categoryname']).'</A>');
+					'<a href="'.qa_path_html(@$options['categorypathprefix'].implode('/', array_reverse(explode('/', $post['categorybackpath'])))).
+					'" class="qa-category-link">'.qa_html($post['categoryname']).'</a>');
 		}
 		
 	//	Answer-specific stuff (selection)
@@ -311,9 +311,9 @@
 			));
 			
 			if ($microformats)
-				$fields['content']='<DIV CLASS="entry-content">'.$fields['content'].'</DIV>';
+				$fields['content']='<div class="entry-content">'.$fields['content'].'</div>';
 			
-			$fields['content']='<A NAME="'.qa_html($postid).'"></A>'.$fields['content'];
+			$fields['content']='<a name="'.qa_html($postid).'"></a>'.$fields['content'];
 				// this is for backwards compatibility with any existing links using the old style of anchor
 				// that contained the post id only (changed to be valid under W3C specifications)
 		}
@@ -348,10 +348,10 @@
 		//	...with microformats if appropriate
 
 			if ($microformats) {
-				$netvoteshtml.='<SPAN CLASS="votes-up"><SPAN CLASS="value-title" TITLE="'.$upvoteshtml.'"></SPAN></SPAN>'.
-					'<SPAN CLASS="votes-down"><SPAN CLASS="value-title" TITLE="'.$downvoteshtml.'"></SPAN></SPAN>';
-				$upvoteshtml='<SPAN CLASS="votes-up">'.$upvoteshtml.'</SPAN>';
-				$downvoteshtml='<SPAN CLASS="votes-down">'.$downvoteshtml.'</SPAN>';
+				$netvoteshtml.='<span class="votes-up"><span class="value-title" title="'.$upvoteshtml.'"></span></span>'.
+					'<span class="votes-down"><span class="value-title" title="'.$downvoteshtml.'"></span></span>';
+				$upvoteshtml='<span class="votes-up">'.$upvoteshtml.'</span>';
+				$downvoteshtml='<span class="votes-down">'.$downvoteshtml.'</span>';
 			}
 			
 		//	Pass information on vote viewing
@@ -375,49 +375,49 @@
 		
 		//	Voting buttons
 			
-			$fields['vote_tags']='ID="voting_'.qa_html($postid).'"';
-			$onclick='onClick="return qa_vote_click(this);"';
+			$fields['vote_tags']='id="voting_'.qa_html($postid).'"';
+			$onclick='onclick="return qa_vote_click(this);"';
 			
 			if ($fields['hidden']) {
 				$fields['vote_state']='disabled';
-				$fields['vote_up_tags']='TITLE="'.qa_lang_html($isanswer ? 'main/vote_disabled_hidden_a' : 'main/vote_disabled_hidden_q').'"';
+				$fields['vote_up_tags']='title="'.qa_lang_html($isanswer ? 'main/vote_disabled_hidden_a' : 'main/vote_disabled_hidden_q').'"';
 				$fields['vote_down_tags']=$fields['vote_up_tags'];
 			
 			} elseif ($isbyuser) {
 				$fields['vote_state']='disabled';
-				$fields['vote_up_tags']='TITLE="'.qa_lang_html($isanswer ? 'main/vote_disabled_my_a' : 'main/vote_disabled_my_q').'"';
+				$fields['vote_up_tags']='title="'.qa_lang_html($isanswer ? 'main/vote_disabled_my_a' : 'main/vote_disabled_my_q').'"';
 				$fields['vote_down_tags']=$fields['vote_up_tags'];
 				
 			} elseif (strpos($voteview, '-disabled-')) {
 				$fields['vote_state']=(@$post['uservote']>0) ? 'voted_up_disabled' : ((@$post['uservote']<0) ? 'voted_down_disabled' : 'disabled');
 				
 				if (strpos($voteview, '-disabled-page'))
-					$fields['vote_up_tags']='TITLE="'.qa_lang_html('main/vote_disabled_q_page_only').'"';
+					$fields['vote_up_tags']='title="'.qa_lang_html('main/vote_disabled_q_page_only').'"';
 				else
-					$fields['vote_up_tags']='TITLE="'.qa_lang_html('main/vote_disabled_level').'"';
+					$fields['vote_up_tags']='title="'.qa_lang_html('main/vote_disabled_level').'"';
 					
 				$fields['vote_down_tags']=$fields['vote_up_tags'];
 
 			} elseif (@$post['uservote']>0) {
 				$fields['vote_state']='voted_up';
-				$fields['vote_up_tags']='TITLE="'.qa_lang_html('main/voted_up_popup').'" NAME="'.qa_html('vote_'.$postid.'_0_'.$elementid).'" '.$onclick;
+				$fields['vote_up_tags']='title="'.qa_lang_html('main/voted_up_popup').'" name="'.qa_html('vote_'.$postid.'_0_'.$elementid).'" '.$onclick;
 				$fields['vote_down_tags']=' ';
 
 			} elseif (@$post['uservote']<0) {
 				$fields['vote_state']='voted_down';
 				$fields['vote_up_tags']=' ';
-				$fields['vote_down_tags']='TITLE="'.qa_lang_html('main/voted_down_popup').'" NAME="'.qa_html('vote_'.$postid.'_0_'.$elementid).'" '.$onclick;
+				$fields['vote_down_tags']='title="'.qa_lang_html('main/voted_down_popup').'" name="'.qa_html('vote_'.$postid.'_0_'.$elementid).'" '.$onclick;
 				
 			} else {
-				$fields['vote_up_tags']='TITLE="'.qa_lang_html('main/vote_up_popup').'" NAME="'.qa_html('vote_'.$postid.'_1_'.$elementid).'" '.$onclick;
+				$fields['vote_up_tags']='title="'.qa_lang_html('main/vote_up_popup').'" name="'.qa_html('vote_'.$postid.'_1_'.$elementid).'" '.$onclick;
 				
 				if (strpos($voteview, '-uponly-level')) {
 					$fields['vote_state']='up_only';
-					$fields['vote_down_tags']='TITLE="'.qa_lang_html('main/vote_disabled_down').'"';
+					$fields['vote_down_tags']='title="'.qa_lang_html('main/vote_disabled_down').'"';
 				
 				} else {
 					$fields['vote_state']='enabled';
-					$fields['vote_down_tags']='TITLE="'.qa_lang_html('main/vote_down_popup').'" NAME="'.qa_html('vote_'.$postid.'_-1_'.$elementid).'" '.$onclick;
+					$fields['vote_down_tags']='title="'.qa_lang_html('main/vote_down_popup').'" name="'.qa_html('vote_'.$postid.'_-1_'.$elementid).'" '.$onclick;
 				}
 			}
 		}
@@ -443,7 +443,7 @@
 			$fields['when']=qa_when_to_html($post['created'], @$options['fulldatedays']);
 			
 			if ($microformats)
-				$fields['when']['data']='<SPAN CLASS="published"><SPAN CLASS="value-title" TITLE="'.gmdate('Y-m-d\TH:i:sO', $post['created']).'"></SPAN>'.$fields['when']['data'].'</SPAN>';
+				$fields['when']['data']='<span class="published"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['created']).'"></span>'.$fields['when']['data'].'</span>';
 		}
 		
 		if (@$options['whoview']) {
@@ -520,7 +520,7 @@
 				$fields['when_2']=qa_when_to_html($post['updated'], @$options['fulldatedays']);
 				
 				if ($microformats)
-					$fields['when_2']['data']='<SPAN CLASS="updated"><SPAN CLASS="value-title" TITLE="'.gmdate('Y-m-d\TH:i:sO', $post['updated']).'"></SPAN>'.$fields['when_2']['data'].'</SPAN>';
+					$fields['when_2']['data']='<span class="updated"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['updated']).'"></span>'.$fields['when_2']['data'].'</span>';
 			}
 			
 			if (isset($post['lastuserid']) && @$options['whoview'])
@@ -543,7 +543,7 @@
 		if (isset($postuserid) && isset($usershtml[$postuserid])) {
 			$whohtml=$usershtml[$postuserid];
 			if ($microformats)
-				$whohtml='<SPAN CLASS="vcard author">'.$whohtml.'</SPAN>';
+				$whohtml='<span class="vcard author">'.$whohtml.'</span>';
 
 		} elseif ($isbyuser)
 			$whohtml=qa_lang_html('main/me');
@@ -784,7 +784,7 @@
 				(
 					(@$laterquestion['oupdatetype']) && // the more recent reference was an edit
 					(!@$question['oupdatetype']) && // this is not an edit
-					($laterquestion['_type']==$question['_type']) && // the same part (Q/A/C) is referenced here 
+					($laterquestion['_type']==$question['_type']) && // the same part (Q/a/C) is referenced here 
 					($laterquestion['_userid']==$question['_userid']) && // the same user made the later edit
 					(abs($laterquestion['_time']-$question['_time'])<300) // the edit was within 5 minutes of creation
 				)
@@ -830,7 +830,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>"\'\.])+\.([^\s&<>"\']|&amp;)+)/i', '\1<A HREF="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</A>', ' '.$html.' '), 1, -1);
+		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>"\'\.])+\.([^\s&<>"\']|&amp;)+)/i', '\1<a href="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</a>', ' '.$html.' '), 1, -1);
 	}
 
 	
@@ -846,7 +846,7 @@
 			if (!is_numeric(strpos($linkurl, ':/')))
 				$linkurl='http://'.$linkurl;
 				
-			return '<A HREF="'.qa_html($linkurl).'" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>'.qa_html($url).'</A>';
+			return '<a href="'.qa_html($linkurl).'" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>'.qa_html($url).'</a>';
 		
 		} else
 			return qa_html($url);
@@ -866,12 +866,12 @@
 			$htmlmessage,
 			
 			array(
-				'^1' => empty($userlinks['login']) ? '' : '<A HREF="'.qa_html($userlinks['login']).'">',
-				'^2' => empty($userlinks['login']) ? '' : '</A>',
-				'^3' => empty($userlinks['register']) ? '' : '<A HREF="'.qa_html($userlinks['register']).'">',
-				'^4' => empty($userlinks['register']) ? '' : '</A>',
-				'^5' => empty($userlinks['confirm']) ? '' : '<A HREF="'.qa_html($userlinks['confirm']).'">',
-				'^6' => empty($userlinks['confirm']) ? '' : '</A>',
+				'^1' => empty($userlinks['login']) ? '' : '<a href="'.qa_html($userlinks['login']).'">',
+				'^2' => empty($userlinks['login']) ? '' : '</a>',
+				'^3' => empty($userlinks['register']) ? '' : '<a href="'.qa_html($userlinks['register']).'">',
+				'^4' => empty($userlinks['register']) ? '' : '</a>',
+				'^5' => empty($userlinks['confirm']) ? '' : '<a href="'.qa_html($userlinks['confirm']).'">',
+				'^6' => empty($userlinks['confirm']) ? '' : '</a>',
 			)
 		);
 	}
@@ -955,10 +955,10 @@
 			$htmlmessage,
 			
 			array(
-				'^1' => '<A HREF="'.qa_path_html('questions'.($hascategory ? ('/'.$categoryrequest) : '')).'">',
-				'^2' => '</A>',
-				'^3' => '<A HREF="'.qa_path_html('tags').'">',
-				'^4' => '</A>',
+				'^1' => '<a href="'.qa_path_html('questions'.($hascategory ? ('/'.$categoryrequest) : '')).'">',
+				'^2' => '</a>',
+				'^3' => '<a href="'.qa_path_html('tags').'">',
+				'^4' => '</a>',
 			)
 		);
 	}
@@ -977,8 +977,8 @@
 			$htmlmessage,
 			
 			array(
-				'^1' => '<A HREF="'.qa_path_html('ask', strlen($categoryid) ? array('cat' => $categoryid) : null).'">',
-				'^2' => '</A>',
+				'^1' => '<a href="'.qa_path_html('ask', strlen($categoryid) ? array('cat' => $categoryid) : null).'">',
+				'^2' => '</a>',
 			)
 		);
 	}
@@ -1159,7 +1159,7 @@
 			
 		foreach ($effects as $target => $sources) {
 			$funcscript[]="\tvar e=document.getElementById(".qa_js($target).");";
-			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='SPAN')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
+			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='span')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
 		}
 		
 		$funcscript[]="}";
@@ -1176,7 +1176,7 @@
 	$exampletags are suggestions and $completetags are simply the most popular ones. Show up to $maxtags.
 */
 	{
-		$template='<A HREF="#" CLASS="qa-tag-link" onClick="return qa_tag_click(this);">^</A>';
+		$template='<a href="#" class="qa-tag-link" onclick="return qa_tag_click(this);">^</a>';
 
 		$qa_content['script_rel'][]='qa-content/qa-ask.js?'.QA_VERSION;
 		$qa_content['script_var']['qa_tag_template']=$template;
@@ -1189,18 +1189,18 @@
 		
 		$field['label']=qa_lang_html($separatorcomma ? 'question/q_tags_comma_label' : 'question/q_tags_label');
 		$field['value']=qa_html(implode($separatorcomma ? ', ' : ' ', $tags));
-		$field['tags']='NAME="'.$fieldname.'" ID="tags" AUTOCOMPLETE="off" onKeyUp="qa_tag_hints();" onMouseUp="qa_tag_hints();"';
+		$field['tags']='name="'.$fieldname.'" id="tags" autocomplete="off" onkeyup="qa_tag_hints();" onmouseup="qa_tag_hints();"';
 		
-		$sdn=' STYLE="display:none;"';
+		$sdn=' style="display:none;"';
 		
 		$field['note']=
-			'<SPAN ID="tag_examples_title"'.(count($exampletags) ? '' : $sdn).'>'.qa_lang_html('question/example_tags').'</SPAN>'.
-			'<SPAN ID="tag_complete_title"'.$sdn.'>'.qa_lang_html('question/matching_tags').'</SPAN><SPAN ID="tag_hints">';
+			'<span id="tag_examples_title"'.(count($exampletags) ? '' : $sdn).'>'.qa_lang_html('question/example_tags').'</span>'.
+			'<span id="tag_complete_title"'.$sdn.'>'.qa_lang_html('question/matching_tags').'</span><span id="tag_hints">';
 
 		foreach ($exampletags as $tag)
 			$field['note'].=str_replace('^', qa_html($tag), $template).' ';
 
-		$field['note'].='</SPAN>';
+		$field['note'].='</span>';
 		$field['note_force']=true;
 	}
 	
@@ -1249,7 +1249,7 @@
 		$qa_content['script_var']['qa_cat_maxdepth']=$maxdepth;
 
 		$field['type']='select';
-		$field['tags']='NAME="'.$fieldname.'_0" ID="'.$fieldname.'_0" onChange="qa_category_select('.qa_js($fieldname).');"';
+		$field['tags']='name="'.$fieldname.'_0" id="'.$fieldname.'_0" onchange="qa_category_select('.qa_js($fieldname).');"';
 		$field['options']=array();
 		
 		// create the menu that will be shown if Javascript is disabled
@@ -1305,7 +1305,7 @@
 				$field['options'][$keycategoryid]=qa_category_path_html($navcategories, $keycategoryid);
 			
 		$field['value']=@$field['options'][$categoryid];
-		$field['note']='<DIV ID="'.$fieldname.'_note"><NOSCRIPT STYLE="color:red;">'.qa_lang_html('question/category_js_note').'</NOSCRIPT></DIV>';
+		$field['note']='<div id="'.$fieldname.'_note"><noscript style="color:red;">'.qa_lang_html('question/category_js_note').'</noscript></div>';
 	}
 	
 	
@@ -1338,7 +1338,7 @@
 */
 	{
 		$fields['notify']=array(
-			'tags' => 'NAME="'.$fieldprefix.'notify"',
+			'tags' => 'name="'.$fieldprefix.'notify"',
 			'type' => 'checkbox',
 			'value' => qa_html($innotify),
 		);
@@ -1365,15 +1365,15 @@
 			
 		if (empty($login_email)) {
 			$fields['notify']['label']=
-				'<SPAN ID="'.$fieldprefix.'email_shown">'.$labelaskemail.'</SPAN>'.
-				'<SPAN ID="'.$fieldprefix.'email_hidden" STYLE="display:none;">'.$labelonly.'</SPAN>';
+				'<span id="'.$fieldprefix.'email_shown">'.$labelaskemail.'</span>'.
+				'<span id="'.$fieldprefix.'email_hidden" style="display:none;">'.$labelonly.'</span>';
 			
-			$fields['notify']['tags'].=' ID="'.$fieldprefix.'notify" onclick="if (document.getElementById(\''.$fieldprefix.'notify\').checked) document.getElementById(\''.$fieldprefix.'email\').focus();"';
+			$fields['notify']['tags'].=' id="'.$fieldprefix.'notify" onclick="if (document.getElementById(\''.$fieldprefix.'notify\').checked) document.getElementById(\''.$fieldprefix.'email\').focus();"';
 			$fields['notify']['tight']=true;
 			
 			$fields['email']=array(
 				'id' => $fieldprefix.'email_display',
-				'tags' => 'NAME="'.$fieldprefix.'email" ID="'.$fieldprefix.'email"',
+				'tags' => 'name="'.$fieldprefix.'email" id="'.$fieldprefix.'email"',
 				'value' => qa_html($inemail),
 				'note' => qa_lang_html('question/notify_email_note'),
 				'error' => qa_html($errors_email),
@@ -1461,7 +1461,7 @@
 							$layerphp=substr_replace($layerphp, $replace, $searchmatch[1], strlen($searchmatch[0]));
 					}
 				
-			//	echo '<PRE STYLE="text-align:left;">'.htmlspecialchars($layerphp).'</PRE>'; // to debug munged code
+			//	echo '<PRE style="text-align:left;">'.htmlspecialchars($layerphp).'</PRE>'; // to debug munged code
 				
 				eval('?'.'>'.$layerphp);
 				
@@ -1623,15 +1623,15 @@
 		if (strlen($blobid) && ($size>0)) {
 			qa_image_constrain($width, $height, $size);
 			
-			$html='<IMG SRC="'.qa_path_html('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
-				'"'.(($width && $height) ? (' WIDTH="'.$width.'" HEIGHT="'.$height.'"') : '').' CLASS="qa-avatar-image" ALT=""/>';
+			$html='<img src="'.qa_path_html('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
+				'"'.(($width && $height) ? (' width="'.$width.'" height="'.$height.'"') : '').' class="qa-avatar-image" alt=""/>';
 				
 			if ($padding && $width && $height) {
 				$padleft=floor(($size-$width)/2);
 				$padright=$size-$width-$padleft;
 				$padtop=floor(($size-$height)/2);
 				$padbottom=$size-$height-$padtop;
-				$html='<SPAN STYLE="display:inline-block; padding:'.$padtop.'px '.$padright.'px '.$padbottom.'px '.$padleft.'px;">'.$html.'</SPAN>';
+				$html='<span style="display:inline-block; padding:'.$padtop.'px '.$padright.'px '.$padbottom.'px '.$padleft.'px;">'.$html.'</span>';
 			}
 		
 			return $html;
@@ -1649,9 +1649,9 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if ($size>0)
-			return '<IMG SRC="'.(qa_is_https_probably() ? 'https' : 'http').
+			return '<img src="'.(qa_is_https_probably() ? 'https' : 'http').
 				'://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
-				'" WIDTH="'.(int)$size.'" HEIGHT="'.(int)$size.'" CLASS="qa-avatar-image" ALT=""/>';
+				'" width="'.(int)$size.'" height="'.(int)$size.'" class="qa-avatar-image" alt=""/>';
 		else
 			return null;
 	}
@@ -1681,8 +1681,8 @@
 		return array(
 			'id' => qa_html($elementid),
 			'raw' => $rawnotice,
-			'form_tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
-			'close_tags' => 'NAME="'.qa_html($elementid).'" onclick="return qa_notice_click(this);"',
+			'form_tags' => 'method="post" action="'.qa_self_html().'"',
+			'close_tags' => 'name="'.qa_html($elementid).'" onclick="return qa_notice_click(this);"',
 			'content' => $content,
 		);
 	}
@@ -1695,10 +1695,10 @@
 */
 	{
 		return array(
-			'form_tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
-			'favorite_tags' => 'ID="favoriting"',
+			'form_tags' => 'method="post" action="'.qa_self_html().'"',
+			'favorite_tags' => 'id="favoriting"',
 			($favorite ? 'favorite_remove_tags' : 'favorite_add_tags') =>
-				'TITLE="'.qa_html($title).'" NAME="'.qa_html('favorite_'.$entitytype.'_'.$entityid.'_'.(int)!$favorite).'" onClick="return qa_favorite_click(this);"',
+				'title="'.qa_html($title).'" name="'.qa_html('favorite_'.$entitytype.'_'.$entityid.'_'.(int)!$favorite).'" onclick="return qa_favorite_click(this);"',
 		);
 	}
 	

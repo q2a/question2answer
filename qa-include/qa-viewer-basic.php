@@ -58,7 +58,7 @@
 			if ($format=='html') {
 				$html=qa_sanitize_html($content, @$options['linksnewwindow'], false); // sanitize again for display, for extra safety, and due to new window setting
 
-				if (isset($options['blockwordspreg'])) { // filtering out blocked words inline within HTML is pretty complex, e.g. p<B>oo</B>p must be caught
+				if (isset($options['blockwordspreg'])) { // filtering out blocked words inline within HTML is pretty complex, e.g. p<strong>oo</strong>p must be caught
 					require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 					$html=preg_replace('/<\s*('.$this->htmllineseparators.')[^A-Za-z0-9]/i', "\n\\0", $html); // tags to single new line
@@ -106,7 +106,7 @@
 					
 					$htmlunlinkeds=array_reverse(preg_split('|<[Aa]\s+[^>]+>.*</[Aa]\s*>|', $html, -1, PREG_SPLIT_OFFSET_CAPTURE)); // start from end so we substitute correctly
 					
-					foreach ($htmlunlinkeds as $htmlunlinked) { // and that we don't detect links inside HTML, e.g. <IMG SRC="http://...">
+					foreach ($htmlunlinkeds as $htmlunlinked) { // and that we don't detect links inside HTML, e.g. <img src="http://...">
 						$thishtmluntaggeds=array_reverse(preg_split('/<[^>]*>/', $htmlunlinked[0], -1, PREG_SPLIT_OFFSET_CAPTURE)); // again, start from end
 						
 						foreach ($thishtmluntaggeds as $thishtmluntagged) {

@@ -451,8 +451,8 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-			return strlen($handle) ? ('<A HREF="'.qa_path_html('user/'.$handle).
-				'" CLASS="qa-user-link'.($microformats ? ' url nickname' : '').'">'.qa_html($handle).'</A>') : '';
+			return strlen($handle) ? ('<a href="'.qa_path_html('user/'.$handle).
+				'" class="qa-user-link'.($microformats ? ' url nickname' : '').'">'.qa_html($handle).'</a>') : '';
 		}
 		
 		
@@ -475,7 +475,7 @@
 			else
 				$html=null;
 				
-			return (isset($html) && strlen($handle)) ? ('<A HREF="'.qa_path_html('user/'.$handle).'" CLASS="qa-avatar-link">'.$html.'</A>') : $html;
+			return (isset($html) && strlen($handle)) ? ('<a href="'.qa_path_html('user/'.$handle).'" class="qa-avatar-link">'.$html.'</a>') : $html;
 		}
 		
 

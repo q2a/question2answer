@@ -474,8 +474,8 @@
 
 		$publicusername=$logged_in_user['publicusername'];
 		
-		return '<A HREF="'.htmlspecialchars($relative_url_prefix.'user/'.urlencode($publicusername)).
-			'" CLASS="qa-user-link">'.htmlspecialchars($publicusername).'</A>';
+		return '<a href="'.htmlspecialchars($relative_url_prefix.'user/'.urlencode($publicusername)).
+			'" class="qa-user-link">'.htmlspecialchars($publicusername).'</a>';
 
 	/*
 		Example 1 - suitable if:
@@ -485,8 +485,8 @@
 	
 		$publicusername=$logged_in_user['publicusername'];
 		
-		return '<A HREF="'.htmlspecialchars($relative_url_prefix.'../user/'.urlencode($publicusername)).
-			'" CLASS="qa-user-link">'.htmlspecialchars($publicusername).'</A>';
+		return '<a href="'.htmlspecialchars($relative_url_prefix.'../user/'.urlencode($publicusername)).
+			'" class="qa-user-link">'.htmlspecialchars($publicusername).'</a>';
 	*/
 
 	/*
@@ -498,9 +498,9 @@
 	
 		$publicusername=$logged_in_user['publicusername'];
 		
-		return '<A HREF="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).'/" CLASS="qa-user-link">'.
-			'<IMG SRC="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).'/photo-small.jpeg" '.
-			'STYLE="width:16px; height:16px; border:none; margin-right:4px;">'.htmlspecialchars($publicusername).'</A>';
+		return '<a href="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).'/" class="qa-user-link">'.
+			'<img src="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).'/photo-small.jpeg" '.
+			'style="width:16px; height:16px; border:none; margin-right:4px;">'.htmlspecialchars($publicusername).'</a>';
 	*/
 
 	}
@@ -545,8 +545,8 @@
 			$usershtml[$userid]=htmlspecialchars($publicusername);
 			
 			if ($should_include_link)
-				$usershtml[$userid]='<A HREF="'.htmlspecialchars($relative_url_prefix.'user/'.urlencode($publicusername)).
-					'" CLASS="qa-user-link">'.$usershtml[$userid].'</A>';
+				$usershtml[$userid]='<a href="'.htmlspecialchars($relative_url_prefix.'user/'.urlencode($publicusername)).
+					'" class="qa-user-link">'.$usershtml[$userid].'</a>';
 		}
 			
 		return $usershtml;
@@ -565,8 +565,8 @@
 			$usershtml[$userid]=htmlspecialchars($publicusername);
 			
 			if ($should_include_link)
-				$usershtml[$userid]='<A HREF="'.htmlspecialchars($relative_url_prefix.'../user/'.urlencode($publicusername)).
-					'" CLASS="qa-user-link">'.$usershtml[$userid].'</A>';
+				$usershtml[$userid]='<a href="'.htmlspecialchars($relative_url_prefix.'../user/'.urlencode($publicusername)).
+					'" class="qa-user-link">'.$usershtml[$userid].'</a>';
 		}
 			
 		return $usershtml;
@@ -584,12 +584,12 @@
 		foreach ($userids as $userid) {
 			$publicusername=$useridtopublic[$userid];
 			
-			$usershtml[$userid]='<IMG SRC="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).'/photo-small.jpeg" '.
-				'STYLE="width:16px; height:16px; border:0; margin-right:4px;">'.htmlspecialchars($publicusername);
+			$usershtml[$userid]='<img src="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).'/photo-small.jpeg" '.
+				'style="width:16px; height:16px; border:0; margin-right:4px;">'.htmlspecialchars($publicusername);
 			
 			if ($should_include_link)
-				$usershtml[$userid]='<A HREF="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).
-					'/" CLASS="qa-user-link">'.$usershtml[$userid].'</A>';
+				$usershtml[$userid]='<a href="http://www.mysite.com/'.htmlspecialchars(urlencode($publicusername)).
+					'/" class="qa-user-link">'.$usershtml[$userid].'</a>';
 		}
 			
 		return $usershtml;
@@ -634,8 +634,8 @@
 		
 		$htmlsize=(int)$size;
 		
-		return '<IMG SRC="http://www.mysite.com/avatar/'.htmlspecialchars($userid).'-'.$htmlsize.'x'.$htmlsize.'.jpg" '.
-			'WIDTH="'.$htmlsize.'" HEIGHT="'.$htmlsize.'" CLASS="qa-avatar-image" ALT=""/>';
+		return '<img src="http://www.mysite.com/avatar/'.htmlspecialchars($userid).'-'.$htmlsize.'x'.$htmlsize.'.jpg" '.
+			'width="'.$htmlsize.'" height="'.$htmlsize.'" class="qa-avatar-image" ALT=""/>';
 	*/
 
 	}

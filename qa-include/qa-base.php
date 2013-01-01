@@ -342,7 +342,7 @@
 						$functionsphp=substr_replace($functionsphp, $newname, $searchmatch[1], strlen($searchmatch[0]));
 				}
 			
-		//	echo '<PRE STYLE="text-align:left;">'.htmlspecialchars($functionsphp).'</PRE>'; // to debug munged code
+		//	echo '<PRE style="text-align:left;">'.htmlspecialchars($functionsphp).'</PRE>'; // to debug munged code
 			
 			eval('?'.'>'.$functionsphp);
 		}
@@ -567,14 +567,14 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		echo 'Question2Answer fatal error:<P><FONT COLOR="red">'.qa_html($message, true).'</FONT></P>';
+		echo 'Question2Answer fatal error:<p><<font color="red">'.qa_html($message, true).'</font></p>';
 		@error_log('PHP Question2Answer fatal error: '.$message);
-		echo '<P>Stack trace:<P>';
+		echo '<p>Stack trace:<p>';
 
 		$backtrace=array_reverse(array_slice(debug_backtrace(), 1));
 		foreach ($backtrace as $trace)
-			echo '<FONT COLOR="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
-				qa_html(@$trace['function'].'() '.@$trace['file'].':'.@$trace['line']).'</FONT><BR>';
+			echo '<<font color="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
+				qa_html(@$trace['function'].'() '.@$trace['file'].':'.@$trace['line']).'</font><br />';
 		
 		
 		qa_exit('error');
@@ -856,7 +856,7 @@
 	
 	function qa_clicked($name)
 /*
-	Return true if form button $name was clicked (as TYPE=SUBMIT/IMAGE) to create this page request.
+	Return true if form button $name was clicked (as type=SUBMIT/IMAGE) to create this page request.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -1210,7 +1210,7 @@
 	
 	function qa_anchor($basetype, $postid)
 /*
-	Return the HTML anchor that should be used for post $postid with $basetype (Q/A/C)
+	Return the HTML anchor that should be used for post $postid with $basetype (Q/a/C)
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -1290,7 +1290,7 @@
 			
 			foreach ($params as $param)
 				if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-					$formhtml.='<INPUT TYPE="hidden" NAME="'.qa_html(urldecode($matches[1])).'" VALUE="'.qa_html(urldecode(@$matches[3])).'"/>';
+					$formhtml.='<input type="hidden" name="'.qa_html(urldecode($matches[1])).'" VALUE="'.qa_html(urldecode(@$matches[3])).'"/>';
 		}
 		
 		return $formhtml;

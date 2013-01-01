@@ -72,7 +72,7 @@
 	
 	$qa_content['q_list']=array(
 		'form' => array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 		),
 		
 		'qs' => array(),
@@ -102,12 +102,12 @@
 
 				'buttons' => array(
 					'clearflags' => array(
-						'tags' => 'NAME="admin_'.$postid.'_clearflags" onclick="return qa_admin_click(this);"',
+						'tags' => 'name="admin_'.$postid.'_clearflags" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/clear_flags_button'),
 					),
 	
 					'hide' => array(
-						'tags' => 'NAME="admin_'.$postid.'_hide" onclick="return qa_admin_click(this);"',
+						'tags' => 'name="admin_'.$postid.'_hide" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/hide_button'),
 					),
 				),

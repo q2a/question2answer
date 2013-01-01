@@ -74,7 +74,7 @@
 			while ( qa_recalc_perform_step($state) && (time()<$stoptime) )
 				;
 			
-			echo qa_html(qa_recalc_get_message($state)).str_repeat('    ', 1024)."<BR>\n";
+			echo qa_html(qa_recalc_get_message($state)).str_repeat('    ', 1024)."<br />\n";
 
 			flush();
 			sleep(1); // ... then rest for one
@@ -83,7 +83,7 @@
 ?>
 		</TT>
 		
-		<A HREF="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></A>
+		<a href="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></a>
 	</BODY>
 </HTML>
 

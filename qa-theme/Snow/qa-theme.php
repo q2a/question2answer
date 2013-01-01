@@ -32,10 +32,10 @@
 			qa_html_theme_base::head_script();
 			
 			$this->output(
-				'<SCRIPT TYPE="text/javascript"><!--',
+				'<script type="text/javascript"><!--',
 				'if (qa_wysiwyg_editor_config)',
 				'qa_wysiwyg_editor_config.skin="kama";',
-				'//--></SCRIPT>'
+				'//--></script>'
 			);
 		}
 		
@@ -76,9 +76,9 @@
 					: qa_lang_html_sub('main/x_points', qa_html(number_format($userpoints)));
 						
 				$this->output(
-					'<SPAN CLASS="qa-logged-in-points">',
+					'<span class="qa-logged-in-points">',
 					'('.$pointshtml.')',
-					'</SPAN>'
+					'</span>'
 				);
 			}
 		}
@@ -93,32 +93,32 @@
 		function header_custom() // allows modification of custom element shown inside header after logo
 		{
 			if (isset($this->content['body_header'])) {
-				$this->output('<DIV CLASS="header-banner">');
+				$this->output('<div class="header-banner">');
 				$this->output_raw($this->content['body_header']);
-				$this->output('</DIV>');
+				$this->output('</div>');
 			}
 		}
 		
-		function header() // removes user navigation and search from header and replaces with custom header content. Also opens new <DIV>s
+		function header() // removes user navigation and search from header and replaces with custom header content. Also opens new <div>s
 		{	
-			$this->output('<DIV CLASS="qa-header">');
+			$this->output('<div class="qa-header">');
 			
 			$this->logo();						
 			$this->header_clear();
 			$this->header_custom();
 
-			$this->output('</DIV> <!-- END qa-header -->', '');
+			$this->output('</div> <!-- END qa-header -->', '');
 
-			$this->output('<DIV CLASS="qa-main-shadow">', '');
-			$this->output('<DIV CLASS="qa-main-wrapper">', '');
+			$this->output('<div class="qa-main-shadow">', '');
+			$this->output('<div class="qa-main-wrapper">', '');
 			$this->nav_main_sub();
 
 		}
 		
-		function footer() // prevent display of regular footer content (see body_suffix()) and replace with closing new <DIV>s
+		function footer() // prevent display of regular footer content (see body_suffix()) and replace with closing new <div>s
 		{
-			$this->output('</DIV> <!-- END main-wrapper -->');
-			$this->output('</DIV> <!-- END main-shadow -->');		
+			$this->output('</div> <!-- END main-wrapper -->');
+			$this->output('</div> <!-- END main-shadow -->');		
 		}		
 		
 		function title() // add RSS feed icon after the page title
@@ -128,18 +128,18 @@
 			$feed=@$this->content['feed'];
 			
 			if (!empty($feed))
-				$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" border="0" CLASS="qa-rss-icon"/></a>');
+				$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" class="qa-rss-icon"/></a>');
 		}
 		
 		function q_item_stats($q_item) // add view count to question list
 		{
-			$this->output('<DIV CLASS="qa-q-item-stats">');
+			$this->output('<div class="qa-q-item-stats">');
 			
 			$this->voting($q_item);
 			$this->a_count($q_item);
 			qa_html_theme_base::view_count($q_item);
 
-			$this->output('</DIV>');
+			$this->output('</div>');
 		}
 		
 		function view_count($q_item) // prevent display of view count in the usual place
@@ -150,15 +150,15 @@
         {
 			$this->output('<div class="qa-footer-bottom-group">');
 			qa_html_theme_base::footer();
-			$this->output('</DIV> <!-- END footer-bottom-group -->', '');
+			$this->output('</div> <!-- END footer-bottom-group -->', '');
         }
 		
 		function attribution()
 		{
 			$this->output(
-				'<DIV CLASS="qa-attribution">',
+				'<div class="qa-attribution">',
 				'&nbsp;| Snow Theme by <a href="http://www.q2amarket.com">Q2A Market</a>',
-				'</DIV>'
+				'</div>'
 			);
 
 			qa_html_theme_base::attribution();

@@ -89,7 +89,7 @@
 	
 	$qa_content['q_list']=array(
 		'form' => array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 		),
 		
 		'qs' => array(),
@@ -122,13 +122,13 @@
 			
 			if ($allowhideshow)
 				$buttons['reshow']=array(
-					'tags' => 'NAME="admin_'.qa_html($qhiddenpostid[$key]).'_reshow" onclick="return qa_admin_click(this);"',
+					'tags' => 'name="admin_'.qa_html($qhiddenpostid[$key]).'_reshow" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/reshow_button'),
 				);
 				
 			if ($allowdeletehidden && !$dependcounts[$qhiddenpostid[$key]])
 				$buttons['delete']=array(
-					'tags' => 'NAME="admin_'.qa_html($qhiddenpostid[$key]).'_delete" onclick="return qa_admin_click(this);"',
+					'tags' => 'name="admin_'.qa_html($qhiddenpostid[$key]).'_delete" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/delete_button'),
 				);
 				

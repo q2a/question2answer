@@ -243,8 +243,8 @@
 			if (qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
 				if (!isset($qa_content['error']))
 					$qa_content['error']=strtr(qa_lang_html('admin/maintenance_admin_only'), array(
-						'^1' => '<A HREF="'.qa_path_html('admin/general').'">',
-						'^2' => '</A>',
+						'^1' => '<a href="'.qa_path_html('admin/general').'">',
+						'^2' => '</a>',
 					));
 	
 			} else {
@@ -261,14 +261,14 @@
 				$qa_content=qa_content_prepare();
 				$qa_content['title']=qa_lang_html('users/confirm_title');
 				$qa_content['error']=strtr(qa_lang_html('users/confirm_required'), array(
-					'^1' => '<A HREF="'.qa_path_html('confirm').'">',
-					'^2' => '</A>',
+					'^1' => '<a href="'.qa_path_html('confirm').'">',
+					'^2' => '</a>',
 				));
 			}
 	
 	//	Combine various Javascript elements in $qa_content into single array for theme layer
 	
-		$script=array('<SCRIPT TYPE="text/javascript"><!--');
+		$script=array('<script type="text/javascript"><!--');
 		
 		if (isset($qa_content['script_var']))
 			foreach ($qa_content['script_var'] as $var => $value)
@@ -308,17 +308,17 @@
 			$script[]='}';
 		}
 		
-		$script[]='//--></SCRIPT>';
+		$script[]='//--></script>';
 		
 		if (isset($qa_content['script_rel'])) {
 			$uniquerel=array_unique($qa_content['script_rel']); // remove any duplicates
 			foreach ($uniquerel as $script_rel)
-				$script[]='<SCRIPT SRC="'.qa_html(qa_path_to_root().$script_rel).'" TYPE="text/javascript"></SCRIPT>';
+				$script[]='<script src="'.qa_html(qa_path_to_root().$script_rel).'" type="text/javascript"></script>';
 		}
 		
 		if (isset($qa_content['script_src']))
 			foreach ($qa_content['script_src'] as $script_src)
-				$script[]='<SCRIPT SRC="'.qa_html($script_src).'" TYPE="text/javascript"></SCRIPT>';
+				$script[]='<script src="'.qa_html($script_src).'" type="text/javascript"></script>';
 	
 		$qa_content['script']=$script;
 
@@ -558,10 +558,10 @@
 
 		
 		$qa_content['search']=array(
-			'form_tags' => 'METHOD="GET" ACTION="'.qa_path_html('search').'"',
+			'form_tags' => 'method="get" action="'.qa_path_html('search').'"',
 			'form_extra' => qa_path_form_html('search'),
 			'title' => qa_lang_html('main/search_title'),
-			'field_tags' => 'NAME="q"',
+			'field_tags' => 'name="q"',
 			'button_label' => qa_lang_html('main/search_button'),
 		);
 		
@@ -608,12 +608,12 @@
 		$logoheight=qa_opt('logo_height');
 		
 		if ($logoshow)
-			$qa_content['logo']='<A HREF="'.qa_path_html('').'" CLASS="qa-logo-link" TITLE="'.qa_html(qa_opt('site_title')).'">'.
-				'<IMG SRC="'.qa_html(is_numeric(strpos($logourl, '://')) ? $logourl : qa_path_to_root().$logourl).'"'.
-				($logowidth ? (' WIDTH="'.$logowidth.'"') : '').($logoheight ? (' HEIGHT="'.$logoheight.'"') : '').
-				' BORDER="0" ALT="'.qa_html(qa_opt('site_title')).'"/></A>';
+			$qa_content['logo']='<a href="'.qa_path_html('').'" class="qa-logo-link" title="'.qa_html(qa_opt('site_title')).'">'.
+				'<img src="'.qa_html(is_numeric(strpos($logourl, '://')) ? $logourl : qa_path_to_root().$logourl).'"'.
+				($logowidth ? (' width="'.$logowidth.'"') : '').($logoheight ? (' height="'.$logoheight.'"') : '').
+				' alt="'.qa_html(qa_opt('site_title')).'"/></a>';
 		else
-			$qa_content['logo']='<A HREF="'.qa_path_html('').'" CLASS="qa-logo-link">'.qa_html(qa_opt('site_title')).'</A>';
+			$qa_content['logo']='<a href="'.qa_path_html('').'" class="qa-logo-link">'.qa_html(qa_opt('site_title')).'</a>';
 
 		$topath=qa_get('to'); // lets user switch between login and register without losing destination page
 
