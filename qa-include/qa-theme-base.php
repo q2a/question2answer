@@ -76,7 +76,7 @@
 				if ($delta<0)
 					$this->indent+=$delta;
 				
-				echo str_repeat("\t", max(0, $this->indent))."\n";
+				echo str_repeat("\t", max(0, $this->indent)).$element."\n";
 				
 				if ($delta>0)
 					$this->indent+=$delta;
