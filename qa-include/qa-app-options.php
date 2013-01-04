@@ -289,7 +289,7 @@
 			'nav_unanswered' => 1,
 			'nav_users' => 1,
 			'neat_urls' => QA_URL_FORMAT_SAFEST,
-			'notify_users_default' => 1,
+			'notify_users_default' => 0,
 			'page_size_activity' => 20,
 			'page_size_ask_check_qs' => 5,
 			'page_size_ask_tags' => 5,

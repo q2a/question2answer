@@ -1,0 +1,12 @@
+name: q2a
+instances: 1
+framework: php
+mem: 256M
+min_version:
+  client: 1.4.3
+  server: 1.0
+requirements:
+  ubuntu:
+    - php5-fpm
+services:
+  ${name}-db: mysql
