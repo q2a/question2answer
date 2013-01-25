@@ -378,11 +378,13 @@
 			$qa_content['a_list']['as'][]=$a_view;
 		}
 	}
-		
-	if ($countfortitle==1)
-		$qa_content['a_list']['title']=qa_lang_html('question/1_answer_title');
-	elseif ($countfortitle>0)
-		$qa_content['a_list']['title']=qa_lang_html_sub('question/x_answers_title', $countfortitle);
+
+	if (in_array($question['basetype'], array('Q', 'Q_HIDDEN'))) {
+		if ($countfortitle==1)
+			$qa_content['a_list']['title']=qa_lang_html('question/1_answer_title');
+		elseif ($countfortitle>0)
+			$qa_content['a_list']['title']=qa_lang_html_sub('question/x_answers_title', $countfortitle);
+	}
 
 	$qa_content['a_list']['title']='<SPAN ID="a_list_title">'.@$qa_content['a_list']['title'].'</SPAN>';
 
