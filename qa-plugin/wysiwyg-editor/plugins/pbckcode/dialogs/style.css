@@ -1,0 +1,20 @@
+.ace_editor * {
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Droid Sans Mono', 'Consolas', monospace !important;
+	font-size: 12px !important;
+}
+select {
+	background-color: white !important;
+	border: 1px solid #CCC !important;
+	-webkit-border-radius: 4px !important;
+	   -moz-border-radius: 4px !important;
+	        border-radius: 4px !important;
+	color: #555 !important;
+    display: inline-block;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    height: 22px !important;
+    margin-bottom: 10px !important;
+    padding: 4px 6px !important;
+    vertical-align: middle !important;
+	width: 110px !important;
+}
