@@ -134,6 +134,15 @@
 				
 				$qa_content['script_src'][]=$scriptsrc;
 				$qa_content['script_lines'][]=array(
+					"qa_wysiwyg_editor_config={".
+					"autogrow:false".
+					", entities:false".
+					($uploadimages ? (", filebrowserImageUploadUrl:".qa_js(qa_path('wysiwyg-editor-upload', array('qa_only_image' => true)))) : "").
+					($uploadall ? (", filebrowserUploadUrl:".qa_js(qa_path('wysiwyg-editor-upload'))) : "").
+					"}"
+				);
+/*
+				$qa_content['script_lines'][]=array(
 					"qa_wysiwyg_editor_config={toolbar:[".
 						"['Bold','Italic','Underline','Strike'],".
 						"['Font','FontSize'],".
@@ -156,6 +165,7 @@
 					($uploadall ? (", filebrowserUploadUrl:".qa_js(qa_path('wysiwyg-editor-upload'))) : "").
 					"}"
 				);
+*/
 			}		
 				
 			if ($format=='html')
