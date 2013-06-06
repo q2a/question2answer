@@ -69,6 +69,7 @@
 					break;
 					
 				case 'u_message':
+				case 'u_wall_post':
 					qa_limits_increment($userid, QA_LIMIT_MESSAGES);
 					break;
 			}

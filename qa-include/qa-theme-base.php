@@ -144,6 +144,14 @@
 		}
 
 		
+		function reorder_parts($parts, $beforekey=null, $reorderrelative=true)
+		{
+			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+			
+			qa_array_reorder($this->content, $parts, $beforekey, $reorderrelative);
+		}
+		
+		
 		function widgets($region, $place)
 	/*
 		Output the widgets (as provided in $this->content['widgets']) for $region and $place
@@ -324,10 +332,10 @@
 		function body_script()
 		{
 			$this->output(
-				'<SCRIPT TYPE="text/javascript"><!--',
+				'<SCRIPT TYPE="text/javascript">',
 				"var b=document.getElementsByTagName('body')[0];",
 				"b.className=b.className.replace('qa-body-js-off', 'qa-body-js-on');",
-				'//--></SCRIPT>'
+				'</SCRIPT>'
 			);
 		}
 		
@@ -403,8 +411,10 @@
 			
 			$this->output('<INPUT '.$notice['close_tags'].' TYPE="submit" VALUE="X" CLASS="qa-notice-close-button"/> ');
 			
-			if (isset($notice['form_tags']))
+			if (isset($notice['form_tags'])) {
+				$this->form_hidden_elements(@$notice['form_hidden']);
 				$this->output('</FORM>');
+			}
 			
 			$this->output('</DIV>');
 		}		
@@ -525,8 +535,13 @@
 		
 		function nav_item($key, $navlink, $class, $level=null)
 		{
+			$suffix=strtr($key, array( // map special character in navigation key
+				'$' => '',
+				'/' => '-',
+			));
+			
 			$this->output('<LI CLASS="qa-'.$class.'-item'.(@$navlink['opposite'] ? '-opp' : '').
-				(@$navlink['state'] ? (' qa-'.$class.'-'.$navlink['state']) : '').' qa-'.$class.'-'.$key.'">');
+				(@$navlink['state'] ? (' qa-'.$class.'-'.$navlink['state']) : '').' qa-'.$class.'-'.$suffix.'">');
 			$this->nav_link($navlink, $class);
 			
 			if (count(@$navlink['subnav']))
@@ -537,17 +552,23 @@
 		
 		function nav_link($navlink, $class)
 		{
-			if (isset($navlink['url'])) {
+			if (isset($navlink['url']))
 				$this->output(
 					'<A HREF="'.$navlink['url'].'" CLASS="qa-'.$class.'-link'.
-					(@$navlink['selected'] ? (' qa-'.$class.'-selected') : '').'"'.
-					(strlen(@$navlink['popup']) ? (' TITLE="'.$navlink['popup'].'"') : '').
+					(@$navlink['selected'] ? (' qa-'.$class.'-selected') : '').
+					(@$navlink['favorited'] ? (' qa-'.$class.'-favorited') : '').
+					'"'.(strlen(@$navlink['popup']) ? (' TITLE="'.$navlink['popup'].'"') : '').
 					(isset($navlink['target']) ? (' TARGET="'.$navlink['target'].'"') : '').'>'.$navlink['label'].
 					'</A>'
 				);
 
-			} else
-				$this->output($navlink['label']);
+			else
+				$this->output(
+					'<SPAN CLASS="qa-'.$class.'-nolink'.(@$navlink['selected'] ? (' qa-'.$class.'-selected') : '').
+					(@$navlink['favorited'] ? (' qa-'.$class.'-favorited') : '').'"'.
+					(strlen(@$navlink['popup']) ? (' TITLE="'.$navlink['popup'].'"') : '').
+					'>'.$navlink['label'].'</SPAN>'
+				);
 
 			if (strlen(@$navlink['note']))
 				$this->output('<SPAN CLASS="qa-'.$class.'-note">'.$navlink['note'].'</SPAN>');
@@ -647,8 +668,10 @@
 			if (isset($this->content['error']))
 				$this->error(@$this->content['error']);
 
-			if (isset($favorite))
+			if (isset($favorite)) {
+				$this->form_hidden_elements(@$favorite['form_hidden']);
 				$this->output('</FORM>');
+			}
 		}
 		
 		function favorite()
@@ -677,8 +700,7 @@
 		function favorite_button($tags, $class)
 		{
 			if (isset($tags))
-				$this->output('<INPUT '.$tags.' TYPE="submit" VALUE="" CLASS="'.$class.
-					'-button" onmouseover="this.className=\''.$class.'-hover\';" onmouseout="this.className=\''.$class.'-button\';"/> ');
+				$this->output('<INPUT '.$tags.' TYPE="submit" VALUE="" CLASS="'.$class.'-button"/> ');
 		}
 		
 		function error($error)
@@ -703,6 +725,21 @@
 		
 		function main_part($key, $part)
 		{
+			$partdiv=(
+				(strpos($key, 'custom')===0) ||
+				(strpos($key, 'form')===0) ||
+				(strpos($key, 'q_list')===0) ||
+				(strpos($key, 'q_view')===0) ||
+				(strpos($key, 'a_form')===0) ||
+				(strpos($key, 'a_list')===0) ||
+				(strpos($key, 'ranking')===0) ||
+				(strpos($key, 'message_list')===0) ||
+				(strpos($key, 'nav_list')===0)
+			);
+				
+			if ($partdiv)
+				$this->output('<DIV CLASS="qa-part-'.strtr($key, '_', '-').'">'); // to help target CSS to page parts
+
 			if (strpos($key, 'custom')===0)
 				$this->output_raw($part);
 
@@ -724,10 +761,16 @@
 			elseif (strpos($key, 'ranking')===0)
 				$this->ranking($part);
 				
+			elseif (strpos($key, 'message_list')===0)
+				$this->message_list_and_form($part);
+				
 			elseif (strpos($key, 'nav_list')===0) {
-				$this->section(@$part['title']);		
+				$this->part_title($part);		
 				$this->nav_list($part['nav'], $part['type'], 1);
 			}
+
+			if ($partdiv)
+				$this->output('</DIV>');
 		}
 		
 		function footer()
@@ -762,14 +805,19 @@
 
 		function section($title)
 		{
-			if (!empty($title))
-				$this->output('<H2>'.$title.'</H2>');
+			$this->part_title(array('title' => $title));
+		}
+		
+		function part_title($part)
+		{
+			if (strlen(@$part['title']) || strlen(@$part['title_tags']))
+				$this->output('<H2'.rtrim(' '.@$part['title_tags']).'>'.@$part['title'].'</H2>');
 		}
 		
 		function form($form)
 		{
 			if (!empty($form)) {
-				$this->section(@$form['title']);
+				$this->part_title($form);
 				
 				if (isset($form['tags']))
 					$this->output('<FORM '.$form['tags'].'>');
@@ -831,6 +879,14 @@
 				);
 		}
 		
+		function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
+		{
+			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+			
+			if (is_array($form['fields']))
+				qa_array_reorder($form['fields'], $keys, $beforekey, $reorderrelative);
+		}
+
 		function form_fields($form, $columns)
 		{
 			if (!empty($form['fields'])) {
@@ -990,6 +1046,14 @@
 			$this->form_suffix($field, $style);
 		}
 		
+		function form_reorder_buttons(&$form, $keys, $beforekey=null, $reorderrelative=true)
+		{
+			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+			
+			if (is_array($form['buttons']))
+				qa_array_reorder($form['buttons'], $keys, $beforekey, $reorderrelative);
+		}
+
 		function form_buttons($form, $columns)
 		{
 			if (!empty($form['buttons'])) {
@@ -1025,10 +1089,9 @@
 		function form_button_data($button, $key, $style)
 		{
 			$baseclass='qa-form-'.$style.'-button qa-form-'.$style.'-button-'.$key;
-			$hoverclass='qa-form-'.$style.'-hover qa-form-'.$style.'-hover-'.$key;
 			
 			$this->output('<INPUT'.rtrim(' '.@$button['tags']).' VALUE="'.@$button['label'].'" TITLE="'.@$button['popup'].'" TYPE="submit"'.
-				(isset($style) ? (' CLASS="'.$baseclass.'" onmouseover="this.className=\''.$hoverclass.'\';" onmouseout="this.className=\''.$baseclass.'\';"') : '').'/>');
+				(isset($style) ? (' CLASS="'.$baseclass.'"') : '').'/>');
 		}
 		
 		function form_button_note($button, $style)
@@ -1049,8 +1112,13 @@
 		
 		function form_hidden($form)
 		{
-			if (!empty($form['hidden']))
-				foreach ($form['hidden'] as $name => $value)
+			$this->form_hidden_elements(@$form['hidden']);
+		}
+		
+		function form_hidden_elements($hidden)
+		{
+			if (!empty($hidden))
+				foreach ($hidden as $name => $value)
 					$this->output('<INPUT TYPE="hidden" NAME="'.$name.'" VALUE="'.$value.'"/>');
 		}
 		
@@ -1139,7 +1207,7 @@
 		
 		function ranking($ranking)
 		{
-			$this->section(@$ranking['title']);
+			$this->part_title($ranking);
 			
 			$class=(@$ranking['type']=='users') ? 'qa-top-users' : 'qa-top-tags';
 			
@@ -1210,6 +1278,75 @@
 			$this->output('<TD CLASS="'.$class.'-score">'.$item['score'].'</TD>');
 		}
 		
+		function message_list_and_form($list)
+		{
+			if (!empty($list)) {
+				$this->part_title($list);
+				
+				if (!empty($list['form'])) {
+					$this->output('<FORM '.$list['form']['tags'].'>');
+					unset($list['form']['tags']); // we already output the tags before the messages
+					$this->message_list_form($list);
+				}
+					
+				$this->message_list($list);
+				
+				if (!empty($list['form'])) {
+					$this->output('</FORM>');
+				}
+				
+				$this->error(@$list['error']);
+			}		
+		}
+		
+		function message_list_form($list)
+		{
+			if (!empty($list['form'])) {
+				$this->output('<DIV CLASS="qa-message-list-form">');
+				$this->form($list['form']);
+				$this->output('</DIV>');
+			}
+		}
+		
+		function message_list($list)
+		{
+			if (isset($list['messages'])) {
+				$this->output('<DIV CLASS="qa-message-list" '.@$list['tags'].'>');
+				
+				foreach ($list['messages'] as $message)
+					$this->message_item($message);
+				
+				$this->output('</DIV> <!-- END qa-message-list -->', '');
+			}
+		}
+		
+		function message_item($message)
+		{
+			$this->output('<DIV CLASS="qa-message-item" '.@$message['tags'].'>');
+			$this->message_content($message);
+			$this->post_avatar_meta($message, 'qa-message');
+			$this->message_buttons($message);
+			$this->output('</DIV> <!-- END qa-message-item -->', '');
+		}
+		
+		function message_content($message)
+		{
+			if (!empty($message['content'])) {
+				$this->output('<DIV CLASS="qa-message-content">');
+				$this->output_raw($message['content']);
+				$this->output('</DIV>');
+			}
+		}
+		
+		function message_buttons($item)
+		{
+			if (!empty($item['form'])) {
+				$this->output('<DIV CLASS="qa-message-buttons">');
+				$this->form($item['form']);
+				$this->output('</DIV>');
+			}
+		}
+		
 		function list_vote_disabled($items)
 		{
 			$disabled=false;
@@ -1228,7 +1365,7 @@
 		function q_list_and_form($q_list)
 		{
 			if (!empty($q_list)) {
-				$this->section(@$q_list['title']);
+				$this->part_title($q_list);
 	
 				if (!empty($q_list['form']))
 					$this->output('<FORM '.$q_list['form']['tags'].'>');
@@ -1256,12 +1393,15 @@
 		{
 			if (isset($q_list['qs'])) {
 				$this->output('<DIV CLASS="qa-q-list'.($this->list_vote_disabled($q_list['qs']) ? ' qa-q-list-vote-disabled' : '').'">', '');
-				
-				foreach ($q_list['qs'] as $q_item)
-					$this->q_list_item($q_item);
-	
+				$this->q_list_items($q_list['qs']);
 				$this->output('</DIV> <!-- END qa-q-list -->', '');
 			}
+		}
+		
+		function q_list_items($q_items)
+		{
+			foreach ($q_items as $q_item)
+				$this->q_list_item($q_item);
 		}
 		
 		function q_list_item($q_item)
@@ -1458,8 +1598,7 @@
 		function post_hover_button($post, $element, $value, $class)
 		{
 			if (isset($post[$element]))
-				$this->output('<INPUT '.$post[$element].' TYPE="submit" VALUE="'.$value.'" CLASS="'.$class.
-					'-button" onmouseover="this.className=\''.$class.'-hover\';" onmouseout="this.className=\''.$class.'-button\';"/> ');
+				$this->output('<INPUT '.$post[$element].' TYPE="submit" VALUE="'.$value.'" CLASS="'.$class.'-button"/> ');
 		}
 		
 		function post_disabled_button($post, $element, $value, $class)
@@ -1482,7 +1621,11 @@
 				if (isset($prefix))
 					$this->output($prefix);
 
-				$this->output('<SPAN CLASS="'.$class.'-avatar">', $post['avatar'], '</SPAN>');
+				$this->output(
+					'<SPAN CLASS="'.$class.'-avatar">',
+					$post['avatar'],
+					'</SPAN>'
+				);
 			}
 		}
 		
@@ -1541,10 +1684,14 @@
 		function post_meta_what($post, $class)
 		{
 			if (isset($post['what'])) {
+				$classes=$class.'-what';
+				if (@$post['what_your'])
+					$classes.=' '.$class.'-what-your';
+				
 				if (isset($post['what_url']))
-					$this->output('<A HREF="'.$post['what_url'].'" CLASS="'.$class.'-what">'.$post['what'].'</A>');
+					$this->output('<A HREF="'.$post['what_url'].'" CLASS="'.$classes.'">'.$post['what'].'</A>');
 				else
-					$this->output('<SPAN CLASS="'.$class.'-what">'.$post['what'].'</SPAN>');
+					$this->output('<SPAN CLASS="'.$classes.'">'.$post['what'].'</SPAN>');
 			}
 		}
 		
@@ -1720,17 +1867,28 @@
 				if (isset($q_view['main_form_tags']))
 					$this->output('<FORM '.$q_view['main_form_tags'].'>'); // form for voting buttons
 				
-				$this->voting($q_view);
+				$this->q_view_stats($q_view);
 				
-				if (isset($q_view['main_form_tags']))
+				if (isset($q_view['main_form_tags'])) {
+					$this->form_hidden_elements(@$q_view['voting_form_hidden']);
 					$this->output('</FORM>');
+				}
 					
-				$this->a_count($q_view);
 				$this->q_view_main($q_view);
 				$this->q_view_clear();
 				
 				$this->output('</DIV> <!-- END qa-q-view -->', '');
 			}
+		}
+		
+		function q_view_stats($q_view)
+		{
+			$this->output('<DIV CLASS="qa-q-view-stats">');
+			
+			$this->voting($q_view);
+			$this->a_count($q_view);
+			
+			$this->output('</DIV>');
 		}
 		
 		function q_view_main($q_view)
@@ -1740,6 +1898,7 @@
 			if (isset($q_view['main_form_tags']))
 				$this->output('<FORM '.$q_view['main_form_tags'].'>'); // form for buttons on question
 
+			$this->view_count($q_view);
 			$this->q_view_content($q_view);
 			$this->q_view_extra($q_view);
 			$this->q_view_follows($q_view);
@@ -1749,8 +1908,10 @@
 			$this->q_view_buttons($q_view);
 			$this->c_list(@$q_view['c_list'], 'qa-q-view');
 			
-			if (isset($q_view['main_form_tags']))
+			if (isset($q_view['main_form_tags'])) {
+				$this->form_hidden_elements(@$q_view['buttons_form_hidden']);
 				$this->output('</FORM>');
+			}
 			
 			$this->c_form(@$q_view['c_form']);
 			
@@ -1837,15 +1998,18 @@
 		function a_list($a_list)
 		{
 			if (!empty($a_list)) {
-				$this->section(@$a_list['title']);
+				$this->part_title($a_list);
 				
 				$this->output('<DIV CLASS="qa-a-list'.($this->list_vote_disabled($a_list['as']) ? ' qa-a-list-vote-disabled' : '').'" '.@$a_list['tags'].'>', '');
-				
-				foreach ($a_list['as'] as $a_item)
-					$this->a_list_item($a_item);
-				
+				$this->a_list_items($a_list['as']);
 				$this->output('</DIV> <!-- END qa-a-list -->', '');
 			}
+		}
+		
+		function a_list_items($a_items)
+		{
+			foreach ($a_items as $a_item)
+				$this->a_list_item($a_item);
 		}
 		
 		function a_list_item($a_item)
@@ -1859,8 +2023,10 @@
 			
 			$this->voting($a_item);
 			
-			if (isset($a_item['main_form_tags']))
+			if (isset($a_item['main_form_tags'])) {
+				$this->form_hidden_elements(@$a_item['voting_form_hidden']);
 				$this->output('</FORM>');
+			}
 			
 			$this->a_item_main($a_item);
 			$this->a_item_clear();
@@ -1892,8 +2058,10 @@
 			
 			$this->c_list(@$a_item['c_list'], 'qa-a-item');
 
-			if (isset($a_item['main_form_tags']))
+			if (isset($a_item['main_form_tags'])) {
+				$this->form_hidden_elements(@$a_item['buttons_form_hidden']);
 				$this->output('</FORM>');
+			}
 
 			$this->c_form(@$a_item['c_form']);
 
@@ -1938,12 +2106,15 @@
 		{
 			if (!empty($c_list)) {
 				$this->output('', '<DIV CLASS="'.$class.'-c-list"'.(@$c_list['hidden'] ? ' STYLE="display:none;"' : '').' '.@$c_list['tags'].'>');
-				
-				foreach ($c_list['cs'] as $c_item)
-					$this->c_list_item($c_item);
-				
+				$this->c_list_items($c_list['cs']);
 				$this->output('</DIV> <!-- END qa-c-list -->', '');
 			}
+		}
+		
+		function c_list_items($c_items)
+		{
+			foreach ($c_items as $c_item)
+				$this->c_list_item($c_item);
 		}
 		
 		function c_list_item($c_item)

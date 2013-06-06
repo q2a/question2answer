@@ -39,7 +39,7 @@
 
 	$userid=qa_get_logged_in_userid();
 
-	@list($answer, $question, $qchildposts, $achildposts)=qa_db_select_with_pending(
+	list($answer, $question, $qchildposts, $achildposts)=qa_db_select_with_pending(
 		qa_db_full_post_selectspec($userid, $answerid),
 		qa_db_full_post_selectspec($userid, $questionid),
 		qa_db_full_child_posts_selectspec($userid, $questionid),
@@ -94,7 +94,7 @@
 				$a_view=qa_page_q_answer_view($question, $answer, ($answer['postid']==$question['selchildid']) && ($answer['type']=='A'),
 					$usershtml, false);
 				
-				$a_view['c_list']=qa_page_q_comment_follow_list($answer, $achildposts, false, $usershtml, false, null);
+				$a_view['c_list']=qa_page_q_comment_follow_list($question, $answer, $achildposts, false, $usershtml, false, null);
 
 				$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-answer', null, null);
 

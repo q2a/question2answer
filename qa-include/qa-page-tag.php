@@ -43,10 +43,9 @@
 	if (!strlen($tag))
 		qa_redirect('tags');
 
-	@list($questions, $tagword, $favorite)=qa_db_select_with_pending(
+	list($questions, $tagword)=qa_db_select_with_pending(
 		qa_db_tag_recent_qs_selectspec($userid, $tag, $start, false, qa_opt_if_loaded('page_size_tag_qs')),
-		qa_db_tag_word_selectspec($tag),
-		isset($userid) ? qa_db_is_favorite_selectspec($userid, QA_ENTITY_TAG, $tag) : null
+		qa_db_tag_word_selectspec($tag)
 	);
 	
 	$pagesize=qa_opt('page_size_tag_qs');
@@ -60,21 +59,28 @@
 	
 	$qa_content['title']=qa_lang_html_sub('main/questions_tagged_x', qa_html($tag));
 	
-	if (isset($userid) && isset($tagword))
+	if (isset($userid) && isset($tagword)) {
+		$favoritemap=qa_get_favorite_non_qs_map();
+		$favorite=@$favoritemap['tag'][qa_strtolower($tagword['word'])];
+		
 		$qa_content['favorite']=qa_favorite_form(QA_ENTITY_TAG, $tagword['wordid'], $favorite,
 			qa_lang_sub($favorite ? 'main/remove_x_favorites' : 'main/add_tag_x_favorites', $tagword['word']));
+	}
 
 	if (!count($questions))
 		$qa_content['q_list']['title']=qa_lang_html('main/no_questions_found');
 
 	$qa_content['q_list']['form']=array(
 		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+
+		'hidden' => array(
+			'code' => qa_get_form_security_code('vote'),
+		),
 	);
 
 	$qa_content['q_list']['qs']=array();
 	foreach ($questions as $postid => $question)
-		$qa_content['q_list']['qs'][]=qa_post_html_fields($question, $userid, qa_cookie_get(), $usershtml,
-			null, qa_post_html_defaults('Q'));
+		$qa_content['q_list']['qs'][]=qa_post_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, qa_post_html_options($question));
 		
 	$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $tagword['tagcount'], qa_opt('pages_prev_next'));
 

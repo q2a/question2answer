@@ -138,7 +138,7 @@
 */
 	{
 		return qa_db_read_all_values(qa_db_query_sub(
-			"SELECT postid FROM ^posts WHERE userid=# AND type IN ('Q', 'A', 'C')",
+			"SELECT postid FROM ^posts WHERE userid=# AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
 			$userid
 		));
 	}
@@ -150,7 +150,7 @@
 */
 	{
 		return qa_db_read_all_values(qa_db_query_sub(
-			"SELECT postid FROM ^posts WHERE createip=INET_ATON($) AND type IN ('Q', 'A', 'C')",
+			"SELECT postid FROM ^posts WHERE createip=INET_ATON($) AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
 			$ip
 		));
 	}
@@ -168,6 +168,45 @@
 			), 'postid', 'count');
 		else
 			return array();
+	}
+	
+	
+	function qa_db_get_unapproved_users($count)
+	{
+		$results=qa_db_read_all_assoc(qa_db_query_sub(
+			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET_NTOA(createip) AS createip, email, handle, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
+			QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED, $count
+		));
+		
+		$users=array();
+		
+		foreach ($results as $result) {
+			$userid=$result['userid'];
+			
+			if (!isset($users[$userid])) {
+				$users[$result['userid']]=$result;
+				$users[$result['userid']]['profile']=array();
+				unset($users[$userid]['title']);
+				unset($users[$userid]['content']);
+			}
+			
+			if (isset($result['title']) && isset($result['content']))
+				$users[$userid]['profile'][$result['title']]=$result['content'];
+		}
+		
+		return $users;
+	}
+	
+	
+	function qa_db_has_blobs_on_disk()
+	{
+		return count(qa_db_read_all_values(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NULL LIMIT 1'))) ? true : false;
+	}
+	
+	
+	function qa_db_has_blobs_in_db()
+	{
+		return count(qa_db_read_all_values(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NOT NULL LIMIT 1'))) ? true : false;
 	}
 
 	
@@ -442,7 +481,7 @@
 	}
 	
 	
-	function qa_db_userfield_create($title, $content, $flags)
+	function qa_db_userfield_create($title, $content, $flags, $permit=null)
 /*
 	Create a new user field with (internal) tag $title, label $content, and $flags in the database
 */
@@ -450,22 +489,22 @@
 		$position=qa_db_read_one_value(qa_db_query_sub('SELECT 1+COALESCE(MAX(position), 0) FROM ^userfields'));
 		
 		qa_db_query_sub(
-			'INSERT INTO ^userfields (title, content, position, flags) VALUES ($, $, #, #)',
-			$title, $content, $position, $flags
+			'INSERT INTO ^userfields (title, content, position, flags, permit) VALUES ($, $, #, #, #)',
+			$title, $content, $position, $flags, $permit
 		);
 
 		return qa_db_last_insert_id();
 	}
 	
 	
-	function qa_db_userfield_set_fields($fieldid, $content, $flags)
+	function qa_db_userfield_set_fields($fieldid, $content, $flags, $permit=null)
 /*
 	Change the user field $fieldid to have label $content and $flags in the database (the title column cannot be changed once set)
 */
 	{
 		qa_db_query_sub(
-			'UPDATE ^userfields SET content=$, flags=# WHERE fieldid=#',
-			$content, $flags, $fieldid
+			'UPDATE ^userfields SET content=$, flags=#, permit=# WHERE fieldid=#',
+			$content, $flags, $permit, $fieldid
 		);
 	}
 	

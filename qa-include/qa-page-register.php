@@ -40,6 +40,20 @@
 		
 	if (qa_is_logged_in())
 		qa_redirect('');
+
+
+//	Get information about possible additional fields
+
+	$userfields=qa_db_select_with_pending(
+		qa_db_userfields_selectspec()
+	);
+	
+	foreach ($userfields as $index => $userfield)
+		if (!($userfield['flags'] & QA_FIELD_FLAGS_ON_REGISTER))
+			unset($userfields[$index]);
+
+
+//	Check we haven't suspended registration, and this IP isn't blocked
 	
 	if (qa_opt('suspend_register_users')) {
 		$qa_content=qa_content_prepare();
@@ -59,33 +73,50 @@
 	if (qa_clicked('doregister')) {
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 		
-		if (qa_limits_remaining(null, QA_LIMIT_REGISTRATIONS)) {
+		if (qa_user_limits_remaining(QA_LIMIT_REGISTRATIONS)) {
 			require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
 			
 			$inemail=qa_post_text('email');
 			$inpassword=qa_post_text('password');
 			$inhandle=qa_post_text('handle');
 			
-			$errors=array_merge(
-				qa_handle_email_filter($inhandle, $inemail),
-				qa_password_validate($inpassword)
-			);
+			$inprofile=array();
+			foreach ($userfields as $userfield)
+				$inprofile[$userfield['fieldid']]=qa_post_text('field_'.$userfield['fieldid']);		
 			
-			if (qa_opt('captcha_on_register'))
-				qa_captcha_validate_post($errors);
-		
-			if (empty($errors)) { // register and redirect
-				qa_limits_increment(null, QA_LIMIT_REGISTRATIONS);
-
-				$userid=qa_create_new_user($inemail, $inpassword, $inhandle);
-				qa_set_logged_in_user($userid, $inhandle);
-	
-				$topath=qa_get('to');
+			if (!qa_check_form_security_code('register', qa_post_text('code')))
+				$pageerror=qa_lang_html('misc/form_security_again');
 				
-				if (isset($topath))
-					qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
-				else
-					qa_redirect('');
+			else {
+				$errors=array_merge(
+					qa_handle_email_filter($inhandle, $inemail),
+					qa_password_validate($inpassword)
+				);
+				
+				$filtermodules=qa_load_modules_with('filter', 'filter_profile');
+				foreach ($filtermodules as $filtermodule)
+					$filtermodule->filter_profile($inprofile, $errors, null, null);
+				
+				if (qa_opt('captcha_on_register'))
+					qa_captcha_validate_post($errors);
+			
+				if (empty($errors)) { // register and redirect
+					qa_limits_increment(null, QA_LIMIT_REGISTRATIONS);
+	
+					$userid=qa_create_new_user($inemail, $inpassword, $inhandle);
+					
+					foreach ($userfields as $userfield)
+						qa_db_user_profile_set($userid, $userfield['title'], $inprofile[$userfield['fieldid']]);
+					
+					qa_set_logged_in_user($userid, $inhandle);
+		
+					$topath=qa_get('to');
+					
+					if (isset($topath))
+						qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
+					else
+						qa_redirect('');
+				}
 			}
 			
 		} else
@@ -147,11 +178,28 @@
 		
 		'hidden' => array(
 			'doregister' => '1',
+			'code' => qa_get_form_security_code('register'),
 		),
 	);
 	
 	if (!strlen($custom))
 		unset($qa_content['form']['fields']['custom']);
+	
+	foreach ($userfields as $userfield) {
+		$value=@$inprofile[$userfield['fieldid']];	
+		
+		$label=trim(qa_user_userfield_label($userfield), ':');
+		if (strlen($label))
+			$label.=':';
+			
+		$qa_content['form']['fields'][$userfield['title']]=array(
+			'label' => qa_html($label),
+			'tags' => 'NAME="field_'.$userfield['fieldid'].'"',
+			'value' => qa_html($value),
+			'error' => qa_html(@$errors[$userfield['fieldid']]),
+			'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
+		);
+	}
 	
 	if (qa_opt('captcha_on_register'))
 		qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);

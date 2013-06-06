@@ -86,10 +86,11 @@
 	}
 	
 	
-	function qa_image_constrain_data($imagedata, &$width, &$height, $size)
+	function qa_image_constrain_data($imagedata, &$width, &$height, $maxwidth, $maxheight=null)
 /*
-	Given $imagedata containing JPEG/GIF/PNG data, constrain it proportionally to fit in $size (square)
-	Return the new image data (will be a JPEG), and set the $width and $height variables
+	Given $imagedata containing JPEG/GIF/PNG data, constrain it proportionally to fit in $maxwidth x $maxheight.
+	Return the new image data (will always be a JPEG), and set the $width and $height variables.
+	If $maxheight is omitted or set to null, assume it to be the same as $maxwidth.
 */
 	{
 		$inimage=@imagecreatefromstring($imagedata);
@@ -99,7 +100,7 @@
 			$height=imagesy($inimage);
 			
 			// always call qa_gd_image_resize(), even if the size is the same, to take care of possible PNG transparency
-			qa_image_constrain($width, $height, $size);
+			qa_image_constrain($width, $height, $maxwidth, $maxheight);
 			qa_gd_image_resize($inimage, $width, $height);
 		}
 		
@@ -111,16 +112,20 @@
 		
 		return null;	
 	}
-
 	
-	function qa_image_constrain(&$width, &$height, $size)
+	
+	function qa_image_constrain(&$width, &$height, $maxwidth, $maxheight=null)
 /*
-	Given and $width and $height, return true if those need to be contrained to fit in $size (square)
-	If so, also set $width and $height to the new proportionally constrained values
+	Given and $width and $height, return true if those need to be contrained to fit in $maxwidth x $maxheight.
+	If so, also set $width and $height to the new proportionally constrained values.
+	If $maxheight is omitted or set to null, assume it to be the same as $maxwidth.
 */
 	{
-		if (($width>$size) || ($height>$size)) {
-			$multiplier=min($size/$width, $size/$height);
+		if (!isset($maxheight))
+			$maxheight=$maxwidth;
+		
+		if (($width>$maxwidth) || ($height>$maxheight)) {
+			$multiplier=min($maxwidth/$width, $maxheight/$height);
 			$width=floor($width*$multiplier);
 			$height=floor($height*$multiplier);
 

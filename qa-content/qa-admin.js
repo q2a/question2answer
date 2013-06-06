@@ -32,7 +32,7 @@ window.onbeforeunload=function(event)
 		event.returnValue=message;
 		return message;
 	}
-}
+};
 
 function qa_recalc_click(state, elem, value, noteid)
 {
@@ -58,7 +58,7 @@ function qa_recalc_click(state, elem, value, noteid)
 function qa_recalc_update(elem, state, noteid)
 {
 	if (state)
-		qa_ajax_post('recalc', {state:state},
+		qa_ajax_post('recalc', {state:state, code:elem.form.elements.code.value},
 			function(lines) {
 				if (lines[0]=='1') {
 					if (lines[2])
@@ -114,16 +114,18 @@ function qa_admin_click(target)
 {
 	var p=target.name.split('_');
 	
-	var params={postid:p[1], action:p[2]};
+	var params={entityid:p[1], action:p[2]};
+	params.code=target.form.elements.code.value;
 
 	qa_ajax_post('click_admin', params,
 		function (lines) {
-			if (lines[0]=='1') {
-				qa_conceal(document.getElementById('p'+p[1]), 'q_item');
-				
-			} else {
+			if (lines[0]=='1')
+				qa_conceal(document.getElementById('p'+p[1]), 'admin');
+			else if (lines[0]=='0') {
+				alert(lines[1]);
+				qa_hide_waiting(target);
+			} else
 				qa_ajax_error();
-			}
 		}
 	);
 	

@@ -113,21 +113,21 @@
 	}
 
 	
-	function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_CONTENT)
+	function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_CONTENT, $name=null)
 /*
 	Set the text fields in the database of $postid to $title, $content, $tagstring and $notify, and record
 	that $lastuserid did it from $lastip (if at least one is specified) with $updatetype.
 */
 	{
-		if (isset($lastuserid) || isset($lastip))
+		if (isset($lastuserid) || isset($lastip)) // use COALESCE() for name since $name=null means it should not be modified (for backwards compatibility)
 			qa_db_query_sub(
-				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#',
-				$title, $content, $format, $tagstring, $notify, $updatetype, $lastuserid, $lastip, $postid
+				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#',
+				$title, $content, $format, $tagstring, $name, $notify, $updatetype, $lastuserid, $lastip, $postid
 			);
 		else
 			qa_db_query_sub(
-				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, notify=$ WHERE postid=#',
-				$title, $content, $format, $tagstring, $notify, $postid
+				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$ WHERE postid=#',
+				$title, $content, $format, $tagstring, $name, $notify, $postid
 			);
 	}
 
@@ -188,6 +188,21 @@
 		else
 			qa_db_query_sub(
 				'UPDATE ^posts SET created=NOW() WHERE postid=#',
+				$postid
+			);
+	}
+	
+	
+	function qa_db_post_set_updated($postid, $updated)
+	{
+		if (isset($updated))
+			qa_db_query_sub(
+				'UPDATE ^posts SET updated=FROM_UNIXTIME(#) WHERE postid=#',
+				$updated, $postid
+			);
+		else
+			qa_db_query_sub(
+				'UPDATE ^posts SET updated=NOW() WHERE postid=#',
 				$postid
 			);
 	}
@@ -330,6 +345,12 @@
 			return array();
 	}
 
+	
+	function qa_db_flaggedcount_update()
+	{
+		if (qa_should_update_counts())
+			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts WHERE flagcount>0 AND type IN ('Q', 'A', 'C')");
+	}
 
 /*
 	Omit PHP closing tag to help avoid accidental output

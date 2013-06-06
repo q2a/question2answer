@@ -24,6 +24,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+
 	class qa_wysiwyg_editor {
 		
 		var $urltoroot;
@@ -37,7 +38,7 @@
 		function option_default($option)
 		{
 			if ($option=='wysiwyg_editor_upload_max_size') {
-				require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+				require_once QA_INCLUDE_DIR.'qa-app-upload.php';
 				
 				return min(qa_get_max_upload_size(), 1048576);
 			}
@@ -52,7 +53,7 @@
 	
 		function admin_form(&$qa_content)
 		{
-			require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+			require_once QA_INCLUDE_DIR.'qa-app-upload.php';
 			
 			$saved=false;
 			
@@ -154,7 +155,7 @@
 					", entities:false".
 					($uploadimages ? (", filebrowserImageUploadUrl:".qa_js(qa_path('wysiwyg-editor-upload', array('qa_only_image' => true)))) : "").
 					($uploadall ? (", filebrowserUploadUrl:".qa_js(qa_path('wysiwyg-editor-upload'))) : "").
-					"}"
+					"};"
 				);
 			}		
 				

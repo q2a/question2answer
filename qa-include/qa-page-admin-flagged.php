@@ -45,7 +45,7 @@
 	
 //	Check admin privileges (do late to allow one DB query)
 
-	if (qa_user_permit_error('permit_hide_show')) {
+	if (qa_user_maximum_permit_error('permit_hide_show')) {
 		$qa_content=qa_content_prepare();
 		$qa_content['error']=qa_lang_html('users/no_permission');
 		return $qa_content;
@@ -54,7 +54,15 @@
 		
 //	Check to see if any were cleared or hidden here
 
-	qa_admin_check_clicks();
+	$pageerror=qa_admin_check_clicks();
+	
+
+//	Remove questions the user has no permission to hide/show
+
+	if (qa_user_permit_error('permit_hide_show')) // if user not allowed to show/hide all posts
+		foreach ($questions as $index => $question)
+			if (qa_user_post_permit_error('permit_hide_show', $question))
+				unset($questions[$index]);
 	
 
 //	Get information for users
@@ -67,12 +75,15 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('admin/most_flagged_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['error']=isset($pageerror) ? $pageerror : qa_admin_page_error();
 	
 	$qa_content['q_list']=array(
 		'form' => array(
 			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+
+			'hidden' => array(
+				'code' => qa_get_form_security_code('admin/click'),
+			),
 		),
 		
 		'qs' => array(),
@@ -84,7 +95,7 @@
 			$postid=qa_html(isset($question['opostid']) ? $question['opostid'] : $question['postid']);
 			$elementid='p'.$postid;
 
-			$htmloptions=qa_post_html_defaults('Q');
+			$htmloptions=qa_post_html_options($question);
 			$htmloptions['voteview']=false;
 			$htmloptions['tagsview']=($question['obasetype']=='Q');
 			$htmloptions['answersview']=false;

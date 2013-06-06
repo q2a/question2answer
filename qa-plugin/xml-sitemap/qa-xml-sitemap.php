@@ -288,7 +288,7 @@
 		function sitemap_output($request, $priority)
 		{
 			echo "\t<url>\n".
-				"\t\t<loc>".qa_path_html($request, null, qa_opt('site_url'))."</loc>\n".
+				"\t\t<loc>".qa_xml(qa_path($request, null, qa_opt('site_url')))."</loc>\n".
 				"\t\t<priority>".max(0, min(1.0, $priority))."</priority>\n".
 				"\t</url>\n";
 		}

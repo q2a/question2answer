@@ -41,27 +41,109 @@
 	}
 	
 	
-	function qa_get_max_upload_size()
-/*
-	Return the maximum size of file that can be uploaded, based on database and PHP limits
-*/
+	function qa_get_blob_directory($blobid)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		return rtrim(QA_BLOBS_DIRECTORY, '/').'/'.substr(str_pad($blobid, 20, '0', STR_PAD_LEFT), 0, 3);
+	}
+	
+	
+	function qa_get_blob_filename($blobid, $format)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		return qa_get_blob_directory($blobid).'/'.$blobid.'.'.preg_replace('/[^A-Za-z0-9]/', '', $format);
+	}
+	
+	
+	function qa_create_blob($content, $format, $sourcefilename=null, $userid=null, $cookieid=null, $ip=null)
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		$mindb=16777215; // from MEDIUMBLOB column type
+		require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
 		
-		$minphp=trim(ini_get('upload_max_filesize'));
+		$blobid=qa_db_blob_create(defined('QA_BLOBS_DIRECTORY') ? null : $content, $format, $sourcefilename, $userid, $cookieid, $ip);
+
+		if (defined('QA_BLOBS_DIRECTORY'))
+			if (!qa_write_blob_file($blobid, $content, $format))
+				qa_db_blob_set_content($blobid, $content); // still write to database if writing to disk failed
+
+		return $blobid;
+	}
+	
+	
+	function qa_write_blob_file($blobid, $content, $format)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		$written=false;
 		
-		switch (strtolower(substr($minphp, -1))) {
-			case 'g':
-				$minphp*=1024;
-			case 'm':
-				$minphp*=1024;
-			case 'k':
-				$minphp*=1024;
+		$directory=qa_get_blob_directory($blobid);
+		if (is_dir($directory) || mkdir($directory, fileperms(rtrim(QA_BLOBS_DIRECTORY, '/')) & 0777)) {
+			$filename=qa_get_blob_filename($blobid, $format);
+			
+			$file=fopen($filename, 'xb');
+			if (is_resource($file)) {
+				if (fwrite($file, $content)>=strlen($content))
+					$written=true;
+
+				fclose($file);
+				
+				if (!$written)
+					unlink($filename);
+			}
 		}
 		
-		return min($mindb, $minphp);
+		return $written;	
+	}
+	
+	
+	function qa_read_blob($blobid)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+		
+		require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+	
+		$blob=qa_db_blob_read($blobid);
+		
+		if (defined('QA_BLOBS_DIRECTORY') && !isset($blob['content']))
+			$blob['content']=qa_read_blob_file($blobid, $blob['format']);
+			
+		return $blob;
+	}
+	
+	
+	function qa_read_blob_file($blobid, $format)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		return file_get_contents(qa_get_blob_filename($blobid, $format));
+	}
+	
+	
+	function qa_delete_blob($blobid)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+		
+		require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+	
+		if (defined('QA_BLOBS_DIRECTORY')) {
+			$blob=qa_db_blob_read($blobid);
+			
+			if (isset($blob) && !isset($blob['content']))
+				unlink(qa_get_blob_filename($blobid, $blob['format']));
+		}
+		
+		qa_db_blob_delete($blobid);
+	}
+	
+	
+	function qa_delete_blob_file($blobid, $format)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+		
+		unlink(qa_get_blob_filename($blobid, $format));
 	}
 	
 

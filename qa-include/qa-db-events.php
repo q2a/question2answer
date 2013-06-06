@@ -117,7 +117,7 @@
 	Add an event to the event stream for $userid which is not related to an entity they are following (but rather a
 	notification which is relevant for them, e.g. if someone answers their question). The event of type $updatetype
 	relates to $lastpostid whose antecedent question is $questionid, and was caused by $lastuserid. Pass a unix
-	$timestamp for the event time or leave as null to use now. Also handles truncation.
+	$timestamp for the event time or leave as null to use now. Also handles truncation of event streams.
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';

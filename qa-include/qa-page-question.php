@@ -45,7 +45,7 @@
 
 //	Get information about this question
 
-	@list($question, $childposts, $achildposts, $parentquestion, $closepost, $extravalue, $categories, $favorite)=qa_db_select_with_pending(
+	list($question, $childposts, $achildposts, $parentquestion, $closepost, $extravalue, $categories, $favorite)=qa_db_select_with_pending(
 		qa_db_full_post_selectspec($userid, $questionid),
 		qa_db_full_child_posts_selectspec($userid, $questionid),
 		qa_db_full_a_child_posts_selectspec($userid, $questionid),
@@ -81,9 +81,6 @@
 		}
 	}
 	
-	$usecaptcha=qa_user_use_captcha();
-
-
 //	Deal with question not found or not viewable, otherwise report the view event
 
 	if (!isset($question))
@@ -106,7 +103,7 @@
 		return $qa_content;
 	}
 	
-	$permiterror=qa_user_permit_error('permit_view_q_page');
+	$permiterror=qa_user_post_permit_error('permit_view_q_page', $question, null, false);
 	
 	if ( $permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots')) ) {
 		$qa_content=qa_content_prepare();
@@ -121,6 +118,10 @@
 				$qa_content['error']=qa_insert_login_links(qa_lang_html('main/view_q_must_confirm'), $topage);
 				break;
 				
+			case 'approve':
+				$qa_content['error']=qa_lang_html('main/view_q_must_be_approved');
+				break;
+				
 			default:
 				$qa_content['error']=qa_lang_html('users/no_permission');
 				break;
@@ -128,7 +129,13 @@
 		
 		return $qa_content;
 	}
+
+
+//	Determine if captchas will be required
 	
+	$captchareason=qa_user_captcha_reason(qa_user_level_for_post($question));
+	$usecaptcha=($captchareason!=false);
+
 
 //	If we're responding to an HTTP POST, include file that handles all posting/editing/etc... logic
 //	This is in a separate file because it's a *lot* of logic, and will slow down ordinary page views
@@ -182,13 +189,6 @@
 
 	$qa_content['script_rel'][]='qa-content/qa-question.js?'.QA_VERSION;
 
-	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="q_page_form"',
-		'hidden' => array(
-			'qa_click' => '', // for simulating clicks in Javascript
-		),
-	);
-	
 	if (isset($pageerror))
 		$qa_content['error']=$pageerror; // might also show voting error set in qa-index.php
 	
@@ -231,19 +231,19 @@
 		$qa_content['a_form']=qa_page_q_edit_a_form($qa_content, 'a'.$formpostid, $answers[$formpostid],
 			$question, $answers, $commentsfollows, @$aeditin[$formpostid], @$aediterrors[$formpostid]);
 
-		$qa_content['a_form']['c_list']=qa_page_q_comment_follow_list($answers[$formpostid], $commentsfollows,
-			true, $usershtml, $formrequested, $formpostid);
+		$qa_content['a_form']['c_list']=qa_page_q_comment_follow_list($question, $answers[$formpostid],
+			$commentsfollows, true, $usershtml, $formrequested, $formpostid);
 
 		$jumptoanchor='a'.$formpostid;
 	
 	} elseif (($formtype=='a_add') || ($question['answerbutton'] && !$formrequested)) {
-		$qa_content['a_form']=qa_page_q_add_a_form($qa_content, 'anew', $usecaptcha, $questionid, @$anewin, @$anewerrors, $formtype=='a_add', $formrequested);
+		$qa_content['a_form']=qa_page_q_add_a_form($qa_content, 'anew', $captchareason, $question, @$anewin, @$anewerrors, $formtype=='a_add', $formrequested);
 		
 		if ($formrequested)
 			$jumptoanchor='anew';
 		elseif ($formtype=='a_add')
 			$qa_content['script_onloads'][]=array(
-				"qa_element_revealed=document.getElementById('anew')"
+				"qa_element_revealed=document.getElementById('anew');"
 			);
 	}
 
@@ -255,8 +255,8 @@
 		$jumptoanchor='close';
 	
 	} elseif ((($formtype=='c_add') && ($formpostid==$questionid)) || ($question['commentbutton'] && !$formrequested) ) { // ...to be added
-		$qa_content['q_view']['c_form']=qa_page_q_add_c_form($qa_content, $questionid, $questionid, 'c'.$questionid,
-			$usecaptcha, @$cnewin[$questionid], @$cnewerrors[$questionid], $formtype=='c_add');
+		$qa_content['q_view']['c_form']=qa_page_q_add_c_form($qa_content, $question, $question, 'c'.$questionid,
+			$captchareason, @$cnewin[$questionid], @$cnewerrors[$questionid], $formtype=='c_add');
 		
 		if (($formtype=='c_add') && ($formpostid==$questionid)) {
 			$jumptoanchor='c'.$questionid;
@@ -271,8 +271,8 @@
 		$commentsall=$questionid;
 	}
 
-	$qa_content['q_view']['c_list']=qa_page_q_comment_follow_list($question, $commentsfollows, $commentsall==$questionid,
-		$usershtml, $formrequested, $formpostid); // ...for viewing
+	$qa_content['q_view']['c_list']=qa_page_q_comment_follow_list($question, $question, $commentsfollows,
+		$commentsall==$questionid, $usershtml, $formrequested, $formpostid); // ...for viewing
 	
 
 //	Prepare content for existing answers (could be added to by Ajax)
@@ -354,8 +354,8 @@
 		//	Prepare content for comments on this answer, plus add or edit comment forms
 			
 			if ((($formtype=='c_add') && ($formpostid==$answerid)) || ($answer['commentbutton'] && !$formrequested) ) { // ...to be added
-				$a_view['c_form']=qa_page_q_add_c_form($qa_content, $questionid, $answerid, 'c'.$answerid,
-					$usecaptcha, @$cnewin[$answerid], @$cnewerrors[$answerid], $formtype=='c_add');
+				$a_view['c_form']=qa_page_q_add_c_form($qa_content, $question, $answer, 'c'.$answerid,
+					$captchareason, @$cnewin[$answerid], @$cnewerrors[$answerid], $formtype=='c_add');
 
 				if (($formtype=='c_add') && ($formpostid==$answerid)) {
 					$jumptoanchor='c'.$answerid;
@@ -370,21 +370,25 @@
 				$commentsall=$answerid;
 			}
 
-			$a_view['c_list']=qa_page_q_comment_follow_list($answer, $commentsfollows, $commentsall==$answerid,
-				$usershtml, $formrequested, $formpostid); // ...for viewing
+			$a_view['c_list']=qa_page_q_comment_follow_list($question, $answer, $commentsfollows,
+				$commentsall==$answerid, $usershtml, $formrequested, $formpostid); // ...for viewing
 
 		//	Add the answer to the list
 				
 			$qa_content['a_list']['as'][]=$a_view;
 		}
 	}
-		
-	if ($countfortitle==1)
-		$qa_content['a_list']['title']=qa_lang_html('question/1_answer_title');
-	elseif ($countfortitle>0)
-		$qa_content['a_list']['title']=qa_lang_html_sub('question/x_answers_title', $countfortitle);
+	
+	if ($question['basetype']=='Q') {
+		$qa_content['a_list']['title_tags']='ID="a_list_title"';
 
-	$qa_content['a_list']['title']='<SPAN ID="a_list_title">'.@$qa_content['a_list']['title'].'</SPAN>';
+		if ($countfortitle==1)
+			$qa_content['a_list']['title']=qa_lang_html('question/1_answer_title');
+		elseif ($countfortitle>0)
+			$qa_content['a_list']['title']=qa_lang_html_sub('question/x_answers_title', $countfortitle);
+		else
+			$qa_content['a_list']['title_tags'].=' STYLE="display:none;" ';
+	}
 
 	if (!$formrequested)
 		$qa_content['page_links']=qa_html_page_links(qa_request(), $pagestart, $pagesize, $countforpages, qa_opt('pages_prev_next'), array(), false, 'a_list_title');

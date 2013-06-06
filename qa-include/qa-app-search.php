@@ -84,7 +84,7 @@
 		
 	//	Perform the appropriate database queries
 	
-		@list($postidfull, $postidtype, $postidquestion, $pageidpage)=qa_db_select_with_pending(
+		list($postidfull, $postidtype, $postidquestion, $pageidpage)=qa_db_select_with_pending(
 			count($keypostidgetfull) ? qa_db_posts_selectspec($userid, array_keys($keypostidgetfull), $fullcontent) : null,
 			count($keypostidgettype) ? qa_db_posts_basetype_selectspec(array_keys($keypostidgettype)) : null,
 			count($keypostidgetquestion) ? qa_db_posts_to_qs_selectspec($userid, array_keys($keypostidgetquestion), $fullcontent) : null,

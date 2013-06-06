@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.5.4'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2012-11-29');
+	define('QA_VERSION', '1.6-beta-1'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2013-06-06');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -314,7 +314,8 @@
 		$functionindex=array();
 
 		foreach ($qa_override_files as $index => $override) {
-			$functionsphp=file_get_contents($override['directory'].$override['include']);
+			$filename=$override['directory'].$override['include'];
+			$functionsphp=file_get_contents($filename);
 			
 			preg_match_all('/\Wfunction\s+(qa_[a-z_]+)\s*\(/im', $functionsphp, $rawmatches, PREG_PATTERN_ORDER|PREG_OFFSET_CAPTURE);
 			
@@ -344,7 +345,7 @@
 			
 		//	echo '<PRE STYLE="text-align:left;">'.htmlspecialchars($functionsphp).'</PRE>'; // to debug munged code
 			
-			eval('?'.'>'.$functionsphp);
+			qa_eval_from_file($functionsphp, $filename);
 		}
 	}
 	
@@ -493,6 +494,31 @@
 	
 //	Low-level functions used throughout Q2A
 
+	function qa_eval_from_file($contents, $filename)
+	{
+		// could also use ini_set('error_append_string') but apparently it doesn't work for errors logged on disk
+		
+		global $php_errormsg;
+		
+		$oldtrackerrors=@ini_set('track_errors', 1);
+		$php_errormsg=null; 
+		
+		eval('?'.'>'.$contents);
+		
+		if (strlen($php_errormsg)) {
+			switch (strtolower(@ini_get('display_errors'))) {
+				case 'on': case '1': case 'yes': case 'true': case 'stdout': case 'stderr':
+					echo ' of '.qa_html($filename)."\n";
+					break;
+			}
+
+			@error_log('PHP Question2Answer more info: '.$php_errormsg." in eval()'d code from ".qa_html($filename));
+		}
+		
+		@ini_set('track_errors', $oldtrackerrors);
+	}
+	
+	
 	function qa_call($function, $args)
 /*
 	Call $function with the arguments in the $args array (doesn't work with call-by-reference functions)
@@ -574,8 +600,7 @@
 		$backtrace=array_reverse(array_slice(debug_backtrace(), 1));
 		foreach ($backtrace as $trace)
 			echo '<FONT COLOR="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
-				qa_html(@$trace['function'].'() '.@$trace['file'].':'.@$trace['line']).'</FONT><BR>';
-		
+				qa_html(@$trace['function'].'() in '.basename(@$trace['file']).':'.@$trace['line']).'</FONT><BR>';	
 		
 		qa_exit('error');
 	}
@@ -635,7 +660,7 @@
 				$object=new $module['class'];
 				
 				if (method_exists($object, 'load_module'))
-					$object->load_module($module['directory'], qa_path_to_root().$module['urltoroot']);
+					$object->load_module($module['directory'], qa_path_to_root().$module['urltoroot'], $type, $name);
 				
 				$qa_modules[$type][$name]['object']=$object;
 				return $object;
@@ -739,6 +764,12 @@
 			$html.=' '.$key.'="'.$value.'"';
 			
 		return $html.'>';
+	}
+	
+	
+	function qa_xml($string)
+	{
+		return htmlspecialchars(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', (string)$string));
 	}
 	
 	
@@ -856,12 +887,13 @@
 	
 	function qa_clicked($name)
 /*
-	Return true if form button $name was clicked (as TYPE=SUBMIT/IMAGE) to create this page request.
+	Return true if form button $name was clicked (as TYPE=SUBMIT/IMAGE) to create this page request, or if a
+	simulated click was sent for the button (via 'qa_click' POST field)
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		return isset($_POST[$name]) || isset($_POST[$name.'_x']);
+		return isset($_POST[$name]) || isset($_POST[$name.'_x']) || (qa_post_text('qa_click')==$name);
 	}
 
 	
@@ -1166,6 +1198,12 @@
 	{
 		return qa_html(qa_path($request, $params, $rooturl, $neaturls, $anchor));
 	}
+	
+	
+	function qa_path_absolute($request, $params=null, $anchor=null)
+	{
+		return qa_path($request, $params, qa_opt('site_url'), null, $anchor);
+	}
 
 	
 	function qa_q_request($questionid, $title)
@@ -1227,7 +1265,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		if ( (($showtype=='A') || ($showtype=='C')) && isset($showid))  {
+		if ( (($showtype=='Q') || ($showtype=='A') || ($showtype=='C')) && isset($showid))  {
 			$params=array('show' => $showid); // due to pagination
 			$anchor=qa_anchor($showtype, $showid);
 		

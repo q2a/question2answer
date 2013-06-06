@@ -43,10 +43,10 @@
 		'feedback_body' => "Comments:\n^message\n\nName:\n^name\n\nEmail:\n^email\n\nPrevious page:\n^previous\n\nUser:\n^url\n\nIP address:\n^ip\n\nBrowser:\n^browser",
 		'feedback_subject' => '^ feedback',
 
-		'flagged_body' => "A post by ^p_handle has received ^flags:\n\n^open^p_context^close\n\nClick below to see the post:\n\n^url\n\nThank you,\n\n^site_title",
+		'flagged_body' => "A post by ^p_handle has received ^flags:\n\n^open^p_context^close\n\nClick below to see the post:\n\n^url\n\n\nClick below to review all flagged posts:\n\n^a_url\n\n\nThank you,\n\n^site_title",
 		'flagged_subject' => '^site_title has a flagged post',
 
-		'moderate_body' => "A post by ^p_handle requires your approval:\n\n^open^p_context^close\n\nClick below to approve or reject the post:\n\n^url\n\nThank you,\n\n^site_title",
+		'moderate_body' => "A post by ^p_handle requires your approval:\n\n^open^p_context^close\n\nClick below to approve or reject the post:\n\n^url\n\n\nClick below to review all queued posts:\n\n^a_url\n\n\nThank you,\n\n^site_title",
 		'moderate_subject' => '^site_title moderation',
 
 		'new_password_body' => "Your new password for ^site_title is below.\n\nPassword: ^password\n\nIt is recommended to change this password immediately after logging in.\n\nThank you,\n^site_title\n^url",
@@ -65,11 +65,24 @@
 
 		'q_posted_body' => "A new question has been asked by ^q_handle:\n\n^open^q_title\n\n^q_content^close\n\nClick below to see the question:\n\n^url\n\nThank you,\n\n^site_title",
 		'q_posted_subject' => '^site_title has a new question',
+		
+		'remoderate_body' => "An edited post by ^p_handle requires your reapproval:\n\n^open^p_context^close\n\nClick below to approve or hide the edited post:\n\n^url\n\n\nClick below to review all queued posts:\n\n^a_url\n\n\nThank you,\n\n^site_title",
+		'remoderate_subject' => '^site_title moderation',
 
 		'reset_body' => "Please click below to reset your password for ^site_title.\n\n^url\n\nAlternatively, enter the code below into the field provided.\n\nCode: ^code\n\nIf you did not ask to reset your password, please ignore this message.\n\nThank you,\n^site_title",
 		'reset_subject' => '^site_title - Reset Forgotten Password',
 
 		'to_handle_prefix' => "^,\n\n",
+		
+		'u_registered_body' => "A new user has registered as ^u_handle.\n\nClick below to view the user profile:\n\n^url\n\nThank you,\n\n^site_title",
+		'u_to_approve_body' => "A new user has registered as ^u_handle.\n\nClick below to approve the user:\n\n^url\n\nClick below to review all users waiting for approval:\n\n^a_url\n\nThank you,\n\n^site_title",
+		'u_registered_subject' => '^site_title has a new registered user',
+		
+		'u_approved_body' => "You can see your new user profile here:\n\n^url\n\nThank you,\n\n^site_title",
+		'u_approved_subject' => 'Your ^site_title user has been approved',
+		
+		'wall_post_subject' => 'Post on your ^site_title wall',
+		'wall_post_body' => "^f_handle has posted on your user wall at ^site_title:\n\n^open^post^close\n\nYou may respond to the post here:\n\n^url\n\nThank you,\n\n^site_title",
 
 		'welcome_body' => "Thank you for registering for ^site_title.\n\n^custom^confirmYour login details are as follows:\n\nEmail: ^email\nPassword: ^password\n\nPlease keep this information safe for future reference.\n\nThank you,\n\n^site_title\n^url",
 		'welcome_confirm' => "Please click below to confirm your email address.\n\n^url\n\n",

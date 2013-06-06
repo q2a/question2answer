@@ -45,11 +45,11 @@
 
 //	Output the blob in question
 
-	require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+	require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
 
 	qa_db_connect('qa_blob_db_fail_handler');
 	
-	$blob=qa_db_blob_read(qa_get('qa_blobid'));
+	$blob=qa_read_blob(qa_get('qa_blobid'));
 	
 	if (isset($blob)) {
 		header('Cache-Control: max-age=2592000, public'); // allows browsers and proxies to cache the blob

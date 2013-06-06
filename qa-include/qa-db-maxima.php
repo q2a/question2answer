@@ -39,6 +39,7 @@
 	@define('QA_DB_MAX_CONTENT_LENGTH', 8000);
 	@define('QA_DB_MAX_FORMAT_LENGTH', 20);
 	@define('QA_DB_MAX_TAGS_LENGTH', 800);
+	@define('QA_DB_MAX_NAME_LENGTH', 40);
 	@define('QA_DB_MAX_WORD_LENGTH', 80);
 	@define('QA_DB_MAX_CAT_PAGE_TITLE_LENGTH', 80);
 	@define('QA_DB_MAX_CAT_PAGE_TAGS_LENGTH', 200);

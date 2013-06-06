@@ -63,7 +63,7 @@
 				$relativedepth=count($requestparts);
 				
 				// Workaround for fact that Apache unescapes characters while rewriting, based on assumption that $_GET['qa-rewrite'] has
-				// right path depth, which is true do long as there are only escaped characters in the last part of the path
+				// right path depth, which is true so long as there are only escaped characters in the last part of the path
 				if (!empty($_SERVER['REQUEST_URI'])) {
 					$origpath=$_SERVER['REQUEST_URI'];
 					$_GET=array();
@@ -73,8 +73,10 @@
 						$params=explode('&', substr($origpath, $questionpos+1));
 						
 						foreach ($params as $param)
-							if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-								$_GET[urldecode($matches[1])]=qa_string_to_gpc(urldecode(@$matches[3]));
+							if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches)) {
+								$argument=strtr(urldecode($matches[1]), '.', '_'); // simulate PHP's $_GET behavior
+								$_GET[$argument]=qa_string_to_gpc(urldecode(@$matches[3]));
+							}
 		
 						$origpath=substr($origpath, 0, $questionpos);
 					}

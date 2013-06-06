@@ -377,7 +377,36 @@
 			$type.'_HIDDEN', $startpostid
 		));
 	}
+	
+	
+//	For moving blobs between database and disk...
 
+	function qa_db_count_blobs_in_db()
+	{
+		return qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^blobs WHERE content IS NOT NULL'));
+	}
+
+	function qa_db_get_next_blob_in_db($startblobid)
+	{
+		return qa_db_read_one_assoc(qa_db_query_sub(
+			'SELECT blobid, content, format FROM ^blobs WHERE blobid>=# AND content IS NOT NULL',
+			$startblobid
+		), true);
+	}
+
+	function qa_db_count_blobs_on_disk()
+	{
+		return qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^blobs WHERE content IS NULL'));
+	}
+	
+	function qa_db_get_next_blob_on_disk($startblobid)
+	{
+		return qa_db_read_one_assoc(qa_db_query_sub(
+			'SELECT blobid, format FROM ^blobs WHERE blobid>=# AND content IS NULL',
+			$startblobid
+		), true);
+	}
+		
 
 /*
 	Omit PHP closing tag to help avoid accidental output

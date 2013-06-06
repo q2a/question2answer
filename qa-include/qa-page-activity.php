@@ -32,7 +32,6 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 	require_once QA_INCLUDE_DIR.'qa-app-q-list.php';
 	
 	$categoryslugs=qa_request_parts(1);
@@ -42,14 +41,13 @@
 
 //	Get lists of recent activity in all its forms, plus category information
 	
-	@list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid, $favorite)=qa_db_select_with_pending(
+	list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid)=qa_db_select_with_pending(
 		qa_db_qs_selectspec($userid, 'created', 0, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_activity')),
 		qa_db_recent_a_qs_selectspec($userid, 0, $categoryslugs),
 		qa_db_recent_c_qs_selectspec($userid, 0, $categoryslugs),
 		qa_db_recent_edit_qs_selectspec($userid, 0, $categoryslugs),
 		qa_db_category_nav_selectspec($categoryslugs, false, false, true),
-		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null,
-		($countslugs && isset($userid)) ? qa_db_is_favorite_selectspec($userid, QA_ENTITY_CATEGORY, $categoryslugs) : null
+		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
 	);
 	
 	if ($countslugs) {
@@ -82,8 +80,7 @@
 		qa_opt('feed_for_activity') ? 'activity' : null, // prefix for RSS feed paths (null to hide)
 		qa_html_suggest_qs_tags(qa_using_tags(), qa_category_path_request($categories, $categoryid)), // suggest what to do next
 		null, // page link params
-		null, // category nav params
-		$favorite // has user favorited this category
+		null // category nav params
 	);
 
 

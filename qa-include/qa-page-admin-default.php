@@ -67,6 +67,7 @@
 //	For non-text options, lists of option types, minima and maxima
 	
 	$optiontype=array(
+		'avatar_message_list_size' => 'number',
 		'avatar_profile_size' => 'number',
 		'avatar_q_list_size' => 'number',
 		'avatar_q_page_a_size' => 'number',
@@ -111,6 +112,7 @@
 		'min_len_q_content' => 'number',
 		'min_len_q_title' => 'number',
 		'min_num_q_tags' => 'number',
+		'moderate_points_limit' => 'number',
 		'page_size_activity' => 'number',
 		'page_size_ask_check_qs' => 'number',
 		'page_size_ask_tags' => 'number',
@@ -123,7 +125,6 @@
 		'page_size_tag_qs' => 'number',
 		'page_size_tags' => 'number',
 		'page_size_una_qs' => 'number',
-		'page_size_user_posts' => 'number',
 		'page_size_users' => 'number',
 		'pages_prev_next' => 'number',
 		'q_urls_title_length' => 'number',
@@ -132,13 +133,16 @@
 		'show_full_date_days' => 'number',
 		'smtp_port' => 'number',
 		
+		'allow_anon_name' => 'checkbox',
 		'allow_change_usernames' => 'checkbox',
 		'allow_close_questions' => 'checkbox',
 		'allow_login_email_only' => 'checkbox',
 		'allow_multi_answers' => 'checkbox',
 		'allow_private_messages' => 'checkbox',
+		'allow_user_walls' => 'checkbox',
 		'allow_self_answer' => 'checkbox',
 		'allow_view_q_bots' => 'checkbox',
+		'approve_user_required' => 'checkbox',
 		'avatar_allow_gravatar' => 'checkbox',
 		'avatar_allow_upload' => 'checkbox',
 		'avatar_default_show' => 'checkbox',
@@ -146,6 +150,7 @@
 		'captcha_on_feedback' => 'checkbox',
 		'captcha_on_register' => 'checkbox',
 		'captcha_on_reset_password' => 'checkbox',
+		'captcha_on_unapproved' => 'checkbox',
 		'captcha_on_unconfirmed' => 'checkbox',
 		'comment_on_as' => 'checkbox',
 		'comment_on_qs' => 'checkbox',
@@ -175,13 +180,16 @@
 		'mailing_enabled' => 'checkbox',
 		'moderate_anon_post' => 'checkbox',
 		'moderate_by_points' => 'checkbox',
+		'moderate_edited_again' => 'checkbox',
 		'moderate_notify_admin' => 'checkbox',
-		'moderate_points_limit' => 'number',
+		'moderate_unapproved' => 'checkbox',
 		'moderate_unconfirmed' => 'checkbox',
+		'moderate_users' => 'checkbox',
 		'neat_urls' => 'checkbox',
 		'notify_admin_q_post' => 'checkbox',
 		'notify_users_default' => 'checkbox',
 		'q_urls_remove_accents' => 'checkbox',
+		'register_notify_admin' => 'checkbox',
 		'show_c_reply_buttons' => 'checkbox',
 		'show_custom_answer' => 'checkbox',
 		'show_custom_ask' => 'checkbox',
@@ -203,6 +211,7 @@
 		'show_user_points' => 'checkbox',
 		'show_user_titles' => 'checkbox',
 		'show_view_counts' => 'checkbox',
+		'show_view_count_q_page' => 'checkbox',
 		'show_when_created' => 'checkbox',
 		'site_maintenance' => 'checkbox',
 		'smtp_active' => 'checkbox',
@@ -231,7 +240,6 @@
 		'page_size_tag_qs' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_tags' => QA_DB_RETRIEVE_TAGS,
 		'page_size_una_qs' => QA_DB_RETRIEVE_QS_AS,
-		'page_size_user_posts' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_users' => QA_DB_RETRIEVE_USERS,
 	);
 	
@@ -260,6 +268,10 @@
 	$formstyle='tall';
 	$checkboxtodisplay=null;
 	
+	$maxpermitpost=max(qa_opt('permit_post_q'), qa_opt('permit_post_a'));
+	if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
+		$maxpermitpost=max($maxpermitpost, qa_opt('permit_post_c'));
+			
 	switch ($adminsection) {
 		case 'general':
 			$subtitle='admin/general_title';
@@ -293,7 +305,7 @@
 				
 				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 			
-				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', '', 'avatar_allow_gravatar');
+				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'allow_user_walls', '', 'avatar_allow_gravatar');
 				
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');
@@ -304,8 +316,9 @@
 			if (!QA_FINAL_EXTERNAL_USERS)
 				$showoptions[]='avatar_profile_size';
 			
-			array_push($showoptions, 'avatar_users_size', 'avatar_q_page_q_size', 'avatar_q_page_a_size', 'avatar_q_page_c_size', 'avatar_q_list_size');
-
+			array_push($showoptions, 'avatar_users_size', 'avatar_q_page_q_size', 'avatar_q_page_a_size', 'avatar_q_page_c_size',
+				'avatar_q_list_size', 'avatar_message_list_size');
+			
 			$checkboxtodisplay=array(
 				'custom_register' => 'option_show_custom_register',
 				'custom_welcome' => 'option_show_custom_welcome',
@@ -324,6 +337,7 @@
 					'avatar_q_page_a_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 					'avatar_q_page_c_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 					'avatar_q_list_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
+					'avatar_message_list_size' => 'option_allow_private_messages || option_allow_user_walls',
 				));
 	
 			$formstyle='wide';
@@ -350,7 +364,7 @@
 			
 		case 'viewing':
 			$subtitle='admin/viewing_title';
-			$showoptions=array('q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', '', 'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'votes_separated', '', 'show_url_links', 'links_in_new_window', 'show_when_created', 'show_full_date_days');
+			$showoptions=array('q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', 'show_view_count_q_page', '', 'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'votes_separated', '', 'show_url_links', 'links_in_new_window', 'show_when_created', 'show_full_date_days');
 			
 			if (count(qa_get_points_to_titles()))
 				$showoptions[]='show_user_titles';
@@ -376,6 +390,7 @@
 
 			$checkboxtodisplay=array(
 				'show_view_counts' => 'option_do_count_q_views',
+				'show_view_count_q_page' => 'option_do_count_q_views',
 				'votes_separated' => 'option_voting_on_qs || option_voting_on_as',
 				'voting_on_q_page_only' => 'option_voting_on_qs',
 				'show_full_date_days' => 'option_show_when_created',
@@ -389,8 +404,8 @@
 			
 			if (qa_using_tags())
 				$showoptions[]='page_size_tag_qs';
-				
-			array_push($showoptions, 'page_size_user_posts', '');
+			
+			$showoptions[]='';
 			
 			if (qa_using_tags())
 				array_push($showoptions, 'page_size_tags', 'columns_tags');
@@ -430,7 +445,12 @@
 			if (qa_using_tags())
 				array_push($showoptions, 'min_num_q_tags', 'max_num_q_tags', 'tag_separator_comma');
 			
-			array_push($showoptions, 'min_len_a_content', 'min_len_c_content', 'notify_users_default', '', 'block_bad_words', '', 'do_ask_check_qs', 'match_ask_check_qs', 'page_size_ask_check_qs', '');
+			array_push($showoptions, 'min_len_a_content', 'min_len_c_content', 'notify_users_default');
+			
+			if ($maxpermitpost > QA_PERMIT_USERS)
+				$showoptions[]='allow_anon_name';
+			
+			array_push($showoptions, '', 'block_bad_words', '', 'do_ask_check_qs', 'match_ask_check_qs', 'page_size_ask_check_qs', '');
 
 			if (qa_using_tags())
 				array_push($showoptions, 'do_example_tags', 'match_example_tags', 'do_complete_tags', 'page_size_ask_tags');
@@ -473,7 +493,8 @@
 				
 				} else {
 					$showoptions[]=$permitoption.'_points';
-					$checkboxtodisplay[$permitoption.'_points']='(option_'.$permitoption.'=='.qa_js(QA_PERMIT_POINTS).') ||(option_'.$permitoption.'=='.qa_js(QA_PERMIT_POINTS_CONFIRMED).')';
+					$checkboxtodisplay[$permitoption.'_points']='(option_'.$permitoption.'=='.qa_js(QA_PERMIT_POINTS).
+						')||(option_'.$permitoption.'=='.qa_js(QA_PERMIT_POINTS_CONFIRMED).')||(option_'.$permitoption.'=='.qa_js(QA_PERMIT_APPROVED_POINTS).')';
 				}
 			}
 			
@@ -510,11 +531,7 @@
 			$getoptions=qa_get_options(array('feedback_enabled', 'permit_post_q', 'permit_post_a', 'permit_post_c'));
 			
 			if (!QA_FINAL_EXTERNAL_USERS)
-				array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'suspend_register_users', '');
-			
-			$maxpermitpost=max($getoptions['permit_post_q'], $getoptions['permit_post_a']);
-			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
-				$maxpermitpost=max($maxpermitpost, $getoptions['permit_post_c']);
+				array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'moderate_users', 'approve_user_required', 'register_notify_admin', 'suspend_register_users', '');
 			
 			$captchamodules=qa_list_modules('captcha');
 			
@@ -524,6 +541,9 @@
 				
 				if ($maxpermitpost > QA_PERMIT_USERS)
 					$showoptions[]='captcha_on_anon_post';
+					
+				if ($maxpermitpost > QA_PERMIT_APPROVED)
+					$showoptions[]='captcha_on_unapproved';
 					
 				if ($maxpermitpost > QA_PERMIT_CONFIRMED)
 					$showoptions[]='captcha_on_unconfirmed';
@@ -539,11 +559,14 @@
 			if ($maxpermitpost > QA_PERMIT_USERS)
 				$showoptions[]='moderate_anon_post';
 				
+			if ($maxpermitpost > QA_PERMIT_APPROVED)
+				$showoptions[]='moderate_unapproved';
+			
 			if ($maxpermitpost > QA_PERMIT_CONFIRMED)
 				$showoptions[]='moderate_unconfirmed';
-			
+				
 			if ($maxpermitpost > QA_PERMIT_EXPERTS)
-				array_push($showoptions, 'moderate_by_points', 'moderate_points_limit', 'moderate_notify_admin', '');
+				array_push($showoptions, 'moderate_by_points', 'moderate_points_limit', 'moderate_edited_again', 'moderate_notify_admin', 'moderate_update_time', '');
 			
 			array_push($showoptions, 'flagging_of_posts', 'flagging_notify_first', 'flagging_notify_every', 'flagging_hide_after', '');
 			
@@ -571,18 +594,25 @@
 
 			$checkboxtodisplay=array(
 				'confirm_user_required' => 'option_confirm_user_emails',
-				'captcha_on_unconfirmed' => 'option_confirm_user_emails',
-				'captcha_module' => 'option_captcha_on_register || option_captcha_on_anon_post || (option_confirm_user_emails && option_captcha_on_unconfirmed) || option_captcha_on_reset_password || option_captcha_on_feedback',
-				'moderate_unconfirmed' => 'option_confirm_user_emails',
+				'approve_user_required' => 'option_moderate_users',
+				'captcha_on_unapproved' => 'option_moderate_users',
+				'captcha_on_unconfirmed' => 'option_confirm_user_emails && !(option_moderate_users && option_captcha_on_unapproved)',
+				'captcha_module' => 'option_captcha_on_register || option_captcha_on_anon_post || (option_confirm_user_emails && option_captcha_on_unconfirmed) || (option_moderate_users && option_captcha_on_unapproved) || option_captcha_on_reset_password || option_captcha_on_feedback',
+				'moderate_unapproved' => 'option_moderate_users',
+				'moderate_unconfirmed' => 'option_confirm_user_emails && !(option_moderate_users && option_moderate_unapproved)',
 				'moderate_points_limit' => 'option_moderate_by_points',
 				'moderate_points_label_off' => '!option_moderate_by_points',
 				'moderate_points_label_on' => 'option_moderate_by_points',
+				'moderate_edited_again' => 'option_moderate_anon_post || (option_confirm_user_emails && option_moderate_unconfirmed) || (option_moderate_users && option_moderate_unapproved) || option_moderate_by_points',
 				'flagging_hide_after' => 'option_flagging_of_posts',
 				'flagging_notify_every' => 'option_flagging_of_posts',
 				'flagging_notify_first' => 'option_flagging_of_posts',
 				'max_rate_ip_flags' =>  'option_flagging_of_posts',
 				'max_rate_user_flags' => 'option_flagging_of_posts',
 			);
+			
+			$checkboxtodisplay['moderate_notify_admin']=$checkboxtodisplay['moderate_edited_again'];
+			$checkboxtodisplay['moderate_update_time']=$checkboxtodisplay['moderate_edited_again'];
 			break;
 		
 		case 'mailing':
@@ -620,93 +650,104 @@
 
 	$recalchotness=false;
 	$startmailing=false;
+	$securityexpired=false;
 	
 	$formokhtml=null;
 	
 	if (qa_clicked('doresetoptions')) {
-		qa_reset_options($getoptions);
-		$formokhtml=qa_lang_html('admin/options_reset');
+		if (!qa_check_form_security_code('admin/'.$adminsection, qa_post_text('code')))
+			$securityexpired=true;
+
+		else {
+			qa_reset_options($getoptions);
+			$formokhtml=qa_lang_html('admin/options_reset');
+		}
 
 	} elseif (qa_clicked('dosaveoptions')) {
-		foreach ($getoptions as $optionname) {
-			$optionvalue=qa_post_text('option_'.$optionname);
-			
-			if (
-				(@$optiontype[$optionname]=='number') ||
-				(@$optiontype[$optionname]=='checkbox') ||
-				((@$optiontype[$optionname]=='number-blank') && strlen($optionvalue))
-			)
-				$optionvalue=(int)$optionvalue;
-				
-			if (isset($optionmaximum[$optionname]))
-				$optionvalue=min($optionmaximum[$optionname], $optionvalue);
-
-			if (isset($optionminimum[$optionname]))
-				$optionvalue=max($optionminimum[$optionname], $optionvalue);
-				
-			switch ($optionname) {
-				case 'site_url':
-					if (substr($optionvalue, -1)!='/') // seems to be a very common mistake and will mess up URLs
-						$optionvalue.='/';
-					break;
-				
-				case 'hot_weight_views':
-				case 'hot_weight_answers':
-				case 'hot_weight_votes':
-				case 'hot_weight_q_age':
-				case 'hot_weight_a_age':
-					if (qa_opt($optionname) != $optionvalue)
-						$recalchotness=true;
-					break;
-					
-				case 'block_ips_write':
-					require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-					$optionvalue=implode(' , ', qa_block_ips_explode($optionvalue));
-					break;
-					
-				case 'block_bad_words':
-					require_once QA_INCLUDE_DIR.'qa-util-string.php';
-					$optionvalue=implode(' , ', qa_block_words_explode($optionvalue));
-					break;
-			}
-						
-			qa_set_option($optionname, $optionvalue);
-		}
+		if (!qa_check_form_security_code('admin/'.$adminsection, qa_post_text('code')))
+			$securityexpired=true;
 		
-		$formokhtml=qa_lang_html('admin/options_saved');
-
-	//	Uploading default avatar
-
-		if (is_array(@$_FILES['avatar_default_file']) && $_FILES['avatar_default_file']['size']) {
-			require_once QA_INCLUDE_DIR.'qa-util-image.php';
-			
-			$oldblobid=qa_opt('avatar_default_blobid');
-			
-			$toobig=qa_image_file_too_big($_FILES['avatar_default_file']['tmp_name'], qa_opt('avatar_store_size'));
-			
-			if ($toobig)
-				$errors['avatar_default_show']=qa_lang_sub('main/image_too_big_x_pc', (int)($toobig*100));
-			
-			else {
-				$imagedata=qa_image_constrain_data(file_get_contents($_FILES['avatar_default_file']['tmp_name']), $width, $height, qa_opt('avatar_store_size'));
+		else {
+			foreach ($getoptions as $optionname) {
+				$optionvalue=qa_post_text('option_'.$optionname);
 				
-				if (isset($imagedata)) {
-					require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+				if (
+					(@$optiontype[$optionname]=='number') ||
+					(@$optiontype[$optionname]=='checkbox') ||
+					((@$optiontype[$optionname]=='number-blank') && strlen($optionvalue))
+				)
+					$optionvalue=(int)$optionvalue;
 					
-					$newblobid=qa_db_blob_create($imagedata, 'jpeg');
-					
-					if (isset($newblobid)) {
-						qa_set_option('avatar_default_blobid', $newblobid);
-						qa_set_option('avatar_default_width', $width);
-						qa_set_option('avatar_default_height', $height);
-						qa_set_option('avatar_default_show', 1);
-					}
-						
-					if (strlen($oldblobid))
-						qa_db_blob_delete($oldblobid);
+				if (isset($optionmaximum[$optionname]))
+					$optionvalue=min($optionmaximum[$optionname], $optionvalue);
 	
-				} else
-					$errors['avatar_default_show']=qa_lang_sub('main/image_not_read', implode(', ', qa_gd_image_formats()));
+				if (isset($optionminimum[$optionname]))
+					$optionvalue=max($optionminimum[$optionname], $optionvalue);
+					
+				switch ($optionname) {
+					case 'site_url':
+						if (substr($optionvalue, -1)!='/') // seems to be a very common mistake and will mess up URLs
+							$optionvalue.='/';
+						break;
+					
+					case 'hot_weight_views':
+					case 'hot_weight_answers':
+					case 'hot_weight_votes':
+					case 'hot_weight_q_age':
+					case 'hot_weight_a_age':
+						if (qa_opt($optionname) != $optionvalue)
+							$recalchotness=true;
+						break;
+						
+					case 'block_ips_write':
+						require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+						$optionvalue=implode(' , ', qa_block_ips_explode($optionvalue));
+						break;
+						
+					case 'block_bad_words':
+						require_once QA_INCLUDE_DIR.'qa-util-string.php';
+						$optionvalue=implode(' , ', qa_block_words_explode($optionvalue));
+						break;
+				}
+							
+				qa_set_option($optionname, $optionvalue);
+			}
+			
+			$formokhtml=qa_lang_html('admin/options_saved');
+	
+		//	Uploading default avatar
+	
+			if (is_array(@$_FILES['avatar_default_file']) && $_FILES['avatar_default_file']['size']) {
+				require_once QA_INCLUDE_DIR.'qa-util-image.php';
+				
+				$oldblobid=qa_opt('avatar_default_blobid');
+				
+				$toobig=qa_image_file_too_big($_FILES['avatar_default_file']['tmp_name'], qa_opt('avatar_store_size'));
+				
+				if ($toobig)
+					$errors['avatar_default_show']=qa_lang_sub('main/image_too_big_x_pc', (int)($toobig*100));
+				
+				else {
+					$imagedata=qa_image_constrain_data(file_get_contents($_FILES['avatar_default_file']['tmp_name']), $width, $height, qa_opt('avatar_store_size'));
+					
+					if (isset($imagedata)) {
+						require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+						
+						$newblobid=qa_create_blob($imagedata, 'jpeg');
+						
+						if (isset($newblobid)) {
+							qa_set_option('avatar_default_blobid', $newblobid);
+							qa_set_option('avatar_default_width', $width);
+							qa_set_option('avatar_default_height', $height);
+							qa_set_option('avatar_default_show', 1);
+						}
+							
+						if (strlen($oldblobid))
+							qa_delete_blob($oldblobid);
+		
+					} else
+						$errors['avatar_default_show']=qa_lang_sub('main/image_not_read', implode(', ', qa_gd_image_formats()));
+				}
 			}
 		}
 	}
@@ -715,25 +756,32 @@
 //	Mailings management
 	
 	if ($adminsection=='mailing') {
-		if (qa_clicked('domailingtest')) {
-			$email=qa_get_logged_in_email();
-			
-			if (qa_mailing_send_one(qa_get_logged_in_userid(), qa_get_logged_in_handle(), $email, qa_get_logged_in_user_field('emailcode')))
-				$formokhtml=qa_lang_html_sub('admin/test_sent_to_x', qa_html($email));
-			else
-				$formokhtml=qa_lang_html('main/general_error');
+		if ( qa_clicked('domailingtest') || qa_clicked('domailingstart') || qa_clicked('domailingresume') || qa_clicked('domailingcancel') ) {
+			if (!qa_check_form_security_code('admin/'.$adminsection, qa_post_text('code')))
+				$securityexpired=true;
+				
+			else {
+				if (qa_clicked('domailingtest')) {
+					$email=qa_get_logged_in_email();
+					
+					if (qa_mailing_send_one(qa_get_logged_in_userid(), qa_get_logged_in_handle(), $email, qa_get_logged_in_user_field('emailcode')))
+						$formokhtml=qa_lang_html_sub('admin/test_sent_to_x', qa_html($email));
+					else
+						$formokhtml=qa_lang_html('main/general_error');
+				}
+				
+				if (qa_clicked('domailingstart')) {
+					qa_mailing_start();
+					$startmailing=true;
+				}
+				
+				if (qa_clicked('domailingresume'))
+					$startmailing=true;
+				
+				if (qa_clicked('domailingcancel'))
+					qa_mailing_stop();
+			}
 		}
-		
-		if (qa_clicked('domailingstart')) {
-			qa_mailing_start();
-			$startmailing=true;
-		}
-		
-		if (qa_clicked('domailingresume'))
-			$startmailing=true;
-		
-		if (qa_clicked('domailingcancel'))
-			qa_mailing_stop();
 				
 		$mailingprogress=qa_mailing_progress_message();
 	
@@ -768,8 +816,7 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html($subtitle);
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;
 	
@@ -796,6 +843,7 @@
 		'hidden' => array(
 			'dosaveoptions' => '1', // for IE
 			'has_js' => '0',
+			'code' => qa_get_form_security_code('admin/'.$adminsection),
 		),
 	);
 
@@ -1067,6 +1115,7 @@
 				case 'avatar_q_page_a_size':
 				case 'avatar_q_page_c_size':
 				case 'avatar_q_list_size':
+				case 'avatar_message_list_size':
 					$optionfield['note']=qa_lang_html('admin/pixels');
 					break;
 
@@ -1101,7 +1150,7 @@
 					
 				case 'min_num_q_tags':
 				case 'max_num_q_tags':
-					$optionfield['note']=qa_lang_html_sub('main/x_tags', '');
+					$optionfield['note']=qa_lang_html_sub('main/x_tags', ''); // this to avoid language checking error: a_lang('main/1_tag')
 					break;
 				
 				case 'show_full_date_days':
@@ -1159,7 +1208,7 @@
 							$module=qa_load_module('editor', $editor);
 							
 							if (method_exists($module, 'admin_form'))
-								$optionfield['note']='<A HREF="'.qa_path_html('admin/plugins', null, null, null, md5('editor/'.$editor)).'">'.qa_lang_html('admin/options').'</A>';
+								$optionfield['note']='<A HREF="'.qa_admin_module_options_path('editor', $editor).'">'.qa_lang_html('admin/options').'</A>';
 						}
 					}
 						
@@ -1197,7 +1246,7 @@
 						$selectoptions[qa_html($modulename)]=strlen($modulename) ? qa_html($modulename) : qa_lang_html('options/option_default');
 
 						if (($modulename==$value) && method_exists($module, 'admin_form'))
-							$optionfield['note']='<A HREF="'.qa_path_html('admin/plugins', null, null, null, md5('search/'.$modulename)).'">'.qa_lang_html('admin/options').'</A>';
+							$optionfield['note']='<A HREF="'.qa_admin_module_options_path('search', $modulename).'">'.qa_lang_html('admin/options').'</A>';
 					}
 						
 					qa_optionfield_make_select($optionfield, $selectoptions, $value, '');
@@ -1248,6 +1297,7 @@
 				case 'permit_retag_cat':
 				case 'permit_edit_a':
 				case 'permit_edit_c':
+				case 'permit_edit_silent':
 				case 'permit_flag':
 				case 'permit_close_q':
 				case 'permit_select_a':
@@ -1255,6 +1305,10 @@
 				case 'permit_moderate':
 				case 'permit_delete_hidden':
 				case 'permit_anon_view_ips':
+				case 'permit_view_voters_flaggers':
+				case 'permit_post_wall':
+					$dopoints=true;
+					
 					if ($optionname=='permit_retag_cat')
 						$optionfield['label']=qa_lang_html(qa_using_categories() ? 'profile/permit_recat' : 'profile/permit_retag').':';
 					else
@@ -1266,23 +1320,28 @@
 						$widest=QA_PERMIT_POINTS;
 					elseif ($optionname=='permit_delete_hidden')
 						$widest=QA_PERMIT_EDITORS;
+					elseif ( ($optionname=='permit_view_voters_flaggers') || ($optionname=='permit_edit_silent') )
+						$widest=QA_PERMIT_EXPERTS;
 					else
 						$widest=QA_PERMIT_USERS;
 						
-					if ($optionname=='permit_view_q_page')
-						$narrowest=QA_PERMIT_CONFIRMED;
-					elseif ( ($optionname=='permit_edit_c') || ($optionname=='permit_close_q') || ($optionname=='permit_select_a') || ($optionname=='permit_moderate')|| ($optionname=='permit_hide_show') || ($optionname=='permit_anon_view_ips') )
+					if ($optionname=='permit_view_q_page') {
+						$narrowest=QA_PERMIT_APPROVED;
+						$dopoints=false;
+					} elseif ( ($optionname=='permit_edit_c') || ($optionname=='permit_close_q') || ($optionname=='permit_select_a') || ($optionname=='permit_moderate')|| ($optionname=='permit_hide_show') || ($optionname=='permit_anon_view_ips') )
 						$narrowest=QA_PERMIT_MODERATORS;
 					elseif ( ($optionname=='permit_post_c') || ($optionname=='permit_edit_q') || ($optionname=='permit_retag_cat') || ($optionname=='permit_edit_a') || ($optionname=='permit_flag') )
 						$narrowest=QA_PERMIT_EDITORS;
-					elseif ( ($optionname=='permit_vote_q') || ($optionname=='permit_vote_a') )
-						$narrowest=QA_PERMIT_POINTS_CONFIRMED;
-					elseif ($optionname=='permit_delete_hidden')
+					elseif ( ($optionname=='permit_vote_q') || ($optionname=='permit_vote_a') || ($optionname=='permit_post_wall') )
+						$narrowest=QA_PERMIT_APPROVED_POINTS;
+					elseif ( ($optionname=='permit_delete_hidden') || ($optionname=='permit_edit_silent') )
 						$narrowest=QA_PERMIT_ADMINS;
+					elseif ($optionname=='permit_view_voters_flaggers')
+						$narrowest=QA_PERMIT_SUPERS;
 					else
 						$narrowest=QA_PERMIT_EXPERTS;
 					
-					$permitoptions=qa_admin_permit_options($widest, $narrowest, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'));
+					$permitoptions=qa_admin_permit_options($widest, $narrowest, (!QA_FINAL_EXTERNAL_USERS) && qa_opt('confirm_user_emails'), $dopoints);
 					
 					if (count($permitoptions)>1)
 						qa_optionfield_make_select($optionfield, $permitoptions, $value,
@@ -1310,6 +1369,7 @@
 				case 'permit_moderate_points':
 				case 'permit_delete_hidden_points':
 				case 'permit_anon_view_ips_points':
+				case 'permit_post_wall_points':
 					unset($optionfield['label']);
 					$optionfield['type']='number';
 					$optionfield['prefix']=qa_lang_html('admin/users_must_have').'&nbsp;';
@@ -1382,39 +1442,46 @@
 							$module=qa_load_module('captcha', $modulename);
 							
 							if (method_exists($module, 'admin_form'))
-								$optionfield['note']='<A HREF="'.qa_path_html('admin/plugins', null, null, null, md5('captcha/'.$modulename)).'">'.qa_lang_html('admin/options').'</A>';
+								$optionfield['note']='<A HREF="'.qa_admin_module_options_path('captcha', $modulename).'">'.qa_lang_html('admin/options').'</A>';
 						}
 					}
 					
 					qa_optionfield_make_select($optionfield, $captchaoptions, $value, '');
 					break;
+				
+				case 'moderate_update_time':
+					qa_optionfield_make_select($optionfield, array(
+						'0' => qa_lang_html('options/time_written'),
+						'1' => qa_lang_html('options/time_approved'),
+					), $value, '0');
+					break;					
+				
+				case 'max_rate_ip_as':
+				case 'max_rate_ip_cs':
+				case 'max_rate_ip_flags':
+				case 'max_rate_ip_logins':
+				case 'max_rate_ip_messages':
+				case 'max_rate_ip_qs':
+				case 'max_rate_ip_registers':
+				case 'max_rate_ip_uploads':
+				case 'max_rate_ip_votes':
+					$optionfield['note']=qa_lang_html('admin/per_ip_hour');
+					break;
 					
-					case 'max_rate_ip_as':
-					case 'max_rate_ip_cs':
-					case 'max_rate_ip_flags':
-					case 'max_rate_ip_logins':
-					case 'max_rate_ip_messages':
-					case 'max_rate_ip_qs':
-					case 'max_rate_ip_registers':
-					case 'max_rate_ip_uploads':
-					case 'max_rate_ip_votes':
-						$optionfield['note']=qa_lang_html('admin/per_ip_hour');
-						break;
-						
-					case 'max_rate_user_as':
-					case 'max_rate_user_cs':
-					case 'max_rate_user_flags':
-					case 'max_rate_user_messages':
-					case 'max_rate_user_qs':
-					case 'max_rate_user_uploads':
-					case 'max_rate_user_votes':
-						unset($optionfield['label']);
-						$optionfield['note']=qa_lang_html('admin/per_user_hour');
-						break;
-						
-					case 'mailing_per_minute':
-						$optionfield['suffix']=qa_lang_html('admin/emails_per_minute');
-						break;
+				case 'max_rate_user_as':
+				case 'max_rate_user_cs':
+				case 'max_rate_user_flags':
+				case 'max_rate_user_messages':
+				case 'max_rate_user_qs':
+				case 'max_rate_user_uploads':
+				case 'max_rate_user_votes':
+					unset($optionfield['label']);
+					$optionfield['note']=qa_lang_html('admin/per_user_hour');
+					break;
+					
+				case 'mailing_per_minute':
+					$optionfield['suffix']=qa_lang_html('admin/emails_per_minute');
+					break;
 			}
 
 			if (isset($feedrequest) && $value)
@@ -1500,7 +1567,7 @@
 					
 					if (method_exists($trywidget, 'admin_form'))
 						$listhtml.=strtr(qa_lang_html('admin/widget_global_options'), array(
-							'^1' => '<A HREF="'.qa_path_html('admin/plugins', null, null, null, md5('widget/'.$tryname)).'">',
+							'^1' => '<A HREF="'.qa_admin_module_options_path('widget', $tryname).'">',
 							'^2' => '</A>',
 						));
 						
@@ -1546,6 +1613,12 @@
 			);
 			
 			if (!QA_FINAL_EXTERNAL_USERS) {
+				$qa_content['form']['fields']['permit_approve_users']=array(
+					'type' => 'static',
+					'label' => qa_lang_html('options/permit_approve_users'),
+					'value' => qa_lang_html('options/permit_moderators'),
+				);
+	
 				$qa_content['form']['fields']['permit_create_experts']=array(
 					'type' => 'static',
 					'label' => qa_lang_html('options/permit_create_experts'),

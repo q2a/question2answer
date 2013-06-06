@@ -116,44 +116,51 @@
 
 //	Process saving an old or new widget
 
+	$securityexpired=false;
+	
 	if (qa_clicked('docancel'))
 		qa_redirect('admin/layout');
 
 	elseif (qa_clicked('dosavewidget')) {
 		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
 		
-		if (qa_post_text('dodelete')) {
-			qa_db_widget_delete($editwidget['widgetid']);
-			qa_redirect('admin/layout');
+		if (!qa_check_form_security_code('admin/widgets', qa_post_text('code')))
+			$securityexpired=true;
 		
-		} else {
-			if ($widgetfound) {
-				$intitle=qa_post_text('title');
-				$inposition=qa_post_text('position');
-				$intemplates=array();
-				
-				if (qa_post_text('template_all'))
-					$intemplates[]='all';
-				
-				foreach (array_keys($templateoptions) as $template)
-					if (qa_post_text('template_'.$template))
-						$intemplates[]=$template;
-						
-				$intags=implode(',', $intemplates);
-	
-			//	Perform appropriate database action
-		
-				if (isset($editwidget['widgetid'])) { // changing existing widget
-					$widgetid=$editwidget['widgetid'];
-					qa_db_widget_set_fields($widgetid, $intags);
-	
-				} else
-					$widgetid=qa_db_widget_create($intitle, $intags);
-	
-				qa_db_widget_move($widgetid, substr($inposition, 0, 2), substr($inposition, 2));
-			}
+		else {
+			if (qa_post_text('dodelete')) {
+				qa_db_widget_delete($editwidget['widgetid']);
+				qa_redirect('admin/layout');
 			
-			qa_redirect('admin/layout');
+			} else {
+				if ($widgetfound) {
+					$intitle=qa_post_text('title');
+					$inposition=qa_post_text('position');
+					$intemplates=array();
+					
+					if (qa_post_text('template_all'))
+						$intemplates[]='all';
+					
+					foreach (array_keys($templateoptions) as $template)
+						if (qa_post_text('template_'.$template))
+							$intemplates[]=$template;
+							
+					$intags=implode(',', $intemplates);
+		
+				//	Perform appropriate database action
+			
+					if (isset($editwidget['widgetid'])) { // changing existing widget
+						$widgetid=$editwidget['widgetid'];
+						qa_db_widget_set_fields($widgetid, $intags);
+		
+					} else
+						$widgetid=qa_db_widget_create($intitle, $intags);
+		
+					qa_db_widget_move($widgetid, substr($inposition, 0, 2), substr($inposition, 2));
+				}
+				
+				qa_redirect('admin/layout');
+			}
 		}
 	}
 	
@@ -162,9 +169,8 @@
 	
 	$qa_content=qa_content_prepare();
 
-	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/layout_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/layout_title');	
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 	
 	$positionoptions=array();
 	
@@ -279,6 +285,7 @@
 			'dosavewidget' => '1', // for IE
 			'edit' => @$editwidget['widgetid'],
 			'title' => @$editwidget['title'],
+			'code' => qa_get_form_security_code('admin/widgets'),
 		),
 	);
 	

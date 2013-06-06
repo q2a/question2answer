@@ -176,6 +176,7 @@
 	* userid: a user id appropriate for your response to qa_get_mysql_user_column_type()
 	* publicusername: a user description you are willing to show publicly, e.g. the username
 	* email: the logged in user's email address
+	* passsalt: (optional) password salt specific to this user, used for form security codes
 	* level: one of the QA_USER_LEVEL_* values below to denote the user's privileges:
 	
 	QA_USER_LEVEL_BASIC, QA_USER_LEVEL_EDITOR, QA_USER_LEVEL_ADMIN, QA_USER_LEVEL_SUPER

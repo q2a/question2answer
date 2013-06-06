@@ -40,7 +40,7 @@
 		
 //	Map modules with options to their containing plugins
 	
-	$pluginoptionanchors=array();
+	$pluginoptionmodules=array();
 	
 	$tables=qa_db_list_tables_lc();
 	$moduletypes=qa_list_module_types();
@@ -53,7 +53,10 @@
 			
 			if (method_exists($module, 'admin_form')) {
 				$info=qa_get_module_info($type, $name);
-				$pluginoptionanchors[$info['directory']][]=md5($type.'/'.$name);
+				$pluginoptionmodules[$info['directory']][]=array(
+					'type' => $type,
+					'name' => $name,
+				);
 			}
 		}
 	}
@@ -70,22 +73,39 @@
 	$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;
 
 	$pluginfiles=glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
+	
+	foreach ($moduletypes as $type) {
+		$modules=qa_load_modules_with($type, 'init_queries');
+
+		foreach ($modules as $name => $module) {
+			$queries=$module->init_queries($tables);
+		
+			if (!empty($queries)) {
+				if (qa_is_http_post())
+					qa_redirect('install');
+				
+				else
+					$qa_content['error']=strtr(qa_lang_html('admin/module_x_database_init'), array(
+						'^1' => qa_html($name),
+						'^2' => qa_html($type),
+						'^3' => '<A HREF="'.qa_path_html('install').'">',
+						'^4' => '</A>',
+					));
+			}
+		}
+	}
+	
+	if ( qa_is_http_post() && !qa_check_form_security_code('admin/plugins', qa_post_text('qa_form_security_code')) ) {
+		$qa_content['error']=qa_lang_html('misc/form_security_reload');
+		$showpluginforms=false;
+	} else
+		$showpluginforms=true;
 
 	if (count($pluginfiles)) {
-		$qa_content['form']=array(
-			'style' => 'tall',
-			
-			'fields' => array(
-				'plugins' => array(
-					'type' => 'custom',
-					'label' => qa_lang_html('admin/installed_plugins'),
-					'html' => '',
-				),		
-			),
-		);
-		
-		foreach ($pluginfiles as $pluginfile) {
+		foreach ($pluginfiles as $pluginindex => $pluginfile) {
 			$plugindirectory=dirname($pluginfile).'/';
+			$hash=qa_admin_plugin_directory_hash($plugindirectory);
+			$showthisform=$showpluginforms && (qa_get('show')==$hash);
 			
 			$contents=file_get_contents($pluginfile);
 			
@@ -144,9 +164,9 @@
 			else
 				$deschtml='';
 			
-			if (isset($pluginoptionanchors[$plugindirectory]))
-				foreach ($pluginoptionanchors[$plugindirectory] as $anchor)
-					$deschtml.=(strlen($deschtml) ? ' - ' : '').'<A HREF="#'.qa_html($anchor).'">'.qa_lang_html('admin/options').'</A>';
+			if (isset($pluginoptionmodules[$plugindirectory]) && !$showthisform)
+				$deschtml.=(strlen($deschtml) ? ' - ' : '').'<A HREF="'.
+					qa_admin_plugin_options_path($plugindirectory).'">'.qa_lang_html('admin/options').'</A>';
 				
 			$pluginhtml=$namehtml.' '.$authorhtml.' '.$updatehtml.'<BR>'.$deschtml.(strlen($deschtml) ? '<BR>' : '').
 				'<SMALL STYLE="color:#666">'.qa_html($plugindirectory).'</SMALL>';
@@ -159,64 +179,39 @@
 				$pluginhtml='<STRIKE STYLE="color:#999">'.$pluginhtml.'</STRIKE><BR><SPAN STYLE="color:#f00">'.
 					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</SPAN>';
 				
-			$qa_content['form']['fields'][]=array(
-				'type' => 'custom',
-				'html' => $pluginhtml,
+			$qa_content['form_plugin_'.$pluginindex]=array(
+				'tags' => 'ID="'.qa_html($hash).'"',
+				'style' => 'tall',
+				'fields' => array(
+					array(
+						'type' => 'custom',
+						'html' => $pluginhtml,
+					)
+				),
 			);
+			
+			if ($showthisform && isset($pluginoptionmodules[$plugindirectory]))
+				foreach ($pluginoptionmodules[$plugindirectory] as $pluginoptionmodule) {
+					$type=$pluginoptionmodule['type'];
+					$name=$pluginoptionmodule['name'];
+				
+					$module=qa_load_module($type, $name);
+				
+					$form=$module->admin_form($qa_content);
+
+					if (!isset($form['tags']))
+						$form['tags']='METHOD="POST" ACTION="'.qa_admin_plugin_options_path($plugindirectory).'"';
+					
+					if (!isset($form['style']))
+						$form['style']='tall';
+			
+					$form['hidden']['qa_form_security_code']=qa_get_form_security_code('admin/plugins');
+			
+					$qa_content['form_'.$type.'_'.$name]=$form;
+				}
+
 		}
 	}
-	
-	$formadded=false;
-	
-	$moduletypes=qa_list_module_types();
-	
-	foreach ($moduletypes as $type) {
-		$modules=qa_load_modules_with($type, 'admin_form');
-		
-		foreach ($modules as $name => $module) {
-			$form=$module->admin_form($qa_content);
-
-			if (!isset($form['title']))
-				$form['title']=qa_html($name);
-			
-			$identifierhtml=qa_html(md5($type.'/'.$name));
-			
-			$form['title']='<A NAME="'.$identifierhtml.'">'.$form['title'].'</A>';
-				
-			if (!isset($form['tags']))
-				$form['tags']='METHOD="POST" ACTION="'.qa_self_html().'#'.$identifierhtml.'"';
-			
-			if (!isset($form['style']))
-				$form['style']='tall';
-				
-			$qa_content['form_'.$type.'_'.$name]=$form;
-			$formadded=true;
-		}
-	}
-		
-	foreach ($moduletypes as $type) {
-		$modules=qa_load_modules_with($type, 'init_queries');
-
-		foreach ($modules as $name => $module) {
-			$queries=$module->init_queries($tables);
-		
-			if (!empty($queries)) {
-				if (qa_is_http_post())
-					qa_redirect('install');
-				
-				else
-					$qa_content['error']=strtr(qa_lang_html('admin/module_x_database_init'), array(
-						'^1' => qa_html($name),
-						'^2' => qa_html($type),
-						'^3' => '<A HREF="'.qa_path_html('install').'">',
-						'^4' => '</A>',
-					));
-			}
-		}
-	}
-
-	if (!$formadded)
-		$qa_content['suggest_next']=qa_lang_html('admin/no_plugin_options');
 	
 	$qa_content['navigation']['sub']=qa_admin_sub_navigation();
 

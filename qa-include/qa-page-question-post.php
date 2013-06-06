@@ -33,6 +33,9 @@
 	require_once QA_INCLUDE_DIR.'qa-page-question-submit.php';
 	
 	
+	$code=qa_post_text('code');
+	
+
 //	Process general cancel button
 
 	if (qa_clicked('docancel'))
@@ -45,8 +48,11 @@
 		if (qa_clicked('q_doanswer'))
 			qa_page_q_refresh($pagestart, 'answer');
 		
+		// The 'approve', 'login', 'confirm', 'limit', 'userblock', 'ipblock' permission errors are reported to the user here
+		// The other option ('level') prevents the answer button being shown, in qa_page_q_post_rules(...)
+
 		if (qa_clicked('a_doadd') || ($pagestate=='answer'))
-			switch (qa_user_permit_error('permit_post_a', QA_LIMIT_ANSWERS)) {
+			switch (qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
 				case 'login':
 					$pageerror=qa_insert_login_links(qa_lang_html('question/answer_must_login'), qa_request());
 					break;
@@ -55,6 +61,10 @@
 					$pageerror=qa_insert_login_links(qa_lang_html('question/answer_must_confirm'), qa_request());
 					break;
 					
+				case 'approve':
+					$pageerror=qa_lang_html('question/answer_must_be_approved');
+					break;
+				
 				case 'limit':
 					$pageerror=qa_lang_html('question/answer_limit');
 					break;
@@ -96,15 +106,12 @@
 	}
 	
 	
-//	Process any single click operations for question
+//	Process any single click operations or delete button for question
 
 	if (qa_page_q_single_click_q($question, $answers, $commentsfollows, $closepost, $pageerror))
 		qa_page_q_refresh($pagestart);
-
 	
-//	Process delete button for question
-
-	if (qa_clicked('q_dodelete') && $question['deleteable']) {
+	if (qa_clicked('q_dodelete') && $question['deleteable'] && qa_page_q_click_check_form_code($question, $pageerror)) {
 		qa_question_delete($question, $userid, qa_get_logged_in_handle(), $cookieid, $closepost);
 		qa_redirect(''); // redirect since question has gone
 	}
@@ -119,8 +126,11 @@
 		elseif (qa_clicked('q_dosave') && qa_page_q_permit_edit($question, 'permit_edit_q', $pageerror, 'permit_retag_cat')) {
 			if (qa_page_q_edit_q_submit($question, $answers, $commentsfollows, $closepost, $qin, $qerrors))
 				qa_redirect(qa_q_request($questionid, $qin['title'])); // don't use refresh since URL may have changed
-			else
+			
+			else {
 				$formtype='q_edit'; // keep editing if an error
+				$pageerror=@$qerrors['page']; // for security code failure
+			}
 
 		} else if (($pagestate==('edit-'.$questionid)) && qa_page_q_permit_edit($question, 'permit_edit_q', $pageerror, 'permit_retag_cat'))
 			$formtype='q_edit';
@@ -260,13 +270,16 @@
 	If not, sets the $error variable appropriately
 */
 	{
-		$permiterror=qa_user_permit_error($post['isbyuser'] ? null : $permitoption);
+		// The 'login', 'confirm', 'userblock', 'ipblock' permission errors are reported to the user here
+		// The other options ('approve', 'level') prevent the edit button being shown, in qa_page_q_post_rules(...)
+
+		$permiterror=qa_user_post_permit_error($post['isbyuser'] ? null : $permitoption, $post);
 			// if it's by the user, this will only check whether they are blocked
 		
 		if ($permiterror && isset($permitoption2)) {
-			$permiterror2=qa_user_permit_error($post['isbyuser'] ? null : $permitoption2);
+			$permiterror2=qa_user_post_permit_error($post['isbyuser'] ? null : $permitoption2, $post);
 			
-			if ( ($permiterror=='level') || (!$permiterror2) ) // if it's a less strict error
+			if ( ($permiterror=='level') || ($permiterror=='approve') || (!$permiterror2) ) // if it's a less strict error
 				$permiterror=$permiterror2;
 		}
 		
@@ -347,6 +360,7 @@
 			
 			'hidden' => array(
 				'q_dosave' => '1',
+				'code' => qa_get_form_security_code('edit-'.$question['postid']),
 			),
 		);
 		
@@ -383,11 +397,23 @@
 				array(), $completetags, qa_opt('page_size_ask_tags'));
 		else
 			unset($form['fields']['tags']);
-				
-		if ($question['isbyuser'])
+		
+		if ($question['isbyuser']) {
+			if (!qa_is_logged_in())
+				qa_set_up_name_field($qa_content, $form['fields'], isset($in['name']) ? $in['name'] : @$question['name'], 'q_');
+
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'Q', qa_get_logged_in_email(),
 				isset($in['notify']) ? $in['notify'] : !empty($question['notify']),
 				isset($in['email']) ? $in['email'] : @$question['notify'], @$errors['email'], 'q_');
+		}
+		
+		if (!qa_user_post_permit_error('permit_edit_silent', $question))
+			$form['fields']['silent']=array(
+				'type' => 'checkbox',
+				'label' => qa_lang_html('question/save_silent_label'),
+				'tags' => 'NAME="q_silent"',
+				'value' => qa_html(@$in['silent']),
+			);
 		
 		return $form;
 	}
@@ -414,55 +440,81 @@
 				$in['categoryid']=qa_get_category_field_value('q_category');
 		}
 		
+		if (isset($in['categoryid'])) { // need to check if we can move it to that category, and if we need moderation
+			$categories=qa_db_select_with_pending(qa_db_category_nav_selectspec($in['categoryid'], true));
+			$categoryids=array_keys(qa_category_path($categories, $in['categoryid']));
+			$userlevel=qa_user_level_for_categories($categoryids);
+		
+		} else
+			$userlevel=null;
+			
 		if ($question['isbyuser']) {
+			$in['name']=qa_post_text('q_name');
 			$in['notify']=qa_post_text('q_notify') ? true : false;
 			$in['email']=qa_post_text('q_email');
 		}
 		
+		if (!qa_user_post_permit_error('permit_edit_silent', $question))
+			$in['silent']=qa_post_text('q_silent');
+
 		// here the $in array only contains values for parts of the form that were displayed, so those are only ones checked by filters
 		
 		$errors=array();
 		
-		$filtermodules=qa_load_modules_with('filter', 'filter_question');
-		foreach ($filtermodules as $filtermodule) {
-			$oldin=$in;
-			$filtermodule->filter_question($in, $errors, $question);
+		if (!qa_check_form_security_code('edit-'.$question['postid'], qa_post_text('code')))
+			$errors['page']=qa_lang_html('misc/form_security_again');
 			
-			if ($question['editable'])
-				qa_update_post_text($in, $oldin);
-		}
-		
-		if (empty($errors)) {
-			$userid=qa_get_logged_in_userid();
-			$handle=qa_get_logged_in_handle();
-			$cookieid=qa_cookie_get();
+		else {
+			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason($userlevel);
 			
-			// now we fill in the missing values in the $in array, so that we have everything we need for qa_question_set_content()
-			// we do things in this way to avoid any risk of a validation failure on elements the user can't see (e.g. due to admin setting changes)
-			
-			if (!$question['editable']) {
-				$in['title']=$question['title'];
-				$in['content']=$question['content'];
-				$in['format']=$question['format'];
-				$in['text']=qa_viewer_text($in['content'], $in['format']);
-				$in['extra']=$question['extra'];
+			$filtermodules=qa_load_modules_with('filter', 'filter_question');
+			foreach ($filtermodules as $filtermodule) {
+				$oldin=$in;
+				$filtermodule->filter_question($in, $errors, $question);
+				
+				if ($question['editable'])
+					qa_update_post_text($in, $oldin);
 			}
 			
-			if (!isset($in['tags']))
-				$in['tags']=qa_tagstring_to_tags($question['tags']);
+			if (strcmp($in['categoryid'], $question['categoryid']))
+				if (qa_user_permit_error('permit_post_q', null, $userlevel))
+					$errors['categoryid']=qa_lang_html('question/category_ask_not_allowed');
+			
+			if (empty($errors)) {
+				$userid=qa_get_logged_in_userid();
+				$handle=qa_get_logged_in_handle();
+				$cookieid=qa_cookie_get();
 				
-			if (!array_key_exists('categoryid', $in))
-				$in['categoryid']=$question['categoryid'];
-			
-			$setnotify=$question['isbyuser'] ? qa_combine_notify_email($question['userid'], $in['notify'], $in['email']) : $question['notify'];
-						
-			qa_question_set_content($question, $in['title'], $in['content'], $in['format'], $in['text'],
-				qa_tags_to_tagstring($in['tags']), $setnotify, $userid, $handle, $cookieid, $in['extra']);
-
-			if (qa_using_categories() && strcmp($in['categoryid'], $question['categoryid']))
-				qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
-			
-			return true;
+				// now we fill in the missing values in the $in array, so that we have everything we need for qa_question_set_content()
+				// we do things in this way to avoid any risk of a validation failure on elements the user can't see (e.g. due to admin setting changes)
+				
+				if (!$question['editable']) {
+					$in['title']=$question['title'];
+					$in['content']=$question['content'];
+					$in['format']=$question['format'];
+					$in['text']=qa_viewer_text($in['content'], $in['format']);
+					$in['extra']=$question['extra'];
+				}
+				
+				if (!isset($in['tags']))
+					$in['tags']=qa_tagstring_to_tags($question['tags']);
+					
+				if (!array_key_exists('categoryid', $in))
+					$in['categoryid']=$question['categoryid'];
+					
+				if (!isset($in['silent']))
+					$in['silent']=false;
+				
+				$setnotify=$question['isbyuser'] ? qa_combine_notify_email($question['userid'], $in['notify'], $in['email']) : $question['notify'];
+				
+				qa_question_set_content($question, $in['title'], $in['content'], $in['format'], $in['text'], qa_tags_to_tagstring($in['tags']),
+					$setnotify, $userid, $handle, $cookieid, $in['extra'], @$in['name'], $in['queued'], $in['silent']);
+	
+				if (qa_using_categories() && strcmp($in['categoryid'], $question['categoryid']))
+					qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
+				
+				return true;
+			}
 		}
 		
 		return false;
@@ -516,6 +568,7 @@
 			
 			'hidden' => array(
 				'doclose' => '1',
+				'code' => qa_get_form_security_code('close-'.$question['postid']),
 			),
 		);
 		
@@ -544,8 +597,11 @@
 		$userid=qa_get_logged_in_userid();
 		$handle=qa_get_logged_in_handle();
 		$cookieid=qa_cookie_get();
+		
+		if (!qa_check_form_security_code('close-'.$question['postid'], qa_post_text('code')))
+			$errors['details']=qa_lang_html('misc/form_security_again');
 
-		if ($in['duplicate']) {
+		elseif ($in['duplicate']) {
 			// be liberal in what we accept, but there are two potential unlikely pitfalls here:
 			// a) URLs could have a fixed numerical path, e.g. http://qa.mysite.com/1/478/...
 			// b) There could be a question title which is just a number, e.g. http://qa.mysite.com/478/12345/...
@@ -635,6 +691,7 @@
 			'hidden' => array(
 				$prefix.'editor' => qa_html($editorname),
 				$prefix.'dosave' => '1',
+				$prefix.'code' => qa_get_form_security_code('edit-'.$answerid),
 			),
 		);
 		
@@ -685,12 +742,24 @@
 			));
 		}
 		
-	//	Show notification field if appropriate
+	//	Show name and notification field if appropriate
 		
-		if ($answer['isbyuser'])
+		if ($answer['isbyuser']) {
+			if (!qa_is_logged_in())
+				qa_set_up_name_field($qa_content, $form['fields'], isset($in['name']) ? $in['name'] : @$answer['name'], $prefix);
+			
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'A', qa_get_logged_in_email(),
 				isset($in['notify']) ? $in['notify'] : !empty($answer['notify']),
 				isset($in['email']) ? $in['email'] : @$answer['notify'], @$errors['email'], $prefix);
+		}
+		
+		if (!qa_user_post_permit_error('permit_edit_silent', $answer))
+			$form['fields']['silent']=array(
+				'type' => 'checkbox',
+				'label' => qa_lang_html('question/save_silent_label'),
+				'tags' => 'NAME="'.$prefix.'silent"',
+				'value' => qa_html(@$in['silent']),
+			);
 		
 		return $form;
 	}
@@ -710,46 +779,63 @@
 		);
 		
 		if ($answer['isbyuser']) {
+			$in['name']=qa_post_text($prefix.'name');
 			$in['notify']=qa_post_text($prefix.'notify') ? true : false;
 			$in['email']=qa_post_text($prefix.'email');
 		}
 		
+		if (!qa_user_post_permit_error('permit_edit_silent', $answer))
+			$in['silent']=qa_post_text($prefix.'silent');
+
 		qa_get_post_content($prefix.'editor', $prefix.'content', $in['editor'], $in['content'], $in['format'], $in['text']);
+		
+		// here the $in array only contains values for parts of the form that were displayed, so those are only ones checked by filters
 		
 		$errors=array();
 		
-		$filtermodules=qa_load_modules_with('filter', 'filter_answer');
-		foreach ($filtermodules as $filtermodule) {
-			$oldin=$in;
-			$filtermodule->filter_answer($in, $errors, $question, $answer);
-			qa_update_post_text($in, $oldin);
-		}
-		
-		if (empty($errors)) {
-			$userid=qa_get_logged_in_userid();
-			$handle=qa_get_logged_in_handle();
-			$cookieid=qa_cookie_get();
-
-			$setnotify=$answer['isbyuser'] ? qa_combine_notify_email($answer['userid'], $in['notify'], $in['email']) : $answer['notify'];			
-
-			if ($in['dotoc'] && (
-				(($in['commenton']==$question['postid']) && $question['commentable']) ||
-				(($in['commenton']!=$answerid) && @$answers[$in['commenton']]['commentable'])
-			)) { // convert to a comment
-
-				if (qa_limits_remaining($userid, QA_LIMIT_COMMENTS)) { // already checked 'permit_post_c'
-					qa_answer_to_comment($answer, $in['commenton'], $in['content'], $in['format'], $in['text'], $setnotify,
-						$userid, $handle, $cookieid, $question, $answers, $commentsfollows);
-
-					return 'C'; // to signify that redirect should be to the comment
-
-				} else
-					$errors['content']=qa_lang_html('question/comment_limit'); // not really best place for error, but it will do
+		if (!qa_check_form_security_code('edit-'.$answerid, qa_post_text($prefix.'code')))
+			$errors['content']=qa_lang_html('misc/form_security_again');
 			
-			} else {
-				qa_answer_set_content($answer, $in['content'], $in['format'], $in['text'], $setnotify, $userid, $handle, $cookieid, $question);
-
-				return 'A';
+		else {
+			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason(qa_user_level_for_post($answer));
+			
+			$filtermodules=qa_load_modules_with('filter', 'filter_answer');
+			foreach ($filtermodules as $filtermodule) {
+				$oldin=$in;
+				$filtermodule->filter_answer($in, $errors, $question, $answer);
+				qa_update_post_text($in, $oldin);
+			}
+			
+			if (empty($errors)) {
+				$userid=qa_get_logged_in_userid();
+				$handle=qa_get_logged_in_handle();
+				$cookieid=qa_cookie_get();
+	
+				if (!isset($in['silent']))
+					$in['silent']=false;
+				
+				$setnotify=$answer['isbyuser'] ? qa_combine_notify_email($answer['userid'], $in['notify'], $in['email']) : $answer['notify'];			
+	
+				if ($in['dotoc'] && (
+					(($in['commenton']==$question['postid']) && $question['commentable']) ||
+					(($in['commenton']!=$answerid) && @$answers[$in['commenton']]['commentable'])
+				)) { // convert to a comment
+	
+					if (qa_user_limits_remaining(QA_LIMIT_COMMENTS)) { // already checked 'permit_post_c'
+						qa_answer_to_comment($answer, $in['commenton'], $in['content'], $in['format'], $in['text'], $setnotify,
+							$userid, $handle, $cookieid, $question, $answers, $commentsfollows, @$in['name'], $in['queued'], $in['silent']);
+	
+						return 'C'; // to signify that redirect should be to the comment
+	
+					} else
+						$errors['content']=qa_lang_html('question/comment_limit'); // not really best place for error, but it will do
+				
+				} else {
+					qa_answer_set_content($answer, $in['content'], $in['format'], $in['text'], $setnotify,
+						$userid, $handle, $cookieid, $question, @$in['name'], $in['queued'], $in['silent']);
+	
+					return 'A';
+				}
 			}
 		}
 		
@@ -762,16 +848,23 @@
 	Processes a request to add a comment to $parent, with antecedent $question, checking for permissions errors
 */
 	{
+		// The 'approve', 'login', 'confirm', 'userblock', 'ipblock' permission errors are reported to the user here
+		// The other option ('level') prevents the comment button being shown, in qa_page_q_post_rules(...)
+
 		$answer=($question['postid']==$parent['postid']) ? null : $parent;
 		$parentid=$parent['postid'];
 		
-		switch (qa_user_permit_error('permit_post_c', QA_LIMIT_COMMENTS)) {
+		switch (qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)) {
 			case 'login':
 				$error=qa_insert_login_links(qa_lang_html('question/comment_must_login'), qa_request());
 				break;
 				
 			case 'confirm':
 				$error=qa_insert_login_links(qa_lang_html('question/comment_must_confirm'), qa_request());
+				break;
+				
+			case 'approve':
+				$error=qa_lang_html('question/comment_must_be_approved');
 				break;
 				
 			case 'limit':
@@ -851,13 +944,26 @@
 			'hidden' => array(
 				$prefix.'editor' => qa_html($editorname),
 				$prefix.'dosave' => '1',
+				$prefix.'code' => qa_get_form_security_code('edit-'.$commentid),
 			),
 		);
 		
-		if ($comment['isbyuser'])
+		if ($comment['isbyuser']) {
+			if (!qa_is_logged_in())
+				qa_set_up_name_field($qa_content, $form['fields'], isset($in['name']) ? $in['name'] : @$comment['name'], $prefix);
+
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),
 				isset($in['notify']) ? $in['notify'] : !empty($comment['notify']),
 				isset($in['email']) ? $in['email'] : @$comment['notify'], @$errors['email'], $prefix);
+		}
+
+		if (!qa_user_post_permit_error('permit_edit_silent', $comment))
+			$form['fields']['silent']=array(
+				'type' => 'checkbox',
+				'label' => qa_lang_html('question/save_silent_label'),
+				'tags' => 'NAME="'.$prefix.'silent"',
+				'value' => qa_html(@$in['silent']),
+			);
 
 		return $form;
 	}
@@ -874,31 +980,48 @@
 		$in=array();
 		
 		if ($comment['isbyuser']) {
+			$in['name']=qa_post_text($prefix.'name');
 			$in['notify']=qa_post_text($prefix.'notify') ? true : false;
 			$in['email']=qa_post_text($prefix.'email');
 		}
 
+		if (!qa_user_post_permit_error('permit_edit_silent', $comment))
+			$in['silent']=qa_post_text($prefix.'silent');
+
 		qa_get_post_content($prefix.'editor', $prefix.'content', $in['editor'], $in['content'], $in['format'], $in['text']);
 		
+		// here the $in array only contains values for parts of the form that were displayed, so those are only ones checked by filters
+
 		$errors=array();
 		
-		$filtermodules=qa_load_modules_with('filter', 'filter_comment');
-		foreach ($filtermodules as $filtermodule) {
-			$oldin=$in;
-			$filtermodule->filter_comment($in, $errors, $question, $parent, $comment);
-			qa_update_post_text($in, $oldin);
-		}
-
-		if (empty($errors)) {
-			$userid=qa_get_logged_in_userid();
-			$handle=qa_get_logged_in_handle();
-			$cookieid=qa_cookie_get();
-
-			qa_comment_set_content($comment, $in['content'], $in['format'], $in['text'],
-				$comment['isbyuser'] ? qa_combine_notify_email($comment['userid'], $in['notify'], $in['email']) : $comment['notify'],
-				$userid, $handle, $cookieid, $question, $parent);
+		if (!qa_check_form_security_code('edit-'.$commentid, qa_post_text($prefix.'code')))
+			$errors['content']=qa_lang_html('misc/form_security_again');
 			
-			return true;
+		else {
+			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason(qa_user_level_for_post($comment));
+			
+			$filtermodules=qa_load_modules_with('filter', 'filter_comment');
+			foreach ($filtermodules as $filtermodule) {
+				$oldin=$in;
+				$filtermodule->filter_comment($in, $errors, $question, $parent, $comment);
+				qa_update_post_text($in, $oldin);
+			}
+	
+			if (empty($errors)) {
+				$userid=qa_get_logged_in_userid();
+				$handle=qa_get_logged_in_handle();
+				$cookieid=qa_cookie_get();
+	
+				if (!isset($in['silent']))
+					$in['silent']=false;
+					
+				$setnotify=$comment['isbyuser'] ? qa_combine_notify_email($comment['userid'], $in['notify'], $in['email']) : $comment['notify'];
+				
+				qa_comment_set_content($comment, $in['content'], $in['format'], $in['text'], $setnotify,
+					$userid, $handle, $cookieid, $question, $parent, @$in['name'], $in['queued'], $in['silent']);
+				
+				return true;
+			}
 		}
 		
 		return false;

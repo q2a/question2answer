@@ -59,57 +59,65 @@
 	
 //	Check we have permission to view this page, and whether we can block or unblock IPs
 
-	if (qa_user_permit_error('permit_anon_view_ips')) {
+	if (qa_user_maximum_permit_error('permit_anon_view_ips')) {
 		$qa_content=qa_content_prepare();
 		$qa_content['error']=qa_lang_html('users/no_permission');
 		return $qa_content;
 	}
 	
-	$blockable=qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR;
+	$blockable=qa_user_level_maximum()>=QA_USER_LEVEL_MODERATOR; // allow moderator in one category to block across all categories
 		
 
 //	Perform blocking or unblocking operations as appropriate
 
-	if ($blockable) {
-		if (qa_clicked('doblock')) {
-			$oldblocked=qa_opt('block_ips_write');
-			qa_set_option('block_ips_write', (strlen($oldblocked) ? ($oldblocked.' , ') : '').$ip);
-			
-			qa_report_event('ip_block', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
-				'ip' => $ip,
-			));
-			
-			qa_redirect(qa_request());
-		}
-		
-		if (qa_clicked('dounblock')) {
-			require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-			
-			$blockipclauses=qa_block_ips_explode(qa_opt('block_ips_write'));
-			
-			foreach ($blockipclauses as $key => $blockipclause)
-				if (qa_block_ip_match($ip, $blockipclause))
-					unset($blockipclauses[$key]);
-					
-			qa_set_option('block_ips_write', implode(' , ', $blockipclauses));
+	if (qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall')) {
+		if (!qa_check_form_security_code('ip-'.$ip, qa_post_text('code')))
+			$pageerror=qa_lang_html('misc/form_security_again');
 
-			qa_report_event('ip_unblock', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
-				'ip' => $ip,
-			));
-
-			qa_redirect(qa_request());
-		}
+		elseif ($blockable) {
 		
-		if (qa_clicked('dohideall') && !qa_user_permit_error('permit_hide_show')) {
-			require_once QA_INCLUDE_DIR.'qa-db-admin.php';
-			require_once QA_INCLUDE_DIR.'qa-app-posts.php';
-		
-			$postids=qa_db_get_ip_visible_postids($ip);
-
-			foreach ($postids as $postid)
-				qa_post_set_hidden($postid, true, $userid);
+			if (qa_clicked('doblock')) {
+				$oldblocked=qa_opt('block_ips_write');
+				qa_set_option('block_ips_write', (strlen($oldblocked) ? ($oldblocked.' , ') : '').$ip);
 				
-			qa_redirect(qa_request());
+				qa_report_event('ip_block', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'ip' => $ip,
+				));
+				
+				qa_redirect(qa_request());
+			}
+			
+			if (qa_clicked('dounblock')) {
+				require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+				
+				$blockipclauses=qa_block_ips_explode(qa_opt('block_ips_write'));
+				
+				foreach ($blockipclauses as $key => $blockipclause)
+					if (qa_block_ip_match($ip, $blockipclause))
+						unset($blockipclauses[$key]);
+						
+				qa_set_option('block_ips_write', implode(' , ', $blockipclauses));
+	
+				qa_report_event('ip_unblock', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'ip' => $ip,
+				));
+	
+				qa_redirect(qa_request());
+			}
+			
+			if (qa_clicked('dohideall') && !qa_user_maximum_permit_error('permit_hide_show')) {
+				// allow moderator in one category to hide posts across all categories if they are identified via IP page
+				
+				require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+				require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+			
+				$postids=qa_db_get_ip_visible_postids($ip);
+	
+				foreach ($postids as $postid)
+					qa_post_set_hidden($postid, true, $userid);
+					
+				qa_redirect(qa_request());
+			}
 		}
 	}
 	
@@ -128,21 +136,26 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html_sub('main/ip_address_x', qa_html($ip));
+	$qa_content['error']=@$pageerror;
 
 	$qa_content['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
-			
-			'style' => 'wide',
-			
-			'fields' => array(
-				'host' => array(
-					'type' => 'static',
-					'label' => qa_lang_html('misc/host_name'),
-					'value' => qa_html($hostname),
-				),
-			),
-		);
+		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
 		
+		'style' => 'wide',
+		
+		'fields' => array(
+			'host' => array(
+				'type' => 'static',
+				'label' => qa_lang_html('misc/host_name'),
+				'value' => qa_html($hostname),
+			),
+		),
+		
+		'hidden' => array(
+			'code' => qa_get_form_security_code('ip-'.$ip),
+		),
+	);
+	
 
 	if ($blockable) {
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
@@ -166,7 +179,7 @@
 				'label' => qa_lang_html('misc/unblock_ip_button'),
 			);
 			
-			if (count($questions) && !qa_user_permit_error('permit_hide_show'))
+			if (count($questions) && !qa_user_maximum_permit_error('permit_hide_show'))
 				$qa_content['form']['buttons']['hideall']=array(
 					'tags' => 'NAME="dohideall" onClick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('misc/hide_all_ip_button'),
@@ -186,7 +199,7 @@
 		$qa_content['q_list']['title']=qa_lang_html_sub('misc/recent_activity_from_x', qa_html($ip));
 	
 		foreach ($questions as $question) {
-			$htmloptions=qa_post_html_defaults('Q');
+			$htmloptions=qa_post_html_options($question);
 			$htmloptions['tagsview']=false;
 			$htmloptions['voteview']=false;
 			$htmloptions['ipview']=false;

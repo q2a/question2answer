@@ -74,6 +74,8 @@
 		'click_c' => 'qa-ajax-click-comment.php',
 		'click_admin' => 'qa-ajax-click-admin.php',
 		'show_cs' => 'qa-ajax-show-comments.php',
+		'wallpost' => 'qa-ajax-wallpost.php',
+		'click_wall' => 'qa-ajax-click-wall.php',
 	);
 	
 	$operation=qa_post_text('qa_operation');

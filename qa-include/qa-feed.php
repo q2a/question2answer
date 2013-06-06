@@ -69,7 +69,7 @@
 	{
 		$countslugs=@count($categoryslugs);
 		
-		@list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid)=qa_db_select_with_pending(
+		list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid)=qa_db_select_with_pending(
 			$questionselectspec1,
 			$questionselectspec2,
 			$questionselectspec3,
@@ -292,8 +292,8 @@
 	$lines[]='<rss version="2.0">';
 	$lines[]='<channel>';
 
-	$lines[]='<title>'.qa_html($sitetitle.' - '.$title).'</title>';
-	$lines[]='<link>'.qa_path_html($linkrequest, $linkparams, $siteurl).'</link>';
+	$lines[]='<title>'.qa_xml($sitetitle.' - '.$title).'</title>';
+	$lines[]='<link>'.qa_xml(qa_path($linkrequest, $linkparams, $siteurl)).'</link>';
 	$lines[]='<description>Powered by Question2Answer</description>';
 	
 	foreach ($questions as $question) {
@@ -320,7 +320,7 @@
 			
 		if ($feedtype=='search') {
 			$titleprefix='';
-			$urlhtml=qa_html($question['url']);
+			$urlxml=qa_xml($question['url']);
 		
 		} else {
 			switch (@$question['obasetype'].'-'.@$question['oupdatetype']) {
@@ -386,7 +386,7 @@
 			
 			$titleprefix=isset($langstring) ? qa_lang($langstring) : '';
 							
-			$urlhtml=qa_q_path_html($question['postid'], $question['title'], true, @$question['obasetype'], @$question['opostid']) ;
+			$urlxml=qa_xml(qa_q_path($question['postid'], $question['title'], true, @$question['obasetype'], @$question['opostid']));
 		}
 		
 		if (isset($blockwordspreg))
@@ -395,19 +395,19 @@
 	//	Build the inner XML structure for each item
 		
 		$lines[]='<item>';
-		$lines[]='<title>'.qa_html($titleprefix.$question['title']).'</title>';
-		$lines[]='<link>'.$urlhtml.'</link>';
+		$lines[]='<title>'.qa_xml($titleprefix.$question['title']).'</title>';
+		$lines[]='<link>'.$urlxml.'</link>';
 
 		if (isset($htmlcontent))
-			$lines[]='<description>'.qa_html($htmlcontent).'</description>'; // qa_html() a second time to put HTML code inside XML wrapper
+			$lines[]='<description>'.qa_xml($htmlcontent).'</description>';
 			
 		if (isset($question['categoryname']))
-			$lines[]='<category>'.qa_html($question['categoryname']).'</category>';
+			$lines[]='<category>'.qa_xml($question['categoryname']).'</category>';
 			
-		$lines[]='<guid isPermaLink="true">'.$urlhtml.'</guid>';
+		$lines[]='<guid isPermaLink="true">'.$urlxml.'</guid>';
 		
 		if (isset($time))
-			$lines[]='<pubDate>'.qa_html(gmdate('r', $time)).'</pubDate>';
+			$lines[]='<pubDate>'.qa_xml(gmdate('r', $time)).'</pubDate>';
 		
 		$lines[]='</item>';
 	}

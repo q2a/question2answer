@@ -41,7 +41,7 @@
 	$start=qa_get_start();
 	$userid=qa_get_logged_in_userid();
 	
-	@list($questions, $categories, $categoryid)=qa_db_select_with_pending(
+	list($questions, $categories, $categoryid)=qa_db_select_with_pending(
 		qa_db_qs_selectspec($userid, 'hotness', $start, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_hot_qs')),
 		qa_db_category_nav_selectspec($categoryslugs, false, false, true),
 		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null

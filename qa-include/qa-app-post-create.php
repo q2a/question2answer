@@ -46,7 +46,7 @@
 	
 	
 	function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, $content, $format, $text, $tagstring, $notify, $email,
-		$categoryid=null, $extravalue=null, $queued=false)
+		$categoryid=null, $extravalue=null, $queued=false, $name=null)
 /*
 	Add a question (application level) - create record, update appropriate counts, index it, send notifications.
 	If question is follow-on from an answer, $followanswer should contain answer database record, otherwise null.
@@ -56,7 +56,8 @@
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 		$postid=qa_db_post_create($queued ? 'Q_QUEUED' : 'Q', @$followanswer['postid'], $userid, isset($userid) ? null : $cookieid,
-			qa_remote_ip_address(), $title, $content, $format, $tagstring, qa_combine_notify_email($userid, $notify, $email), $categoryid);
+			qa_remote_ip_address(), $title, $content, $format, $tagstring, qa_combine_notify_email($userid, $notify, $email),
+			$categoryid, isset($userid) ? null : $name);
 		
 		if (isset($extravalue))	{
 			require_once QA_INCLUDE_DIR.'qa-db-metas.php';
@@ -66,14 +67,13 @@
 		qa_db_posts_calc_category_path($postid);
 		qa_db_hotness_update($postid);
 		
-		if (!$queued) {
-			qa_db_category_path_qcount_update(qa_db_post_get_category_path($postid));
+		if ($queued) {
+			qa_db_queuedcount_update();
+
+		} else {
 			qa_post_index($postid, 'Q', $postid, @$followanswer['postid'], $title, $content, $format, $text, $tagstring, $categoryid);
+			qa_update_counts_for_q($postid);
 			qa_db_points_update_ifuser($userid, 'qposts');
-			qa_db_qcount_update();
-			qa_db_unaqcount_update();
-			qa_db_unselqcount_update();
-			qa_db_unupaqcount_update();
 		}
 		
 		qa_report_event($queued ? 'q_queue' : 'q_post', $userid, $handle, $cookieid, array(
@@ -87,11 +87,24 @@
 			'tags' => $tagstring,
 			'categoryid' => $categoryid,
 			'extra' => $extravalue,
+			'name' => $name,
 			'notify' => $notify,
 			'email' => $email,
 		));
 		
 		return $postid;
+	}
+	
+	
+	function qa_update_counts_for_q($postid)
+	{
+		if (isset($postid)) // post might no longer exist
+			qa_db_category_path_qcount_update(qa_db_post_get_category_path($postid));
+		
+		qa_db_qcount_update();
+		qa_db_unaqcount_update();
+		qa_db_unselqcount_update();
+		qa_db_unupaqcount_update();
 	}
 	
 	
@@ -141,7 +154,7 @@
 	}
 
 		
-	function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $queued=false)
+	function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $queued=false, $name=null)
 /*
 	Add an answer (application level) - create record, update appropriate counts, index it, send notifications.
 	$question should contain database record for the question this is an answer to.
@@ -149,19 +162,20 @@
 */
 	{
 		$postid=qa_db_post_create($queued ? 'A_QUEUED' : 'A', $question['postid'], $userid, isset($userid) ? null : $cookieid,
-			qa_remote_ip_address(), null, $content, $format, null, qa_combine_notify_email($userid, $notify, $email), $question['categoryid']);
+			qa_remote_ip_address(), null, $content, $format, null, qa_combine_notify_email($userid, $notify, $email),
+			$question['categoryid'], isset($userid) ? null : $name);
 		
 		qa_db_posts_calc_category_path($postid);
 		
-		if (!$queued) {
+		if ($queued) {
+			qa_db_queuedcount_update();
+			
+		} else {
 			if ($question['type']=='Q') // don't index answer if parent question is hidden or queued
 				qa_post_index($postid, 'A', $question['postid'], $question['postid'], null, $content, $format, $text, null, $question['categoryid']);
 			
-			qa_db_post_acount_update($question['postid']);
-			qa_db_hotness_update($question['postid']);
+			qa_update_q_counts_for_a($question['postid']);
 			qa_db_points_update_ifuser($userid, 'aposts');
-			qa_db_acount_update();
-			qa_db_unaqcount_update();
 		}
 		
 		qa_report_event($queued ? 'a_queue' : 'a_post', $userid, $handle, $cookieid, array(
@@ -172,15 +186,26 @@
 			'format' => $format,
 			'text' => $text,
 			'categoryid' => $question['categoryid'],
+			'name' => $name,
 			'notify' => $notify,
 			'email' => $email,
 		));
 		
 		return $postid;
 	}
+	
+	
+	function qa_update_q_counts_for_a($questionid)
+	{
+		qa_db_post_acount_update($questionid);
+		qa_db_hotness_update($questionid);
+		qa_db_acount_update();
+		qa_db_unaqcount_update();
+		qa_db_unupaqcount_update();
+	}
 
 	
-	function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $parent, $commentsfollows, $queued=false)
+	function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $parent, $commentsfollows, $queued=false, $name=null)
 /*
 	Add a comment (application level) - create record, update appropriate counts, index it, send notifications.
 	$question should contain database record for the question this is part of (as direct or comment on Q's answer).
@@ -199,11 +224,15 @@
 			$parent=$question; // for backwards compatibility with old answer parameter
 		
 		$postid=qa_db_post_create($queued ? 'C_QUEUED' : 'C', $parent['postid'], $userid, isset($userid) ? null : $cookieid,
-			qa_remote_ip_address(), null, $content, $format, null, qa_combine_notify_email($userid, $notify, $email), $question['categoryid']);
+			qa_remote_ip_address(), null, $content, $format, null, qa_combine_notify_email($userid, $notify, $email),
+			$question['categoryid'], isset($userid) ? null : $name);
 		
 		qa_db_posts_calc_category_path($postid);
 		
-		if (!$queued) {
+		if ($queued) {
+			qa_db_queuedcount_update();
+		
+		} else {
 			if ( ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) ) // only index if antecedents fully visible
 				qa_post_index($postid, 'C', $question['postid'], $parent['postid'], null, $content, $format, $text, null, $question['categoryid']);
 			
@@ -229,6 +258,7 @@
 			'format' => $format,
 			'text' => $text,
 			'categoryid' => $question['categoryid'],
+			'name' => $name,
 			'notify' => $notify,
 			'email' => $email,
 		));

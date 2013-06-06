@@ -69,7 +69,7 @@
 
 //	Process sending a message to user
 
-	$messagesent=false;
+	$messagesent=(qa_get_state()=='message-sent');
 	
 	if (qa_post_text('domessage')) {
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
@@ -102,45 +102,54 @@
 	
 		$inmessage=qa_post_text('message');
 		
-		if (empty($inmessage))
-			$errors['message']=qa_lang('misc/message_empty');
-		
-		if (empty($errors)) {
-			require_once QA_INCLUDE_DIR.'qa-db-messages.php';
-			require_once QA_INCLUDE_DIR.'qa-app-emails.php';
-
-			if (qa_opt('show_message_history'))
-				$messageid=qa_db_message_create($loginuserid, $toaccount['userid'], $inmessage, '');
-			else
-				$messageid=null;
-
-			$fromhandle=qa_get_logged_in_handle();
-			$canreply=!(qa_get_logged_in_flags() & QA_USER_FLAGS_NO_MESSAGES);
+		if (!qa_check_form_security_code('message-'.$handle, qa_post_text('code')))
+			$pageerror=qa_lang_html('misc/form_security_again');
 			
-			$more=strtr(qa_lang($canreply ? 'emails/private_message_reply' : 'emails/private_message_info'), array(
-				'^f_handle' => $fromhandle,
-				'^url' => qa_path($canreply ? ('message/'.$fromhandle) : ('user/'.$fromhandle), null, qa_opt('site_url')),
-			));
-
-			$subs=array(
-				'^message' => $inmessage,
-				'^f_handle' => $fromhandle,
-				'^f_url' => qa_path('user/'.$fromhandle, null, qa_opt('site_url')),
-				'^more' => $more,
-				'^a_url' => qa_path_html('account', null, qa_opt('site_url')),
-			);
+		else {
+			if (empty($inmessage))
+				$errors['message']=qa_lang('misc/message_empty');
 			
-			if (qa_send_notification($toaccount['userid'], $toaccount['email'], $toaccount['handle'],
-					qa_lang('emails/private_message_subject'), qa_lang('emails/private_message_body'), $subs))
-				$messagesent=true;
-			else
-				$page_error=qa_lang_html('main/general_error');
-
-			qa_report_event('u_message', $loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), array(
-				'userid' => $toaccount['userid'],
-				'handle' => $toaccount['handle'],
-				'message' => $inmessage,
-			));
+			if (empty($errors)) {
+				require_once QA_INCLUDE_DIR.'qa-db-messages.php';
+				require_once QA_INCLUDE_DIR.'qa-app-emails.php';
+	
+				if (qa_opt('show_message_history'))
+					$messageid=qa_db_message_create($loginuserid, $toaccount['userid'], $inmessage, '', false);
+				else
+					$messageid=null;
+	
+				$fromhandle=qa_get_logged_in_handle();
+				$canreply=!(qa_get_logged_in_flags() & QA_USER_FLAGS_NO_MESSAGES);
+				
+				$more=strtr(qa_lang($canreply ? 'emails/private_message_reply' : 'emails/private_message_info'), array(
+					'^f_handle' => $fromhandle,
+					'^url' => qa_path_absolute($canreply ? ('message/'.$fromhandle) : ('user/'.$fromhandle)),
+				));
+	
+				$subs=array(
+					'^message' => $inmessage,
+					'^f_handle' => $fromhandle,
+					'^f_url' => qa_path_absolute('user/'.$fromhandle),
+					'^more' => $more,
+					'^a_url' => qa_path_absolute('account'),
+				);
+				
+				if (qa_send_notification($toaccount['userid'], $toaccount['email'], $toaccount['handle'],
+						qa_lang('emails/private_message_subject'), qa_lang('emails/private_message_body'), $subs))
+					$messagesent=true;
+				else
+					$pageerror=qa_lang_html('main/general_error');
+	
+				qa_report_event('u_message', $loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'userid' => $toaccount['userid'],
+					'handle' => $toaccount['handle'],
+					'messageid' => $messageid,
+					'message' => $inmessage,
+				));
+				
+				if ($messagesent && qa_opt('show_message_history')) // show message as part of general history
+					qa_redirect(qa_request(), array('state' => 'message-sent'));
+			}
 		}
 	}
 
@@ -151,7 +160,7 @@
 	
 	$qa_content['title']=qa_lang_html('misc/private_message_title');
 
-	$qa_content['error']=@$page_error;
+	$qa_content['error']=@$pageerror;
 
 	$qa_content['form_message']=array(
 		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
@@ -179,6 +188,7 @@
 		
 		'hidden' => array(
 			'domessage' => '1',
+			'code' => qa_get_form_security_code('message-'.$handle),
 		),
 	);
 	
@@ -186,8 +196,14 @@
 
 	if ($messagesent) {
 		$qa_content['form_message']['ok']=qa_lang_html('misc/message_sent');
-		unset($qa_content['form_message']['fields']['message']['note']);
 		unset($qa_content['form_message']['buttons']);
+
+		if (qa_opt('show_message_history'))
+			unset($qa_content['form_message']['fields']['message']);
+		else {
+			unset($qa_content['form_message']['fields']['message']['note']);
+			unset($qa_content['form_message']['fields']['message']['label']);
+		}
 	}
 	
 
@@ -201,21 +217,14 @@
 		$showmessages=array_slice(array_reverse($recent, true), 0, QA_DB_RETRIEVE_MESSAGES);
 		
 		if (count($showmessages)) {
-			$qa_content['form_recent']=array(
+			$qa_content['message_list']=array(
 				'title' => qa_lang_html_sub('misc/message_recent_history', qa_html($toaccount['handle'])),
-				'style' => 'tall',
-				'fields' => array(),
 			);
 			
-			foreach ($showmessages as $message) {
-				$qa_content['form_recent']['fields'][]=array(
-					'label' => qa_lang_html_sub(
-						($message['touserid']==$toaccount['userid']) ? 'misc/message_sent_x_ago' : 'misc/message_received_x_ago',
-						qa_html(qa_time_to_string(qa_opt('db_time')-$message['created']))),
-					'type' => 'static',
-					'value' => qa_viewer_html($message['content'], $message['format']),
-				);
-			}
+			$options=qa_message_html_defaults();
+			
+			foreach ($showmessages as $message)
+				$qa_content['message_list']['messages'][]=qa_message_html_fields($message, $loginuserid, $options);
 		}
 	}
 

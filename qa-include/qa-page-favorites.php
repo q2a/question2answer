@@ -43,7 +43,7 @@
 
 //	Get lists of favorites for this user
 
-	@list($questions, $users, $tags, $categories)=qa_db_select_with_pending(
+	list($questions, $users, $tags, $categories)=qa_db_select_with_pending(
 		qa_db_user_favorite_qs_selectspec($userid),
 		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_favorite_users_selectspec($userid),
 		qa_db_user_favorite_tags_selectspec($userid),
@@ -71,12 +71,17 @@
 	if (count($questions)) {
 		$qa_content['q_list']['form']=array(
 			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+
+			'hidden' => array(
+				'code' => qa_get_form_security_code('vote'),
+			),
 		);
 		
-		$options=qa_post_html_defaults('Q');
+		$defaults=qa_post_html_defaults('Q');
 			
 		foreach ($questions as $question)
-			$qa_content['q_list']['qs'][]=qa_post_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, $options);
+			$qa_content['q_list']['qs'][]=qa_post_html_fields($question, $userid, qa_cookie_get(),
+				$usershtml, null, qa_post_html_options($question, $defaults));
 	}
 	
 	
@@ -111,7 +116,7 @@
 		
 		foreach ($tags as $tag)
 			$qa_content['ranking_tags']['items'][]=array(
-				'label' => qa_tag_html($tag['word']),
+				'label' => qa_tag_html($tag['word'], false, true),
 				'count' => number_format($tag['tagcount']),
 			);
 	}
@@ -123,13 +128,14 @@
 		$qa_content['nav_list_categories']=array(
 			'title' => count($categories) ? qa_lang_html('main/nav_categories') : qa_lang_html('misc/no_favorite_categories'),
 			'nav' => array(),
-			'type' => 'nav-cat',
+			'type' => 'browse-cat',
 		);
 		
 		foreach ($categories as $category)
 			$qa_content['nav_list_categories']['nav'][$category['categoryid']]=array(
 				'label' => qa_html($category['title']),
 				'state' => 'open',
+				'favorited' => true,
 				'note' => ' - <A HREF="'.qa_path_html('questions/'.implode('/', array_reverse(explode('/', $category['backpath'])))).'">'.
 					( ($category['qcount']==1)
 						? qa_lang_html_sub('main/1_question', '1', '1')

@@ -43,7 +43,9 @@
 
 
 //	Process user actions
-
+	
+	$securityexpired=false;
+	$recalculate=false;
 	$optionnames=qa_db_points_option_names();
 
 	if (qa_clicked('doshowdefaults')) {
@@ -57,11 +59,18 @@
 			;
 
 		elseif (qa_clicked('dosaverecalc')) {
-			foreach ($optionnames as $optionname)
-				qa_set_option($optionname, (int)qa_post_text('option_'.$optionname));
-				
-			if (!qa_post_text('has_js'))
-				qa_redirect('admin/recalc', array('dorecalcpoints' => 1));
+			if (!qa_check_form_security_code('admin/points', qa_post_text('code')))
+				$securityexpired=true;
+		
+			else {
+				foreach ($optionnames as $optionname)
+					qa_set_option($optionname, (int)qa_post_text('option_'.$optionname));
+					
+				if (!qa_post_text('has_js'))
+					qa_redirect('admin/recalc', array('dorecalcpoints' => 1));
+				else
+					$recalculate=true;
+			}
 		}
 	
 		$options=qa_get_options($optionnames);
@@ -73,8 +82,7 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/points_title');
-
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	$qa_content['form']=array(
 		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="points_form" onsubmit="document.forms.points_form.has_js.value=1; return true;"',
@@ -91,6 +99,7 @@
 		'hidden' => array(
 			'dosaverecalc' => '1',
 			'has_js' => '0',
+			'code' => qa_get_form_security_code('admin/points'),
 		),
 	);
 
@@ -104,9 +113,7 @@
 		);
 
 	} else {
-		if (qa_clicked('docancel'))
-			;
-		elseif (qa_clicked('dosaverecalc')) {
+		if ($recalculate) {
 			$qa_content['form']['ok']='<SPAN ID="recalc_ok"></SPAN>';
 			
 			$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;

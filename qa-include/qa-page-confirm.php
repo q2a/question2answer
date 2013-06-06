@@ -47,8 +47,13 @@
 	if (isset($loginuserid) && qa_clicked('dosendconfirm')) { // button clicked to send a link
 		require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
 		
-		qa_send_new_confirm($loginuserid);
-		$useremailed=true;
+		if (!qa_check_form_security_code('confirm', qa_post_text('code')))
+			$pageerror=qa_lang_html('misc/form_security_again');
+		
+		else {
+			qa_send_new_confirm($loginuserid);
+			$useremailed=true;
+		}
 	
 	} elseif (strlen($incode)) { // non-empty code detected from the URL
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
@@ -83,6 +88,7 @@
 	$qa_content=qa_content_prepare();
 	
 	$qa_content['title']=qa_lang_html('users/confirm_title');
+	$qa_content['error']=@$pageerror;
 
 	if ($useremailed)
 		$qa_content['error']=qa_lang_html('users/confirm_emailed'); // not an error, but display it prominently anyway
@@ -101,9 +107,13 @@
 			);
 
 	} elseif (isset($loginuserid)) { // if logged in, allow sending a fresh link
+		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		
 		if (strlen($incode))
 			$qa_content['error']=qa_lang_html('users/confirm_wrong_resend');
-
+			
+		$email=qa_get_logged_in_email();
+		
 		$qa_content['form']=array(
 			'tags' => 'METHOD="POST" ACTION="'.qa_path_html('confirm').'"',
 			
@@ -112,7 +122,7 @@
 			'fields' => array(
 				'email' => array(
 					'label' => qa_lang_html('users/email_label'),
-					'value' => qa_html(qa_get_logged_in_email()).strtr(qa_lang_html('users/change_email_link'), array(
+					'value' => qa_html($email).strtr(qa_lang_html('users/change_email_link'), array(
 						'^1' => '<A HREF="'.qa_path_html('account').'">',
 						'^2' => '</A>',
 					)),
@@ -126,7 +136,16 @@
 					'label' => qa_lang_html('users/send_confirm_button'),
 				),
 			),
+
+			'hidden' => array(
+				'code' => qa_get_form_security_code('confirm'),
+			),
 		);
+		
+		if (!qa_email_validate($email)) {
+			$qa_content['error']=qa_lang_html('users/email_invalid');
+			unset($qa_content['form']['buttons']['send']);
+		}
 
 	} else
 		$qa_content['error']=qa_insert_login_links(qa_lang_html('users/confirm_wrong_log_in'), 'confirm');

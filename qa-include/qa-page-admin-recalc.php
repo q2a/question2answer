@@ -48,13 +48,22 @@
 		'dorefillevents',
 		'dorecalccategories',
 		'dodeletehidden',
+		'doblobstodisk',
+		'doblobstodb',
 	);
 	
+	$recalcnow=false;
+	
 	foreach ($allowstates as $allowstate)
-		if (qa_post_text($allowstate) || qa_get($allowstate))
+		if (qa_post_text($allowstate) || qa_get($allowstate)) {
 			$state=$allowstate;
+			$code=qa_post_text('code');
 			
-	if (isset($state)) {
+			if (isset($code) && qa_check_form_security_code('admin/recalc', $code))
+				$recalcnow=true;
+		}
+			
+	if ($recalcnow) {
 ?>
 
 <HTML>
@@ -89,6 +98,31 @@
 
 <?php
 		qa_exit();
+	
+	} elseif (isset($state)) {
+		$qa_content=qa_content_prepare();
+
+		$qa_content['title']=qa_lang_html('admin/admin_title');
+		$qa_content['error']=qa_lang_html('misc/form_security_again');
+		
+		$qa_content['form']=array(
+			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		
+			'style' => 'wide',
+			
+			'buttons' => array(
+				'recalc' => array(
+					'tags' => 'NAME="'.qa_html($state).'"',
+					'label' => qa_lang_html('misc/form_security_again'),
+				),
+			),
+			
+			'hidden' => array(
+				'code' => qa_get_form_security_code('admin/recalc'),
+			),
+		);
+		
+		return $qa_content;
 	
 	} else {
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';

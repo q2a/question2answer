@@ -31,20 +31,25 @@
 
 	$noticeid=qa_post_text('noticeid');	
 	
-	if ($noticeid=='visitor')
-		setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN);
+	if (!qa_check_form_security_code('notice-'.$noticeid, qa_post_text('code')))
+		echo "QA_AJAX_RESPONSE\n0\n".qa_lang('misc/form_security_reload');
 	
 	else {
-		$userid=qa_get_logged_in_userid();
+		if ($noticeid=='visitor')
+			setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN);
 		
-		if ($noticeid=='welcome')
-			qa_db_user_set_flag($userid, QA_USER_FLAGS_WELCOME_NOTICE, false);
-		else
-			qa_db_usernotice_delete($userid, $noticeid);
-	}
-
+		else {
+			$userid=qa_get_logged_in_userid();
+			
+			if ($noticeid=='welcome')
+				qa_db_user_set_flag($userid, QA_USER_FLAGS_WELCOME_NOTICE, false);
+			else
+				qa_db_usernotice_delete($userid, $noticeid);
+		}
 	
-	echo "QA_AJAX_RESPONSE\n1";
+		
+		echo "QA_AJAX_RESPONSE\n1";
+	}
 
 
 /*

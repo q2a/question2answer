@@ -26,6 +26,9 @@
 
 	class qa_related_qs {
 		
+		var $voteformcode;
+		
+		
 		function allow_template($template)
 		{
 			return ($template=='question');
@@ -88,16 +91,20 @@
 				$q_list=array(
 					'form' => array(
 						'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+
+						'hidden' => array(
+							'code' => qa_get_form_security_code('vote'),
+						),
 					),
 					
 					'qs' => array(),
 				);
 				
-				$options=qa_post_html_defaults('Q');
+				$defaults=qa_post_html_defaults('Q');
 				$usershtml=qa_userids_handles_html($questions);
 				
 				foreach ($questions as $question)
-					$q_list['qs'][]=qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, $options);
+					$q_list['qs'][]=qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, qa_post_html_options($question, $defaults));
 
 				$themeobject->q_list_and_form($q_list);
 			}

@@ -131,6 +131,22 @@
 		));
 	}
 	
+	
+	function qa_db_uservoteflag_posts_get($postids)
+	{
+		if (QA_FINAL_EXTERNAL_USERS)
+			return qa_db_read_all_assoc(qa_db_query_sub(
+				'SELECT postid, userid, vote, flag FROM ^uservotes WHERE postid IN (#) AND ((vote!=0) OR (flag!=0))',
+				$postids
+			));
+
+		else
+			return qa_db_read_all_assoc(qa_db_query_sub(
+				'SELECT postid, handle, vote, flag FROM ^uservotes LEFT JOIN ^users ON ^uservotes.userid=^users.userid WHERE postid IN (#) AND ((vote!=0) OR (flag!=0))',
+				$postids
+			));
+	}
+	
 
 /*
 	Omit PHP closing tag to help avoid accidental output

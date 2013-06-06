@@ -36,6 +36,8 @@
 	define('QA_PERMIT_CONFIRMED', 110);
 	define('QA_PERMIT_POINTS', 106);
 	define('QA_PERMIT_POINTS_CONFIRMED', 104);
+	define('QA_PERMIT_APPROVED', 103);
+	define('QA_PERMIT_APPROVED_POINTS', 102);
 	define('QA_PERMIT_EXPERTS', 100);
 	define('QA_PERMIT_EDITORS', 70);
 	define('QA_PERMIT_MODERATORS', 40);
@@ -204,14 +206,17 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		$fixed_defaults=array(
+			'allow_anon_name' => 1,
 			'allow_change_usernames' => 1,
 			'allow_close_questions' => 1,
 			'allow_multi_answers' => 1,
 			'allow_private_messages' => 1,
+			'allow_user_walls' => 1,
 			'allow_self_answer' => 1,
 			'allow_view_q_bots' => 1,
 			'avatar_allow_gravatar' => 1,
 			'avatar_allow_upload' => 1,
+			'avatar_message_list_size' => 20,
 			'avatar_profile_size' => 200,
 			'avatar_q_list_size' => 0,
 			'avatar_q_page_a_size' => 40,
@@ -282,6 +287,7 @@
 			'min_num_q_tags' => 0,
 			'moderate_notify_admin' => 1,
 			'moderate_points_limit' => 150,
+			'moderate_update_time' => 1,
 			'nav_ask' => 1,
 			'nav_qa_not_home' => 1,
 			'nav_questions' => 1,
@@ -302,7 +308,6 @@
 			'page_size_tag_qs' => 20,
 			'page_size_tags' => 30,
 			'page_size_una_qs' => 20,
-			'page_size_user_posts' => 20,
 			'page_size_users' => 20,
 			'pages_prev_next' => 3,
 			'permit_anon_view_ips' => QA_PERMIT_EDITORS,
@@ -311,11 +316,14 @@
 			'permit_edit_a' => QA_PERMIT_EXPERTS,
 			'permit_edit_c' => QA_PERMIT_EDITORS,
 			'permit_edit_q' => QA_PERMIT_EDITORS,
+			'permit_edit_silent' => QA_PERMIT_MODERATORS,
 			'permit_flag' => QA_PERMIT_CONFIRMED,
 			'permit_hide_show' => QA_PERMIT_EDITORS,
 			'permit_moderate' => QA_PERMIT_EXPERTS,
+			'permit_post_wall' => QA_PERMIT_CONFIRMED,
 			'permit_select_a' => QA_PERMIT_EXPERTS,
 			'permit_view_q_page' => QA_PERMIT_ALL,
+			'permit_view_voters_flaggers' => QA_PERMIT_ADMINS,
 			'permit_vote_a' => QA_PERMIT_USERS,
 			'permit_vote_down' => QA_PERMIT_USERS,
 			'permit_vote_q' => QA_PERMIT_USERS,
@@ -472,6 +480,11 @@
 				case 'mailing_body':
 					$value="\n\n\n--\n".qa_opt('site_title')."\n".qa_opt('site_url');
 					break;
+					
+				case 'form_security_salt':
+					require_once QA_INCLUDE_DIR.'qa-util-string.php';
+					$value=qa_random_alphanum(32);
+					break;
 				
 				default: // call option_default method in any registered modules
 					$moduletypes=qa_list_module_types();
@@ -525,8 +538,9 @@
 			'contentview' => $full,
 			'voteview' => qa_get_vote_view($basetype, $full),
 			'flagsview' => qa_opt('flagging_of_posts') && $full,
+			'favoritedview' => true,
 			'answersview' => $basetype=='Q',
-			'viewsview' => ($basetype=='Q') && qa_opt('do_count_q_views') && qa_opt('show_view_counts'),
+			'viewsview' => ($basetype=='Q') && qa_opt('do_count_q_views') && ($full ? qa_opt('show_view_count_q_page') : qa_opt('show_view_counts')),
 			'whatview' => true,
 			'whatlink' => qa_opt('show_a_c_links'),
 			'whenview' => qa_opt('show_when_created'),
@@ -544,37 +558,87 @@
 		);
 	}
 	
+	
+	function qa_post_html_options($post, $defaults=null, $full=false)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+		
+		if (!isset($defaults))
+			$defaults=qa_post_html_defaults($post['basetype'], $full);
+			
+		$defaults['voteview']=qa_get_vote_view($post, $full);
+		$defaults['ipview']=!qa_user_post_permit_error('permit_anon_view_ips', $post);
+		
+		return $defaults;
+	}
+	
+	
+	function qa_message_html_defaults()
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+		
+		return array(
+			'whenview' => qa_opt('show_when_created'),
+			'whoview' => true,
+			'avatarsize' => qa_opt('avatar_message_list_size'),
+			'blockwordspreg' => qa_get_block_words_preg(),
+			'showurllinks' => qa_opt('show_url_links'),
+			'linksnewwindow' => qa_opt('links_in_new_window'),
+			'fulldatedays' => qa_opt('show_full_date_days'),
+		);
+	}
+	
 
-	function qa_get_vote_view($basetype, $full=false, $enabledif=true)
+	function qa_get_vote_view($postorbasetype, $full=false, $enabledif=true)
 /*
-	Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php for posts of $basetype (Q/A/C),
+	Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php for the post in $postorbasetype
 	with buttons enabled if appropriate (based on whether $full post shown) unless $enabledif is false.
+	For compatibility $postorbasetype can also just be a basetype, i.e. 'Q', 'A' or 'C'
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
+		// The 'level' and 'approve' permission errors are taken care of by disabling the voting buttons.
+		// Others are reported to the user after they click, in qa_vote_error_html(...)
+		
+		if (is_array($postorbasetype)) { // deal with dual-use parameter
+			$basetype=$postorbasetype['basetype'];
+			$post=$postorbasetype;
+		
+		} else {
+			$basetype=$postorbasetype;
+			$post=null;
+		}
+		
 		$disabledsuffix='';
 		
-		if ($basetype=='Q') {
-			$view=qa_opt('voting_on_qs');
+		if (($basetype=='Q') || ($basetype=='A')) {
+			$view=($basetype=='A') ? qa_opt('voting_on_as') : qa_opt('voting_on_qs');
 			
-			if (!($enabledif && ($full || !qa_opt('voting_on_q_page_only'))))
+			if (!($enabledif && (($basetype=='A') || $full || !qa_opt('voting_on_q_page_only'))))
 				$disabledsuffix='-disabled-page';
-			elseif (qa_user_permit_error('permit_vote_q')=='level')
-				$disabledsuffix='-disabled-level';
-			elseif (qa_user_permit_error('permit_vote_down')=='level')
-				$disabledsuffix='-uponly-level';
+			
+			else {
+				if ($basetype=='A')
+					$permiterror=isset($post) ? qa_user_post_permit_error('permit_vote_a', $post) : qa_user_permit_error('permit_vote_a');
+				else
+					$permiterror=isset($post) ? qa_user_post_permit_error('permit_vote_q', $post) : qa_user_permit_error('permit_vote_q');
+				
+				if ($permiterror=='level')
+					$disabledsuffix='-disabled-level';
+				elseif ($permiterror=='approve')
+					$disabledsuffix='-disabled-approve';
 
-		} elseif ($basetype=='A') {
-			$view=qa_opt('voting_on_as');
-			
-			if (!$enabledif)
-				$disabledsuffix='-disabled-page';
-			elseif (qa_user_permit_error('permit_vote_a')=='level')
-				$disabledsuffix='-disabled-level';
-			elseif (qa_user_permit_error('permit_vote_down')=='level')
-				$disabledsuffix='-uponly-level';
-			
+				else {
+					$permiterrordown=isset($post) ? qa_user_post_permit_error('permit_vote_down', $post) : qa_user_permit_error('permit_vote_down');
+				
+					if ($permiterrordown=='level')
+						$disabledsuffix='-uponly-level';
+					elseif ($permiterrordown=='approve')
+						$disabledsuffix='-uponly-approve';
+				}
+			}
+
 		} else
 			$view=false;
 		
@@ -692,11 +756,16 @@
 		
 		if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
 			$permits[]='permit_edit_c';
+			
+		$permits[]='permit_edit_silent';
 		
 		if (qa_opt('allow_close_questions'))
 			$permits[]='permit_close_q';
 		
 		array_push($permits, 'permit_select_a', 'permit_anon_view_ips');
+		
+		if (qa_opt('voting_on_qs') || qa_opt('voting_on_as') || qa_opt('flagging_of_posts'))
+			$permits[]='permit_view_voters_flaggers';
 		
 		if (qa_opt('flagging_of_posts'))
 			$permits[]='permit_flag';
@@ -704,6 +773,9 @@
 		$permits[]='permit_moderate';
 
 		array_push($permits, 'permit_hide_show', 'permit_delete_hidden');
+		
+		if (qa_opt('allow_user_walls'))
+			$permits[]='permit_post_wall';
 		
 		return $permits;
 	}

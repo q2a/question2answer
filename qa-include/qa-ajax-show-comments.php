@@ -34,10 +34,12 @@
 
 //	Load relevant information about this question and check it exists
 
+	$questionid=qa_post_text('c_questionid');
 	$parentid=qa_post_text('c_parentid');
 	$userid=qa_get_logged_in_userid();
 	
-	list($parent, $children)=qa_db_select_with_pending(
+	list($question, $parent, $children)=qa_db_select_with_pending(
+		qa_db_full_post_selectspec($userid, $questionid),
 		qa_db_full_post_selectspec($userid, $parentid),
 		qa_db_full_child_posts_selectspec($userid, $parentid)
 	);
@@ -53,7 +55,7 @@
 			
 		qa_sort_by($children, 'created');
 			
-		$c_list=qa_page_q_comment_follow_list($parent, $children, true, $usershtml, false, null);
+		$c_list=qa_page_q_comment_follow_list($question, $parent, $children, true, $usershtml, false, null);
 			
 		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-comments', null, null);
 		
@@ -62,8 +64,7 @@
 		
 	//	Send back the HTML
 
-		foreach ($c_list['cs'] as $c_item)
-			$themeclass->c_list_item($c_item);
+		$themeclass->c_list_items($c_list['cs']);
 
 		return;
 	}

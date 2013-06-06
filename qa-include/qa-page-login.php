@@ -42,50 +42,56 @@
 //	Process submitted form after checking we haven't reached rate limit
 	
 	$passwordsent=qa_get('ps');
+	$emailexists=qa_get('ee');
 
 	if (qa_clicked('dologin')) {
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 
-		if (qa_limits_remaining(null, QA_LIMIT_LOGINS)) {
+		if (qa_user_limits_remaining(QA_LIMIT_LOGINS)) {
 			require_once QA_INCLUDE_DIR.'qa-db-users.php';
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 		
-			qa_limits_increment(null, QA_LIMIT_LOGINS);
-
 			$inemailhandle=qa_post_text('emailhandle');
 			$inpassword=qa_post_text('password');
 			$inremember=qa_post_text('remember');
 			
-			$errors=array();
-			
-			if (qa_opt('allow_login_email_only') || (strpos($inemailhandle, '@')!==false)) // handles can't contain @ symbols
-				$matchusers=qa_db_user_find_by_email($inemailhandle);
-			else
-				$matchusers=qa_db_user_find_by_handle($inemailhandle);
-	
-			if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
-				$inuserid=$matchusers[0];
-				$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
+			if (!qa_check_form_security_code('login', qa_post_text('code')))
+				$pageerror=qa_lang_html('misc/form_security_again');
 				
-				if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
-					require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	
-					qa_set_logged_in_user($inuserid, $userinfo['handle'], $inremember ? true : false);
+			else {
+				qa_limits_increment(null, QA_LIMIT_LOGINS);
+
+				$errors=array();
+				
+				if (qa_opt('allow_login_email_only') || (strpos($inemailhandle, '@')!==false)) // handles can't contain @ symbols
+					$matchusers=qa_db_user_find_by_email($inemailhandle);
+				else
+					$matchusers=qa_db_user_find_by_handle($inemailhandle);
+		
+				if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
+					$inuserid=$matchusers[0];
+					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 					
-					$topath=qa_get('to');
-					
-					if (isset($topath))
-						qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
-					elseif ($passwordsent)
-						qa_redirect('account');
-					else
-						qa_redirect('');
-	
+					if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
+						require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		
+						qa_set_logged_in_user($inuserid, $userinfo['handle'], $inremember ? true : false);
+						
+						$topath=qa_get('to');
+						
+						if (isset($topath))
+							qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
+						elseif ($passwordsent)
+							qa_redirect('account');
+						else
+							qa_redirect('');
+		
+					} else
+						$errors['password']=qa_lang('users/password_wrong');
+		
 				} else
-					$errors['password']=qa_lang('users/password_wrong');
-	
-			} else
-				$errors['emailhandle']=qa_lang('users/user_not_found');
+					$errors['emailhandle']=qa_lang('users/user_not_found');
+			}
 				
 		} else
 			$pageerror=qa_lang('users/login_limit');
@@ -114,7 +120,7 @@
 		
 		'style' => 'tall',
 		
-		'ok' => $passwordsent ? qa_lang_html('users/password_sent') : null,
+		'ok' => $passwordsent ? qa_lang_html('users/password_sent') : ($emailexists ? qa_lang_html('users/email_exists') : null),
 		
 		'fields' => array(
 			'email_handle' => array(
@@ -149,6 +155,7 @@
 		
 		'hidden' => array(
 			'dologin' => '1',
+			'code' => qa_get_form_security_code('login'),
 		),
 	);
 	

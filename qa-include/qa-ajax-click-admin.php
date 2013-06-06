@@ -26,15 +26,18 @@
 
 	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
 	require_once QA_INCLUDE_DIR.'qa-app-users.php';
+	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
 
 
-	$postid=qa_post_text('postid');
+	$entityid=qa_post_text('entityid');
 	$action=qa_post_text('action');
 
-	if (qa_admin_single_click($postid, $action)) // permission check happens in here
+	if (!qa_check_form_security_code('admin/click', qa_post_text('code')))
+		echo "QA_AJAX_RESPONSE\n0\n".qa_lang('misc/form_security_reload');
+	elseif (qa_admin_single_click($entityid, $action)) // permission check happens in here
 		echo "QA_AJAX_RESPONSE\n1\n";
 	else
-		echo "QA_AJAX_RESPONSE\n0\n";
+		echo "QA_AJAX_RESPONSE\n0\n".qa_lang('main/general_error');
 				
 	
 /*

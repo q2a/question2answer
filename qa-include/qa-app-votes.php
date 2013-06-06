@@ -38,6 +38,9 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
+		// The 'login', 'confirm', 'limit', 'userblock' and 'ipblock' permission errors are reported to the user here.
+		// Others ('approve', 'level') prevent the buttons being clickable in the first place, in qa_get_vote_view(...)
+
 		require_once QA_INCLUDE_DIR.'qa-app-users.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 		
@@ -47,11 +50,11 @@
 			qa_opt(($post['basetype']=='Q') ? 'voting_on_qs' : 'voting_on_as') &&
 			( (!isset($post['userid'])) || (!isset($userid)) || ($post['userid']!=$userid) )
 		) {
-			$permiterror=qa_user_permit_error(($post['basetype']=='Q') ? 'permit_vote_q' : 'permit_vote_a', QA_LIMIT_VOTES);
+			$permiterror=qa_user_post_permit_error(($post['basetype']=='Q') ? 'permit_vote_q' : 'permit_vote_a', $post, QA_LIMIT_VOTES);
 			
 			$errordownonly=(!$permiterror) && ($vote<0);
 			if ($errordownonly)
-				$permiterror=qa_user_permit_error('permit_vote_down');
+				$permiterror=qa_user_post_permit_error('permit_vote_down', $post);
 				
 			switch ($permiterror) {
 				case 'login':
@@ -144,6 +147,9 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
+		// The 'login', 'confirm', 'limit', 'userblock' and 'ipblock' permission errors are reported to the user here.
+		// Others ('approve', 'level') prevent the flag button being shown, in qa_page_q_post_rules(...)
+
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 		require_once QA_INCLUDE_DIR.'qa-app-options.php';
 		require_once QA_INCLUDE_DIR.'qa-app-users.php';
@@ -155,7 +161,7 @@
 			( (!isset($post['userid'])) || (!isset($userid)) || ($post['userid']!=$userid) )
 		) {
 		
-			switch (qa_user_permit_error('permit_flag', QA_LIMIT_FLAGS)) {
+			switch (qa_user_post_permit_error('permit_flag', $post, QA_LIMIT_FLAGS)) {
 				case 'login':
 					return qa_insert_login_links(qa_lang_html('question/flag_must_login'), $topage);
 					break;
@@ -192,9 +198,11 @@
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 		
 		qa_db_userflag_set($oldpost['postid'], $userid, true);
 		qa_db_post_recount_flags($oldpost['postid']);
+		qa_db_flaggedcount_update();
 		
 		switch ($oldpost['basetype']) {
 			case 'Q':
@@ -234,9 +242,11 @@
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 		
 		qa_db_userflag_set($oldpost['postid'], $userid, false);
 		qa_db_post_recount_flags($oldpost['postid']);
+		qa_db_flaggedcount_update();
 		
 		switch ($oldpost['basetype']) {
 			case 'Q':
@@ -269,9 +279,11 @@
 		
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 		
 		qa_db_userflags_clear_all($oldpost['postid']);
 		qa_db_post_recount_flags($oldpost['postid']);
+		qa_db_flaggedcount_update();
 
 		switch ($oldpost['basetype']) {
 			case 'Q':

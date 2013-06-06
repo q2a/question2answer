@@ -40,7 +40,7 @@
 
 	$userid=qa_get_logged_in_userid();
 
-	@list($comment, $question, $parent, $children)=qa_db_select_with_pending(
+	list($comment, $question, $parent, $children)=qa_db_select_with_pending(
 		qa_db_full_post_selectspec($userid, $commentid),
 		qa_db_full_post_selectspec($userid, $questionid),
 		qa_db_full_post_selectspec($userid, $parentid),
@@ -75,7 +75,7 @@
 				
 				$usershtml=qa_userids_handles_html(array($comment), true);
 				
-				$c_view=qa_page_q_comment_view($parent, $comment, $usershtml, false);
+				$c_view=qa_page_q_comment_view($question, $parent, $comment, $usershtml, false);
 				
 				$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-comment', null, null);
 			

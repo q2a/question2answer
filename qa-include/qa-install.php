@@ -97,11 +97,9 @@
 				global $pass_failure_from_install;
 				
 				if (@$pass_failure_from_install)
-					$errorhtml.="Question2Answer was unable to perform the installation query below. Please check the user in the config file has CREATE and ALTER permissions:\n\n";
+					$errorhtml.="Question2Answer was unable to perform the installation query below. Please check the user in the config file has CREATE and ALTER permissions:\n\n".qa_html($pass_failure_query."\n\nError ".$pass_failure_errno.": ".$pass_failure_error."\n\n");
 				else
-					$errorhtml.="Question2Answer query failed:\n\n";
-					
-				$errorhtml.=qa_html($pass_failure_query."\n\nError ".$pass_failure_errno.": ".$pass_failure_error."\n\n");
+					$errorhtml.="A Question2Answer database query failed when generating this page.\n\nA full description of the failure is available in the web server's error log file.";
 				break;
 		}
 

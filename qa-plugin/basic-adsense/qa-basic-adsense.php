@@ -104,14 +104,13 @@
 			
 ?>
 <div style="<?php echo $divstyle?>">
-<script type="text/javascript"><!--
+<script type="text/javascript">
 google_ad_client = <?php echo qa_js(qa_opt('adsense_publisher_id'))?>;
 google_ad_width = <?php echo qa_js($width)?>;
 google_ad_height = <?php echo qa_js($height)?>;
 google_ad_format = <?php echo qa_js($format)?>;
 google_ad_type = "text_image";
 google_ad_channel = "";
-//-->
 </script>
 <script type="text/javascript"
 src="http://pagead2.googlesyndication.com/pagead/show_ads.js">

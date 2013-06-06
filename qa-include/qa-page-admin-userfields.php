@@ -54,7 +54,9 @@
 		
 		
 //	Process saving an old or new user field
-
+	
+	$securityexpired=false;
+	
 	if (qa_clicked('docancel'))
 		qa_redirect('admin/users');
 
@@ -62,57 +64,65 @@
 		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
-		if (qa_post_text('dodelete')) {
-			qa_db_userfield_delete($editfield['fieldid']);
-			qa_redirect('admin/users');
+		if (!qa_check_form_security_code('admin/userfields', qa_post_text('code')))
+			$securityexpired=true;
 		
-		} else {
-			$inname=qa_post_text('name');
-			$inflags=qa_post_text('flags');
-			$inposition=qa_post_text('position');
-
-			$errors=array();
+		else {
+			if (qa_post_text('dodelete')) {
+				qa_db_userfield_delete($editfield['fieldid']);
+				qa_redirect('admin/users');
 			
-		//	Verify the name is legitimate
+			} else {
+				$inname=qa_post_text('name');
+				$intype=qa_post_text('type');
+				$inonregister=(int)qa_post_text('onregister');
+				$inflags=$intype | ($inonregister ? QA_FIELD_FLAGS_ON_REGISTER : 0);
+				$inposition=qa_post_text('position');
+				$inpermit=(int)qa_post_text('permit');
+	
+				$errors=array();
+				
+			//	Verify the name is legitimate
+			
+				if (qa_strlen($inname)>QA_DB_MAX_PROFILE_TITLE_LENGTH)
+					$errors['name']=qa_lang_sub('main/max_length_x', QA_DB_MAX_PROFILE_TITLE_LENGTH);
+	
+			//	Perform appropriate database action
 		
-			if (qa_strlen($inname)>QA_DB_MAX_PROFILE_TITLE_LENGTH)
-				$errors['name']=qa_lang_sub('main/max_length_x', QA_DB_MAX_PROFILE_TITLE_LENGTH);
-
-		//	Perform appropriate database action
-	
-			if (isset($editfield['fieldid'])) { // changing existing user field
-				qa_db_userfield_set_fields($editfield['fieldid'], isset($errors['name']) ? $editfield['content'] : $inname, $inflags);
-				qa_db_userfield_move($editfield['fieldid'], $inposition);
-				
-				if (empty($errors))
-					qa_redirect('admin/users');
-
-				else {
-					$userfields=qa_db_select_with_pending(qa_db_userfields_selectspec()); // reload after changes
-					foreach ($userfields as $userfield)
-						if ($userfield['fieldid']==$editfield['fieldid'])
-							$editfield=$userfield;
-				}
-	
-			} elseif (empty($errors)) { // creating a new user field
-
-				for ($attempt=0; $attempt<1000; $attempt++) {
-					$suffix=$attempt ? ('-'.(1+$attempt)) : '';
-					$newtag=qa_substr(implode('-', qa_string_to_words($inname)), 0, QA_DB_MAX_PROFILE_TITLE_LENGTH-strlen($suffix)).$suffix;
-					$uniquetag=true;
-				
-					foreach ($userfields as $userfield)	
-						if (qa_strtolower(trim($newtag)) == qa_strtolower(trim($userfield['title'])))
-							$uniquetag=false;
-							
-					if ($uniquetag) {
-						$fieldid=qa_db_userfield_create($newtag, $inname, $inflags);
-						qa_db_userfield_move($fieldid, $inposition);
+				if (isset($editfield['fieldid'])) { // changing existing user field
+					qa_db_userfield_set_fields($editfield['fieldid'], isset($errors['name']) ? $editfield['content'] : $inname, $inflags, $inpermit);
+					qa_db_userfield_move($editfield['fieldid'], $inposition);
+					
+					if (empty($errors))
 						qa_redirect('admin/users');
+	
+					else {
+						$userfields=qa_db_select_with_pending(qa_db_userfields_selectspec()); // reload after changes
+						foreach ($userfields as $userfield)
+							if ($userfield['fieldid']==$editfield['fieldid'])
+								$editfield=$userfield;
 					}
+		
+				} elseif (empty($errors)) { // creating a new user field
+	
+					for ($attempt=0; $attempt<1000; $attempt++) {
+						$suffix=$attempt ? ('-'.(1+$attempt)) : '';
+						$newtag=qa_substr(implode('-', qa_string_to_words($inname)), 0, QA_DB_MAX_PROFILE_TITLE_LENGTH-strlen($suffix)).$suffix;
+						$uniquetag=true;
+					
+						foreach ($userfields as $userfield)	
+							if (qa_strtolower(trim($newtag)) == qa_strtolower(trim($userfield['title'])))
+								$uniquetag=false;
+								
+						if ($uniquetag) {
+							$fieldid=qa_db_userfield_create($newtag, $inname, $inflags, $inpermit);
+							qa_db_userfield_move($fieldid, $inposition);
+							qa_redirect('admin/users');
+						}
+					}
+					
+					qa_fatal_error('Could not create a unique database tag');
 				}
-				
-				qa_fatal_error('Could not create a unique database tag');
 			}
 		}
 	}
@@ -123,8 +133,7 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/users_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	$positionoptions=array();
 	$previous=null;
@@ -157,6 +166,9 @@
 		QA_FIELD_FLAGS_LINK_URL => qa_lang_html('admin/field_link_url'),
 	);
 	
+	$permitoptions=qa_admin_permit_options(QA_PERMIT_ALL, QA_PERMIT_ADMINS, false, false);
+	$permitvalue=@$permitoptions[isset($inpermit) ? $inpermit : $editfield['permit']];
+
 	$qa_content['form']=array(
 		'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
 		
@@ -170,20 +182,29 @@
 				'error' => qa_html(@$errors['name']),
 			),
 			
-			'type' => array(
-				'id' => 'type_display',
-				'tags' => 'NAME="flags"',
-				'label' => qa_lang_html('admin/field_type'),
-				'type' => 'select',
-				'options' => $typeoptions,
-				'value' => @$typeoptions[isset($inflags) ? $inflags : @$editfield['flags']],
-			),
-			
 			'delete' => array(
 				'tags' => 'NAME="dodelete" ID="dodelete"',
 				'label' => qa_lang_html('admin/delete_field'),
 				'value' => 0,
 				'type' => 'checkbox',
+			),
+			
+			'type' => array(
+				'id' => 'type_display',
+				'tags' => 'NAME="type"',
+				'label' => qa_lang_html('admin/field_type'),
+				'type' => 'select',
+				'options' => $typeoptions,
+				'value' => @$typeoptions[isset($intype) ? $intype : (@$editfield['flags']&(QA_FIELD_FLAGS_MULTI_LINE|QA_FIELD_FLAGS_LINK_URL))],
+			),
+			
+			'permit' => array(
+				'id' => 'permit_display',
+				'tags' => 'NAME="permit"',
+				'label' => qa_lang_html('admin/permit_to_view'),
+				'type' => 'select',
+				'options' => $permitoptions,
+				'value' => $permitvalue,
 			),
 			
 			'position' => array(
@@ -193,6 +214,14 @@
 				'type' => 'select',
 				'options' => $positionoptions,
 				'value' => $positionvalue,
+			),			
+
+			'onregister' => array(
+				'id' => 'register_display',
+				'tags' => 'NAME="onregister"',
+				'label' => qa_lang_html('admin/show_on_register_form'),
+				'type' => 'checkbox',
+				'value' => isset($inonregister) ? $inonregister : (@$editfield['flags']&QA_FIELD_FLAGS_ON_REGISTER),
 			),
 		),
 
@@ -210,12 +239,15 @@
 		'hidden' => array(
 			'dosavefield' => '1', // for IE
 			'edit' => @$editfield['fieldid'],
+			'code' => qa_get_form_security_code('admin/userfields'),
 		),
 	);
 	
 	if (isset($editfield['fieldid']))
 		qa_set_display_rules($qa_content, array(
+			'type_display' => '!dodelete',
 			'position_display' => '!dodelete',
+			'register_display' => '!dodelete',
 		));
 	else
 		unset($qa_content['form']['fields']['delete']);

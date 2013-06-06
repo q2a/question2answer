@@ -36,7 +36,11 @@
 //	Get popular tags
 	
 	$start=qa_get_start();
-	$populartags=qa_db_select_with_pending(qa_db_popular_tags_selectspec($start, qa_opt_if_loaded('page_size_tags')));
+	$userid=qa_get_logged_in_userid();
+	list($populartags, $favoritetags)=qa_db_select_with_pending(
+		qa_db_popular_tags_selectspec($start, qa_opt_if_loaded('page_size_tags')),
+		isset($userid) ? qa_db_user_favorite_tags_selectspec($userid) : null
+	);
 
 	$tagcount=qa_opt('cache_tagcount');
 	$pagesize=qa_opt('page_size_tags');
@@ -55,10 +59,15 @@
 	);
 	
 	if (count($populartags)) {
+		$favoritemap=array();
+		if (isset($favoritetags))
+			foreach ($favoritetags as $wordandcount)
+				$favoritemap[$wordandcount['word']]=true;
+		
 		$output=0;
 		foreach ($populartags as $word => $count) {
 			$qa_content['ranking']['items'][]=array(
-				'label' => qa_tag_html($word),
+				'label' => qa_tag_html($word, false, @$favoritemap[$word]),
 				'count' => number_format($count),
 			);
 			

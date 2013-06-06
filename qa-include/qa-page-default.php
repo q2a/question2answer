@@ -31,7 +31,6 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
 
 //	Determine whether path begins with qa or not (question and answer listing can be accessed either way)
@@ -53,12 +52,11 @@
 	
 	$userid=qa_get_logged_in_userid();
 	
-	@list($questions1, $questions2, $categories, $categoryid, $favorite, $custompage)=qa_db_select_with_pending(
+	list($questions1, $questions2, $categories, $categoryid, $custompage)=qa_db_select_with_pending(
 		qa_db_qs_selectspec($userid, 'created', 0, $slugs, null, false, false, qa_opt_if_loaded('page_size_activity')),
 		qa_db_recent_a_qs_selectspec($userid, 0, $slugs),
 		qa_db_category_nav_selectspec($slugs, false, false, true),
 		$countslugs ? qa_db_slugs_to_category_id_selectspec($slugs) : null,
-		($countslugs && isset($userid)) ? qa_db_is_favorite_selectspec($userid, QA_ENTITY_CATEGORY, $slugs) : null,
 		(($countslugs==1) && !$explicitqa) ? qa_db_page_full_selectspec($slugs[0], false) : null
 	);
 
@@ -165,8 +163,7 @@
 			? qa_html_suggest_ask($categoryid)
 			: qa_html_suggest_qs_tags(qa_using_tags(), qa_category_path_request($categories, $categoryid)),
 		null, // page link params
-		null, // category nav params
-		$favorite // has user favorited this category
+		null // category nav params
 	);
 	
 	if ( (!$explicitqa) && (!$countslugs) && qa_opt('show_home_description') )

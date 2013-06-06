@@ -30,17 +30,26 @@
 	}
 
 
-	function qa_db_message_create($fromuserid, $touserid, $content, $format)
+	function qa_db_message_create($fromuserid, $touserid, $content, $format, $public=false)
 /*
 	Record a private message sent from $fromuserid to $touserid with $content in $format
 */
 	{
 		qa_db_query_sub(
-			'INSERT INTO ^messages (fromuserid, touserid, content, format, created) VALUES (#, #, $, $, NOW())',
-			$fromuserid, $touserid, $content, $format
+			'INSERT INTO ^messages (type, fromuserid, touserid, content, format, created) VALUES ($, #, #, $, $, NOW())',
+			$public ? 'PUBLIC' : 'PRIVATE', $fromuserid, $touserid, $content, $format
 		);
 		
 		return qa_db_last_insert_id();
+	}
+	
+
+	function qa_db_message_delete($messageid)
+	{
+		qa_db_query_sub(
+			'DELETE FROM ^messages WHERE messageid=#',
+			$messageid
+		);
 	}
 
 

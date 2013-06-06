@@ -166,6 +166,7 @@
 
 		$userid=qa_db_user_create($email, $password, $handle, $level, qa_remote_ip_address());
 		qa_db_points_update_ifuser($userid, null);
+		qa_db_uapprovecount_update();
 		
 		if ($confirmed)
 			qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, true);
@@ -186,6 +187,9 @@
 		} else
 			$confirm='';
 		
+		if (qa_opt('moderate_users') && qa_opt('approve_user_required') && ($level<QA_USER_LEVEL_EXPERT))
+			qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, true);
+				
 		qa_send_notification($userid, $email, $handle, qa_lang('emails/welcome_subject'), qa_lang('emails/welcome_body'), array(
 			'^password' => isset($password) ? $password : qa_lang('users/password_to_set'),
 			'^url' => qa_opt('site_url'),
@@ -218,6 +222,7 @@
 		$postids=qa_db_uservoteflag_user_get($userid); // posts this user has flagged or voted on, whose counts need updating
 		
 		qa_db_user_delete($userid);
+		qa_db_uapprovecount_update();
 		
 		foreach ($postids as $postid) { // hoping there aren't many of these - saves a lot of new SQL code...
 			qa_db_post_recount_votes($postid);
@@ -263,7 +268,7 @@
 		$emailcode=qa_db_user_rand_emailcode();
 		qa_db_user_set($userid, 'emailcode', $emailcode);
 		
-		return qa_path('confirm', array('c' => $emailcode, 'u' => $handle), qa_opt('site_url'));
+		return qa_path_absolute('confirm', array('c' => $emailcode, 'u' => $handle));
 	}
 
 	
@@ -283,6 +288,41 @@
 
 		qa_report_event('u_confirmed', $userid, $handle, qa_cookie_get(), array(
 			'email' => $email,
+		));
+	}
+	
+	
+	function qa_set_user_level($userid, $handle, $level, $oldlevel)
+	{
+		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+
+		if ($level!=$oldlevel) {
+			qa_db_user_set($userid, 'level', $level);
+			qa_db_uapprovecount_update();
+			
+			if ($level>=QA_USER_LEVEL_APPROVED)
+				qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, false);
+
+			qa_report_event('u_level', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+				'userid' => $userid,
+				'handle' => $handle,
+				'level' => $level,
+				'oldlevel' => $oldlevel,
+			));
+		}
+	}
+	
+	
+	function qa_set_user_blocked($userid, $handle, $blocked)
+	{
+		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		
+		qa_db_user_set_flag($userid, QA_USER_FLAGS_USER_BLOCKED, $blocked);
+		qa_db_uapprovecount_update();
+		
+		qa_report_event($blocked ? 'u_block' : 'u_unblock', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+			'userid' => $userid,
+			'handle' => $handle,
 		));
 	}
 
@@ -305,7 +345,7 @@
 
 		if (!qa_send_notification($userid, $userinfo['email'], $userinfo['handle'], qa_lang('emails/reset_subject'), qa_lang('emails/reset_body'), array(
 			'^code' => $userinfo['emailcode'],
-			'^url' => qa_path('reset', array('c' => $userinfo['emailcode'], 'e' => $userinfo['email']), qa_opt('site_url')),
+			'^url' => qa_path_absolute('reset', array('c' => $userinfo['emailcode'], 'e' => $userinfo['email'])),
 		)))
 			qa_fatal_error('Could not send reset password email');
 	}
@@ -366,9 +406,9 @@
 		$imagedata=qa_image_constrain_data($imagedata, $width, $height, qa_opt('avatar_store_size'));
 		
 		if (isset($imagedata)) {
-			require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+			require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
 
-			$newblobid=qa_db_blob_create($imagedata, 'jpeg', null, $userid, null, qa_remote_ip_address());
+			$newblobid=qa_create_blob($imagedata, 'jpeg', null, $userid, null, qa_remote_ip_address());
 			
 			if (isset($newblobid)) {
 				qa_db_user_set($userid, 'avatarblobid', $newblobid);
@@ -378,7 +418,7 @@
 				qa_db_user_set_flag($userid, QA_USER_FLAGS_SHOW_GRAVATAR, false);
 
 				if (isset($oldblobid))
-					qa_db_blob_delete($oldblobid);
+					qa_delete_blob($oldblobid);
 
 				return true;
 			}

@@ -40,7 +40,7 @@
 	if (!isset($pageid))
 		$pageid=qa_get('edit');
 		
-	@list($pages, $editpage)=qa_db_select_with_pending(
+	list($pages, $editpage)=qa_db_select_with_pending(
 		qa_db_pages_selectspec(),
 		isset($pageid) ? qa_db_page_full_selectspec($pageid, true) : null
 	);
@@ -102,179 +102,187 @@
 
 //	Process saving an old or new page
 
+	$securityexpired=false;
+
 	if (qa_clicked('docancel'))
 		$editpage=null;
 
 	elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('doaddlink')) {
-		foreach ($navoptions as $optionname => $langkey)
+		if (!qa_check_form_security_code('admin/pages', qa_post_text('code')))
+			$securityexpired=true;
+		else foreach ($navoptions as $optionname => $langkey)
 			qa_set_option($optionname, (int)qa_post_text('option_'.$optionname));
 
 	} elseif (qa_clicked('dosavepage')) {
 		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
-		$reloadpages=false;
-		
-		if (qa_post_text('dodelete')) {
-			qa_db_page_delete($editpage['pageid']);
+		if (!qa_check_form_security_code('admin/pages', qa_post_text('code')))
+			$securityexpired=true;
+		else {
+			$reloadpages=false;
 			
-			$searchmodules=qa_load_modules_with('search', 'unindex_page');
-			foreach ($searchmodules as $searchmodule)
-				$searchmodule->unindex_page($editpage['pageid']);
+			if (qa_post_text('dodelete')) {
+				qa_db_page_delete($editpage['pageid']);
+				
+				$searchmodules=qa_load_modules_with('search', 'unindex_page');
+				foreach ($searchmodules as $searchmodule)
+					$searchmodule->unindex_page($editpage['pageid']);
+				
+				$editpage=null;
+				$reloadpages=true;
 			
-			$editpage=null;
-			$reloadpages=true;
-		
-		} else {
-			$inname=qa_post_text('name');
-			$inposition=qa_post_text('position');
-			$inpermit=(int)qa_post_text('permit');
-			$inurl=qa_post_text('url');
-			$innewwindow=qa_post_text('newwindow');
-			$inheading=qa_post_text('heading');
-			$incontent=qa_post_text('content');
-
-			$errors=array();
-			
-		//	Verify the name (navigation link) is legitimate
-		
-			if (empty($inname))
-				$errors['name']=qa_lang('main/field_required');
-			elseif (qa_strlen($inname)>QA_DB_MAX_CAT_PAGE_TITLE_LENGTH)
-				$errors['name']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
-			else
-				foreach ($pages as $page)
-					if (
-						($page['pageid'] != @$editpage['pageid']) &&
-						qa_strtolower($page['title']) == qa_strtolower($inname)
-					)
-						$errors['name']=qa_lang('admin/page_already_used');
-						
-			if ($isexternal) {
-			
-			//	Verify the url is legitimate (vaguely)
-			
-				if (empty($inurl))
-					$errors['url']=qa_lang('main/field_required');
-				elseif (qa_strlen($inurl)>QA_DB_MAX_CAT_PAGE_TAGS_LENGTH)
-					$errors['url']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
-
 			} else {
+				$inname=qa_post_text('name');
+				$inposition=qa_post_text('position');
+				$inpermit=(int)qa_post_text('permit');
+				$inurl=qa_post_text('url');
+				$innewwindow=qa_post_text('newwindow');
+				$inheading=qa_post_text('heading');
+				$incontent=qa_post_text('content');
+	
+				$errors=array();
+				
+			//	Verify the name (navigation link) is legitimate
 			
-			//	Verify the heading is legitimate
-			
-				if (qa_strlen($inheading)>QA_DB_MAX_TITLE_LENGTH)
-					$errors['heading']=qa_lang_sub('main/max_length_x', QA_DB_MAX_TITLE_LENGTH);
-			
-			//	Verify the slug is legitimate (and try some defaults if we're creating a new page, and it's not)
-					
-				for ($attempt=0; $attempt<100; $attempt++) {
-					switch ($attempt) {
-						case 0:
-							$inslug=qa_post_text('slug');
-							if (!isset($inslug))
-								$inslug=implode('-', qa_string_to_words($inname));
-							break;
+				if (empty($inname))
+					$errors['name']=qa_lang('main/field_required');
+				elseif (qa_strlen($inname)>QA_DB_MAX_CAT_PAGE_TITLE_LENGTH)
+					$errors['name']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
+				else
+					foreach ($pages as $page)
+						if (
+							($page['pageid'] != @$editpage['pageid']) &&
+							qa_strtolower($page['title']) == qa_strtolower($inname)
+						)
+							$errors['name']=qa_lang('admin/page_already_used');
 							
-						case 1:
-							$inslug=qa_lang_sub('admin/page_default_slug', $inslug);
-							break;
-							
-						default:
-							$inslug=qa_lang_sub('admin/page_default_slug', $attempt-1);
+				if ($isexternal) {
+				
+				//	Verify the url is legitimate (vaguely)
+				
+					if (empty($inurl))
+						$errors['url']=qa_lang('main/field_required');
+					elseif (qa_strlen($inurl)>QA_DB_MAX_CAT_PAGE_TAGS_LENGTH)
+						$errors['url']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
+	
+				} else {
+				
+				//	Verify the heading is legitimate
+				
+					if (qa_strlen($inheading)>QA_DB_MAX_TITLE_LENGTH)
+						$errors['heading']=qa_lang_sub('main/max_length_x', QA_DB_MAX_TITLE_LENGTH);
+				
+				//	Verify the slug is legitimate (and try some defaults if we're creating a new page, and it's not)
+						
+					for ($attempt=0; $attempt<100; $attempt++) {
+						switch ($attempt) {
+							case 0:
+								$inslug=qa_post_text('slug');
+								if (!isset($inslug))
+									$inslug=implode('-', qa_string_to_words($inname));
+								break;
+								
+							case 1:
+								$inslug=qa_lang_sub('admin/page_default_slug', $inslug);
+								break;
+								
+							default:
+								$inslug=qa_lang_sub('admin/page_default_slug', $attempt-1);
+								break;
+						}
+						
+						list($matchcategoryid, $matchpage)=qa_db_select_with_pending(
+							qa_db_slugs_to_category_id_selectspec($inslug),
+							qa_db_page_full_selectspec($inslug, false)
+						);
+						
+						if (empty($inslug))
+							$errors['slug']=qa_lang('main/field_required');
+						elseif (qa_strlen($inslug)>QA_DB_MAX_CAT_PAGE_TAGS_LENGTH)
+							$errors['slug']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
+						elseif (preg_match('/[\\+\\/]/', $inslug))
+							$errors['slug']=qa_lang_sub('admin/slug_bad_chars', '+ /');
+						elseif (qa_admin_is_slug_reserved($inslug))
+							$errors['slug']=qa_lang('admin/slug_reserved');
+						elseif (isset($matchpage) && ($matchpage['pageid']!=@$editpage['pageid']))
+							$errors['slug']=qa_lang('admin/page_already_used');
+						elseif (isset($matchcategoryid))
+							$errors['slug']=qa_lang('admin/category_already_used');
+						else
+							unset($errors['slug']);
+						
+						if (isset($editpage['pageid']) || !isset($errors['slug'])) // don't try other options if editing existing page
 							break;
 					}
-					
-					list($matchcategoryid, $matchpage)=qa_db_select_with_pending(
-						qa_db_slugs_to_category_id_selectspec($inslug),
-						qa_db_page_full_selectspec($inslug, false)
-					);
-					
-					if (empty($inslug))
-						$errors['slug']=qa_lang('main/field_required');
-					elseif (qa_strlen($inslug)>QA_DB_MAX_CAT_PAGE_TAGS_LENGTH)
-						$errors['slug']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
-					elseif (preg_match('/[\\+\\/]/', $inslug))
-						$errors['slug']=qa_lang_sub('admin/slug_bad_chars', '+ /');
-					elseif (qa_admin_is_slug_reserved($inslug))
-						$errors['slug']=qa_lang('admin/slug_reserved');
-					elseif (isset($matchpage) && ($matchpage['pageid']!=@$editpage['pageid']))
-						$errors['slug']=qa_lang('admin/page_already_used');
-					elseif (isset($matchcategoryid))
-						$errors['slug']=qa_lang('admin/category_already_used');
-					else
-						unset($errors['slug']);
-					
-					if (isset($editpage['pageid']) || !isset($errors['slug'])) // don't try other options if editing existing page
-						break;
-				}
-			}
-			
-		//	Perform appropriate database action
-	
-			if (isset($editpage['pageid'])) { // changing existing page
-				if ($isexternal)
-					qa_db_page_set_fields($editpage['pageid'],
-						isset($errors['name']) ? $editpage['title'] : $inname,
-						QA_PAGE_FLAGS_EXTERNAL | ($innewwindow ? QA_PAGE_FLAGS_NEW_WINDOW : 0),
-						isset($errors['url']) ? $editpage['tags'] : $inurl,
-						null, null, $inpermit);
-
-				else {
-					$setheading=isset($errors['heading']) ? $editpage['heading'] : $inheading;
-					$setslug=isset($errors['slug']) ? $editpage['tags'] : $inslug;
-					$setcontent=isset($errors['content']) ? $editpage['content'] : $incontent;
-					
-					qa_db_page_set_fields($editpage['pageid'],
-						isset($errors['name']) ? $editpage['title'] : $inname,
-						0,
-						$setslug, $setheading, $setcontent, $inpermit);
-
-					$searchmodules=qa_load_modules_with('search', 'unindex_page');
-					foreach ($searchmodules as $searchmodule)
-						$searchmodule->unindex_page($editpage['pageid']);
-					
-					$indextext=qa_viewer_text($setcontent, 'html');
-					
-					$searchmodules=qa_load_modules_with('search', 'index_page');
-					foreach ($searchmodules as $searchmodule)
-						$searchmodule->index_page($editpage['pageid'], $setslug, $setheading, $setcontent, 'html', $indextext);
 				}
 				
-				qa_db_page_move($editpage['pageid'], substr($inposition, 0, 1), substr($inposition, 1));
-				
-				$reloadpages=true;
-	
-				if (empty($errors))
-					$editpage=null;
-				else
-					$editpage=@$pages[$editpage['pageid']];
-	
-			} else { // creating a new one
-				if (empty($errors)) {
+			//	Perform appropriate database action
+		
+				if (isset($editpage['pageid'])) { // changing existing page
 					if ($isexternal)
-						$pageid=qa_db_page_create($inname, QA_PAGE_FLAGS_EXTERNAL | ($innewwindow ? QA_PAGE_FLAGS_NEW_WINDOW : 0), $inurl, null, null, $inpermit);
+						qa_db_page_set_fields($editpage['pageid'],
+							isset($errors['name']) ? $editpage['title'] : $inname,
+							QA_PAGE_FLAGS_EXTERNAL | ($innewwindow ? QA_PAGE_FLAGS_NEW_WINDOW : 0),
+							isset($errors['url']) ? $editpage['tags'] : $inurl,
+							null, null, $inpermit);
+	
 					else {
-						$pageid=qa_db_page_create($inname, 0, $inslug, $inheading, $incontent, $inpermit);
-					
-						$indextext=qa_viewer_text($incontent, 'html');
+						$setheading=isset($errors['heading']) ? $editpage['heading'] : $inheading;
+						$setslug=isset($errors['slug']) ? $editpage['tags'] : $inslug;
+						$setcontent=isset($errors['content']) ? $editpage['content'] : $incontent;
+						
+						qa_db_page_set_fields($editpage['pageid'],
+							isset($errors['name']) ? $editpage['title'] : $inname,
+							0,
+							$setslug, $setheading, $setcontent, $inpermit);
+	
+						$searchmodules=qa_load_modules_with('search', 'unindex_page');
+						foreach ($searchmodules as $searchmodule)
+							$searchmodule->unindex_page($editpage['pageid']);
+						
+						$indextext=qa_viewer_text($setcontent, 'html');
 						
 						$searchmodules=qa_load_modules_with('search', 'index_page');
 						foreach ($searchmodules as $searchmodule)
-							$searchmodule->index_page($pageid, $inslug, $inheading, $incontent, 'html', $indextext);
+							$searchmodule->index_page($editpage['pageid'], $setslug, $setheading, $setcontent, 'html', $indextext);
 					}
 					
-					qa_db_page_move($pageid, substr($inposition, 0, 1), substr($inposition, 1));
-
-					$editpage=null;
+					qa_db_page_move($editpage['pageid'], substr($inposition, 0, 1), substr($inposition, 1));
+					
 					$reloadpages=true;
+		
+					if (empty($errors))
+						$editpage=null;
+					else
+						$editpage=@$pages[$editpage['pageid']];
+		
+				} else { // creating a new one
+					if (empty($errors)) {
+						if ($isexternal)
+							$pageid=qa_db_page_create($inname, QA_PAGE_FLAGS_EXTERNAL | ($innewwindow ? QA_PAGE_FLAGS_NEW_WINDOW : 0), $inurl, null, null, $inpermit);
+						else {
+							$pageid=qa_db_page_create($inname, 0, $inslug, $inheading, $incontent, $inpermit);
+						
+							$indextext=qa_viewer_text($incontent, 'html');
+							
+							$searchmodules=qa_load_modules_with('search', 'index_page');
+							foreach ($searchmodules as $searchmodule)
+								$searchmodule->index_page($pageid, $inslug, $inheading, $incontent, 'html', $indextext);
+						}
+						
+						qa_db_page_move($pageid, substr($inposition, 0, 1), substr($inposition, 1));
+	
+						$editpage=null;
+						$reloadpages=true;
+					}
 				}
 			}
-		}
-		
-		if ($reloadpages) {
-			qa_db_flush_pending_result('navpages');
-			$pages=qa_db_select_with_pending(qa_db_pages_selectspec());
+			
+			if ($reloadpages) {
+				qa_db_flush_pending_result('navpages');
+				$pages=qa_db_select_with_pending(qa_db_pages_selectspec());
+			}
 		}
 	}
 		
@@ -283,9 +291,8 @@
 	
 	$qa_content=qa_content_prepare();
 
-	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/pages_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/pages_title');	
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	if (isset($editpage)) {
 		$positionoptions=array();
@@ -330,7 +337,7 @@
 		$positionvalue=@$positionoptions[$editpage['nav'].$editpage['position']];
 		
 		$permitoptions=qa_admin_permit_options(QA_PERMIT_ALL, QA_PERMIT_ADMINS, false, false);
-		$permitvalue=@$permitoptions[$editpage['permit']];
+		$permitvalue=@$permitoptions[isset($inpermit) ? $inpermit : $editpage['permit']];
 		
 		$qa_content['form']=array(
 			'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
@@ -427,6 +434,7 @@
 				'dosavepage' => '1', // for IE
 				'edit' => @$editpage['pageid'],
 				'external' => (int)$isexternal,
+				'code' => qa_get_form_security_code('admin/pages'),
 			),
 		);
 		
@@ -483,6 +491,10 @@
 					'label' => qa_lang_html('admin/add_link_button'),
 				),
 			),
+			
+			'hidden' => array(
+				'code' => qa_get_form_security_code('admin/pages'),
+			),
 		);
 		
 		$qa_content['form']['fields']['navlinks']=array(
@@ -524,7 +536,7 @@
 				));
 				
 				if (method_exists($trypage, 'admin_form'))
-					$listhtml.=' - <A HREF="'.qa_path_html('admin/plugins', null, null, null, md5('page/'.$tryname)).'">'.qa_lang_html('admin/options').'</A>';
+					$listhtml.=' - <A HREF="'.qa_admin_module_options_path('page', $tryname).'">'.qa_lang_html('admin/options').'</A>';
 					
 				$listhtml.='</LI>';
 			}

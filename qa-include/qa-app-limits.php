@@ -41,6 +41,15 @@
 	define('QA_LIMIT_MESSAGES', 'M');
 
 	
+	function qa_user_limits_remaining($action)
+	{
+		$userlimits=qa_db_get_pending_result('userlimits', qa_db_user_limits_selectspec(qa_get_logged_in_userid()));
+		$iplimits=qa_db_get_pending_result('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
+		
+		return qa_limits_calc_remaining($action, @$userlimits[$action], @$iplimits[$action]);
+	}
+	
+	
 	function qa_limits_remaining($userid, $action)
 /*
 	Return how many more times user $userid and/or the requesting IP can perform $action this hour,
@@ -49,56 +58,60 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
 		require_once QA_INCLUDE_DIR.'qa-db-limits.php';
 
-		$period=(int)(qa_opt('db_time')/3600);
 		$dblimits=qa_db_limits_get($userid, qa_remote_ip_address(), $action);
 		
+		return qa_limits_calc_remaining($action, $dblimits['user'], $dblimits['ip']);
+	}
+	
+	
+	function qa_limits_calc_remaining($action, $userlimits, $iplimits)
+	{
 		switch ($action) {
 			case QA_LIMIT_QUESTIONS:
-				$userlimit=qa_opt('max_rate_user_qs');
-				$iplimit=qa_opt('max_rate_ip_qs');
+				$usermax=qa_opt('max_rate_user_qs');
+				$ipmax=qa_opt('max_rate_ip_qs');
 				break;
 				
 			case QA_LIMIT_ANSWERS:
-				$userlimit=qa_opt('max_rate_user_as');
-				$iplimit=qa_opt('max_rate_ip_as');
+				$usermax=qa_opt('max_rate_user_as');
+				$ipmax=qa_opt('max_rate_ip_as');
 				break;
 				
 			case QA_LIMIT_COMMENTS:
-				$userlimit=qa_opt('max_rate_user_cs');
-				$iplimit=qa_opt('max_rate_ip_cs');
+				$usermax=qa_opt('max_rate_user_cs');
+				$ipmax=qa_opt('max_rate_ip_cs');
 				break;
 
 			case QA_LIMIT_VOTES:
-				$userlimit=qa_opt('max_rate_user_votes');
-				$iplimit=qa_opt('max_rate_ip_votes');
+				$usermax=qa_opt('max_rate_user_votes');
+				$ipmax=qa_opt('max_rate_ip_votes');
 				break;
 				
 			case QA_LIMIT_REGISTRATIONS:
-				$userlimit=1; // not really relevant
-				$iplimit=qa_opt('max_rate_ip_registers');
+				$usermax=1; // not really relevant
+				$ipmax=qa_opt('max_rate_ip_registers');
 				break;
 
 			case QA_LIMIT_LOGINS:
-				$userlimit=1; // not really relevant
-				$iplimit=qa_opt('max_rate_ip_logins');
+				$usermax=1; // not really relevant
+				$ipmax=qa_opt('max_rate_ip_logins');
 				break;
 				
 			case QA_LIMIT_UPLOADS:
-				$userlimit=qa_opt('max_rate_user_uploads');
-				$iplimit=qa_opt('max_rate_ip_uploads');
+				$usermax=qa_opt('max_rate_user_uploads');
+				$ipmax=qa_opt('max_rate_ip_uploads');
 				break;
 				
 			case QA_LIMIT_FLAGS:
-				$userlimit=qa_opt('max_rate_user_flags');
-				$iplimit=qa_opt('max_rate_ip_flags');
+				$usermax=qa_opt('max_rate_user_flags');
+				$ipmax=qa_opt('max_rate_ip_flags');
 				break;
 				
 			case QA_LIMIT_MESSAGES:
-				$userlimit=qa_opt('max_rate_user_messages');
-				$iplimit=qa_opt('max_rate_ip_messages');
+				$usermax=qa_opt('max_rate_user_messages');
+				$ipmax=qa_opt('max_rate_ip_messages');
 				break;
 			
 			default:
@@ -106,9 +119,11 @@
 				break;
 		}
 		
+		$period=(int)(qa_opt('db_time')/3600);
+
 		return max(0, min(
-			$userlimit-((@$dblimits['user']['period']==$period) ? $dblimits['user']['count'] : 0),
-			$iplimit-((@$dblimits['ip']['period']==$period) ? $dblimits['ip']['count'] : 0)
+			$usermax-((@$userlimits['period']==$period) ? $userlimits['count'] : 0),
+			$ipmax-((@$iplimits['period']==$period) ? $iplimits['count'] : 0)
 		));
 	}
 	

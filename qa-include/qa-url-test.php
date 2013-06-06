@@ -31,7 +31,7 @@
 		echo '<TABLE WIDTH="100%" HEIGHT="100%" CELLSPACING="0" CELLPADDING="0">';
 		echo '<TR VALIGN="middle"><TD ALIGN="center" STYLE="border-style:solid; border-width:1px; background-color:#fff; ';
 		echo qa_admin_url_test_html();
-		echo 'TD></TR></TABLE>';
+		echo '/TD></TR></TABLE>';
 		echo '</BODY></HTML>';
 	}
 

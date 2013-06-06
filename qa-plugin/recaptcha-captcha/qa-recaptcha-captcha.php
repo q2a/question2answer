@@ -113,10 +113,10 @@
 				$language='en';
 				
 			$qa_content['script_lines'][]=array(
-				"var RecaptchaOptions = {",
+				"var RecaptchaOptions={",
 				"\ttheme:'white',",
 				"\tlang:".qa_js($language),
-				"}",
+				"};",
 			);
 		
 			return recaptcha_get_html(qa_opt('recaptcha_public_key'), $error, qa_is_https_probably());

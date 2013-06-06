@@ -61,7 +61,7 @@
 	
 	echo '<H1>Checking US English files in <code>qa-include</code>...</H1>';
 	
-	$includefiles=glob(QA_INCLUDE_DIR.'qa-*.php');
+	$includefiles=array_merge(glob(QA_INCLUDE_DIR.'qa-*.php'), glob(QA_PLUGIN_DIR.'*/qa-*.php'));
 	
 	$definite=array();
 	$probable=array();

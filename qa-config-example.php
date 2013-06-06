@@ -69,6 +69,19 @@
 */
 
 /*
+	If you wish, you can define QA_BLOBS_DIRECTORY to store BLOBs (binary large objects) such
+	as avatars and uploaded files on disk, rather than in the database. If so this directory
+	must be writable by the web server process - on Unix/Linux use chown/chmod as appropriate.
+	Note than if multiple Q2A sites are using QA_MYSQL_USERS_PREFIX to share users, they must
+	also have the same value for QA_BLOBS_DIRECTORY.
+
+	If there are already some BLOBs stored in the database from previous uploads, click the
+	'Move BLOBs to disk' button in the 'Stats' section of the admin panel to move them to disk. 
+		
+	define('QA_BLOBS_DIRECTORY', '/path/to/writable_blobs_directory/');
+*/
+
+/*
 	If you wish, you can define QA_COOKIE_DOMAIN so that any cookies created by Q2A are assigned
 	to a specific domain name, instead of the full domain name of the request by default. This is
 	useful if you're running multiple Q2A sites on subdomains with a shared user base. 

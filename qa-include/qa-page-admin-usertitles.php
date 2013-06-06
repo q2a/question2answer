@@ -50,60 +50,67 @@
 		
 //	Process saving an old or new user title
 
+	$securityexpired=false;
+	
 	if (qa_clicked('docancel'))
 		qa_redirect('admin/users');
 
 	elseif (qa_clicked('dosavetitle')) {
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 		
-		if (qa_post_text('dodelete')) {
-			unset($pointstitle[$oldpoints]);
+		if (!qa_check_form_security_code('admin/usertitles', qa_post_text('code')))
+			$securityexpired=true;
 		
-		} else {
-			$intitle=qa_post_text('title');
-			$inpoints=qa_post_text('points');
-	
-			$errors=array();
-			
-		//	Verify the title and points are legitimate
-		
-			if (!strlen($intitle))
-				$errors['title']=qa_lang('main/field_required');
-				
-			if (!is_numeric($inpoints))
-				$errors['points']=qa_lang('main/field_required');
-			else {
-				$inpoints=(int)$inpoints;
-				
-				if (isset($pointstitle[$inpoints]) && ((!strlen(@$oldpoints)) || ($inpoints!=$oldpoints)) )
-					$errors['points']=qa_lang('admin/title_already_used');
-			}
-	
-		//	Perform appropriate action
-	
-			if (isset($pointstitle[$oldpoints])) { // changing existing user title
-				$newpoints=isset($errors['points']) ? $oldpoints : $inpoints;
-				$newtitle=isset($errors['title']) ? $pointstitle[$oldpoints] : $intitle;
-	
+		else {
+			if (qa_post_text('dodelete')) {
 				unset($pointstitle[$oldpoints]);
-				$pointstitle[$newpoints]=$newtitle;
-	
-			} elseif (empty($errors)) // creating a new user title
-				$pointstitle[$inpoints]=$intitle;
-		}
 			
-	//	Save the new option value
-			
-		krsort($pointstitle, SORT_NUMERIC);
+			} else {
+				$intitle=qa_post_text('title');
+				$inpoints=qa_post_text('points');
 		
-		$option='';
-		foreach ($pointstitle as $points => $title)
-			$option.=(strlen($option) ? ',' : '').$points.' '.$title;
+				$errors=array();
+				
+			//	Verify the title and points are legitimate
 			
-		qa_set_option('points_to_titles', $option); 
-
-		if (empty($errors))
-			qa_redirect('admin/users');
+				if (!strlen($intitle))
+					$errors['title']=qa_lang('main/field_required');
+					
+				if (!is_numeric($inpoints))
+					$errors['points']=qa_lang('main/field_required');
+				else {
+					$inpoints=(int)$inpoints;
+					
+					if (isset($pointstitle[$inpoints]) && ((!strlen(@$oldpoints)) || ($inpoints!=$oldpoints)) )
+						$errors['points']=qa_lang('admin/title_already_used');
+				}
+		
+			//	Perform appropriate action
+		
+				if (isset($pointstitle[$oldpoints])) { // changing existing user title
+					$newpoints=isset($errors['points']) ? $oldpoints : $inpoints;
+					$newtitle=isset($errors['title']) ? $pointstitle[$oldpoints] : $intitle;
+		
+					unset($pointstitle[$oldpoints]);
+					$pointstitle[$newpoints]=$newtitle;
+		
+				} elseif (empty($errors)) // creating a new user title
+					$pointstitle[$inpoints]=$intitle;
+			}
+				
+		//	Save the new option value
+				
+			krsort($pointstitle, SORT_NUMERIC);
+			
+			$option='';
+			foreach ($pointstitle as $points => $title)
+				$option.=(strlen($option) ? ',' : '').$points.' '.$title;
+				
+			qa_set_option('points_to_titles', $option); 
+	
+			if (empty($errors))
+				qa_redirect('admin/users');
+		}
 	}
 	
 		
@@ -111,9 +118,8 @@
 	
 	$qa_content=qa_content_prepare();
 
-	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/users_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/users_title');	
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	$qa_content['form']=array(
 		'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
@@ -159,6 +165,7 @@
 		'hidden' => array(
 			'dosavetitle' => '1', // for IE
 			'edit' => @$oldpoints,
+			'code' => qa_get_form_security_code('admin/usertitles'),
 		),
 	);
 	

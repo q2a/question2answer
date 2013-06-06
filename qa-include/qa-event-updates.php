@@ -34,10 +34,12 @@
 
 		function process_event($event, $userid, $handle, $cookieid, $params)
 		{
+			if (@$params['silent']) // don't create updates about silent edits, and possibly other silent events in future
+				return;
+				
 			require_once QA_INCLUDE_DIR.'qa-db-events.php';
 			require_once QA_INCLUDE_DIR.'qa-app-events.php';
 
-	
 			switch ($event) {
 				case 'q_post':
 					if (isset($params['parent'])) // question is following an answer
@@ -55,8 +57,6 @@
 					
 
 				case 'c_post':
-					qa_create_event_for_q_user($params['questionid'], $params['postid'], null, $userid, $params['parent']['userid']);
-					
 					$keyuserids=array();
 					
 					foreach ($params['thread'] as $comment) // previous comments in thread (but not author of parent again)
@@ -64,8 +64,27 @@
 							$keyuserids[$comment['userid']]=true;
 							
 					foreach ($keyuserids as $keyuserid => $dummy)
-						if ( ($keyuserid != $userid) && ($keyuserid != $params['parent']['userid']) )
-							qa_db_event_create_not_entity($keyuserid, $params['questionid'], $params['postid'], null, $userid);
+						if ($keyuserid != $userid)
+							qa_db_event_create_not_entity($keyuserid, $params['questionid'], $params['postid'], QA_UPDATE_FOLLOWS, $userid);
+
+					switch ($params['parent']['basetype'])
+					{
+						case 'Q':
+							$updatetype=QA_UPDATE_C_FOR_Q;
+							break;
+							
+						case 'A':
+							$updatetype=QA_UPDATE_C_FOR_A;
+							break;
+							
+						default:
+							$updatetype=null;
+							break;
+					}
+					
+					qa_create_event_for_q_user($params['questionid'], $params['postid'], $updatetype, $userid,
+						@$keyuserids[$params['parent']['userid']] ? null : $params['parent']['userid']);
+							// give precedence to 'your comment followed' rather than 'your Q/A commented' if both are true	
 					break;
 
 				
@@ -97,11 +116,17 @@
 					break;
 					
 
+				case 'q_hide':
+					if (isset($params['oldquestion']['userid']))
+						qa_db_event_create_not_entity($params['oldquestion']['userid'], $params['postid'], $params['postid'], QA_UPDATE_VISIBLE, $userid);
+					break;
+					
+
 				case 'q_reshow':
 					qa_create_event_for_q_user($params['postid'], $params['postid'], QA_UPDATE_VISIBLE, $userid, $params['oldquestion']['userid']);
 					break;
 					
-
+				
 				case 'q_move':
 					qa_create_event_for_q_user($params['postid'], $params['postid'], QA_UPDATE_CATEGORY, $userid, $params['oldquestion']['userid']);
 					qa_create_event_for_category($params['categoryid'], $params['postid'], QA_UPDATE_CATEGORY, $userid);
@@ -111,6 +136,12 @@
 				case 'a_edit':
 					if ($params['contentchanged'])
 						qa_create_event_for_q_user($params['parentid'], $params['postid'], QA_UPDATE_CONTENT, $userid, $params['oldanswer']['userid']);
+					break;
+					
+
+				case 'a_hide':
+					if (isset($params['oldanswer']['userid']))
+						qa_db_event_create_not_entity($params['oldanswer']['userid'], $params['parentid'], $params['postid'], QA_UPDATE_VISIBLE, $userid);
 					break;
 					
 
@@ -132,6 +163,12 @@
 						qa_create_event_for_q_user($params['questionid'], $params['postid'], QA_UPDATE_TYPE, $userid, $params['oldanswer']['userid']);
 					break;
 				
+
+				case 'c_hide':
+					if (isset($params['oldcomment']['userid']))
+						qa_db_event_create_not_entity($params['oldcomment']['userid'], $params['questionid'], $params['postid'], QA_UPDATE_VISIBLE, $userid);
+					break;
+					
 
 				case 'c_reshow':
 					qa_create_event_for_q_user($params['questionid'], $params['postid'], QA_UPDATE_VISIBLE, $userid, $params['oldcomment']['userid']);

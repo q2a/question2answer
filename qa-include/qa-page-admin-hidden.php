@@ -48,10 +48,7 @@
 	
 //	Check admin privileges (do late to allow one DB query)
 	
-	$allowhideshow=!qa_user_permit_error('permit_hide_show');
-	$allowdeletehidden=!qa_user_permit_error('permit_delete_hidden');
-	
-	if (!($allowhideshow || $allowdeletehidden)) {
+	if (qa_user_maximum_permit_error('permit_hide_show') && qa_user_maximum_permit_error('permit_delete_hidden')) {
 		$qa_content=qa_content_prepare();
 		$qa_content['error']=qa_lang_html('users/no_permission');
 		return $qa_content;
@@ -60,12 +57,20 @@
 		
 //	Check to see if any have been reshown or deleted
 
-	qa_admin_check_clicks();
+	$pageerror=qa_admin_check_clicks();
 
 
-//	Combine sets of questions, get information for users
+//	Combine sets of questions and remove those this user has no permissions for
 
 	$questions=qa_any_sort_by_date(array_merge($hiddenquestions, $hiddenanswers, $hiddencomments));
+
+	if (qa_user_permit_error('permit_hide_show') && qa_user_permit_error('permit_delete_hidden')) // not allowed to see all hidden posts
+		foreach ($questions as $index => $question)
+			if (qa_user_post_permit_error('permit_hide_show', $question) && qa_user_post_permit_error('permit_delete_hidden', $question))
+				unset($questions[$index]);
+
+
+//	Get information for users
 
 	$usershtml=qa_userids_handles_html(qa_any_get_userids_handles($questions));
 
@@ -84,12 +89,15 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('admin/recent_hidden_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['error']=isset($pageerror) ? $pageerror : qa_admin_page_error();
 	
 	$qa_content['q_list']=array(
 		'form' => array(
 			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+
+			'hidden' => array(
+				'code' => qa_get_form_security_code('admin/click'),
+			),
 		),
 		
 		'qs' => array(),
@@ -99,7 +107,7 @@
 		foreach ($questions as $key => $question) {
 			$elementid='p'.$qhiddenpostid[$key];
 
-			$htmloptions=qa_post_html_defaults('Q');
+			$htmloptions=qa_post_html_options($question);
 			$htmloptions['voteview']=false;
 			$htmloptions['tagsview']=!isset($question['opostid']);
 			$htmloptions['answersview']=false;
@@ -120,13 +128,13 @@
 			
 			$buttons=array();
 			
-			if ($allowhideshow)
+			if (!qa_user_post_permit_error('permit_hide_show', $question))
 				$buttons['reshow']=array(
 					'tags' => 'NAME="admin_'.qa_html($qhiddenpostid[$key]).'_reshow" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/reshow_button'),
 				);
 				
-			if ($allowdeletehidden && !$dependcounts[$qhiddenpostid[$key]])
+			if ((!qa_user_post_permit_error('permit_delete_hidden', $question)) && !$dependcounts[$qhiddenpostid[$key]])
 				$buttons['delete']=array(
 					'tags' => 'NAME="admin_'.qa_html($qhiddenpostid[$key]).'_delete" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/delete_button'),

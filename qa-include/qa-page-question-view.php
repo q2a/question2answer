@@ -95,6 +95,7 @@
 		
 		$userid=qa_get_logged_in_userid();
 		$cookieid=qa_cookie_get();
+		$userlevel=qa_user_level_for_post($post);
 		
 		$rules['isbyuser']=qa_post_is_by_user($post, $userid, $cookieid);
 		$rules['queued']=(substr($post['type'], 1)=='_QUEUED');
@@ -102,16 +103,17 @@
 
 	//	Cache some responses to the user permission checks
 	
-		$permiterror_post_q=qa_user_permit_error('permit_post_q');
-		$permiterror_post_a=qa_user_permit_error('permit_post_a');
-		$permiterror_post_c=qa_user_permit_error('permit_post_c');
+		$permiterror_post_q=qa_user_permit_error('permit_post_q', null, $userlevel); // don't check limits here, so we can show error message
+		$permiterror_post_a=qa_user_permit_error('permit_post_a', null, $userlevel);
+		$permiterror_post_c=qa_user_permit_error('permit_post_c', null, $userlevel);
 
 		$permiterror_edit=qa_user_permit_error(($post['basetype']=='Q') ? 'permit_edit_q' :
-			(($post['basetype']=='A') ? 'permit_edit_a' : 'permit_edit_c'));
-		$permiterror_retagcat=qa_user_permit_error('permit_retag_cat');
-		$permiterror_hide_show=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_hide_show');
-		$permiterror_close_open=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_close_q');
-		$permiterror_moderate=qa_user_permit_error('permit_moderate');
+			(($post['basetype']=='A') ? 'permit_edit_a' : 'permit_edit_c'), null, $userlevel);
+		$permiterror_retagcat=qa_user_permit_error('permit_retag_cat', null, $userlevel);
+		$permiterror_flag=qa_user_permit_error('permit_flag', null, $userlevel);
+		$permiterror_hide_show=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_hide_show', null, $userlevel);
+		$permiterror_close_open=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_close_q', null, $userlevel);
+		$permiterror_moderate=qa_user_permit_error('permit_moderate', null, $userlevel);
 	
 	//	General permissions
 	
@@ -124,15 +126,15 @@
 			(qa_opt('allow_self_answer') || !$rules['isbyuser']);
 
 		$rules['commentbutton']=(($post['type']=='Q') || ($post['type']=='A')) &&
-			($permiterror_post_c!='level') &&
-			qa_opt(($post['type']=='Q') ? 'comment_on_qs' : 'comment_on_as');
+			($permiterror_post_c!='level') && qa_opt(($post['type']=='Q') ? 'comment_on_qs' : 'comment_on_as');
 		$rules['commentable']=$rules['commentbutton'] && !$permiterror_post_c;
 
-		$rules['editbutton']=(!$post['hidden']) && ($rules['isbyuser'] || (($permiterror_edit!='level') && (!$rules['queued']))) && !$rules['closed'];
+		$rules['editbutton']=(!$post['hidden']) && (!$rules['closed']) && 
+			($rules['isbyuser'] || (($permiterror_edit!='level') && ($permiterror_edit!='approve') && (!$rules['queued'])));
 		$rules['editable']=$rules['editbutton'] && ($rules['isbyuser'] || !$permiterror_edit);
 		
 		$rules['retagcatbutton']=($post['basetype']=='Q') && (qa_using_tags() || qa_using_categories()) && 
-			(!$post['hidden']) && ($rules['isbyuser'] || ($permiterror_retagcat!='level'));
+			(!$post['hidden']) && ($rules['isbyuser'] || (($permiterror_retagcat!='level') && ($permiterror_retagcat!='approve')) );
 		$rules['retagcatable']=$rules['retagcatbutton'] && ($rules['isbyuser'] || !$permiterror_retagcat);
 		
 		if ($rules['editbutton'] && $rules['retagcatbutton']) { // only show one button since they lead to the same form
@@ -142,13 +144,13 @@
 				$rules['retagcatbutton']=false;
 		}
 		
-		$rules['aselectable']=($post['type']=='Q') && !qa_user_permit_error($rules['isbyuser'] ? null : 'permit_select_a');
+		$rules['aselectable']=($post['type']=='Q') && !qa_user_permit_error($rules['isbyuser'] ? null : 'permit_select_a', null, $userlevel);
 
 		$rules['flagbutton']=qa_opt('flagging_of_posts') && (!$rules['isbyuser']) && (!$post['hidden']) && (!$rules['queued']) &&
-			(!@$post['userflag']) && (qa_user_permit_error('permit_flag')!='level');
-		$rules['flagtohide']=$rules['flagbutton'] && (!qa_user_permit_error('permit_flag')) && (($post['flagcount']+1)>=qa_opt('flagging_hide_after'));
+			(!@$post['userflag']) && ($permiterror_flag!='level') && ($permiterror_flag!='approve');
+		$rules['flagtohide']=$rules['flagbutton'] && (!$permiterror_flag) && (($post['flagcount']+1)>=qa_opt('flagging_hide_after'));
 		$rules['unflaggable']=@$post['userflag'] && (!$post['hidden']);
-		$rules['clearflaggable']=($post['flagcount']>=(@$post['userflag'] ? 2 : 1)) && !qa_user_permit_error('permit_hide_show');
+		$rules['clearflaggable']=($post['flagcount']>=(@$post['userflag'] ? 2 : 1)) && !qa_user_permit_error('permit_hide_show', null, $userlevel);
 		
 	//	Other actions only show the button if it's immediately possible
 		
@@ -157,21 +159,23 @@
 		
 		$rules['closeable']=qa_opt('allow_close_questions') && ($post['type']=='Q') && (!$rules['closed']) && !$permiterror_close_open;
 		$rules['reopenable']=$rules['closed'] && isset($post['closedbyid']) && (!$permiterror_close_open) && (!$post['hidden']) &&
-			($notclosedbyother || !qa_user_permit_error('permit_close_q'));
+			($notclosedbyother || !qa_user_permit_error('permit_close_q', null, $userlevel));
 			// cannot reopen a question if it's been hidden, or if it was closed by someone else and you don't have global closing permissions
 		$rules['moderatable']=$rules['queued'] && !$permiterror_moderate;
 		$rules['hideable']=(!$post['hidden']) && ($rules['isbyuser'] || !$rules['queued']) &&
-			(!$permiterror_hide_show) && ($notclosedbyother || !qa_user_permit_error('permit_hide_show'));
+			(!$permiterror_hide_show) && ($notclosedbyother || !qa_user_permit_error('permit_hide_show', null, $userlevel));
 			// cannot hide a question if it was closed by someone else and you don't have global hiding permissions
-		$rules['reshowable']=$post['hidden'] && (!$permiterror_hide_show) && (!qa_user_moderation_reason()) &&
-			(($nothiddenbyother && !$post['flagcount']) || !qa_user_permit_error('permit_hide_show'));
-			// cannot reshow a question if it was hidden by someone else, or if it has flags - unless you have global hiding permissions
-		$rules['deleteable']=$post['hidden'] && !qa_user_permit_error('permit_delete_hidden');
+		$rules['reshowimmed']=$post['hidden'] && !qa_user_permit_error('permit_hide_show', null, $userlevel);
+			// means post can be reshown immediately without checking whether it needs moderation
+		$rules['reshowable']=$post['hidden'] && (!$permiterror_hide_show) &&
+			($rules['reshowimmed'] || ($nothiddenbyother && !$post['flagcount']));
+			// cannot reshow a question if it was hidden by someone else, or if it has flags - unless you have global hide/show permissions
+		$rules['deleteable']=$post['hidden'] && !qa_user_permit_error('permit_delete_hidden', null, $userlevel);
 		$rules['claimable']=(!isset($post['userid'])) && isset($userid) && strlen(@$post['cookieid']) && (strcmp(@$post['cookieid'], $cookieid)==0) &&
 			!(($post['basetype']=='Q') ? $permiterror_post_q : (($post['basetype']=='A') ? $permiterror_post_a : $permiterror_post_c));
 		$rules['followable']=($post['type']=='A') ? qa_opt('follow_on_as') : false;
 		
-	//	Check for claims that could break rules about self answering and mulltiple answers
+	//	Check for claims that could break rules about self answering and multiple answers
 	
 		if ($rules['claimable'] && ($post['basetype']=='A')) {		
 			if ( (!qa_opt('allow_self_answer')) && isset($parentpost) && qa_post_is_by_user($parentpost, $userid, $cookieid) )
@@ -187,10 +191,7 @@
 	
 		if (isset($childposts))
 			foreach ($childposts as $childpost)
-				if (
-					($childpost['parentid']==$post['postid']) &&
-					( ($childpost['basetype']=='A') || ($childpost['basetype']=='C') )
-				) {
+				if ($childpost['parentid']==$post['postid']) {
 					$rules['deleteable']=false;
 					
 					if (($childpost['basetype']=='A') && qa_post_is_by_user($childpost, $userid, $cookieid)) {
@@ -221,13 +222,15 @@
 		$userid=qa_get_logged_in_userid();
 		$cookieid=qa_cookie_get();
 		
-		$htmloptions=qa_post_html_defaults('Q', true);
+		$htmloptions=qa_post_html_options($question, null, true);
 		$htmloptions['answersview']=false; // answer count is displayed separately so don't show it here
 		$htmloptions['avatarsize']=qa_opt('avatar_q_page_q_size');
 		$q_view=qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, $htmloptions);
 
 
 		$q_view['main_form_tags']='METHOD="POST" ACTION="'.qa_self_html().'"';
+		$q_view['voting_form_hidden']=array('code' => qa_get_form_security_code('vote'));
+		$q_view['buttons_form_hidden']=array('code' => qa_get_form_security_code('buttons-'.$questionid), 'qa_click' => '');
 		
 
 	//	Buttons for operating on the question
@@ -344,9 +347,6 @@
 			$q_view['form']=array(
 				'style' => 'light',
 				'buttons' => $buttons,
-				'hidden' => array(
-					'qa_click' => '',
-				),
 			);
 		}
 		
@@ -411,15 +411,18 @@
 		$userid=qa_get_logged_in_userid();
 		$cookieid=qa_cookie_get();
 		
-		$htmloptions=qa_post_html_defaults('A', true);
+		$htmloptions=qa_post_html_options($answer, null, true);
 		$htmloptions['isselected']=$isselected;
 		$htmloptions['avatarsize']=qa_opt('avatar_q_page_a_size');
+		$htmloptions['q_request']=qa_q_request($question['postid'], $question['title']);
 		$a_view=qa_post_html_fields($answer, $userid, $cookieid, $usershtml, null, $htmloptions);
 
 		if ($answer['queued'])
 			$a_view['error']=$answer['isbyuser'] ? qa_lang_html('question/a_your_waiting_approval') : qa_lang_html('question/a_waiting_your_approval');
 		
 		$a_view['main_form_tags']='METHOD="POST" ACTION="'.qa_self_html().'"';
+		$a_view['voting_form_hidden']=array('code' => qa_get_form_security_code('vote'));
+		$a_view['buttons_form_hidden']=array('code' => qa_get_form_security_code('buttons-'.$answerid), 'qa_click' => '');
 
 
 	//	Selection/unselect buttons and others for operating on the answer
@@ -527,7 +530,7 @@
 	}
 	
 	
-	function qa_page_q_comment_view($parent, $comment, $usershtml, $formrequested)
+	function qa_page_q_comment_view($question, $parent, $comment, $usershtml, $formrequested)
 /*
 	Returns an element to add to the appropriate $qa_content[...]['c_list']['cs'] array for $comment as viewed by the
 	current user. Pass the comment's $parent post. $usershtml should be an array which maps userids to HTML user
@@ -541,8 +544,9 @@
 		$userid=qa_get_logged_in_userid();
 		$cookieid=qa_cookie_get();
 		
-		$htmloptions=qa_post_html_defaults('C', true);
+		$htmloptions=qa_post_html_options($comment, null, true);
 		$htmloptions['avatarsize']=qa_opt('avatar_q_page_c_size');
+		$htmloptions['q_request']=qa_q_request($question['postid'], $question['title']);
 		$c_view=qa_post_html_fields($comment, $userid, $cookieid, $usershtml, null, $htmloptions);
 	
 		if ($comment['queued'])
@@ -641,7 +645,7 @@
 	}
 
 
-	function qa_page_q_comment_follow_list($parent, $commentsfollows, $alwaysfull, $usershtml, $formrequested, $formpostid)
+	function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $alwaysfull, $usershtml, $formrequested, $formpostid)
 /*
 	Return an array $qa_content[...]['c_list'] for all of the comments and follow-on questions in $commentsfollows which
 	belong to post $parent, as viewed by the current user. If $alwaysfull then all comments will be included, otherwise
@@ -690,7 +694,7 @@
 			$commentlist['cs'][$parentid]=array(
 				'url' => qa_html('?state=showcomments-'.$parentid.'&show='.$parentid.'#'.urlencode(qa_anchor($parent['basetype'], $parentid))),
 					
-				'expand_tags' => 'onClick="return qa_show_comments('.qa_js($parentid).', this);"',
+				'expand_tags' => 'onClick="return qa_show_comments('.qa_js($question['postid']).', '.qa_js($parentid).', this);"',
 				
 				'title' => $expandtitle,
 			);
@@ -700,10 +704,10 @@
 				$skipfirst--;
 			
 			elseif ($commentfollow['basetype']=='C') {
-				$commentlist['cs'][$commentfollowid]=qa_page_q_comment_view($parent, $commentfollow, $usershtml, $formrequested);
+				$commentlist['cs'][$commentfollowid]=qa_page_q_comment_view($question, $parent, $commentfollow, $usershtml, $formrequested);
 
 			} elseif ($commentfollow['basetype']=='Q') {
-				$htmloptions=qa_post_html_defaults('Q');
+				$htmloptions=qa_post_html_options($commentfollow);
 				$htmloptions['avatarsize']=qa_opt('avatar_q_page_c_size');
 				
 				$commentlist['cs'][$commentfollowid]=qa_post_html_fields($commentfollow, $userid, $cookieid, $usershtml, null, $htmloptions);
@@ -716,7 +720,7 @@
 	}
 	
 
-	function qa_page_q_add_a_form(&$qa_content, $formid, $usecaptcha, $questionid, $in, $errors, $loadnow, $formrequested)
+	function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, $in, $errors, $loadnow, $formrequested)
 /*
 	Return a $qa_content form for adding an answer to $questionid. Pass an HTML element id to use for the form in
 	$formid and $usecaptcha if it should contain a captcha. Pass previous inputs from a submitted version of this form
@@ -724,7 +728,10 @@
 	$formrequested to true if the user explicitly requested it, as opposed being shown automatically.
 */
 	{
-		switch (qa_user_permit_error('permit_post_a')) {
+		// The 'approve', 'login', 'confirm', 'limit', 'userblock', 'ipblock' permission errors are reported to the user here
+		// The other option ('level') prevents the answer button being shown, in qa_page_q_post_rules(...)
+
+		switch (qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
 			case 'login':
 				$form=array(
 					'title' => qa_insert_login_links(qa_lang_html('question/answer_must_login'), qa_request())
@@ -734,6 +741,12 @@
 			case 'confirm':
 				$form=array(
 					'title' => qa_insert_login_links(qa_lang_html('question/answer_must_confirm'), qa_request())
+				);
+				break;
+				
+			case 'approve':
+				$form=array(
+					'title' => qa_lang_html('question/answer_must_be_approved')
 				);
 				break;
 				
@@ -781,7 +794,7 @@
 					
 					'buttons' => array(
 						'answer' => array(
-							'tags' => 'onClick="'.$updatescript.' return qa_submit_answer('.qa_js($questionid).', this);"',
+							'tags' => 'onClick="'.$updatescript.' return qa_submit_answer('.qa_js($question['postid']).', this);"',
 							'label' => qa_lang_html('question/add_answer_button'),
 						),
 					),
@@ -789,6 +802,7 @@
 					'hidden' => array(
 						'a_editor' => qa_html($editorname),
 						'a_doadd' => '1',
+						'code' => qa_get_form_security_code('answer-'.$question['postid']),
 					),
 				);
 				
@@ -801,31 +815,31 @@
 						'label' => qa_lang_html('main/cancel_button'),
 					);
 					
+				if (!qa_is_logged_in())
+					qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], 'a_');
+					
 				qa_set_up_notify_fields($qa_content, $form['fields'], 'A', qa_get_logged_in_email(),
 					isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email'], 'a_');
 					
 				$onloads=array();
 					
-				if ($usecaptcha) {
-					$userid=qa_get_logged_in_userid();
-					
-					$captchaloadscript=qa_set_up_captcha_field($qa_content, $form['fields'], $errors,
-						qa_insert_login_links(qa_lang_html(isset($userid) ? 'misc/captcha_confirm_fix' : 'misc/captcha_login_fix')));
+				if ($captchareason) {
+					$captchaloadscript=qa_set_up_captcha_field($qa_content, $form['fields'], $errors, qa_captcha_reason_note($captchareason));
 						
 					if (strlen($captchaloadscript))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_show=function() { '.$captchaloadscript.' }';
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_show=function() { '.$captchaloadscript.' };';
 				}
 
 				if (!$loadnow) {
 					if (method_exists($editor, 'load_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script('a_content').' }';
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script('a_content').' };';
 						
 					$form['buttons']['cancel']['tags'].=' onClick="return qa_toggle_element();"';
 				}
 				
 				if (!$formrequested) {
 					if (method_exists($editor, 'focus_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script('a_content').' }';
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script('a_content').' };';
 				}
 
 				if (count($onloads))
@@ -841,7 +855,7 @@
 	}
 	
 	
-	function qa_page_q_add_c_form(&$qa_content, $questionid, $parentid, $formid, $usecaptcha, $in, $errors, $loadfocusnow)
+	function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captchareason, $in, $errors, $loadfocusnow)
 /*
 	Returns a $qa_content form for adding a comment to post $parentid which is part of question $questionid. Pass an
 	HTML element id to use for the form in $formid and $usecaptcha if it should contain a captcha. Pass previous inputs
@@ -849,7 +863,10 @@
 	the form will be loaded and focused immediately.
 */
 	{
-		switch (qa_user_permit_error('permit_post_c')) {
+		// The 'approve', 'login', 'confirm', 'userblock', 'ipblock' permission errors are reported to the user here
+		// The other option ('level') prevents the comment button being shown, in qa_page_q_post_rules(...)
+
+		switch (qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)) {
 			case 'login':
 				$form=array(
 					'title' => qa_insert_login_links(qa_lang_html('question/comment_must_login'), qa_request())
@@ -859,6 +876,12 @@
 			case 'confirm':
 				$form=array(
 					'title' => qa_insert_login_links(qa_lang_html('question/comment_must_confirm'), qa_request())
+				);
+				break;
+			
+			case 'approve':
+				$form=array(
+					'title' => qa_lang_html('question/comment_must_be_approved')
 				);
 				break;
 			
@@ -875,7 +898,7 @@
 				break;
 			
 			case false:
-				$prefix='c'.$parentid.'_';
+				$prefix='c'.$parent['postid'].'_';
 				
 				$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_cs');
 				$editor=qa_load_editor(@$in['content'], @$in['format'], $editorname);
@@ -888,9 +911,9 @@
 				$custom=qa_opt('show_custom_comment') ? trim(qa_opt('custom_comment')) : '';
 				
 				$form=array(
-					'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="c_form_'.qa_html($parentid).'"',
+					'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="c_form_'.qa_html($parent['postid']).'"',
 					
-					'title' => qa_lang_html(($questionid==$parentid) ? 'question/your_comment_q' : 'question/your_comment_a'),
+					'title' => qa_lang_html(($question['postid']==$parent['postid']) ? 'question/your_comment_q' : 'question/your_comment_a'),
 					
 					'fields' => array(
 						'custom' => array(
@@ -908,7 +931,7 @@
 					
 					'buttons' => array(
 						'comment' => array(
-							'tags' => 'onClick="'.$updatescript.' return qa_submit_comment('.qa_js($questionid).', '.qa_js($parentid).', this);"',
+							'tags' => 'onClick="'.$updatescript.' return qa_submit_comment('.qa_js($question['postid']).', '.qa_js($parent['postid']).', this);"',
 							'label' => qa_lang_html('question/add_comment_button'),
 						),
 						
@@ -921,32 +944,33 @@
 					'hidden' => array(
 						$prefix.'editor' => qa_html($editorname),
 						$prefix.'doadd' => '1',
+						$prefix.'code' => qa_get_form_security_code('comment-'.$parent['postid']),
 					),
 				);
 		
 				if (!strlen($custom))
 					unset($form['fields']['custom']);
 			
+				if (!qa_is_logged_in())
+					qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], $prefix);
+
 				qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),
 					isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), $in['email'], @$errors['email'], $prefix);
 				
 				$onloads=array();
 
-				if ($usecaptcha) {
-					$userid=qa_get_logged_in_userid();
-					
-					$captchaloadscript=qa_set_up_captcha_field($qa_content, $form['fields'], $errors,
-						qa_insert_login_links(qa_lang_html(isset($userid) ? 'misc/captcha_confirm_fix' : 'misc/captcha_login_fix')));
+				if ($captchareason) {
+					$captchaloadscript=qa_set_up_captcha_field($qa_content, $form['fields'], $errors, qa_captcha_reason_note($captchareason));
 						
 					if (strlen($captchaloadscript))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_show=function() { '.$captchaloadscript.' }';
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_show=function() { '.$captchaloadscript.' };';
 				}
 				
 				if (!$loadfocusnow) {
 					if (method_exists($editor, 'load_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script($prefix.'content').' }';
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script($prefix.'content').' };';
 					if (method_exists($editor, 'focus_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script($prefix.'content').' }';
+						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script($prefix.'content').' };';
 						
 					$form['buttons']['cancel']['tags'].=' onClick="return qa_toggle_element()"';
 				}

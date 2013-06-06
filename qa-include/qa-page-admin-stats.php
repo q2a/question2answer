@@ -50,8 +50,8 @@
 
 	$ccount=(int)qa_opt('cache_ccount');
 	$ccount_anon=qa_db_count_posts('C', false);
-
 	
+
 //	Prepare content for theme
 
 	$qa_content=qa_content_prepare();
@@ -245,10 +245,31 @@
 				'note' => '<SPAN ID="delete_hidden_note">'.qa_lang_html('admin/delete_hidden_note').'</SPAN>',
 			),
 		),
+		
+		'hidden' => array(
+			'code' => qa_get_form_security_code('admin/recalc'),
+		),
 	);
 	
 	if (!qa_using_categories())
 		unset($qa_content['form_2']['buttons']['recalc_categories']);
+	
+	if (defined('QA_BLOBS_DIRECTORY')) {
+		if (qa_db_has_blobs_in_db())
+			$qa_content['form_2']['buttons']['blobs_to_disk']=array(
+				'label' => qa_lang_html('admin/blobs_to_disk'),
+				'tags' => 'NAME="doblobstodisk" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/blobs_stop')).', \'blobs_to_disk_note\');"',
+				'note' => '<SPAN ID="blobs_to_disk_note">'.qa_lang_html('admin/blobs_to_disk_note').'</SPAN>',
+			);
+		
+		if (qa_db_has_blobs_on_disk())
+			$qa_content['form_2']['buttons']['blobs_to_db']=array(
+				'label' => qa_lang_html('admin/blobs_to_db'),
+				'tags' => 'NAME="doblobstodb" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/blobs_stop')).', \'blobs_to_db_note\');"',
+				'note' => '<SPAN ID="blobs_to_db_note">'.qa_lang_html('admin/blobs_to_db_note').'</SPAN>',
+			);
+	}
+
 	
 	$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;
 	$qa_content['script_var']['qa_warning_recalc']=qa_lang('admin/stop_recalc_warning');

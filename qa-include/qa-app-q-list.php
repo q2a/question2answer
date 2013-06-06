@@ -32,20 +32,19 @@
 	
 	function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitle, $nonetitle,
 		$navcategories, $categoryid, $categoryqcount, $categorypathprefix, $feedpathprefix, $suggest,
-		$pagelinkparams=null, $categoryparams=null, $categoryisfavorite=null)
+		$pagelinkparams=null, $categoryparams=null, $dummy=null)
 /*
-	Returns the $qa_content structure for a question list page showing $questions retrieved from the database.
-	If $pagesize is not null, it sets the max number of questions to display.
-	If $count is not null, pagination is determined by $start and $count.
-	The page title is $sometitle unless there are no questions shown, in which case it's $nonetitle.
-	$navcategories should contain the categories retrived from the database using qa_db_category_nav_selectspec(...) for
-	$categoryid, which is the current category shown (set $categoryisfavorite to whether the user has favorited it).
-	If $categorypathprefix is set, category navigation will be shown, with per-category question counts if
-	$categoryqcount is true. The nav links will have the prefix $categorypathprefix and possible extra $categoryparams.
-	If $feedpathprefix is set, the page has an RSS feed whose URL uses that prefix.
-	If there are no links to other pages, $suggest is used to suggest what the user should do.
-	The $pagelinkparams are passed through to qa_html_page_links(...) which creates links for page 2, 3, etc..
-	
+	Returns the $qa_content structure for a question list page showing $questions retrieved from the
+	database. If $pagesize is not null, it sets the max number of questions to display. If $count is
+	not null, pagination is determined by $start and $count. The page title is $sometitle unless
+	there are no questions shown, in which case it's $nonetitle. $navcategories should contain the
+	categories retrived from the database using qa_db_category_nav_selectspec(...) for $categoryid,
+	which is the current category shown. If $categorypathprefix is set, category navigation will be
+	shown, with per-category question counts if $categoryqcount is true. The nav links will have the
+	prefix $categorypathprefix and possible extra $categoryparams. If $feedpathprefix is set, the
+	page has an RSS feed whose URL uses that prefix. If there are no links to other pages, $suggest
+	is used to suggest what the user should do. The $pagelinkparams are passed through to
+	qa_html_page_links(...) which creates links for page 2, 3, etc..
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -70,6 +69,10 @@
 	
 		$qa_content['q_list']['form']=array(
 			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			
+			'hidden' => array(
+				'code' => qa_get_form_security_code('vote'),
+			),
 		);
 		
 		$qa_content['q_list']['qs']=array();
@@ -77,19 +80,24 @@
 		if (count($questions)) {
 			$qa_content['title']=$sometitle;
 		
-			$options=qa_post_html_defaults('Q');
+			$defaults=qa_post_html_defaults('Q');
 			if (isset($categorypathprefix))
-				$options['categorypathprefix']=$categorypathprefix;
+				$defaults['categorypathprefix']=$categorypathprefix;
 				
 			foreach ($questions as $question)
-				$qa_content['q_list']['qs'][]=qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, $options);
+				$qa_content['q_list']['qs'][]=qa_any_to_q_html_fields($question, $userid, qa_cookie_get(),
+					$usershtml, null, qa_post_html_options($question, $defaults));
 
 		} else
 			$qa_content['title']=$nonetitle;
+		
+		if (isset($userid) && isset($categoryid) && isset($categoryisfavorite)) {
+			$favoritemap=qa_get_favorite_non_qs_map();
+			$categoryisfavorite=@$favoritemap['category'][$navcategories[$categoryid]['backpath']] ? true : false;
 			
-		if (isset($userid) && isset($categoryid) && isset($categoryisfavorite))
 			$qa_content['favorite']=qa_favorite_form(QA_ENTITY_CATEGORY, $categoryid, $categoryisfavorite,
 				qa_lang_sub($categoryisfavorite ? 'main/remove_x_favorites' : 'main/add_category_x_favorites', $navcategories[$categoryid]['title']));
+		}
 			
 		if (isset($count) && isset($pagesize))
 			$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'), $pagelinkparams);

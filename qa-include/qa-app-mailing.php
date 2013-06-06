@@ -122,7 +122,7 @@
 			qa_db_user_set($userid, 'emailcode', $emailcode);
 		}
 		
-		$unsubscribeurl=qa_path('unsubscribe', array('c' => $emailcode, 'u' => $handle), qa_opt('site_url'));
+		$unsubscribeurl=qa_path_absolute('unsubscribe', array('c' => $emailcode, 'u' => $handle));
 		
 		return qa_send_email(array(
 			'fromemail' => qa_opt('mailing_from_email'),

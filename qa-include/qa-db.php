@@ -274,7 +274,7 @@
 		
 		$prefix=QA_MYSQL_TABLE_PREFIX;
 		
-		if (defined('QA_MYSQL_USERS_PREFIX'))
+		if (defined('QA_MYSQL_USERS_PREFIX')) {
 			switch (strtolower($rawname)) {
 				case 'users':
 				case 'userlogins':
@@ -284,9 +284,12 @@
 				case 'cookies':
 				case 'blobs':
 				case 'cache':
+				case 'userlogins_ibfk_1': // also special cases for constraint names
+				case 'userprofile_ibfk_1':
 					$prefix=QA_MYSQL_USERS_PREFIX;
 					break;
 			}
+		}
 			
 		return $prefix.$rawname;
 	}
@@ -395,12 +398,13 @@
 	Return an array of the names of all tables in the Q2A database, converted to lower case
 */
 	{
-		$tables=qa_db_read_all_values(qa_db_query_raw('SHOW TABLES'));
-		
-		foreach ($tables as $key => $table)
-			$tables[$key]=strtolower($table);
-			
-		return $tables;
+		return array_map('strtolower', qa_db_list_tables());
+	}
+	
+	
+	function qa_db_list_tables()
+	{
+		return qa_db_read_all_values(qa_db_query_raw('SHOW TABLES'));
 	}
 
 	

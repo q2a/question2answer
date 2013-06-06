@@ -39,9 +39,11 @@
 
 //	Get information about appropriate categories and redirect to questions page if category has no sub-categories
 	
-	@list($categories, $categoryid)=qa_db_select_with_pending(
+	$userid=qa_get_logged_in_userid();
+	list($categories, $categoryid, $favoritecats)=qa_db_select_with_pending(
 		qa_db_category_nav_selectspec($categoryslugs, false, false, true),
-		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
+		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null,
+		isset($userid) ? qa_db_user_favorite_categories_selectspec($userid) : null
 	);
 	
 	if ($countslugs && !isset($categoryid))
@@ -50,7 +52,7 @@
 
 //	Function for recursive display of categories
 
-	function qa_category_nav_to_browse(&$navigation, $categories, $categoryid)
+	function qa_category_nav_to_browse(&$navigation, $categories, $categoryid, $favoritemap)
 	{
 		foreach ($navigation as $key => $navlink) {
 			$category=$categories[$navlink['categoryid']];
@@ -62,6 +64,9 @@
 				$navigation[$key]['url']=qa_path_html('categories/'.qa_category_path_request($categories, $category['parentid']));
 			} else
 				$navigation[$key]['state']='closed';
+				
+			if (@$favoritemap[$navlink['categoryid']])
+				$navigation[$key]['favorited']=true;
 				
 			$navigation[$key]['note']='';
 			
@@ -75,7 +80,7 @@
 				$navigation[$key]['note'].=qa_html(' - '.$category['content']);
 			
 			if (isset($navlink['subnav']))
-				qa_category_nav_to_browse($navigation[$key]['subnav'], $categories, $categoryid);
+				qa_category_nav_to_browse($navigation[$key]['subnav'], $categories, $categoryid, $favoritemap);
 		}
 	}
 		
@@ -91,7 +96,12 @@
 		
 		unset($navigation['all']);
 		
-		qa_category_nav_to_browse($navigation, $categories, $categoryid);
+		$favoritemap=array();
+		if (isset($favoritecats))
+			foreach ($favoritecats as $category)
+				$favoritemap[$category['categoryid']]=true;
+
+		qa_category_nav_to_browse($navigation, $categories, $categoryid, $favoritemap);
 		
 		$qa_content['nav_list']=array(
 			'nav' => $navigation,

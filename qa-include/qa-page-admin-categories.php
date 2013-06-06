@@ -80,14 +80,20 @@
 			$hassubcategory=true;
 
 
-
 //	Process saving options
 
-	$savedoptions=false;	
+	$savedoptions=false;
+	$securityexpired=false;
+	
 	if (qa_clicked('dosaveoptions')) {
-		qa_set_option('allow_no_category', (int)qa_post_text('option_allow_no_category'));
-		qa_set_option('allow_no_sub_category', (int)qa_post_text('option_allow_no_sub_category'));
-		$savedoptions=true;
+		if (!qa_check_form_security_code('admin/categories', qa_post_text('code')))
+			$securityexpired=true;
+
+		else {
+			qa_set_option('allow_no_category', (int)qa_post_text('option_allow_no_category'));
+			qa_set_option('allow_no_sub_category', (int)qa_post_text('option_allow_no_sub_category'));
+			$savedoptions=true;
+		}
 	}
 
 
@@ -102,13 +108,20 @@
 			qa_redirect(qa_request(), array('edit' => @$editcategory['parentid']));
 		
 	} elseif (qa_clicked('dosetmissing')) {
-		$inreassign=qa_get_category_field_value('reassign');
-		qa_db_category_reassign($editcategory['categoryid'], $inreassign);
-		qa_redirect(qa_request(), array('recalc' => 1, 'edit' => $editcategory['categoryid']));
+		if (!qa_check_form_security_code('admin/categories', qa_post_text('code')))
+			$securityexpired=true;
+			
+		else {
+			$inreassign=qa_get_category_field_value('reassign');
+			qa_db_category_reassign($editcategory['categoryid'], $inreassign);
+			qa_redirect(qa_request(), array('recalc' => 1, 'edit' => $editcategory['categoryid']));
+		}
 	
 	} elseif (qa_clicked('dosavecategory')) {
-		
-		if (qa_post_text('dodelete')) {
+		if (!qa_check_form_security_code('admin/categories', qa_post_text('code')))
+			$securityexpired=true;
+			
+		elseif (qa_post_text('dodelete')) {
 
 			if (!$hassubcategory) {
 				$inreassign=qa_get_category_field_value('reassign');
@@ -230,8 +243,7 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/categories_title');
-	
-	$qa_content['error']=qa_admin_page_error();
+	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 	
 	if ($setmissing) {
 		$qa_content['form']=array(
@@ -263,6 +275,7 @@
 				'dosetmissing' => '1', // for IE
 				'edit' => @$editcategory['categoryid'],
 				'missing' => '1',
+				'code' => qa_get_form_security_code('admin/categories'),
 			),
 		);
 
@@ -328,6 +341,7 @@
 				'edit' => @$editcategory['categoryid'],
 				'parent' =>  @$editcategory['parentid'],
 				'setparent' => (int)$setparent,
+				'code' => qa_get_form_security_code('admin/categories'),
 			),
 		);
 		
@@ -534,6 +548,10 @@
 					'label' => qa_lang_html('admin/add_category_button'),
 				),			
 			),
+			
+			'hidden' => array(
+				'code' => qa_get_form_security_code('admin/categories'),
+			),	
 		);
 
 		if (count($categories)) {

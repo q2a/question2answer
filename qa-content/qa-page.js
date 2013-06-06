@@ -51,8 +51,6 @@ function qa_set_outer_html(elem, type, html)
 function qa_show_waiting_after(elem, inside)
 {
 	if (elem && !elem.qa_waiting_shown) {
-		elem.qa_waiting_shown=true;
-		
 		var w=document.getElementById('qa-waiting-template');
 	
 		if (w) {
@@ -63,7 +61,19 @@ function qa_show_waiting_after(elem, inside)
 				elem.insertBefore(c, null);
 			else
 				elem.parentNode.insertBefore(c, elem.nextSibling);
+
+			elem.qa_waiting_shown=c;
 		}
+	}
+}
+
+function qa_hide_waiting(elem)
+{
+	var c=elem.qa_waiting_shown;
+
+	if (c) {
+		c.parentNode.removeChild(c);
+		elem.qa_waiting_shown=null;
 	}
 }
 
@@ -72,9 +82,10 @@ function qa_vote_click(elem)
 	var ens=elem.name.split('_');
 	var postid=ens[1];
 	var vote=parseInt(ens[2]);
+	var code=elem.form.elements.code.value;
 	var anchor=ens[3];
 	
-	qa_ajax_post('vote', {postid:postid, vote:vote},
+	qa_ajax_post('vote', {postid:postid, vote:vote, code:code},
 		function(lines) {
 			if (lines[0]=='1') {
 				qa_set_inner_html(document.getElementById('voting_'+postid), 'voting', lines.slice(1).join("\n"));
@@ -105,11 +116,14 @@ function qa_vote_click(elem)
 function qa_notice_click(elem)
 {
 	var ens=elem.name.split('_');
+	var code=elem.form.elements.code.value;
 	
-	qa_ajax_post('notice', {noticeid:ens[1]},
+	qa_ajax_post('notice', {noticeid:ens[1], code:code},
 		function(lines) {
 			if (lines[0]=='1')
 				qa_conceal(document.getElementById('notice_'+ens[1]), 'notice');
+			else if (lines[0]=='0')
+				alert(lines[1]);
 			else
 				qa_ajax_error();
 		}
@@ -121,12 +135,16 @@ function qa_notice_click(elem)
 function qa_favorite_click(elem)
 {
 	var ens=elem.name.split('_');
+	var code=elem.form.elements.code.value;
 	
-	qa_ajax_post('favorite', {entitytype:ens[1], entityid:ens[2], favorite:parseInt(ens[3])},
+	qa_ajax_post('favorite', {entitytype:ens[1], entityid:ens[2], favorite:parseInt(ens[3]), code:code},
 		function (lines) {
 			if (lines[0]=='1')
 				qa_set_inner_html(document.getElementById('favoriting'), 'favoriting', lines.slice(1).join("\n"));
-			else
+			else if (lines[0]=='0') {
+				alert(lines[1]);
+				qa_hide_waiting(elem);
+			} else
 				qa_ajax_error();
 		}
 	);

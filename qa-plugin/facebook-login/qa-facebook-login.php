@@ -26,78 +26,6 @@
 
 	class qa_facebook_login {
 		
-		var $directory;
-		var $urltoroot;
-
-		
-		function load_module($directory, $urltoroot)
-		{
-			$this->directory=$directory;
-			$this->urltoroot=$urltoroot;
-		}
-
-		
-		function check_login()
-		{
-			// Based on sample code: http://developers.facebook.com/docs/guides/web
-			
-			$testfacebook=false;
-			
-			foreach ($_COOKIE as $key => $value)
-				if (substr($key, 0, 5)=='fbsr_')
-					$testfacebook=true;
-					
-			if (!$testfacebook) // to save making a database query for qa_opt() if there's no point
-				return;
-				
-			$app_id=qa_opt('facebook_app_id');
-			$app_secret=qa_opt('facebook_app_secret');
-			
-			if (!(strlen($app_id) && strlen($app_secret)))
-				return;
-				
-			if (!function_exists('json_decode')) { // work around fact that PHP might not have JSON extension installed
-				require_once $this->directory.'JSON.php';
-				
-				function json_decode($json)
-				{
-					$decoder=new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-					return $decoder->decode($json);
-				}
-			}
-			
-			require_once $this->directory.'facebook.php';
-			
-			$facebook = new Facebook(array(
-				'appId'  => qa_opt('facebook_app_id'),
-				'secret' => qa_opt('facebook_app_secret'),
-				'cookie' => true,
-			));
-			
-			$fb_userid=$facebook->getUser();
-			
-			if ($fb_userid)
-				try {
-					$user=$facebook->api('/me?fields=email,name,verified,location,website,about,picture');
-				
-					if (is_array($user))
-						qa_log_in_external_user('facebook', $fb_userid, array(
-							'email' => @$user['email'],
-							'handle' => @$user['name'],
-							'confirmed' => @$user['verified'],
-							'name' => @$user['name'],
-							'location' => @$user['location']['name'],
-							'website' => @$user['website'],
-							'about' => @$user['bio'],
-							'avatar' => strlen(@$user['picture']['data']['url']) ? qa_retrieve_url($user['picture']['data']['url']) : null,
-						));
-
-				} catch (FacebookApiException $e) {
-					$facebookuserid=null;
-				}
-		}
-		
-
 		function match_source($source)
 		{
 			return $source=='facebook';
@@ -111,7 +39,7 @@
 			if (!strlen($app_id))
 				return;
 				
-			$this->facebook_html($tourl, false, $context);
+			$this->facebook_html(qa_path_absolute('facebook-login', array('to' => $tourl)), false, $context);
 		}
 
 		
@@ -122,10 +50,7 @@
 			if (!strlen($app_id))
 				return;
 				
-			if (isset($_COOKIE['fbsr_'.$app_id])) // check we still have a Facebook cookie ...
-				$this->facebook_html($tourl, true, 'menu');
-			else // ... if not, show a standard logout link, since sometimes the redirect to Q2A's logout page doesn't complete
-				echo '<A HREF="'.qa_html($tourl).'">'.qa_lang_html('main/nav_logout').'</A>';
+			$this->facebook_html($tourl, true, 'menu');
 		}
 		
 

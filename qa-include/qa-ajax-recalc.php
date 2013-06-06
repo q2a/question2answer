@@ -29,13 +29,20 @@
 	
 
 	if (qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {
-		$state=qa_post_text('state');
-		$stoptime=time()+3;
 		
-		while ( qa_recalc_perform_step($state) && (time()<$stoptime) )
-			;
+		if (!qa_check_form_security_code('admin/recalc', qa_post_text('code'))) {
+			$state='';
+			$message=qa_lang('misc/form_security_reload');
+		
+		} else {
+			$state=qa_post_text('state');
+			$stoptime=time()+3;
 			
-		$message=qa_recalc_get_message($state);
+			while ( qa_recalc_perform_step($state) && (time()<$stoptime) )
+				;
+				
+			$message=qa_recalc_get_message($state);
+		}
 	
 	} else {
 		$state='';

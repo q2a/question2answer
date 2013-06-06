@@ -32,8 +32,7 @@
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 	require_once QA_INCLUDE_DIR.'qa-app-q-list.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
-	
+
 	$categoryslugs=qa_request_parts(1);
 	$countslugs=count($categoryslugs);
 	
@@ -66,11 +65,10 @@
 			break;
 	}
 	
-	@list($questions, $categories, $categoryid, $favorite)=qa_db_select_with_pending(
+	list($questions, $categories, $categoryid)=qa_db_select_with_pending(
 		qa_db_qs_selectspec($userid, $selectsort, $start, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_qs')),
 		qa_db_category_nav_selectspec($categoryslugs, false, false, true),
-		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null,
-		($countslugs && isset($userid)) ? qa_db_is_favorite_selectspec($userid, QA_ENTITY_CATEGORY, $categoryslugs) : null
+		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
 	);
 	
 	if ($countslugs) {
@@ -131,8 +129,7 @@
 		$feedpathprefix, // prefix for RSS feed paths
 		$countslugs ? qa_html_suggest_qs_tags(qa_using_tags()) : qa_html_suggest_ask($categoryid), // suggest what to do next
 		$linkparams, // extra parameters for page links
-		$linkparams, // category nav params
-		$favorite // has used favorited this category
+		$linkparams // category nav params
 	);
 	
 	if (QA_ALLOW_UNINDEXED_QUERIES || !$countslugs)

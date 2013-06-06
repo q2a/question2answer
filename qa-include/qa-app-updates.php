@@ -44,13 +44,18 @@
 	define('QA_UPDATE_CATEGORY', 'A'); // questions only, category changed
 	define('QA_UPDATE_CLOSED', 'C'); // questions only, closed or reopened
 	define('QA_UPDATE_CONTENT', 'E'); // title or content edited
-	define('QA_UPDATE_FOLLOWS', 'F'); // questions only (this is only set in streams tables, not on post)
 	define('QA_UPDATE_PARENT', 'M'); // e.g. comment moved when converting its parent answer to a comment
 	define('QA_UPDATE_SELECTED', 'S'); // answers only, removed if unselected
 	define('QA_UPDATE_TAGS', 'T'); // questions only
 	define('QA_UPDATE_TYPE', 'Y'); // e.g. answer to comment
 	define('QA_UPDATE_VISIBLE', 'H'); // hidden or reshown
+
+
+//	Character codes for types of update that only appear in the streams tables, not on the posts themselves
 	
+	define('QA_UPDATE_FOLLOWS', 'F'); // if a new question was asked related to one of its answers, or for a comment that follows another
+	define('QA_UPDATE_C_FOR_Q', 'U'); // if comment created was on a question of the user whose stream this appears in
+	define('QA_UPDATE_C_FOR_A', 'N'); // if comment created was on an answer of the user whose stream this appears in
 
 /*
 	Omit PHP closing tag to help avoid accidental output

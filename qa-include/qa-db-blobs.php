@@ -30,7 +30,7 @@
 	}
 
 
-	function qa_db_blob_create($content, $format, $filename=null, $userid=null, $cookieid=null, $ip=null)
+	function qa_db_blob_create($content, $format, $sourcefilename=null, $userid=null, $cookieid=null, $ip=null)
 /*
 	Create a new blob in the database with $content and $format, returning its blobid
 */
@@ -45,7 +45,7 @@
 
 			qa_db_query_sub(
 				'INSERT INTO ^blobs (blobid, format, content, filename, userid, cookieid, createip, created) VALUES (#, $, $, $, $, #, INET_ATON($), NOW())',
-				$blobid, $format, $content, $filename, $userid, $cookieid, $ip
+				$blobid, $format, $content, $sourcefilename, $userid, $cookieid, $ip
 			);
 		
 			return $blobid;
@@ -66,6 +66,15 @@
 			'SELECT content, format, filename FROM ^blobs WHERE blobid=#',
 			$blobid
 		), true);
+	}
+	
+	
+	function qa_db_blob_set_content($blobid, $content)
+	{
+		qa_db_query_sub(
+			'UPDATE ^blobs SET content=$ WHERE blobid=#',
+			$content, $blobid
+		);
 	}
 	
 	

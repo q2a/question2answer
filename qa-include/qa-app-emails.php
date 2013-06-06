@@ -119,6 +119,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
+	//	@error_log(print_r($params, true));
+		
 		require_once QA_INCLUDE_DIR.'qa-class.phpmailer.php';
 		
 		$mailer=new PHPMailer();

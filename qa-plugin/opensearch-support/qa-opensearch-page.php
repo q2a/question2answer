@@ -35,17 +35,17 @@
 		{
 			@ini_set('display_errors', 0); // we don't want to show PHP errors inside XML
 
-			$titlehtml=qa_html(qa_opt('site_title'));
-			$template=str_replace('_searchTerms_placeholder_', '{searchTerms}', qa_path('search', array('q' => '_searchTerms_placeholder_'), qa_opt('site_url')));
+			$titlexml=qa_xml(qa_opt('site_title'));
+			$template=str_replace('_searchTerms_placeholder_', '{searchTerms}', qa_path_absolute('search', array('q' => '_searchTerms_placeholder_')));
 
 			header('Content-type: text/xml; charset=utf-8');
 			
 			echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
 			echo '<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">'."\n";
 			
-			echo "\t<ShortName>".$titlehtml."</ShortName>\n";
-			echo "\t<Description>".qa_lang_html('main/search_button').' '.$titlehtml."</Description>\n";
-			echo "\t".'<Url type="text/html" method="get" template="'.qa_html($template).'"/>'."\n";
+			echo "\t<ShortName>".$titlexml."</ShortName>\n";
+			echo "\t<Description>".qa_xml(qa_lang('main/search_button')).' '.$titlexml."</Description>\n";
+			echo "\t".'<Url type="text/html" method="get" template="'.qa_xml($template).'"/>'."\n";
 			echo "\t<InputEncoding>UTF-8</InputEncoding>\n";
 			
 			echo '</OpenSearchDescription>'."\n";

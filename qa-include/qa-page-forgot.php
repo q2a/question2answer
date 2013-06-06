@@ -51,27 +51,31 @@
 		
 		$errors=array();
 		
-		if (strpos($inemailhandle, '@')===false) { // handles can't contain @ symbols
-			$matchusers=qa_db_user_find_by_handle($inemailhandle);
-			$passemailhandle=!qa_opt('allow_login_email_only');
-			
-		} else {
-			$matchusers=qa_db_user_find_by_email($inemailhandle);
-			$passemailhandle=true;
-		}
-			
-		if (count($matchusers)!=1) // if we get more than one match (should be impossible) also give an error
-			$errors['emailhandle']=qa_lang('users/user_not_found');
-
-		if (qa_opt('captcha_on_reset_password'))
-			qa_captcha_validate_post($errors);
-
-		if (empty($errors)) {
-			$inuserid=$matchusers[0];
-			qa_start_reset_user($inuserid);
-			qa_redirect('reset', $passemailhandle ? array('e' => $inemailhandle) : null); // redirect to page where code is entered
-		}
-			
+		if (!qa_check_form_security_code('forgot', qa_post_text('code')))
+			$errors['page']=qa_lang_html('misc/form_security_again');
+		
+		else {
+			if (strpos($inemailhandle, '@')===false) { // handles can't contain @ symbols
+				$matchusers=qa_db_user_find_by_handle($inemailhandle);
+				$passemailhandle=!qa_opt('allow_login_email_only');
+				
+			} else {
+				$matchusers=qa_db_user_find_by_email($inemailhandle);
+				$passemailhandle=true;
+			}
+				
+			if (count($matchusers)!=1) // if we get more than one match (should be impossible) also give an error
+				$errors['emailhandle']=qa_lang('users/user_not_found');
+	
+			if (qa_opt('captcha_on_reset_password'))
+				qa_captcha_validate_post($errors);
+	
+			if (empty($errors)) {
+				$inuserid=$matchusers[0];
+				qa_start_reset_user($inuserid);
+				qa_redirect('reset', $passemailhandle ? array('e' => $inemailhandle) : null); // redirect to page where code is entered
+			}
+		}			
 
 	} else
 		$inemailhandle=qa_get('e');
@@ -82,6 +86,7 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('users/reset_title');
+	$qa_content['error']=@$errors['page'];
 
 	$qa_content['form']=array(
 		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
@@ -106,6 +111,7 @@
 		
 		'hidden' => array(
 			'doforgot' => '1',
+			'code' => qa_get_form_security_code('forgot'),
 		),
 	);
 	
