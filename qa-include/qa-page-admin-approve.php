@@ -70,7 +70,7 @@
 	
 	$qa_content['message_list']=array(
 		'form' => array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 
 			'hidden' => array(
 				'code' => qa_get_form_security_code('admin/click'),
@@ -85,7 +85,7 @@
 		foreach ($users as $user) {
 			$message=array();
 			
-			$message['tags']='ID="p'.qa_html($user['userid']).'"'; // use p prefix for qa_admin_click() in qa-admin.js
+			$message['tags']='id="p'.qa_html($user['userid']).'"'; // use p prefix for qa_admin_click() in qa-admin.js
 						
 			$message['content']=qa_lang_html('users/registered_label').' '.
 				strtr(qa_lang_html('users/x_ago_from_y'), array(
@@ -95,7 +95,7 @@
 				
 			$htmlemail=qa_html($user['email']);
 			
-			$message['content'].=qa_lang_html('users/email_label').' <A HREF="mailto:'.$htmlemail.'">'.$htmlemail.'</A>';
+			$message['content'].=qa_lang_html('users/email_label').' <a href="mailto:'.$htmlemail.'">'.$htmlemail.'</a>';
 			
 			foreach ($userfields as $userfield)
 				if (strlen(@$user['profile'][$userfield['title']]))
@@ -109,12 +109,12 @@
 
 				'buttons' => array(
 					'approve' => array(
-						'tags' => 'NAME="admin_'.$user['userid'].'_userapprove" onclick="return qa_admin_click(this);"',
+						'tags' => 'name="admin_'.$user['userid'].'_userapprove" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/approve_button'),
 					),
 
 					'block' => array(
-						'tags' => 'NAME="admin_'.$user['userid'].'_userblock" onclick="return qa_admin_click(this);"',
+						'tags' => 'name="admin_'.$user['userid'].'_userblock" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('admin/block_button'),
 					),
 				),

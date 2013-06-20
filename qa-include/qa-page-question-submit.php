@@ -62,7 +62,7 @@
 		if ( (qa_clicked('q_doreshow') && $question['reshowable']) || (qa_clicked('q_doapprove') && $question['moderatable']) )
 			if (qa_page_q_click_check_form_code($question, $error)) {
 				if ($question['moderatable'] || $question['reshowimmed']) {
-					$status=QA_STATUS_NORMAL;
+					$status=QA_POST_STATUS_NORMAL;
 
 				} else {
 					$in=qa_page_q_prepare_post_for_filters($question);
@@ -74,7 +74,7 @@
 						$in['queued']=$tempin; // only preserve queued status in loop
 					}
 					
-					$status=$in['queued'] ? QA_STATUS_QUEUED : QA_STATUS_NORMAL;
+					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
 				}
 				
 				qa_question_set_status($question, $status, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
@@ -152,7 +152,7 @@
 		if ( (qa_clicked($prefix.'doreshow') && $answer['reshowable']) || (qa_clicked($prefix.'doapprove') && $answer['moderatable']) )
 			if (qa_page_q_click_check_form_code($answer, $error)) {
 				if ($answer['moderatable'] || $answer['reshowimmed']) {
-					$status=QA_STATUS_NORMAL;
+					$status=QA_POST_STATUS_NORMAL;
 					
 				} else {
 					$in=qa_page_q_prepare_post_for_filters($answer);
@@ -164,7 +164,7 @@
 						$in['queued']=$tempin; // only preserve queued status in loop
 					}
 					
-					$status=$in['queued'] ? QA_STATUS_QUEUED : QA_STATUS_NORMAL;
+					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
 				}
 				
 				qa_answer_set_status($answer, $status, $userid, $handle, $cookieid, $question, $commentsfollows);
@@ -237,7 +237,7 @@
 		if ( (qa_clicked($prefix.'doreshow') && $comment['reshowable']) || (qa_clicked($prefix.'doapprove') && $comment['moderatable']) )
 			if (qa_page_q_click_check_form_code($parent, $error)) {
 				if ($comment['moderatable'] || $comment['reshowimmed']) {
-					$status=QA_STATUS_NORMAL;
+					$status=QA_POST_STATUS_NORMAL;
 					
 				} else {
 					$in=qa_page_q_prepare_post_for_filters($comment);
@@ -249,7 +249,7 @@
 						$in['queued']=$tempin; // only preserve queued status in loop
 					}
 					
-					$status=$in['queued'] ? QA_STATUS_QUEUED : QA_STATUS_NORMAL;
+					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
 				}
 				
 				qa_comment_set_status($comment, $status, $userid, $handle, $cookieid, $question, $parent);
@@ -301,6 +301,10 @@
 	
 	
 	function qa_page_q_click_check_form_code($post, &$error)
+/*
+	Check the form security (anti-CSRF protection) for one of the buttons shown for post $post. Return true if the
+	security passed, otherwise return false and set an error message in $error
+*/
 	{
 		$result=qa_check_form_security_code('buttons-'.$post['postid'], qa_post_text('code'));
 		
@@ -431,6 +435,9 @@
 	
 	
 	function qa_page_q_prepare_post_for_filters($post)
+/*
+	Return the array of information to be passed to filter modules for the post in $post (from the database)
+*/
 	{
 		$in=array(
 			'content' => $post['content'],

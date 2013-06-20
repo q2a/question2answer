@@ -110,7 +110,7 @@
 			$qa_db_fail_handler($type, $errno, $error, $query);
 		
 		else {
-			echo '<HR><FONT COLOR="red">Database '.htmlspecialchars($type.' error '.$errno).'<P>'.nl2br(htmlspecialchars($error."\n\n".$query));
+			echo '<hr><font color="red">Database '.htmlspecialchars($type.' error '.$errno).'<p>'.nl2br(htmlspecialchars($error."\n\n".$query));
 			qa_exit('error');
 		}
 	}
@@ -403,6 +403,9 @@
 	
 	
 	function qa_db_list_tables()
+/*
+	Return an array of the names of all tables in the Q2A database
+*/
 	{
 		return qa_db_read_all_values(qa_db_query_raw('SHOW TABLES'));
 	}

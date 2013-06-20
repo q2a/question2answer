@@ -309,6 +309,7 @@
 			'page_size_tags' => 30,
 			'page_size_una_qs' => 20,
 			'page_size_users' => 20,
+			'page_size_wall' => 10,
 			'pages_prev_next' => 3,
 			'permit_anon_view_ips' => QA_PERMIT_EDITORS,
 			'permit_close_q' => QA_PERMIT_EDITORS,
@@ -525,7 +526,8 @@
 	
 	function qa_post_html_defaults($basetype, $full=false)
 /*
-	Return an array of defaults for the $options parameter passed to qa_post_html_fields() and its ilk
+	Return an array of defaults for the $options parameter passed to qa_post_html_fields() and its ilk for posts of $basetype='Q'/'A'/'C'
+	Set $full to true if these posts will be viewed in full, i.e. on a question page rather than a question listing
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -560,6 +562,11 @@
 	
 	
 	function qa_post_html_options($post, $defaults=null, $full=false)
+/*
+	Return an array of options for post $post to pass in the $options parameter to qa_post_html_fields() and its ilk. Preferably,
+	call qa_post_html_defaults() previously and pass its output in $defaults, to save excessive recalculation for each item in a
+	list. Set $full to true if these posts will be viewed in full, i.e. on a question page rather than a question listing.	
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -574,6 +581,9 @@
 	
 	
 	function qa_message_html_defaults()
+/*
+	Return an array of defaults for the $options parameter passed to qa_message_html_fields()
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		

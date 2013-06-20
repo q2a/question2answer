@@ -56,6 +56,11 @@
 //	Display the appropriate page based on the request	
 
 	switch (qa_request_part(2)) {
+		case 'wall':
+			qa_set_template('user-wall');
+			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-wall.php';
+			break;
+		
 		case 'activity':
 			qa_set_template('user-activity');
 			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-activity.php';

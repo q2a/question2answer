@@ -113,10 +113,10 @@
 	else
 		$forgotpath=qa_path('forgot', array('e' => $inemailhandle));
 	
-	$forgothtml='<A HREF="'.qa_html($forgotpath).'">'.qa_lang_html('users/forgot_link').'</A>';
+	$forgothtml='<a href="'.qa_html($forgotpath).'">'.qa_lang_html('users/forgot_link').'</a>';
 	
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
@@ -125,7 +125,7 @@
 		'fields' => array(
 			'email_handle' => array(
 				'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
-				'tags' => 'NAME="emailhandle" ID="emailhandle"',
+				'tags' => 'name="emailhandle" id="emailhandle"',
 				'value' => qa_html(@$inemailhandle),
 				'error' => qa_html(@$errors['emailhandle']),
 			),
@@ -133,7 +133,7 @@
 			'password' => array(
 				'type' => 'password',
 				'label' => qa_lang_html('users/password_label'),
-				'tags' => 'NAME="password" ID="password"',
+				'tags' => 'name="password" id="password"',
 				'value' => qa_html(@$inpassword),
 				'error' => empty($errors['password']) ? '' : (qa_html(@$errors['password']).' - '.$forgothtml),
 				'note' => $passwordsent ? qa_lang_html('users/password_sent') : $forgothtml,
@@ -142,7 +142,7 @@
 			'remember' => array(
 				'type' => 'checkbox',
 				'label' => qa_lang_html('users/remember_label'),
-				'tags' => 'NAME="remember"',
+				'tags' => 'name="remember"',
 				'value' => @$inremember ? true : false,
 			),
 		),
@@ -167,7 +167,7 @@
 		$html=ob_get_clean();
 		
 		if (strlen($html))
-			@$qa_content['custom'].='<BR>'.$html.'<BR>';
+			@$qa_content['custom'].='<br>'.$html.'<br>';
 	}
 
 	$qa_content['focusid']=(isset($inemailhandle) && !isset($errors['emailhandle'])) ? 'password' : 'emailhandle';

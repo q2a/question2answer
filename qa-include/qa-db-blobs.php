@@ -32,7 +32,7 @@
 
 	function qa_db_blob_create($content, $format, $sourcefilename=null, $userid=null, $cookieid=null, $ip=null)
 /*
-	Create a new blob in the database with $content and $format, returning its blobid
+	Create a new blob in the database with $content and $format, other fields as provided 
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -57,7 +57,7 @@
 	
 	function qa_db_blob_read($blobid)
 /*
-	Get the content of blob $blobid from the database
+	Get the information about blob $blobid from the database
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -70,6 +70,9 @@
 	
 	
 	function qa_db_blob_set_content($blobid, $content)
+/*
+	Change the content of blob $blobid in the database to $content (can also be null)
+*/
 	{
 		qa_db_query_sub(
 			'UPDATE ^blobs SET content=$ WHERE blobid=#',

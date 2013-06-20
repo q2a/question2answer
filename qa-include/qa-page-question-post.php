@@ -310,7 +310,7 @@
 */
 	{
 		$form=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 			
 			'style' => 'tall',
 			
@@ -318,7 +318,7 @@
 				'title' => array(
 					'type' => $question['editable'] ? 'text' : 'static',
 					'label' => qa_lang_html('question/q_title_label'),
-					'tags' => 'NAME="q_title"',
+					'tags' => 'name="q_title"',
 					'value' => qa_html(($question['editable'] && isset($in['title'])) ? $in['title'] : $question['title']),
 					'error' => qa_html(@$errors['title']),
 				),
@@ -335,7 +335,7 @@
 				
 				'extra' => array(
 					'label' => qa_html(qa_opt('extra_field_prompt')),
-					'tags' => 'NAME="q_extra"',
+					'tags' => 'name="q_extra"',
 					'value' => qa_html(isset($in['extra']) ? $in['extra'] : $question['extra']),
 					'error' => qa_html(@$errors['extra']),
 				),
@@ -348,12 +348,12 @@
 			
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'onClick="qa_show_waiting_after(this, false);"',
+					'tags' => 'onclick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
 				'cancel' => array(
-					'tags' => 'NAME="docancel"',
+					'tags' => 'name="docancel"',
 					'label' => qa_lang_html('main/cancel_button'),
 				),
 			),
@@ -375,7 +375,7 @@
 				qa_editor_load_field($editor, $qa_content, $content, $format, 'q_content', 12, true));
 				
 			if (method_exists($editor, 'update_script'))
-				$form['buttons']['save']['tags']='onClick="qa_show_waiting_after(this, false); '.$editor->update_script('q_content').'"';
+				$form['buttons']['save']['tags']='onclick="qa_show_waiting_after(this, false); '.$editor->update_script('q_content').'"';
 			
 			$form['hidden']['q_editor']=qa_html($editorname);
 		
@@ -411,7 +411,7 @@
 			$form['fields']['silent']=array(
 				'type' => 'checkbox',
 				'label' => qa_lang_html('question/save_silent_label'),
-				'tags' => 'NAME="q_silent"',
+				'tags' => 'name="q_silent"',
 				'value' => qa_html(@$in['silent']),
 			);
 		
@@ -527,7 +527,7 @@
 */
 	{
 		$form=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 			
 			'id' => $id,
 			
@@ -538,17 +538,17 @@
 			'fields' => array(
 				'duplicate' => array(
 					'type' => 'checkbox',
-					'tags' => 'NAME="q_close_duplicate" ID="q_close_duplicate" onchange="document.getElementById(\'q_close_details\').focus();"',
+					'tags' => 'name="q_close_duplicate" id="q_close_duplicate" onchange="document.getElementById(\'q_close_details\').focus();"',
 					'label' => qa_lang_html('question/close_duplicate'),
 					'value' => @$in['duplicate'],
 				),
 				
 				'details' => array(
-					'tags' => 'NAME="q_close_details" ID="q_close_details"',
+					'tags' => 'name="q_close_details" id="q_close_details"',
 					'label' =>
-						'<SPAN ID="close_label_duplicate">'.qa_lang_html('question/close_original_title').' </SPAN>'.
-						'<SPAN ID="close_label_other">'.qa_lang_html('question/close_reason_title').'</SPAN>',
-					'note' => '<SPAN ID="close_note_duplicate" STYLE="display:none;">'.qa_lang_html('question/close_original_note').'</SPAN>',
+						'<span id="close_label_duplicate">'.qa_lang_html('question/close_original_title').' </span>'.
+						'<span id="close_label_other">'.qa_lang_html('question/close_reason_title').'</span>',
+					'note' => '<span id="close_note_duplicate" style="display:none;">'.qa_lang_html('question/close_original_note').'</span>',
 					'value' => @$in['details'],
 					'error' => qa_html(@$errors['details']),
 				),
@@ -556,12 +556,12 @@
 			
 			'buttons' => array(
 				'close' => array(
-					'tags' => 'onClick="qa_show_waiting_after(this, false);"',
+					'tags' => 'onclick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('question/close_form_button'),
 				),
 				
 				'cancel' => array(
-					'tags' => 'NAME="docancel"',
+					'tags' => 'name="docancel"',
 					'label' => qa_lang_html('main/cancel_button'),
 				),
 			),
@@ -658,7 +658,7 @@
 				$hascomments=true;
 		
 		$form=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 			
 			'id' => $id,
 			
@@ -677,13 +677,13 @@
 
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'onClick="qa_show_waiting_after(this, false); '.
+					'tags' => 'onclick="qa_show_waiting_after(this, false); '.
 						(method_exists($editor, 'update_script') ? $editor->update_script($prefix.'content') : '').'"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
 				'cancel' => array(
-					'tags' => 'NAME="docancel"',
+					'tags' => 'name="docancel"',
 					'label' => qa_lang_html('main/cancel_button'),
 				),
 			),
@@ -719,15 +719,15 @@
 				
 		if (count($commentonoptions)) {
 			$form['fields']['tocomment']=array(
-				'tags' => 'NAME="'.$prefix.'dotoc" ID="'.$prefix.'dotoc"',
-				'label' => '<SPAN ID="'.$prefix.'toshown">'.qa_lang_html('question/a_convert_to_c_on').'</SPAN>'.
-								'<SPAN ID="'.$prefix.'tohidden" STYLE="display:none;">'.qa_lang_html('question/a_convert_to_c').'</SPAN>',
+				'tags' => 'name="'.$prefix.'dotoc" id="'.$prefix.'dotoc"',
+				'label' => '<span id="'.$prefix.'toshown">'.qa_lang_html('question/a_convert_to_c_on').'</span>'.
+								'<span id="'.$prefix.'tohidden" style="display:none;">'.qa_lang_html('question/a_convert_to_c').'</span>',
 				'type' => 'checkbox',
 				'tight' => true,
 			);
 			
 			$form['fields']['commenton']=array(
-				'tags' => 'NAME="'.$prefix.'commenton"',
+				'tags' => 'name="'.$prefix.'commenton"',
 				'id' => $prefix.'commenton',
 				'type' => 'select',
 				'note' => qa_lang_html($hascomments ? 'question/a_convert_warn_cs' : 'question/a_convert_warn'),
@@ -757,7 +757,7 @@
 			$form['fields']['silent']=array(
 				'type' => 'checkbox',
 				'label' => qa_lang_html('question/save_silent_label'),
-				'tags' => 'NAME="'.$prefix.'silent"',
+				'tags' => 'name="'.$prefix.'silent"',
 				'value' => qa_html(@$in['silent']),
 			);
 		
@@ -911,7 +911,7 @@
 		$editor=qa_load_editor($content, $format, $editorname);
 		
 		$form=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 			
 			'id' => $id,
 			
@@ -930,13 +930,13 @@
 			
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'onClick="qa_show_waiting_after(this, false); '.
+					'tags' => 'onclick="qa_show_waiting_after(this, false); '.
 						(method_exists($editor, 'update_script') ? $editor->update_script($prefix.'content') : '').'"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
 				'cancel' => array(
-					'tags' => 'NAME="docancel"',
+					'tags' => 'name="docancel"',
 					'label' => qa_lang_html('main/cancel_button'),
 				),
 			),
@@ -961,7 +961,7 @@
 			$form['fields']['silent']=array(
 				'type' => 'checkbox',
 				'label' => qa_lang_html('question/save_silent_label'),
-				'tags' => 'NAME="'.$prefix.'silent"',
+				'tags' => 'name="'.$prefix.'silent"',
 				'value' => qa_html(@$in['silent']),
 			);
 

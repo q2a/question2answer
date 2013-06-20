@@ -126,6 +126,7 @@
 		'page_size_tags' => 'number',
 		'page_size_una_qs' => 'number',
 		'page_size_users' => 'number',
+		'page_size_wall' => 'number',
 		'pages_prev_next' => 'number',
 		'q_urls_title_length' => 'number',
 		'show_fewer_cs_count' => 'number',
@@ -241,6 +242,7 @@
 		'page_size_tags' => QA_DB_RETRIEVE_TAGS,
 		'page_size_una_qs' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_users' => QA_DB_RETRIEVE_USERS,
+		'page_size_wall' => QA_DB_RETRIEVE_MESSAGES,
 	);
 	
 	$optionminimum=array(
@@ -260,6 +262,7 @@
 		'page_size_tag_qs' => 1,
 		'page_size_tags' => 1,
 		'page_size_users' => 1,
+		'page_size_wall' => 1,
 	);
 	
 
@@ -305,7 +308,7 @@
 				
 				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 			
-				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'allow_user_walls', '', 'avatar_allow_gravatar');
+				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
 				
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');
@@ -331,6 +334,7 @@
 			
 			if (!QA_FINAL_EXTERNAL_USERS)
 				$checkboxtodisplay=array_merge($checkboxtodisplay, array(
+					'page_size_wall' => 'option_allow_user_walls',
 					'avatar_profile_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 					'avatar_users_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 					'avatar_q_page_q_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
@@ -823,7 +827,7 @@
 	$qa_content['form']=array(
 		'ok' => $formokhtml,
 		
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="admin_form" onsubmit="document.forms.admin_form.has_js.value=1; return true;"',
+		'tags' => 'method="post" action="'.qa_self_html().'" name="admin_form" onsubmit="document.forms.admin_form.has_js.value=1; return true;"',
 		
 		'style' => $formstyle,
 		
@@ -835,7 +839,7 @@
 			),
 			
 			'reset' => array(
-				'tags' => 'NAME="doresetoptions"',
+				'tags' => 'name="doresetoptions"',
 				'label' => qa_lang_html('admin/reset_options_button'),
 			),
 		),
@@ -848,7 +852,7 @@
 	);
 
 	if ($recalchotness) {
-		$qa_content['form']['ok']='<SPAN ID="recalc_ok"></SPAN>';
+		$qa_content['form']['ok']='<span id="recalc_ok"></span>';
 		
 		$qa_content['script_var']['qa_warning_recalc']=qa_lang('admin/stop_recalc_warning');
 		
@@ -859,14 +863,14 @@
 	} elseif ($startmailing) {
 		
 		if (qa_post_text('has_js')) {
-			$qa_content['form']['ok']='<SPAN ID="mailing_ok">'.qa_html($mailingprogress).'</SPAN>';
+			$qa_content['form']['ok']='<span id="mailing_ok">'.qa_html($mailingprogress).'</span>';
 			
 			$qa_content['script_onloads'][]=array(
 				"qa_mailing_start('mailing_ok', 'domailingpause');"
 			);
 		
 		} else { // rudimentary non-Javascript version of mass mailing loop
-			echo '<TT>';
+			echo '<tt>';
 			
 			while (true) {
 				qa_mailing_perform_step();
@@ -876,13 +880,13 @@
 				if (!isset($message))
 					break;
 				
-				echo qa_html($message).str_repeat('    ', 1024)."<BR>\n";
+				echo qa_html($message).str_repeat('    ', 1024)."<br>\n";
 				
 				flush();
 				sleep(1);
 			}
 			
-			echo qa_lang_html('admin/mailing_complete').'</TT><P><A HREF="'.qa_path_html('admin/mailing').'">'.qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/mailing_title').'</A>';
+			echo qa_lang_html('admin/mailing_complete').'</tt><p><a href="'.qa_path_html('admin/mailing').'">'.qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/mailing_title').'</a>';
 			
 			qa_exit();
 		}
@@ -924,7 +928,7 @@
 			$optionfield=array(
 				'id' => $optionname,
 				'label' => ($indented ? '&ndash; ' : '').qa_lang_html('options/'.$optionname),
-				'tags' => 'NAME="option_'.$optionname.'" ID="option_'.$optionname.'"',
+				'tags' => 'name="option_'.$optionname.'" id="option_'.$optionname.'"',
 				'value' => qa_html($value),
 				'type' => $type,
 				'error' => qa_html(@$errors[$optionname]),
@@ -943,8 +947,8 @@
 					qa_optionfield_make_select($optionfield, qa_admin_language_options(), $value, '');
 					
 					$optionfield['suffix']=strtr(qa_lang_html('admin/check_language_suffix'), array(
-						'^1' => '<A HREF="'.qa_html(qa_path_to_root().'qa-include/qa-check-lang.php').'">',
-						'^2' => '</A>',
+						'^1' => '<a href="'.qa_html(qa_path_to_root().'qa-include/qa-check-lang.php').'">',
+						'^2' => '</a>',
 					));
 				
 					if (!qa_has_multibyte())
@@ -964,19 +968,19 @@
 					
 					foreach ($rawoptions as $rawoption)
 						$neatoptions[$rawoption]=
-							'<IFRAME SRC="'.qa_path_html('url/test/'.QA_URL_TEST_STRING, array('dummy' => '', 'param' => QA_URL_TEST_STRING), null, $rawoption).'" WIDTH="20" HEIGHT="16" STYLE="vertical-align:middle; border:0" SCROLLING="no" FRAMEBORDER="0"></IFRAME>&nbsp;'.
-							'<SMALL>'.
+							'<iframe src="'.qa_path_html('url/test/'.QA_URL_TEST_STRING, array('dummy' => '', 'param' => QA_URL_TEST_STRING), null, $rawoption).'" width="20" height="16" style="vertical-align:middle; border:0" scrolling="no" frameborder="0"></iframe>&nbsp;'.
+							'<small>'.
 							qa_html(urldecode(qa_path('123/why-do-birds-sing', null, '/', $rawoption))).
 							(($rawoption==QA_URL_FORMAT_NEAT) ? strtr(qa_lang_html('admin/neat_urls_note'), array(
-								'^1' => '<A HREF="http://www.question2answer.org/htaccess.php" TARGET="_blank">',
-								'^2' => '</A>',
+								'^1' => '<a href="http://www.question2answer.org/htaccess.php" target="_blank">',
+								'^2' => '</a>',
 							)) : '').
-							'</SMALL>';
+							'</small>';
 							
 					qa_optionfield_make_select($optionfield, $neatoptions, $value, QA_URL_FORMAT_SAFEST);
 							
 					$optionfield['type']='select-radio';
-					$optionfield['note']=qa_lang_html_sub('admin/url_format_note', '<SPAN STYLE=" '.qa_admin_url_test_html().'/SPAN>');
+					$optionfield['note']=qa_lang_html_sub('admin/url_format_note', '<span style=" '.qa_admin_url_test_html().'/span>');
 					break;
 					
 				case 'site_theme':
@@ -1008,14 +1012,14 @@
 						if (!strlen($namehtml))
 							$namehtml=qa_html($value);
 							
-						$namehtml='<A HREF="'.qa_html($metadata['uri']).'">'.$namehtml.'</A>';
+						$namehtml='<a href="'.qa_html($metadata['uri']).'">'.$namehtml.'</a>';
 					}
 				
 					if (strlen(@$metadata['author'])) {
 						$authorhtml=qa_html($metadata['author']);
 						
 						if (strlen(@$metadata['author_uri']))
-							$authorhtml='<A HREF="'.qa_html($metadata['author_uri']).'">'.$authorhtml.'</A>';
+							$authorhtml='<a href="'.qa_html($metadata['author_uri']).'">'.$authorhtml.'</a>';
 							
 						$authorhtml=qa_lang_html_sub('main/by_x', $authorhtml);
 						
@@ -1025,7 +1029,7 @@
 					if (strlen(@$metadata['version']) && strlen(@$metadata['update'])) {
 						$elementid='version_check_'.$optionname;
 						
-						$updatehtml='(<SPAN ID="'.$elementid.'">...</SPAN>)';
+						$updatehtml='(<span id="'.$elementid.'">...</span>)';
 						
 						$qa_content['script_onloads'][]=array(
 							"qa_version_check(".qa_js($metadata['update']).", 'Theme Version', ".qa_js($metadata['version'], true).", 'Theme URI', ".qa_js($elementid).");"
@@ -1098,8 +1102,8 @@
 				
 				case 'avatar_allow_gravatar':
 					$optionfield['label']=strtr($optionfield['label'], array(
-						'^1' => '<A HREF="http://www.gravatar.com/" TARGET="_blank">',
-						'^2' => '</A>',
+						'^1' => '<a href="http://www.gravatar.com/" target="_blank">',
+						'^2' => '</a>',
 					));
 					
 					if (!qa_has_gd_image()) {
@@ -1120,10 +1124,10 @@
 					break;
 
 				case 'avatar_default_show';
-					$qa_content['form']['tags'].='ENCTYPE="multipart/form-data"';
-					$optionfield['label'].=' <SPAN STYLE="margin:2px 0; display:inline-block;">'.
+					$qa_content['form']['tags'].='enctype="multipart/form-data"';
+					$optionfield['label'].=' <span style="margin:2px 0; display:inline-block;">'.
 						qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), 32).
-						'</SPAN> <INPUT NAME="avatar_default_file" TYPE="file" STYLE="width:16em;">';
+						'</span> <input name="avatar_default_file" type="file" style="width:16em;">';
 					break;
 				
 				case 'logo_width':
@@ -1208,7 +1212,7 @@
 							$module=qa_load_module('editor', $editor);
 							
 							if (method_exists($module, 'admin_form'))
-								$optionfield['note']='<A HREF="'.qa_admin_module_options_path('editor', $editor).'">'.qa_lang_html('admin/options').'</A>';
+								$optionfield['note']='<a href="'.qa_admin_module_options_path('editor', $editor).'">'.qa_lang_html('admin/options').'</a>';
 						}
 					}
 						
@@ -1232,7 +1236,7 @@
 					
 				case 'extra_field_display':
 					$optionfield['style']='tall';
-					$optionfield['label']='<SPAN ID="extra_field_label_hidden" STYLE="display:none;">'.$optionfield['label'].'</SPAN><SPAN ID="extra_field_label_shown">'.qa_lang_html('options/extra_field_display_label').'</SPAN>';
+					$optionfield['label']='<span id="extra_field_label_hidden" style="display:none;">'.$optionfield['label'].'</span><span id="extra_field_label_shown">'.qa_lang_html('options/extra_field_display_label').'</span>';
 					break;
 					
 				case 'extra_field_prompt':
@@ -1246,7 +1250,7 @@
 						$selectoptions[qa_html($modulename)]=strlen($modulename) ? qa_html($modulename) : qa_lang_html('options/option_default');
 
 						if (($modulename==$value) && method_exists($module, 'admin_form'))
-							$optionfield['note']='<A HREF="'.qa_admin_module_options_path('search', $modulename).'">'.qa_lang_html('admin/options').'</A>';
+							$optionfield['note']='<a href="'.qa_admin_module_options_path('search', $modulename).'">'.qa_lang_html('admin/options').'</a>';
 					}
 						
 					qa_optionfield_make_select($optionfield, $selectoptions, $value, '');
@@ -1261,7 +1265,7 @@
 					break;
 				
 				case 'moderate_by_points':
-					$optionfield['label']='<SPAN ID="moderate_points_label_off" STYLE="display:none;">'.$optionfield['label'].'</SPAN><SPAN ID="moderate_points_label_on">'.qa_lang_html('options/moderate_points_limit').'</SPAN>';
+					$optionfield['label']='<span id="moderate_points_label_off" style="display:none;">'.$optionfield['label'].'</span><span id="moderate_points_label_on">'.qa_lang_html('options/moderate_points_limit').'</span>';
 					break;
 				
 				case 'moderate_points_limit';
@@ -1442,7 +1446,7 @@
 							$module=qa_load_module('captcha', $modulename);
 							
 							if (method_exists($module, 'admin_form'))
-								$optionfield['note']='<A HREF="'.qa_admin_module_options_path('captcha', $modulename).'">'.qa_lang_html('admin/options').'</A>';
+								$optionfield['note']='<a href="'.qa_admin_module_options_path('captcha', $modulename).'">'.qa_lang_html('admin/options').'</a>';
 						}
 					}
 					
@@ -1485,7 +1489,7 @@
 			}
 
 			if (isset($feedrequest) && $value)
-				$optionfield['note']='<A HREF="'.qa_path_html(qa_feed_request($feedrequest)).'">'.qa_lang_html($feedisexample ? 'admin/feed_link_example' : 'admin/feed_link').'</A>';
+				$optionfield['note']='<a href="'.qa_path_html(qa_feed_request($feedrequest)).'">'.qa_lang_html($feedisexample ? 'admin/feed_link_example' : 'admin/feed_link').'</a>';
 
 			$qa_content['form']['fields'][$optionname]=$optionfield;
 		}
@@ -1501,17 +1505,17 @@
 				$listhtml='';
 				
 				foreach ($userfields as $userfield) {
-					$listhtml.='<LI><B>'.qa_html(qa_user_userfield_label($userfield)).'</B>';
+					$listhtml.='<li><b>'.qa_html(qa_user_userfield_label($userfield)).'</b>';
 	
 					$listhtml.=strtr(qa_lang_html('admin/edit_field'), array(
-						'^1' => '<A HREF="'.qa_path_html('admin/userfields', array('edit' => $userfield['fieldid'])).'">',
-						'^2' => '</A>',
+						'^1' => '<a href="'.qa_path_html('admin/userfields', array('edit' => $userfield['fieldid'])).'">',
+						'^2' => '</a>',
 					));
 	
-					$listhtml.='</LI>';
+					$listhtml.='</li>';
 				}
 				
-				$listhtml.='<LI><B><A HREF="'.qa_path_html('admin/userfields').'">'.qa_lang_html('admin/add_new_field').'</A></B></LI>';
+				$listhtml.='<li><b><a href="'.qa_path_html('admin/userfields').'">'.qa_lang_html('admin/add_new_field').'</a></b></li>';
 	
 				$qa_content['form']['fields'][]=array('type' => 'blank');
 				
@@ -1519,7 +1523,7 @@
 					'label' => qa_lang_html('admin/profile_fields'),
 					'style' => 'tall',
 					'type' => 'custom',
-					'html' => strlen($listhtml) ? '<UL STYLE="margin-bottom:0;">'.$listhtml.'</UL>' : null,
+					'html' => strlen($listhtml) ? '<ul style="margin-bottom:0;">'.$listhtml.'</ul>' : null,
 				);
 			}
 			
@@ -1530,24 +1534,24 @@
 			$listhtml='';
 			
 			foreach ($pointstitle as $points => $title) {
-				$listhtml.='<LI><B>'.$title.'</B> - '.(($points==1) ? qa_lang_html_sub('main/1_point', '1', '1')
+				$listhtml.='<li><b>'.$title.'</b> - '.(($points==1) ? qa_lang_html_sub('main/1_point', '1', '1')
 				: qa_lang_html_sub('main/x_points', qa_html(number_format($points))));
 
 				$listhtml.=strtr(qa_lang_html('admin/edit_title'), array(
-					'^1' => '<A HREF="'.qa_path_html('admin/usertitles', array('edit' => $points)).'">',
-					'^2' => '</A>',
+					'^1' => '<a href="'.qa_path_html('admin/usertitles', array('edit' => $points)).'">',
+					'^2' => '</a>',
 				));
 
-				$listhtml.='</LI>';
+				$listhtml.='</li>';
 			}
 
-			$listhtml.='<LI><B><A HREF="'.qa_path_html('admin/usertitles').'">'.qa_lang_html('admin/add_new_title').'</A></B></LI>';
+			$listhtml.='<li><b><a href="'.qa_path_html('admin/usertitles').'">'.qa_lang_html('admin/add_new_title').'</a></b></li>';
 
 			$qa_content['form']['fields']['usertitles']=array(
 				'label' => qa_lang_html('admin/user_titles'),
 				'style' => 'tall',
 				'type' => 'custom',
-				'html' => strlen($listhtml) ? '<UL STYLE="margin-bottom:0;">'.$listhtml.'</UL>' : null,
+				'html' => strlen($listhtml) ? '<ul style="margin-bottom:0;">'.$listhtml.'</ul>' : null,
 			);
 			break;
 			
@@ -1558,20 +1562,20 @@
 			
 			foreach ($widgetmodules as $tryname => $trywidget)
 				if (method_exists($trywidget, 'allow_region')) {
-					$listhtml.='<LI><B>'.qa_html($tryname).'</B>';
+					$listhtml.='<li><b>'.qa_html($tryname).'</b>';
 					
 					$listhtml.=strtr(qa_lang_html('admin/add_widget_link'), array(
-						'^1' => '<A HREF="'.qa_path_html('admin/layoutwidgets', array('title' => $tryname)).'">',
-						'^2' => '</A>',
+						'^1' => '<a href="'.qa_path_html('admin/layoutwidgets', array('title' => $tryname)).'">',
+						'^2' => '</a>',
 					));
 					
 					if (method_exists($trywidget, 'admin_form'))
 						$listhtml.=strtr(qa_lang_html('admin/widget_global_options'), array(
-							'^1' => '<A HREF="'.qa_admin_module_options_path('widget', $tryname).'">',
-							'^2' => '</A>',
+							'^1' => '<a href="'.qa_admin_module_options_path('widget', $tryname).'">',
+							'^2' => '</a>',
 						));
 						
-					$listhtml.='</LI>';
+					$listhtml.='</li>';
 				}
 			
 			if (strlen($listhtml))
@@ -1579,7 +1583,7 @@
 					'label' => qa_lang_html('admin/widgets_explanation'),
 					'style' => 'tall',
 					'type' => 'custom',
-					'html' => '<UL STYLE="margin-bottom:0;">'.$listhtml.'</UL>',
+					'html' => '<ul style="margin-bottom:0;">'.$listhtml.'</ul>',
 				);
 			
 			$widgets=qa_db_single_select(qa_db_widgets_selectspec());
@@ -1589,18 +1593,18 @@
 			$placeoptions=qa_admin_place_options();
 			
 			foreach ($widgets as $widget) {
-				$listhtml.='<LI><B>'.qa_html($widget['title']).'</B> - '.
-					'<A HREF="'.qa_path_html('admin/layoutwidgets', array('edit' => $widget['widgetid'])).'">'.
-					@$placeoptions[$widget['place']].'</A>';
+				$listhtml.='<li><b>'.qa_html($widget['title']).'</b> - '.
+					'<a href="'.qa_path_html('admin/layoutwidgets', array('edit' => $widget['widgetid'])).'">'.
+					@$placeoptions[$widget['place']].'</a>';
 			
-				$listhtml.='</LI>';
+				$listhtml.='</li>';
 			}
 			
 			if (strlen($listhtml))
 				$qa_content['form']['fields']['widgets']=array(
 					'label' => qa_lang_html('admin/active_widgets_explanation'),
 					'type' => 'custom',
-					'html' => '<UL STYLE="margin-bottom:0;">'.$listhtml.'</UL>',
+					'html' => '<ul style="margin-bottom:0;">'.$listhtml.'</ul>',
 				);
 			
 			break;
@@ -1668,18 +1672,18 @@
 					$qa_content['form']['fields']['mailing_body']['value']=qa_html(qa_opt('mailing_body'), true);
 
 					$qa_content['form']['buttons']['stop']=array(
-						'tags' => 'NAME="domailingpause" ID="domailingpause"',
+						'tags' => 'name="domailingpause" id="domailingpause"',
 						'label' => qa_lang_html('admin/pause_mailing_button'),
 					);
 
 				} else {
 					$qa_content['form']['buttons']['resume']=array(
-						'tags' => 'NAME="domailingresume"',
+						'tags' => 'name="domailingresume"',
 						'label' => qa_lang_html('admin/resume_mailing_button'),
 					);
 
 					$qa_content['form']['buttons']['cancel']=array(
-						'tags' => 'NAME="domailingcancel"',
+						'tags' => 'name="domailingcancel"',
 						'label' => qa_lang_html('admin/cancel_mailing_button'),
 					);
 				}
@@ -1688,12 +1692,12 @@
 				$qa_content['form']['buttons']['spacer']=array();
 	
 				$qa_content['form']['buttons']['test']=array(
-					'tags' => 'NAME="domailingtest" ID="domailingtest"',
+					'tags' => 'name="domailingtest" id="domailingtest"',
 					'label' => qa_lang_html('admin/send_test_button'),
 				);
 
 				$qa_content['form']['buttons']['start']=array(
-					'tags' => 'NAME="domailingstart" ID="domailingstart"',
+					'tags' => 'name="domailingstart" id="domailingstart"',
 					'label' => qa_lang_html('admin/start_mailing_button'),
 				);
 			}

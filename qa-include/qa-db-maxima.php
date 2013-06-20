@@ -63,7 +63,7 @@
 	@define('QA_DB_RETRIEVE_USERS', 200);
 	@define('QA_DB_RETRIEVE_ASK_TAG_QS', 500);
 	@define('QA_DB_RETRIEVE_COMPLETE_TAGS', 1000);
-	@define('QA_DB_RETRIEVE_MESSAGES', 10);
+	@define('QA_DB_RETRIEVE_MESSAGES', 20);
 
 	
 //	Keep event streams trimmed - not worth storing too many events per question because we only display the

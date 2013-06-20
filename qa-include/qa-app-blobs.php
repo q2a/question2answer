@@ -42,6 +42,9 @@
 	
 	
 	function qa_get_blob_directory($blobid)
+/*
+	Return the full path to the on-disk directory for blob $blobid (subdirectories are named by the first 3 digits of $blobid)
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -50,6 +53,9 @@
 	
 	
 	function qa_get_blob_filename($blobid, $format)
+/*
+	Return the full page and filename of blob $blobid which is in $format ($format is used as the file name suffix e.g. .jpg)
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -58,6 +64,10 @@
 	
 	
 	function qa_create_blob($content, $format, $sourcefilename=null, $userid=null, $cookieid=null, $ip=null)
+/*
+	Create a new blob (storing the content in the database or on disk as appropriate) with $content and $format, returning its blobid.
+	Pass the original name of the file uploaded in $sourcefilename and the $userid, $cookieid and $ip of the user creating it
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -65,15 +75,18 @@
 		
 		$blobid=qa_db_blob_create(defined('QA_BLOBS_DIRECTORY') ? null : $content, $format, $sourcefilename, $userid, $cookieid, $ip);
 
-		if (defined('QA_BLOBS_DIRECTORY'))
+		if (isset($blobid) && defined('QA_BLOBS_DIRECTORY'))
 			if (!qa_write_blob_file($blobid, $content, $format))
-				qa_db_blob_set_content($blobid, $content); // still write to database if writing to disk failed
+				qa_db_blob_set_content($blobid, $content); // still write content to the database if writing to disk failed
 
 		return $blobid;
 	}
 	
 	
 	function qa_write_blob_file($blobid, $content, $format)
+/*
+	Write the on-disk file for blob $blobid with $content and $format. Returns true if the write succeeded, false otherwise.
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -100,6 +113,9 @@
 	
 	
 	function qa_read_blob($blobid)
+/*
+	Retrieve blob $blobid from the database, reading the content from disk if appropriate
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -115,6 +131,9 @@
 	
 	
 	function qa_read_blob_file($blobid, $format)
+/*
+	Read the content of blob $blobid in $format from disk. On failure, it will return false.
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -123,6 +142,9 @@
 	
 	
 	function qa_delete_blob($blobid)
+/*
+	Delete blob $blobid from the database, and remove the on-disk file if appropriate
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -140,10 +162,26 @@
 	
 	
 	function qa_delete_blob_file($blobid, $format)
+/*
+	Delete the on-disk file for blob $blobid in $format
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		unlink(qa_get_blob_filename($blobid, $format));
+	}
+	
+	
+	function qa_blob_exists($blobid)
+/*
+	Check if blob $blobid exists
+*/
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+		
+		return qa_db_blob_exists($blobid);
 	}
 	
 

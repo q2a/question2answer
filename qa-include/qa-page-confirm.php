@@ -101,8 +101,8 @@
 				qa_lang_html('users/log_in_to_access'),
 				
 				array(
-					'^1' => '<A HREF="'.qa_path_html('login', array('e' => $inhandle)).'">',
-					'^2' => '</A>',
+					'^1' => '<a href="'.qa_path_html('login', array('e' => $inhandle)).'">',
+					'^2' => '</a>',
 				)
 			);
 
@@ -115,7 +115,7 @@
 		$email=qa_get_logged_in_email();
 		
 		$qa_content['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_path_html('confirm').'"',
+			'tags' => 'method="post" action="'.qa_path_html('confirm').'"',
 			
 			'style' => 'tall',
 			
@@ -123,8 +123,8 @@
 				'email' => array(
 					'label' => qa_lang_html('users/email_label'),
 					'value' => qa_html($email).strtr(qa_lang_html('users/change_email_link'), array(
-						'^1' => '<A HREF="'.qa_path_html('account').'">',
-						'^2' => '</A>',
+						'^1' => '<a href="'.qa_path_html('account').'">',
+						'^2' => '</a>',
 					)),
 					'type' => 'static',
 				),
@@ -132,7 +132,7 @@
 			
 			'buttons' => array(
 				'send' => array(
-					'tags' => 'NAME="dosendconfirm"',
+					'tags' => 'name="dosendconfirm"',
 					'label' => qa_lang_html('users/send_confirm_button'),
 				),
 			),

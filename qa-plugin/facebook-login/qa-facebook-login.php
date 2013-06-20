@@ -111,21 +111,21 @@
 					array(
 						'label' => 'Facebook App ID:',
 						'value' => qa_html(qa_opt('facebook_app_id')),
-						'tags' => 'NAME="facebook_app_id_field"',
+						'tags' => 'name="facebook_app_id_field"',
 					),
 
 					array(
 						'label' => 'Facebook App Secret:',
 						'value' => qa_html(qa_opt('facebook_app_secret')),
-						'tags' => 'NAME="facebook_app_secret_field"',
-						'error' => $ready ? null : 'To use Facebook Login, please <A HREF="http://developers.facebook.com/setup/" TARGET="_blank">set up a Facebook application</A>.',
+						'tags' => 'name="facebook_app_secret_field"',
+						'error' => $ready ? null : 'To use Facebook Login, please <a href="http://developers.facebook.com/setup/" target="_blank">set up a Facebook application</a>.',
 					),
 				),
 				
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
-						'tags' => 'NAME="facebook_save_button"',
+						'tags' => 'name="facebook_save_button"',
 					),
 				),
 			);

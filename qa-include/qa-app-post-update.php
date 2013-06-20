@@ -37,17 +37,19 @@
 	require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
 	
 	
-	define('QA_STATUS_NORMAL', 0);
-	define('QA_STATUS_HIDDEN', 1);
-	define('QA_STATUS_QUEUED', 2);
+	define('QA_POST_STATUS_NORMAL', 0);
+	define('QA_POST_STATUS_HIDDEN', 1);
+	define('QA_POST_STATUS_QUEUED', 2);
 
 	
 	function qa_question_set_content($oldquestion, $title, $content, $format, $text, $tagstring, $notify, $userid, $handle, $cookieid, $extravalue=null, $name=null, $remoderate=false, $silent=false)
 /*
-	Change the fields of a question (application level) to $title, $content, $format, $tagstring, $notify and
-	$extravalue and reindex based on $text. Pass the question's database record before changes in $oldquestion and
-	details of the user doing this in $userid, $handle and $cookieid. Reports event as appropriate.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Change the fields of a question (application level) to $title, $content, $format, $tagstring, $notify, $extravalue
+	and $name, then reindex based on $text. For backwards compatibility if $name is null then the name will not be
+	changed. Pass the question's database record before changes in $oldquestion and details of the user doing this in
+	$userid, $handle and $cookieid. Set $remoderate to true if the question should be requeued for moderation if
+	modified. Set $silent to true to not mark the question as edited. Reports event as appropriate. See qa-app-posts.php
+	for a higher-level function which is easier to use.
 */
 	{
 		qa_post_unindex($oldquestion['postid']);
@@ -235,19 +237,23 @@
 	
 	function qa_question_set_hidden($oldquestion, $hidden, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost=null)
 /*
-	Set the hidden status (application level) of $oldquestion to $hidden. Pass details of the user doing this in
-	$userid, $handle and $cookieid, the database records for all answers to the question in $answers, the database
-	records for all comments on the question or the question's answers in $commentsfollows ($commentsfollows can also
-	contain records for follow-on questions which are ignored), and $closepost to match $oldquestion['closedbyid'] (if any).
-	Handles indexing, user points, cached counts and event reports.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Set $oldquestion to hidden if $hidden is true, visible/normal if otherwise. All other parameters are as for qa_question_set_status(...)
+	This function is included mainly for backwards compatibility.
 */
 	{
-		qa_question_set_status($oldquestion, $hidden ? QA_STATUS_HIDDEN : QA_STATUS_NORMAL, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
+		qa_question_set_status($oldquestion, $hidden ? QA_POST_STATUS_HIDDEN : QA_POST_STATUS_NORMAL, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
 	}
 
 	
 	function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost=null)
+/*
+	Set the status (application level) of $oldquestion to $status, one of the QA_POST_STATUS_* constants above. Pass
+	details of the user doing this in $userid, $handle and $cookieid, the database records for all answers to the
+	question in $answers, the database records for all comments on the question or the question's answers in
+	$commentsfollows ($commentsfollows can also contain records for follow-on questions which are ignored), and
+	$closepost to match $oldquestion['closedbyid'] (if any). Handles indexing, user points, cached counts and event
+	reports. See qa-app-posts.php for a higher-level function which is easier to use.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
@@ -271,12 +277,12 @@
 		$setupdated=false;
 		$event=null;
 		
-		if ($status==QA_STATUS_QUEUED) {
+		if ($status==QA_POST_STATUS_QUEUED) {
 			$newtype='Q_QUEUED';
 			if (!$wasqueued)
 				$event='q_requeue'; // same event whether it was hidden or shown before
 
-		} elseif ($status==QA_STATUS_HIDDEN) {
+		} elseif ($status==QA_POST_STATUS_HIDDEN) {
 			$newtype='Q_HIDDEN';
 			if (!$washidden) {
 				$event=$wasqueued ? 'q_reject' : 'q_hide';
@@ -284,7 +290,7 @@
 					$setupdated=true;
 			}
 				
-		} elseif ($status==QA_STATUS_NORMAL) {
+		} elseif ($status==QA_POST_STATUS_NORMAL) {
 			$newtype='Q';
 			if ($wasqueued)
 				$event='q_approve';
@@ -298,7 +304,7 @@
 			
 		qa_db_post_set_type($oldquestion['postid'], $newtype, $setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_VISIBLE);
 		
-		if ( $wasqueued && ($status==QA_STATUS_NORMAL) && qa_opt('moderate_update_time') ) { // ... for approval of a post, can set time to now instead			
+		if ( $wasqueued && ($status==QA_POST_STATUS_NORMAL) && qa_opt('moderate_update_time') ) { // ... for approval of a post, can set time to now instead			
 			if ($wasrequeued) // reset edit time to now if there was one, since we're approving the edit...
 				qa_db_post_set_updated($oldquestion['postid'], null);
 				
@@ -311,13 +317,13 @@
 		qa_update_counts_for_q($oldquestion['postid']);
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 		
-		if ($wasqueued || ($status==QA_STATUS_QUEUED))
+		if ($wasqueued || ($status==QA_POST_STATUS_QUEUED))
 			qa_db_queuedcount_update();			
 		
 		if ($oldquestion['flagcount'])
 			qa_db_flaggedcount_update();
 			
-		if ($status==QA_STATUS_NORMAL) {
+		if ($status==QA_POST_STATUS_NORMAL) {
 			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $oldquestion['title'], $oldquestion['content'],
 				$oldquestion['format'], qa_viewer_text($oldquestion['content'], $oldquestion['format']), $oldquestion['tags'], $oldquestion['categoryid']);
 
@@ -358,7 +364,7 @@
 				'oldquestion' => $oldquestion,
 			));
 		
-		if ($wasqueued && ($status==QA_STATUS_NORMAL) && !$wasrequeued) {
+		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
 			
@@ -497,10 +503,12 @@
 	
 	function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $userid, $handle, $cookieid, $question, $name=null, $remoderate=false, $silent=false)
 /*
-	Change the fields of an answer (application level) to $content, $format and $notify, and reindex based on $text.
-	Pass the answer's database record before changes in $oldanswer, the question's in $question, and details of the
-	user doing this in $userid, $handle and $cookieid. Handle indexing and event reports as appropriate.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Change the fields of an answer (application level) to $content, $format, $notify and $name, then reindex based on
+	$text. For backwards compatibility if $name is null then the name will not be changed. Pass the answer's database
+	record before changes in $oldanswer, the question's in $question, and details of the user doing this in $userid,
+	$handle and $cookieid. Set $remoderate to true if the question should be requeued for moderation if modified. Set
+	$silent to true to not mark the question as edited. Handle indexing and event reports as appropriate. See
+	qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
 		qa_post_unindex($oldanswer['postid']);
@@ -558,18 +566,22 @@
 	
 	function qa_answer_set_hidden($oldanswer, $hidden, $userid, $handle, $cookieid, $question, $commentsfollows)
 /*
-	Set the hidden status (application level) of $oldanswer to $hidden. Pass details of the user doing this
-	in $userid, $handle and $cookieid, the database record for the question in $question, and the database
-	records for all comments on the answer in $commentsfollows ($commentsfollows can also contain other
-	records which are ignored). Handles indexing, user points, cached counts and event reports.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Set $oldanswer to hidden if $hidden is true, visible/normal if otherwise. All other parameters are as for qa_answer_set_status(...)
+	This function is included mainly for backwards compatibility.
 */
 	{
-		qa_answer_set_status($oldanswer, $hidden ? QA_STATUS_HIDDEN : QA_STATUS_NORMAL, $userid, $handle, $cookieid, $question, $commentsfollows);
+		qa_answer_set_status($oldanswer, $hidden ? QA_POST_STATUS_HIDDEN : QA_POST_STATUS_NORMAL, $userid, $handle, $cookieid, $question, $commentsfollows);
 	}
 	
 	
 	function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, $question, $commentsfollows)
+/*
+	Set the status (application level) of $oldanswer to $status, one of the QA_POST_STATUS_* constants above. Pass
+	details of the user doing this in $userid, $handle and $cookieid, the database record for the question in $question,
+	and the database records for all comments on the answer in $commentsfollows ($commentsfollows can also contain other
+	records which are ignored). Handles indexing, user points, cached counts and event reports. See qa-app-posts.php for
+	a higher-level function which is easier to use.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 			
@@ -586,12 +598,12 @@
 		$setupdated=false;
 		$event=null;
 		
-		if ($status==QA_STATUS_QUEUED) {
+		if ($status==QA_POST_STATUS_QUEUED) {
 			$newtype='A_QUEUED';
 			if (!$wasqueued)
 				$event='a_requeue'; // same event whether it was hidden or shown before
 
-		} elseif ($status==QA_STATUS_HIDDEN) {
+		} elseif ($status==QA_POST_STATUS_HIDDEN) {
 			$newtype='A_HIDDEN';
 			if (!$washidden) {
 				$event=$wasqueued ? 'a_reject' : 'a_hide';
@@ -599,7 +611,7 @@
 					$setupdated=true;
 			}
 				
-		} elseif ($status==QA_STATUS_NORMAL) {
+		} elseif ($status==QA_POST_STATUS_NORMAL) {
 			$newtype='A';
 			if ($wasqueued)
 				$event='a_approve';
@@ -613,7 +625,7 @@
 		
 		qa_db_post_set_type($oldanswer['postid'], $newtype, $setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_VISIBLE);
 
-		if ( $wasqueued && ($status==QA_STATUS_NORMAL) && qa_opt('moderate_update_time') ) { // ... for approval of a post, can set time to now instead
+		if ( $wasqueued && ($status==QA_POST_STATUS_NORMAL) && qa_opt('moderate_update_time') ) { // ... for approval of a post, can set time to now instead
 			if ($wasrequeued)
 				qa_db_post_set_updated($oldanswer['postid'], null);
 			else
@@ -623,13 +635,13 @@
 		qa_update_q_counts_for_a($question['postid']);
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 		
-		if ($wasqueued || ($status==QA_STATUS_QUEUED))
+		if ($wasqueued || ($status==QA_POST_STATUS_QUEUED))
 			qa_db_queuedcount_update();
 		
 		if ($oldanswer['flagcount'])
 			qa_db_flaggedcount_update();
 			
-		if (($question['type']=='Q') && ($status==QA_STATUS_NORMAL)) { // even if answer visible, don't index if question is hidden or queued
+		if (($question['type']=='Q') && ($status==QA_POST_STATUS_NORMAL)) { // even if answer visible, don't index if question is hidden or queued
 			qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $oldanswer['content'],
 				$oldanswer['format'], qa_viewer_text($oldanswer['content'], $oldanswer['format']), null, $oldanswer['categoryid']);
 			
@@ -655,7 +667,7 @@
 				'oldanswer' => $oldanswer,
 			));
 		
-		if ($wasqueued && ($status==QA_STATUS_NORMAL) && !$wasrequeued) {
+		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
 			
 			qa_report_event('a_post', $oldanswer['userid'], $oldanswer['handle'], $oldanswer['cookieid'], $eventparams + array(
@@ -727,11 +739,13 @@
 	
 	function qa_comment_set_content($oldcomment, $content, $format, $text, $notify, $userid, $handle, $cookieid, $question, $parent, $name=null, $remoderate=false, $silent=false)
 /*
-	Change the fields of a comment (application level) to $content, $format and $notify, and reindex based on $text.
-	Pass the comment's database record before changes in $oldcomment, details of the user doing this in  $userid,
-	$handle and $cookieid, the antecedent question in $question and the answer's database record in $answer if this
-	is a comment on an answer, otherwise null. Handles unindexing and event reports.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Change the fields of a comment (application level) to $content, $format, $notify and $name, then reindex based on
+	$text. For backwards compatibility if $name is null then the name will not be changed. Pass the comment's database
+	record before changes in $oldcomment, details of the user doing this in $userid, $handle and $cookieid, the
+	antecedent question in $question and the answer's database record in $answer if this is a comment on an answer,
+	otherwise null. Set $remoderate to true if the question should be requeued for moderation if modified. Set $silent
+	to true to not mark the question as edited. Handles unindexing and event reports. See qa-app-posts.php for a
+	higher-level function which is easier to use.
 */
 	{
 		if (!isset($parent))
@@ -787,11 +801,13 @@
 	
 	function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $notify, $userid, $handle, $cookieid, $question, $answers, $commentsfollows, $name=null, $remoderate=false, $silent=false)
 /*
-	Convert an answer to a comment (application level) and set its fields to $content, $format and $notify.
-	Pass the answer's database record before changes in $oldanswer, the new comment's $parentid to be, details of the
-	user doing this in $userid, $handle and $cookieid, the antecedent question's record in $question, the records for
-	all answers to that question in $answers, and the records for all comments on the (old) answer and questions
-	following from the (old) answer in $commentsfollows ($commentsfollows can also contain other records which are ignored).
+	Convert an answer to a comment (application level) and set its fields to $content, $format, $notify and $name. For
+	backwards compatibility if $name is null then the name will not be changed. Pass the answer's database record before
+	changes in $oldanswer, the new comment's $parentid to be, details of the user doing this in $userid, $handle and
+	$cookieid, the antecedent question's record in $question, the records for all answers to that question in $answers,
+	and the records for all comments on the (old) answer and questions following from the (old) answer in
+	$commentsfollows ($commentsfollows can also contain other records which are ignored). Set $remoderate to true if the
+	question should be requeued for moderation if modified. Set $silent to true to not mark the question as edited.
 	Handles indexing (based on $text), user points, cached counts and event reports.
 */
 	{
@@ -860,17 +876,21 @@
 	
 	function qa_comment_set_hidden($oldcomment, $hidden, $userid, $handle, $cookieid, $question, $parent)
 /*
-	Set the hidden status (application level) of $oldcomment to $hidden. Pass the antecedent question's record in $question,
-	details of the user doing this in $userid, $handle and $cookieid, and the answer's database record in $answer if this
-	is a comment on an answer, otherwise null. Handles indexing, user points, cached counts and event reports.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Set $oldcomment to hidden if $hidden is true, visible/normal if otherwise. All other parameters are as for qa_comment_set_status(...)
+	This function is included mainly for backwards compatibility.
 */
 	{
-		qa_comment_set_status($oldcomment, $hidden ? QA_STATUS_HIDDEN : QA_STATUS_NORMAL, $userid, $handle, $cookieid, $question, $parent);
+		qa_comment_set_status($oldcomment, $hidden ? QA_POST_STATUS_HIDDEN : QA_POST_STATUS_NORMAL, $userid, $handle, $cookieid, $question, $parent);
 	}
 	
 	
 	function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid, $question, $parent)
+/*
+	Set the status (application level) of $oldcomment to $status, one of the QA_POST_STATUS_* constants above. Pass the
+	antecedent question's record in $question, details of the user doing this in $userid, $handle and $cookieid, and the
+	answer's database record in $answer if this is a comment on an answer, otherwise null. Handles indexing, user
+	points, cached counts and event reports. See qa-app-posts.php for a higher-level function which is easier to use.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 		
@@ -886,12 +906,12 @@
 		$setupdated=false;
 		$event=null;
 		
-		if ($status==QA_STATUS_QUEUED) {
+		if ($status==QA_POST_STATUS_QUEUED) {
 			$newtype='C_QUEUED';
 			if (!$wasqueued)
 				$event='c_requeue'; // same event whether it was hidden or shown before
 
-		} elseif ($status==QA_STATUS_HIDDEN) {
+		} elseif ($status==QA_POST_STATUS_HIDDEN) {
 			$newtype='C_HIDDEN';
 			if (!$washidden) {
 				$event=$wasqueued ? 'c_reject' : 'c_hide';
@@ -899,7 +919,7 @@
 					$setupdated=true;
 			}
 				
-		} elseif ($status==QA_STATUS_NORMAL) {
+		} elseif ($status==QA_POST_STATUS_NORMAL) {
 			$newtype='C';
 			if ($wasqueued)
 				$event='c_approve';
@@ -913,7 +933,7 @@
 
 		qa_db_post_set_type($oldcomment['postid'], $newtype, $setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_VISIBLE);
 
-		if ( $wasqueued && ($status==QA_STATUS_NORMAL) && qa_opt('moderate_update_time') ) { // ... for approval of a post, can set time to now instead
+		if ( $wasqueued && ($status==QA_POST_STATUS_NORMAL) && qa_opt('moderate_update_time') ) { // ... for approval of a post, can set time to now instead
 			if ($wasrequeued)
 				qa_db_post_set_updated($oldcomment['postid'], null);
 			else
@@ -923,13 +943,13 @@
 		qa_db_ccount_update();
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 		
-		if ($wasqueued || ($status==QA_STATUS_QUEUED))
+		if ($wasqueued || ($status==QA_POST_STATUS_QUEUED))
 			qa_db_queuedcount_update();
 		
 		if ($oldcomment['flagcount'])
 			qa_db_flaggedcount_update();
 			
-		if ( ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) && ($status==QA_STATUS_NORMAL)) // only index if none of the things it depends on are hidden or queued
+		if ( ($question['type']=='Q') && (($parent['type']=='Q') || ($parent['type']=='A')) && ($status==QA_POST_STATUS_NORMAL)) // only index if none of the things it depends on are hidden or queued
 			qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $oldcomment['content'],
 				$oldcomment['format'], qa_viewer_text($oldcomment['content'], $oldcomment['format']), null, $oldcomment['categoryid']);
 				
@@ -952,7 +972,7 @@
 				'oldcomment' => $oldcomment,
 			));
 		
-		if ($wasqueued && ($status==QA_STATUS_NORMAL) && !$wasrequeued) {
+		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
 			

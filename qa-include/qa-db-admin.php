@@ -134,7 +134,7 @@
 	
 	function qa_db_get_user_visible_postids($userid)
 /*
-	Return list of postids of visible posts by $userid
+	Return list of postids of visible or queued posts by $userid
 */
 	{
 		return qa_db_read_all_values(qa_db_query_sub(
@@ -146,7 +146,7 @@
 	
 	function qa_db_get_ip_visible_postids($ip)
 /*
-	Return list of postids of visible posts from $ip address
+	Return list of postids of visible or queued posts from $ip address
 */
 	{
 		return qa_db_read_all_values(qa_db_query_sub(
@@ -172,6 +172,10 @@
 	
 	
 	function qa_db_get_unapproved_users($count)
+/*
+	Return an array of the (up to) $count most recently created users who are awaiting approval and have not been blocked.
+	The array element for each user includes a 'profile' key whose value is an array of non-empty profile fields of the user.
+*/
 	{
 		$results=qa_db_read_all_assoc(qa_db_query_sub(
 			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET_NTOA(createip) AS createip, email, handle, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
@@ -199,12 +203,18 @@
 	
 	
 	function qa_db_has_blobs_on_disk()
+/*
+	Return whether there are any blobs whose content has been stored as a file on disk
+*/
 	{
 		return count(qa_db_read_all_values(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NULL LIMIT 1'))) ? true : false;
 	}
 	
 	
 	function qa_db_has_blobs_in_db()
+/*
+	Return whether there are any blobs whose content has been stored in the database
+*/
 	{
 		return count(qa_db_read_all_values(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NOT NULL LIMIT 1'))) ? true : false;
 	}
@@ -483,7 +493,7 @@
 	
 	function qa_db_userfield_create($title, $content, $flags, $permit=null)
 /*
-	Create a new user field with (internal) tag $title, label $content, and $flags in the database
+	Create a new user field with (internal) tag $title, label $content, $flags and $permit in the database.
 */
 	{
 		$position=qa_db_read_one_value(qa_db_query_sub('SELECT 1+COALESCE(MAX(position), 0) FROM ^userfields'));
@@ -499,7 +509,7 @@
 	
 	function qa_db_userfield_set_fields($fieldid, $content, $flags, $permit=null)
 /*
-	Change the user field $fieldid to have label $content and $flags in the database (the title column cannot be changed once set)
+	Change the user field $fieldid to have label $content, $flags and $permit in the database (the title column cannot be changed once set)
 */
 	{
 		qa_db_query_sub(

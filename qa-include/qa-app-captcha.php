@@ -42,6 +42,9 @@
 	
 	
 	function qa_captcha_reason_note($captchareason)
+/*
+	Return an HTML string explaining $captchareason (from qa_user_captcha_reason()) to the user about why they are seeing a captcha
+*/
 	{
 		$notehtml=null;
 		
@@ -83,7 +86,7 @@
 			$fields['captcha']=array(
 				'type' => 'custom',
 				'label' => qa_lang_html('misc/captcha_label'),
-				'html' => '<DIV ID="qa_captcha_div_'.$count.'">'.$html.'</DIV>',
+				'html' => '<div id="qa_captcha_div_'.$count.'">'.$html.'</div>',
 				'error' => @array_key_exists('captcha', $errors) ? qa_lang_html('misc/captcha_error') : null,
 				'note' => $note,
 			);

@@ -356,6 +356,9 @@
 	
 	
 	function qa_db_queuedcount_update()
+/*
+	Update the cached count in the database of the number of posts which are queued for moderation
+*/
 	{
 		if (qa_should_update_counts())
 			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_queuedcount', COUNT(*) FROM ^posts WHERE type IN ('Q_QUEUED', 'A_QUEUED', 'C_QUEUED')");

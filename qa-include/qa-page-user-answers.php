@@ -8,7 +8,7 @@
 	
 	File: qa-include/qa-page-user-answers.php
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Controller for user profile page
+	Description: Controller for user page showing all user's answers
 
 
 	This program is free software; you can redistribute it and/or
@@ -57,7 +57,7 @@
 
 	$pagesize=qa_opt('page_size_activity');
 	$count=(int)@$userpoints['aposts'];
-	$questions=array_slice(qa_any_sort_and_dedupe($questions), 0, $pagesize);
+	$questions=array_slice($questions, 0, $pagesize);
 	$usershtml=qa_userids_handles_html($questions, false);
 
 	
@@ -74,7 +74,7 @@
 //	Recent questions by this user
 
 	$qa_content['q_list']['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 
 		'hidden' => array(
 			'code' => qa_get_form_security_code('vote'),
@@ -86,10 +86,15 @@
 	$htmldefaults=qa_post_html_defaults('Q');
 	$htmldefaults['whoview']=false;
 	$htmldefaults['avatarsize']=0;
+	$htmldefaults['ovoteview']=true;
 	
-	foreach ($questions as $question)
+	foreach ($questions as $question) {
+		$options=qa_post_html_options($question, $htmldefaults);
+		$options['voteview']=qa_get_vote_view('A', false, false);
+		
 		$qa_content['q_list']['qs'][]=qa_other_to_q_html_fields($question, $loginuserid, qa_cookie_get(),
-			$usershtml, null, qa_post_html_options($question, $htmldefaults));
+			$usershtml, null, $options);
+	}
 
 	$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 

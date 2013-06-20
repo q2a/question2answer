@@ -170,20 +170,20 @@
 	$permitvalue=@$permitoptions[isset($inpermit) ? $inpermit : $editfield['permit']];
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
+		'tags' => 'method="post" action="'.qa_path_html(qa_request()).'"',
 		
 		'style' => 'tall',
 		
 		'fields' => array(
 			'name' => array(
-				'tags' => 'NAME="name" ID="name"',
+				'tags' => 'name="name" id="name"',
 				'label' => qa_lang_html('admin/field_name'),
 				'value' => qa_html(isset($inname) ? $inname : qa_user_userfield_label($editfield)),
 				'error' => qa_html(@$errors['name']),
 			),
 			
 			'delete' => array(
-				'tags' => 'NAME="dodelete" ID="dodelete"',
+				'tags' => 'name="dodelete" id="dodelete"',
 				'label' => qa_lang_html('admin/delete_field'),
 				'value' => 0,
 				'type' => 'checkbox',
@@ -191,7 +191,7 @@
 			
 			'type' => array(
 				'id' => 'type_display',
-				'tags' => 'NAME="type"',
+				'tags' => 'name="type"',
 				'label' => qa_lang_html('admin/field_type'),
 				'type' => 'select',
 				'options' => $typeoptions,
@@ -200,7 +200,7 @@
 			
 			'permit' => array(
 				'id' => 'permit_display',
-				'tags' => 'NAME="permit"',
+				'tags' => 'name="permit"',
 				'label' => qa_lang_html('admin/permit_to_view'),
 				'type' => 'select',
 				'options' => $permitoptions,
@@ -209,7 +209,7 @@
 			
 			'position' => array(
 				'id' => 'position_display',
-				'tags' => 'NAME="position"',
+				'tags' => 'name="position"',
 				'label' => qa_lang_html('admin/position'),
 				'type' => 'select',
 				'options' => $positionoptions,
@@ -218,7 +218,7 @@
 
 			'onregister' => array(
 				'id' => 'register_display',
-				'tags' => 'NAME="onregister"',
+				'tags' => 'name="onregister"',
 				'label' => qa_lang_html('admin/show_on_register_form'),
 				'type' => 'checkbox',
 				'value' => isset($inonregister) ? $inonregister : (@$editfield['flags']&QA_FIELD_FLAGS_ON_REGISTER),
@@ -231,7 +231,7 @@
 			),
 			
 			'cancel' => array(
-				'tags' => 'NAME="docancel"',
+				'tags' => 'name="docancel"',
 				'label' => qa_lang_html('main/cancel_button'),
 			),
 		),
@@ -248,6 +248,7 @@
 			'type_display' => '!dodelete',
 			'position_display' => '!dodelete',
 			'register_display' => '!dodelete',
+			'permit_display' => '!dodelete',
 		));
 	else
 		unset($qa_content['form']['fields']['delete']);

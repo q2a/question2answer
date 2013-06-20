@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.6-beta-1'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2013-06-06');
+	define('QA_VERSION', '1.6-beta-2'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2013-06-20');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -343,7 +343,7 @@
 						$functionsphp=substr_replace($functionsphp, $newname, $searchmatch[1], strlen($searchmatch[0]));
 				}
 			
-		//	echo '<PRE STYLE="text-align:left;">'.htmlspecialchars($functionsphp).'</PRE>'; // to debug munged code
+		//	echo '<pre style="text-align:left;">'.htmlspecialchars($functionsphp).'</pre>'; // to debug munged code
 			
 			qa_eval_from_file($functionsphp, $filename);
 		}
@@ -494,7 +494,11 @@
 	
 //	Low-level functions used throughout Q2A
 
-	function qa_eval_from_file($contents, $filename)
+	function qa_eval_from_file($eval, $filename)
+/*
+	Calls eval() on the PHP code in $eval which came from the file $filename. It supplements PHP's regular error reporting by
+	displaying/logging (as appropriate) the original source filename, if an error occurred when evaluating the code.
+*/
 	{
 		// could also use ini_set('error_append_string') but apparently it doesn't work for errors logged on disk
 		
@@ -503,7 +507,7 @@
 		$oldtrackerrors=@ini_set('track_errors', 1);
 		$php_errormsg=null; 
 		
-		eval('?'.'>'.$contents);
+		eval('?'.'>'.$eval);
 		
 		if (strlen($php_errormsg)) {
 			switch (strtolower(@ini_get('display_errors'))) {
@@ -593,14 +597,14 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		echo 'Question2Answer fatal error:<P><FONT COLOR="red">'.qa_html($message, true).'</FONT></P>';
+		echo 'Question2Answer fatal error:<p><font color="red">'.qa_html($message, true).'</font></p>';
 		@error_log('PHP Question2Answer fatal error: '.$message);
-		echo '<P>Stack trace:<P>';
+		echo '<p>Stack trace:<p>';
 
 		$backtrace=array_reverse(array_slice(debug_backtrace(), 1));
 		foreach ($backtrace as $trace)
-			echo '<FONT COLOR="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
-				qa_html(@$trace['function'].'() in '.basename(@$trace['file']).':'.@$trace['line']).'</FONT><BR>';	
+			echo '<font color="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
+				qa_html(@$trace['function'].'() in '.basename(@$trace['file']).':'.@$trace['line']).'</font><br>';	
 		
 		qa_exit('error');
 	}
@@ -768,6 +772,9 @@
 	
 	
 	function qa_xml($string)
+/*
+	Return XML representation of $string, which is similar to HTML but ASCII control characters are also disallowed
+*/
 	{
 		return htmlspecialchars(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', (string)$string));
 	}
@@ -775,7 +782,7 @@
 	
 	function qa_js($value, $forcequotes=false)
 /*
-	Return JavaScript representation of $value, putting in quotes if non-numeric or if $forcequote is true
+	Return JavaScript representation of $value, putting in quotes if non-numeric or if $forcequotes is true
 */
 	{
 		if (is_numeric($value) && !$forcequotes)
@@ -887,7 +894,7 @@
 	
 	function qa_clicked($name)
 /*
-	Return true if form button $name was clicked (as TYPE=SUBMIT/IMAGE) to create this page request, or if a
+	Return true if form button $name was clicked (as type=submit/image) to create this page request, or if a
 	simulated click was sent for the button (via 'qa_click' POST field)
 */
 	{
@@ -1201,6 +1208,9 @@
 	
 	
 	function qa_path_absolute($request, $params=null, $anchor=null)
+/*
+	Return the absolute URI for $request - see qa_path() for other parameters
+*/
 	{
 		return qa_path($request, $params, qa_opt('site_url'), null, $anchor);
 	}
@@ -1300,7 +1310,7 @@
 	
 	function qa_self_html()
 /*
-	Return an HTML-ready relative URL for the current page, preserving GET parameters - this is useful for ACTION in FORMs
+	Return an HTML-ready relative URL for the current page, preserving GET parameters - this is useful for action="..." in HTML forms
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -1313,7 +1323,7 @@
 
 	function qa_path_form_html($request, $params=null, $rooturl=null, $neaturls=null, $anchor=null)
 /*
-	Return HTML for hidden fields to insert into a <FORM METHOD="GET"...> on the page.
+	Return HTML for hidden fields to insert into a <form method="get"...> on the page.
 	This is needed because any parameters on the URL will be lost when the form is submitted.
 */
 	{
@@ -1328,7 +1338,7 @@
 			
 			foreach ($params as $param)
 				if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-					$formhtml.='<INPUT TYPE="hidden" NAME="'.qa_html(urldecode($matches[1])).'" VALUE="'.qa_html(urldecode(@$matches[3])).'"/>';
+					$formhtml.='<input type="hidden" name="'.qa_html(urldecode($matches[1])).'" value="'.qa_html(urldecode(@$matches[3])).'"/>';
 		}
 		
 		return $formhtml;

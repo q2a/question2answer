@@ -37,9 +37,8 @@
 	
 	$start=qa_get_start();
 	$userid=qa_get_logged_in_userid();
-	list($populartags, $favoritetags)=qa_db_select_with_pending(
-		qa_db_popular_tags_selectspec($start, qa_opt_if_loaded('page_size_tags')),
-		isset($userid) ? qa_db_user_favorite_tags_selectspec($userid) : null
+	$populartags=qa_db_select_with_pending(
+		qa_db_popular_tags_selectspec($start, qa_opt_if_loaded('page_size_tags'))
 	);
 
 	$tagcount=qa_opt('cache_tagcount');
@@ -59,18 +58,15 @@
 	);
 	
 	if (count($populartags)) {
-		$favoritemap=array();
-		if (isset($favoritetags))
-			foreach ($favoritetags as $wordandcount)
-				$favoritemap[$wordandcount['word']]=true;
+		$favoritemap=qa_get_favorite_non_qs_map();
 		
 		$output=0;
 		foreach ($populartags as $word => $count) {
 			$qa_content['ranking']['items'][]=array(
-				'label' => qa_tag_html($word, false, @$favoritemap[$word]),
+				'label' => qa_tag_html($word, false, @$favoritemap['tag'][qa_strtolower($word)]),
 				'count' => number_format($count),
 			);
-			
+
 			if ((++$output)>=$pagesize)
 				break;
 		}

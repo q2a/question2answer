@@ -700,28 +700,28 @@ div.header-banner{
 	width:16px;
 }
 .qa-voted-up-button {
-background-position:0 -40px;
-color:#f1c96b;
+	background-position:0 -40px;
+	color:#f1c96b;
 }
 .qa-voted-up-button:hover {
-background-position:0 -60px;
-color:#f1c96b;
+	background-position:0 -60px;
+	color:#f1c96b;
 }
 .qa-voted-down-button {
-background:url(images/vote-buttons.png);
-border:0;
-color:#f1c96b;
-font-size:1px;
-height:20px;
-width:16px;
+	background:url(images/vote-buttons.png);
+	border:0;
+	color:#f1c96b;
+	font-size:1px;
+	height:20px;
+	width:16px;
 }
 .qa-voted-down-button {
-background-position:-16px -40px;
-color:#f1c96b;
+	background-position:-16px -40px;
+	color:#f1c96b;
 }
 .qa-voted-down-button:hover {
-background-position:-16px -60px;
-color:#f1c96b;
+	background-position:-16px -60px;
+	color:#f1c96b;
 }
 .qa-vote-one-button {
 	position:absolute;
@@ -751,36 +751,28 @@ color:#f1c96b;
 	overflow:hidden;
 }
 .qa-netvote-count-pad {
-font-size:11px;
+	font-size:11px;
 }
-.qa-upvote-count {
-text-align:center;
-display:block;
-float:left;
-width:45px;
-}
-.qa-upvote-count-data {
-font-size:20px;
-font-weight:700;
-display:block;
-}
-.qa-upvote-count-pad {
-font-size:12px;
-}
+/* separate vote buttons counter */
+.qa-upvote-count,
 .qa-downvote-count {
-text-align:center;
-display:block;
-float:left;
-width:45px;
+	text-align:center;
+	display:block;
 }
+.qa-upvote-count-data,
 .qa-downvote-count-data {
-font-size:20px;
-font-weight:700;
-display:block;
+	font-size:18px;
+	font-weight:700;
+	display:block;
+	line-height: 18px
 }
+.qa-upvote-count-pad,
 .qa-downvote-count-pad {
-font-size:12px;
+	font-size:11px;
+	line-height: 11px;
+	color: #9DA8AD;
 }
+
 /* Answers and views count */
 .qa-a-count {
 	background:#eafff4;
@@ -888,7 +880,6 @@ font-size:12px;
 	background-position:0 0;
 }
 .qa-error {
-	/*background:#fed8d8 url(images/error-bg.png) repeat-x left top;*/
 	background:#d00;
 	border:1px solid #a00;
 	color:#ffd9d9;
@@ -1135,6 +1126,10 @@ transition:background-color ease-in-out 0.15s;
 .qa-form-tall-table {
 width:100%;
 border-collapse:collapse;
+}
+.qa-form-table-boxed {
+border:1px solid black;
+margin-bottom:1em;
 }
 .qa-form-tall-spacer {
 line-height:1px;
@@ -2195,7 +2190,7 @@ background:url(images/a-count-icon-ie6.png) no-repeat 32px 13px;
 	box-sizing: border-box;
 }
 .qa-template-user .qa-part-form-activity,
-.qa-template-user  .qa-part-message-list{
+.qa-template-user .qa-part-message-list{
 	float: right;
 	width: 50%;
 	padding-left: 10px;
@@ -2206,11 +2201,12 @@ background:url(images/a-count-icon-ie6.png) no-repeat 32px 13px;
 .qa-template-user .qa-part-form-profile{
 	float: left;
 	width: 50%;
+	min-height: 630px;
 	padding-right: 10px;
 	border-right: 1px solid #ddd;
 }
 .qa-template-user .qa-part-form-activity,
-.qa-template-user  .qa-part-message-list,
+.qa-template-user .qa-part-message-list,
 .qa-template-user .qa-part-form-profile{
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;

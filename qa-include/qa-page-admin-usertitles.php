@@ -122,20 +122,20 @@
 	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
+		'tags' => 'method="post" action="'.qa_path_html(qa_request()).'"',
 		
 		'style' => 'tall',
 		
 		'fields' => array(
 			'title' => array(
-				'tags' => 'NAME="title" ID="title"',
+				'tags' => 'name="title" id="title"',
 				'label' => qa_lang_html('admin/user_title'),
 				'value' => qa_html(isset($intitle) ? $intitle : @$pointstitle[$oldpoints]),
 				'error' => qa_html(@$errors['title']),
 			),
 			
 			'delete' => array(
-				'tags' => 'NAME="dodelete" ID="dodelete"',
+				'tags' => 'name="dodelete" id="dodelete"',
 				'label' => qa_lang_html('admin/delete_title'),
 				'value' => 0,
 				'type' => 'checkbox',
@@ -143,7 +143,7 @@
 			
 			'points' => array(
 				'id' => 'points_display',
-				'tags' => 'NAME="points"',
+				'tags' => 'name="points"',
 				'label' => qa_lang_html('admin/points_required'),
 				'type' => 'number',
 				'value' => qa_html(isset($inpoints) ? $inpoints : @$oldpoints),
@@ -157,7 +157,7 @@
 			),
 			
 			'cancel' => array(
-				'tags' => 'NAME="docancel"',
+				'tags' => 'name="docancel"',
 				'label' => qa_lang_html('main/cancel_button'),
 			),
 		),

@@ -454,13 +454,13 @@
 
 		function qa_get_one_user_html($handle, $microformats=false, $favorited=false)
 	/*
-		Return HTML to display for user with username $handle
+		Return HTML to display for user with username $handle, with microformats if $microformats is true. Set $favorited to true to show the user as favorited.
 	*/
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-			return strlen($handle) ? ('<A HREF="'.qa_path_html('user/'.$handle).'" CLASS="qa-user-link'
-				.($favorited ? ' qa-user-favorited' : '').($microformats ? ' url nickname' : '').'">'.qa_html($handle).'</A>') : '';
+			return strlen($handle) ? ('<a href="'.qa_path_html('user/'.$handle).'" class="qa-user-link'
+				.($favorited ? ' qa-user-favorited' : '').($microformats ? ' url nickname' : '').'">'.qa_html($handle).'</a>') : '';
 		}
 		
 		
@@ -483,7 +483,7 @@
 			else
 				$html=null;
 				
-			return (isset($html) && strlen($handle)) ? ('<A HREF="'.qa_path_html('user/'.$handle).'" CLASS="qa-avatar-link">'.$html.'</A>') : $html;
+			return (isset($html) && strlen($handle)) ? ('<a href="'.qa_path_html('user/'.$handle).'" class="qa-avatar-link">'.$html.'</a>') : $html;
 		}
 		
 
@@ -603,6 +603,9 @@
 
 	
 	function qa_get_logged_in_levels()
+/*
+	Return an array of all the specific (e.g. per category) level privileges for the logged in user, retrieving from the database if necessary
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 		
@@ -668,6 +671,9 @@
 	
 	
 	function qa_handle_to_userid($handle)
+/*
+	Return the userid corresponding to $handle (not case- or accent-sensitive)
+*/
 	{
 		if (QA_FINAL_EXTERNAL_USERS)
 			$handleuserids=qa_get_userids_from_public(array($handle));
@@ -685,6 +691,9 @@
 	
 	
 	function qa_user_level_for_categories($categoryids)
+/*
+	Return the level of the logged in user for a post with $categoryids (expressing the full hierarchy to the final category)
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -709,6 +718,9 @@
 	
 	
 	function qa_user_level_for_post($post)
+/*
+	Return the level of the logged in user for $post, as retrieved from the database
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -720,6 +732,9 @@
 	
 	
 	function qa_user_level_maximum()
+/*
+	Return the maximum possible level of the logged in user in any context (i.e. for any category)
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -734,12 +749,20 @@
 	
 
 	function qa_user_post_permit_error($permitoption, $post, $limitaction=null, $checkblocks=true)
+/*
+	Check whether the logged in user has permission to perform $permitoption on post $post (from the database)
+	Other parameters and the return value are as for qa_user_permit_error(...)
+*/
 	{
 		return qa_user_permit_error($permitoption, $limitaction, qa_user_level_for_post($post), $checkblocks);
 	}
 	
 	
 	function qa_user_maximum_permit_error($permitoption, $limitaction=null, $checkblocks=true)
+/*
+	Check whether the logged in user would have permittion to perform $permitoption in any context (i.e. for any category)
+	Other parameters and the return value are as for qa_user_permit_error(...)
+*/
 	{
 		return qa_user_permit_error($permitoption, $limitaction, qa_user_level_maximum(), $checkblocks);
 	}
@@ -749,8 +772,9 @@
 /*
 	Check whether the logged in user has permission to perform $permitoption. If $permitoption is null, this simply
 	checks whether the user is blocked. Optionally provide an $limitaction (see top of qa-app-limits.php) to also check
-	against user or IP rate limits. Optionally provide an array of $categoryids within which this permission should be
-	assessed, to support special user permission level in certain categories.
+	against user or IP rate limits. You can pass in a QA_USER_LEVEL_* constant in $userlevel to consider the user at a
+	different level to usual (e.g. if they are performing this action in a category for which they have elevated
+	privileges). To ignore the user's blocked status, set $checkblocks to false.
 
 	Possible results, in order of priority (i.e. if more than one reason, the first will be given):
 	'level' => a special privilege level (e.g. expert) or minimum number of points is required
@@ -887,6 +911,17 @@
 	
 	
 	function qa_user_captcha_reason($userlevel=null)
+/*
+	Return whether a captcha is required for posts submitted by the current user. You can pass in a QA_USER_LEVEL_*
+	constant in $userlevel to consider the user at a different level to usual (e.g. if they are performing this action
+	in a category for which they have elevated privileges).
+	
+	Possible results:
+	'login' => captcha required because the user is not logged in
+	'approve' => captcha required because the user has not been approved
+	'confirm' => captcha required because the user has not confirmed their email address
+	false => captcha is not required
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -911,7 +946,8 @@
 	
 	function qa_user_use_captcha($userlevel=null)
 /*
-	Return whether a captcha should be presented to the current user for writing posts
+	Return whether a captcha should be presented to the logged in user for writing posts. You can pass in a
+	QA_USER_LEVEL_* constant in $userlevel to consider the user at a different level to usual.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -922,7 +958,11 @@
 	
 	function qa_user_moderation_reason($userlevel=null)
 /*
-	Return whether moderation is required for posts submitted by the current user. Possible results:
+	Return whether moderation is required for posts submitted by the current user. You can pass in a QA_USER_LEVEL_*
+constant in $userlevel to consider the user at a different level to usual (e.g. if they are performing this action
+in a category for which they have elevated privileges).
+	
+	Possible results:
 	'login' => moderation required because the user is not logged in
 	'approve' => moderation required because the user has not been approved
 	'confirm' => moderation required because the user has not confirmed their email address
@@ -983,6 +1023,9 @@
 
 
 	function qa_set_form_security_key()
+/*
+	Set or extend the cookie in browser of non logged-in users which identifies them for the purposes of form security (anti-CSRF protection)
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1002,6 +1045,10 @@
 	
 	
 	function qa_calc_form_security_hash($action, $timestamp)
+/*
+	Return the form security (anti-CSRF protection) hash for an $action (any string), that can be performed within
+	QA_FORM_EXPIRY_SECS of $timestamp (in unix seconds) by the current user.
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -1015,6 +1062,10 @@
 	
 	
 	function qa_get_form_security_code($action)
+/*
+	Return the full form security (anti-CSRF protection) code for an $action (any string) performed within
+	QA_FORM_EXPIRY_SECS of now by the current user.
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -1027,6 +1078,10 @@
 	
 	
 	function qa_check_form_security_code($action, $value)
+/*
+	Return whether $value matches the expected form security (anti-CSRF protection) code for $action (any string) and
+	that the code has not expired (if more than QA_FORM_EXPIRY_SECS have passed). Logs causes for suspicion.
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		

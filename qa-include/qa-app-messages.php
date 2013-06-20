@@ -8,7 +8,7 @@
 	
 	File: qa-include/qa-app-messages.php
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Handling public/private messages
+	Description: Handling private or public messages (wall posts)
 
 
 	This program is free software; you can redistribute it and/or
@@ -30,18 +30,22 @@
 	}
 
 
-	function qa_wall_error_html($fromuserid, $touseraccount)
+	function qa_wall_error_html($fromuserid, $touserid, $touserflags)
+/*
+	Returns an HTML string describing the reason why user $fromuserid cannot post on the wall of $touserid who has
+	user flags $touserflags. If there is no such reason the function returns false.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
 		if ((!QA_FINAL_EXTERNAL_USERS) && qa_opt('allow_user_walls')) {
-			if ( ($touseraccount['flags'] & QA_USER_FLAGS_NO_WALL_POSTS) && !(isset($fromuserid) && ($fromuserid==$touseraccount['userid'])) )
+			if ( ($touserflags & QA_USER_FLAGS_NO_WALL_POSTS) && !(isset($fromuserid) && ($fromuserid==$touserid)) )
 				return qa_lang_html('profile/post_wall_blocked');
 			
 			else
-				switch (qa_user_permit_error('permit_post_wall', QA_LIMIT_MESSAGES)) {
+				switch (qa_user_permit_error('permit_post_wall', QA_LIMIT_WALL_POSTS)) {
 					case 'limit':
 						return qa_lang_html('profile/post_wall_limit');
 						break;
@@ -69,6 +73,10 @@
 	
 	
 	function qa_wall_add_post($userid, $handle, $cookieid, $touserid, $tohandle, $content, $format)
+/*
+	Adds a post to the wall of user $touserid with handle $tohandle, containing $content in $format (e.g. '' for text or 'html')
+	The post is by user $userid with handle $handle, and $cookieid is the user's current cookie (used for reporting the event).
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -76,6 +84,7 @@
 		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
 				
 		$messageid=qa_db_message_create($userid, $touserid, $content, $format, true);
+		qa_db_user_recount_posts($touserid);
 		
 		qa_report_event('u_wall_post', $userid, $handle, $cookieid, array(
 			'userid' => $touserid,
@@ -91,10 +100,15 @@
 	
 	
 	function qa_wall_delete_post($userid, $handle, $cookieid, $message)
+/*
+	Deletes the wall post described in $message (as obtained via qa_db_recent_messages_selectspec()). The deletion was performed
+	by user $userid with handle $handle, and $cookieid is the user's current cookie (all used for reporting the event).
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
 		
 		qa_db_message_delete($message['messageid']);
+		qa_db_user_recount_posts($message['touserid']);
 		
 		qa_report_event('u_wall_delete', $userid, $handle, $cookieid, array(
 			'messageid' => $message['messageid'],
@@ -104,6 +118,10 @@
 	
 	
 	function qa_wall_posts_add_rules($usermessages, $userid)
+/*
+	Return the list of messages in $usermessages (as obtained via qa_db_recent_messages_selectspec()) with additional fields
+	indicating what actions can be performed on them by user $userid. Currently only 'deleteable' is relevant.
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -120,21 +138,25 @@
 	}
 	
 	
-	function qa_wall_post_view($message, $userid)
+	function qa_wall_post_view($message)
+/*
+	Returns an element to add to $qa_content['message_list']['messages'] for $message (as obtained via qa_db_recent_messages_selectspec()
+	and then qa_wall_posts_add_rules()) where $userid is the identity of the user currently viewing the message.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 		
 		$options=qa_message_html_defaults();
 		
-		$htmlfields=qa_message_html_fields($message, $userid, $options);
+		$htmlfields=qa_message_html_fields($message, $options);
 		
-		if ($message['deleteable'])
+		if (@$message['deleteable'])
 			$htmlfields['form']=array(
 				'style' => 'light',
 
 				'buttons' => array(
 					'delete' => array(
-						'tags' => 'NAME="m'.qa_html($message['messageid']).'_dodelete" onClick="return qa_wall_post_click('.qa_js($message['messageid']).', this);"',
+						'tags' => 'name="m'.qa_html($message['messageid']).'_dodelete" onclick="return qa_wall_post_click('.qa_js($message['messageid']).', this);"',
 						'label' => qa_lang_html('question/delete_button'),
 						'popup' => qa_lang_html('profile/delete_wall_post_popup'),
 					),
@@ -142,6 +164,17 @@
 			);
 			
 		return $htmlfields;
+	}
+	
+	
+	function qa_wall_view_more_link($handle, $start)
+/*
+	Returns an element to add to $qa_content['message_list']['messages'] with a link to view all wall posts
+*/
+	{
+		return array(
+			'content' => '<a href="'.qa_path_html('user/'.$handle.'/wall', array('start' => $start)).'">'.qa_lang_html('profile/wall_view_more').'</a>',
+		);
 	}
 
 

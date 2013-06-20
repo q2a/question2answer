@@ -85,13 +85,13 @@
 	$qa_content['error']=$securityexpired ? qa_lang_html('admin/form_security_expired') : qa_admin_page_error();
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'" NAME="points_form" onsubmit="document.forms.points_form.has_js.value=1; return true;"',
+		'tags' => 'method="post" action="'.qa_self_html().'" name="points_form" onsubmit="document.forms.points_form.has_js.value=1; return true;"',
 		
 		'style' => 'wide',
 		
 		'buttons' => array(
 			'saverecalc' => array(
-				'tags' => 'ID="dosaverecalc"',
+				'tags' => 'id="dosaverecalc"',
 				'label' => qa_lang_html('admin/save_recalc_button'),
 			),
 		),
@@ -108,13 +108,13 @@
 		$qa_content['form']['ok']=qa_lang_html('admin/points_defaults_shown');
 	
 		$qa_content['form']['buttons']['cancel']=array(
-			'tags' => 'NAME="docancel"',
+			'tags' => 'name="docancel"',
 			'label' => qa_lang_html('main/cancel_button'),
 		);
 
 	} else {
 		if ($recalculate) {
-			$qa_content['form']['ok']='<SPAN ID="recalc_ok"></SPAN>';
+			$qa_content['form']['ok']='<span id="recalc_ok"></span>';
 			
 			$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;
 			$qa_content['script_var']['qa_warning_recalc']=qa_lang('admin/stop_recalc_warning');
@@ -125,7 +125,7 @@
 		}
 		
 		$qa_content['form']['buttons']['showdefaults']=array(
-			'tags' => 'NAME="doshowdefaults"',
+			'tags' => 'name="doshowdefaults"',
 			'label' => qa_lang_html('admin/show_defaults_button'),
 		);
 	}
@@ -134,7 +134,7 @@
 	foreach ($optionnames as $optionname) {
 		$optionfield=array(
 			'label' => qa_lang_html('options/'.$optionname),
-			'tags' => 'NAME="option_'.$optionname.'"',
+			'tags' => 'name="option_'.$optionname.'"',
 			'value' => qa_html($options[$optionname]),
 			'type' => 'number',
 			'note' => qa_lang_html('admin/points'),
@@ -165,11 +165,11 @@
 				break;
 				
 			default:
-				$prefix='<SPAN STYLE="visibility:hidden;">+</SPAN>'; // for even alignment
+				$prefix='<span style="visibility:hidden;">+</span>'; // for even alignment
 				break;
 		}
 		
-		$optionfield['prefix']='<SPAN STYLE="width:1em; display:inline-block; display:-moz-inline-stack;">'.$prefix.'</SPAN>';
+		$optionfield['prefix']='<span style="width:1em; display:inline-block; display:-moz-inline-stack;">'.$prefix.'</span>';
 		
 		$qa_content['form']['fields'][$optionname]=$optionfield;
 	}

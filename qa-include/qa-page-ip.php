@@ -139,7 +139,7 @@
 	$qa_content['error']=@$pageerror;
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'wide',
 		
@@ -175,19 +175,19 @@
 			);
 			
 			$qa_content['form']['buttons']['unblock']=array(
-				'tags' => 'NAME="dounblock"',
+				'tags' => 'name="dounblock"',
 				'label' => qa_lang_html('misc/unblock_ip_button'),
 			);
 			
 			if (count($questions) && !qa_user_maximum_permit_error('permit_hide_show'))
 				$qa_content['form']['buttons']['hideall']=array(
-					'tags' => 'NAME="dohideall" onClick="qa_show_waiting_after(this, false);"',
+					'tags' => 'name="dohideall" onclick="qa_show_waiting_after(this, false);"',
 					'label' => qa_lang_html('misc/hide_all_ip_button'),
 				);
 
 		} else
 			$qa_content['form']['buttons']['block']=array(
-				'tags' => 'NAME="doblock"',
+				'tags' => 'name="doblock"',
 				'label' => qa_lang_html('misc/block_ip_button'),
 			);
 	}
@@ -204,6 +204,7 @@
 			$htmloptions['voteview']=false;
 			$htmloptions['ipview']=false;
 			$htmloptions['answersview']=false;
+			$htmloptions['viewsview']=false;
 			$htmloptions['updateview']=false;
 			
 			$htmlfields=qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, $htmloptions);

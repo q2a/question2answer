@@ -287,6 +287,10 @@
 	
 	
 	function qa_db_user_levels_set($userid, $userlevels)
+/*
+	Reset the full set of context-specific (currently, per category) user levels for user $userid to $userlevels, where
+	$userlevels is an array of arrays, the inner arrays containing items 'entitytype', 'entityid' and 'level'.
+*/
 	{
 		qa_db_query_sub(
 			'DELETE FROM ^userlevels WHERE userid=$',
@@ -314,6 +318,9 @@
 	
 	
 	function qa_db_uapprovecount_update()
+/*
+	Update the cached count of the number of users who are awaiting approval after registration
+*/
 	{
 		if ( qa_should_update_counts() && !QA_FINAL_EXTERNAL_USERS )
 			qa_db_query_sub(

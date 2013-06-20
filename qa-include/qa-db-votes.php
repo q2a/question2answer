@@ -133,6 +133,9 @@
 	
 	
 	function qa_db_uservoteflag_posts_get($postids)
+/*
+	Return information about all the non-zero votes and/or flags on the posts in postids, including user handles for internal user management
+*/
 	{
 		if (QA_FINAL_EXTERNAL_USERS)
 			return qa_db_read_all_assoc(qa_db_query_sub(

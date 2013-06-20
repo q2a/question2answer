@@ -382,11 +382,18 @@
 //	For moving blobs between database and disk...
 
 	function qa_db_count_blobs_in_db()
+/*
+	Return the number of blobs whose content is stored in the database, rather than on disk
+*/
 	{
 		return qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^blobs WHERE content IS NOT NULL'));
 	}
 
+
 	function qa_db_get_next_blob_in_db($startblobid)
+/*
+	Return the id, content and format of the first blob whose content is stored in the database starting from $startblobid
+*/
 	{
 		return qa_db_read_one_assoc(qa_db_query_sub(
 			'SELECT blobid, content, format FROM ^blobs WHERE blobid>=# AND content IS NOT NULL',
@@ -394,12 +401,20 @@
 		), true);
 	}
 
+
 	function qa_db_count_blobs_on_disk()
+/*
+	Return the number of blobs whose content is stored on disk, rather than in the database
+*/
 	{
 		return qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^blobs WHERE content IS NULL'));
 	}
+
 	
 	function qa_db_get_next_blob_on_disk($startblobid)
+/*
+	Return the id and format of the first blob whose content is stored on disk starting from $startblobid
+*/
 	{
 		return qa_db_read_one_assoc(qa_db_query_sub(
 			'SELECT blobid, format FROM ^blobs WHERE blobid>=# AND content IS NULL',

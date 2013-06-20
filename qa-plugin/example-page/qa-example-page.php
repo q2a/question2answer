@@ -64,10 +64,10 @@
 
 			$qa_content['title']=qa_lang_html('example_page/page_title');
 			$qa_content['error']='An example error';
-			$qa_content['custom']='Some <B>custom html</B>';
+			$qa_content['custom']='Some <b>custom html</b>';
 
 			$qa_content['form']=array(
-				'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+				'tags' => 'method="post" action="'.qa_self_html().'"',
 				
 				'style' => 'wide',
 				
@@ -78,7 +78,7 @@
 				'fields' => array(
 					'request' => array(
 						'label' => 'The request',
-						'tags' => 'NAME="request"',
+						'tags' => 'name="request"',
 						'value' => qa_html($request),
 						'error' => qa_html('Another error'),
 					),
@@ -87,7 +87,7 @@
 				
 				'buttons' => array(
 					'ok' => array(
-						'tags' => 'NAME="okthen"',
+						'tags' => 'name="okthen"',
 						'label' => 'OK then',
 						'value' => '1',
 					),
@@ -98,7 +98,7 @@
 				),
 			);
 
-			$qa_content['custom_2']='<P><BR>More <I>custom html</I></P>';
+			$qa_content['custom_2']='<p><br>More <i>custom html</i></p>';
 			
 			return $qa_content;
 		}

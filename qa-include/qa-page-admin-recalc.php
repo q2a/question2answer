@@ -66,12 +66,12 @@
 	if ($recalcnow) {
 ?>
 
-<HTML>
-	<HEAD>
-		<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=utf-8">
-	</HEAD>
-	<BODY>
-		<TT>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	</head>
+	<body>
+		<tt>
 
 <?php
 
@@ -83,18 +83,18 @@
 			while ( qa_recalc_perform_step($state) && (time()<$stoptime) )
 				;
 			
-			echo qa_html(qa_recalc_get_message($state)).str_repeat('    ', 1024)."<BR>\n";
+			echo qa_html(qa_recalc_get_message($state)).str_repeat('    ', 1024)."<br>\n";
 
 			flush();
 			sleep(1); // ... then rest for one
 		}
 
 ?>
-		</TT>
+		</tt>
 		
-		<A HREF="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></A>
-	</BODY>
-</HTML>
+		<a href="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></a>
+	</body>
+</html>
 
 <?php
 		qa_exit();
@@ -106,13 +106,13 @@
 		$qa_content['error']=qa_lang_html('misc/form_security_again');
 		
 		$qa_content['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 			'style' => 'wide',
 			
 			'buttons' => array(
 				'recalc' => array(
-					'tags' => 'NAME="'.qa_html($state).'"',
+					'tags' => 'name="'.qa_html($state).'"',
 					'label' => qa_lang_html('misc/form_security_again'),
 				),
 			),

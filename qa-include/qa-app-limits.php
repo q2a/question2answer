@@ -38,10 +38,15 @@
 	define('QA_LIMIT_LOGINS', 'L');
 	define('QA_LIMIT_UPLOADS', 'U');
 	define('QA_LIMIT_FLAGS', 'F');
-	define('QA_LIMIT_MESSAGES', 'M');
+	define('QA_LIMIT_MESSAGES', 'M'); // i.e. private messages
+	define('QA_LIMIT_WALL_POSTS', 'W');
 
 	
 	function qa_user_limits_remaining($action)
+/*
+	Return how many more times the logged in user (and requesting IP address) can perform $action this hour,
+	where $action is one of the QA_LIMIT_* constants defined above.
+*/
 	{
 		$userlimits=qa_db_get_pending_result('userlimits', qa_db_user_limits_selectspec(qa_get_logged_in_userid()));
 		$iplimits=qa_db_get_pending_result('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
@@ -52,8 +57,8 @@
 	
 	function qa_limits_remaining($userid, $action)
 /*
-	Return how many more times user $userid and/or the requesting IP can perform $action this hour,
-	where $action is one of the QA_LIMIT_* constants defined above.
+	Return how many more times user $userid and/or the requesting IP can perform $action this hour, where $action is one
+	of the QA_LIMIT_* constants above. This function is no longer used and only included for backwards compatibility.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -67,6 +72,9 @@
 	
 	
 	function qa_limits_calc_remaining($action, $userlimits, $iplimits)
+/*
+	Calculate how many more times $action can be performed this hour, based on $userlimits and $iplimits retrieved from the database
+*/
 	{
 		switch ($action) {
 			case QA_LIMIT_QUESTIONS:
@@ -110,12 +118,13 @@
 				break;
 				
 			case QA_LIMIT_MESSAGES:
+			case QA_LIMIT_WALL_POSTS:
 				$usermax=qa_opt('max_rate_user_messages');
 				$ipmax=qa_opt('max_rate_ip_messages');
 				break;
 			
 			default:
-				qa_fatal_error('Unknown limit code in qa_limits_remaining: '.$action);
+				qa_fatal_error('Unknown limit code in qa_limits_calc_remaining: '.$action);
 				break;
 		}
 		

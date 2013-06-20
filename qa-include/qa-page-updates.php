@@ -85,8 +85,8 @@
 		null, // prefix for links in category navigation
 		null, // prefix for RSS feed paths (null to hide)
 		$forfavorites ? strtr(qa_lang_html('misc/suggest_update_favorites'), array(
-			'^1' => '<A HREF="'.qa_path_html('favorites').'">',
-			'^2' => '</A>',
+			'^1' => '<a href="'.qa_path_html('favorites').'">',
+			'^2' => '</a>',
 		)) : null // suggest what to do next
 	);
 	

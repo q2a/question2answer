@@ -401,8 +401,8 @@
 				qa_lang_html('admin/upgrade_db'),
 				
 				array(
-					'^1' => '<A HREF="'.qa_path_html('install').'">',
-					'^2' => '</A>',
+					'^1' => '<a href="'.qa_path_html('install').'">',
+					'^2' => '</a>',
 				)
 			);
 
@@ -462,8 +462,8 @@
 	
 	function qa_admin_single_click($entityid, $action)
 /*
-	Returns true if admin (hidden/flagged/approve) page $action performed on $entityid is permitted by the current user
-	and was processed successfully
+	Returns true if admin (hidden/flagged/approve/moderate) page $action performed on $entityid is permitted by the
+	logged in user and was processed successfully
 */
 	{	
 		$userid=qa_get_logged_in_userid();
@@ -552,7 +552,7 @@
 	
 	function qa_admin_check_clicks()
 /*
-	Checks for a POSTed click on an admin (hidden/flagged/approve) page, and refresh the page if processed successfully (non Ajax)
+	Checks for a POSTed click on an admin (hidden/flagged/approve/moderate) page, and refresh the page if processed successfully (non Ajax)
 */
 	{
 		if (qa_is_http_post())
@@ -588,12 +588,18 @@
 	
 	
 	function qa_admin_plugin_directory_hash($directory)
+/*
+	Return the hash code for the plugin in $directory, used for in-page navigation on admin/plugins page
+*/
 	{
 		return md5($directory);
 	}
 	
 	
 	function qa_admin_plugin_options_path($directory)
+/*
+	Return the URL (relative to the current page) to navigate to the options panel for the plugin in $directory
+*/
 	{
 		$hash=qa_admin_plugin_directory_hash($directory);		
 		return qa_path_html('admin/plugins', array('show' => $hash), null, null, $hash);
@@ -601,6 +607,9 @@
 	
 
 	function qa_admin_module_options_path($type, $name)
+/*
+	Return the URL (relative to the current page) to navigate to the options panel for plugin module $name of $type
+*/
 	{
 		$info=qa_get_module_info($type, $name);
 		return qa_admin_plugin_options_path($info['directory']);

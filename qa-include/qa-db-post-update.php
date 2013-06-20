@@ -115,8 +115,9 @@
 	
 	function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_CONTENT, $name=null)
 /*
-	Set the text fields in the database of $postid to $title, $content, $tagstring and $notify, and record
-	that $lastuserid did it from $lastip (if at least one is specified) with $updatetype.
+	Set the text fields in the database of $postid to $title, $content, $tagstring, $notify and $name, and record that
+	$lastuserid did it from $lastip (if at least one is specified) with $updatetype. or backwards compatibility if $name
+	is null then the name will not be changed.
 */
 	{
 		if (isset($lastuserid) || isset($lastip)) // use COALESCE() for name since $name=null means it should not be modified (for backwards compatibility)
@@ -177,7 +178,7 @@
 	
 	function qa_db_post_set_created($postid, $created)
 /*
-	Set the created date of $postid to $created, which is a unix timestamp. If created is NULL, set to now.
+	Set the created date of $postid to $created, which is a unix timestamp. If created is null, set to now.
 */
 	{
 		if (isset($created))
@@ -194,6 +195,9 @@
 	
 	
 	function qa_db_post_set_updated($postid, $updated)
+/*
+	Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is nul, set to now.
+*/
 	{
 		if (isset($updated))
 			qa_db_query_sub(
@@ -347,6 +351,9 @@
 
 	
 	function qa_db_flaggedcount_update()
+/*
+	Update the cached count of the number of flagged posts in the database
+*/
 	{
 		if (qa_should_update_counts())
 			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts WHERE flagcount>0 AND type IN ('Q', 'A', 'C')");

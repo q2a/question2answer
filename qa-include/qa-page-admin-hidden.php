@@ -93,7 +93,7 @@
 	
 	$qa_content['q_list']=array(
 		'form' => array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 
 			'hidden' => array(
 				'code' => qa_get_form_security_code('admin/click'),
@@ -111,6 +111,7 @@
 			$htmloptions['voteview']=false;
 			$htmloptions['tagsview']=!isset($question['opostid']);
 			$htmloptions['answersview']=false;
+			$htmloptions['viewsview']=false;
 			$htmloptions['updateview']=false;
 			$htmloptions['contentview']=true;
 			$htmloptions['flagsview']=true;
@@ -130,13 +131,13 @@
 			
 			if (!qa_user_post_permit_error('permit_hide_show', $question))
 				$buttons['reshow']=array(
-					'tags' => 'NAME="admin_'.qa_html($qhiddenpostid[$key]).'_reshow" onclick="return qa_admin_click(this);"',
+					'tags' => 'name="admin_'.qa_html($qhiddenpostid[$key]).'_reshow" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/reshow_button'),
 				);
 				
 			if ((!qa_user_post_permit_error('permit_delete_hidden', $question)) && !$dependcounts[$qhiddenpostid[$key]])
 				$buttons['delete']=array(
-					'tags' => 'NAME="admin_'.qa_html($qhiddenpostid[$key]).'_delete" onclick="return qa_admin_click(this);"',
+					'tags' => 'name="admin_'.qa_html($qhiddenpostid[$key]).'_delete" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/delete_button'),
 				);
 				

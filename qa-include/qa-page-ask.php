@@ -170,7 +170,7 @@
 	$custom=qa_opt('show_custom_ask') ? trim(qa_opt('custom_ask')) : '';
 
 	$qa_content['form']=array(
-		'tags' => 'NAME="ask" METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'name="ask" method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
@@ -182,14 +182,14 @@
 			
 			'title' => array(
 				'label' => qa_lang_html('question/q_title_label'),
-				'tags' => 'NAME="title" ID="title" AUTOCOMPLETE="off"',
+				'tags' => 'name="title" id="title" autocomplete="off"',
 				'value' => qa_html(@$in['title']),
 				'error' => qa_html(@$errors['title']),
 			),
 			
 			'similar' => array(
 				'type' => 'custom',
-				'html' => '<SPAN ID="similar"></SPAN>',
+				'html' => '<span id="similar"></span>',
 			),
 			
 			'content' => $field,
@@ -197,7 +197,7 @@
 		
 		'buttons' => array(
 			'ask' => array(
-				'tags' => 'onClick="qa_show_waiting_after(this, false); '.
+				'tags' => 'onclick="qa_show_waiting_after(this, false); '.
 					(method_exists($editor, 'update_script') ? $editor->update_script('content') : '').'"',
 				'label' => qa_lang_html('question/ask_button'),
 			),
@@ -215,7 +215,7 @@
 
 	if (qa_opt('do_ask_check_qs') || qa_opt('do_example_tags')) {
 		$qa_content['script_rel'][]='qa-content/qa-ask.js?'.QA_VERSION;
-		$qa_content['form']['fields']['title']['tags'].=' onChange="qa_title_change(this.value);"';
+		$qa_content['form']['fields']['title']['tags'].=' onchange="qa_title_change(this.value);"';
 		
 		if (strlen(@$in['title']))
 			$qa_content['script_onloads'][]='qa_title_change('.qa_js($in['title']).');';
@@ -250,7 +250,7 @@
 	if (qa_opt('extra_field_active')) {
 		$field=array(
 			'label' => qa_html(qa_opt('extra_field_prompt')),
-			'tags' => 'NAME="extra"',
+			'tags' => 'name="extra"',
 			'value' => qa_html(@$in['extra']),
 			'error' => qa_html(@$errors['extra']),
 		);

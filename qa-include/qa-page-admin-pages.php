@@ -340,20 +340,20 @@
 		$permitvalue=@$permitoptions[isset($inpermit) ? $inpermit : $editpage['permit']];
 		
 		$qa_content['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_path_html(qa_request()).'"',
+			'tags' => 'method="post" action="'.qa_path_html(qa_request()).'"',
 			
 			'style' => 'tall',
 			
 			'fields' => array(
 				'name' => array(
-					'tags' => 'NAME="name" ID="name"',
+					'tags' => 'name="name" id="name"',
 					'label' => qa_lang_html($isexternal ? 'admin/link_name' : 'admin/page_name'),
 					'value' => qa_html(isset($inname) ? $inname : @$editpage['title']),
 					'error' => qa_html(@$errors['name']),
 				),
 				
 				'delete' => array(
-					'tags' => 'NAME="dodelete" ID="dodelete"',
+					'tags' => 'name="dodelete" id="dodelete"',
 					'label' => qa_lang_html($isexternal ? 'admin/delete_link' : 'admin/delete_page'),
 					'value' => 0,
 					'type' => 'checkbox',
@@ -361,7 +361,7 @@
 				
 				'position' => array(
 					'id' => 'position_display',
-					'tags' => 'NAME="position"',
+					'tags' => 'name="position"',
 					'label' => qa_lang_html('admin/position'),
 					'type' => 'select',
 					'options' => $positionoptions,
@@ -370,7 +370,7 @@
 				
 				'permit' => array(
 					'id' => 'permit_display',
-					'tags' => 'NAME="permit"',
+					'tags' => 'name="permit"',
 					'label' => qa_lang_html('admin/permit_to_view'),
 					'type' => 'select',
 					'options' => $permitoptions,
@@ -379,7 +379,7 @@
 				
 				'slug' => array(
 					'id' => 'slug_display',
-					'tags' => 'NAME="slug"',
+					'tags' => 'name="slug"',
 					'label' => qa_lang_html('admin/page_slug'),
 					'value' => qa_html(isset($inslug) ? $inslug : @$editpage['tags']),
 					'error' => qa_html(@$errors['slug']),
@@ -387,7 +387,7 @@
 				
 				'url' => array(
 					'id' => 'url_display',
-					'tags' => 'NAME="url"',
+					'tags' => 'name="url"',
 					'label' => qa_lang_html('admin/link_url'),
 					'value' => qa_html(isset($inurl) ? $inurl : @$editpage['tags']),
 					'error' => qa_html(@$errors['url']),
@@ -395,7 +395,7 @@
 				
 				'newwindow' => array(
 					'id' => 'newwindow_display',
-					'tags' => 'NAME="newwindow"',
+					'tags' => 'name="newwindow"',
 					'label' => qa_lang_html('admin/link_new_window'),
 					'value' => (isset($innewwindow) ? $innewwindow : (@$editpage['flags'] & QA_PAGE_FLAGS_NEW_WINDOW)) ? 1 : 0,
 					'type' => 'checkbox',
@@ -403,7 +403,7 @@
 				
 				'heading' => array(
 					'id' => 'heading_display',
-					'tags' => 'NAME="heading"',
+					'tags' => 'name="heading"',
 					'label' => qa_lang_html('admin/page_heading'),
 					'value' => qa_html(isset($inheading) ? $inheading : @$editpage['heading']),
 					'error' => qa_html(@$errors['heading']),
@@ -411,7 +411,7 @@
 				
 				'content' => array(
 					'id' => 'content_display',
-					'tags' => 'NAME="content"',
+					'tags' => 'name="content"',
 					'label' => qa_lang_html('admin/page_content_html'),
 					'value' => qa_html(isset($incontent) ? $incontent : @$editpage['content']),
 					'error' => qa_html(@$errors['content']),
@@ -425,7 +425,7 @@
 				),
 				
 				'cancel' => array(
-					'tags' => 'NAME="docancel"',
+					'tags' => 'name="docancel"',
 					'label' => qa_lang_html('main/cancel_button'),
 				),
 			),
@@ -469,7 +469,7 @@
 	//	List of standard navigation links
 
 		$qa_content['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 			
 			'style' => 'tall',
 			
@@ -477,17 +477,17 @@
 
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'NAME="dosaveoptions"',
+					'tags' => 'name="dosaveoptions"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 
 				'addpage' => array(
-					'tags' => 'NAME="doaddpage"',
+					'tags' => 'name="doaddpage"',
 					'label' => qa_lang_html('admin/add_page_button'),
 				),
 
 				'addlink' => array(
-					'tags' => 'NAME="doaddlink"',
+					'tags' => 'name="doaddlink"',
 					'label' => qa_lang_html('admin/add_link_button'),
 				),
 			),
@@ -505,8 +505,8 @@
 
 		foreach ($navoptions as $optionname => $langkey) {
 			$qa_content['form']['fields'][$optionname]=array(
-				'label' => '<A HREF="'.qa_path_html($navpaths[$optionname]).'">'.qa_lang_html($langkey).'</A>',
-				'tags' => 'NAME="option_'.$optionname.'"',
+				'label' => '<a href="'.qa_path_html($navpaths[$optionname]).'">'.qa_lang_html($langkey).'</a>',
+				'tags' => 'name="option_'.$optionname.'"',
 				'type' => 'checkbox',
 				'value' => qa_opt($optionname),
 			);
@@ -526,19 +526,19 @@
 			$suggestrequests=$trypage->suggest_requests();
 		
 			foreach ($suggestrequests as $suggestrequest) {
-				$listhtml.='<LI><B><A HREF="'.qa_path_html($suggestrequest['request']).'">'.qa_html($suggestrequest['title']).'</A></B>';
+				$listhtml.='<li><b><a href="'.qa_path_html($suggestrequest['request']).'">'.qa_html($suggestrequest['title']).'</a></b>';
 				
 				$listhtml.=qa_lang_html_sub('admin/plugin_module', qa_html($tryname));
 
 				$listhtml.=strtr(qa_lang_html('admin/add_link_link'), array(
-					'^1' => '<A HREF="'.qa_path_html(qa_request(), array('doaddlink' => 1, 'text' => $suggestrequest['title'], 'url' => $suggestrequest['request'], 'nav' => @$suggestrequest['nav'])).'">',
-					'^2' => '</A>',
+					'^1' => '<a href="'.qa_path_html(qa_request(), array('doaddlink' => 1, 'text' => $suggestrequest['title'], 'url' => $suggestrequest['request'], 'nav' => @$suggestrequest['nav'])).'">',
+					'^2' => '</a>',
 				));
 				
 				if (method_exists($trypage, 'admin_form'))
-					$listhtml.=' - <A HREF="'.qa_admin_module_options_path('page', $tryname).'">'.qa_lang_html('admin/options').'</A>';
+					$listhtml.=' - <a href="'.qa_admin_module_options_path('page', $tryname).'">'.qa_lang_html('admin/options').'</a>';
 					
-				$listhtml.='</LI>';
+				$listhtml.='</li>';
 			}
 		}
 
@@ -546,7 +546,7 @@
 			$qa_content['form']['fields']['plugins']=array(
 				'label' => qa_lang_html('admin/plugin_pages_explanation'),
 				'type' => 'custom',
-				'html' => '<UL STYLE="margin-bottom:0;">'.$listhtml.'</UL>',
+				'html' => '<ul style="margin-bottom:0;">'.$listhtml.'</ul>',
 			);
 		
 	//	List of custom pages or links
@@ -554,20 +554,20 @@
 		$listhtml='';
 		
 		foreach ($pages as $page) {
-			$listhtml.='<LI><B><A HREF="'.qa_custom_page_url($page).'">'.qa_html($page['title']).'</A></B>';
+			$listhtml.='<li><b><a href="'.qa_custom_page_url($page).'">'.qa_html($page['title']).'</a></b>';
 			
 			$listhtml.=strtr(qa_lang_html(($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) ? 'admin/edit_link' : 'admin/edit_page'), array(
-				'^1' => '<A HREF="'.qa_path_html('admin/pages', array('edit' => $page['pageid'])).'">',
-				'^2' => '</A>',
+				'^1' => '<a href="'.qa_path_html('admin/pages', array('edit' => $page['pageid'])).'">',
+				'^2' => '</a>',
 			));
 								
-			$listhtml.='</LI>';
+			$listhtml.='</li>';
 		}
 		
 		$qa_content['form']['fields']['pages']=array(
 			'label' => strlen($listhtml) ? qa_lang_html('admin/click_name_edit') : qa_lang_html('admin/pages_explanation'),
 			'type' => 'custom',
-			'html' => strlen($listhtml) ? '<UL STYLE="margin-bottom:0;">'.$listhtml.'</UL>' : null,
+			'html' => strlen($listhtml) ? '<ul style="margin-bottom:0;">'.$listhtml.'</ul>' : null,
 		);
 	}
 

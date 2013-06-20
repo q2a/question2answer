@@ -8,7 +8,7 @@
 	
 	File: qa-include/qa-page-user-questions.php
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Controller for user profile page
+	Description: Controller for user page showing all user's questions
 
 
 	This program is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@
 //	Recent questions by this user
 
 	$qa_content['q_list']['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 
 		'hidden' => array(
 			'code' => qa_get_form_security_code('vote'),

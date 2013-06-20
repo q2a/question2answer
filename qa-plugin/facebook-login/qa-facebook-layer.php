@@ -32,9 +32,9 @@
 			
 			if (strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret')))
 				$this->output(
-					'<STYLE><!--',
+					'<style><!--',
 					'.fb-login-button.fb_iframe_widget.fb_hide_iframes span {display:none;}',
-					'--></STYLE>'
+					'--></style>'
 				);
 		}
 

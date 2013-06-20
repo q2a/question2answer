@@ -89,14 +89,14 @@
 	$qa_content['error']=@$errors['page'];
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
 		'fields' => array(
 			'email_handle' => array(
 				'label' => qa_lang_html('users/email_handle_label'),
-				'tags' => 'NAME="emailhandle" ID="emailhandle"',
+				'tags' => 'name="emailhandle" id="emailhandle"',
 				'value' => qa_html(@$inemailhandle),
 				'error' => qa_html(@$errors['emailhandle']),
 				'note' => qa_lang_html('users/send_reset_note'),

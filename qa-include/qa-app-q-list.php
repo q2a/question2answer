@@ -68,7 +68,7 @@
 		$qa_content=qa_content_prepare(true, array_keys(qa_category_path($navcategories, $categoryid)));
 	
 		$qa_content['q_list']['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 			
 			'hidden' => array(
 				'code' => qa_get_form_security_code('vote'),
@@ -91,7 +91,7 @@
 		} else
 			$qa_content['title']=$nonetitle;
 		
-		if (isset($userid) && isset($categoryid) && isset($categoryisfavorite)) {
+		if (isset($userid) && isset($categoryid)) {
 			$favoritemap=qa_get_favorite_non_qs_map();
 			$categoryisfavorite=@$favoritemap['category'][$navcategories[$categoryid]['backpath']] ? true : false;
 			

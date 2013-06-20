@@ -54,15 +54,22 @@
 	}
 	
 	
-	function qa_upload_file_one($maxfilesize=null, $onlyimage=false, $imagemaxwidth=null, $imagemaxheight=null)
-	{
-		$file=reset($_FILES);
-		
-		return qa_upload_file($file['tmp_name'], $file['name'], $maxfilesize, $onlyimage, $imagemaxwidth, $imagemaxheight);
-	}
-	
-	
 	function qa_upload_file($localfilename, $sourcefilename, $maxfilesize=null, $onlyimage=false, $imagemaxwidth=null, $imagemaxheight=null)
+/*
+	Move an uploaded image or other file into blob storage. Pass the $localfilename where the file is currently stored
+	(temporarily) and the $sourcefilename of the file on the user's computer (if using PHP's usual file upload
+	mechanism, these are obtained from $_FILES[..]['tmp_name'] and $_FILES[..]['name'] fields respectively). To apply a
+	maximum file size (in bytes) beyond the general one, use $maxfilesize, otherwise set it to null. Set $onlyimage to
+	true if only image uploads (PNG, GIF, JPEG) are allowed. To apply a maximum width or height (in pixels) to uploaded
+	images, set $imagemaxwidth and $imagemaxheight. The function returns an array which may contain the following elements:
+
+	'error' => a string containing an error, if one occurred
+	'format' => the format (file extension) of the blob created (all scaled images end up as 'jpeg')
+	'width' => if an image, the width in pixels of the blob created (after possible scaling)
+	'height' => if an image, the height in pixels of the blob created (after possible scaling)
+	'blobid' => the blobid that was created (if there was no error)
+	'bloburl' => the url that can be used to view/download the created blob (if there was no error)
+*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
@@ -193,6 +200,17 @@
 	}
 	
 
+	function qa_upload_file_one($maxfilesize=null, $onlyimage=false, $imagemaxwidth=null, $imagemaxheight=null)
+/*
+	In response to a file upload, move the first uploaded file into blob storage. Other parameters are as for qa_upload_file(...)
+*/
+	{
+		$file=reset($_FILES);
+		
+		return qa_upload_file($file['tmp_name'], $file['name'], $maxfilesize, $onlyimage, $imagemaxwidth, $imagemaxheight);
+	}
+	
+	
 /*
 	Omit PHP closing tag to help avoid accidental output
 */

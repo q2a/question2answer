@@ -152,7 +152,7 @@
 	
 		function vote_count($post)
 		{
-			$votersflaggers=$this->get_post_voters_flaggers($post['raw'], $post['raw']['postid']);
+			$votersflaggers=$this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
 			
 			$tooltip='';
 			
@@ -172,12 +172,12 @@
 			}
 			
 			if (strlen($tooltip))
-				$this->output('<SPAN TITLE="'.$tooltip.'">');
+				$this->output('<span title="'.$tooltip.'">');
 			
 			qa_html_theme_base::vote_count($post);
 			
 			if (strlen($tooltip))
-				$this->output('</SPAN>');
+				$this->output('</span>');
 		}
 		
 		
@@ -199,12 +199,12 @@
 			}
 						
 			if (strlen($tooltip))
-				$this->output('<SPAN TITLE="&#9873; '.$tooltip.'">');
+				$this->output('<span title="&#9873; '.$tooltip.'">');
 			
 			qa_html_theme_base::post_meta_flags($post, $class);
 			
 			if (strlen($tooltip))
-				$this->output('</SPAN>');
+				$this->output('</span>');
 		}
 
 	}

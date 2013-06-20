@@ -126,7 +126,7 @@
 	$qa_content['error']=@$pageerror;
 
 	$qa_content['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
@@ -134,7 +134,7 @@
 			'message' => array(
 				'type' => $feedbacksent ? 'static' : '',
 				'label' => qa_lang_html_sub('misc/feedback_message', qa_opt('site_title')),
-				'tags' => 'NAME="message" ID="message"',
+				'tags' => 'name="message" id="message"',
 				'value' => qa_html(@$inmessage),
 				'rows' => 8,
 				'error' => qa_html(@$errors['message']),
@@ -143,14 +143,14 @@
 			'name' => array(
 				'type' => $feedbacksent ? 'static' : '',
 				'label' => qa_lang_html('misc/feedback_name'),
-				'tags' => 'NAME="name"',
+				'tags' => 'name="name"',
 				'value' => qa_html(isset($inname) ? $inname : @$userprofile['name']),
 			),
 
 			'email' => array(
 				'type' => $feedbacksent ? 'static' : '',
 				'label' => qa_lang_html('misc/feedback_email'),
-				'tags' => 'NAME="email"',
+				'tags' => 'name="email"',
 				'value' => qa_html(isset($inemail) ? $inemail : qa_get_logged_in_email()),
 				'note' => $feedbacksent ? null : qa_opt('email_privacy'),
 			),

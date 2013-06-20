@@ -32,6 +32,7 @@
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-users.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
+	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 	
 	$handle=qa_request_part(1);
 	$loginuserid=qa_get_logged_in_userid();
@@ -67,39 +68,35 @@
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 	
 
+//	Check that we have permission and haven't reached the limit
+
+	$errorhtml=null;
+	
+	switch (qa_user_permit_error(null, QA_LIMIT_MESSAGES)) {
+		case 'limit':
+			$errorhtml=qa_lang_html('misc/message_limit');
+			break;
+			
+		case false:
+			break;
+			
+		default:
+			$errorhtml=qa_lang_html('users/no_permission');
+			break;
+	}
+
+	if (isset($errorhtml)) {
+		$qa_content=qa_content_prepare();
+		$qa_content['error']=$errorhtml;
+		return $qa_content;
+	}
+
+
 //	Process sending a message to user
 
 	$messagesent=(qa_get_state()=='message-sent');
 	
 	if (qa_post_text('domessage')) {
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-	
-	//	Check that we haven't been blocked on volume
-	
-		$errorhtml=null;
-		
-		switch (qa_user_permit_error(null, QA_LIMIT_MESSAGES)) {
-			case 'limit':
-				$errorhtml=qa_lang_html('misc/message_limit');
-				break;
-				
-			case false:
-				break;
-				
-			default:
-				$errorhtml=qa_lang_html('users/no_permission');
-				break;
-		}
-	
-		if (isset($errorhtml)) {
-			$qa_content=qa_content_prepare();
-			$qa_content['error']=$errorhtml;
-			return $qa_content;
-		}
-	
-
-	//	Proceed...
-	
 		$inmessage=qa_post_text('message');
 		
 		if (!qa_check_form_security_code('message-'.$handle, qa_post_text('code')))
@@ -163,7 +160,7 @@
 	$qa_content['error']=@$pageerror;
 
 	$qa_content['form_message']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 		
 		'style' => 'tall',
 		
@@ -171,7 +168,7 @@
 			'message' => array(
 				'type' => $messagesent ? 'static' : '',
 				'label' => qa_lang_html_sub('misc/message_for_x', qa_get_one_user_html($handle, false)),
-				'tags' => 'NAME="message" ID="message"',
+				'tags' => 'name="message" id="message"',
 				'value' => qa_html(@$inmessage, $messagesent),
 				'rows' => 8,
 				'note' => qa_lang_html_sub('misc/message_explanation', qa_html(qa_opt('site_title'))),
@@ -181,7 +178,7 @@
 		
 		'buttons' => array(
 			'send' => array(
-				'tags' => 'onClick="qa_show_waiting_after(this, false);"',
+				'tags' => 'onclick="qa_show_waiting_after(this, false);"',
 				'label' => qa_lang_html('main/send_button'),
 			),
 		),
@@ -224,7 +221,7 @@
 			$options=qa_message_html_defaults();
 			
 			foreach ($showmessages as $message)
-				$qa_content['message_list']['messages'][]=qa_message_html_fields($message, $loginuserid, $options);
+				$qa_content['message_list']['messages'][]=qa_message_html_fields($message, $options);
 		}
 	}
 

@@ -37,7 +37,7 @@
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 
-	function qa_post_create($type, $parentid, $title, $content, $format='', $categoryid=null, $tags=null, $userid=null, $notify=null, $email=null, $extravalue=null)
+	function qa_post_create($type, $parentid, $title, $content, $format='', $categoryid=null, $tags=null, $userid=null, $notify=null, $email=null, $extravalue=null, $name=null)
 /*
 	Create a new post in the database, and return its postid.
 	
@@ -50,9 +50,10 @@
 	should be in UTF-8 HTML. Other values of $format may be allowed if an appropriate viewer module is installed. The
 	$title, $categoryid and $tags parameters are only relevant when creating a question - $tags can either be an array
 	of tags, or a string of tags separated by commas. The new post will be assigned to $userid if it is not null,
-	otherwise it will be anonymous. If $notify is true then the author will be sent notifications relating to the post -
-	either to $email if it is specified and valid, or to the current email address of $userid if $email is '@'. If
-	you're creating a question, the $extravalue parameter will be set as the custom extra field, if not null.
+	otherwise it will be by a non-user. If $notify is true then the author will be sent notifications relating to the
+	post - either to $email if it is specified and valid, or to the current email address of $userid if $email is '@'.
+	If you're creating a question, the $extravalue parameter will be set as the custom extra field, if not null. For all
+	post types you can specify the $name of the post's author, which is relevant if the $userid is null.
 */
 	{
 		$handle=qa_post_userid_to_handle($userid);
@@ -64,13 +65,13 @@
 				$followanswer=isset($parentid) ? qa_post_get_full($parentid, 'A') : null;
 				$tagstring=qa_post_tags_to_tagstring($tags);
 				$postid=qa_question_create($followanswer, $userid, $handle, null, $title, $content, $format, $text, $tagstring,
-					$notify, $email, $categoryid, $extravalue, $type=='Q_QUEUED');
+					$notify, $email, $categoryid, $extravalue, $type=='Q_QUEUED', $name);
 				break;
 				
 			case 'A':
 			case 'A_QUEUED':
 				$question=qa_post_get_full($parentid, 'Q');
-				$postid=qa_answer_create($userid, $handle, null, $content, $format, $text, $notify, $email, $question, $type=='A_QUEUED');
+				$postid=qa_answer_create($userid, $handle, null, $content, $format, $text, $notify, $email, $question, $type=='A_QUEUED', $name);
 				break;
 				
 			case 'C':
@@ -78,7 +79,7 @@
 				$parent=qa_post_get_full($parentid, 'QA');
 				$commentsfollows=qa_db_single_select(qa_db_full_child_posts_selectspec(null, $parentid));
 				$question=qa_post_parent_to_question($parent);
-				$postid=qa_comment_create($userid, $handle, null, $content, $format, $text, $notify, $email, $question, $parent, $commentsfollows, $type=='C_QUEUED');
+				$postid=qa_comment_create($userid, $handle, null, $content, $format, $text, $notify, $email, $question, $parent, $commentsfollows, $type=='C_QUEUED', $name);
 				break;
 				
 			default:
@@ -90,11 +91,11 @@
 	}
 	
 	
-	function qa_post_set_content($postid, $title, $content, $format=null, $tags=null, $notify=null, $email=null, $byuserid=null, $extravalue=null)
+	function qa_post_set_content($postid, $title, $content, $format=null, $tags=null, $notify=null, $email=null, $byuserid=null, $extravalue=null, $name=null)
 /*
-	Change the data stored for post $postid based on any of the $title, $content, $format, $tags, $notify, $email
-	and $extravalue parameters passed which are not null. The meaning of these parameters is the same as for
-	qa_post_create() above. Pass the identify of the user making this change in $byuserid (or null for anonymous).
+	Change the data stored for post $postid based on any of the $title, $content, $format, $tags, $notify, $email,
+	$extravalue and $name parameters passed which are not null. The meaning of these parameters is the same as for
+	qa_post_create() above. Pass the identify of the user making this change in $byuserid (or null for silent).
 */
 	{
 		$oldpost=qa_post_get_full($postid, 'QAC');
@@ -123,18 +124,18 @@
 		switch ($oldpost['basetype']) {
 			case 'Q':
 				$tagstring=qa_post_tags_to_tagstring($tags);
-				qa_question_set_content($oldpost, $title, $content, $format, $text, $tagstring, $setnotify, $byuserid, $byhandle, null, $extravalue);
+				qa_question_set_content($oldpost, $title, $content, $format, $text, $tagstring, $setnotify, $byuserid, $byhandle, null, $extravalue, $name);
 				break;
 				
 			case 'A':
 				$question=qa_post_get_full($oldpost['parentid'], 'Q');
-				qa_answer_set_content($oldpost, $content, $format, $text, $setnotify, $byuserid, $byhandle, null, $question);
+				qa_answer_set_content($oldpost, $content, $format, $text, $setnotify, $byuserid, $byhandle, null, $question, $name);
 				break;
 				
 			case 'C':
 				$parent=qa_post_get_full($oldpost['parentid'], 'QA');
 				$question=qa_post_parent_to_question($parent);
-				qa_comment_set_content($oldpost, $content, $format, $text, $setnotify, $byuserid, $byhandle, null, $question, $parent);
+				qa_comment_set_content($oldpost, $content, $format, $text, $setnotify, $byuserid, $byhandle, null, $question, $parent, $name);
 				break;
 		}
 	}
@@ -204,8 +205,18 @@
 	
 	function qa_post_set_hidden($postid, $hidden=true, $byuserid=null)
 /*
-	Hide $postid if $hidden is true, show the post. Pass the identify of the user making this change in $byuserid (or
-	null for an anonymous change).
+	Hide $postid if $hidden is true, otherwise show the post. Pass the identify of the user making this change in
+	$byuserid (or null for a silent change). This function is included mainly for backwards compatibility.
+*/
+	{
+		qa_post_set_status($postid, $hidden ? QA_POST_STATUS_HIDDEN : QA_POST_STATUS_NORMAL, $byuserid);
+	}
+	
+	
+	function qa_post_set_status($postid, $status, $byuserid=null)
+/*
+	Change the status of $postid to $status, which should be one of the QA_POST_STATUS_* constants defined in
+	qa-app-post-update.php. Pass the identify of the user making this change in $byuserid (or null for a silent change).
 */
 	{
 		$oldpost=qa_post_get_full($postid, 'QAC');
@@ -216,19 +227,19 @@
 				$answers=qa_post_get_question_answers($postid);
 				$commentsfollows=qa_post_get_question_commentsfollows($postid);
 				$closepost=qa_post_get_question_closepost($postid);
-				qa_question_set_hidden($oldpost, $hidden, $byuserid, $byhandle, null, $answers, $commentsfollows, $closepost);
+				qa_question_set_status($oldpost, $status, $byuserid, $byhandle, null, $answers, $commentsfollows, $closepost);
 				break;
 				
 			case 'A':
 				$question=qa_post_get_full($oldpost['parentid'], 'Q');
 				$commentsfollows=qa_post_get_answer_commentsfollows($postid);
-				qa_answer_set_hidden($oldpost, $hidden, $byuserid, $byhandle, null, $question, $commentsfollows);
+				qa_answer_set_status($oldpost, $status, $byuserid, $byhandle, null, $question, $commentsfollows);
 				break;
 				
 			case 'C':
 				$parent=qa_post_get_full($oldpost['parentid'], 'QA');
 				$question=qa_post_parent_to_question($parent);
-				qa_comment_set_hidden($oldpost, $hidden, $byuserid, $byhandle, null, $question, $parent);
+				qa_comment_set_status($oldpost, $status, $byuserid, $byhandle, null, $question, $parent);
 				break;
 		}
 	}

@@ -77,8 +77,8 @@
 			'q2a_latest' => array(
 				'label' => qa_lang_html('admin/q2a_latest_version'),
 				'type' => 'custom',
-				'html' => '<IFRAME SRC="http://www.question2answer.org/question2answer-latest.php?version='.urlencode(QA_VERSION).'&language='.urlencode(qa_opt('site_language')).
-					'" WIDTH="100" HEIGHT="16" STYLE="vertical-align:middle; border:0; background:transparent;" allowTransparency="true" SCROLLING="no" FRAMEBORDER="0"></IFRAME>',
+				'html' => '<iframe src="http://www.question2answer.org/question2answer-latest.php?version='.urlencode(QA_VERSION).'&language='.urlencode(qa_opt('site_language')).
+					'" width="100" height="16" style="vertical-align:middle; border:0; background:transparent;" allowTransparency="true" scrolling="no" frameborder="0"></iframe>',
 			),
 			
 			'break0' => array(
@@ -202,7 +202,7 @@
 			$qa_content['form']['fields'][$index]['type']='static';
 	
 	$qa_content['form_2']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_path_html('admin/recalc').'"',
+		'tags' => 'method="post" action="'.qa_path_html('admin/recalc').'"',
 		
 		'title' => qa_lang_html('admin/database_cleanup'),
 		
@@ -211,38 +211,38 @@
 		'buttons' => array(
 			'recount_posts' => array(
 				'label' => qa_lang_html('admin/recount_posts'),
-				'tags' => 'NAME="dorecountposts" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recount_posts_stop')).', \'recount_posts_note\');"',
-				'note' => '<SPAN ID="recount_posts_note">'.qa_lang_html('admin/recount_posts_note').'</SPAN>',
+				'tags' => 'name="dorecountposts" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recount_posts_stop')).', \'recount_posts_note\');"',
+				'note' => '<span id="recount_posts_note">'.qa_lang_html('admin/recount_posts_note').'</span>',
 			),
 	
 			'reindex_content' => array(
 				'label' => qa_lang_html('admin/reindex_content'),
-				'tags' => 'NAME="doreindexcontent" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/reindex_content_stop')).', \'reindex_content_note\');"',
-				'note' => '<SPAN ID="reindex_content_note">'.qa_lang_html('admin/reindex_content_note').'</SPAN>',
+				'tags' => 'name="doreindexcontent" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/reindex_content_stop')).', \'reindex_content_note\');"',
+				'note' => '<span id="reindex_content_note">'.qa_lang_html('admin/reindex_content_note').'</span>',
 			),
 			
 			'recalc_points' => array(
 				'label' => qa_lang_html('admin/recalc_points'),
-				'tags' => 'NAME="dorecalcpoints" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recalc_stop')).', \'recalc_points_note\');"',
-				'note' => '<SPAN ID="recalc_points_note">'.qa_lang_html('admin/recalc_points_note').'</SPAN>',
+				'tags' => 'name="dorecalcpoints" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recalc_stop')).', \'recalc_points_note\');"',
+				'note' => '<span id="recalc_points_note">'.qa_lang_html('admin/recalc_points_note').'</span>',
 			),
 			
 			'refill_events' => array(
 				'label' => qa_lang_html('admin/refill_events'),
-				'tags' => 'NAME="dorefillevents" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recalc_stop')).', \'refill_events_note\');"',
-				'note' => '<SPAN ID="refill_events_note">'.qa_lang_html('admin/refill_events_note').'</SPAN>',
+				'tags' => 'name="dorefillevents" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recalc_stop')).', \'refill_events_note\');"',
+				'note' => '<span id="refill_events_note">'.qa_lang_html('admin/refill_events_note').'</span>',
 			),
 			
 			'recalc_categories' => array(
 				'label' => qa_lang_html('admin/recalc_categories'),
-				'tags' => 'NAME="dorecalccategories" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recalc_stop')).', \'recalc_categories_note\');"',
-				'note' => '<SPAN ID="recalc_categories_note">'.qa_lang_html('admin/recalc_categories_note').'</SPAN>',
+				'tags' => 'name="dorecalccategories" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/recalc_stop')).', \'recalc_categories_note\');"',
+				'note' => '<span id="recalc_categories_note">'.qa_lang_html('admin/recalc_categories_note').'</span>',
 			),
 			
 			'delete_hidden' => array(
 				'label' => qa_lang_html('admin/delete_hidden'),
-				'tags' => 'NAME="dodeletehidden" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/delete_stop')).', \'delete_hidden_note\');"',
-				'note' => '<SPAN ID="delete_hidden_note">'.qa_lang_html('admin/delete_hidden_note').'</SPAN>',
+				'tags' => 'name="dodeletehidden" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/delete_stop')).', \'delete_hidden_note\');"',
+				'note' => '<span id="delete_hidden_note">'.qa_lang_html('admin/delete_hidden_note').'</span>',
 			),
 		),
 		
@@ -258,15 +258,15 @@
 		if (qa_db_has_blobs_in_db())
 			$qa_content['form_2']['buttons']['blobs_to_disk']=array(
 				'label' => qa_lang_html('admin/blobs_to_disk'),
-				'tags' => 'NAME="doblobstodisk" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/blobs_stop')).', \'blobs_to_disk_note\');"',
-				'note' => '<SPAN ID="blobs_to_disk_note">'.qa_lang_html('admin/blobs_to_disk_note').'</SPAN>',
+				'tags' => 'name="doblobstodisk" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/blobs_stop')).', \'blobs_to_disk_note\');"',
+				'note' => '<span id="blobs_to_disk_note">'.qa_lang_html('admin/blobs_to_disk_note').'</span>',
 			);
 		
 		if (qa_db_has_blobs_on_disk())
 			$qa_content['form_2']['buttons']['blobs_to_db']=array(
 				'label' => qa_lang_html('admin/blobs_to_db'),
-				'tags' => 'NAME="doblobstodb" onClick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/blobs_stop')).', \'blobs_to_db_note\');"',
-				'note' => '<SPAN ID="blobs_to_db_note">'.qa_lang_html('admin/blobs_to_db_note').'</SPAN>',
+				'tags' => 'name="doblobstodb" onclick="return qa_recalc_click(this.name, this, '.qa_js(qa_lang('admin/blobs_stop')).', \'blobs_to_db_note\');"',
+				'note' => '<span id="blobs_to_db_note">'.qa_lang_html('admin/blobs_to_db_note').'</span>',
 			);
 	}
 

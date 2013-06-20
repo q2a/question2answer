@@ -293,27 +293,33 @@
 	
 	
 	function qa_set_user_level($userid, $handle, $level, $oldlevel)
+/*
+	Set the user level of user $userid with $handle to $level (one of the QA_USER_LEVEL_* constraints in qa-app-users.php)
+	Pass the previous user level in $oldlevel. Reports the appropriate event, assumes change performed by the logged in user.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 
-		if ($level!=$oldlevel) {
-			qa_db_user_set($userid, 'level', $level);
-			qa_db_uapprovecount_update();
-			
-			if ($level>=QA_USER_LEVEL_APPROVED)
-				qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, false);
+		qa_db_user_set($userid, 'level', $level);
+		qa_db_uapprovecount_update();
+		
+		if ($level>=QA_USER_LEVEL_APPROVED)
+			qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, false);
 
-			qa_report_event('u_level', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
-				'userid' => $userid,
-				'handle' => $handle,
-				'level' => $level,
-				'oldlevel' => $oldlevel,
-			));
-		}
+		qa_report_event('u_level', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+			'userid' => $userid,
+			'handle' => $handle,
+			'level' => $level,
+			'oldlevel' => $oldlevel,
+		));
 	}
 	
 	
 	function qa_set_user_blocked($userid, $handle, $blocked)
+/*
+	Set the status of user $userid with $handle to blocked if $blocked is true, otherwise to unblocked. Reports the appropriate
+	event, assumes change performed by the logged in user.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		

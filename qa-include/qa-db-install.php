@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 54);
+	define('QA_DB_VERSION_CURRENT', 55);
 
 
 	function qa_db_user_column_type_verify()
@@ -121,6 +121,7 @@
 				'sessioncode' => 'CHAR(8) CHARACTER SET ascii NOT NULL DEFAULT \'\'', // for comparing against session cookie in browser
 				'sessionsource' => 'VARCHAR (16) CHARACTER SET ascii DEFAULT \'\'', // e.g. facebook, openid, etc...
 				'flags' => 'SMALLINT UNSIGNED NOT NULL DEFAULT 0', // see constants at top of qa-app-users.php
+				'wallposts' => 'MEDIUMINT NOT NULL DEFAULT 0', // cached count of wall posts 
 				'PRIMARY KEY (userid)',
 				'KEY email (email)',
 				'KEY handle (handle)',
@@ -255,7 +256,7 @@
 				'flags' => 'TINYINT UNSIGNED NOT NULL', // local or external, open in new window?
 				'permit' => 'TINYINT UNSIGNED', // is there a minimum user level required for it (uses QA_PERMIT_* constants), null means no restriction
 				'tags' => 'VARCHAR('.QA_DB_MAX_CAT_PAGE_TAGS_LENGTH.') NOT NULL', // slug (url fragment) for page, or url for external pages
-				'heading' => 'VARCHAR('.QA_DB_MAX_TITLE_LENGTH.')', // for display within <H1> tags
+				'heading' => 'VARCHAR('.QA_DB_MAX_TITLE_LENGTH.')', // for display within <h1> tags
 				'content' => 'MEDIUMTEXT', // remainder of page HTML
 				'PRIMARY KEY (pageid)',
 				'UNIQUE tags (tags)',
@@ -1377,7 +1378,24 @@
 					qa_db_upgrade_query($locktablesquery);
 					break;
 					
-			//	Up to here: Version 1.6 dev
+			//	Up to here: Version 1.6 beta 1
+			
+				case 55:
+					if (!QA_FINAL_EXTERNAL_USERS) {
+						$keycolumns=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^users')));
+							// might be using messages table shared with another installation, so check if we need to upgrade
+						
+						if (isset($keycolumns['wallposts']))
+							qa_db_upgrade_progress('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
+	
+						else {
+							qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN wallposts '.$definitions['users']['wallposts'].' AFTER flags');
+							qa_db_upgrade_query($locktablesquery);
+						}
+					}
+					break;
+			
+			//	Up to here: Version 1.6 beta 2
 			
 			}
 			
@@ -1434,7 +1452,7 @@
 	Output $text to the browser (after converting to HTML) and do all we can to get it displayed
 */
 	{
-		echo qa_html($text).str_repeat('    ', 1024)."<BR><BR>\n";
+		echo qa_html($text).str_repeat('    ', 1024)."<br><br>\n";
 		flush();
 	}
 

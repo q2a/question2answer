@@ -1057,6 +1057,10 @@
 		
 		qa_db_add_selectspec_opost($selectspec, 'aposts');
 		
+		$selectspec['columns']['oupvotes']='aposts.upvotes';
+		$selectspec['columns']['odownvotes']='aposts.downvotes';
+		$selectspec['columns']['onetvotes']='aposts.netvotes';
+		
 		$selectspec['source'].=" JOIN ^posts AS aposts ON ^posts.postid=aposts.parentid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			" userid=".(QA_FINAL_EXTERNAL_USERS ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)").
@@ -1170,7 +1174,7 @@
 				'^users.userid', 'passsalt', 'passcheck' => 'HEX(passcheck)', 'email', 'level', 'emailcode', 'handle',
 				'created' => 'UNIX_TIMESTAMP(created)', 'sessioncode', 'sessionsource', 'flags', 'loggedin' => 'UNIX_TIMESTAMP(loggedin)',
 				'loginip' => 'INET_NTOA(loginip)', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip' => 'INET_NTOA(writeip)',
-				'avatarblobid', 'avatarwidth', 'avatarheight', 'points',
+				'avatarblobid', 'avatarwidth', 'avatarheight', 'points', 'wallposts',
 			),
 			
 			'source' => '^users LEFT JOIN ^userpoints ON ^userpoints.userid=^users.userid WHERE ^users.'.($isuserid ? 'userid' : 'handle').'=$',
@@ -1296,7 +1300,7 @@
 	}
 	
 	
-	function qa_db_recent_messages_selectspec($fromidentifier, $fromisuserid, $toidentifier, $toisuserid, $count=null)
+	function qa_db_recent_messages_selectspec($fromidentifier, $fromisuserid, $toidentifier, $toisuserid, $count=null, $start=0)
 /*
 	If $fromidentifier is not null, return the selectspec to get recent private messages which have been sent from
 	the user identified by $fromidentifier+$fromisuserid to the user identified by $toidentifier+$toisuserid (see
@@ -1316,9 +1320,9 @@
 			'source' => '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE '.(isset($fromidentifier)
 				? ('fromuserid='.($fromisuserid ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)")." AND type='PRIVATE'")
 				: "type='PUBLIC'"
-			).' AND touserid='.($toisuserid ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)").' ORDER BY ^messages.created DESC LIMIT #',
+			).' AND touserid='.($toisuserid ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)").' ORDER BY ^messages.created DESC LIMIT #,#',
 
-			'arguments' => isset($fromidentifier) ? array($fromidentifier, $toidentifier, $count) : array($toidentifier, $count),
+			'arguments' => isset($fromidentifier) ? array($fromidentifier, $toidentifier, $start, $count) : array($toidentifier, $start, $count),
 			'arraykey' => 'messageid',
 			'sortdesc' => 'created',
 		);
@@ -1431,6 +1435,10 @@
 	
 	
 	function qa_db_user_favorite_non_qs_selectspec($userid)
+/*
+	Return the selectspec to retrieve information about all a user's favorited items except the questions. Depending on
+	the type of item, the array for each item will contain a userid, category backpath or tag word.
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 		
@@ -1497,6 +1505,9 @@
 	
 	
 	function qa_db_user_limits_selectspec($userid)
+/*
+	Return the selectspec to retrieve all of the per-hour activity limits for user $userid
+*/
 	{
 		return array(
 			'columns' => array('action', 'period', 'count'),
@@ -1508,6 +1519,9 @@
 	
 	
 	function qa_db_ip_limits_selectspec($ip)
+/*
+	Return the selectspec to retrieve all of the per-hour activity limits for ip address $ip
+*/
 	{
 		return array(
 			'columns' => array('action', 'period', 'count'),
@@ -1519,6 +1533,11 @@
 	
 	
 	function qa_db_user_levels_selectspec($identifier, $isuserid=QA_FINAL_EXTERNAL_USERS, $full=false)
+/*
+	Return the selectspec to retrieve all of the context specific (currently per-categpry) levels for the user identified by
+	$identifier, which is treated as a userid if $isuserid is true, otherwise as a handle. Set $full to true to obtain extra
+	information about these contexts (currently, categories).
+*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 

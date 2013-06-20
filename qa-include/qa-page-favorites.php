@@ -70,7 +70,7 @@
 	
 	if (count($questions)) {
 		$qa_content['q_list']['form']=array(
-			'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 
 			'hidden' => array(
 				'code' => qa_get_form_security_code('vote'),
@@ -136,11 +136,11 @@
 				'label' => qa_html($category['title']),
 				'state' => 'open',
 				'favorited' => true,
-				'note' => ' - <A HREF="'.qa_path_html('questions/'.implode('/', array_reverse(explode('/', $category['backpath'])))).'">'.
+				'note' => ' - <a href="'.qa_path_html('questions/'.implode('/', array_reverse(explode('/', $category['backpath'])))).'">'.
 					( ($category['qcount']==1)
 						? qa_lang_html_sub('main/1_question', '1', '1')
 						: qa_lang_html_sub('main/x_questions', number_format($category['qcount']))
-					).'</A>'.
+					).'</a>'.
 					(strlen($category['content']) ? qa_html(' - '.$category['content']) : ''),
 			);
 	}
@@ -148,7 +148,7 @@
 
 //	Sub navigation for account pages and suggestion
 	
-	$qa_content['suggest_next']=qa_lang_html_sub('misc/suggest_favorites_add', '<SPAN CLASS="qa-favorite-image">&nbsp;</SPAN>');
+	$qa_content['suggest_next']=qa_lang_html_sub('misc/suggest_favorites_add', '<span class="qa-favorite-image">&nbsp;</span>');
 	
 	if (!QA_FINAL_EXTERNAL_USERS)
 		$qa_content['navigation']['sub']=qa_account_sub_navigation();

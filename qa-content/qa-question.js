@@ -90,7 +90,7 @@ function qa_submit_answer(questionid, elem)
 				qa_set_inner_html(t, 'a_list_title', lines[2]);
 				qa_reveal(t, 'a_list_title');
 				
-				var e=document.createElement('DIV');
+				var e=document.createElement('div');
 				e.innerHTML=lines.slice(3).join("\n");
 				
 				var c=e.firstChild;

@@ -50,14 +50,14 @@
 					$maxlength=qa_opt('mouseover_content_max_len');
 					
 				//	Now add the popup to the title for each question
-		
+			
 					foreach ($q_list['qs'] as $index => $question) {
 						$thispost=@$postinfo[$question['raw']['postid']];
 						
 						if (isset($thispost)) {
 							$text=qa_viewer_text($thispost['content'], $thispost['format'], array('blockwordspreg' => $blockwordspreg));
 							$text=qa_shorten_string_line($text, $maxlength);
-							$q_list['qs'][$index]['title']='<SPAN TITLE="'.qa_html($text).'">'.@$question['title'].'</SPAN>';
+							$q_list['qs'][$index]['title']='<span title="'.qa_html($text).'">'.@$question['title'].'</span>';
 						}
 					}
 				}

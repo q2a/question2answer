@@ -288,7 +288,7 @@
 
 	$lines=array();
 
-	$lines[]='<?xml version="1.0" encoding="UTF-8"?>';
+	$lines[]='<?xml version="1.0" encoding="utf-8"?>';
 	$lines[]='<rss version="2.0">';
 	$lines[]='<channel>';
 

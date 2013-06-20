@@ -162,6 +162,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 /* Standard form (tall version) */
 
+.qa-form-table-boxed {width:504px; border:1px solid black; margin-bottom:1em;}
 .qa-form-tall-table {width:500px; border-collapse:collapse;}
 .qa-form-tall-spacer {line-height:1px; padding:0; font-size:1px;}
 .qa-form-tall-ok {color:#090; font-size:18px; padding:6px; text-align:center;}

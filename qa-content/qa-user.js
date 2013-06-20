@@ -6,7 +6,7 @@
 	
 	File: qa-content/qa-user.js
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Javascript to handle question page actions
+	Description: Javascript to handle user page actions
 
 
 	This program is free software; you can redistribute it and/or

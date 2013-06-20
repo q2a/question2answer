@@ -8,7 +8,7 @@
 	
 	File: qa-include/qa-page-user-activity.php
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Controller for user profile page
+	Description: Controller for user page showing recent activity
 
 
 	This program is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@
 //	Recent activity by this user
 
 	$qa_content['q_list']['form']=array(
-		'tags' => 'METHOD="POST" ACTION="'.qa_self_html().'"',
+		'tags' => 'method="post" action="'.qa_self_html().'"',
 
 		'hidden' => array(
 			'code' => qa_get_form_security_code('vote'),
@@ -84,11 +84,12 @@
 	
 	$htmldefaults=qa_post_html_defaults('Q');
 	$htmldefaults['whoview']=false;
+	$htmldefaults['voteview']=false;
 	$htmldefaults['avatarsize']=0;
 	
 	foreach ($questions as $question)
 		$qa_content['q_list']['qs'][]=qa_any_to_q_html_fields($question, $loginuserid, qa_cookie_get(),
-			$usershtml, null, qa_post_html_options($question, $htmldefaults));
+			$usershtml, null, array('voteview' => false) + qa_post_html_options($question, $htmldefaults));
 
 
 //	Sub menu for navigation in user pages

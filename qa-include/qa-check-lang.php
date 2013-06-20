@@ -34,15 +34,15 @@
 	
 	header('Content-type: text/html; charset=utf-8');
 ?>
-<HTML>
-	<HEAD>
-		<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=utf-8"/>
-		<TITLE>Question2Answer Language Check</TITLE>
-		<STYLE>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<title>Question2Answer Language Check</title>
+		<style>
 			code {font-size:125%;}
-		</STYLE>
-	</HEAD>
-	<BODY STYLE="font-family:arial; font-size:12px;">
+		</style>
+	</head>
+	<body style="font-family:arial; font-size:12px;">
 <?php
 
 	function get_phrase_substitutions($phrase)
@@ -59,7 +59,7 @@
 	echo '<font color="#cc0000"><code>Dark red = important to review.</code></font><br>';
 	echo '<font color="#cc9999"><code>Light red = probably safe to ignore.</code></font>';
 	
-	echo '<H1>Checking US English files in <code>qa-include</code>...</H1>';
+	echo '<h1>Checking US English files in <code>qa-include</code>...</h1>';
 	
 	$includefiles=array_merge(glob(QA_INCLUDE_DIR.'qa-*.php'), glob(QA_PLUGIN_DIR.'*/qa-*.php'));
 	
@@ -135,7 +135,7 @@
 	unset($languages['']);
 	
 	foreach ($languages as $code => $language) {
-		echo '<H1>Checking '.$language.' files in <code>qa-lang/'.$code.'</code>...</H1>';
+		echo '<h1>Checking '.$language.' files in <code>qa-lang/'.$code.'</code>...</h1>';
 		
 		$langdefined=array();
 		$langdifferent=array();
@@ -195,16 +195,16 @@
 		}
 		
 		foreach ($langnewphrases as $prefix => $phrases) {
-			echo '<H2>'.$language.' phrases to add to <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code>:</H2>';
+			echo '<h2>'.$language.' phrases to add to <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code>:</h2>';
 			
 			echo 'Copy and paste this into the middle of <code>qa-lang/'.$code.'/qa-lang-'.$prefix.'.php</code> then translate the right-hand side after the <code>=></code> symbol.';
 			
-			echo '<PRE>';
+			echo '<pre>';
 			
 			foreach ($phrases as $key => $value)
-				echo '<SPAN STYLE="font-size:25%;">'."\t\t</SPAN>'".$key."' => \"".strtr($value, array('\\' => '\\\\', '"' => '\"', '$' => '\$', "\n" => '\n', "\t" => '\t'))."\",\n";
+				echo '<span style="font-size:25%;">'."\t\t</span>'".$key."' => \"".strtr($value, array('\\' => '\\\\', '"' => '\"', '$' => '\$', "\n" => '\n', "\t" => '\t'))."\",\n";
 				
-			echo '</PRE>';
+			echo '</pre>';
 		}
 	}
 
@@ -213,12 +213,12 @@
 	{
 		echo '<font color="'.($error ? '#cc0000' : '#cc9999').'"><code>';
 
-		echo 'qa-lang-<B>'.qa_html($prefix).'</B>.php:';
+		echo 'qa-lang-<b>'.qa_html($prefix).'</b>.php:';
 
 		if (strlen($key))
-			echo "'<B>".qa_html($key)."</B>'";
+			echo "'<b>".qa_html($key)."</b>'";
 		
-		echo '</code></font> &nbsp; '.qa_html($issue).'<BR>';
+		echo '</code></font> &nbsp; '.qa_html($issue).'<br>';
 	}
 
 
@@ -228,7 +228,7 @@
 		
 		$oneread=false;
 		
-		echo '<P STYLE="font-size:80%; color:#999;">Reading: ';
+		echo '<p style="font-size:80%; color:#999;">Reading: ';
 	}
 
 	
@@ -245,13 +245,13 @@
 	
 	function output_finish_includes()
 	{
-		echo '</P>';
+		echo '</p>';
 	}
 
 	
-	echo '<H1>Finished scanning for problems!</H1>';
+	echo '<h1>Finished scanning for problems!</h1>';
 
 ?>
 
-	</BODY>
-</HTML>
+	</body>
+</html>
