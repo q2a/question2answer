@@ -87,6 +87,7 @@
 	$htmldefaults['whoview']=false;
 	$htmldefaults['avatarsize']=0;
 	$htmldefaults['ovoteview']=true;
+	$htmldefaults['answersview']=false;
 	
 	foreach ($questions as $question) {
 		$options=qa_post_html_options($question, $htmldefaults);

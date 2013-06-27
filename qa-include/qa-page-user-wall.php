@@ -59,7 +59,43 @@
 
 	$pagesize=qa_opt('page_size_wall');
 	$count=$useraccount['wallposts'];
+	$loginuserid=qa_get_logged_in_userid();
+	
 	$usermessages=array_slice($usermessages, 0, $pagesize);
+	$usermessages=qa_wall_posts_add_rules($usermessages, $start, $loginuserid);
+
+
+//	Process deleting or adding a wall post (similar but not identical code to qq-page-user-profile.php)
+	
+	$errors=array();
+	
+	$wallposterrorhtml=qa_wall_error_html($loginuserid, $useraccount['userid'], $useraccount['flags']);
+	
+	foreach ($usermessages as $message)
+		if ($message['deleteable'] && qa_clicked('m'.$message['messageid'].'_dodelete')) {
+			if (!qa_check_form_security_code('wall-'.$useraccount['handle'], qa_post_text('code')))
+				$errors['page']=qa_lang_html('misc/form_security_again');
+				
+			else {
+				qa_wall_delete_post($loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), $message);
+				qa_redirect(qa_request());
+			}
+		}
+
+	if (qa_clicked('dowallpost')) {
+		$inmessage=qa_post_text('message');
+		
+		if (!strlen($inmessage))
+			$errors['message']=qa_lang('profile/post_wall_empty');
+			
+		elseif (!qa_check_form_security_code('wall-'.$useraccount['handle'], qa_post_text('code')))
+			$errors['message']=qa_lang_html('misc/form_security_again');
+		
+		elseif (!$wallposterrorhtml) {
+			qa_wall_add_post($loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), $useraccount['userid'], $useraccount['handle'], $inmessage, '');
+			qa_redirect(qa_request());
+		}
+	}
 
 	
 //	Prepare content for theme
@@ -67,11 +103,53 @@
 	$qa_content=qa_content_prepare();
 	
 	$qa_content['title']=qa_lang_html_sub('profile/wall_for_x', $userhtml);
-	$qa_content['message_list']=array('messages' => array());
+	$qa_content['error']=@$errors['page'];
 	
+	$qa_content['script_rel'][]='qa-content/qa-user.js?'.QA_VERSION;
+
+	$qa_content['message_list']=array(
+		'tags' => 'id="wallmessages"',
+		
+		'form' => array(
+			'tags' => 'name="wallpost" method="post" action="'.qa_self_html().'"',
+			'style' => 'tall',
+			'hidden' => array(
+				'qa_click' => '', // for simulating clicks in Javascript
+			),
+		),
+		
+		'messages' => array(),
+	);
+	
+	if ($start==0) { // only allow posting on first page
+		if ($wallposterrorhtml)
+			$qa_content['message_list']['error']=$wallposterrorhtml; // an error that means we are not allowed to post
+		
+		else {
+			$qa_content['message_list']['form']['fields']=array(
+				'message' => array(
+					'tags' => 'name="message" id="message"',
+					'value' => qa_html(@$inmessage, false),
+					'rows' => 2,
+					'error' => qa_html(@$errors['message']),
+				),
+			);
+			
+			$qa_content['message_list']['form']['buttons']=array(
+				'post' => array(
+					'tags' => 'name="dowallpost" onclick="return qa_submit_wall_post(this, false);"',
+					'label' => qa_lang_html('profile/post_wall_button'),
+				),
+			);
+			
+			$qa_content['message_list']['form']['hidden']['handle']=qa_html($useraccount['handle']);
+			$qa_content['message_list']['form']['hidden']['code']=qa_get_form_security_code('wall-'.$useraccount['handle']);
+		}
+	}
+
 	foreach ($usermessages as $message)
 		$qa_content['message_list']['messages'][]=qa_wall_post_view($message);
-
+	
 	$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
 

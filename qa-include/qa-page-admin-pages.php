@@ -149,13 +149,6 @@
 					$errors['name']=qa_lang('main/field_required');
 				elseif (qa_strlen($inname)>QA_DB_MAX_CAT_PAGE_TITLE_LENGTH)
 					$errors['name']=qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
-				else
-					foreach ($pages as $page)
-						if (
-							($page['pageid'] != @$editpage['pageid']) &&
-							qa_strtolower($page['title']) == qa_strtolower($inname)
-						)
-							$errors['name']=qa_lang('admin/page_already_used');
 							
 				if ($isexternal) {
 				

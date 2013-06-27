@@ -35,7 +35,7 @@
 	$usermessages=qa_db_select_with_pending(qa_db_recent_messages_selectspec(null, null, $tohandle, false));
 	$loginuserid=qa_get_logged_in_userid();
 	
-	$usermessages=qa_wall_posts_add_rules($usermessages, $loginuserid);
+	$usermessages=qa_wall_posts_add_rules($usermessages, 0, $loginuserid);
 	
 	foreach ($usermessages as $message)
 		if (qa_clicked('m'.$message['messageid'].'_dodelete') && $message['deleteable'])

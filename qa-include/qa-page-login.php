@@ -44,17 +44,17 @@
 	$passwordsent=qa_get('ps');
 	$emailexists=qa_get('ee');
 
-	if (qa_clicked('dologin')) {
+	$inemailhandle=qa_post_text('emailhandle');
+	$inpassword=qa_post_text('password');
+	$inremember=qa_post_text('remember');
+			
+	if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword)) ) {
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 
 		if (qa_user_limits_remaining(QA_LIMIT_LOGINS)) {
 			require_once QA_INCLUDE_DIR.'qa-db-users.php';
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 		
-			$inemailhandle=qa_post_text('emailhandle');
-			$inpassword=qa_post_text('password');
-			$inremember=qa_post_text('remember');
-			
 			if (!qa_check_form_security_code('login', qa_post_text('code')))
 				$pageerror=qa_lang_html('misc/form_security_again');
 				

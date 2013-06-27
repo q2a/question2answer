@@ -2198,7 +2198,7 @@ background:url(images/a-count-icon-ie6.png) no-repeat 32px 13px;
 .qa-template-user .qa-part-form-activity h2{
 	margin-top: 0;
 }
-.qa-template-user .qa-part-form-profile{
+.qa-template-user .qa-part-form-profile {
 	float: left;
 	width: 50%;
 	min-height: 630px;
@@ -2207,13 +2207,14 @@ background:url(images/a-count-icon-ie6.png) no-repeat 32px 13px;
 }
 .qa-template-user .qa-part-form-activity,
 .qa-template-user .qa-part-message-list,
-.qa-template-user .qa-part-form-profile{
+.qa-template-user .qa-part-form-profile {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	overflow:hidden;
 }
 .qa-template-user .qa-part-message-list .qa-form-tall-text,
-.qa-template-user .qa-part-form-profile .qa-form-wide-text{
+.qa-template-user .qa-part-form-profile .qa-form-wide-text {
 	width: 100% !important;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;

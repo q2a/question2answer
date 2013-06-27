@@ -32,6 +32,7 @@
 	
 	$message=qa_post_text('message');
 	$tohandle=qa_post_text('handle');
+	$morelink=qa_post_text('morelink');
 
 	$touseraccount=qa_db_select_with_pending(qa_db_user_account_selectspec($tohandle, false));
 	$loginuserid=qa_get_logged_in_userid();
@@ -47,7 +48,7 @@
 		$touseraccount['wallposts']++; // won't have been updated
 	
 		$usermessages=qa_db_select_with_pending(qa_db_recent_messages_selectspec(null, null, $touseraccount['userid'], true, qa_opt('page_size_wall')));
-		$usermessages=qa_wall_posts_add_rules($usermessages, $loginuserid);
+		$usermessages=qa_wall_posts_add_rules($usermessages, 0, $loginuserid);
 		
 		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'wall', null, null);
 
@@ -58,7 +59,7 @@
 		foreach ($usermessages as $message)
 			$themeclass->message_item(qa_wall_post_view($message));
 
-		if ($touseraccount['wallposts']>count($usermessages))
+		if ($morelink && ($touseraccount['wallposts']>count($usermessages)))
 			$themeclass->message_item(qa_wall_view_more_link($tohandle, count($usermessages)));
 	}
 	

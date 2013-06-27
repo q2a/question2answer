@@ -111,9 +111,11 @@
 		$userediting=$usereditbutton && (qa_get_state()=='edit');
 		
 		$wallposterrorhtml=qa_wall_error_html($loginuserid, $useraccount['userid'], $useraccount['flags']);
+	
+	//	This code is similar but not identical to that in to qq-page-user-wall.php
 		
 		$usermessages=array_slice($usermessages, 0, qa_opt('page_size_wall'));
-		$usermessages=qa_wall_posts_add_rules($usermessages, $loginuserid);
+		$usermessages=qa_wall_posts_add_rules($usermessages, 0, $loginuserid);
 		
 		foreach ($usermessages as $message)
 			if ($message['deleteable'] && qa_clicked('m'.$message['messageid'].'_dodelete')) {
@@ -911,7 +913,7 @@
 				
 			$qa_content['message_list']['form']['buttons']=array(
 				'post' => array(
-					'tags' => 'name="dowallpost" onclick="return qa_submit_wall_post(this);"',
+					'tags' => 'name="dowallpost" onclick="return qa_submit_wall_post(this, true);"',
 					'label' => qa_lang_html('profile/post_wall_button'),
 				),
 			);

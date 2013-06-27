@@ -117,31 +117,32 @@
 	}
 	
 	
-	function qa_wall_posts_add_rules($usermessages, $userid)
+	function qa_wall_posts_add_rules($usermessages, $start, $userid)
 /*
-	Return the list of messages in $usermessages (as obtained via qa_db_recent_messages_selectspec()) with additional fields
-	indicating what actions can be performed on them by user $userid. Currently only 'deleteable' is relevant.
+	Return the list of messages in $usermessages (as obtained via qa_db_recent_messages_selectspec()) with additional
+	fields indicating what actions can be performed on them by user $userid. The messages are retrieved beginning at
+	offset $start in the database. Currently only 'deleteable' is relevant.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		$deleteable=isset($userid); // can delete all most recent messages...
-		
+		$deleteable=($start==0) && isset($userid); // can delete all of the most recent messages...
+	
 		foreach ($usermessages as $key => $message) {
 			if (($message['touserid']!=$userid) && ($message['fromuserid']!=$userid))
 				$deleteable=false; // ... until we come across one that doesn't involve me 
-			
+		
 			$usermessages[$key]['deleteable']=$deleteable;
 		}
 		
 		return $usermessages;
 	}
 	
-	
+		
 	function qa_wall_post_view($message)
 /*
-	Returns an element to add to $qa_content['message_list']['messages'] for $message (as obtained via qa_db_recent_messages_selectspec()
-	and then qa_wall_posts_add_rules()) where $userid is the identity of the user currently viewing the message.
+	Returns an element to add to $qa_content['message_list']['messages'] for $message (as obtained via
+	qa_db_recent_messages_selectspec() and then qa_wall_posts_add_rules()).
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
@@ -150,7 +151,7 @@
 		
 		$htmlfields=qa_message_html_fields($message, $options);
 		
-		if (@$message['deleteable'])
+		if ($message['deleteable'])
 			$htmlfields['form']=array(
 				'style' => 'light',
 

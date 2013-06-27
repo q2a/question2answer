@@ -22,13 +22,14 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-function qa_submit_wall_post(elem)
+function qa_submit_wall_post(elem, morelink)
 {
 	var params={};
 	
 	params.message=document.forms.wallpost.message.value;
 	params.handle=document.forms.wallpost.handle.value;
 	params.code=document.forms.wallpost.code.value;
+	params.morelink=morelink ? 1 : 0;
 	
 	qa_ajax_post('wallpost', params,
 		function(lines) {

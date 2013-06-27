@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 55);
+	define('QA_DB_VERSION_CURRENT', 56);
 
 
 	function qa_db_user_column_type_verify()
@@ -259,7 +259,7 @@
 				'heading' => 'VARCHAR('.QA_DB_MAX_TITLE_LENGTH.')', // for display within <h1> tags
 				'content' => 'MEDIUMTEXT', // remainder of page HTML
 				'PRIMARY KEY (pageid)',
-				'UNIQUE tags (tags)',
+				'KEY tags (tags)',
 				'UNIQUE position (position)',
 			),
 			
@@ -1363,7 +1363,9 @@
 					
 				case 54:
 					qa_db_upgrade_query('UNLOCK TABLES');
-				
+					
+					qa_db_upgrade_query('SET FOREIGN_KEY_CHECKS=0'); // in case InnoDB not available
+					
 					qa_db_upgrade_query(qa_db_create_table_sql('userlevels', array(
 						'userid' => $definitions['userlevels']['userid'],
 						'entitytype' => $definitions['userlevels']['entitytype'],
@@ -1396,6 +1398,13 @@
 					break;
 			
 			//	Up to here: Version 1.6 beta 2
+			
+				case 56:
+					qa_db_upgrade_query('ALTER TABLE ^pages DROP INDEX tags, ADD KEY tags (tags)');
+					qa_db_upgrade_query($locktablesquery);
+					break;
+					
+			//	Up to here: Version 1.6 (release)
 			
 			}
 			
