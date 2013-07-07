@@ -36,7 +36,8 @@ function qa_conceal(elem, type, callback)
 
 function qa_set_inner_html(elem, type, html)
 {
-	elem.innerHTML=html;
+	if (elem)
+		elem.innerHTML=html;
 }
 
 function qa_set_outer_html(elem, type, html)

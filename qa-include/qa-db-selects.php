@@ -1314,7 +1314,8 @@
 			'columns' => array(
 				'messageid', 'fromuserid', 'touserid', 'content', 'format', 'created' => 'UNIX_TIMESTAMP(^messages.created)',
 				'fromflags' => '^users.flags', 'fromlevel' => '^users.level', 'fromemail' => '^users.email', 'fromhandle' => '^users.handle',
-				'fromavatarblobid' => '^users.avatarblobid', 'fromavatarwidth' => '^users.avatarwidth', 'fromavatarheight' => '^users.avatarheight',
+				'fromavatarblobid' => 'BINARY ^users.avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
+				'fromavatarwidth' => '^users.avatarwidth', 'fromavatarheight' => '^users.avatarheight',
 			),
 
 			'source' => '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE '.(isset($fromidentifier)

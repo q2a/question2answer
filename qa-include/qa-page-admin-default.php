@@ -134,7 +134,6 @@
 		'show_full_date_days' => 'number',
 		'smtp_port' => 'number',
 		
-		'allow_anon_name' => 'checkbox',
 		'allow_change_usernames' => 'checkbox',
 		'allow_close_questions' => 'checkbox',
 		'allow_login_email_only' => 'checkbox',
@@ -450,9 +449,6 @@
 				array_push($showoptions, 'min_num_q_tags', 'max_num_q_tags', 'tag_separator_comma');
 			
 			array_push($showoptions, 'min_len_a_content', 'min_len_c_content', 'notify_users_default');
-			
-			if ($maxpermitpost > QA_PERMIT_USERS)
-				$showoptions[]='allow_anon_name';
 			
 			array_push($showoptions, '', 'block_bad_words', '', 'do_ask_check_qs', 'match_ask_check_qs', 'page_size_ask_check_qs', '');
 
@@ -1436,6 +1432,10 @@
 					$feedisexample=true;
 					break;
 					
+				case 'moderate_users':
+					$optionfield['note']='<a href="'.qa_path_html('admin/users', null, null, null, 'profile_fields').'">'.qa_lang_html('admin/registration_fields').'</a>';
+					break;
+				
 				case 'captcha_module':
 					$captchaoptions=array();
 
@@ -1521,6 +1521,7 @@
 				
 				$qa_content['form']['fields']['userfields']=array(
 					'label' => qa_lang_html('admin/profile_fields'),
+					'id' => 'profile_fields',
 					'style' => 'tall',
 					'type' => 'custom',
 					'html' => strlen($listhtml) ? '<ul style="margin-bottom:0;">'.$listhtml.'</ul>' : null,

@@ -25,7 +25,6 @@
 */
 
 	return array(
-		'allow_anon_name' => 'Request a name for anonymous posts:',
 		'allow_change_usernames' => 'Allow users with posts to change their username:',
 		'allow_close_questions' => 'Allow questions to be manually closed:',
 		'allow_login_email_only' => 'Only log in by email address (not username):', 

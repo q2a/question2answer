@@ -1555,7 +1555,7 @@
 			// You can also use $post['upvotes_raw'], $post['downvotes_raw'], $post['netvotes_raw'] to get
 			// raw integer vote counts, for graphing or showing in other non-textual ways
 			
-			$this->output('<div class="qa-vote-count '.(($post['vote_view']=='updown') ? 'qa-vote-count-updown' : 'qa-vote-count-net').'">');
+			$this->output('<div class="qa-vote-count '.(($post['vote_view']=='updown') ? 'qa-vote-count-updown' : 'qa-vote-count-net').'"'.@$post['vote_count_tags'].'>');
 
 			if ($post['vote_view']=='updown') {
 				$this->output_split($post['upvotes_view'], 'qa-upvote-count');

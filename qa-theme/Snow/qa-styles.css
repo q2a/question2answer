@@ -89,6 +89,7 @@ input[type="text"],input[type="password"],textarea,select,checkbox,radio{
 	padding:5px;
 	color:#777;
 	border-radius: 3px;
+	line-height: normal;
 	-moz-transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
 	-webkit-transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
 	-o-transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
@@ -98,6 +99,7 @@ input[type="text"]:focus,input[type="password"]:focus,textarea:focus{
 	box-shadow:0 2px 2px 0 rgba(0,0,0,0.3) inset;	
 	border:1px solid #00AAFF !important;
 	color:#333;
+	line-height: normal;
 	-moz-transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
 	-webkit-transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
 	-o-transition:box-shadow ease-in-out 0.2s, border ease-in-out 0.2s;
@@ -231,7 +233,7 @@ p {
 #qa-userid,#qa-password,.qa-search-field{
 	width:165px;
 	margin-right:5px;
-	height:14px;
+	padding: 4px 5px;
 }
 #qa-userid,#qa-password{
 	float:left;

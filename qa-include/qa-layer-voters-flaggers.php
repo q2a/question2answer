@@ -171,13 +171,9 @@
 				}
 			}
 			
-			if (strlen($tooltip))
-				$this->output('<span title="'.$tooltip.'">');
+			$post['vote_count_tags']=@$post['vote_count_tags'].' title="'.$tooltip.'"';
 			
 			qa_html_theme_base::vote_count($post);
-			
-			if (strlen($tooltip))
-				$this->output('</span>');
 		}
 		
 		

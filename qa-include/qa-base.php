@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.6'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2013-06-27');
+	define('QA_VERSION', '1.6.1'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2013-07-07');
 
 //	Execution section of this file - remainder contains function definitions
 
