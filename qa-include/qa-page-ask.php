@@ -101,7 +101,8 @@
 	
 	$in['title']=qa_post_text('title'); // allow title and tags to be posted by an external form
 	$in['extra']=qa_opt('extra_field_active') ? qa_post_text('extra') : null;
-	$in['tags']=qa_get_tags_field_value('tags');
+	if (qa_using_tags())
+		$in['tags']=qa_get_tags_field_value('tags');
 
 	if (qa_clicked('doask')) {
 		require_once QA_INCLUDE_DIR.'qa-app-post-create.php';

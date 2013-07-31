@@ -102,6 +102,7 @@
 			'ru' => 'Russian - Русский',
 			'sk' => 'Slovak - Slovenčina',
 			'sl' => 'Slovenian - Slovenščina',
+			'sq' => 'Albanian - Shqip',
 			'sr' => 'Serbian - Српски',
 			'sv' => 'Swedish - Svenska',
 			'th' => 'Thai - ไทย',

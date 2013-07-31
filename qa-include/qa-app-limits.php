@@ -67,7 +67,7 @@
 
 		$dblimits=qa_db_limits_get($userid, qa_remote_ip_address(), $action);
 		
-		return qa_limits_calc_remaining($action, $dblimits['user'], $dblimits['ip']);
+		return qa_limits_calc_remaining($action, @$dblimits['user'], @$dblimits['ip']);
 	}
 	
 	

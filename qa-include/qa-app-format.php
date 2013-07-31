@@ -510,7 +510,8 @@
 			$fields['what']=qa_lang_html($isquestion ? 'main/asked' : ($isanswer ? 'main/answered' : 'main/commented'));
 				
 			if (@$options['whatlink'] && strlen(@$options['q_request']))
-				$fields['what_url']=qa_path_html($options['q_request'], array('show' => $postid), null, null, qa_anchor($post['basetype'], $postid));
+				$fields['what_url']=($post['basetype']=='Q') ? qa_path_html($options['q_request'])
+					: qa_path_html($options['q_request'], array('show' => $postid), null, null, qa_anchor($post['basetype'], $postid));
 		}
 		
 		if (isset($post['created']) && @$options['whenview']) {
@@ -1263,7 +1264,7 @@
 		if (isset($navigation[$selected]))
 			$navigation[$selected]['selected']=true;
 			
-		if (!qa_opt('allow_user_walls'))
+		if (QA_FINAL_EXTERNAL_USERS || !qa_opt('allow_user_walls'))
 			unset($navigation['wall']);
 		
 		return $navigation;

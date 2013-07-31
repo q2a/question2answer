@@ -172,7 +172,7 @@
 				$selectspec['columns'][]='^users.level';
 				$selectspec['columns']['email']='^users.email';
 				$selectspec['columns']['handle']='^users.handle';
-				$selectspec['columns'][]='^users.avatarblobid';
+				$selectspec['columns']['avatarblobid']='BINARY ^users.avatarblobid';
 				$selectspec['columns'][]='^users.avatarwidth';
 				$selectspec['columns'][]='^users.avatarheight';
 				$selectspec['source'].=' LEFT JOIN ^users ON ^posts.userid=^users.userid';
@@ -1174,7 +1174,8 @@
 				'^users.userid', 'passsalt', 'passcheck' => 'HEX(passcheck)', 'email', 'level', 'emailcode', 'handle',
 				'created' => 'UNIX_TIMESTAMP(created)', 'sessioncode', 'sessionsource', 'flags', 'loggedin' => 'UNIX_TIMESTAMP(loggedin)',
 				'loginip' => 'INET_NTOA(loginip)', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip' => 'INET_NTOA(writeip)',
-				'avatarblobid', 'avatarwidth', 'avatarheight', 'points', 'wallposts',
+				'avatarblobid' => 'BINARY avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
+				'avatarwidth', 'avatarheight', 'points', 'wallposts',
 			),
 			
 			'source' => '^users LEFT JOIN ^userpoints ON ^userpoints.userid=^users.userid WHERE ^users.'.($isuserid ? 'userid' : 'handle').'=$',
@@ -1264,7 +1265,7 @@
 		
 		else
 			return array(
-				'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid', 'avatarwidth', 'avatarheight'),
+				'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
 				'source' => '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid',
 				'arguments' => array($start, $count),
 				'arraykey' => 'userid',
@@ -1395,7 +1396,7 @@
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 		
 		return array(
-			'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid', 'avatarwidth', 'avatarheight'),
+			'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
 			'source' => "^users JOIN ^userpoints ON ^users.userid=^userpoints.userid JOIN ^userfavorites ON ^users.userid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$",
 			'arguments' => array($userid, QA_ENTITY_USER),
 			'sortasc' => 'handle',

@@ -115,12 +115,13 @@
 	} else {
 		if ($recalculate) {
 			$qa_content['form']['ok']='<span id="recalc_ok"></span>';
+			$qa_content['form']['hidden']['code_recalc']=qa_get_form_security_code('admin/recalc');
 			
 			$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;
 			$qa_content['script_var']['qa_warning_recalc']=qa_lang('admin/stop_recalc_warning');
 			
 			$qa_content['script_onloads'][]=array(
-				"qa_recalc_click('dorecalcpoints', document.getElementById('recalc_ok'), null, 'recalc_ok');"
+				"qa_recalc_click('dorecalcpoints', document.getElementById('dosaverecalc'), null, 'recalc_ok');"
 			);
 		}
 		

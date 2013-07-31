@@ -440,7 +440,7 @@
 				$in['categoryid']=qa_get_category_field_value('q_category');
 		}
 		
-		if (isset($in['categoryid'])) { // need to check if we can move it to that category, and if we need moderation
+		if (array_key_exists('categoryid', $in)) { // need to check if we can move it to that category, and if we need moderation
 			$categories=qa_db_select_with_pending(qa_db_category_nav_selectspec($in['categoryid'], true));
 			$categoryids=array_keys(qa_category_path($categories, $in['categoryid']));
 			$userlevel=qa_user_level_for_categories($categoryids);
@@ -476,7 +476,7 @@
 					qa_update_post_text($in, $oldin);
 			}
 			
-			if (strcmp($in['categoryid'], $question['categoryid']))
+			if (array_key_exists('categoryid', $in) && strcmp($in['categoryid'], $question['categoryid']))
 				if (qa_user_permit_error('permit_post_q', null, $userlevel))
 					$errors['categoryid']=qa_lang_html('question/category_ask_not_allowed');
 			

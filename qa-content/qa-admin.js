@@ -58,7 +58,7 @@ function qa_recalc_click(state, elem, value, noteid)
 function qa_recalc_update(elem, state, noteid)
 {
 	if (state)
-		qa_ajax_post('recalc', {state:state, code:elem.form.elements.code.value},
+		qa_ajax_post('recalc', {state:state, code:(elem.form.elements.code_recalc ? elem.form.elements.code_recalc.value : elem.form.elements.code.value)},
 			function(lines) {
 				if (lines[0]=='1') {
 					if (lines[2])

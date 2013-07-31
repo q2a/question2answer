@@ -217,8 +217,11 @@
 			if ($question[$hasother ? 'ohidden' : 'hidden'] && !isset($question[$hasother ? 'oupdatetype' : 'updatetype'])) {
 				$htmlfields['what_2']=qa_lang_html('main/hidden');
 
-				if (@$htmloptions['whenview'])
-					$htmlfields['when_2']=qa_when_to_html($question[$hasother ? 'oupdated' : 'updated'], @$htmloptions['fulldatedays']);
+				if (@$htmloptions['whenview']) {
+					$updated=@$question[$hasother ? 'oupdated' : 'updated'];
+					if (isset($updated))
+						$htmlfields['when_2']=qa_when_to_html($updated, @$htmloptions['fulldatedays']);
+				}
 			}
 
 			$qa_content['q_list']['qs'][]=$htmlfields;

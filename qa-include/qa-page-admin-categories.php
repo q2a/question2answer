@@ -262,6 +262,7 @@
 			
 			'buttons' => array(
 				'save' => array(
+					'tags' => 'id="dosaveoptions"', // just used for qa_recalc_click()
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
@@ -327,6 +328,7 @@
 			
 			'buttons' => array(
 				'save' => array(
+					'tags' => 'id="dosaveoptions"', // just used for qa_recalc_click
 					'label' => qa_lang_html(isset($editcategory['categoryid']) ? 'main/save_button' : 'admin/add_category_button'),
 				),
 				
@@ -539,7 +541,7 @@
 			
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'name="dosaveoptions"',
+					'tags' => 'name="dosaveoptions" id="dosaveoptions"',
 					'label' => qa_lang_html('main/save_button'),
 				),
 				
@@ -602,12 +604,13 @@
 
 	if (qa_get('recalc')) {
 		$qa_content['form']['ok']='<span id="recalc_ok">'.qa_lang_html('admin/recalc_categories').'</span>';
+		$qa_content['form']['hidden']['code_recalc']=qa_get_form_security_code('admin/recalc');
 		
 		$qa_content['script_rel'][]='qa-content/qa-admin.js?'.QA_VERSION;
 		$qa_content['script_var']['qa_warning_recalc']=qa_lang('admin/stop_recalc_warning');
 		
 		$qa_content['script_onloads'][]=array(
-			"qa_recalc_click('dorecalccategories', document.getElementById('recalc_ok'), null, 'recalc_ok');"
+			"qa_recalc_click('dorecalccategories', document.getElementById('dosaveoptions'), null, 'recalc_ok');"
 		);
 	}
 	

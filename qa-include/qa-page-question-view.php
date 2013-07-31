@@ -225,6 +225,7 @@
 		$htmloptions=qa_post_html_options($question, null, true);
 		$htmloptions['answersview']=false; // answer count is displayed separately so don't show it here
 		$htmloptions['avatarsize']=qa_opt('avatar_q_page_q_size');
+		$htmloptions['q_request']=qa_q_request($question['postid'], $question['title']);
 		$q_view=qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, $htmloptions);
 
 
