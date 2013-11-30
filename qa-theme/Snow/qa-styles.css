@@ -57,11 +57,15 @@
 	font-style:italic;
 	line-height:20px;
 }
+html {
+	position: relative;
+	min-height: 100%;
+}
 body {
 	background:#eee url(images/bodybg.jpg)repeat left top;
 	text-align:center;
-	margin:0;
 	padding:0;
+	margin: 0 0 100px; /* bottom = footer height */
 }
 body,td,input,textarea {
 	font:14px/1.5 Helvetica, Arial, Sens-serif;
@@ -925,6 +929,11 @@ div.header-banner{
 .qa-footer-bottom-group{
 	background:#ddd;	
 	border-top:1px solid #aaa;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 40px;
+	width: 100%;
 }
 .qa-footer {
 	clear:both;
