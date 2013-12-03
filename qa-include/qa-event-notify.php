@@ -105,7 +105,7 @@
 					$sendhandle=isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] : qa_lang('main/anonymous'));
 					$sendcontext=qa_block_words_replace($context, $blockwordspreg);
 					$sendtext=qa_block_words_replace($params['text'], $blockwordspreg);
-					$sendurl=qa_q_path($question['postid'], $question['title'], true, $parent['basetype'], $parent['postid']);
+					$sendurl=qa_q_path($question['postid'], $question['title'], true, 'C', $params['postid']);
 						
 					if (isset($parent['notify']) && !qa_post_is_by_user($parent, $userid, $cookieid)) {
 						$senduserid=$parent['userid'];

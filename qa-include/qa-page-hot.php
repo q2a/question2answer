@@ -72,8 +72,8 @@
 		$nonetitle, // title if no questions
 		QA_ALLOW_UNINDEXED_QUERIES ? $categories : null, // categories for navigation
 		$categoryid, // selected category id
-		true, // show question counts in category navigation (null since not relevant)
-		QA_ALLOW_UNINDEXED_QUERIES ? 'hot/' : null, // prefix for links in category navigation (null since no navigation)
+		true, // show question counts in category navigation
+		QA_ALLOW_UNINDEXED_QUERIES ? 'hot/' : null, // prefix for links in category navigation (null if no navigation)
 		qa_opt('feed_for_hot') ? 'hot' : null, // prefix for RSS feed paths (null to hide)
 		qa_html_suggest_ask() // suggest what to do next
 	);

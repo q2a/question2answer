@@ -71,7 +71,7 @@
 					foreach ($filtermodules as $filtermodule) {
 						$tempin=$in; // always pass original question in because we aren't modifying anything else
 						$filtermodule->filter_question($tempin, $temperrors, $question);
-						$in['queued']=$tempin; // only preserve queued status in loop
+						$in['queued']=$tempin['queued']; // only preserve queued status in loop
 					}
 					
 					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
@@ -161,7 +161,7 @@
 					foreach ($filtermodules as $filtermodule) {
 						$tempin=$in; // always pass original answer in because we aren't modifying anything else
 						$filtermodule->filter_answer($tempin, $temperrors, $question, $answer);
-						$in['queued']=$tempin; // only preserve queued status in loop
+						$in['queued']=$tempin['queued']; // only preserve queued status in loop
 					}
 					
 					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
@@ -246,7 +246,7 @@
 					foreach ($filtermodules as $filtermodule) {
 						$tempin=$in; // always pass original comment in because we aren't modifying anything else
 						$filtermodule->filter_comment($tempin, $temperrors, $question, $parent, $comment);
-						$in['queued']=$tempin; // only preserve queued status in loop
+						$in['queued']=$tempin['queued']; // only preserve queued status in loop
 					}
 					
 					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;

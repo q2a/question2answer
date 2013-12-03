@@ -476,8 +476,7 @@
 
 		$publicusername=$logged_in_user['publicusername'];
 		
-		return '<a href="'.htmlspecialchars($relative_url_prefix.'user/'.urlencode($publicusername)).
-			'" class="qa-user-link">'.htmlspecialchars($publicusername).'</a>';
+		return '<a href="'.qa_path_html('user/'.$publicusername).'" class="qa-user-link">'.htmlspecialchars($publicusername).'</a>';
 
 	/*
 		Example 1 - suitable if:
@@ -547,8 +546,7 @@
 			$usershtml[$userid]=htmlspecialchars($publicusername);
 			
 			if ($should_include_link)
-				$usershtml[$userid]='<a href="'.htmlspecialchars($relative_url_prefix.'user/'.urlencode($publicusername)).
-					'" class="qa-user-link">'.$usershtml[$userid].'</a>';
+				$usershtml[$userid]='<a href="'.qa_path_html('user/'.$publicusername).'" class="qa-user-link">'.$usershtml[$userid].'</a>';
 		}
 			
 		return $usershtml;

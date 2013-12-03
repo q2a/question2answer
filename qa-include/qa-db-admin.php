@@ -41,16 +41,29 @@
 	
 	function qa_db_table_size()
 /*
-	Return the total size in bytes of all tables in the Q2A database
+	Return the total size in bytes of all relevant tables in the Q2A database
 */
 	{
-		$statuses=qa_db_read_all_assoc(qa_db_query_raw(
-			"SHOW TABLE STATUS"
-		));
+		if (defined('QA_MYSQL_USERS_PREFIX')) { // check if one of the prefixes is a prefix itself of the other
+			if (stripos(QA_MYSQL_USERS_PREFIX, QA_MYSQL_TABLE_PREFIX)===0)
+				$prefixes=array(QA_MYSQL_TABLE_PREFIX);
+			elseif (stripos(QA_MYSQL_TABLE_PREFIX, QA_MYSQL_USERS_PREFIX)===0)
+				$prefixes=array(QA_MYSQL_USERS_PREFIX);
+			else
+				$prefixes=array(QA_MYSQL_TABLE_PREFIX, QA_MYSQL_USERS_PREFIX);
 		
+		} else
+			$prefixes=array(QA_MYSQL_TABLE_PREFIX);
+			
 		$size=0;
-		foreach ($statuses as $status)
-			$size+=$status['Data_length']+$status['Index_length'];
+		foreach ($prefixes as $prefix) {
+			$statuses=qa_db_read_all_assoc(qa_db_query_raw(
+				"SHOW TABLE STATUS LIKE '".$prefix."%'"
+			));
+
+			foreach ($statuses as $status)
+				$size+=$status['Data_length']+$status['Index_length'];
+		}
 		
 		return $size;
 	}
@@ -178,7 +191,7 @@
 */
 	{
 		$results=qa_db_read_all_assoc(qa_db_query_sub(
-			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET_NTOA(createip) AS createip, email, handle, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
+			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET_NTOA(createip) AS createip, email, handle, flags, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
 			QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED, $count
 		));
 		

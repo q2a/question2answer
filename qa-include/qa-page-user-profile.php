@@ -115,7 +115,7 @@
 	//	This code is similar but not identical to that in to qq-page-user-wall.php
 		
 		$usermessages=array_slice($usermessages, 0, qa_opt('page_size_wall'));
-		$usermessages=qa_wall_posts_add_rules($usermessages, 0, $loginuserid);
+		$usermessages=qa_wall_posts_add_rules($usermessages, 0);
 		
 		foreach ($usermessages as $message)
 			if ($message['deleteable'] && qa_clicked('m'.$message['messageid'].'_dodelete')) {
@@ -181,10 +181,12 @@
 								qa_db_user_set($userid, 'email', $inemail);
 								qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, false);
 							}
-							
-						$filtermodules=qa_load_modules_with('filter', 'filter_profile');
-						foreach ($filtermodules as $filtermodule)
-							$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
+						
+						if (count($inprofile)) {
+							$filtermodules=qa_load_modules_with('filter', 'filter_profile');
+							foreach ($filtermodules as $filtermodule)
+								$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
+						}
 					
 						foreach ($userfields as $userfield)
 							if (!isset($errors[$userfield['fieldid']]))
@@ -892,6 +894,9 @@
 				'style' => 'tall',
 				'hidden' => array(
 					'qa_click' => '', // for simulating clicks in Javascript
+					'handle' => qa_html($useraccount['handle']),
+					'start' => 0,
+					'code' => qa_get_form_security_code('wall-'.$useraccount['handle']),
 				),
 			),
 			
@@ -917,9 +922,6 @@
 					'label' => qa_lang_html('profile/post_wall_button'),
 				),
 			);
-				
-			$qa_content['message_list']['form']['hidden']['handle']=qa_html($useraccount['handle']);
-			$qa_content['message_list']['form']['hidden']['code']=qa_get_form_security_code('wall-'.$useraccount['handle']);
 		}
 
 		foreach ($usermessages as $message)

@@ -93,9 +93,11 @@
 					qa_password_validate($inpassword)
 				);
 				
-				$filtermodules=qa_load_modules_with('filter', 'filter_profile');
-				foreach ($filtermodules as $filtermodule)
-					$filtermodule->filter_profile($inprofile, $errors, null, null);
+				if (count($inprofile)) {
+					$filtermodules=qa_load_modules_with('filter', 'filter_profile');
+					foreach ($filtermodules as $filtermodule)
+						$filtermodule->filter_profile($inprofile, $errors, null, null);
+				}
 				
 				if (qa_opt('captcha_on_register'))
 					qa_captcha_validate_post($errors);

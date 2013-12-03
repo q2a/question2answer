@@ -94,6 +94,7 @@
 			'ko' => 'Korean - 한국어',
 			'ku-CKB' => 'Kurdish Central - کورد',
 			'lt' => 'Lithuanian - Lietuvių',
+			'lv' => 'Latvian - Latviešu',
 			'nl' => 'Dutch - Nederlands',
 			'no' => 'Norwegian - Norsk',
 			'pl' => 'Polish - Polski',

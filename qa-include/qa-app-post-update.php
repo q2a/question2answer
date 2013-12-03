@@ -377,19 +377,19 @@
 	}
 	
 	
-	function qa_question_set_category($oldquestion, $categoryid, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost=null)
+	function qa_question_set_category($oldquestion, $categoryid, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost=null, $silent=false)
 /*
 	Sets the category (application level) of $oldquestion to $categoryid. Pass details of the user doing this in
 	$userid, $handle and $cookieid, the database records for all answers to the question in $answers, the database
 	records for all comments on the question or the question's answers in $commentsfollows ($commentsfollows can also
 	contain records for follow-on questions which are ignored), and $closepost to match $oldquestion['closedbyid'] (if any).
-	Handles cached counts and event reports and will reset category IDs and paths for all answers and comments.
-	See qa-app-posts.php for a higher-level function which is easier to use.
+	Set $silent to true to not mark the question as edited. Handles cached counts and event reports and will reset category
+	IDs and paths for all answers and comments. See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
 		$oldpath=qa_db_post_get_category_path($oldquestion['postid']);
 		
-		qa_db_post_set_category($oldquestion['postid'], $categoryid, $userid, qa_remote_ip_address());
+		qa_db_post_set_category($oldquestion['postid'], $categoryid, $silent ? null : $userid, $silent ? null : qa_remote_ip_address());
 		qa_db_posts_calc_category_path($oldquestion['postid']);
 		
 		$newpath=qa_db_post_get_category_path($oldquestion['postid']);

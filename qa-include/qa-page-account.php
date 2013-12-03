@@ -60,11 +60,12 @@
 	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
 	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 	$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+	$isblocked=qa_user_permit_error() ? true : false;
 
 	
 //	Process profile if saved
 
-	if (qa_clicked('dosaveprofile')) {
+	if (qa_clicked('dosaveprofile') && !$isblocked) {
 		require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
 		
 		$inhandle=$changehandle ? qa_post_text('handle') : $useraccount['handle'];
@@ -135,9 +136,11 @@
 				}
 			}
 	
-			$filtermodules=qa_load_modules_with('filter', 'filter_profile');
-			foreach ($filtermodules as $filtermodule)
-				$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
+			if (count($inprofile)) {
+				$filtermodules=qa_load_modules_with('filter', 'filter_profile');
+				foreach ($filtermodules as $filtermodule)
+					$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
+			}
 		
 			foreach ($userfields as $userfield)
 				if (!isset($errors[$userfield['fieldid']]))
@@ -218,6 +221,7 @@
 				'type' => 'static',
 				'label' => qa_lang_html('users/member_type'),
 				'value' => qa_html(qa_user_level_string($useraccount['level'])),
+				'note' => $isblocked ? qa_lang_html('users/user_blocked') : null,
 			),
 			
 			'handle' => array(
@@ -225,7 +229,7 @@
 				'tags' => 'name="handle"',
 				'value' => qa_html(isset($inhandle) ? $inhandle : $useraccount['handle']),
 				'error' => qa_html(@$errors['handle']),
-				'type' => $changehandle ? 'text' : 'static',
+				'type' => ($changehandle && !$isblocked) ? 'text' : 'static',
 			),
 			
 			'email' => array(
@@ -234,6 +238,7 @@
 				'value' => qa_html(isset($inemail) ? $inemail : $useraccount['email']),
 				'error' => isset($errors['email']) ? qa_html($errors['email']) :
 					(($doconfirms && !$isconfirmed) ? qa_insert_login_links(qa_lang_html('users/email_please_confirm')) : null),
+				'type' => $isblocked ? 'static' : 'text',
 			),
 			
 			'messages' => array(
@@ -288,6 +293,10 @@
 	if (!qa_opt('mailing_enabled'))
 		unset($qa_content['form_profile']['fields']['mailings']);
 		
+	if ($isblocked) {
+		unset($qa_content['form_profile']['buttons']['save']);
+		$qa_content['error']=qa_lang_html('users/no_permission');
+	}
 
 //	Avatar upload stuff
 
@@ -356,6 +365,7 @@
 			'value' => qa_html($value),
 			'error' => qa_html(@$errors[$userfield['fieldid']]),
 			'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
+			'type' => $isblocked ? 'static' : 'text',
 		);
 	}
 	

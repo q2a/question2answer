@@ -97,6 +97,9 @@
 			
 			$message['content'].=qa_lang_html('users/email_label').' <a href="mailto:'.$htmlemail.'">'.$htmlemail.'</a>';
 			
+			if (qa_opt('confirm_user_emails'))
+				$message['content'].='<small> - '.qa_lang_html(($user['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? 'users/email_confirmed' : 'users/email_not_confirmed').'</small>';
+			
 			foreach ($userfields as $userfield)
 				if (strlen(@$user['profile'][$userfield['title']]))
 					$message['content'].='<br/>'.qa_html($userfield['content'].': '.$user['profile'][$userfield['title']]);

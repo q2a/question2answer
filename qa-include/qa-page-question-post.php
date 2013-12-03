@@ -511,7 +511,8 @@
 					$setnotify, $userid, $handle, $cookieid, $in['extra'], @$in['name'], $in['queued'], $in['silent']);
 	
 				if (qa_using_categories() && strcmp($in['categoryid'], $question['categoryid']))
-					qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
+					qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid,
+						$answers, $commentsfollows, $closepost, $in['silent']);
 				
 				return true;
 			}

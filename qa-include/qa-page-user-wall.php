@@ -62,7 +62,7 @@
 	$loginuserid=qa_get_logged_in_userid();
 	
 	$usermessages=array_slice($usermessages, 0, $pagesize);
-	$usermessages=qa_wall_posts_add_rules($usermessages, $start, $loginuserid);
+	$usermessages=qa_wall_posts_add_rules($usermessages, $start);
 
 
 //	Process deleting or adding a wall post (similar but not identical code to qq-page-user-profile.php)
@@ -78,7 +78,7 @@
 				
 			else {
 				qa_wall_delete_post($loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), $message);
-				qa_redirect(qa_request());
+				qa_redirect(qa_request(), $_GET);
 			}
 		}
 
@@ -115,6 +115,9 @@
 			'style' => 'tall',
 			'hidden' => array(
 				'qa_click' => '', // for simulating clicks in Javascript
+				'handle' => qa_html($useraccount['handle']),
+				'start' => qa_html($start),
+				'code' => qa_get_form_security_code('wall-'.$useraccount['handle']),
 			),
 		),
 		
@@ -141,9 +144,6 @@
 					'label' => qa_lang_html('profile/post_wall_button'),
 				),
 			);
-			
-			$qa_content['message_list']['form']['hidden']['handle']=qa_html($useraccount['handle']);
-			$qa_content['message_list']['form']['hidden']['code']=qa_get_form_security_code('wall-'.$useraccount['handle']);
 		}
 	}
 
