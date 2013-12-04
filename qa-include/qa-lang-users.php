@@ -99,6 +99,7 @@
 		'password_mismatch' => 'New passwords do not match',
 		'password_none' => 'None. To log in directly, set a password below.',
 		'password_sent' => 'Your new password was emailed to you',
+		'password_hidden' => 'Hidden for security reasons.',
 		'password_to_set' => 'Please set on your account page',
 		'password_wrong' => 'Password not correct',
 		'private_messages_explanation' => 'Allow users to email you (without seeing your address)',
