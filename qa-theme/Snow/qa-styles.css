@@ -339,6 +339,8 @@ input[type="submit"].qa-search-button:hover{
 .qa-logged-in-avatar .qa-avatar-image{
 	max-width: 100%;
 	height: auto;
+	min-width: 24px;
+	min-height: 24px;
 }
 /* end */
 .qa-logged-in-points{
