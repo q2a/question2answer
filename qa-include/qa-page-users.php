@@ -67,6 +67,7 @@
 							$user['avatarblobid'], $user['avatarwidth'], $user['avatarheight'], qa_opt('avatar_users_size'), true)
 					).' '.$usershtml[$user['userid']],
 				'score' => qa_html(number_format($user['points'])),
+				'userid' => $user['userid'],
 			);
 	
 	} else
