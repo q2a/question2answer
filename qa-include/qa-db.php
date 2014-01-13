@@ -402,6 +402,18 @@
 	}
 	
 	
+	function qa_db_get_indexes_from_table($table)
+/*
+	Return an array of the current indexes for the given table
+*/
+	{
+		$results=qa_db_read_all_assoc(qa_db_query_raw('SHOW INDEXES FROM ' . $table));
+		foreach($results as $index => $result)
+			$results[$index]['Table'] = strtolower($result['Table']); 
+		return $results;
+	}
+	
+	
 	function qa_db_list_tables()
 /*
 	Return an array of the names of all tables in the Q2A database
