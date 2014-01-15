@@ -191,7 +191,7 @@
 			qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, true);
 				
 		qa_send_notification($userid, $email, $handle, qa_lang('emails/welcome_subject'), qa_lang('emails/welcome_body'), array(
-			'^password' => isset($password) ? $password : qa_lang('users/password_to_set'),
+			'^password' => isset($password) ? qa_lang('main/hidden') : qa_lang('users/password_to_set'), // v 1.6.3: no longer email out passwords
 			'^url' => qa_opt('site_url'),
 			'^custom' => strlen($custom) ? ($custom."\n\n") : '',
 			'^confirm' => $confirm,

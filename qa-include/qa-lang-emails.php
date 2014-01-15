@@ -84,7 +84,7 @@
 		'wall_post_subject' => 'Post on your ^site_title wall',
 		'wall_post_body' => "^f_handle has posted on your user wall at ^site_title:\n\n^open^post^close\n\nYou may respond to the post here:\n\n^url\n\nThank you,\n\n^site_title",
 
-		'welcome_body' => "Thank you for registering for ^site_title.\n\n^custom^confirmYour login details are as follows:\n\nEmail: ^email\nPassword: ^password\n\nPlease keep this information safe for future reference.\n\nThank you,\n\n^site_title\n^url",
+		'welcome_body' => "Thank you for registering for ^site_title.\n\n^custom^confirmYour login details are as follows:\n\nUsername: ^handle\nEmail: ^email\n\nPlease keep this information safe for future reference.\n\nThank you,\n\n^site_title\n^url",
 		'welcome_confirm' => "Please click below to confirm your email address.\n\n^url\n\n",
 		'welcome_subject' => 'Welcome to ^site_title!',
 	);

@@ -992,7 +992,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 		
-		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>"\'\.])+\.([^\s&<>"\']|&amp;)+)/i', '\1<a href="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</a>', ' '.$html.' '), 1, -1);
+		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>\(\)\[\]"\'\.])+\.([^\s&<>\(\)\[\]"\']|&amp;)+)/i', '\1<a href="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</a>', ' '.$html.' '), 1, -1);
 	}
 
 	
@@ -1229,7 +1229,7 @@
 	}
 	
 	
-	function qa_user_sub_navigation($handle, $selected)
+	function qa_user_sub_navigation($handle, $selected, $ismyuser=false)
 /*
 	Return the sub navigation structure for navigating between the different pages relating to a user
 */
@@ -1238,6 +1238,16 @@
 			'profile' => array(
 				'label' => qa_lang_html_sub('profile/user_x', qa_html($handle)),
 				'url' => qa_path_html('user/'.$handle),
+			),
+			
+			'account' => array(
+				'label' => qa_lang_html('misc/nav_my_details'),
+				'url' => qa_path_html('account'),
+			),
+			
+			'favorites' => array(
+				'label' => qa_lang_html('misc/nav_my_favorites'),
+				'url' => qa_path_html('favorites'),
 			),
 			
 			'wall' => array(
@@ -1266,6 +1276,12 @@
 			
 		if (QA_FINAL_EXTERNAL_USERS || !qa_opt('allow_user_walls'))
 			unset($navigation['wall']);
+			
+		if (QA_FINAL_EXTERNAL_USERS || !$ismyuser)
+			unset($navigation['account']);
+			
+		if (!$ismyuser)
+			unset($navigation['favorites']);
 		
 		return $navigation;
 	}
@@ -1273,7 +1289,8 @@
 	
 	function qa_account_sub_navigation()
 /*
-	Return the sub navigation structure for user account pages
+	Return the sub navigation structure for user account pages.
+	RETIRED FROM USE IN Q2A 1.6.3 BUT RETAINED FOR BACKWARDS COMPATIBILITY
 */
 	{
 		return array(

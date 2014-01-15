@@ -150,8 +150,7 @@
 	
 	$qa_content['suggest_next']=qa_lang_html_sub('misc/suggest_favorites_add', '<span class="qa-favorite-image">&nbsp;</span>');
 	
-	if (!QA_FINAL_EXTERNAL_USERS)
-		$qa_content['navigation']['sub']=qa_account_sub_navigation();
+	$qa_content['navigation']['sub']=qa_user_sub_navigation(qa_get_logged_in_handle(), 'favorites', true);
 	
 	
 	return $qa_content;

@@ -8,7 +8,7 @@
 	
 	File: qa-include/qa-page-unanswered.php
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Controller for page listing recent questions without answers
+	Description: Controller for page listing recent questions without upvoted/selected/any answers
 
 
 	This program is free software; you can redistribute it and/or

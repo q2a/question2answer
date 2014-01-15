@@ -234,8 +234,8 @@
 	{
 		if (QA_FINAL_EXTERNAL_USERS)
 			return qa_db_read_all_values(qa_db_query_sub(
-				'(SELECT DISTINCT userid FROM ^posts WHERE userid>=# ORDER BY userid LIMIT #) UNION (SELECT DISTINCT userid FROM ^uservotes WHERE userid>=# ORDER BY userid LIMIT #)',
-				$startuserid, $count, $startuserid, $count
+				'SELECT userid FROM ((SELECT DISTINCT userid FROM ^posts WHERE userid>=# ORDER BY userid LIMIT #) UNION (SELECT DISTINCT userid FROM ^uservotes WHERE userid>=# ORDER BY userid LIMIT #)) x ORDER BY userid LIMIT #',
+				$startuserid, $count, $startuserid, $count, $count
 			));
 		else
 			return qa_db_read_all_values(qa_db_query_sub(
@@ -298,14 +298,14 @@
 	}
 
 	
-	function qa_db_truncate_userpoints($firstuserid)
+	function qa_db_truncate_userpoints($lastuserid)
 /*
-	Remove any rows in the userpoints table from $firstuserid upwards
+	Remove any rows in the userpoints table where userid is greater than $lastuserid
 */
 	{
 		qa_db_query_sub(
-			'DELETE FROM ^userpoints WHERE userid>=#',
-			$firstuserid
+			'DELETE FROM ^userpoints WHERE userid>#',
+			$lastuserid
 		);
 	}
 	

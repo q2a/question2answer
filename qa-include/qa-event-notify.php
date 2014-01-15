@@ -161,7 +161,7 @@
 							array(
 								'^p_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] :
 									(strlen(@$oldquestion['name']) ? $oldquestion['name'] : qa_lang('main/anonymous'))),
-								'^p_context' => trim(@$params['title']."\n\n".$params['text']),
+								'^p_context' => trim(@$params['title']."\n\n".$params['text']), // don't censor for admin
 								'^url' => qa_q_path($params['postid'], $params['title'], true),
 								'^a_url' => qa_path_absolute('admin/moderate'),
 							)
@@ -178,7 +178,7 @@
 							array(
 								'^p_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] :
 									(strlen(@$oldanswer['name']) ? $oldanswer['name'] : qa_lang('main/anonymous'))),
-								'^p_context' => $params['text'],
+								'^p_context' => $params['text'], // don't censor for admin
 								'^url' => qa_q_path($params['parentid'], $params['parent']['title'], true, 'A', $params['postid']),
 								'^a_url' => qa_path_absolute('admin/moderate'),
 							)
@@ -196,7 +196,7 @@
 								'^p_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] :
 									(strlen(@$oldcomment['name']) ? $oldcomment['name'] : // could also be after answer converted to comment
 									(strlen(@$oldanswer['name']) ? $oldanswer['name'] : qa_lang('main/anonymous')))),
-								'^p_context' => $params['text'],
+								'^p_context' => $params['text'], // don't censor for admin
 								'^url' => qa_q_path($params['questionid'], $params['question']['title'], true, 'C', $params['postid']),
 								'^a_url' => qa_path_absolute('admin/moderate'),
 							)
@@ -216,7 +216,7 @@
 							'^p_handle' => isset($oldpost['handle']) ? $oldpost['handle'] :
 								(strlen($oldpost['name']) ? $oldpost['name'] : qa_lang('main/anonymous')),
 							'^flags' => ($flagcount==1) ? qa_lang_html_sub('main/1_flag', '1', '1') : qa_lang_html_sub('main/x_flags', $flagcount),
-							'^p_context' => trim(@$oldpost['title']."\n\n".qa_viewer_text($oldpost['content'], $oldpost['format'])),
+							'^p_context' => trim(@$oldpost['title']."\n\n".qa_viewer_text($oldpost['content'], $oldpost['format'])), // don't censor for admin
 							'^url' => qa_q_path($params['questionid'], $params['question']['title'], true, $oldpost['basetype'], $oldpost['postid']),
 							'^a_url' => qa_path_absolute('admin/flagged'),
 						));
@@ -257,12 +257,15 @@
 					break;
 				
 				case 'u_wall_post':
-					if ($userid!=$params['userid'])
+					if ($userid!=$params['userid']) {
+						$blockwordspreg=qa_get_block_words_preg();
+						
 						qa_send_notification($params['userid'], null, $params['handle'], qa_lang('emails/wall_post_subject'), qa_lang('emails/wall_post_body'), array(
 							'^f_handle' => isset($handle) ? $handle : qa_lang('main/anonymous'),
-							'^post' => $params['text'],
+							'^post' => qa_block_words_replace($params['text'], $blockwordspreg),
 							'^url' => qa_path_absolute('user/'.$params['handle'], null, 'wall'),
 						));
+					}
 					break;
 			}
 		}

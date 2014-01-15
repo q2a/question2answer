@@ -50,6 +50,7 @@
 		'confirm_wrong_log_in' => 'Code not correct - please ^1log in^2 to send a new link',
 		'confirm_wrong_resend' => 'Code not correct - please click below to send a new link',
 		'delete_user_button' => 'Delete User',
+		'edit_profile' => 'Edit my Profile',
 		'edit_user_button' => 'Edit User',
 		'email_confirmed' => 'Confirmed',
 		'email_exists' => 'Email already belongs to an account',

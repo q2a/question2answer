@@ -41,9 +41,7 @@
 	$in=array();
 	
 	$followpostid=qa_get('follow');
-	$in['categoryid']=qa_get_category_field_value('category');
-	if (!isset($in['categoryid']))
-		$in['categoryid']=qa_get('cat');
+	$in['categoryid']=qa_clicked('doask') ? qa_get_category_field_value('category') : qa_get('cat');
 	$userid=qa_get_logged_in_userid();
 	
 	list($categories, $followanswer, $completetags)=qa_db_select_with_pending(

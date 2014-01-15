@@ -69,7 +69,7 @@
 		'my_favorites_title' => 'My favorites',
 		'nav_all_my_updates' => 'All my updates',
 		'nav_my_content' => 'My content',
-		'nav_my_details' => 'My details',
+		'nav_my_details' => 'My account',
 		'nav_my_favorites' => 'My favorites',
 		'nav_user_activity' => 'Recent activity',
 		'nav_user_as' => 'All answers',

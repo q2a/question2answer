@@ -84,7 +84,7 @@
 	{
 		$continue=false;
 		
-		@list($operation, $length, $next, $done)=explode(',', $state);
+		@list($operation, $length, $next, $done)=explode("\t", $state);
 		
 		switch ($operation) {
 			case 'doreindexcontent':
@@ -234,19 +234,25 @@
 				break;
 				
 			case 'dorecalcpoints_recalc':
-				$userids=qa_db_users_get_for_recalc_points($next, 10);
+				$recalccount=10;
+				$userids=qa_db_users_get_for_recalc_points($next, $recalccount+1); // get one extra so we know where to start from next
+				$gotcount=count($userids);
+				$recalccount=min($recalccount, $gotcount); // can't recalc more than we got
 				
-				if (count($userids)) {
-					$lastuserid=max($userids);
+				if ($recalccount>0) {
+					$lastuserid=$userids[$recalccount-1];
+					qa_db_users_recalc_points($next, $lastuserid);					
+					$done+=$recalccount;
 					
-					qa_db_users_recalc_points($next, $lastuserid);
-					
-					$next=1+$lastuserid;
-					$done+=count($userids);
+				} else
+					$lastuserid=$next; // for truncation
+
+				if ($gotcount>$recalccount) { // more left to do
+					$next=$userids[$recalccount]; // start next round at first one not recalculated
 					$continue=true;
-				
+
 				} else {
-					qa_db_truncate_userpoints($next);
+					qa_db_truncate_userpoints($lastuserid);
 					qa_db_userpointscount_update(); // quick so just do it here
 					qa_recalc_transition($state, 'dorecalcpoints_complete');
 				}
@@ -523,7 +529,7 @@
 		}
 		
 		if ($continue)
-			$state=$operation.','.$length.','.$next.','.$done;
+			$state=$operation."\t".$length."\t".$next."\t".$done;
 		
 		return $continue && ($done<$length);
 	}
@@ -534,7 +540,11 @@
 	Change the $state to represent the beginning of a new $operation
 */
 	{
-		$state=$operation.','.qa_recalc_stage_length($operation).',0,0';
+		$length=qa_recalc_stage_length($operation);
+		$next=(QA_FINAL_EXTERNAL_USERS && ($operation=='dorecalcpoints_recalc')) ? '' : 0;
+		$done=0;
+		
+		$state=$operation."\t".$length."\t".$next."\t".$done;
 	}
 
 		
@@ -609,7 +619,7 @@
 	Return a string which gives a user-viewable version of $state
 */
 	{
-		@list($operation, $length, $next, $done)=explode(',', $state);
+		@list($operation, $length, $next, $done)=explode("\t", $state);
 		
 		$done=(int)$done;
 		$length=(int)$length;

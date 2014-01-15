@@ -587,7 +587,7 @@
 
 			array_push($showoptions, 'max_rate_ip_flags', 'max_rate_user_flags', 'max_rate_ip_uploads', 'max_rate_user_uploads');
 			
-			if (qa_opt('allow_private_messages'))
+			if (qa_opt('allow_private_messages') || qa_opt('allow_user_walls'))
 				array_push($showoptions, 'max_rate_ip_messages', 'max_rate_user_messages');
 			
 			$formstyle='wide';

@@ -38,6 +38,12 @@
 //	$handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
 
 
+//	Redirect to 'My Account' page if button clicked
+
+	if (qa_clicked('doaccount'))
+		qa_redirect('account');
+		
+
 //	Find the user profile and questions and answers for this handle
 	
 	$loginuserid=qa_get_logged_in_userid();
@@ -74,8 +80,6 @@
 			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 	
 		$userid=$useraccount['userid'];
-		$ismyuserpage=isset($loginuserid) && ($loginuserid==$userid);
-
 		$fieldseditable=false;
 		$maxlevelassign=null;
 		
@@ -710,7 +714,15 @@
 					'code' => qa_get_form_security_code('user-'.$handle),
 				);
 			}
-		}
+
+		} elseif (isset($loginuserid) && ($loginuserid==$userid))
+			$qa_content['form_profile']['buttons']=array(
+				'account' => array(
+					'tags' => 'name="doaccount"',
+					'label' => qa_lang_html('users/edit_profile'),
+				),
+			);
+			
 		
 		if (!is_array($qa_content['form_profile']['fields']['removeavatar']))
 			unset($qa_content['form_profile']['fields']['removeavatar']);
@@ -934,7 +946,8 @@
 	
 //	Sub menu for navigation in user pages
 
-	$qa_content['navigation']['sub']=qa_user_sub_navigation($handle, 'profile');
+	$qa_content['navigation']['sub']=qa_user_sub_navigation($handle, 'profile',
+		isset($loginuserid) && ($loginuserid==(QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid'])));
 
 
 	return $qa_content;

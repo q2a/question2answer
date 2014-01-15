@@ -1,8 +1,8 @@
 /*
 	Theme Name: Snow
 	Theme URI: 
-	Theme Version: 1.2
-	Theme Date: 2013-05-01
+	Theme Version: 1.3
+	Theme Date: 2013-11-13
 	Theme Author: Q2A Market
 	Theme Author URI: http://www.q2amarket.com/
 	Theme License: GPLv2
@@ -17,7 +17,8 @@
 .qa-footer-bottom-group:after,
 .qa-main-wrapper:after,
 .qa-nav-main-list:after,
-.qa-nav-sub-list:after {
+.qa-nav-sub-list:after,
+.qa-nav-cat-item:after {
 	visibility: hidden;
 	display: block;
 	font-size: 0;
@@ -33,7 +34,8 @@
 .qa-footer-bottom-group,
 .qa-main-wrapper,
 .qa-nav-main-list,
-.qa-nav-sub-list { display: inline-table; }
+.qa-nav-sub-list,
+.qa-nav-cat-item { display: inline-table; }
 /* Hides from IE-mac \*/
 * html .clearfix { height: 1%; }
 .clearfix,
@@ -44,7 +46,8 @@
 .qa-footer-bottom-group,
 .qa-main-wrapper,
 .qa-nav-main-list,
-.qa-nav-sub-list { display: block; }
+.qa-nav-sub-list,
+.qa-nav-cat-item { display: block; }
 /* End hide from IE-mac */ 
 
 :-moz-placeholder{
@@ -64,7 +67,7 @@ body {
 	padding:0;
 }
 body,td,input,textarea {
-	font:14px/1.5 Helvetica, Arial, Sens-serif;
+	font:14px/1.5 Helvetica, Arial, sans-serif;
 	color:#333;
 }
 a:link, a:visited {
@@ -339,6 +342,8 @@ input[type="submit"].qa-search-button:hover{
 .qa-logged-in-avatar .qa-avatar-image{
 	max-width: 100%;
 	height: auto;
+	min-width: 24px; /* pull request */
+	min-height: 24px; /* pull request */
 }
 /* end */
 .qa-logged-in-points{
@@ -1049,16 +1054,18 @@ margin-left:1em;
 }
 .qa-nav-cat-item {
 margin:2px 0;
+text-align: right;
 }
 .qa-nav-cat-item:nth-child(odd){
 }
 .qa-nav-cat-item:nth-child(even){
 }
 .qa-nav-cat-link {
+	clear: both;
+	float: left;
 }
 .qa-nav-cat-note{
 	color:#000;
-	float:right;
 }
 .qa-nav-cat-selected,.qa-nav-cat-selected:hover {
 }

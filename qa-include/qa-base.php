@@ -25,8 +25,8 @@
 */
 
 	
-	define('QA_VERSION', '1.6.3-dev-1203'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2013-12-03');
+	define('QA_VERSION', '1.6.3'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2014-01-15');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -733,7 +733,7 @@
 		
 		$safe=htmLawed($html, array(
 			'safe' => 1,
-			'elements' => '*+embed+object',
+			'elements' => '*+embed+object-form',
 			'schemes' => 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, telnet; *:file, http, https; style: !; classid:clsid',
 			'keep_bad' => 0,
 			'anti_link_spam' => array('/.*/', ''),

@@ -431,7 +431,7 @@
 		$qa_content['form_profile']['ok']=qa_lang_html('users/password_changed');
 		
 
-	$qa_content['navigation']['sub']=qa_account_sub_navigation();
+	$qa_content['navigation']['sub']=qa_user_sub_navigation($useraccount['handle'], 'account', true);
 		
 		
 	return $qa_content;

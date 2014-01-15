@@ -155,7 +155,8 @@
 
 //	Sub menu for navigation in user pages
 
-	$qa_content['navigation']['sub']=qa_user_sub_navigation($handle, 'wall');
+	$qa_content['navigation']['sub']=qa_user_sub_navigation($handle, 'wall',
+		isset($loginuserid) && ($loginuserid==(QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid'])));
 
 
 	return $qa_content;

@@ -331,7 +331,7 @@
 */
 	{
 		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND acount=0");
+			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND acount=0 AND closedbyid IS NULL");
 	}
 	
 	
@@ -341,7 +341,7 @@
 */
 	{
 		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unselqcount', COUNT(*) FROM ^posts WHERE type='Q' AND selchildid IS NULL");
+			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unselqcount', COUNT(*) FROM ^posts WHERE type='Q' AND selchildid IS NULL AND closedbyid IS NULL");
 	}
 	
 	
@@ -351,7 +351,7 @@
 */
 	{
 		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND amaxvote=0");
+			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND amaxvote=0 AND closedbyid IS NULL");
 	}
 	
 	

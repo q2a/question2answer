@@ -37,7 +37,7 @@
 		'delete_wall_post_popup' => 'Delete this wall post',
 		'extra_privileges' => 'Extra privileges:',
 		'gave_out' => 'Gave out:',
-		'my_account_title' => 'My account details',
+		'my_account_title' => 'My account',
 		'no_answers_by_x' => 'No answers by ^',
 		'no_posts_by_x' => 'No posts by ^',
 		'no_questions_by_x' => 'No questions by ^',
