@@ -1,7 +1,9 @@
 Question2Answer on GitHub
 -------------------------
 
-By popular demand, beginning with version 1.5 beta 1, [Question2Answer] is now available here on GitHub for your forking and syncing pleasure.
+As of version 1.6.3, all development of [Question2Answer] will take place through GitHub.
+
+Pull requests are officially welcomed!
 
 Thanks and enjoy!
 
