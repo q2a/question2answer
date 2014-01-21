@@ -10,4 +10,3 @@ Thanks and enjoy!
 Gideon
 
 [Question2Answer]: http://www.question2answer.org/
-[here]: http://www.question2answer.org/qa/message/gidgreen
