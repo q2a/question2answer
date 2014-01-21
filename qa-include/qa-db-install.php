@@ -1362,6 +1362,7 @@
 					break;
 					
 				case 54:
+					qa_db_query_sub("SET FOREIGN_KEY_CHECKS=0;");
 					qa_db_upgrade_query('UNLOCK TABLES');
 					
 					qa_db_upgrade_query('SET FOREIGN_KEY_CHECKS=0'); // in case InnoDB not available
@@ -1378,6 +1379,7 @@
 				
 					$locktablesquery.=', ^userlevels WRITE';
 					qa_db_upgrade_query($locktablesquery);
+					qa_db_query_sub("SET FOREIGN_KEY_CHECKS=1;");
 					break;
 					
 			//	Up to here: Version 1.6 beta 1
