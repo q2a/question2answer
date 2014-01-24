@@ -34,6 +34,7 @@
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 	require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
 	require_once QA_INCLUDE_DIR.'qa-app-post-update.php';
+	require_once QA_INCLUDE_DIR.'qa-app-users.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 
@@ -56,7 +57,7 @@
 	post types you can specify the $name of the post's author, which is relevant if the $userid is null.
 */
 	{
-		$handle=qa_post_userid_to_handle($userid);
+		$handle=qa_userid_to_handle($userid);
 		$text=qa_post_content_to_text($content, $format);
 
 		switch ($type) {
@@ -118,7 +119,7 @@
 		else
 			$setnotify=$oldpost['notify'];
 	
-		$byhandle=qa_post_userid_to_handle($byuserid);
+		$byhandle=qa_userid_to_handle($byuserid);
 		$text=qa_post_content_to_text($content, $format);
 		
 		switch ($oldpost['basetype']) {
@@ -151,7 +152,7 @@
 		$oldpost=qa_post_get_full($postid, 'QAC');
 		
 		if ($oldpost['basetype']=='Q') {
-			$byhandle=qa_post_userid_to_handle($byuserid);
+			$byhandle=qa_userid_to_handle($byuserid);
 			$answers=qa_post_get_question_answers($postid);
 			$commentsfollows=qa_post_get_question_commentsfollows($postid);
 			$closepost=qa_post_get_question_closepost($postid);
@@ -169,7 +170,7 @@
 */
 	{
 		$oldquestion=qa_post_get_full($questionid, 'Q');
-		$byhandle=qa_post_userid_to_handle($byuserid);
+		$byhandle=qa_userid_to_handle($byuserid);
 		$answers=qa_post_get_question_answers($questionid);
 		
 		if (isset($answerid) && !isset($answers[$answerid]))
@@ -188,7 +189,7 @@
 	{
 		$oldquestion=qa_post_get_full($questionid, 'Q');
 		$oldclosepost=qa_post_get_question_closepost($questionid);
-		$byhandle=qa_post_userid_to_handle($byuserid);
+		$byhandle=qa_userid_to_handle($byuserid);
 		
 		if ($closed) {
 			if (isset($originalpostid))
@@ -220,7 +221,7 @@
 */
 	{
 		$oldpost=qa_post_get_full($postid, 'QAC');
-		$byhandle=qa_post_userid_to_handle($byuserid);
+		$byhandle=qa_userid_to_handle($byuserid);
 		
 		switch ($oldpost['basetype']) {
 			case 'Q':
@@ -326,33 +327,6 @@
 	}
 
 	
-	function qa_post_userid_to_handle($userid)
-/*
-	Return the handle corresponding to $userid, unless it is null in which case return null.
-*/
-	{
-		if (isset($userid)) {
-			if (QA_FINAL_EXTERNAL_USERS) {
-				require_once QA_INCLUDE_DIR.'qa-app-users.php';
-				
-				$handles=qa_get_public_from_userids(array($userid));
-				
-				return @$handles[$userid];
-			
-			} else {
-				$user=qa_db_single_select(qa_db_user_account_selectspec($userid, true));
-				
-				if (!is_array($user))
-					qa_fatal_error('User ID could not be found: '.$userid);
-
-				return $user['handle'];
-			}
-		}
-		
-		return null;
-	}
-
-
 	function qa_post_content_to_text($content, $format)
 /*
 	Return the textual rendition of $content in $format (used for indexing).
