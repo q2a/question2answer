@@ -46,7 +46,8 @@
 
 	function qa_db_connect($failhandler=null)
 /*
-	Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary)
+	Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary).
+	Uses mysqli as of Q2A 1.6.4.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -57,41 +58,35 @@
 			qa_fatal_error('It appears that a plugin is trying to access the database, but this is not allowed until Q2A initialization is complete.');
 
 		if (isset($failhandler))
-			$qa_db_fail_handler=$failhandler; // set this even if connection already opened
+			$qa_db_fail_handler = $failhandler; // set this even if connection already opened
 
-		if (!is_resource($qa_db_connection)) {
-			if (QA_PERSISTENT_CONN_DB)
-				$db=mysql_pconnect(QA_FINAL_MYSQL_HOSTNAME, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD);
-			else
-				$db=mysql_connect(QA_FINAL_MYSQL_HOSTNAME, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD);
+		if ($qa_db_connection instanceof mysqli)
+			return;
 
-			if (is_resource($db)) {
-				if (!mysql_select_db(QA_FINAL_MYSQL_DATABASE, $db)) {
-					mysql_close($db);
-					qa_db_fail_error('select');
-				}
+		// in mysqli we connect and select database in constructor
+		if (QA_PERSISTENT_CONN_DB)
+			$db = new mysqli('p:'.QA_FINAL_MYSQL_HOSTNAME, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE);
+		else
+			$db = new mysqli(QA_FINAL_MYSQL_HOSTNAME, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE);
 
-			/*
-				From Q2A 1.5, we *do* explicitly set the character encoding of the MySQL connection, instead
-				of using lots of "SELECT BINARY col AS col"-style queries, as in previous versions of Q2A.
-				Although this introduces the latency of another query here, testing showed that the delay is
-				the same as that from calling mysql_select_db() and only a quarter of that of mysql_connect().
-				So overall it adds 20% to the latency delay in qa_db_connect(), and this seems worth trading
-				off against the benefit of more straightforward queries, especially for plugin developers.
-			*/
+		// must use procedural `mysqli_connect_error` here prior to 5.2.9
+		$conn_error = mysqli_connect_error();
+		if ($conn_error)
+			qa_db_fail_error('connect', $db->connect_errno, $conn_error);
 
-				if (function_exists('mysql_set_charset'))
-					mysql_set_charset('utf8', $db);
-				else
-					mysql_query('SET NAMES utf8', $db);
+	/*
+		From Q2A 1.5, we explicitly set the character encoding of the MySQL connection, instead of
+		using lots of "SELECT BINARY col"-style queries. Testing showed that overhead is minimal,
+		so this seems worth trading off against the benefit of more straightforward queries,
+		especially for plugin developers.
+	*/
 
-				qa_report_process_stage('db_connected');
+		if (!$db->set_charset('utf8'))
+			qa_db_fail_error('set_charset', $db->errno, $db->error);
 
-			} else
-				qa_db_fail_error('connect');
+		qa_report_process_stage('db_connected');
 
-			$qa_db_connection=$db;
-		}
+		$qa_db_connection=$db;
 	}
 
 
@@ -125,10 +120,10 @@
 
 		global $qa_db_connection;
 
-		if ($connect && !is_resource($qa_db_connection)) {
+		if ($connect && !($qa_db_connection instanceof mysqli)) {
 			qa_db_connect();
 
-			if (!is_resource($qa_db_connection))
+			if (!($qa_db_connection instanceof mysqli))
 				qa_fatal_error('Failed to connect to database');
 		}
 
@@ -145,12 +140,13 @@
 
 		global $qa_db_connection;
 
-		if (is_resource($qa_db_connection)) {
+		if ($qa_db_connection instanceof mysqli) {
 			qa_report_process_stage('db_disconnect');
 
-			if (!QA_PERSISTENT_CONN_DB)
-				if (!mysql_close($qa_db_connection))
+			if (!QA_PERSISTENT_CONN_DB) {
+				if (!$qa_db_connection->close())
 					qa_fatal_error('Database disconnect failed');
+			}
 
 			$qa_db_connection=null;
 		}
@@ -168,34 +164,41 @@
 		if (QA_DEBUG_PERFORMANCE) {
 			global $qa_database_usage, $qa_database_queries;
 
-			$oldtime=array_sum(explode(' ', microtime()));
-			$result=qa_db_query_execute($query);
-			$usedtime=array_sum(explode(' ', microtime()))-$oldtime;
+			$oldtime = array_sum(explode(' ', microtime()));
+			$result = qa_db_query_execute($query);
+			$usedtime = array_sum(explode(' ', microtime())) - $oldtime;
 
 			if (is_array($qa_database_usage)) {
-				$qa_database_usage['clock']+=$usedtime;
+				$qa_database_usage['clock'] += $usedtime;
 
-				if (strlen($qa_database_queries)<1048576) { // don't keep track of big tests
-					$gotrows=is_resource($result) ? mysql_num_rows($result) : null;
-					$gotcolumns=is_resource($result) ? mysql_num_fields($result) : null;
+				if (strlen($qa_database_queries) < 1048576) { // don't keep track of big tests
+					$gotrows = $gotcolumns = null;
+					if ($result instanceof mysqli_result) {
+						$gotrows = $result->num_rows;
+						$gotcolumns = $result->field_count;
+					}
 
-					$qa_database_queries.=$query."\n\n".sprintf('%.2f ms', $usedtime*1000).
-						(is_numeric($gotrows) ? (' - '.$gotrows.(($gotrows==1) ? ' row' : ' rows')) : '').
-						(is_numeric($gotcolumns) ? (' - '.$gotcolumns.(($gotcolumns==1) ? ' column' : ' columns')) : '').
-						"\n\n";
+					$rowcolstring = '';
+					if (is_numeric($gotrows))
+						$rowcolstring .= ' - ' . $gotrows . ($gotrows == 1 ? ' row' : ' rows');
+					if (is_numeric($gotcolumns))
+						$rowcolstring .= ' - ' . $gotcolumns . ($gotcolumns == 1 ? ' column' : ' columns');
+
+					$qa_database_queries .= $query . "\n\n" . sprintf('%.2f ms', $usedtime*1000) . $rowcolstring . "\n\n";
 				}
 
 				$qa_database_usage['queries']++;
 			}
 
-		} else
-			$result=qa_db_query_execute($query);
+		}
+		else
+			$result = qa_db_query_execute($query);
 
 	//	@error_log('Question2Answer MySQL query: '.$query);
 
-		if ($result===false) {
-			$db=qa_db_connection();
-			qa_db_fail_error('query', mysql_errno($db), mysql_error($db), $query);
+		if ($result === false) {
+			$db = qa_db_connection();
+			qa_db_fail_error('query', $db->errno, $db->error, $query);
 		}
 
 		return $result;
@@ -209,13 +212,13 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$db=qa_db_connection();
+		$db = qa_db_connection();
 
-		for ($attempt=0; $attempt<100; $attempt++) {
-			$result=mysql_query($query, $db);
+		for ($attempt = 0; $attempt < 100; $attempt++) {
+			$result = $db->query($query);
 
-			if (($result===false) && (mysql_errno($db)==1213))
-				usleep(10000); // dead with InnoDB deadlock errors by waiting 0.01s then retrying
+			if ($result === false && $db->errno == 1213)
+				usleep(10000); // deal with InnoDB deadlock errors by waiting 0.01s then retrying
 			else
 				break;
 		}
@@ -231,7 +234,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		return mysql_real_escape_string($string, qa_db_connection());
+		$db = qa_db_connection();
+		return $db->real_escape_string($string);
 	}
 
 
@@ -245,21 +249,22 @@
 			$parts=array();
 
 			foreach ($argument as $subargument)
-				$parts[]=qa_db_argument_to_mysql($subargument, $alwaysquote, true);
+				$parts[] = qa_db_argument_to_mysql($subargument, $alwaysquote, true);
 
 			if ($arraybrackets)
-				$result='('.implode(',', $parts).')';
+				$result = '('.implode(',', $parts).')';
 			else
-				$result=implode(',', $parts);
+				$result = implode(',', $parts);
 
-		} elseif (isset($argument)) {
+		}
+		else if (isset($argument)) {
 			if ($alwaysquote || !is_numeric($argument))
-				$result="'".qa_db_escape_string($argument)."'";
+				$result = "'".qa_db_escape_string($argument)."'";
 			else
-				$result=qa_db_escape_string($argument);
-
-		} else
-			$result='NULL';
+				$result = qa_db_escape_string($argument);
+		}
+		else
+			$result = 'NULL';
 
 		return $result;
 	}
@@ -272,7 +277,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$prefix=QA_MYSQL_TABLE_PREFIX;
+		$prefix = QA_MYSQL_TABLE_PREFIX;
 
 		if (defined('QA_MYSQL_USERS_PREFIX')) {
 			switch (strtolower($rawname)) {
@@ -286,7 +291,7 @@
 				case 'cache':
 				case 'userlogins_ibfk_1': // also special cases for constraint names
 				case 'userprofile_ibfk_1':
-					$prefix=QA_MYSQL_USERS_PREFIX;
+					$prefix = QA_MYSQL_USERS_PREFIX;
 					break;
 			}
 		}
@@ -313,32 +318,33 @@
 	It's important to use $ when matching a textual column since MySQL won't use indexes to compare text against numbers.
 */
 	{
-		$query=preg_replace_callback('/\^([A-Za-z_0-9]+)/', 'qa_db_prefix_callback', $query);
+		$query = preg_replace_callback('/\^([A-Za-z_0-9]+)/', 'qa_db_prefix_callback', $query);
 
-		if (is_array($arguments)) {
-			$countargs=count($arguments);
-			$offset=0;
+		if (!is_array($arguments))
+			return $query;
 
-			for ($argument=0; $argument<$countargs; $argument++) {
-				$stringpos=strpos($query, '$', $offset);
-				$numberpos=strpos($query, '#', $offset);
+		$countargs = count($arguments);
+		$offset = 0;
 
-				if ( ($stringpos===false) || ( ($numberpos!==false) && ($numberpos<$stringpos) ) ) {
-					$alwaysquote=false;
-					$position=$numberpos;
+		for ($argument = 0; $argument < $countargs; $argument++) {
+			$stringpos = strpos($query, '$', $offset);
+			$numberpos = strpos($query, '#', $offset);
 
-				} else {
-					$alwaysquote=true;
-					$position=$stringpos;
-				}
-
-				if (!is_numeric($position))
-					qa_fatal_error('Insufficient parameters in query: '.$query);
-
-				$value=qa_db_argument_to_mysql($arguments[$argument], $alwaysquote);
-				$query=substr_replace($query, $value, $position, 1);
-				$offset=$position+strlen($value); // allows inserting strings which contain #/$ character
+			if ($stringpos === false || ($numberpos !== false && $numberpos < $stringpos)) {
+				$alwaysquote = false;
+				$position = $numberpos;
 			}
+			else {
+				$alwaysquote = true;
+				$position = $stringpos;
+			}
+
+			if (!is_numeric($position))
+				qa_fatal_error('Insufficient parameters in query: '.$query);
+
+			$value = qa_db_argument_to_mysql($arguments[$argument], $alwaysquote);
+			$query = substr_replace($query, $value, $position, 1);
+			$offset = $position + strlen($value); // allows inserting strings which contain #/$ character
 		}
 
 		return $query;
@@ -361,7 +367,8 @@
 	Return the value of the auto-increment column for the last inserted row
 */
 	{
-		return qa_db_read_one_value(qa_db_query_raw('SELECT LAST_INSERT_ID()'));
+		$db = qa_db_connection();
+		return $db->insert_id;
 	}
 
 
@@ -370,7 +377,8 @@
 	Does what it says on the tin
 */
 	{
-		return mysql_affected_rows(qa_db_connection());
+		$db = qa_db_connection();
+		return $db->affected_rows;
 	}
 
 
@@ -379,7 +387,7 @@
 	For the previous INSERT ... ON DUPLICATE KEY UPDATE query, return whether an insert operation took place
 */
 	{
-		return (qa_db_affected_rows()==1);
+		return (qa_db_affected_rows() == 1);
 	}
 
 
@@ -462,12 +470,12 @@
 	Return the data specified by a single $selectspec - see long comment above.
 */
 	{
-		$query='SELECT ';
+		$query = 'SELECT ';
 
 		foreach ($selectspec['columns'] as $columnas => $columnfrom)
-			$query.=$columnfrom.(is_int($columnas) ? '' : (' AS '.$columnas)).', ';
+			$query .= $columnfrom . (is_int($columnas) ? '' : (' AS '.$columnas)) . ', ';
 
-		$results=qa_db_read_all_assoc(qa_db_query_raw(qa_db_apply_sub(
+		$results = qa_db_read_all_assoc(qa_db_query_raw(qa_db_apply_sub(
 			substr($query, 0, -2).(strlen(@$selectspec['source']) ? (' FROM '.$selectspec['source']) : ''),
 			@$selectspec['arguments'])
 		), @$selectspec['arraykey']); // arrayvalue is applied in qa_db_post_select()
@@ -639,16 +647,16 @@
 	is from column $value if specified, otherwise it's a named array of all columns, given an array of arrays.
 */
 	{
-		if (!is_resource($result))
+		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading all assoc from invalid result');
 
-		$assocs=array();
+		$assocs = array();
 
-		while ($assoc=mysql_fetch_assoc($result)) {
+		while ($assoc = $result->fetch_assoc()) {
 			if (isset($key))
-				$assocs[$assoc[$key]]=isset($value) ? $assoc[$value] : $assoc;
+				$assocs[$assoc[$key]] = isset($value) ? $assoc[$value] : $assoc;
 			else
-				$assocs[]=isset($value) ? $assoc[$value] : $assoc;
+				$assocs[] = isset($value) ? $assoc[$value] : $assoc;
 		}
 
 		return $assocs;
@@ -661,19 +669,18 @@
 	If there's no first row, throw a fatal error unless $allowempty is true.
 */
 	{
-		if (!is_resource($result))
+		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading one assoc from invalid result');
 
-		$assoc=mysql_fetch_assoc($result);
+		$assoc = $result->fetch_assoc();
 
-		if (!is_array($assoc)) {
-			if ($allowempty)
-				return null;
-			else
-				qa_fatal_error('Reading one assoc from empty results');
-		}
+		if (is_array($assoc))
+			return $assoc;
 
-		return $assoc;
+		if ($allowempty)
+			return null;
+		else
+			qa_fatal_error('Reading one assoc from empty results');
 	}
 
 
@@ -682,13 +689,13 @@
 	Return a numbered array containing the first (and presumably only) column from the $result resource
 */
 	{
-		if (!is_resource($result))
+		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading column from invalid result');
 
-		$output=array();
+		$output = array();
 
-		while ($row=mysql_fetch_row($result))
-			$output[]=$row[0];
+		while ($row = $result->fetch_row())
+			$output[] = $row[0];
 
 		return $output;
 	}
@@ -700,19 +707,18 @@
 	If there's no first row, throw a fatal error unless $allowempty is true.
 */
 	{
-		if (!is_resource($result))
+		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading one value from invalid result');
 
-		$row=mysql_fetch_row($result);
+		$row = $result->fetch_row();
 
-		if (!is_array($row)) {
-			if ($allowempty)
-				return null;
-			else
-				qa_fatal_error('Reading one value from empty results');
-		}
+		if (is_array($row))
+			return $row[0];
 
-		return $row[0];
+		if ($allowempty)
+			return null;
+		else
+			qa_fatal_error('Reading one value from empty results');
 	}
 
 
@@ -724,7 +730,7 @@
 	{
 		global $qa_update_counts_suspended;
 
-		$qa_update_counts_suspended+=($suspend ? 1 : -1);
+		$qa_update_counts_suspended += ($suspend ? 1 : -1);
 	}
 
 
@@ -735,7 +741,7 @@
 	{
 		global $qa_update_counts_suspended;
 
-		return ($qa_update_counts_suspended<=0);
+		return ($qa_update_counts_suspended <= 0);
 	}
 
 

@@ -28,9 +28,14 @@
 	======================================================================
 	  THE 4 DEFINITIONS BELOW ARE REQUIRED AND MUST BE SET BEFORE USING!
 	======================================================================
+
+	For QA_MYSQL_HOSTNAME, try '127.0.0.1' or 'localhost' if MySQL is on the same server.
+
+	For persistent connections, set the QA_PERSISTENT_CONN_DB at the bottom of this file; do NOT
+	prepend the hostname with 'p:'.
 */
 
-	define('QA_MYSQL_HOSTNAME', '127.0.0.1'); // try '127.0.0.1' or 'localhost' if MySQL on same server
+	define('QA_MYSQL_HOSTNAME', '127.0.0.1');
 	define('QA_MYSQL_USERNAME', 'your-mysql-username');
 	define('QA_MYSQL_PASSWORD', 'your-mysql-password');
 	define('QA_MYSQL_DATABASE', 'your-mysql-db-name');
@@ -151,9 +156,9 @@
 	create significant latency. This will minimize the number of database queries as much as
 	is possible, even at the cost of significant additional processing at each end.
 
-	Set QA_PERSISTENT_CONN_DB to true to use persistent database connections. Only use this if
-	you are absolutely sure it is a good idea under your setup - generally it is not.
-	For more information: http://www.php.net/manual/en/features.persistent-connections.php
+	Set QA_PERSISTENT_CONN_DB to true to use persistent database connections. Requires PHP 5.3.
+	Only use this if you are absolutely sure it is a good idea under your setup - generally it is
+	not. For more information: http://www.php.net/manual/en/features.persistent-connections.php
 
 	Set QA_DEBUG_PERFORMANCE to true to show detailed performance profiling information at the
 	bottom of every Question2Answer page.
