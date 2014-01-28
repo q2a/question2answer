@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-plugin/facebook-login/qa-plugin.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Initiates Facebook login plugin
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,7 +26,7 @@
 
 /*
 	Plugin Name: Facebook Login
-	Plugin URI: 
+	Plugin URI:
 	Plugin Description: Allows users to log in via Facebook
 	Plugin Version: 1.1.5
 	Plugin Date: 2012-09-13
@@ -50,7 +50,7 @@
 		qa_register_plugin_module('page', 'qa-facebook-login-page.php', 'qa_facebook_login_page', 'Facebook Login Page');
 		qa_register_plugin_layer('qa-facebook-layer.php', 'Facebook Login Layer');
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

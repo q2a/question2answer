@@ -1,6 +1,6 @@
 /*
 	Theme Name: Snow
-	Theme URI: 
+	Theme URI:
 	Theme Version: 1.3
 	Theme Date: 2013-11-13
 	Theme Author: Q2A Market
@@ -8,7 +8,7 @@
 	Theme License: GPLv2
 */
 
-    
+
 /*---[ Start: global css ]---*/
 .clearfix:after,
 #qa-login-group:after,
@@ -48,7 +48,7 @@
 .qa-nav-main-list,
 .qa-nav-sub-list,
 .qa-nav-cat-item { display: block; }
-/* End hide from IE-mac */ 
+/* End hide from IE-mac */
 
 :-moz-placeholder{
 	color:#aaa !important;
@@ -99,7 +99,7 @@ input[type="text"],input[type="password"],textarea,select,checkbox,radio{
 	transition:box-shadow ease-in-out 0.5s, border ease-in-out 0.5s;
 }
 input[type="text"]:focus,input[type="password"]:focus,textarea:focus{
-	box-shadow:0 2px 2px 0 rgba(0,0,0,0.3) inset;	
+	box-shadow:0 2px 2px 0 rgba(0,0,0,0.3) inset;
 	border:1px solid #00AAFF !important;
 	color:#333;
 	line-height: normal;
@@ -137,7 +137,7 @@ h1 {
 	line-height:1.1em;
 	border-bottom:1px solid #ddd;
 	position:relative;
-	padding:14px 25px 5px 0;	
+	padding:14px 25px 5px 0;
 }
 h2 {
 	font-size:16px;
@@ -150,7 +150,7 @@ h2 {
 	border-radius: 3px;
 	box-shadow: 0 -25px 25px -25px rgba(255,255,255,1) inset;
 	border:1px solid #ddd;
-	text-shadow:1px 1px 0 rgba(255,255,255,1);	
+	text-shadow:1px 1px 0 rgba(255,255,255,1);
 }
 h3{
 	margin:0 0 10px 0;
@@ -214,7 +214,7 @@ p {
 	background: -o-linear-gradient(top,  #1ca0cc 0%,#0099cc 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #1ca0cc 0%,#0099cc 100%); /* IE10+ */
 	background: linear-gradient(to bottom,  #1ca0cc 0%,#0099cc 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1ca0cc', endColorstr='#0099cc',GradientType=0 ); /* IE6-8 */	
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1ca0cc', endColorstr='#0099cc',GradientType=0 ); /* IE6-8 */
 }
 /*---[ Begin: login bar css ]---*/
 #qa-login-bar{
@@ -495,7 +495,7 @@ div.header-banner{
 	-webkit-transition:all ease-in-out 0.5s;
 	-o-transition:all ease-in-out 0.5s;
 	-ms-transition:all ease-in-out 0.5s;
-	transition:all ease-in-out 0.5s;	
+	transition:all ease-in-out 0.5s;
 }
 .qa-nav-main-link:hover,.qa-nav-main-selected {
 	text-decoration:none;
@@ -504,7 +504,7 @@ div.header-banner{
 	-webkit-transition:all ease-in-out 0.2s;
 	-o-transition:all ease-in-out 0.2s;
 	-ms-transition:all ease-in-out 0.2s;
-	transition:all ease-in-out 0.2s;	
+	transition:all ease-in-out 0.2s;
 }
 .qa-nav-main-custom-1 .qa-nav-main-link{
 	border-left:none;
@@ -549,7 +549,7 @@ div.header-banner{
 	-webkit-transition:all ease-in-out 0.5s;
 	-o-transition:all ease-in-out 0.5s;
 	-ms-transition:all ease-in-out 0.5s;
-	transition:all ease-in-out 0.5s;	
+	transition:all ease-in-out 0.5s;
 }
 .qa-nav-sub-link:hover,.qa-nav-sub-selected {
 	color:#000 !important;
@@ -561,7 +561,7 @@ div.header-banner{
 	-webkit-transition:all ease-in-out 0.2s;
 	-o-transition:all ease-in-out 0.2s;
 	-ms-transition:all ease-in-out 0.2s;
-	transition:all ease-in-out 0.2s;	
+	transition:all ease-in-out 0.2s;
 }
 .qa-nav-sub-hot .qa-nav-sub-link{
 	color:#af0000 !important;
@@ -789,7 +789,7 @@ div.header-banner{
 	height:60px;
 	text-align:center;
 	margin-right:5px;
-	padding:0;	
+	padding:0;
 	border-radius: 3px;
 }
 .qa-a-count-zero{
@@ -897,7 +897,7 @@ div.header-banner{
 }
 .qa-error a{
 	color:#fff;
-	font-weight:bold;	
+	font-weight:bold;
 }
 .qa-error a:hover{
 	text-decoration:underline;
@@ -928,7 +928,7 @@ div.header-banner{
 	padding-left:20px;
 }
 .qa-footer-bottom-group{
-	background:#ddd;	
+	background:#ddd;
 	border-top:1px solid #aaa;
 }
 .qa-footer {
@@ -942,7 +942,7 @@ div.header-banner{
 .qa-footer a, .qa-footer a:visited{
 	text-decoration:underline;
 }
-/* IE6 
+/* IE6
  Widget wrappers */
 .qa-widget-full {
 clear:both;
@@ -1887,7 +1887,7 @@ margin:2px 0;
 .qa-c-item-content {
 display:block;
 margin-bottom:6px;
-font-size:12px; 
+font-size:12px;
 }
 .qa-c-item-footer {
 position:relative;
@@ -2092,14 +2092,14 @@ padding:10px;
 	font-size:0;
 	margin:0px 8px 0px 4px;
 	vertical-align:middle;
-} 
+}
 .qa-favoriting .qa-waiting{
-	position:absolute; 
+	position:absolute;
 	padding:0;
 	left:50%;
 	top:50%;
 	margin:-7px 0 0 -7px;
-} 
+}
 .qa-a-selection .qa-waiting {
 	position:absolute;
 	padding:0;
