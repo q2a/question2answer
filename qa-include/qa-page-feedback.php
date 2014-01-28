@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer (c) Gideon Greenspan
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-feedback.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for feedback page
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -59,28 +59,28 @@
 
 
 //	Send the feedback form
-	
+
 	$feedbacksent=false;
-	
+
 	if (qa_clicked('dofeedback')) {
 		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
-		
+
 		$inmessage=qa_post_text('message');
 		$inname=qa_post_text('name');
 		$inemail=qa_post_text('email');
 		$inreferer=qa_post_text('referer');
-		
+
 		if (!qa_check_form_security_code('feedback', qa_post_text('code')))
 			$pageerror=qa_lang_html('misc/form_security_again');
-		
+
 		else {
 			if (empty($inmessage))
 				$errors['message']=qa_lang('misc/feedback_empty');
-			
+
 			if ($usecaptcha)
 				qa_captcha_validate_post($errors);
-	
+
 			if (empty($errors)) {
 				$subs=array(
 					'^message' => $inmessage,
@@ -91,7 +91,7 @@
 					'^ip' => qa_remote_ip_address(),
 					'^browser' => @$_SERVER['HTTP_USER_AGENT'],
 				);
-				
+
 				if (qa_send_email(array(
 					'fromemail' => qa_email_validate(@$inemail) ? $inemail : qa_opt('from_email'),
 					'fromname' => $inname,
@@ -104,7 +104,7 @@
 					$feedbacksent=true;
 				else
 					$pageerror=qa_lang_html('main/general_error');
-					
+
 				qa_report_event('feedback', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
 					'email' => $inemail,
 					'name' => $inname,
@@ -115,21 +115,21 @@
 			}
 		}
 	}
-	
-	
+
+
 //	Prepare content for theme
 
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('misc/feedback_title');
-	
+
 	$qa_content['error']=@$pageerror;
 
 	$qa_content['form']=array(
 		'tags' => 'method="post" action="'.qa_self_html().'"',
-		
+
 		'style' => 'tall',
-		
+
 		'fields' => array(
 			'message' => array(
 				'type' => $feedbacksent ? 'static' : '',
@@ -155,34 +155,34 @@
 				'note' => $feedbacksent ? null : qa_opt('email_privacy'),
 			),
 		),
-		
+
 		'buttons' => array(
 			'send' => array(
 				'label' => qa_lang_html('main/send_button'),
 			),
 		),
-		
+
 		'hidden' => array(
 			'dofeedback' => '1',
 			'code' => qa_get_form_security_code('feedback'),
 			'referer' => qa_html(isset($inreferer) ? $inreferer : @$_SERVER['HTTP_REFERER']),
 		),
 	);
-	
+
 	if ($usecaptcha && !$feedbacksent)
 		qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
 
 
 	$qa_content['focusid']='message';
-	
+
 	if ($feedbacksent) {
 		$qa_content['form']['ok']=qa_lang_html('misc/feedback_sent');
 		unset($qa_content['form']['buttons']);
 	}
 
-	
+
 	return $qa_content;
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

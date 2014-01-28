@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer (c) Gideon Greenspan
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-emails.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for email notifications
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -65,7 +65,7 @@
 
 		'q_posted_body' => "A new question has been asked by ^q_handle:\n\n^open^q_title\n\n^q_content^close\n\nClick below to see the question:\n\n^url\n\nThank you,\n\n^site_title",
 		'q_posted_subject' => '^site_title has a new question',
-		
+
 		'remoderate_body' => "An edited post by ^p_handle requires your reapproval:\n\n^open^p_context^close\n\nClick below to approve or hide the edited post:\n\n^url\n\n\nClick below to review all queued posts:\n\n^a_url\n\n\nThank you,\n\n^site_title",
 		'remoderate_subject' => '^site_title moderation',
 
@@ -73,14 +73,14 @@
 		'reset_subject' => '^site_title - Reset Forgotten Password',
 
 		'to_handle_prefix' => "^,\n\n",
-		
+
 		'u_registered_body' => "A new user has registered as ^u_handle.\n\nClick below to view the user profile:\n\n^url\n\nThank you,\n\n^site_title",
 		'u_to_approve_body' => "A new user has registered as ^u_handle.\n\nClick below to approve the user:\n\n^url\n\nClick below to review all users waiting for approval:\n\n^a_url\n\nThank you,\n\n^site_title",
 		'u_registered_subject' => '^site_title has a new registered user',
-		
+
 		'u_approved_body' => "You can see your new user profile here:\n\n^url\n\nThank you,\n\n^site_title",
 		'u_approved_subject' => 'Your ^site_title user has been approved',
-		
+
 		'wall_post_subject' => 'Post on your ^site_title wall',
 		'wall_post_body' => "^f_handle has posted on your user wall at ^site_title:\n\n^open^post^close\n\nYou may respond to the post here:\n\n^url\n\nThank you,\n\n^site_title",
 
@@ -88,7 +88,7 @@
 		'welcome_confirm' => "Please click below to confirm your email address.\n\n^url\n\n",
 		'welcome_subject' => 'Welcome to ^site_title!',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

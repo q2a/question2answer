@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-ajax-click-admin.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Server-side response to Ajax single clicks on posts in admin section
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,8 +38,8 @@
 		echo "QA_AJAX_RESPONSE\n1\n";
 	else
 		echo "QA_AJAX_RESPONSE\n0\n".qa_lang('main/general_error');
-				
-	
+
+
 /*
 	Omit PHP closing tag to help avoid accidental output
 */

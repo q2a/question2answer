@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-util-sort.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: A useful general-purpose 'sort by' function
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -36,10 +36,10 @@
 */
 	{
 		global $qa_sort_by_1, $qa_sort_by_2;
-		
+
 		$qa_sort_by_1=$by1;
 		$qa_sort_by_2=$by2;
-		
+
 		uasort($array, 'qa_sort_by_fn');
 	}
 
@@ -50,7 +50,7 @@
 */
 	{
 		global $qa_sort_by_1, $qa_sort_by_2;
-		
+
 		$compare=qa_sort_cmp($a[$qa_sort_by_1], $b[$qa_sort_by_1]);
 
 		if (($compare==0) && $qa_sort_by_2)
@@ -70,8 +70,8 @@
 		else
 			return strcasecmp($a, $b); // doesn't do UTF-8 right but it will do for now
 	}
-	
-	
+
+
 	function qa_array_insert(&$array, $beforekey, $addelements)
 /*
 	Inserts $addelements into $array, preserving their keys, before $beforekey in that array.
@@ -80,33 +80,33 @@
 	{
 		$newarray=array();
 		$beforefound=false;
-		
+
 		foreach ($array as $key => $element) {
 			if ($key==$beforekey) {
 				$beforefound=true;
-				
+
 				foreach ($addelements as $addkey => $addelement)
 					$newarray[$addkey]=$addelement;
 			}
-			
+
 			$newarray[$key]=$element;
 		}
-		
+
 		if (!$beforefound)
 			foreach ($addelements as $addkey => $addelement)
 				$newarray[$addkey]=$addelement;
-			
+
 		$array=$newarray;
 	}
-	
-	
+
+
 //	Special values for the $beforekey parameter for qa_array_reorder() - use floats since these cannot be real keys
 
 	define('QA_ARRAY_WITH_FIRST', null); // collect the elements together in the position of the first one found
 	define('QA_ARRAY_WITH_LAST', 0.6); // collect the elements together in the position of the last one found
 	define('QA_ARRAY_AT_START', 0.1); // place all the elements at the start of the array
 	define('QA_ARRAY_AT_END', 0.9); // place all the elements at the end of the array
-	
+
 	function qa_array_reorder(&$array, $keys, $beforekey=null, $reorderrelative=true)
 /*
 	Moves all of the elements in $array whose keys are in the parameter $keys. They can be moved to before a specific
@@ -117,56 +117,56 @@
 	{
 
 	//	Make a map for checking each key in $array against $keys and which gives their ordering
-	
+
 		$keyorder=array();
 		$keyindex=0;
 		foreach ($keys as $key)
 			$keyorder[$key]=++$keyindex;
-			
+
 	//	Create the new key ordering in $newkeys
-		
+
 		$newkeys=array();
 		$insertkeys=array();
 		$offset=null;
-		
+
 		if ($beforekey==QA_ARRAY_AT_START)
 			$offset=0;
-		
+
 		foreach ($array as $key => $value) {
 			if ($beforekey==$key)
 				$offset=count($newkeys);
-			
+
 			if (isset($keyorder[$key])) {
 				if ($reorderrelative)
 					$insertkeys[$keyorder[$key]]=$key; // in order of $keys parameter
 				else
 					$insertkeys[]=$key; // in order of original array
-				
+
 				if ( ($beforekey==QA_ARRAY_WITH_LAST) || (($beforekey===QA_ARRAY_WITH_FIRST) && !isset($offset)) )
 					$offset=count($newkeys);
-					
+
 			} else
 				$newkeys[]=$key;
 		}
-				
+
 		if (!isset($offset)) // also good for QA_ARRAY_AT_END
 			$offset=count($newkeys);
-			
+
 		if ($reorderrelative)
 			ksort($insertkeys, SORT_NUMERIC); // sort them based on position in $keys parameter
-		
+
 		array_splice($newkeys, $offset, 0, $insertkeys);
-	
+
 	//	Rebuild the array based on the new key ordering
-				
+
 		$newarray=array();
-		
+
 		foreach ($newkeys as $key)
 			$newarray[$key]=$array[$key];
-	
+
 		$array=$newarray;
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

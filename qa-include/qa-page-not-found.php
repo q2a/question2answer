@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-not-found.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for page not found (error 404)
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,7 +28,7 @@
 		header('Location: ../');
 		exit;
 	}
-	
+
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 
 
@@ -39,8 +39,8 @@
 	$qa_content=qa_content_prepare();
 	$qa_content['error']=qa_lang_html('main/page_not_found');
 	$qa_content['suggest_next']=qa_html_suggest_qs_tags(qa_using_tags());
-	
-	
+
+
 	return $qa_content;
 
 

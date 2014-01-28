@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-util-image.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Some useful image-related functions (using GD)
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,7 +23,7 @@
 
 	More about this license: http://www.question2answer.org/license.php
 */
-	
+
 	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 		header('Location: ../');
 		exit;
@@ -48,7 +48,7 @@
 	{
 		if (function_exists('memory_get_usage')) {
 			$gotbytes=trim(@ini_get('memory_limit'));
-			
+
 			switch (strtolower(substr($gotbytes, -1))) {
 				case 'g':
 					$gotbytes*=1024;
@@ -57,35 +57,35 @@
 				case 'k':
 					$gotbytes*=1024;
 			}
-			
+
 			if ($gotbytes>0) { // otherwise we clearly don't know our limit
 				$gotbytes=($gotbytes-memory_get_usage())*0.9; // safety margin of 10%
-				
+
 				$needbytes=filesize($imagefile); // memory to store file contents
 
 				$imagesize=@getimagesize($imagefile);
-				
+
 				if (is_array($imagesize)) { // if image can't be parsed, don't worry about anything else
 					$width=$imagesize[0];
 					$height=$imagesize[1];
 					$bits=isset($imagesize['bits']) ? $imagesize['bits'] : 8; // these elements can be missing (PHP bug) so assume this as default
 					$channels=isset($imagesize['channels']) ? $imagesize['channels'] : 3; // for more info: http://gynvael.coldwind.pl/?id=223
-					
+
 					$needbytes+=$width*$height*$bits*$channels/8*2; // memory to load original image
-					
+
 					if (isset($size) && qa_image_constrain($width, $height, $size)) // memory for constrained image
 						$needbytes+=$width*$height*3*2; // *2 here and above based on empirical tests
 				}
-				
+
 				if ($needbytes>$gotbytes)
 					return sqrt($gotbytes/($needbytes*1.5)); // additional 50% safety margin since JPEG quality may change
 			}
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 	function qa_image_constrain_data($imagedata, &$width, &$height, $maxwidth, $maxheight=null)
 /*
 	Given $imagedata containing JPEG/GIF/PNG data, constrain it proportionally to fit in $maxwidth x $maxheight.
@@ -94,26 +94,26 @@
 */
 	{
 		$inimage=@imagecreatefromstring($imagedata);
-		
+
 		if (is_resource($inimage)) {
 			$width=imagesx($inimage);
 			$height=imagesy($inimage);
-			
+
 			// always call qa_gd_image_resize(), even if the size is the same, to take care of possible PNG transparency
 			qa_image_constrain($width, $height, $maxwidth, $maxheight);
 			qa_gd_image_resize($inimage, $width, $height);
 		}
-		
+
 		if (is_resource($inimage)) {
 			$imagedata=qa_gd_image_jpeg($inimage);
 			imagedestroy($inimage);
 			return $imagedata;
 		}
-		
-		return null;	
+
+		return null;
 	}
-	
-	
+
+
 	function qa_image_constrain(&$width, &$height, $maxwidth, $maxheight=null)
 /*
 	Given and $width and $height, return true if those need to be contrained to fit in $maxwidth x $maxheight.
@@ -123,7 +123,7 @@
 	{
 		if (!isset($maxheight))
 			$maxheight=$maxwidth;
-		
+
 		if (($width>$maxwidth) || ($height>$maxheight)) {
 			$multiplier=min($maxwidth/$width, $maxheight/$height);
 			$width=floor($width*$multiplier);
@@ -131,11 +131,11 @@
 
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 	function qa_gd_image_resize(&$image, $width, $height)
 /*
 	Resize the GD $image to $width and $height, setting it to null if the resize failed
@@ -153,12 +153,12 @@
 				$image=$newimage;
 			else
 				imagedestroy($newimage);
-		}	
+		}
 
 		imagedestroy($oldimage);
 	}
-	
-	
+
+
 	function qa_gd_image_jpeg($image, $output=false)
 /*
 	Return the JPEG data for GD $image, also echoing it to browser if $output is true
@@ -168,25 +168,25 @@
 		imagejpeg($image, null, 90);
 		return $output ? ob_get_flush() : ob_get_clean();
 	}
-	
-	
+
+
 	function qa_gd_image_formats()
 /*
 	Return an array of strings listing the image formats that are supported
 */
 	{
 		$imagetypebits=imagetypes();
-		
+
 		$bitstrings=array(
 			IMG_GIF => 'GIF',
 			IMG_JPG => 'JPG',
 			IMG_PNG => 'PNG',
 		);
-		
+
 		foreach (array_keys($bitstrings) as $bit)
 			if (!($imagetypebits&$bit))
 				unset($bitstrings[$bit]);
-				
+
 		return $bitstrings;
 	}
 

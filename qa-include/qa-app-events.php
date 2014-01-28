@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-app-events.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Handles the submission of events to the database (application level)
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,7 +31,7 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db-events.php';
 	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
-	
+
 
 	function qa_create_event_for_q_user($questionid, $lastpostid, $updatetype, $lastuserid, $otheruserid=null, $timestamp=null)
 /*
@@ -49,7 +49,7 @@
 		if (isset($otheruserid) && ($otheruserid!=$lastuserid))
 			qa_db_event_create_not_entity($otheruserid, $questionid, $lastpostid, $updatetype, $lastuserid, $timestamp); // possible other user to be informed
 	}
-	
+
 
 	function qa_create_event_for_tags($tagstring, $questionid, $updatetype, $lastuserid, $timestamp=null)
 /*
@@ -66,7 +66,7 @@
 		foreach ($tagwordids as $wordid)
 			qa_db_event_create_for_entity(QA_ENTITY_TAG, $wordid, $questionid, $questionid, $updatetype, $lastuserid, $timestamp);
 	}
-	
+
 
 	function qa_create_event_for_category($categoryid, $questionid, $updatetype, $lastuserid, $timestamp=null)
 /*
@@ -79,14 +79,14 @@
 		if (isset($categoryid)) {
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 			require_once QA_INCLUDE_DIR.'qa-app-format.php';
-			
+
 			$categories=qa_category_path(qa_db_single_select(qa_db_category_nav_selectspec($categoryid, true)), $categoryid);
 			foreach ($categories as $category)
 				qa_db_event_create_for_entity(QA_ENTITY_CATEGORY, $category['categoryid'], $questionid, $questionid, $updatetype, $lastuserid, $timestamp);
 		}
 	}
-	
-	
+
+
 /*
 	Omit PHP closing tag to help avoid accidental output
 */

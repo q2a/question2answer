@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer (c) Gideon Greenspan
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-post-create.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Database functions for creating a question, answer or comment
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -40,11 +40,11 @@
 			'VALUES (#, $, #, $, #, INET_ATON($), $, $, $, $, $, $, NOW())',
 			$categoryid, $type, $parentid, $userid, $cookieid, $ip, $title, $content, $format, $tagstring, $notify, $name
 		);
-		
+
 		return qa_db_last_insert_id();
 	}
 
-	
+
 	function qa_db_posts_calc_category_path($firstpostid, $lastpostid=null)
 /*
 	Recalculate the full category path (i.e. columns catidpath1/2/3) for posts from $firstpostid to $lastpostid (if specified)
@@ -52,7 +52,7 @@
 	{
 		if (!isset($lastpostid))
 			$lastpostid=$firstpostid;
-		
+
 		qa_db_query_sub(
 			"UPDATE ^posts AS x, (SELECT ^posts.postid, ".
 				"COALESCE(parent2.parentid, parent1.parentid, parent0.parentid, parent0.categoryid) AS catidpath1, ".
@@ -62,8 +62,8 @@
 			$firstpostid, $lastpostid
 		); // requires QA_CATEGORY_DEPTH=4
 	}
-	
-	
+
+
 	function qa_db_post_get_category_path($postid)
 /*
 	Get the full category path (including categoryid) for $postid
@@ -74,8 +74,8 @@
 			$postid
 		)); // requires QA_CATEGORY_DEPTH=4
 	}
-	
-	
+
+
 	function qa_db_post_acount_update($questionid)
 /*
 	Update the cached number of answers for $questionid in the database, along with the highest netvotes of any of its answers
@@ -87,8 +87,8 @@
 				$questionid, $questionid
 			);
 	}
-	
-	
+
+
 	function qa_db_category_path_qcount_update($path)
 /*
 	Recalculate the number of questions for each category in $path retrieved via qa_db_post_get_category_path()
@@ -99,8 +99,8 @@
 		qa_db_ifcategory_qcount_update($path['catidpath2']);
 		qa_db_ifcategory_qcount_update($path['catidpath3']);
 	}
-	
-	
+
+
 	function qa_db_ifcategory_qcount_update($categoryid)
 /*
 	Update the cached number of questions for category $categoryid in the database, including its subcategories
@@ -116,7 +116,7 @@
 		}
 	}
 
-	
+
 	function qa_db_titlewords_add_post_wordids($postid, $wordids)
 /*
 	Add rows into the database title index, where $postid contains the words $wordids - this does the same sort
@@ -127,7 +127,7 @@
 			$rowstoadd=array();
 			foreach ($wordids as $wordid)
 				$rowstoadd[]=array($postid, $wordid);
-			
+
 			qa_db_query_sub(
 				'INSERT INTO ^titlewords (postid, wordid) VALUES #',
 				$rowstoadd
@@ -135,7 +135,7 @@
 		}
 	}
 
-	
+
 	function qa_db_contentwords_add_post_wordidcounts($postid, $type, $questionid, $wordidcounts)
 /*
 	Add rows into the database content index, where $postid (of $type, with the antecedent $questionid)
@@ -153,8 +153,8 @@
 			);
 		}
 	}
-	
-	
+
+
 	function qa_db_tagwords_add_post_wordids($postid, $wordids)
 /*
 	Add rows into the database index of individual tag words, where $postid contains the words $wordids
@@ -164,7 +164,7 @@
 			$rowstoadd=array();
 			foreach ($wordids as $wordid)
 				$rowstoadd[]=array($postid, $wordid);
-			
+
 			qa_db_query_sub(
 				'INSERT INTO ^tagwords (postid, wordid) VALUES #',
 				$rowstoadd
@@ -172,7 +172,7 @@
 		}
 	}
 
-	
+
 	function qa_db_posttags_add_post_wordids($postid, $wordids)
 /*
 	Add rows into the database index of whole tags, where $postid contains the tags $wordids
@@ -185,7 +185,7 @@
 			);
 	}
 
-	
+
 	function qa_db_word_mapto_ids($words)
 /*
 	Return an array mapping each word in $words to its corresponding wordid in the database
@@ -199,39 +199,39 @@
 			return array();
 	}
 
-	
+
 	function qa_db_word_mapto_ids_add($words)
 /*
 	Return an array mapping each word in $words to its corresponding wordid in the database, adding any that are missing
 */
 	{
 		$wordtoid=qa_db_word_mapto_ids($words);
-		
+
 		$wordstoadd=array();
 		foreach ($words as $word)
 			if (!isset($wordtoid[$word]))
 				$wordstoadd[]=$word;
-		
+
 		if (count($wordstoadd)) {
 			qa_db_query_sub('LOCK TABLES ^words WRITE'); // to prevent two requests adding the same word
-			
+
 			$wordtoid=qa_db_word_mapto_ids($words); // map it again in case table content changed before it was locked
-			
+
 			$rowstoadd=array();
 			foreach ($words as $word)
 				if (!isset($wordtoid[$word]))
 					$rowstoadd[]=array($word);
-				
+
 			qa_db_query_sub('INSERT IGNORE INTO ^words (word) VALUES $', $rowstoadd);
-			
+
 			qa_db_query_sub('UNLOCK TABLES');
-			
+
 			$wordtoid=qa_db_word_mapto_ids($words); // do it one last time
 		}
-		
+
 		return $wordtoid;
 	}
-	
+
 
 	function qa_db_word_titlecount_update($wordids)
 /*
@@ -245,7 +245,7 @@
 			);
 	}
 
-	
+
 	function qa_db_word_contentcount_update($wordids)
 /*
 	Update the contentcount column in the database for the words in $wordids, based on how many posts they appear in the content of
@@ -258,7 +258,7 @@
 			);
 	}
 
-	
+
 	function qa_db_word_tagwordcount_update($wordids)
 /*
 	Update the tagwordcount column in the database for the individual tag words in $wordids, based on how many posts they appear in the tags of
@@ -271,7 +271,7 @@
 			);
 	}
 
-	
+
 	function qa_db_word_tagcount_update($wordids)
 /*
 	Update the tagcount column in the database for the whole tags in $wordids, based on how many posts they appear as tags of
@@ -284,7 +284,7 @@
 			);
 	}
 
-	
+
 	function qa_db_qcount_update()
 /*
 	Update the cached count in the database of the number of questions (excluding hidden/queued)
@@ -324,7 +324,7 @@
 			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_tagcount', COUNT(*) FROM ^words WHERE tagcount>0");
 	}
 
-	
+
 	function qa_db_unaqcount_update()
 /*
 	Update the cached count in the database of the number of unanswered questions (excluding hidden/queued)
@@ -333,8 +333,8 @@
 		if (qa_should_update_counts())
 			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND acount=0 AND closedbyid IS NULL");
 	}
-	
-	
+
+
 	function qa_db_unselqcount_update()
 /*
 	Update the cached count in the database of the number of questions with no answer selected (excluding hidden/queued)
@@ -343,8 +343,8 @@
 		if (qa_should_update_counts())
 			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unselqcount', COUNT(*) FROM ^posts WHERE type='Q' AND selchildid IS NULL AND closedbyid IS NULL");
 	}
-	
-	
+
+
 	function qa_db_unupaqcount_update()
 /*
 	Update the cached count in the database of the number of questions with no upvoted answers (excluding hidden/queued)
@@ -353,8 +353,8 @@
 		if (qa_should_update_counts())
 			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND amaxvote=0 AND closedbyid IS NULL");
 	}
-	
-	
+
+
 	function qa_db_queuedcount_update()
 /*
 	Update the cached count in the database of the number of posts which are queued for moderation

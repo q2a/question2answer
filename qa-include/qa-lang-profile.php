@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer (c) Gideon Greenspan
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-profile.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for user profile page
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -30,7 +30,7 @@
 		'1_up_vote' => '1 up vote',
 		'1_with_best_chosen' => ' (1 with best answer chosen)',
 		'activity_by_x' => 'Activity by ^',
-		'answers_by_x' => 'Answers by ^',		
+		'answers_by_x' => 'Answers by ^',
 		'answers' => 'Answers:',
 		'bonus_points' => 'Bonus points:',
 		'comments' => 'Comments:',
@@ -88,7 +88,7 @@
 		'x_up_votes' => '^ up votes',
 		'x_with_best_chosen' => ' (^ with best answer chosen)',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

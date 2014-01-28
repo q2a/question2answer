@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer (c) Gideon Greenspan
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-users-special.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for admin page showing users with non-standard privileges
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -33,12 +33,12 @@
 	require_once QA_INCLUDE_DIR.'qa-app-users.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 
-	
+
 //	Check we're not using single-sign on integration
-	
+
 	if (QA_FINAL_EXTERNAL_USERS)
 		qa_fatal_error('User accounts are handled by external code');
-		
+
 
 //	Get list of special users
 
@@ -64,13 +64,13 @@
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('users/special_users');
-	
+
 	$qa_content['ranking']=array(
 		'items' => array(),
 		'rows' => ceil(qa_opt('page_size_users')/qa_opt('columns_users')),
 		'type' => 'users'
 	);
-	
+
 	foreach ($users as $user) {
 		$qa_content['ranking']['items'][]=array(
 			'label' => $usershtml[$user['userid']],
@@ -80,7 +80,7 @@
 
 	$qa_content['navigation']['sub']=qa_users_sub_navigation();
 
-	
+
 	return $qa_content;
 
 

@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-comments.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for page listing recent comments on questions
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -32,7 +32,7 @@
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 	require_once QA_INCLUDE_DIR.'qa-app-q-list.php';
-	
+
 	$categoryslugs=qa_request_parts(1);
 	$countslugs=count($categoryslugs);
 	$userid=qa_get_logged_in_userid();
@@ -45,11 +45,11 @@
 		qa_db_category_nav_selectspec($categoryslugs, false, false, true),
 		$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
 	);
-	
+
 	if ($countslugs) {
 		if (!isset($categoryid))
 			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
-	
+
 		$categorytitlehtml=qa_html($categories[$categoryid]['title']);
 		$sometitle=qa_lang_html_sub('main/recent_cs_in_x', $categorytitlehtml);
 		$nonetitle=qa_lang_html_sub('main/no_comments_in_x', $categorytitlehtml);
@@ -59,7 +59,7 @@
 		$nonetitle=qa_lang_html('main/no_comments_found');
 	}
 
-	
+
 //	Prepare and return content for theme
 
 	return qa_q_list_page_content(

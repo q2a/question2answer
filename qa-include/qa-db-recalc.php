@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer (c) Gideon Greenspan
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-recalc.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Database functions for recalculations (clean-up operations)
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,7 +31,7 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
 
-	
+
 //	For reindexing pages...
 
 	function qa_db_count_pages()
@@ -44,7 +44,7 @@
 		));
 	}
 
-	
+
 	function qa_db_pages_get_for_reindexing($startpageid, $count)
 /*
 	Return the information to reindex up to $count pages starting from $startpageid in the database
@@ -55,10 +55,10 @@
 			$startpageid, $count
 		), 'pageid');
 	}
-	
+
 
 //	For reindexing posts...
-	
+
 	function qa_db_posts_get_for_reindexing($startpostid, $count)
 /*
 	Return the information required to reindex up to $count posts starting from $startpostid in the database
@@ -70,7 +70,7 @@
 		), 'postid');
 	}
 
-	
+
 	function qa_db_prepare_for_reindexing($firstpostid, $lastpostid)
 /*
 	Prepare posts $firstpostid to $lastpostid for reindexing in the database by removing their prior index entries
@@ -97,7 +97,7 @@
 		);
 	}
 
-	
+
 	function qa_db_truncate_indexes($firstpostid)
 /*
 	Remove any rows in the database word indexes with postid from $firstpostid upwards
@@ -124,7 +124,7 @@
 		);
 	}
 
-	
+
 	function qa_db_count_words()
 /*
 	Return the number of words currently referenced in the database
@@ -135,7 +135,7 @@
 		));
 	}
 
-	
+
 	function qa_db_words_prepare_for_recounting($startwordid, $count)
 /*
 	Return the ids of up to $count words in the database starting from $startwordid
@@ -147,7 +147,7 @@
 		));
 	}
 
-	
+
 	function qa_db_words_recount($firstwordid, $lastwordid)
 /*
 	Recalculate the cached counts for words $firstwordid to $lastwordid in the database
@@ -172,7 +172,7 @@
 			'UPDATE ^words AS x, (SELECT ^words.wordid, COUNT(^posttags.wordid) AS tagcount FROM ^words LEFT JOIN ^posttags ON ^posttags.wordid=^words.wordid WHERE ^words.wordid>=# AND ^words.wordid<=# GROUP BY wordid) AS a SET x.tagcount=a.tagcount WHERE x.wordid=a.wordid',
 			$firstwordid, $lastwordid
 		);
-		
+
 		qa_db_query_sub(
 			'DELETE FROM ^words WHERE wordid>=# AND wordid<=# AND titlecount=0 AND contentcount=0 AND tagwordcount=0 AND tagcount=0',
 			$firstwordid, $lastwordid
@@ -193,7 +193,7 @@
 		));
 	}
 
-	
+
 	function qa_db_posts_votes_recount($firstpostid, $lastpostid)
 /*
 	Recalculate the cached vote counts for posts $firstpostid to $lastpostid in the database
@@ -203,27 +203,27 @@
 			'UPDATE ^posts AS x, (SELECT ^posts.postid, COALESCE(SUM(GREATEST(0,^uservotes.vote)),0) AS upvotes, -COALESCE(SUM(LEAST(0,^uservotes.vote)),0) AS downvotes, COALESCE(SUM(IF(^uservotes.flag, 1, 0)),0) AS flagcount FROM ^posts LEFT JOIN ^uservotes ON ^uservotes.postid=^posts.postid WHERE ^posts.postid>=# AND ^posts.postid<=# GROUP BY postid) AS a SET x.upvotes=a.upvotes, x.downvotes=a.downvotes, x.netvotes=a.upvotes-a.downvotes, x.flagcount=a.flagcount WHERE x.postid=a.postid',
 			$firstpostid, $lastpostid
 		);
-		
+
 		qa_db_hotness_update($firstpostid, $lastpostid);
 	}
-	
-	
+
+
 	function qa_db_posts_answers_recount($firstpostid, $lastpostid)
 /*
 	Recalculate the cached answer counts for posts $firstpostid to $lastpostid in the database, along with the highest netvotes of any of their answers
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
-		
+
 		qa_db_query_sub(
 			'UPDATE ^posts AS x, (SELECT parents.postid, COUNT(children.postid) AS acount, COALESCE(GREATEST(MAX(children.netvotes), 0), 0) AS amaxvote FROM ^posts AS parents LEFT JOIN ^posts AS children ON parents.postid=children.parentid AND children.type=\'A\' WHERE parents.postid>=# AND parents.postid<=# GROUP BY postid) AS a SET x.acount=a.acount, x.amaxvote=a.amaxvote WHERE x.postid=a.postid',
 			$firstpostid, $lastpostid
 		);
-		
+
 		qa_db_hotness_update($firstpostid, $lastpostid);
 	}
-	
-	
+
+
 //	For recalculating user points...
 
 	function qa_db_users_get_for_recalc_points($startuserid, $count)
@@ -244,30 +244,30 @@
 			));
 	}
 
-	
+
 	function qa_db_users_recalc_points($firstuserid, $lastuserid)
 /*
 	Recalculate all userpoints columns for users $firstuserid to $lastuserid in the database
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-points.php';
-	
+
 		$qa_userpoints_calculations=qa_db_points_calculations();
-				
+
 		qa_db_query_sub(
 			'DELETE FROM ^userpoints WHERE userid>=# AND userid<=# AND bonus=0', // delete those with no bonus
 			$firstuserid, $lastuserid
 		);
-		
-		$zeropoints='points=0';		
+
+		$zeropoints='points=0';
 		foreach ($qa_userpoints_calculations as $field => $calculation)
 			$zeropoints.=', '.$field.'=0';
-		
+
 		qa_db_query_sub(
 			'UPDATE ^userpoints SET '.$zeropoints.' WHERE userid>=# AND userid<=#', // zero out the rest
 			$firstuserid, $lastuserid
 		);
-		
+
 		if (QA_FINAL_EXTERNAL_USERS)
 			qa_db_query_sub(
 				'INSERT IGNORE INTO ^userpoints (userid) SELECT DISTINCT userid FROM ^posts WHERE userid>=# AND userid<=# UNION SELECT DISTINCT userid FROM ^uservotes WHERE userid>=# AND userid<=#',
@@ -278,26 +278,26 @@
 				'INSERT IGNORE INTO ^userpoints (userid) SELECT DISTINCT userid FROM ^users WHERE userid>=# AND userid<=#',
 				$firstuserid, $lastuserid
 			);
-		
+
 		$updatepoints=(int)qa_opt('points_base');
-		
+
 		foreach ($qa_userpoints_calculations as $field => $calculation) {
 			qa_db_query_sub(
 				'UPDATE ^userpoints, (SELECT userid_src.userid, '.str_replace('~', ' BETWEEN # AND #', $calculation['formula']).' GROUP BY userid) AS results '.
 				'SET ^userpoints.'.$field.'=results.'.$field.' WHERE ^userpoints.userid=results.userid',
 				$firstuserid, $lastuserid
 			);
-			
+
 			$updatepoints.='+('.((int)$calculation['multiple']).'*'.$field.')';
 		}
-		
+
 		qa_db_query_sub(
 			'UPDATE ^userpoints SET points='.$updatepoints.'+bonus WHERE userid>=# AND userid<=#',
 			$firstuserid, $lastuserid
 		);
 	}
 
-	
+
 	function qa_db_truncate_userpoints($lastuserid)
 /*
 	Remove any rows in the userpoints table where userid is greater than $lastuserid
@@ -308,8 +308,8 @@
 			$lastuserid
 		);
 	}
-	
-	
+
+
 //	For refilling event streams...
 
 	function qa_db_qs_get_for_event_refilling($startpostid, $count)
@@ -325,7 +325,7 @@
 
 
 //	For recalculating categories...
-	
+
 	function qa_db_posts_get_for_recategorizing($startpostid, $count)
 /*
 	Return the ids of up to $count posts (including queued/hidden) in the database starting from $startpostid
@@ -336,8 +336,8 @@
 			$startpostid, $count
 		));
 	}
-	
-	
+
+
 	function qa_db_posts_recalc_categoryid($firstpostid, $lastpostid)
 /*
 	Recalculate the (exact) categoryid for the posts (including queued/hidden) between $firstpostid and $lastpostid
@@ -349,8 +349,8 @@
 			$firstpostid, $lastpostid
 		);
 	}
-	
-	
+
+
 	function qa_db_categories_get_for_recalcs($startcategoryid, $count)
 /*
 	Return the ids of up to $count categories in the database starting from $startcategoryid
@@ -361,7 +361,7 @@
 			$startcategoryid, $count
 		));
 	}
-	
+
 
 //	For deleting hidden posts...
 
@@ -371,14 +371,14 @@
 */
 	{
 		$limitsql=isset($limit) ? (' ORDER BY ^posts.postid LIMIT '.(int)$limit) : '';
-		
+
 		return qa_db_read_all_values(qa_db_query_sub(
 			"SELECT ^posts.postid FROM ^posts LEFT JOIN ^posts AS child ON child.parentid=^posts.postid WHERE ^posts.type=$ AND ^posts.postid>=# AND child.postid IS NULL".$limitsql,
 			$type.'_HIDDEN', $startpostid
 		));
 	}
-	
-	
+
+
 //	For moving blobs between database and disk...
 
 	function qa_db_count_blobs_in_db()
@@ -410,7 +410,7 @@
 		return qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^blobs WHERE content IS NULL'));
 	}
 
-	
+
 	function qa_db_get_next_blob_on_disk($startblobid)
 /*
 	Return the id and format of the first blob whose content is stored on disk starting from $startblobid
@@ -421,7 +421,7 @@
 			$startblobid
 		), true);
 	}
-		
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

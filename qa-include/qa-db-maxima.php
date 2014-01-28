@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-maxima.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Definitions that determine database column size and rows retrieved
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -65,7 +65,7 @@
 	@define('QA_DB_RETRIEVE_COMPLETE_TAGS', 1000);
 	@define('QA_DB_RETRIEVE_MESSAGES', 20);
 
-	
+
 //	Keep event streams trimmed - not worth storing too many events per question because we only display the
 //	most recent event for each question, that has not been invalidated due to hiding/unselection/etc...
 
