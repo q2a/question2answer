@@ -166,6 +166,7 @@
 		'search_title' => 'Search results',
 		'selected' => 'selected',
 		'send_button' => 'Send',
+		'since_x' => 'since ^',
 		'suggest_ask' => 'Help get things started by ^1asking a question^2.',
 		'suggest_category_qs' => 'To see more, click for all the ^1questions in this category^2.',
 		'suggest_qs_tags' => 'To see more, click for the ^1full list of questions^2 or ^3popular tags^4.',

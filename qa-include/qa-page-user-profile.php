@@ -355,6 +355,9 @@
 //	General information about the user, only available if we're using internal user management
 
 	if (!QA_FINAL_EXTERNAL_USERS) {
+		$membertime = qa_time_to_string(qa_opt('db_time')-$useraccount['created']);
+		$joindate = qa_when_to_html($useraccount['created'], 0);
+
 		$qa_content['form_profile']=array(
 			'tags' => 'method="post" action="'.qa_self_html().'"',
 
@@ -375,7 +378,7 @@
 				'duration' => array(
 					'type' => 'static',
 					'label' => qa_lang_html('users/member_for'),
-					'value' => qa_html(qa_time_to_string(qa_opt('db_time')-$useraccount['created'])),
+					'value' => qa_html( $membertime . ' (' . qa_lang_sub('main/since_x', $joindate['data']) . ')' ),
 					'id' => 'duration',
 				),
 
