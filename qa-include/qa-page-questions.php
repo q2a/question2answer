@@ -28,6 +28,11 @@
 		header('Location: ../');
 		exit;
 	}
+	
+	// Do not grant access to this section if it has been disabled
+	if (!qa_opt('nav_questions')) {
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
