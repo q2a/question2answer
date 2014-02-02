@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-plugin/facebook-login/qa-facebook-login.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Login module class for Facebook login plugin
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,34 +25,34 @@
 */
 
 	class qa_facebook_login {
-		
+
 		function match_source($source)
 		{
 			return $source=='facebook';
 		}
 
-		
+
 		function login_html($tourl, $context)
 		{
 			$app_id=qa_opt('facebook_app_id');
 
 			if (!strlen($app_id))
 				return;
-				
+
 			$this->facebook_html(qa_path_absolute('facebook-login', array('to' => $tourl)), false, $context);
 		}
 
-		
+
 		function logout_html($tourl)
 		{
 			$app_id=qa_opt('facebook_app_id');
 
 			if (!strlen($app_id))
 				return;
-				
+
 			$this->facebook_html($tourl, true, 'menu');
 		}
-		
+
 
 		function facebook_html($tourl, $logout, $context)
 		{
@@ -67,7 +67,7 @@
         window.fbAsyncInit = function() {
           FB.init({
             appId      : <?php echo qa_js(qa_opt('facebook_app_id'), true)?>,
-            status     : true, 
+            status     : true,
             cookie     : true,
             xfbml      : true,
             oauth      : true
@@ -88,25 +88,25 @@
       </div>
 
 <?php
-		
+
 		}
-		
-		
+
+
 		function admin_form()
 		{
 			$saved=false;
-			
+
 			if (qa_clicked('facebook_save_button')) {
 				qa_opt('facebook_app_id', qa_post_text('facebook_app_id_field'));
 				qa_opt('facebook_app_secret', qa_post_text('facebook_app_secret_field'));
 				$saved=true;
 			}
-			
+
 			$ready=strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret'));
-			
+
 			return array(
 				'ok' => $saved ? 'Facebook application details saved' : null,
-				
+
 				'fields' => array(
 					array(
 						'label' => 'Facebook App ID:',
@@ -121,7 +121,7 @@
 						'error' => $ready ? null : 'To use Facebook Login, please <a href="http://developers.facebook.com/setup/" target="_blank">set up a Facebook application</a>.',
 					),
 				),
-				
+
 				'buttons' => array(
 					array(
 						'label' => 'Save Changes',
@@ -130,9 +130,9 @@
 				),
 			);
 		}
-		
+
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

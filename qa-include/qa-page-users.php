@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-users.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for top scoring users page
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,6 +28,11 @@
 		header('Location: ../');
 		exit;
 	}
+	
+	// Do not grant access to this section if it has been disabled
+	if (!qa_opt('nav_users')) {
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-users.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
@@ -35,10 +40,10 @@
 
 
 //	Get list of all users
-	
-	$start=qa_get_start();	
+
+	$start=qa_get_start();
 	$users=qa_db_select_with_pending(qa_db_top_users_selectspec($start, qa_opt_if_loaded('page_size_users')));
-	
+
 	$usercount=qa_opt('cache_userpointscount');
 	$pagesize=qa_opt('page_size_users');
 	$users=array_slice($users, 0, $pagesize);
@@ -46,7 +51,7 @@
 
 
 //	Prepare content for theme
-	
+
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('main/highest_users');
@@ -56,7 +61,7 @@
 		'rows' => ceil($pagesize/qa_opt('columns_users')),
 		'type' => 'users'
 	);
-	
+
 	if (count($users)) {
 		foreach ($users as $userid => $user)
 			$qa_content['ranking']['items'][]=array(
@@ -69,14 +74,14 @@
 				'score' => qa_html(number_format($user['points'])),
 				'raw' => $user,
 			);
-	
+
 	} else
 		$qa_content['title']=qa_lang_html('main/no_active_users');
-	
+
 	$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $usercount, qa_opt('pages_prev_next'));
 
 	$qa_content['navigation']['sub']=qa_users_sub_navigation();
-	
+
 
 	return $qa_content;
 

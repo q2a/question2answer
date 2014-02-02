@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-plugin/facebook-login/qa-facebook-layer.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Theme layer class for mouseover layer plugin
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,11 +25,11 @@
 */
 
 	class qa_html_theme_layer extends qa_html_theme_base {
-		
+
 		function head_css()
 		{
 			qa_html_theme_base::head_css();
-			
+
 			if (strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret')))
 				$this->output(
 					'<style><!--',
@@ -39,7 +39,7 @@
 		}
 
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-admin.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for admin center
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -260,8 +260,8 @@
 		'users_title' => 'Users',
 		'users_voted' => 'Users who voted:',
 		'version_get_x' => 'get ^',
-		'version_requires_php' => '^1 requires PHP ^2', 
-		'version_requires_q2a' => '^1 requires Q2A ^2', 
+		'version_requires_php' => '^1 requires PHP ^2',
+		'version_requires_q2a' => '^1 requires Q2A ^2',
 		'version_latest_unknown' => 'latest unknown',
 		'version_latest' => 'latest',
 		'viewing_title' => 'Viewing',
@@ -273,7 +273,7 @@
 		'widget_pages_explanation' => 'Show widget in this position on the following pages:',
 		'widgets_explanation' => 'Available widgets:',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

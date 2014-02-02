@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-editor-basic.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Basic editor module for plain text editing
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,12 +31,12 @@
 
 
 	class qa_editor_basic {
-		
+
 		function load_module($localdir, $htmldir)
 		{
 		}
-	
-	
+
+
 		function calc_quality($content, $format)
 		{
 			if ($format=='')
@@ -62,7 +62,7 @@
 		{
 			return "document.getElementById('".$fieldname."').focus();";
 		}
-		
+
 
 		function read_post($fieldname)
 		{
@@ -71,9 +71,9 @@
 				'content' => qa_post_text($fieldname),
 			);
 		}
-	
+
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-tags.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for popular tags page
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -28,13 +28,18 @@
 		header('Location: ../');
 		exit;
 	}
+	
+	// Do not grant access to this section if it has been disabled
+	if (!qa_opt('nav_tags')) {
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 
 
 //	Get popular tags
-	
+
 	$start=qa_get_start();
 	$userid=qa_get_logged_in_userid();
 	$populartags=qa_db_select_with_pending(
@@ -43,23 +48,23 @@
 
 	$tagcount=qa_opt('cache_tagcount');
 	$pagesize=qa_opt('page_size_tags');
-	
-	
+
+
 //	Prepare content for theme
 
 	$qa_content=qa_content_prepare();
 
 	$qa_content['title']=qa_lang_html('main/popular_tags');
-	
+
 	$qa_content['ranking']=array(
 		'items' => array(),
 		'rows' => ceil($pagesize/qa_opt('columns_tags')),
 		'type' => 'tags'
 	);
-	
+
 	if (count($populartags)) {
 		$favoritemap=qa_get_favorite_non_qs_map();
-		
+
 		$output=0;
 		foreach ($populartags as $word => $count) {
 			$qa_content['ranking']['items'][]=array(
@@ -73,12 +78,12 @@
 
 	} else
 		$qa_content['title']=qa_lang_html('main/no_tags_found');
-	
+
 	$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $tagcount, qa_opt('pages_prev_next'));
-	
+
 	if (empty($qa_content['page_links']))
 		$qa_content['suggest_next']=qa_html_suggest_ask();
-		
+
 
 	return $qa_content;
 

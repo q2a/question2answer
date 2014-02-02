@@ -3,7 +3,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-theme/Candy/qa-styles.css
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: CSS file for included Candy theme
@@ -13,7 +13,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,13 +23,13 @@
 */
 
 /*
-	Theme URI: 
+	Theme URI:
 	Theme Version: 1.5
 	Theme Date: 2012-09-11
 	Theme Author: Question2Answer
 	Theme Author URI: http://www.question2answer.org/
 	Theme License: GPLv2
-	Theme Update Check URI: 
+	Theme Update Check URI:
 */
 
 
@@ -267,7 +267,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 	.qa-vote-down-button {background-position:-27px 0; color:#f1c96b;}
 	.qa-vote-down-disabled {background-position:-27px -116px; color:#CCC;}
 	.qa-vote-down-button:hover {background-position:-27px -29px; color:#f1c96b;}
-	
+
 .qa-voted-up-button {background:url(vote-buttons.png); border:0; color:#f1c96b; font-size:1px; height:29px; width:27px;}
 	.qa-voted-up-button {background-position:0 -87px; color:#f1c96b;}
 	.qa-voted-up-button:hover {background-position:0 -29px; color:#f1c96b;}

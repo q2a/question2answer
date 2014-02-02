@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-ajax-answer.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Server-side response to Ajax create answer requests
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -30,10 +30,10 @@
 
 
 //	Load relevant information about this question
-	
+
 	$questionid=qa_post_text('a_questionid');
 	$userid=qa_get_logged_in_userid();
-	
+
 	list($question, $childposts)=qa_db_select_with_pending(
 		qa_db_full_post_selectspec($userid, $questionid),
 		qa_db_full_child_posts_selectspec($userid, $questionid)
@@ -52,35 +52,35 @@
 
 
 	//	Try to create the new answer
-	
+
 		$usecaptcha=qa_user_use_captcha(qa_user_level_for_post($question));
 		$answers=qa_page_q_load_as($question, $childposts);
 		$answerid=qa_page_q_add_a_submit($question, $answers, $usecaptcha, $in, $errors);
-		
+
 	//	If successful, page content will be updated via Ajax
 
 		if (isset($answerid)) {
 			$answer=qa_db_select_with_pending(qa_db_full_post_selectspec($userid, $answerid));
-			
+
 			$question=$question+qa_page_q_post_rules($question, null, null, $childposts); // array union
 			$answer=$answer+qa_page_q_post_rules($answer, $question, $answers, null);
-			
+
 			$usershtml=qa_userids_handles_html(array($answer), true);
-			
+
 			$a_view=qa_page_q_answer_view($question, $answer, false, $usershtml, false);
-			
+
 			$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-answer', null, null);
-			
+
 			echo "QA_AJAX_RESPONSE\n1\n";
 
-			
+
 		//	Send back whether the 'answer' button should still be visible
-		
+
 			echo (int)qa_opt('allow_multi_answers')."\n";
 
-			
+
 		//	Send back the count of answers
-			
+
 			$countanswers=$question['acount']+1;
 
 			if ($countanswers==1)
@@ -96,11 +96,11 @@
 			return;
 		}
 	}
-	
+
 
 	echo "QA_AJAX_RESPONSE\n0\n"; // fall back to non-Ajax submission if there were any problems
 
-	
+
 /*
 	Omit PHP closing tag to help avoid accidental output
 */

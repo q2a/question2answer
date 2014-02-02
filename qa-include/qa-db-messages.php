@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-messages.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Database-level access to messages table for private message history
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -40,10 +40,10 @@
 			'INSERT INTO ^messages (type, fromuserid, touserid, content, format, created) VALUES ($, #, #, $, $, NOW())',
 			$public ? 'PUBLIC' : 'PRIVATE', $fromuserid, $touserid, $content, $format
 		);
-		
+
 		return qa_db_last_insert_id();
 	}
-	
+
 
 	function qa_db_message_delete($messageid)
 /*

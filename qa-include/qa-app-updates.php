@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-app-updates.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Definitions relating to favorites and updates in the database tables
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -37,7 +37,7 @@
 	define('QA_ENTITY_TAG', 'T');
 	define('QA_ENTITY_CATEGORY', 'C');
 	define('QA_ENTITY_NONE', '-');
-	
+
 
 //	Character codes for the different types of updates on a post (updatetype columns)
 
@@ -52,7 +52,7 @@
 
 
 //	Character codes for types of update that only appear in the streams tables, not on the posts themselves
-	
+
 	define('QA_UPDATE_FOLLOWS', 'F'); // if a new question was asked related to one of its answers, or for a comment that follows another
 	define('QA_UPDATE_C_FOR_Q', 'U'); // if comment created was on a question of the user whose stream this appears in
 	define('QA_UPDATE_C_FOR_A', 'N'); // if comment created was on an answer of the user whose stream this appears in

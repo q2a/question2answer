@@ -3,7 +3,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-theme/Classic/qa-styles.css
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: CSS file for included Classic theme
@@ -13,7 +13,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,13 +23,13 @@
 */
 
 /*
-	Theme URI: 
+	Theme URI:
 	Theme Version: 1.5
 	Theme Date: 2012-09-11
 	Theme Author: Question2Answer
 	Theme Author URI: http://www.question2answer.org/
 	Theme License: GPLv2
-	Theme Update Check URI: 
+	Theme Update Check URI:
 */
 
 
@@ -248,7 +248,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 	.qa-vote-down-button {background-position:-17px 0; color:#38544e;}
 	.qa-vote-down-disabled {background-position:-17px -60px; color:#38544e;}
 	.qa-vote-down-button:hover {background-position:-17px -15px; color:#65968e;}
-	
+
 .qa-voted-up-button {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; height:15px; width:17px;}
 	.qa-voted-up-button {background-position:0 -30px; color:#f3cb7f;}
 	.qa-voted-up-button:hover {background-position:0 -45px; color:#f3cb7f;}
