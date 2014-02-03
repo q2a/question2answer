@@ -34,18 +34,7 @@
 
 		function allow_region($region)
 		{
-			$allow=false;
-
-			switch ($region)
-			{
-				case 'main':
-				case 'side':
-				case 'full':
-					$allow=true;
-					break;
-			}
-
-			return $allow;
+			return in_array($region, array('main', 'side', 'full'));
 		}
 
 
