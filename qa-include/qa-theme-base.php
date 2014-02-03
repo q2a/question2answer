@@ -260,10 +260,8 @@
 
 			if (isset($this->content['page_links']['items'])) // convert page links to rel=prev and rel=next tags
 				foreach ($this->content['page_links']['items'] as $page_link)
-					if ($page_link['type']=='prev')
-						$this->output('<link rel="prev" href="'.$page_link['url'].'"/>');
-					elseif ($page_link['type']=='next')
-						$this->output('<link rel="next" href="'.$page_link['url'].'"/>');
+					if (in_array($page_link['type'], array('prev', 'next')))
+						$this->output('<link rel="' . $page_link['type'] . '" href="' . $page_link['url'] . '" />');
 		}
 
 		function head_script()
@@ -934,10 +932,11 @@
 			$tworows=($columns==1) && (!empty($field['label'])) && (!$skipdata) &&
 				( (!($prefixed||$suffixed)) || (!empty($field['error'])) || (!empty($field['note'])) );
 
-			if (($columns==1) && isset($field['id']))
-				$this->output('<tbody id="'.$field['id'].'">', '<tr>');
-			elseif (isset($field['id']))
-				$this->output('<tr id="'.$field['id'].'">');
+			if (isset($field['id']))
+				if ($columns == 1)
+					$this->output('<tbody id="'.$field['id'].'">', '<tr>');
+				else
+					$this->output('<tr id="'.$field['id'].'">');
 			else
 				$this->output('<tr>');
 
