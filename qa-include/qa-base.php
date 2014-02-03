@@ -612,14 +612,30 @@
 
 //	Functions for listing, loading and getting info on modules
 
+	function qa_list_all_registered_modules_info()
+/*
+	Return an array with all registered modules' information
+*/
+	{
+		global $qa_modules;
+		
+		return $qa_modules;
+	}
+	
 	function qa_list_module_types()
 /*
 	Return an array of all the module types for which at least one module has been registered
 */
 	{
-		global $qa_modules;
-
-		return array_keys($qa_modules);
+		return array_keys(qa_list_all_registered_modules_info());
+	}
+	
+	function qa_list_module_types()
+/*
+	Return an array of all the module types for which at least one module has been registered
+*/
+	{
+		return array_keys(qa_list_all_registered_modules_info());
 	}
 
 
@@ -628,9 +644,8 @@
 	Return a list of names of registered modules of $type
 */
 	{
-		global $qa_modules;
-
-		return is_array(@$qa_modules[$type]) ? array_keys($qa_modules[$type]) : array();
+		$modules = qa_list_all_registered_modules_info();
+		return is_array(@$modules[$type]) ? array_keys($modules[$type]) : array();
 	}
 
 
@@ -639,8 +654,8 @@
 	Return an array containing information about the module of $type named $name
 */
 	{
-		global $qa_modules;
-		return @$qa_modules[$type][$name];
+		$modules = qa_list_all_registered_modules_info();
+		return @$modules[$type][$name];
 	}
 
 
@@ -673,8 +688,29 @@
 
 		return null;
 	}
+	
+	function qa_load_all_modules_with($method)
+/*
+	Return an array of instantiated clases for modules which have defined $method
+	(all modules are loaded but not included in the returned array)
+*/
+	{
+		$modules = array();
+		
+		$registeredmodules = qa_list_all_registered_modules_info();
+		
+		foreach ($registeredmodules as $moduletype => $modulesinfo) {
+			foreach ($modulesinfo as $modulename => $moduleinfo) {
+				$module = qa_load_module($moduletype, $modulename);
 
-
+				if (method_exists($module, $method))
+					$modules[$moduletype] = $module;
+			}
+		}
+		
+		return $modules;
+	}
+	
 	function qa_load_modules_with($type, $method)
 /*
 	Return an array of instantiated clases for modules of $type which have defined $method
