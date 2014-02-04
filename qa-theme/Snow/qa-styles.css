@@ -584,8 +584,18 @@ div.header-banner{
 	-ms-transition:all ease-in-out 0.2s;
 	transition:all ease-in-out 0.2s;
 }
-.qa-nav-sub-admin-moderate {
-	clear:left;
+.qa-nav-sub-admin-moderate,
+.qa-nav-sub-admin-flagged,
+.qa-nav-sub-admin-hidden{
+	background-color:#DDD;
+	border-radius:2px;
+	border:1px solid #999;
+	margin:0 2px;
+}
+.qa-nav-sub-admin-moderate .qa-nav-sub-link,
+.qa-nav-sub-admin-flagged .qa-nav-sub-link,
+.qa-nav-sub-admin-hidden .qa-nav-sub-link{
+	margin:0 0px;
 }
 /*-- end main + sub navigation css --*/
 /*-- content and widgets --*/
