@@ -852,8 +852,8 @@
 		// The 'approve', 'login', 'confirm', 'userblock', 'ipblock' permission errors are reported to the user here
 		// The other option ('level') prevents the comment button being shown, in qa_page_q_post_rules(...)
 
-		$answer=($question['postid']==$parent['postid']) ? null : $parent;
-		$parentid=$parent['postid'];
+		$parentid = $parent['postid'];
+		$answer = ($question['postid'] == $parentid) ? null : $parent;
 
 		switch (qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)) {
 			case 'login':
