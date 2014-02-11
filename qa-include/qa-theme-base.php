@@ -311,11 +311,11 @@
 			$this->body_tags();
 			$this->output('>');
 
-			$this->body_script();
 			$this->body_header();
 			$this->body_content();
 			$this->body_footer();
 			$this->body_hidden();
+			$this->body_script();
 
 			$this->output('</body>');
 		}
