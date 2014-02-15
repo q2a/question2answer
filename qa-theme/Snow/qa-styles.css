@@ -60,10 +60,15 @@
 	font-style:italic;
 	line-height:20px;
 }
+
+html {
+	position: relative;
+	min-height: 100%;
+}
 body {
 	background:#eee url(images/bodybg.jpg)repeat left top;
 	text-align:center;
-	margin:0;
+	margin: 0 0 80px;
 	padding:0;
 }
 body,td,input,textarea {
@@ -928,8 +933,12 @@ div.header-banner{
 	padding-left:20px;
 }
 .qa-footer-bottom-group{
-	background:#ddd;
-	border-top:1px solid #aaa;
+	background: #ddd;
+	border-top: 1px solid #aaa;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 .qa-footer {
 	clear:both;
