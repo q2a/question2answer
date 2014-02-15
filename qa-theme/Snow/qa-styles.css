@@ -2043,6 +2043,7 @@ a.qa-browse-cat-link:visited {
 	padding: 20px 10px;
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #ccc;
+	min-height: 108px; /* prevent tick icon being hidden */
 }
 
 /* zoom for IE, padding for early FF */
