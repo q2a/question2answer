@@ -634,6 +634,16 @@
 	}
 
 
+	function qa_userid_to_handle($userid)
+/*
+	Return an string mapping the received userid to that user's handle (public username), or to null if not found
+*/
+	{
+		$handles=qa_userids_to_handles(array($userid));
+		return empty($handles) ? null : $handles[$userid];
+	}
+
+
 	function qa_handles_to_userids($handles, $exactonly=false)
 /*
 	Return an array mapping each handle in $handles the user's userid, or null if not found. If $exactonly is true then
