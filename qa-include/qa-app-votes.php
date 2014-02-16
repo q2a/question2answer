@@ -135,7 +135,7 @@
 			'postid' => $post['postid'],
 			'vote' => $vote,
 			'oldvote' => $oldvote,
-			'post_userid' => $post['postid'],
+			'post_userid' => $post['userid'],
 		));
 	}
 	
