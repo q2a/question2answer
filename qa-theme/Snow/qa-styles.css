@@ -2609,8 +2609,9 @@ a.qa-browse-cat-link:visited {
 ----------------------------------------------------------------------------*/
 
 .qa-template-user .qa-main {
-	width: 100%;
-	padding-right: 10px;
+	width:100%;
+	float: none;
+	padding-right: 1%;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -2619,8 +2620,8 @@ a.qa-browse-cat-link:visited {
 .qa-template-user .qa-part-form-activity,
 .qa-template-user .qa-part-message-list {
 	float: right;
-	width: 50%;
-	padding-left: 10px;
+	clear: right;
+	width: 49%;
 }
 
 .qa-template-user .qa-part-form-activity h2 {
@@ -2631,17 +2632,11 @@ a.qa-browse-cat-link:visited {
 	float: left;
 	width: 50%;
 	min-height: 630px;
-	padding-right: 10px;
+	padding: 0 1% 0 0;
 	border-right: 1px solid #ddd;
-}
-
-.qa-template-user .qa-part-form-activity,
-.qa-template-user .qa-part-message-list,
-.qa-template-user .qa-part-form-profile {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	overflow: hidden;
 }
 
 .qa-template-user .qa-part-message-list .qa-form-tall-text,
@@ -2666,3 +2661,4 @@ a.qa-browse-cat-link:visited {
 	color: #069;
 	font-weight: 700;
 }
+
