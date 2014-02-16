@@ -679,12 +679,9 @@ div.header-banner {
 	-ms-transition: all ease-in-out 0.2s;
 	transition: all ease-in-out 0.2s;
 }
-
-.qa-nav-sub-admin-moderate {
-	clear: left;
-}
-
 /*-- end main + sub navigation css --*/
+
+
 /*-- content and widgets --*/
 .qa-main {
 	padding-left: 10px;
