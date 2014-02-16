@@ -2631,12 +2631,18 @@ a.qa-browse-cat-link:visited {
 .qa-template-user .qa-part-form-profile {
 	float: left;
 	width: 50%;
-	min-height: 630px;
 	padding: 0 1% 0 0;
 	border-right: 1px solid #ddd;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+.qa-template-user .qa-part-form-profile,
+.qa-template-user .qa-part-form-activity,
+.qa-template-user .qa-part-message-list {
+	padding-bottom: 100%;
+	margin-bottom: -100%;
 }
 
 .qa-template-user .qa-part-message-list .qa-form-tall-text,
