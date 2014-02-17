@@ -75,6 +75,7 @@
 		$qa_content['ranking']['items'][]=array(
 			'label' => $usershtml[$user['userid']],
 			'score' => qa_html(qa_user_level_string($user['level'])),
+			'raw' => $user,
 		);
 	}
 
