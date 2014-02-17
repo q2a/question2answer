@@ -487,15 +487,12 @@
 					break;
 
 				default: // call option_default method in any registered modules
-					$moduletypes=qa_list_module_types();
+					$modules = qa_load_all_modules_with('option_default');  // Loads all modules with the 'option_default' method
 
-					foreach ($moduletypes as $moduletype) {
-						$modules=qa_load_modules_with($moduletype, 'option_default');
-
-						foreach ($modules as $module) {
-							$value=$module->option_default($name);
-							if (strlen($value))
-								return $value;
+					foreach ($modules as $module) {
+						$value = $module->option_default($name);
+						if (strlen($value)) {
+							return $value;
 						}
 					}
 
