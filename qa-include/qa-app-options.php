@@ -491,9 +491,8 @@
 
 					foreach ($modules as $module) {
 						$value = $module->option_default($name);
-						if (strlen($value)) {
+						if (strlen($value))
 							return $value;
-						}
 					}
 
 					$value='';

@@ -612,52 +612,40 @@
 
 //	Functions for listing, loading and getting info on modules
 
-	function qa_list_all_registered_modules_info()
+	function qa_list_modules_info()
 /*
 	Return an array with all registered modules' information
 */
 	{
 		global $qa_modules;
-		
 		return $qa_modules;
 	}
-	
-	function qa_list_module_types()
-/*
-	Return an array of all the module types for which at least one module has been registered
-*/
-	{
-		return array_keys(qa_list_all_registered_modules_info());
-	}
-	
-	function qa_list_module_types()
-/*
-	Return an array of all the module types for which at least one module has been registered
-*/
-	{
-		return array_keys(qa_list_all_registered_modules_info());
-	}
 
+	function qa_list_module_types()
+/*
+	Return an array of all the module types for which at least one module has been registered
+*/
+	{
+		return array_keys(qa_list_modules_info());
+	}
 
 	function qa_list_modules($type)
 /*
 	Return a list of names of registered modules of $type
 */
 	{
-		$modules = qa_list_all_registered_modules_info();
+		$modules = qa_list_modules_info();
 		return is_array(@$modules[$type]) ? array_keys($modules[$type]) : array();
 	}
-
 
 	function qa_get_module_info($type, $name)
 /*
 	Return an array containing information about the module of $type named $name
 */
 	{
-		$modules = qa_list_all_registered_modules_info();
+		$modules = qa_list_modules_info();
 		return @$modules[$type][$name];
 	}
-
 
 	function qa_load_module($type, $name)
 /*
@@ -666,7 +654,7 @@
 	{
 		global $qa_modules;
 
-		$module=@$qa_modules[$type][$name];
+		$module = @$qa_modules[$type][$name];
 
 		if (is_array($module)) {
 			if (isset($module['object']))
@@ -676,19 +664,19 @@
 				require_once $module['directory'].$module['include'];
 
 			if (strlen(@$module['class'])) {
-				$object=new $module['class'];
+				$object = new $module['class'];
 
 				if (method_exists($object, 'load_module'))
 					$object->load_module($module['directory'], qa_path_to_root().$module['urltoroot'], $type, $name);
 
-				$qa_modules[$type][$name]['object']=$object;
+				$qa_modules[$type][$name]['object'] = $object;
 				return $object;
 			}
 		}
 
 		return null;
 	}
-	
+
 	function qa_load_all_modules_with($method)
 /*
 	Return an array of instantiated clases for modules which have defined $method
@@ -696,10 +684,10 @@
 */
 	{
 		$modules = array();
-		
-		$registeredmodules = qa_list_all_registered_modules_info();
-		
-		foreach ($registeredmodules as $moduletype => $modulesinfo) {
+
+		$regmodules = qa_list_modules_info();
+
+		foreach ($regmodules as $moduletype => $modulesinfo) {
 			foreach ($modulesinfo as $modulename => $moduleinfo) {
 				$module = qa_load_module($moduletype, $modulename);
 
@@ -707,25 +695,25 @@
 					$modules[$moduletype] = $module;
 			}
 		}
-		
+
 		return $modules;
 	}
-	
+
 	function qa_load_modules_with($type, $method)
 /*
 	Return an array of instantiated clases for modules of $type which have defined $method
 	(other modules of that type are also loaded but not included in the returned array)
 */
 	{
-		$modules=array();
+		$modules = array();
 
-		$trynames=qa_list_modules($type);
+		$trynames = qa_list_modules($type);
 
 		foreach ($trynames as $tryname) {
-			$module=qa_load_module($type, $tryname);
+			$module = qa_load_module($type, $tryname);
 
 			if (method_exists($module, $method))
-				$modules[$tryname]=$module;
+				$modules[$tryname] = $module;
 		}
 
 		return $modules;
