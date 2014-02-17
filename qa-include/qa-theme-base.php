@@ -259,10 +259,13 @@
 			if (isset($this->content['feed']['url']))
 				$this->output('<link rel="alternate" type="application/rss+xml" href="'.$this->content['feed']['url'].'" title="'.@$this->content['feed']['label'].'"/>');
 
-			if (isset($this->content['page_links']['items'])) // convert page links to rel=prev and rel=next tags
-				foreach ($this->content['page_links']['items'] as $page_link)
+			// convert page links to rel=prev and rel=next tags
+			if (isset($this->content['page_links']['items'])) {
+				foreach ($this->content['page_links']['items'] as $page_link) {
 					if (in_array($page_link['type'], array('prev', 'next')))
 						$this->output('<link rel="' . $page_link['type'] . '" href="' . $page_link['url'] . '" />');
+				}
+			}
 		}
 
 		function head_script()
@@ -311,11 +314,11 @@
 			$this->body_tags();
 			$this->output('>');
 
+			$this->body_script();
 			$this->body_header();
 			$this->body_content();
 			$this->body_footer();
 			$this->body_hidden();
-			$this->body_script();
 
 			$this->output('</body>');
 		}
