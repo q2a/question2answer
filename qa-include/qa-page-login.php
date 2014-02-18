@@ -75,7 +75,7 @@
 					if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
 						require_once QA_INCLUDE_DIR.'qa-app-users.php';
 
-						qa_set_logged_in_user($inuserid, $userinfo['handle'], $inremember ? true : false);
+						qa_set_logged_in_user($inuserid, $userinfo['handle'], (bool) $inremember);
 
 						$topath=qa_get('to');
 
@@ -143,7 +143,7 @@
 				'type' => 'checkbox',
 				'label' => qa_lang_html('users/remember_label'),
 				'tags' => 'name="remember"',
-				'value' => @$inremember ? true : false,
+				'value' => (bool) @$inremember,
 			),
 		),
 

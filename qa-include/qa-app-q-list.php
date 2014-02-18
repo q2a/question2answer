@@ -93,7 +93,7 @@
 
 		if (isset($userid) && isset($categoryid)) {
 			$favoritemap=qa_get_favorite_non_qs_map();
-			$categoryisfavorite=@$favoritemap['category'][$navcategories[$categoryid]['backpath']] ? true : false;
+			$categoryisfavorite = (bool) @$favoritemap['category'][$navcategories[$categoryid]['backpath']];
 
 			$qa_content['favorite']=qa_favorite_form(QA_ENTITY_CATEGORY, $categoryid, $categoryisfavorite,
 				qa_lang_sub($categoryisfavorite ? 'main/remove_x_favorites' : 'main/add_category_x_favorites', $navcategories[$categoryid]['title']));

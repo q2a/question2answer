@@ -55,9 +55,9 @@
 		qa_post_unindex($oldquestion['postid']);
 
 		$wasqueued=($oldquestion['type']=='Q_QUEUED');
-		$titlechanged=strcmp($oldquestion['title'], $title) ? true : false;
+		$titlechanged = (bool) strcmp($oldquestion['title'], $title);
 		$contentchanged=strcmp($oldquestion['content'], $content) || strcmp($oldquestion['format'], $format);
-		$tagschanged=strcmp($oldquestion['tags'], $tagstring) ? true : false;
+		$tagschanged = (bool) strcmp($oldquestion['tags'], $tagstring);
 		$setupdated=($titlechanged || $contentchanged || $tagschanged) && (!$wasqueued) && !$silent;
 
 		qa_db_post_set_content($oldquestion['postid'], $title, $content, $format, $tagstring, $notify,

@@ -60,7 +60,7 @@
 	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
 	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 	$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
-	$isblocked=qa_user_permit_error() ? true : false;
+	$isblocked = (bool) qa_user_permit_error();
 
 
 //	Process profile if saved
