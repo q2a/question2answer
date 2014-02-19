@@ -102,8 +102,9 @@
 	Set up and verify the PHP environment for Q2A, including unregistering globals if necessary
 */
 	{
-		if (qa_php_version_below('4.3'))
-			qa_fatal_error('This requires PHP 4.3 or later');
+		$min_php_version = '5.1.6';
+		if (qa_php_version_below($min_php_version))
+			qa_fatal_error('This requires PHP ' . $min_php_version . ' or later');
 
 		error_reporting(E_ALL); // be ultra-strict about error checking
 
