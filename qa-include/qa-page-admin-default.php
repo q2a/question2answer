@@ -991,46 +991,38 @@
 
 					$contents=file_get_contents(QA_THEME_DIR.$value.'/qa-styles.css');
 
-					$metadata=qa_addon_metadata($contents, array(
-						'uri' => 'Theme URI',
-						'version' => 'Theme Version',
-						'date' => 'Theme Date',
-						'author' => 'Theme Author',
-						'author_uri' => 'Theme Author URI',
-						'license' => 'Theme License',
-						'update' => 'Theme Update Check URI',
-					));
+					$metadata=qa_addon_metadata($contents);
 
-					if (strlen(@$metadata['version']))
+					if (isset($metadata['version']))
 						$namehtml='v'.qa_html($metadata['version']);
 					else
 						$namehtml='';
 
-					if (strlen(@$metadata['uri'])) {
-						if (!strlen($namehtml))
+					if (isset($metadata['uri'])) {
+						if (empty($namehtml))
 							$namehtml=qa_html($value);
 
 						$namehtml='<a href="'.qa_html($metadata['uri']).'">'.$namehtml.'</a>';
 					}
 
-					if (strlen(@$metadata['author'])) {
+					if (isset($metadata['author'])) {
 						$authorhtml=qa_html($metadata['author']);
 
-						if (strlen(@$metadata['author_uri']))
+						if (isset($metadata['author_uri']))
 							$authorhtml='<a href="'.qa_html($metadata['author_uri']).'">'.$authorhtml.'</a>';
 
 						$authorhtml=qa_lang_html_sub('main/by_x', $authorhtml);
 
 					} else
 						$authorhtml='';
-
-					if (strlen(@$metadata['version']) && strlen(@$metadata['update'])) {
+					
+					if (isset($metadata['version']) && isset($metadata['update_uri'])) {
 						$elementid='version_check_'.$optionname;
 
 						$updatehtml='(<span id="'.$elementid.'">...</span>)';
 
 						$qa_content['script_onloads'][]=array(
-							"qa_version_check(".qa_js($metadata['update']).", 'Theme Version', ".qa_js($metadata['version'], true).", 'Theme URI', ".qa_js($elementid).");"
+							"qa_version_check(".qa_js($metadata['update_uri']).", ".qa_js($metadata['version'], true).", ".qa_js($elementid).");"
 						);
 
 					} else

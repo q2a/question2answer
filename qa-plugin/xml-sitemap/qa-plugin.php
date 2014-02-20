@@ -25,16 +25,18 @@
 */
 
 /*
-	Plugin Name: XML Sitemap
-	Plugin URI:
-	Plugin Description: Generates sitemap.xml file for submission to search engines
-	Plugin Version: 1.1.1
-	Plugin Date: 2011-12-06
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.5
-	Plugin Update Check URI:
+	[metadata]
+	Plugin Name [name]: XML Sitemap
+	Plugin URI [uri]: 
+	Plugin Description [description]: Generates sitemap.xml file for submission to search engines
+	Plugin Version [version]: 1.1.1
+	Plugin Date [date]: 2011-12-06
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [q2a_version]: 1.5
+	Plugin Update Check URI [update_uri]: 
+	[/metadata]
 */
 
 

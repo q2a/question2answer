@@ -25,16 +25,18 @@
 */
 
 /*
-	Plugin Name: reCAPTCHA
-	Plugin URI:
-	Plugin Description: Provides support for reCAPTCHA captchas
-	Plugin Version: 1.0
-	Plugin Date: 2011-11-17
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.5
-	Plugin Update Check URI:
+	[metadata]
+	Plugin Name [name]: reCAPTCHA
+	Plugin URI [uri]: 
+	Plugin Description [description]: Provides support for reCAPTCHA captchas
+	Plugin Version [version]: 1.0
+	Plugin Date [date]: 2011-11-17
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [q2a_version]: 1.5
+	Plugin Update Check URI [update_uri]:
+	[/metadata]
 */
 
 

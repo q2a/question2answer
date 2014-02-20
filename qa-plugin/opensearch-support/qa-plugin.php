@@ -25,16 +25,18 @@
 */
 
 /*
-	Plugin Name: OpenSearch Support
-	Plugin URI:
-	Plugin Description: Allows OpenSearch clients to search Q2A site directly
-	Plugin Version: 1.0
-	Plugin Date: 2012-08-21
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.5
-	Plugin Update Check URI:
+	[metadata]
+	Plugin Name [name]: OpenSearch Support
+	Plugin URI [uri]: 
+	Plugin Description [description]: Allows OpenSearch clients to search Q2A site directly
+	Plugin Version [version]: 1.0
+	Plugin Date [date]: 2012-08-21
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [q2a_version]: 1.5
+	Plugin Update Check URI [update_uri]: 
+	[/metadata]
 */
 
 

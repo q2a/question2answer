@@ -272,18 +272,20 @@
 		qa_register_module('widget', 'qa-widget-related-qs.php', 'qa_related_qs', 'Related Questions');
 	}
 
-
-	function qa_addon_metadata($contents, $fields)
+	function qa_addon_metadata($contents)
 /*
-	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields
+	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file. This function returns
+	a key-value array that contains all values in square brackets between the [metadata] and [/metadata] tags as keys.
+	The values of the array are whitespace (spaces and tabs) trimmed texts to the right of the colon. Keys that have
+	empty values or values only filled with whitespaces will not be returned
 */
 	{
 		$metadata = array();
-		
-		foreach ($fields as $key => $field)
-			if (preg_match('/^\s*' . str_replace(' ', '\s*', preg_quote($field, '/')) . '\:\s*?(.*?)\s*$/im', $contents, $matches))
-				$metadata[$key] = $matches[1];
-		
+		// Make sure data matched is between the [metadata] tag and use that subset do decrese future searches effort
+		if (preg_match('/\[metadata\](.*?)\[\/metadata\]/is', $contents, $matches))
+			// Get all [.*] fields with their values
+			if (preg_match_all('/\[(.*?)\]\h*\:\h*([^\h\r\n].*?)\h*$/im', $matches[1], $matches) > 0)
+				$metadata = array_combine($matches[1], $matches[2]);
 		return $metadata;
 	}
 	
@@ -294,19 +296,15 @@
 */
 	{
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
+		
 		$pluginfiles = glob(QA_PLUGIN_DIR . '*/qa-plugin.php');
 		
-		$metadata_fields = array(
-			'min_q2a' => 'Plugin Minimum Question2Answer Version',
-			'min_php' => 'Plugin Minimum PHP Version',
-		);
 		foreach ($pluginfiles as $pluginfile)
 			if (file_exists($pluginfile)) {
 				$contents = file_get_contents($pluginfile);
-				$metadata = qa_addon_metadata($contents, $metadata_fields);
-				if ((isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a'])) ||
-					(isset($metadata['min_php']) && qa_qa_version_below($metadata['min_php'])))
+				$metadata = qa_addon_metadata($contents);
+				if ((isset($metadata['q2a_version']) && qa_qa_version_below($metadata['q2a_version'])) ||
+					(isset($metadata['php_version']) && qa_qa_version_below($metadata['php_version'])))
 					continue; // skip plugin which requires a later version of Q2A or PHP
 
 				$qa_plugin_directory = dirname($pluginfile) . '/';

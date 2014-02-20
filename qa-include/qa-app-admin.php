@@ -574,14 +574,14 @@
 	}
 
 	/**
-	 * @deprecated Deprecated since Q2A v1.8. Use qa_addon_metadata($contents, $fields) instead
+	 * @deprecated Deprecated since Q2A v1.8. Use qa_addon_metadata($contents) instead
 	 */
 	function qa_admin_addon_metadata($contents, $fields)
 /*
 	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields
 */
 	{
-		return qa_addon_metadata($contents, $fields);
+		return qa_addon_metadata($contents);
 	}
 
 
