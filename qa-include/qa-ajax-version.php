@@ -32,7 +32,7 @@
 	$urikey=qa_post_text('urikey');
 	$version=qa_post_text('version');
 
-	$metadata=qa_admin_addon_metadata(qa_retrieve_url($uri), array(
+	$metadata=qa_addon_metadata(qa_retrieve_url($uri), array(
 		'version' => $versionkey,
 		'uri' => $urikey,
 

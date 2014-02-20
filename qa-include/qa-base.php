@@ -273,6 +273,21 @@
 	}
 
 
+	function qa_addon_metadata($contents, $fields)
+/*
+	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields
+*/
+	{
+		$metadata = array();
+		
+		foreach ($fields as $key => $field)
+			if (preg_match('/^\s*' . str_replace(' ', '\s*', preg_quote($field, '/')) . '\:\s*?(.*?)\s*$/im', $contents, $matches))
+				$metadata[$key] = $matches[1];
+		
+		return $metadata;
+	}
+	
+	
 	function qa_load_plugin_files()
 /*
 	Load all the qa-plugin.php files from plugins that are compatible with this version of Q2A
@@ -280,28 +295,27 @@
 	{
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
 
-		$pluginfiles=glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
-
+		$pluginfiles = glob(QA_PLUGIN_DIR . '*/qa-plugin.php');
+		
+		$metadata_fields = array(
+			'min_q2a' => 'Plugin Minimum Question2Answer Version',
+			'min_php' => 'Plugin Minimum PHP Version',
+		);
 		foreach ($pluginfiles as $pluginfile)
 			if (file_exists($pluginfile)) {
-				$contents=file_get_contents($pluginfile);
+				$contents = file_get_contents($pluginfile);
+				$metadata = qa_addon_metadata($contents, $metadata_fields);
+				if ((isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a'])) ||
+					(isset($metadata['min_php']) && qa_qa_version_below($metadata['min_php'])))
+					continue; // skip plugin which requires a later version of Q2A or PHP
 
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*Question2Answer[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if (qa_qa_version_below($matches[1]))
-						continue; // skip plugin which requires a later version of Q2A
-
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*PHP[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if (qa_php_version_below($matches[1]))
-						continue; // skip plugin which requires a later version of PHP
-
-				$qa_plugin_directory=dirname($pluginfile).'/';
-				$qa_plugin_urltoroot=substr($qa_plugin_directory, strlen(QA_BASE_DIR));
+				$qa_plugin_directory = dirname($pluginfile) . '/';
+				$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
 
 				require_once $pluginfile;
-
-				$qa_plugin_directory=null;
-				$qa_plugin_urltoroot=null;
 			}
+		$qa_plugin_directory = null;
+		$qa_plugin_urltoroot = null;
 	}
 
 
@@ -1131,7 +1145,7 @@
 
 	function qa_path_to_root()
 /*
-	Return the relative path to the Q2A root (if it's was previously set by qa_set_request())
+	Return the relative path to the Q2A root (if it was previously set by qa_set_request())
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }

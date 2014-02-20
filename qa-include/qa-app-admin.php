@@ -573,19 +573,15 @@
 		return null;
 	}
 
-
+	/**
+	 * @deprecated Deprecated since Q2A v1.8. Use qa_addon_metadata($contents, $fields) instead
+	 */
 	function qa_admin_addon_metadata($contents, $fields)
 /*
 	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields
 */
 	{
-		$metadata=array();
-
-		foreach ($fields as $key => $field)
-			if (preg_match('/'.str_replace(' ', '[ \t]*', preg_quote($field, '/')).':[ \t]*([^\n\f]*)[\n\f]/i', $contents, $matches))
-				$metadata[$key]=trim($matches[1]);
-
-		return $metadata;
+		return qa_addon_metadata($contents, $fields);
 	}
 
 

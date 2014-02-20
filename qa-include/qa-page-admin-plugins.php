@@ -109,7 +109,7 @@
 
 			$contents=file_get_contents($pluginfile);
 
-			$metadata=qa_admin_addon_metadata($contents, array(
+			$metadata=qa_addon_metadata($contents, array(
 				'name' => 'Plugin Name',
 				'uri' => 'Plugin URI',
 				'description' => 'Plugin Description',

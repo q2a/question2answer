@@ -985,13 +985,13 @@
 				case 'site_theme_mobile':
 					$themeoptions=qa_admin_theme_options();
 					if (!isset($themeoptions[$value]))
-						$value='Classic'; // check here because we also need $value for qa_admin_addon_metadata()
+						$value='Classic'; // check here because we also need $value for qa_addon_metadata()
 
 					qa_optionfield_make_select($optionfield, $themeoptions, $value, 'Classic');
 
 					$contents=file_get_contents(QA_THEME_DIR.$value.'/qa-styles.css');
 
-					$metadata=qa_admin_addon_metadata($contents, array(
+					$metadata=qa_addon_metadata($contents, array(
 						'uri' => 'Theme URI',
 						'version' => 'Theme Version',
 						'date' => 'Theme Date',
