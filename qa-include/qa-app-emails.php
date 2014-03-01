@@ -77,7 +77,12 @@
 
 				} else {
 					$useraccount=qa_db_select_with_pending(
-						qa_db_user_account_selectspec($userid, true)
+						array(
+							'columns' => array('email', 'handle'),
+							'source' => '^users WHERE userid = #',
+							'arguments' => array($userid),
+							'single' => true,
+						)
 					);
 
 					if ($needhandle)
