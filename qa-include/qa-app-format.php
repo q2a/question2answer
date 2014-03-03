@@ -983,16 +983,32 @@
 	}
 
 
-	function qa_html_convert_urls($html, $newwindow=false)
+	function qa_html_convert_urls($html, $newwindow = false)
 /*
-	Return $html with any URLs converted into links (with nofollow and in a new window if $newwindow)
-	URL regular expressions can get crazy: http://internet.ls-la.net/folklore/url-regexpr.html
+	Return $html with any URLs converted into links (with nofollow and in a new window if $newwindow).
+	Although they are valid URL components, the closing parentheses, if it is the last character of the URL is removed
+	from the URL. This is to avoid creating wrong broken in texts such as (http://www.question2answer.org) but will
+	allow URLs such as http://www.wikipedia.org/Computers_(Software) as the closing parentheses has a match in the URL.
 	So this is something quick and dirty that should do the trick in most cases
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>\(\)\[\]"\'\.])+\.([^\s&<>\(\)\[\]"\']|&amp;)+)/i', '\1<a href="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</a>', ' '.$html.' '), 1, -1);
+		$open_char = '(';
+		$close_char = ')';
+		
+		if (preg_match('/\b((?:http|https|ftp):\/\/[-A-Za-z0-9+&@#\/%?=~_\(\)|!:,.;]*[-A-Za-z0-9+&@#\/%=~_\(\)\|])/i', $html, $matches)) {
+			$text_url = $matches[1];
+			if (substr($text_url, -1) === $close_char) {  // If the last char es equal to the close char
+				$open_char_count = substr_count($text_url, $open_char);
+				$close_char_count = substr_count($text_url, $close_char);
+				if ($close_char_count == $open_char_count + 1) {
+					$text_url = substr($text_url, 0, -1);
+					$removed = true;
+				}
+			}
+			return str_replace($matches[1], '<a href="' . $text_url . '" rel="nofollow"' . ($newwindow ? ' target="_blank"' : '') . '>' . $text_url . '</a>' . (isset($removed) ? $close_char : ''), $html);
+		}
+		return $html;
 	}
 
 
