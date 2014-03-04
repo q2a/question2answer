@@ -110,6 +110,7 @@
 			'tr' => 'Turkish - Türkçe',
 			'ug' => 'Uyghur - ئۇيغۇرچە',
 			'uk' => 'Ukrainian - Українська',
+			'uz' => 'Uzbek - ўзбек',
 			'vi' => 'Vietnamese - Tiếng Việt',
 			'zh-TW' => 'Chinese Traditional - 繁體中文',
 			'zh' => 'Chinese Simplified - 简体中文',
