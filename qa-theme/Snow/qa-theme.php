@@ -2,19 +2,6 @@
 
 class qa_html_theme extends qa_html_theme_base
 {
-	// change style of WYSIWYG editor to match theme better
-	function head_script()
-	{
-		qa_html_theme_base::head_script();
-
-		$this->output(
-			'<script type="text/javascript">',
-			"if (typeof qa_wysiwyg_editor_config == 'object')",
-			"\tqa_wysiwyg_editor_config.skin='kama';",
-			'</script>'
-		);
-	}
-
 	// outputs login form if user not logged in
 	function nav_user_search()
 	{
