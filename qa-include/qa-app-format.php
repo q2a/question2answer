@@ -986,27 +986,40 @@
 	function qa_html_convert_urls($html, $newwindow = false)
 /*
 	Return $html with any URLs converted into links (with nofollow and in a new window if $newwindow).
-	Although they are valid URL components, the closing parentheses, if it is the last character of the URL is removed
-	from the URL. This is to avoid creating wrong broken in texts such as (http://www.question2answer.org) but will
-	allow URLs such as http://www.wikipedia.org/Computers_(Software) as the closing parentheses has a match in the URL.
+	Although they are valid URL components, the closing parentheses, curly and square brackets, if they are at the end
+	of the URL theyare removed from it if they don't have a matching opening one. This is to avoid creating wrong broken
+	URLs from texts such as (http://www.question2answer.org) but will allow URLs such as
+	http://www.wikipedia.org/Computers_(Software) as the closing parentheses has a match in the URL.
 	So this is something quick and dirty that should do the trick in most cases
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-		$open_char = '(';
-		$close_char = ')';
-		
-		if (preg_match('/\b((?:http|https|ftp):\/\/[-A-Za-z0-9+&@#\/%?=~_\(\)|!:,.;]*[-A-Za-z0-9+&@#\/%=~_\(\)\|])/i', $html, $matches)) {
-			$text_url = $matches[1];
-			if (substr($text_url, -1) === $close_char) {  // If the last char es equal to the close char
-				$open_char_count = substr_count($text_url, $open_char);
-				$close_char_count = substr_count($text_url, $close_char);
-				if ($close_char_count == $open_char_count + 1) {
-					$text_url = substr($text_url, 0, -1);
-					$removed = true;
+
+		if (preg_match_all('/\b((?:https?|ftp):\/\/(?:(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?)/iu', $html, $matches)) {
+			$open_close_chars = array(
+				')' => '(',
+				'}' => '{',
+				']' => '[',
+			);
+			$matches = array_unique($matches[1]);
+			foreach ($matches as $match) {
+				$text_url = $match;
+				$appendRemoved = '';
+				$has_match = false;
+				$last_char = substr($text_url, -1);
+				while (array_key_exists($last_char, $open_close_chars) && !$has_match) {
+					$open_char = $open_close_chars[$last_char];
+					$open_char_count = substr_count($text_url, $open_char);
+					$close_char_count = substr_count($text_url, $last_char);
+					if ($close_char_count == $open_char_count + 1) {
+						$text_url = substr($text_url, 0, -1);
+						$appendRemoved = $last_char . $appendRemoved;
+					} else
+						$has_match = true;
+					$last_char = substr($text_url, -1);
 				}
+				$html = str_replace($match, '<a href="' . $text_url . '" rel="nofollow"' . ($newwindow ? ' target="_blank"' : '') . '>' . $text_url . '</a>' . $appendRemoved, $html);
 			}
-			return str_replace($matches[1], '<a href="' . $text_url . '" rel="nofollow"' . ($newwindow ? ' target="_blank"' : '') . '>' . $text_url . '</a>' . (isset($removed) ? $close_char : ''), $html);
 		}
 		return $html;
 	}
