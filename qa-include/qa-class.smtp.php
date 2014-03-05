@@ -1,4 +1,6 @@
 <?php
+trigger_error('File qa-class.smtp.php is deprecated; please use Q2A built-in functions for sending emails', E_USER_NOTICE);
+
 /*~ class.smtp.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |
