@@ -983,16 +983,55 @@
 	}
 
 
-	function qa_html_convert_urls($html, $newwindow=false)
+	function qa_html_convert_urls($html, $newwindow = false)
 /*
-	Return $html with any URLs converted into links (with nofollow and in a new window if $newwindow)
-	URL regular expressions can get crazy: http://internet.ls-la.net/folklore/url-regexpr.html
-	So this is something quick and dirty that should do the trick in most cases
+	Return $html with any URLs converted into links (with nofollow and in a new window if $newwindow).
+	Closing parentheses/brackets are removed from the link if they don't have a matching opening one. This avoids creating
+	incorrect URLs from (http://www.question2answer.org) but allow URLs such as http://www.wikipedia.org/Computers_(Software)
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		return substr(preg_replace('/([^A-Za-z0-9])((http|https|ftp):\/\/([^\s&<>\(\)\[\]"\'\.])+\.([^\s&<>\(\)\[\]"\']|&amp;)+)/i', '\1<a href="\2" rel="nofollow"'.($newwindow ? ' target="_blank"' : '').'>\2</a>', ' '.$html.' '), 1, -1);
+		$uc = 'a-z\x{00a1}-\x{ffff}';
+		$url_regex = '#\b((?:https?|ftp)://(?:[0-9'.$uc.'][0-9'.$uc.'-]*\.)+['.$uc.']{2,}(?::\d{2,5})?(?:/[^\s]*)?)#iu';
+
+		// get matches and their positions
+		if (preg_match_all($url_regex, $html, $matches, PREG_OFFSET_CAPTURE)) {
+			$brackets = array(
+				')' => '(',
+				'}' => '{',
+				']' => '[',
+			);
+
+			// loop backwards so we substitute correctly
+			for ($i = count($matches[1])-1; $i >= 0; $i--) {
+				$match = $matches[1][$i];
+				$text_url = $match[0];
+				$removed = '';
+				$lastch = substr($text_url, -1);
+
+				// exclude bracket from link if no matching bracket
+				while (array_key_exists($lastch, $brackets)) {
+					$open_char = $brackets[$lastch];
+					$num_open = substr_count($text_url, $open_char);
+					$num_close = substr_count($text_url, $lastch);
+
+					if ($num_close == $num_open + 1) {
+						$text_url = substr($text_url, 0, -1);
+						$removed = $lastch . $removed;
+						$lastch = substr($text_url, -1);
+					}
+					else
+						break;
+				}
+
+				$target = $newwindow ? ' target="_blank"' : '';
+				$replace = '<a href="' . $text_url . '" rel="nofollow"' . $target . '>' . $text_url . '</a>' . $removed;
+				$html = substr_replace($html, $replace, $match[1], strlen($match[0]));
+			}
+		}
+
+		return $html;
 	}
 
 
