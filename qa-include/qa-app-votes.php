@@ -133,6 +133,7 @@
 
 		qa_report_event($event, $userid, $handle, $cookieid, array(
 			'postid' => $post['postid'],
+			'userid' => $post['userid'],
 			'vote' => $vote,
 			'oldvote' => $oldvote,
 		));
