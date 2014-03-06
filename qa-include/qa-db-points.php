@@ -188,6 +188,11 @@
 			qa_db_query_raw(str_replace('~', "='".qa_db_escape_string($userid)."'", qa_db_apply_sub($query, array($userid))));
 				// build like this so that a #, $ or ^ character in the $userid (if external integration) isn't substituted
 
+			qa_report_event('u_points', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+				'userid' => $userid,
+				'columns' => array_keys($keycolumns),
+			));
+
 			if (qa_db_insert_on_duplicate_inserted())
 				qa_db_userpointscount_update();
 		}
