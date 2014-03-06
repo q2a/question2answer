@@ -101,7 +101,6 @@
 		'password_none' => 'None. To log in directly, set a password below.',
 		'password_sent' => 'Your new password was emailed to you',
 		'password_to_set' => 'Please set on your account page',
-		'password_wrong' => 'Password not correct',
 		'private_messages_explanation' => 'Allow users to email you (without seeing your address)',
 		'private_messages' => 'Private messages:',
 		'profile_saved' => 'Profile saved',
@@ -134,7 +133,7 @@
 		'unsubscribe_wrong_log_in' => 'Code not correct - please ^1log in^2 to unsubscribe',
 		'unsubscribe' => 'Unsubscribe:',
 		'user_blocked' => '(blocked)',
-		'user_not_found' => 'User not found',
+		'user_or_password_incorrect' => 'User or password incorrect',
 		'website' => 'Website',
 		'x_ago_from_y' => '^1 ago from ^2',
 	);

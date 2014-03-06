@@ -67,7 +67,8 @@
 					$matchusers=qa_db_user_find_by_email($inemailhandle);
 				else
 					$matchusers=qa_db_user_find_by_handle($inemailhandle);
-		
+				
+				$logged_in=false;
 				if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
@@ -77,6 +78,8 @@
 		
 						qa_set_logged_in_user($inuserid, $userinfo['handle'], $inremember ? true : false);
 						
+						$logged_in=true;
+						
 						$topath=qa_get('to');
 						
 						if (isset($topath))
@@ -85,12 +88,11 @@
 							qa_redirect('account');
 						else
 							qa_redirect('');
-		
-					} else
-						$errors['password']=qa_lang('users/password_wrong');
-		
-				} else
-					$errors['emailhandle']=qa_lang('users/user_not_found');
+					}
+				}
+				if (!$logged_in) {
+					$errors['password']=qa_lang('users/user_or_password_incorrect');
+				}
 			}
 				
 		} else
