@@ -32,14 +32,14 @@
 
 //	Collect the information we need from the database
 
-	$intitle=qa_post_text('title');
-	$doaskcheck=qa_opt('do_ask_check_qs');
-	$doexampletags=qa_using_tags() && qa_opt('do_example_tags');
+	$intitle = qa_post_text('title');
+	$doaskcheck = qa_opt('do_ask_check_qs');
+	$doexampletags = qa_using_tags() && qa_opt('do_example_tags');
 
 	if ($doaskcheck || $doexampletags) {
-		$countqs=max($doexampletags ? QA_DB_RETRIEVE_ASK_TAG_QS : 0, $doaskcheck ? qa_opt('page_size_ask_check_qs') : 0);
+		$countqs = max($doexampletags ? QA_DB_RETRIEVE_ASK_TAG_QS : 0, $doaskcheck ? qa_opt('page_size_ask_check_qs') : 0);
 
-		$relatedquestions=qa_db_select_with_pending(
+		$relatedquestions = qa_db_select_with_pending(
 			qa_db_search_posts_selectspec(null, qa_string_to_words($intitle), null, null, null, null, 0, false, $countqs)
 		);
 	}
@@ -48,38 +48,38 @@
 //	Collect example tags if appropriate
 
 	if ($doexampletags) {
-		$tagweight=array();
+		$tagweight = array();
 		foreach ($relatedquestions as $question) {
-			$tags=qa_tagstring_to_tags($question['tags']);
+			$tags = qa_tagstring_to_tags($question['tags']);
 			foreach ($tags as $tag)
-				@$tagweight[$tag]+=exp($question['score']);
+				@$tagweight[$tag] += exp($question['score']);
 		}
 
 		arsort($tagweight, SORT_NUMERIC);
 
-		$exampletags=array();
+		$exampletags = array();
 
-		$minweight=exp(qa_match_to_min_score(qa_opt('match_example_tags')));
-		$maxcount=qa_opt('page_size_ask_tags');
+		$minweight = exp(qa_match_to_min_score(qa_opt('match_example_tags')));
+		$maxcount = qa_opt('page_size_ask_tags');
 
 		foreach ($tagweight as $tag => $weight) {
-			if ($weight<$minweight)
+			if ($weight < $minweight)
 				break;
 
-			$exampletags[]=$tag;
-			if (count($exampletags)>=$maxcount)
+			$exampletags[] = $tag;
+			if (count($exampletags) >= $maxcount)
 				break;
 		}
-
-	} else
-		$exampletags=array();
+	}
+	else
+		$exampletags = array();
 
 
 //	Output the response header and example tags
 
 	echo "QA_AJAX_RESPONSE\n1\n";
 
-	echo strtr(qa_html(implode(',', $exampletags)), "\r\n", '  ')."\n";
+	echo strtr(qa_html(implode(',', $exampletags)), "\r\n", '  ') . "\n";
 
 
 //	Collect and output the list of related questions
