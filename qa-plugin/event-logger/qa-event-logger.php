@@ -26,7 +26,7 @@
 
 	class qa_event_logger {
 
-		function init_queries($tableslc)
+		public function init_queries($tableslc)
 		{
 			if (qa_opt('event_logger_to_database')) {
 				$tablename=qa_db_add_table_prefix('eventlog');
@@ -53,7 +53,7 @@
 		}
 
 
-		function admin_form(&$qa_content)
+		public function admin_form(&$qa_content)
 		{
 
 		//	Process form input
@@ -138,7 +138,7 @@
 		}
 
 
-		function value_to_text($value)
+		public function value_to_text($value)
 		{
 			if (is_array($value))
 				$text='array('.count($value).')';
@@ -151,7 +151,7 @@
 		}
 
 
-		function process_event($event, $userid, $handle, $cookieid, $params)
+		public function process_event($event, $userid, $handle, $cookieid, $params)
 		{
 			if (qa_opt('event_logger_to_database')) {
 				$paramstring='';

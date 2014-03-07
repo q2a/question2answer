@@ -26,14 +26,14 @@
 
 	class qa_mouseover_admin_form {
 
-		function option_default($option)
+		public function option_default($option)
 		{
 			if ($option=='mouseover_content_max_len')
 				return 480;
 		}
 
 
-		function admin_form(&$qa_content)
+		public function admin_form(&$qa_content)
 		{
 			$saved=false;
 

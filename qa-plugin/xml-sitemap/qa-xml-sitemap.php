@@ -26,17 +26,17 @@
 
 	class qa_xml_sitemap {
 
-		var $directory;
-		var $urltoroot;
+		private $directory;
+		private $urltoroot;
 
-		function load_module($directory, $urltoroot)
+		public function load_module($directory, $urltoroot)
 		{
 			$this->directory=$directory;
 			$this->urltoroot=$urltoroot;
 		}
 
 
-		function option_default($option)
+		public function option_default($option)
 		{
 			switch ($option) {
 				case 'xml_sitemap_show_questions':
@@ -50,7 +50,7 @@
 		}
 
 
-		function admin_form()
+		public function admin_form()
 		{
 			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
@@ -129,7 +129,7 @@
 		}
 
 
-		function suggest_requests()
+		public function suggest_requests()
 		{
 			return array(
 				array(
@@ -141,13 +141,13 @@
 		}
 
 
-		function match_request($request)
+		public function match_request($request)
 		{
 			return ($request=='sitemap.xml');
 		}
 
 
-		function process_request($request)
+		public function process_request($request)
 		{
 			@ini_set('display_errors', 0); // we don't want to show PHP errors inside XML
 
@@ -285,7 +285,7 @@
 		}
 
 
-		function sitemap_output($request, $priority)
+		private function sitemap_output($request, $priority)
 		{
 			echo "\t<url>\n".
 				"\t\t<loc>".qa_xml(qa_path($request, null, qa_opt('site_url')))."</loc>\n".

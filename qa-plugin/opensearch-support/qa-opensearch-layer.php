@@ -26,7 +26,7 @@
 
 	class qa_html_theme_layer extends qa_html_theme_base {
 
-		function head_links()
+		public function head_links()
 		{
 			qa_html_theme_base::head_links();
 

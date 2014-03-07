@@ -26,12 +26,12 @@
 
 	class qa_opensearch_xml {
 
-		function match_request($request)
+		public function match_request($request)
 		{
 			return ($request=='opensearch.xml');
 		}
 
-		function process_request($request)
+		public function process_request($request)
 		{
 			@ini_set('display_errors', 0); // we don't want to show PHP errors inside XML
 

@@ -26,7 +26,7 @@
 
 	class qa_html_theme_layer extends qa_html_theme_base {
 
-		function q_list($q_list)
+		public function q_list($q_list)
 		{
 			if (count(@$q_list['qs']) && qa_opt('mouseover_content_on')) { // first check it is not an empty list and the feature is turned on
 

@@ -32,7 +32,6 @@
 				'activity', 'categories', 'custom', 'feedback', 'qa', 'questions',
 				'hot', 'search', 'tag', 'tags', 'unanswered'
 			);
-
 			return in_array($template, $allowed);
 		}
 

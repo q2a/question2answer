@@ -26,18 +26,18 @@
 
 	class qa_tag_cloud {
 
-		function option_default($option)
+		public function option_default($option)
 		{
 			if ($option=='tag_cloud_count_tags')
 				return 100;
-			elseif ($option=='tag_cloud_font_size')
+			if ($option=='tag_cloud_font_size')
 				return 24;
-			elseif ($option=='tag_cloud_size_popular')
+			if ($option=='tag_cloud_size_popular')
 				return true;
 		}
 
 
-		function admin_form()
+		public function admin_form()
 		{
 			$saved=false;
 
@@ -86,42 +86,23 @@
 		}
 
 
-		function allow_template($template)
+		public function allow_template($template)
 		{
-			$allow=false;
-
-			switch ($template)
-			{
-				case 'activity':
-				case 'qa':
-				case 'questions':
-				case 'hot':
-				case 'ask':
-				case 'categories':
-				case 'question':
-				case 'tag':
-				case 'tags':
-				case 'unanswered':
-				case 'user':
-				case 'users':
-				case 'search':
-				case 'admin':
-				case 'custom':
-					$allow=true;
-					break;
-			}
-
-			return $allow;
+			$allowed = array(
+				'activity', 'qa', 'questions', 'hot', 'ask', 'categories', 'question',
+				'tag', 'tags', 'unanswered', 'user', 'users', 'search', 'admin', 'custom',
+			);
+			return in_array($template, $allowed);
 		}
 
 
-		function allow_region($region)
+		public function allow_region($region)
 		{
 			return ($region=='side');
 		}
 
 
-		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 

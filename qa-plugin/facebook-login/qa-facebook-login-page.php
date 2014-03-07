@@ -26,21 +26,21 @@
 
 	class qa_facebook_login_page {
 
-		var $directory;
-		var $urltoroot;
+		private $directory;
+		private $urltoroot;
 
-		function load_module($directory, $urltoroot)
+		public function load_module($directory, $urltoroot)
 		{
 			$this->directory=$directory;
 			$this->urltoroot=$urltoroot;
 		}
 
-		function match_request($request)
+		public function match_request($request)
 		{
 			return ($request=='facebook-login');
 		}
 
-		function process_request($request)
+		public function process_request($request)
 		{
 			if ($request=='facebook-login') {
 				$app_id=qa_opt('facebook_app_id');

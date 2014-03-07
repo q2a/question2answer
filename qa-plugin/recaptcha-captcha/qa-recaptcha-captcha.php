@@ -32,15 +32,15 @@
 
 	class qa_recaptcha_captcha {
 
-		var $directory;
+		private $directory;
 
-		function load_module($directory, $urltoroot)
+		public function load_module($directory, $urltoroot)
 		{
 			$this->directory=$directory;
 		}
 
 
-		function admin_form()
+		public function admin_form()
 		{
 			$saved=false;
 
@@ -81,7 +81,7 @@
 		}
 
 
-		function recaptcha_error_html()
+		public function recaptcha_error_html()
 		{
 			if (!function_exists('fsockopen'))
 				return 'To use reCAPTCHA, the fsockopen() PHP function must be enabled on your server. Please check with your system administrator.';
@@ -98,13 +98,13 @@
 		}
 
 
-		function allow_captcha()
+		public function allow_captcha()
 		{
 			return function_exists('fsockopen') && strlen(trim(qa_opt('recaptcha_public_key'))) && strlen(trim(qa_opt('recaptcha_private_key')));
 		}
 
 
-		function form_html(&$qa_content, $error)
+		public function form_html(&$qa_content, $error)
 		{
 			require_once $this->directory.'recaptchalib.php';
 
@@ -123,7 +123,7 @@
 		}
 
 
-		function validate_post(&$error)
+		public function validate_post(&$error)
 		{
 			if ( (!empty($_POST['recaptcha_challenge_field'])) && (!empty($_POST['recaptcha_response_field'])) ) {
 				require_once $this->directory.'recaptchalib.php';

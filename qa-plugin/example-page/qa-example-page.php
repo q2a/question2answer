@@ -26,18 +26,18 @@
 
 	class qa_example_page {
 
-		var $directory;
-		var $urltoroot;
+		private $directory;
+		private $urltoroot;
 
 
-		function load_module($directory, $urltoroot)
+		public function load_module($directory, $urltoroot)
 		{
 			$this->directory=$directory;
 			$this->urltoroot=$urltoroot;
 		}
 
 
-		function suggest_requests() // for display in admin interface
+		public function suggest_requests() // for display in admin interface
 		{
 			return array(
 				array(
@@ -49,16 +49,13 @@
 		}
 
 
-		function match_request($request)
+		public function match_request($request)
 		{
-			if ($request=='example-plugin-page')
-				return true;
-
-			return false;
+			return $request == 'example-plugin-page';
 		}
 
 
-		function process_request($request)
+		public function process_request($request)
 		{
 			$qa_content=qa_content_prepare();
 

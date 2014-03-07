@@ -26,15 +26,15 @@
 
 	class qa_html_theme_layer extends qa_html_theme_base {
 
-		function head_css()
+		public function head_css()
 		{
 			qa_html_theme_base::head_css();
 
 			if (strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret')))
 				$this->output(
-					'<style><!--',
+					'<style>',
 					'.fb-login-button.fb_iframe_widget.fb_hide_iframes span {display:none;}',
-					'--></style>'
+					'</style>'
 				);
 		}
 

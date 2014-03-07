@@ -3,7 +3,7 @@
 class qa_html_theme extends qa_html_theme_base
 {
 	// outputs login form if user not logged in
-	function nav_user_search()
+	public function nav_user_search()
 	{
 		if (!qa_is_logged_in()) {
 			$login=@$this->content['navigation']['user']['login'];
@@ -29,7 +29,7 @@ class qa_html_theme extends qa_html_theme_base
 		qa_html_theme_base::nav_user_search();
 	}
 
-	function logged_in()
+	public function logged_in()
 	{
 		if (qa_is_logged_in()) // output user avatar to login bar
 			$this->output(
@@ -60,7 +60,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// adds login bar, user navigation and search at top of page in place of custom header content
-	function body_header()
+	public function body_header()
 	{
 		$this->output('<div id="qa-login-bar"><div id="qa-login-group">');
 		$this->nav_user_search();
@@ -68,7 +68,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// allows modification of custom element shown inside header after logo
-	function header_custom()
+	public function header_custom()
 	{
 		if (isset($this->content['body_header'])) {
 			$this->output('<div class="header-banner">');
@@ -78,7 +78,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// removes user navigation and search from header and replaces with custom header content. Also opens new <div>s
-	function header()
+	public function header()
 	{
 		$this->output('<div class="qa-header">');
 
@@ -95,21 +95,21 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// removes sidebar for user profile pages
-	function sidepanel()
+	public function sidepanel()
 	{
 		if ($this->template!='user')
 			qa_html_theme_base::sidepanel();
 	}
 
 	// prevent display of regular footer content (see body_suffix()) and replace with closing new <div>s
-	function footer()
+	public function footer()
 	{
 		$this->output('</div> <!-- END main-wrapper -->');
 		$this->output('</div> <!-- END main-shadow -->');
 	}
 
 	// add RSS feed icon after the page title
-	function title()
+	public function title()
 	{
 		qa_html_theme_base::title();
 
@@ -120,7 +120,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// add view count to question list
-	function q_item_stats($q_item)
+	public function q_item_stats($q_item)
 	{
 		$this->output('<div class="qa-q-item-stats">');
 
@@ -132,21 +132,21 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// prevent display of view count in the usual place
-	function view_count($q_item)
+	public function view_count($q_item)
 	{
 		if ($this->template=='question')
 			qa_html_theme_base::view_count($q_item);
 	}
 
 	// to replace standard Q2A footer
-	function body_suffix()
+	public function body_suffix()
 	{
 		$this->output('<div class="qa-footer-bottom-group">');
 		qa_html_theme_base::footer();
 		$this->output('</div> <!-- END footer-bottom-group -->', '');
 	}
 
-	function attribution()
+	public function attribution()
 	{
 		$this->output(
 			'<div class="qa-attribution">',

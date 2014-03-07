@@ -26,19 +26,19 @@
 
 	class qa_basic_adsense {
 
-		function allow_template($template)
+		public function allow_template($template)
 		{
 			return ($template!='admin');
 		}
 
 
-		function allow_region($region)
+		public function allow_region($region)
 		{
 			return in_array($region, array('main', 'side', 'full'));
 		}
 
 
-		function admin_form(&$qa_content)
+		public function admin_form(&$qa_content)
 		{
 			$saved=false;
 
@@ -70,7 +70,7 @@
 		}
 
 
-		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
 			$divstyle='';
 

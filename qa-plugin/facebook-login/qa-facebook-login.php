@@ -26,13 +26,13 @@
 
 	class qa_facebook_login {
 
-		function match_source($source)
+		public function match_source($source)
 		{
 			return $source=='facebook';
 		}
 
 
-		function login_html($tourl, $context)
+		public function login_html($tourl, $context)
 		{
 			$app_id=qa_opt('facebook_app_id');
 
@@ -43,7 +43,7 @@
 		}
 
 
-		function logout_html($tourl)
+		public function logout_html($tourl)
 		{
 			$app_id=qa_opt('facebook_app_id');
 
@@ -54,7 +54,7 @@
 		}
 
 
-		function facebook_html($tourl, $logout, $context)
+		public function facebook_html($tourl, $logout, $context)
 		{
 			if (($context=='login') || ($context=='register'))
 				$size='large';
@@ -92,7 +92,7 @@
 		}
 
 
-		function admin_form()
+		public function admin_form()
 		{
 			$saved=false;
 

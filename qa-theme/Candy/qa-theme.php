@@ -24,14 +24,14 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	class qa_html_theme extends qa_html_theme_base
+class qa_html_theme extends qa_html_theme_base
+{
+	public function nav_user_search() // reverse the usual order
 	{
-		function nav_user_search() // reverse the usual order
-		{
-			$this->search();
-			$this->nav('user');
-		}
+		$this->search();
+		$this->nav('user');
 	}
+}
 
 
 /*
