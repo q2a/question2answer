@@ -117,28 +117,44 @@
 	{
 		global $qa_usage_start, $qa_usage_stages, $qa_database_queries;
 
-		echo '<p><br><table bgcolor="#cccccc" cellpadding="8" cellspacing="0" width="100%">';
+		$totaldelta = qa_usage_delta($qa_usage_start, qa_usage_get());
+?>
 
-		echo '<tr><td colspan="2">';
+<style>
+.debug-table { border-collapse: collapse; box-sizing: border-box; width: 100%; margin: 20px auto; }
+.debug-table tr { background-color: #ccc; }
+.debug-table td { padding: 10px; }
 
-		$totaldelta=qa_usage_delta($qa_usage_start, qa_usage_get());
+td.debug-cell-files { width: 30%; padding-right: 5px; }
+td.debug-cell-queries { width: 70%; padding-left: 5px; }
 
-		echo qa_usage_line('Total', $totaldelta, $totaldelta).'<br>';
+textarea.debug-output { box-sizing: border-box; width: 100%; font: 12px monospace; color: #000; }
+</style>
 
-		foreach ($qa_usage_stages as $stage => $stagedelta)
+<table class="debug-table">
+<tbody>
+	<tr>
+		<td colspan="2"><?php
+			echo qa_usage_line('Total', $totaldelta, $totaldelta) . "<br>\n";
+			foreach ($qa_usage_stages as $stage => $stagedelta)
+				echo '<br>' . qa_usage_line(ucfirst($stage), $stagedelta, $totaldelta) . "\n";
+		?></td>
+	</tr>
+	<tr>
+		<td class="debug-cell-files">
+			<textarea class="debug-output" cols="40" rows="20"><?php
+				foreach (get_included_files() as $file)
+					echo qa_html(implode('/', array_slice(explode('/', $file), -3)))."\n";
+			?></textarea>
+		</td>
+		<td class="debug-cell-queries">
+			<textarea class="debug-output" cols="40" rows="20"><?=qa_html($qa_database_queries)?></textarea>
+		</td>
+	</tr>
+</tbody>
+</table>
 
-		echo '<br>'.qa_usage_line(ucfirst($stage), $stagedelta, $totaldelta);
-
-		echo '</td></tr><tr valign="bottom"><td width="30%"><textarea cols="40" rows="20" style="width:100%;">';
-
-		foreach (get_included_files() as $file)
-			echo qa_html(implode('/', array_slice(explode('/', $file), -3)))."\n";
-
-		echo '</textarea></td>';
-
-		echo '<td width="70%"><textarea cols="40" rows="20" style="width:100%;">'.qa_html($qa_database_queries).'</textarea></td>';
-
-		echo '</tr></table>';
+<?php
 	}
 
 

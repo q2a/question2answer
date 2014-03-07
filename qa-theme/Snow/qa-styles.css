@@ -156,9 +156,6 @@ table {
 	border-collapse: collapse;
 }
 
-table tr:hover {
-	background: #fafafa;
-}
 
 /* Headings */
 h1 {
