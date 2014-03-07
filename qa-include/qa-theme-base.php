@@ -43,27 +43,27 @@
 
 	class qa_html_theme_base {
 
-		var	$indent=0;
-		var $lines=0;
-		var $context=array();
+		protected $indent = 0;
+		protected $lines = 0;
+		protected $context = array();
 
-		var $rooturl;
-		var $template;
-		var $content;
-		var $request;
+		protected $rooturl;
+		protected $template;
+		protected $content;
+		protected $request;
 
-		function qa_html_theme_base($template, $content, $rooturl, $request)
+		public function __construct($template, $content, $rooturl, $request)
 	/*
 		Initialize the object and assign local variables
 	*/
 		{
-			$this->template=$template;
-			$this->content=$content;
-			$this->rooturl=$rooturl;
-			$this->request=$request;
+			$this->template = $template;
+			$this->content = $content;
+			$this->rooturl = $rooturl;
+			$this->request = $request;
 		}
 
-		function output_array($elements)
+		public function output_array($elements)
 	/*
 		Output each element in $elements on a separate line, with automatic HTML indenting.
 		This should be passed markup which uses the <tag/> form for unpaired tags, to help keep
@@ -86,7 +86,7 @@
 		}
 
 
-		function output() // other parameters picked up via func_get_args()
+		public function output() // other parameters picked up via func_get_args()
 	/*
 		Output each passed parameter on a separate line - see output_array() comments
 	*/
@@ -96,7 +96,7 @@
 		}
 
 
-		function output_raw($html)
+		public function output_raw($html)
 	/*
 		Output $html at the current indent level, but don't change indent level based on the markup within.
 		Useful for user-entered HTML which is unlikely to follow the rules we need to track indenting
@@ -107,7 +107,7 @@
 		}
 
 
-		function output_split($parts, $class, $outertag='span', $innertag='span', $extraclass=null)
+		public function output_split($parts, $class, $outertag='span', $innertag='span', $extraclass=null)
 	/*
 		Output the three elements ['prefix'], ['data'] and ['suffix'] of $parts (if they're defined),
 		with appropriate CSS classes based on $class, using $outertag and $innertag in the markup.
@@ -126,7 +126,7 @@
 		}
 
 
-		function set_context($key, $value)
+		public function set_context($key, $value)
 	/*
 		Set some context, which be accessed via $this->context for a function to know where it's being used on the page
 	*/
@@ -135,7 +135,7 @@
 		}
 
 
-		function clear_context($key)
+		public function clear_context($key)
 	/*
 		Clear some context (used at the end of the appropriate loop)
 	*/
@@ -144,7 +144,7 @@
 		}
 
 
-		function reorder_parts($parts, $beforekey=null, $reorderrelative=true)
+		public function reorder_parts($parts, $beforekey=null, $reorderrelative=true)
 	/*
 		Reorder the parts of the page according to the $parts array which contains part keys in their new order. Call this
 		before main_parts(). See the docs for qa_array_reorder() in qa-util-sort.php for the other parameters.
@@ -156,7 +156,7 @@
 		}
 
 
-		function widgets($region, $place)
+		public function widgets($region, $place)
 	/*
 		Output the widgets (as provided in $this->content['widgets']) for $region and $place
 	*/
@@ -175,7 +175,7 @@
 		}
 
 
-		function finish()
+		public function finish()
 	/*
 		Post-output cleanup. For now, check that the indenting ended right, and if not, output a warning in an HTML comment
 	*/
@@ -194,12 +194,12 @@
 	//	For most HTML elements, the name of the function is similar to the element's CSS class, for example:
 	//	search() outputs <div class="qa-search">, q_list() outputs <div class="qa-q-list">, etc...
 
-		function doctype()
+		public function doctype()
 		{
 			$this->output('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">');
 		}
 
-		function html()
+		public function html()
 		{
 			$attribution = '<!-- Powered by Question2Answer - http://www.question2answer.org/ -->';
 			$this->output(
@@ -216,7 +216,7 @@
 			);
 		}
 
-		function head()
+		public function head()
 		{
 			$this->output(
 				'<head>',
@@ -234,7 +234,7 @@
 			$this->output('</head>');
 		}
 
-		function head_title()
+		public function head_title()
 		{
 			$pagetitle=strlen($this->request) ? strip_tags(@$this->content['title']) : '';
 			$headtitle=(strlen($pagetitle) ? ($pagetitle.' - ') : '').$this->content['site_title'];
@@ -242,7 +242,7 @@
 			$this->output('<title>'.$headtitle.'</title>');
 		}
 
-		function head_metas()
+		public function head_metas()
 		{
 			if (strlen(@$this->content['description']))
 				$this->output('<meta name="description" content="'.$this->content['description'].'"/>');
@@ -251,7 +251,7 @@
 				$this->output('<meta name="keywords" content="'.$this->content['keywords'].'"/>');
 		}
 
-		function head_links()
+		public function head_links()
 		{
 			if (isset($this->content['canonical']))
 				$this->output('<link rel="canonical" href="'.$this->content['canonical'].'"/>');
@@ -268,14 +268,14 @@
 			}
 		}
 
-		function head_script()
+		public function head_script()
 		{
 			if (isset($this->content['script']))
 				foreach ($this->content['script'] as $scriptline)
 					$this->output_raw($scriptline);
 		}
 
-		function head_css()
+		public function head_css()
 		{
 			$this->output('<link rel="stylesheet" type="text/css" href="'.$this->rooturl.$this->css_name().'"/>');
 
@@ -291,24 +291,24 @@
 				);
 		}
 
-		function css_name()
+		public function css_name()
 		{
 			return 'qa-styles.css?'.QA_VERSION;
 		}
 
-		function head_lines()
+		public function head_lines()
 		{
 			if (isset($this->content['head_lines']))
 				foreach ($this->content['head_lines'] as $line)
 					$this->output_raw($line);
 		}
 
-		function head_custom()
+		public function head_custom()
 		{
 			// abstract method
 		}
 
-		function body()
+		public function body()
 		{
 			$this->output('<body');
 			$this->body_tags();
@@ -323,19 +323,19 @@
 			$this->output('</body>');
 		}
 
-		function body_hidden()
+		public function body_hidden()
 		{
 			$this->output('<div style="position:absolute; left:-9999px; top:-9999px;">');
 			$this->waiting_template();
 			$this->output('</div>');
 		}
 
-		function waiting_template()
+		public function waiting_template()
 		{
 			$this->output('<span id="qa-waiting-template" class="qa-waiting">...</span>');
 		}
 
-		function body_script()
+		public function body_script()
 		{
 			$this->output(
 				'<script type="text/javascript">',
@@ -345,19 +345,19 @@
 			);
 		}
 
-		function body_header()
+		public function body_header()
 		{
 			if (isset($this->content['body_header']))
 				$this->output_raw($this->content['body_header']);
 		}
 
-		function body_footer()
+		public function body_footer()
 		{
 			if (isset($this->content['body_footer']))
 				$this->output_raw($this->content['body_footer']);
 		}
 
-		function body_content()
+		public function body_content()
 		{
 			$this->body_prefix();
 			$this->notices();
@@ -378,7 +378,7 @@
 			$this->body_suffix();
 		}
 
-		function body_tags()
+		public function body_tags()
 		{
 			$class='qa-template-'.qa_html($this->template);
 
@@ -389,24 +389,24 @@
 			$this->output('class="'.$class.' qa-body-js-off"');
 		}
 
-		function body_prefix()
+		public function body_prefix()
 		{
 			// abstract method
 		}
 
-		function body_suffix()
+		public function body_suffix()
 		{
 			// abstract method
 		}
 
-		function notices()
+		public function notices()
 		{
 			if (!empty($this->content['notices']))
 				foreach ($this->content['notices'] as $notice)
 					$this->notice($notice);
 		}
 
-		function notice($notice)
+		public function notice($notice)
 		{
 			$this->output('<div class="qa-notice" id="'.$notice['id'].'">');
 
@@ -425,7 +425,7 @@
 			$this->output('</div>');
 		}
 
-		function header()
+		public function header()
 		{
 			$this->output('<div class="qa-header">');
 
@@ -437,19 +437,19 @@
 			$this->output('</div> <!-- END qa-header -->', '');
 		}
 
-		function nav_user_search()
+		public function nav_user_search()
 		{
 			$this->nav('user');
 			$this->search();
 		}
 
-		function nav_main_sub()
+		public function nav_main_sub()
 		{
 			$this->nav('main');
 			$this->nav('sub');
 		}
 
-		function logo()
+		public function logo()
 		{
 			$this->output(
 				'<div class="qa-logo">',
@@ -458,7 +458,7 @@
 			);
 		}
 
-		function search()
+		public function search()
 		{
 			$search=$this->content['search'];
 
@@ -477,17 +477,17 @@
 			);
 		}
 
-		function search_field($search)
+		public function search_field($search)
 		{
 			$this->output('<input type="text" '.$search['field_tags'].' value="'.@$search['value'].'" class="qa-search-field"/>');
 		}
 
-		function search_button($search)
+		public function search_button($search)
 		{
 			$this->output('<input type="submit" value="'.$search['button_label'].'" class="qa-search-button"/>');
 		}
 
-		function nav($navtype, $level=null)
+		public function nav($navtype, $level=null)
 		{
 			$navigation=@$this->content['navigation'][$navtype];
 
@@ -513,7 +513,7 @@
 			}
 		}
 
-		function nav_list($navigation, $class, $level=null)
+		public function nav_list($navigation, $class, $level=null)
 		{
 			$this->output('<ul class="qa-'.$class.'-list'.(isset($level) ? (' qa-'.$class.'-list-'.$level) : '').'">');
 
@@ -531,7 +531,7 @@
 			$this->output('</ul>');
 		}
 
-		function nav_clear($navtype)
+		public function nav_clear($navtype)
 		{
 			$this->output(
 				'<div class="qa-nav-'.$navtype.'-clear">',
@@ -539,7 +539,7 @@
 			);
 		}
 
-		function nav_item($key, $navlink, $class, $level=null)
+		public function nav_item($key, $navlink, $class, $level=null)
 		{
 			$suffix=strtr($key, array( // map special character in navigation key
 				'$' => '',
@@ -556,7 +556,7 @@
 			$this->output('</li>');
 		}
 
-		function nav_link($navlink, $class)
+		public function nav_link($navlink, $class)
 		{
 			if (isset($navlink['url']))
 				$this->output(
@@ -580,12 +580,12 @@
 				$this->output('<span class="qa-'.$class.'-note">'.$navlink['note'].'</span>');
 		}
 
-		function logged_in()
+		public function logged_in()
 		{
 			$this->output_split(@$this->content['loggedin'], 'qa-logged-in', 'div');
 		}
 
-		function header_clear()
+		public function header_clear()
 		{
 			$this->output(
 				'<div class="qa-header-clear">',
@@ -593,7 +593,7 @@
 			);
 		}
 
-		function sidepanel()
+		public function sidepanel()
 		{
 			$this->output('<div class="qa-sidepanel">');
 			$this->widgets('side', 'top');
@@ -607,7 +607,7 @@
 			$this->output('</div>', '');
 		}
 
-		function sidebar()
+		public function sidebar()
 		{
 			$sidebar=@$this->content['sidebar'];
 
@@ -618,7 +618,7 @@
 			}
 		}
 
-		function feed()
+		public function feed()
 		{
 			$feed=@$this->content['feed'];
 
@@ -629,7 +629,7 @@
 			}
 		}
 
-		function main()
+		public function main()
 		{
 			$content=$this->content;
 
@@ -659,7 +659,7 @@
 			$this->output('</div> <!-- END qa-main -->', '');
 		}
 
-		function page_title_error()
+		public function page_title_error()
 		{
 			$favorite=@$this->content['favorite'];
 
@@ -680,7 +680,7 @@
 			}
 		}
 
-		function favorite()
+		public function favorite()
 		{
 			$favorite=@$this->content['favorite'];
 
@@ -691,25 +691,25 @@
 			}
 		}
 
-		function title()
+		public function title()
 		{
 			if (isset($this->content['title']))
 				$this->output($this->content['title']);
 		}
 
-		function favorite_inner_html($favorite)
+		public function favorite_inner_html($favorite)
 		{
 			$this->favorite_button(@$favorite['favorite_add_tags'], 'qa-favorite');
 			$this->favorite_button(@$favorite['favorite_remove_tags'], 'qa-unfavorite');
 		}
 
-		function favorite_button($tags, $class)
+		public function favorite_button($tags, $class)
 		{
 			if (isset($tags))
 				$this->output('<input '.$tags.' type="submit" value="" class="'.$class.'-button"/> ');
 		}
 
-		function error($error)
+		public function error($error)
 		{
 			if (strlen($error))
 				$this->output(
@@ -719,7 +719,7 @@
 				);
 		}
 
-		function main_parts($content)
+		public function main_parts($content)
 		{
 			foreach ($content as $key => $part) {
 				$this->set_context('part', $key);
@@ -729,7 +729,7 @@
 			$this->clear_context('part');
 		}
 
-		function main_part($key, $part)
+		public function main_part($key, $part)
 		{
 			$partdiv=(
 				(strpos($key, 'custom')===0) ||
@@ -779,7 +779,7 @@
 				$this->output('</div>');
 		}
 
-		function footer()
+		public function footer()
 		{
 			$this->output('<div class="qa-footer">');
 
@@ -790,7 +790,7 @@
 			$this->output('</div> <!-- END qa-footer -->', '');
 		}
 
-		function attribution()
+		public function attribution()
 		{
 			// Hi there. I'd really appreciate you displaying this link on your Q2A site. Thank you - Gideon
 
@@ -801,7 +801,7 @@
 			);
 		}
 
-		function footer_clear()
+		public function footer_clear()
 		{
 			$this->output(
 				'<div class="qa-footer-clear">',
@@ -809,18 +809,18 @@
 			);
 		}
 
-		function section($title)
+		public function section($title)
 		{
 			$this->part_title(array('title' => $title));
 		}
 
-		function part_title($part)
+		public function part_title($part)
 		{
 			if (strlen(@$part['title']) || strlen(@$part['title_tags']))
 				$this->output('<h2'.rtrim(' '.@$part['title_tags']).'>'.@$part['title'].'</h2>');
 		}
 
-		function form($form)
+		public function form($form)
 		{
 			if (!empty($form)) {
 				$this->part_title($form);
@@ -835,7 +835,7 @@
 			}
 		}
 
-		function form_columns($form)
+		public function form_columns($form)
 		{
 			if (isset($form['ok']) || !empty($form['fields']) )
 				$columns=($form['style']=='wide') ? 3 : 1;
@@ -845,7 +845,7 @@
 			return $columns;
 		}
 
-		function form_spacer($form, $columns)
+		public function form_spacer($form, $columns)
 		{
 			$this->output(
 				'<tr>',
@@ -856,7 +856,7 @@
 			);
 		}
 
-		function form_body($form)
+		public function form_body($form)
 		{
 			if (@$form['boxed'])
 				$this->output('<div class="qa-form-table-boxed">');
@@ -879,7 +879,7 @@
 				$this->output('</div>');
 		}
 
-		function form_ok($form, $columns)
+		public function form_ok($form, $columns)
 		{
 			if (!empty($form['ok']))
 				$this->output(
@@ -891,7 +891,7 @@
 				);
 		}
 
-		function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
+		public function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
 	/*
 		Reorder the fields of $form according to the $keys array which contains the field keys in their new order. Call
 		before any fields are output. See the docs for qa_array_reorder() in qa-util-sort.php for the other parameters.
@@ -903,7 +903,7 @@
 				qa_array_reorder($form['fields'], $keys, $beforekey, $reorderrelative);
 		}
 
-		function form_fields($form, $columns)
+		public function form_fields($form, $columns)
 		{
 			if (!empty($form['fields'])) {
 				foreach ($form['fields'] as $key => $field) {
@@ -919,7 +919,7 @@
 			}
 		}
 
-		function form_field_rows($form, $columns, $field)
+		public function form_field_rows($form, $columns, $field)
 		{
 			$style=$form['style'];
 
@@ -962,7 +962,7 @@
 				$this->output('</tbody>');
 		}
 
-		function form_label($field, $style, $columns, $prefixed, $suffixed, $colspan)
+		public function form_label($field, $style, $columns, $prefixed, $suffixed, $colspan)
 		{
 			$extratags='';
 
@@ -992,7 +992,7 @@
 			$this->output('</td>');
 		}
 
-		function form_data($field, $style, $columns, $showfield, $colspan)
+		public function form_data($field, $style, $columns, $showfield, $colspan)
 		{
 			if ($showfield || (!empty($field['error'])) || (!empty($field['note']))) {
 				$this->output(
@@ -1015,7 +1015,7 @@
 			}
 		}
 
-		function form_field($field, $style)
+		public function form_field($field, $style)
 		{
 			$this->form_prefix($field, $style);
 
@@ -1067,7 +1067,7 @@
 			$this->form_suffix($field, $style);
 		}
 
-		function form_reorder_buttons(&$form, $keys, $beforekey=null, $reorderrelative=true)
+		public function form_reorder_buttons(&$form, $keys, $beforekey=null, $reorderrelative=true)
 	/*
 		Reorder the buttons of $form according to the $keys array which contains the button keys in their new order. Call
 		before any buttons are output. See the docs for qa_array_reorder() in qa-util-sort.php for the other parameters.
@@ -1079,7 +1079,7 @@
 				qa_array_reorder($form['buttons'], $keys, $beforekey, $reorderrelative);
 		}
 
-		function form_buttons($form, $columns)
+		public function form_buttons($form, $columns)
 		{
 			if (!empty($form['buttons'])) {
 				$style=@$form['style'];
@@ -1111,7 +1111,7 @@
 			}
 		}
 
-		function form_button_data($button, $key, $style)
+		public function form_button_data($button, $key, $style)
 		{
 			$baseclass='qa-form-'.$style.'-button qa-form-'.$style.'-button-'.$key;
 
@@ -1119,7 +1119,7 @@
 				(isset($style) ? (' class="'.$baseclass.'"') : '').'/>');
 		}
 
-		function form_button_note($button, $style)
+		public function form_button_note($button, $style)
 		{
 			if (!empty($button['note']))
 				$this->output(
@@ -1130,56 +1130,56 @@
 				);
 		}
 
-		function form_button_spacer($style)
+		public function form_button_spacer($style)
 		{
 			$this->output('<span class="qa-form-'.$style.'-buttons-spacer">&nbsp;</span>');
 		}
 
-		function form_hidden($form)
+		public function form_hidden($form)
 		{
 			$this->form_hidden_elements(@$form['hidden']);
 		}
 
-		function form_hidden_elements($hidden)
+		public function form_hidden_elements($hidden)
 		{
 			if (!empty($hidden))
 				foreach ($hidden as $name => $value)
 					$this->output('<input type="hidden" name="'.$name.'" value="'.$value.'"/>');
 		}
 
-		function form_prefix($field, $style)
+		public function form_prefix($field, $style)
 		{
 			if (!empty($field['prefix']))
 				$this->output('<span class="qa-form-'.$style.'-prefix">'.$field['prefix'].'</span>');
 		}
 
-		function form_suffix($field, $style)
+		public function form_suffix($field, $style)
 		{
 			if (!empty($field['suffix']))
 				$this->output('<span class="qa-form-'.$style.'-suffix">'.$field['suffix'].'</span>');
 		}
 
-		function form_checkbox($field, $style)
+		public function form_checkbox($field, $style)
 		{
 			$this->output('<input '.@$field['tags'].' type="checkbox" value="1"'.(@$field['value'] ? ' checked' : '').' class="qa-form-'.$style.'-checkbox"/>');
 		}
 
-		function form_static($field, $style)
+		public function form_static($field, $style)
 		{
 			$this->output('<span class="qa-form-'.$style.'-static">'.@$field['value'].'</span>');
 		}
 
-		function form_password($field, $style)
+		public function form_password($field, $style)
 		{
 			$this->output('<input '.@$field['tags'].' type="password" value="'.@$field['value'].'" class="qa-form-'.$style.'-text"/>');
 		}
 
-		function form_number($field, $style)
+		public function form_number($field, $style)
 		{
 			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-number"/>');
 		}
 
-		function form_select($field, $style)
+		public function form_select($field, $style)
 		{
 			$this->output('<select '.@$field['tags'].' class="qa-form-'.$style.'-select">');
 
@@ -1189,7 +1189,7 @@
 			$this->output('</select>');
 		}
 
-		function form_select_radio($field, $style)
+		public function form_select_radio($field, $style)
 		{
 			$radios=0;
 
@@ -1201,36 +1201,36 @@
 			}
 		}
 
-		function form_image($field, $style)
+		public function form_image($field, $style)
 		{
 			$this->output('<div class="qa-form-'.$style.'-image">'.@$field['html'].'</div>');
 		}
 
-		function form_text_single_row($field, $style)
+		public function form_text_single_row($field, $style)
 		{
 			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-text"/>');
 		}
 
-		function form_text_multi_row($field, $style)
+		public function form_text_multi_row($field, $style)
 		{
 			$this->output('<textarea '.@$field['tags'].' rows="'.(int)$field['rows'].'" cols="40" class="qa-form-'.$style.'-text">'.@$field['value'].'</textarea>');
 		}
 
-		function form_error($field, $style, $columns)
+		public function form_error($field, $style, $columns)
 		{
 			$tag=($columns>1) ? 'span' : 'div';
 
 			$this->output('<'.$tag.' class="qa-form-'.$style.'-error">'.$field['error'].'</'.$tag.'>');
 		}
 
-		function form_note($field, $style, $columns)
+		public function form_note($field, $style, $columns)
 		{
 			$tag=($columns>1) ? 'span' : 'div';
 
 			$this->output('<'.$tag.' class="qa-form-'.$style.'-note">'.@$field['note'].'</'.$tag.'>');
 		}
 
-		function ranking($ranking)
+		public function ranking($ranking)
 		{
 			$this->part_title($ranking);
 
@@ -1263,7 +1263,7 @@
 			}
 		}
 
-		function ranking_item($item, $class, $spacer)
+		public function ranking_item($item, $class, $spacer)
 		{
 			if ($spacer)
 				$this->ranking_spacer($class);
@@ -1283,27 +1283,27 @@
 			}
 		}
 
-		function ranking_spacer($class)
+		public function ranking_spacer($class)
 		{
 			$this->output('<td class="'.$class.'-spacer">&nbsp;</td>');
 		}
 
-		function ranking_count($item, $class)
+		public function ranking_count($item, $class)
 		{
 			$this->output('<td class="'.$class.'-count">'.$item['count'].' &#215;'.'</td>');
 		}
 
-		function ranking_label($item, $class)
+		public function ranking_label($item, $class)
 		{
 			$this->output('<td class="'.$class.'-label">'.$item['label'].'</td>');
 		}
 
-		function ranking_score($item, $class)
+		public function ranking_score($item, $class)
 		{
 			$this->output('<td class="'.$class.'-score">'.$item['score'].'</td>');
 		}
 
-		function message_list_and_form($list)
+		public function message_list_and_form($list)
 		{
 			if (!empty($list)) {
 				$this->part_title($list);
@@ -1324,7 +1324,7 @@
 			}
 		}
 
-		function message_list_form($list)
+		public function message_list_form($list)
 		{
 			if (!empty($list['form'])) {
 				$this->output('<div class="qa-message-list-form">');
@@ -1333,7 +1333,7 @@
 			}
 		}
 
-		function message_list($list)
+		public function message_list($list)
 		{
 			if (isset($list['messages'])) {
 				$this->output('<div class="qa-message-list" '.@$list['tags'].'>');
@@ -1345,7 +1345,7 @@
 			}
 		}
 
-		function message_item($message)
+		public function message_item($message)
 		{
 			$this->output('<div class="qa-message-item" '.@$message['tags'].'>');
 			$this->message_content($message);
@@ -1354,7 +1354,7 @@
 			$this->output('</div> <!-- END qa-message-item -->', '');
 		}
 
-		function message_content($message)
+		public function message_content($message)
 		{
 			if (!empty($message['content'])) {
 				$this->output('<div class="qa-message-content">');
@@ -1363,7 +1363,7 @@
 			}
 		}
 
-		function message_buttons($item)
+		public function message_buttons($item)
 		{
 			if (!empty($item['form'])) {
 				$this->output('<div class="qa-message-buttons">');
@@ -1372,7 +1372,7 @@
 			}
 		}
 
-		function list_vote_disabled($items)
+		public function list_vote_disabled($items)
 		{
 			$disabled=false;
 
@@ -1387,7 +1387,7 @@
 			return $disabled;
 		}
 
-		function q_list_and_form($q_list)
+		public function q_list_and_form($q_list)
 		{
 			if (!empty($q_list)) {
 				$this->part_title($q_list);
@@ -1405,7 +1405,7 @@
 			}
 		}
 
-		function q_list_form($q_list)
+		public function q_list_form($q_list)
 		{
 			if (!empty($q_list['form'])) {
 				$this->output('<div class="qa-q-list-form">');
@@ -1414,7 +1414,7 @@
 			}
 		}
 
-		function q_list($q_list)
+		public function q_list($q_list)
 		{
 			if (isset($q_list['qs'])) {
 				$this->output('<div class="qa-q-list'.($this->list_vote_disabled($q_list['qs']) ? ' qa-q-list-vote-disabled' : '').'">', '');
@@ -1423,13 +1423,13 @@
 			}
 		}
 
-		function q_list_items($q_items)
+		public function q_list_items($q_items)
 		{
 			foreach ($q_items as $q_item)
 				$this->q_list_item($q_item);
 		}
 
-		function q_list_item($q_item)
+		public function q_list_item($q_item)
 		{
 			$this->output('<div class="qa-q-list-item'.rtrim(' '.@$q_item['classes']).'" '.@$q_item['tags'].'>');
 
@@ -1440,7 +1440,7 @@
 			$this->output('</div> <!-- END qa-q-list-item -->', '');
 		}
 
-		function q_item_stats($q_item)
+		public function q_item_stats($q_item)
 		{
 			$this->output('<div class="qa-q-item-stats">');
 
@@ -1450,7 +1450,7 @@
 			$this->output('</div>');
 		}
 
-		function q_item_main($q_item)
+		public function q_item_main($q_item)
 		{
 			$this->output('<div class="qa-q-item-main">');
 
@@ -1465,7 +1465,7 @@
 			$this->output('</div>');
 		}
 
-		function q_item_clear()
+		public function q_item_clear()
 		{
 			$this->output(
 				'<div class="qa-q-item-clear">',
@@ -1473,7 +1473,7 @@
 			);
 		}
 
-		function q_item_title($q_item)
+		public function q_item_title($q_item)
 		{
 			$this->output(
 				'<div class="qa-q-item-title">',
@@ -1482,7 +1482,7 @@
 			);
 		}
 
-		function q_item_content($q_item)
+		public function q_item_content($q_item)
 		{
 			if (!empty($q_item['content'])) {
 				$this->output('<div class="qa-q-item-content">');
@@ -1491,7 +1491,7 @@
 			}
 		}
 
-		function q_item_buttons($q_item)
+		public function q_item_buttons($q_item)
 		{
 			if (!empty($q_item['form'])) {
 				$this->output('<div class="qa-q-item-buttons">');
@@ -1500,7 +1500,7 @@
 			}
 		}
 
-		function voting($post)
+		public function voting($post)
 		{
 			if (isset($post['vote_view'])) {
 				$this->output('<div class="qa-voting '.(($post['vote_view']=='updown') ? 'qa-voting-updown' : 'qa-voting-net').'" '.@$post['vote_tags'].'>');
@@ -1509,14 +1509,14 @@
 			}
 		}
 
-		function voting_inner_html($post)
+		public function voting_inner_html($post)
 		{
 			$this->vote_buttons($post);
 			$this->vote_count($post);
 			$this->vote_clear();
 		}
 
-		function vote_buttons($post)
+		public function vote_buttons($post)
 		{
 			$this->output('<div class="qa-vote-buttons '.(($post['vote_view']=='updown') ? 'qa-vote-buttons-updown' : 'qa-vote-buttons-net').'">');
 
@@ -1557,7 +1557,7 @@
 			$this->output('</div>');
 		}
 
-		function vote_count($post)
+		public function vote_count($post)
 		{
 			// You can also use $post['upvotes_raw'], $post['downvotes_raw'], $post['netvotes_raw'] to get
 			// raw integer vote counts, for graphing or showing in other non-textual ways
@@ -1574,7 +1574,7 @@
 			$this->output('</div>');
 		}
 
-		function vote_clear()
+		public function vote_clear()
 		{
 			$this->output(
 				'<div class="qa-vote-clear">',
@@ -1582,7 +1582,7 @@
 			);
 		}
 
-		function a_count($post)
+		public function a_count($post)
 		{
 			// You can also use $post['answers_raw'] to get a raw integer count of answers
 
@@ -1590,20 +1590,20 @@
 				@$post['answer_selected'] ? 'qa-a-count-selected' : (@$post['answers_raw'] ? null : 'qa-a-count-zero'));
 		}
 
-		function view_count($post)
+		public function view_count($post)
 		{
 			// You can also use $post['views_raw'] to get a raw integer count of views
 
 			$this->output_split(@$post['views'], 'qa-view-count');
 		}
 
-		function avatar($post, $class)
+		public function avatar($post, $class)
 		{
 			if (isset($post['avatar']))
 				$this->output('<span class="'.$class.'-avatar">', $post['avatar'], '</span>');
 		}
 
-		function a_selection($post)
+		public function a_selection($post)
 		{
 			$this->output('<div class="qa-a-selection">');
 
@@ -1620,19 +1620,19 @@
 			$this->output('</div>');
 		}
 
-		function post_hover_button($post, $element, $value, $class)
+		public function post_hover_button($post, $element, $value, $class)
 		{
 			if (isset($post[$element]))
 				$this->output('<input '.$post[$element].' type="submit" value="'.$value.'" class="'.$class.'-button"/> ');
 		}
 
-		function post_disabled_button($post, $element, $value, $class)
+		public function post_disabled_button($post, $element, $value, $class)
 		{
 			if (isset($post[$element]))
 				$this->output('<input '.$post[$element].' type="submit" value="'.$value.'" class="'.$class.'-disabled" disabled="disabled"/> ');
 		}
 
-		function post_avatar_meta($post, $class, $avatarprefix=null, $metaprefix=null, $metaseparator='<br/>')
+		public function post_avatar_meta($post, $class, $avatarprefix=null, $metaprefix=null, $metaseparator='<br/>')
 		{
 			$this->output('<span class="'.$class.'-avatar-meta">');
 			$this->post_avatar($post, $class, $avatarprefix);
@@ -1640,7 +1640,7 @@
 			$this->output('</span>');
 		}
 
-		function post_avatar($post, $class, $prefix=null)
+		public function post_avatar($post, $class, $prefix=null)
 		{
 			if (isset($post['avatar'])) {
 				if (isset($prefix))
@@ -1654,7 +1654,7 @@
 			}
 		}
 
-		function post_meta($post, $class, $prefix=null, $separator='<br/>')
+		public function post_meta($post, $class, $prefix=null, $separator='<br/>')
 		{
 			$this->output('<span class="'.$class.'-meta">');
 
@@ -1706,7 +1706,7 @@
 			$this->output('</span>');
 		}
 
-		function post_meta_what($post, $class)
+		public function post_meta_what($post, $class)
 		{
 			if (isset($post['what'])) {
 				$classes=$class.'-what';
@@ -1720,17 +1720,17 @@
 			}
 		}
 
-		function post_meta_when($post, $class)
+		public function post_meta_when($post, $class)
 		{
 			$this->output_split(@$post['when'], $class.'-when');
 		}
 
-		function post_meta_where($post, $class)
+		public function post_meta_where($post, $class)
 		{
 			$this->output_split(@$post['where'], $class.'-where');
 		}
 
-		function post_meta_who($post, $class)
+		public function post_meta_who($post, $class)
 		{
 			if (isset($post['who'])) {
 				$this->output('<span class="'.$class.'-who">');
@@ -1759,12 +1759,12 @@
 			}
 		}
 
-		function post_meta_flags($post, $class)
+		public function post_meta_flags($post, $class)
 		{
 			$this->output_split(@$post['flags'], $class.'-flags');
 		}
 
-		function post_tags($post, $class)
+		public function post_tags($post, $class)
 		{
 			if (!empty($post['q_tags'])) {
 				$this->output('<div class="'.$class.'-tags">');
@@ -1773,7 +1773,7 @@
 			}
 		}
 
-		function post_tag_list($post, $class)
+		public function post_tag_list($post, $class)
 		{
 			$this->output('<ul class="'.$class.'-tag-list">');
 
@@ -1783,12 +1783,12 @@
 			$this->output('</ul>');
 		}
 
-		function post_tag_item($taghtml, $class)
+		public function post_tag_item($taghtml, $class)
 		{
 			$this->output('<li class="'.$class.'-tag-item">'.$taghtml.'</li>');
 		}
 
-		function page_links()
+		public function page_links()
 		{
 			$page_links=@$this->content['page_links'];
 
@@ -1803,13 +1803,13 @@
 			}
 		}
 
-		function page_links_label($label)
+		public function page_links_label($label)
 		{
 			if (!empty($label))
 				$this->output('<span class="qa-page-links-label">'.$label.'</span>');
 		}
 
-		function page_links_list($page_items)
+		public function page_links_list($page_items)
 		{
 			if (!empty($page_items)) {
 				$this->output('<ul class="qa-page-links-list">');
@@ -1830,14 +1830,14 @@
 			}
 		}
 
-		function page_links_item($page_link)
+		public function page_links_item($page_link)
 		{
 			$this->output('<li class="qa-page-links-item">');
 			$this->page_link_content($page_link);
 			$this->output('</li>');
 		}
 
-		function page_link_content($page_link)
+		public function page_link_content($page_link)
 		{
 			$label=@$page_link['label'];
 			$url=@$page_link['url'];
@@ -1865,7 +1865,7 @@
 			}
 		}
 
-		function page_links_clear()
+		public function page_links_clear()
 		{
 			$this->output(
 				'<div class="qa-page-links-clear">',
@@ -1873,7 +1873,7 @@
 			);
 		}
 
-		function suggest_next()
+		public function suggest_next()
 		{
 			$suggest=@$this->content['suggest_next'];
 
@@ -1884,7 +1884,7 @@
 			}
 		}
 
-		function q_view($q_view)
+		public function q_view($q_view)
 		{
 			if (!empty($q_view)) {
 				$this->output('<div class="qa-q-view'.(@$q_view['hidden'] ? ' qa-q-view-hidden' : '').rtrim(' '.@$q_view['classes']).'"'.rtrim(' '.@$q_view['tags']).'>');
@@ -1906,7 +1906,7 @@
 			}
 		}
 
-		function q_view_stats($q_view)
+		public function q_view_stats($q_view)
 		{
 			$this->output('<div class="qa-q-view-stats">');
 
@@ -1916,7 +1916,7 @@
 			$this->output('</div>');
 		}
 
-		function q_view_main($q_view)
+		public function q_view_main($q_view)
 		{
 			$this->output('<div class="qa-q-view-main">');
 
@@ -1943,7 +1943,7 @@
 			$this->output('</div> <!-- END qa-q-view-main -->');
 		}
 
-		function q_view_content($q_view)
+		public function q_view_content($q_view)
 		{
 			if (!empty($q_view['content'])) {
 				$this->output('<div class="qa-q-view-content">');
@@ -1952,7 +1952,7 @@
 			}
 		}
 
-		function q_view_follows($q_view)
+		public function q_view_follows($q_view)
 		{
 			if (!empty($q_view['follows']))
 				$this->output(
@@ -1963,7 +1963,7 @@
 				);
 		}
 
-		function q_view_closed($q_view)
+		public function q_view_closed($q_view)
 		{
 			if (!empty($q_view['closed'])) {
 				$haslink=isset($q_view['closed']['url']);
@@ -1979,7 +1979,7 @@
 			}
 		}
 
-		function q_view_extra($q_view)
+		public function q_view_extra($q_view)
 		{
 			if (!empty($q_view['extra']))
 				$this->output(
@@ -1992,7 +1992,7 @@
 				);
 		}
 
-		function q_view_buttons($q_view)
+		public function q_view_buttons($q_view)
 		{
 			if (!empty($q_view['form'])) {
 				$this->output('<div class="qa-q-view-buttons">');
@@ -2001,7 +2001,7 @@
 			}
 		}
 
-		function q_view_clear()
+		public function q_view_clear()
 		{
 			$this->output(
 				'<div class="qa-q-view-clear">',
@@ -2009,7 +2009,7 @@
 			);
 		}
 
-		function a_form($a_form)
+		public function a_form($a_form)
 		{
 			$this->output('<div class="qa-a-form"'.(isset($a_form['id']) ? (' id="'.$a_form['id'].'"') : '').
 				(@$a_form['collapse'] ? ' style="display:none;"' : '').'>');
@@ -2020,7 +2020,7 @@
 			$this->output('</div> <!-- END qa-a-form -->', '');
 		}
 
-		function a_list($a_list)
+		public function a_list($a_list)
 		{
 			if (!empty($a_list)) {
 				$this->part_title($a_list);
@@ -2031,13 +2031,13 @@
 			}
 		}
 
-		function a_list_items($a_items)
+		public function a_list_items($a_items)
 		{
 			foreach ($a_items as $a_item)
 				$this->a_list_item($a_item);
 		}
 
-		function a_list_item($a_item)
+		public function a_list_item($a_item)
 		{
 			$extraclass=@$a_item['classes'].($a_item['hidden'] ? ' qa-a-list-item-hidden' : ($a_item['selected'] ? ' qa-a-list-item-selected' : ''));
 
@@ -2059,7 +2059,7 @@
 			$this->output('</div> <!-- END qa-a-list-item -->', '');
 		}
 
-		function a_item_main($a_item)
+		public function a_item_main($a_item)
 		{
 			$this->output('<div class="qa-a-item-main">');
 
@@ -2093,7 +2093,7 @@
 			$this->output('</div> <!-- END qa-a-item-main -->');
 		}
 
-		function a_item_clear()
+		public function a_item_clear()
 		{
 			$this->output(
 				'<div class="qa-a-item-clear">',
@@ -2101,14 +2101,14 @@
 			);
 		}
 
-		function a_item_content($a_item)
+		public function a_item_content($a_item)
 		{
 			$this->output('<div class="qa-a-item-content">');
 			$this->output_raw($a_item['content']);
 			$this->output('</div>');
 		}
 
-		function a_item_buttons($a_item)
+		public function a_item_buttons($a_item)
 		{
 			if (!empty($a_item['form'])) {
 				$this->output('<div class="qa-a-item-buttons">');
@@ -2117,7 +2117,7 @@
 			}
 		}
 
-		function c_form($c_form)
+		public function c_form($c_form)
 		{
 			$this->output('<div class="qa-c-form"'.(isset($c_form['id']) ? (' id="'.$c_form['id'].'"') : '').
 				(@$c_form['collapse'] ? ' style="display:none;"' : '').'>');
@@ -2127,7 +2127,7 @@
 			$this->output('</div> <!-- END qa-c-form -->', '');
 		}
 
-		function c_list($c_list, $class)
+		public function c_list($c_list, $class)
 		{
 			if (!empty($c_list)) {
 				$this->output('', '<div class="'.$class.'-c-list"'.(@$c_list['hidden'] ? ' style="display:none;"' : '').' '.@$c_list['tags'].'>');
@@ -2136,13 +2136,13 @@
 			}
 		}
 
-		function c_list_items($c_items)
+		public function c_list_items($c_items)
 		{
 			foreach ($c_items as $c_item)
 				$this->c_list_item($c_item);
 		}
 
-		function c_list_item($c_item)
+		public function c_list_item($c_item)
 		{
 			$extraclass=@$c_item['classes'].(@$c_item['hidden'] ? ' qa-c-item-hidden' : '');
 
@@ -2154,7 +2154,7 @@
 			$this->output('</div> <!-- END qa-c-item -->');
 		}
 
-		function c_item_main($c_item)
+		public function c_item_main($c_item)
 		{
 			$this->error(@$c_item['error']);
 
@@ -2171,28 +2171,28 @@
 			$this->output('</div>');
 		}
 
-		function c_item_link($c_item)
+		public function c_item_link($c_item)
 		{
 			$this->output(
 				'<a href="'.$c_item['url'].'" class="qa-c-item-link">'.$c_item['title'].'</a>'
 			);
 		}
 
-		function c_item_expand($c_item)
+		public function c_item_expand($c_item)
 		{
 			$this->output(
 				'<a href="'.$c_item['url'].'" '.$c_item['expand_tags'].' class="qa-c-item-expand">'.$c_item['title'].'</a>'
 			);
 		}
 
-		function c_item_content($c_item)
+		public function c_item_content($c_item)
 		{
 			$this->output('<div class="qa-c-item-content">');
 			$this->output_raw($c_item['content']);
 			$this->output('</div>');
 		}
 
-		function c_item_buttons($c_item)
+		public function c_item_buttons($c_item)
 		{
 			if (!empty($c_item['form'])) {
 				$this->output('<div class="qa-c-item-buttons">');
@@ -2201,7 +2201,7 @@
 			}
 		}
 
-		function c_item_clear()
+		public function c_item_clear()
 		{
 			$this->output(
 				'<div class="qa-c-item-clear">',
@@ -2210,9 +2210,9 @@
 		}
 
 
-		function q_title_list($q_list, $attrs=null)
+		public function q_title_list($q_list, $attrs=null)
 	/*
-		Generic function to output a basic list of question links.
+		Generic method to output a basic list of question links.
 	*/
 		{
 			$this->output('<ul class="qa-q-title-list">');
@@ -2226,7 +2226,7 @@
 			$this->output('</ul>');
 		}
 
-		function q_ask_similar($q_list, $pretext='')
+		public function q_ask_similar($q_list, $pretext='')
 	/*
 		Output block of similar questions when asking.
 	*/
