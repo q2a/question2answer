@@ -26,6 +26,8 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
+	require_once QA_INCLUDE_DIR.'qa-app-users.php';
+	require_once QA_INCLUDE_DIR.'qa-app-format.php';
 
 
 //	Collect the information we need from the database
@@ -46,8 +48,6 @@
 //	Collect example tags if appropriate
 
 	if ($doexampletags) {
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
-
 		$tagweight=array();
 		foreach ($relatedquestions as $question) {
 			$tags=qa_tagstring_to_tags($question['tags']);
@@ -85,27 +85,21 @@
 //	Collect and output the list of related questions
 
 	if ($doaskcheck) {
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		$minscore = qa_match_to_min_score(qa_opt('match_ask_check_qs'));
+		$maxcount = qa_opt('page_size_ask_check_qs');
 
-		$count=0;
-		$minscore=qa_match_to_min_score(qa_opt('match_ask_check_qs'));
-		$maxcount=qa_opt('page_size_ask_check_qs');
+		$relatedquestions = array_slice($relatedquestions, 0, $maxcount);
+		$limitedquestions = array();
 
 		foreach ($relatedquestions as $question) {
-			if ($question['score']<$minscore)
+			if ($question['score'] < $minscore)
 				break;
 
-			if (!$count)
-				echo qa_lang_html('question/ask_same_q').'<br/>';
-
-			echo strtr(
-				'<a href="'.qa_q_path_html($question['postid'], $question['title']).'" target="_blank">'.qa_html($question['title']).'</a><br/>',
-				"\r\n", '  '
-			)."\n";
-
-			if ((++$count)>=$maxcount)
-				break;
+			$limitedquestions[] = $question;
 		}
+
+		$themeclass = qa_load_theme_class(qa_get_site_theme(), 'ajax-asktitle', null, null);
+		$themeclass->q_ask_similar($limitedquestions, qa_lang_html('question/ask_same_q'));
 	}
 
 

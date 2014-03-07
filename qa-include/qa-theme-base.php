@@ -2209,6 +2209,39 @@
 			);
 		}
 
+
+		function q_title_list($q_list, $attrs=null)
+	/*
+		Generic function to output a basic list of question links.
+	*/
+		{
+			$this->output('<ul class="qa-q-title-list">');
+			foreach ($q_list as $q) {
+				$this->output(
+					'<li class="qa-q-title-item">',
+					'<a href="' . qa_q_path_html($q['postid'], $q['title']) . '" ' . $attrs . '>' . qa_html($q['title']) . '</a>',
+					'</li>'
+				);
+			}
+			$this->output('</ul>');
+		}
+
+		function q_ask_similar($q_list, $pretext='')
+	/*
+		Output block of similar questions when asking.
+	*/
+		{
+			if (!count($q_list))
+				return;
+
+			$this->output('<div class="qa-ask-similar">');
+
+			if (strlen($pretext) > 0)
+				$this->output('<p>'.$pretext.'</p>');
+			$this->q_title_list($q_list, 'target="_blank"');
+
+			$this->output('</div>');
+		}
 	}
 
 
