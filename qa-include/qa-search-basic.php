@@ -32,7 +32,7 @@
 
 	class qa_search_basic {
 
-		function index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
+		public function index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
 
@@ -82,7 +82,7 @@
 		}
 
 
-		function unindex_post($postid)
+		public function unindex_post($postid)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 
@@ -104,25 +104,25 @@
 		}
 
 
-		function move_post($postid, $categoryid)
+		public function move_post($postid, $categoryid)
 		{
 			// for now, the built-in search engine ignores categories
 		}
 
 
-		function index_page($pageid, $request, $title, $content, $format, $text)
+		public function index_page($pageid, $request, $title, $content, $format, $text)
 		{
 			// for now, the built-in search engine ignores custom pages
 		}
 
 
-		function unindex_page($pageid)
+		public function unindex_page($pageid)
 		{
 			// for now, the built-in search engine ignores custom pages
 		}
 
 
-		function process_search($query, $start, $count, $userid, $absoluteurls, $fullcontent)
+		public function process_search($query, $start, $count, $userid, $absoluteurls, $fullcontent)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';

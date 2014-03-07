@@ -32,7 +32,7 @@
 
 	class qa_event_limits {
 
-		function process_event($event, $userid, $handle, $cookieid, $params)
+		public function process_event($event, $userid, $handle, $cookieid, $params)
 		{
 			// Don't increment limits or report user actions for events that were delayed. For example, a 'q_post'
 			// event sent when a post is approved by the admin, for which a 'q_queue' event was already sent.

@@ -26,22 +26,19 @@
 
 	class qa_related_qs {
 
-		var $voteformcode;
-
-
-		function allow_template($template)
+		public function allow_template($template)
 		{
 			return ($template=='question');
 		}
 
 
-		function allow_region($region)
+		public function allow_region($region)
 		{
 			return ($region=='side') || ($region=='main') || ($region=='full');
 		}
 
 
-		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 

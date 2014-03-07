@@ -26,19 +26,19 @@
 
 	class qa_activity_count {
 
-		function allow_template($template)
+		public function allow_template($template)
 		{
 			return true;
 		}
 
 
-		function allow_region($region)
+		public function allow_region($region)
 		{
 			return ($region=='side');
 		}
 
 
-		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
 			$themeobject->output('<div class="qa-activity-count">');
 
@@ -54,7 +54,7 @@
 		}
 
 
-		function output_count($themeobject, $value, $langsingular, $langplural)
+		public function output_count($themeobject, $value, $langsingular, $langplural)
 		{
 			$themeobject->output('<p class="qa-activity-count-item">');
 

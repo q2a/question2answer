@@ -32,23 +32,24 @@
 
 	class qa_editor_basic {
 
-		function load_module($localdir, $htmldir)
+		public function load_module($localdir, $htmldir)
 		{
 		}
 
 
-		function calc_quality($content, $format)
+		public function calc_quality($content, $format)
 		{
 			if ($format=='')
 				return 1.0;
-			elseif ($format=='html')
+
+			if ($format=='html')
 				return 0.2;
-			else
-				return 0;
+
+			return 0;
 		}
 
 
-		function get_field(&$qa_content, $content, $format, $fieldname, $rows /* $autofocus parameter deprecated */)
+		public function get_field(&$qa_content, $content, $format, $fieldname, $rows /* $autofocus parameter deprecated */)
 		{
 			return array(
 				'type' => 'textarea',
@@ -58,13 +59,13 @@
 			);
 		}
 
-		function focus_script($fieldname)
+		public function focus_script($fieldname)
 		{
 			return "document.getElementById('".$fieldname."').focus();";
 		}
 
 
-		function read_post($fieldname)
+		public function read_post($fieldname)
 		{
 			return array(
 				'format' => '',

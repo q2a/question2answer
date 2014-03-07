@@ -32,11 +32,11 @@
 
 	class qa_viewer_basic {
 
-		var $htmllineseparators;
-		var $htmlparagraphseparators;
+		private $htmllineseparators;
+		private $htmlparagraphseparators;
 
 
-		function load_module($localdir, $htmldir)
+		public function load_module($localdir, $htmldir)
 		{
 			$this->htmllineseparators='br|option';
 			$this->htmlparagraphseparators='address|applet|blockquote|center|cite|col|div|dd|dl|dt|embed|form|frame|frameset|h1|h2|h3|h4|h5|h6'.
@@ -44,16 +44,16 @@
 		}
 
 
-		function calc_quality($content, $format)
+		public function calc_quality($content, $format)
 		{
 			if ( ($format=='') || ($format=='html') )
 				return 1.0;
-			else
-				return 0.0001; // if there's nothing better this will give an error message for unknown formats
+
+			return 0.0001; // if there's nothing better this will give an error message for unknown formats
 		}
 
 
-		function get_html($content, $format, $options)
+		public function get_html($content, $format, $options)
 		{
 			if ($format=='html') {
 				$html=qa_sanitize_html($content, @$options['linksnewwindow'], false); // sanitize again for display, for extra safety, and due to new window setting
@@ -121,7 +121,8 @@
 					}
 				}
 
-			} elseif ($format=='') {
+			}
+			elseif ($format=='') {
 				if (isset($options['blockwordspreg'])) {
 					require_once QA_INCLUDE_DIR.'qa-util-string.php';
 					$content=qa_block_words_replace($content, $options['blockwordspreg']);
@@ -134,14 +135,15 @@
 					$html=qa_html_convert_urls($html, qa_opt('links_in_new_window'));
 				}
 
-			} else
+			}
+			else
 				$html='[no viewer found for format: '.qa_html($format).']'; // for unknown formats
 
 			return $html;
 		}
 
 
-		function get_text($content, $format, $options)
+		public function get_text($content, $format, $options)
 		{
 			if ($format=='html') {
 				$text=strtr($content, "\n\r\t", '   '); // convert all white space in HTML to spaces
@@ -166,9 +168,9 @@
 
 				$text=trim($text);
 
-			} elseif ($format=='')
+			}
+			elseif ($format=='')
 				$text=$content;
-
 			else
 				$text='[no viewer found for format: '.$format.']'; // for unknown formats
 

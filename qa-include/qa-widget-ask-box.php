@@ -26,49 +26,24 @@
 
 	class qa_ask_box {
 
-		function allow_template($template)
+		public function allow_template($template)
 		{
-			$allow=false;
+			$allowed = array(
+				'activity', 'categories', 'custom', 'feedback', 'qa', 'questions',
+				'hot', 'search', 'tag', 'tags', 'unanswered'
+			);
 
-			switch ($template)
-			{
-				case 'activity':
-				case 'categories':
-				case 'custom':
-				case 'feedback':
-				case 'qa':
-				case 'questions':
-				case 'hot':
-				case 'search':
-				case 'tag':
-				case 'tags':
-				case 'unanswered':
-					$allow=true;
-					break;
-			}
-
-			return $allow;
+			return in_array($template, $allowed);
 		}
 
 
-		function allow_region($region)
+		public function allow_region($region)
 		{
-			$allow=false;
-
-			switch ($region)
-			{
-				case 'main':
-				case 'side':
-				case 'full':
-					$allow=true;
-					break;
-			}
-
-			return $allow;
+			return in_array($region, array('main', 'side', 'full'));
 		}
 
 
-		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
 			if (isset($qa_content['categoryids']))
 				$params=array('cat' => end($qa_content['categoryids']));

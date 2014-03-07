@@ -32,7 +32,7 @@
 
 	class qa_event_updates {
 
-		function process_event($event, $userid, $handle, $cookieid, $params)
+		public function process_event($event, $userid, $handle, $cookieid, $params)
 		{
 			if (@$params['silent']) // don't create updates about silent edits, and possibly other silent events in future
 				return;

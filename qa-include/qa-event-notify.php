@@ -32,7 +32,7 @@
 
 	class qa_event_notify {
 
-		function process_event($event, $userid, $handle, $cookieid, $params)
+		public function process_event($event, $userid, $handle, $cookieid, $params)
 		{
 			require_once QA_INCLUDE_DIR.'qa-app-emails.php';
 			require_once QA_INCLUDE_DIR.'qa-app-format.php';

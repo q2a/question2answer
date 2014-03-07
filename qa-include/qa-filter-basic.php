@@ -33,11 +33,9 @@
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 
-
-
 	class qa_filter_basic {
 
-		function filter_email(&$email, $olduser)
+		public function filter_email(&$email, $olduser)
 		{
 			if (!strlen($email))
 				return qa_lang('users/email_required');
@@ -50,7 +48,7 @@
 		}
 
 
-		function filter_handle(&$handle, $olduser)
+		public function filter_handle(&$handle, $olduser)
 		{
 			if (!strlen($handle))
 				return qa_lang('users/handle_empty');
@@ -63,7 +61,7 @@
 		}
 
 
-		function filter_question(&$question, &$errors, $oldquestion)
+		public function filter_question(&$question, &$errors, $oldquestion)
 		{
 			$this->validate_length($errors, 'title', @$question['title'], qa_opt('min_len_q_title'),
 				max(qa_opt('min_len_q_title'), min(qa_opt('max_len_q_title'), QA_DB_MAX_TITLE_LENGTH)));
@@ -88,7 +86,7 @@
 		}
 
 
-		function filter_answer(&$answer, &$errors, $question, $oldanswer)
+		public function filter_answer(&$answer, &$errors, $question, $oldanswer)
 		{
 			$this->validate_length($errors, 'content', @$answer['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
 			$this->validate_length($errors, 'content', @$answer['text'], qa_opt('min_len_a_content'), null); // for display
@@ -96,7 +94,7 @@
 		}
 
 
-		function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
+		public function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
 		{
 			$this->validate_length($errors, 'content', @$comment['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
 			$this->validate_length($errors, 'content', @$comment['text'], qa_opt('min_len_c_content'), null); // for display
@@ -104,7 +102,7 @@
 		}
 
 
-		function filter_profile(&$profile, &$errors, $user, $oldprofile)
+		public function filter_profile(&$profile, &$errors, $user, $oldprofile)
 		{
 			foreach ($profile as $field => $value)
 				$this->validate_length($errors, $field, $value, 0, QA_DB_MAX_PROFILE_CONTENT_LENGTH);
@@ -113,7 +111,7 @@
 
 	//	The definitions below are not part of a standard filter module, but just used within this one
 
-		function validate_length(&$errors, $field, $input, $minlength, $maxlength)
+		private function validate_length(&$errors, $field, $input, $minlength, $maxlength)
 	/*
 		Add textual element $field to $errors if length of $input is not between $minlength and $maxlength
 	*/
@@ -129,7 +127,7 @@
 		}
 
 
-		function validate_post_email(&$errors, $post)
+		private function validate_post_email(&$errors, $post)
 		{
 			if (@$post['notify'] && strlen(@$post['email'])) {
 				$error=$this->filter_email($post['email'], null);

@@ -26,13 +26,13 @@
 
 	class qa_html_theme_layer extends qa_html_theme_base {
 
-		var $qa_voters_flaggers_queue=array();
-		var $qa_voters_flaggers_cache=array();
+		private $qa_voters_flaggers_queue=array();
+		private $qa_voters_flaggers_cache=array();
 
 
 	//	Utility functions for this layer
 
-		function queue_post_voters_flaggers($post)
+		private function queue_post_voters_flaggers($post)
 		{
 			if (!qa_user_post_permit_error('permit_view_voters_flaggers', $post)) {
 				$postids=array(@$post['postid'], @$post['opostid']); // opostid can be relevant for flags
@@ -43,7 +43,7 @@
 			}
 		}
 
-		function queue_raw_posts_voters_flaggers($posts)
+		private function queue_raw_posts_voters_flaggers($posts)
 		{
 			if (is_array($posts))
 				foreach ($posts as $post)
@@ -51,7 +51,7 @@
 						$this->queue_post_voters_flaggers($post['raw']);
 		}
 
-		function retrieve_queued_voters_flaggers()
+		private function retrieve_queued_voters_flaggers()
 		{
 			if (count($this->qa_voters_flaggers_queue)) {
 				require_once QA_INCLUDE_DIR.'qa-db-votes.php';
@@ -80,7 +80,7 @@
 			}
 		}
 
-		function get_post_voters_flaggers($post, $postid)
+		private function get_post_voters_flaggers($post, $postid)
 		{
 			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
@@ -100,7 +100,7 @@
 
 	//	Collect up all required postids for the entire page to save DB queries - common case where whole page output
 
-		function main()
+		public function main()
 		{
 			foreach ($this->content as $key => $part) {
 				if (strpos($key, 'q_list')===0)
@@ -126,21 +126,21 @@
 
 	//	Other functions which also collect up required postids for lists to save DB queries - helps with widget output and Ajax calls
 
-		function q_list_items($q_items)
+		public function q_list_items($q_items)
 		{
 			$this->queue_raw_posts_voters_flaggers($q_items);
 
 			qa_html_theme_base::q_list_items($q_items);
 		}
 
-		function a_list_items($a_items)
+		public function a_list_items($a_items)
 		{
 			$this->queue_raw_posts_voters_flaggers($a_items);
 
 			qa_html_theme_base::a_list_items($a_items);
 		}
 
-		function c_list_items($c_items)
+		public function c_list_items($c_items)
 		{
 			$this->queue_raw_posts_voters_flaggers($c_items);
 
@@ -150,7 +150,7 @@
 
 	//	Actual output of the voters and flaggers
 
-		function vote_count($post)
+		public function vote_count($post)
 		{
 			$votersflaggers=$this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
 
@@ -177,7 +177,7 @@
 		}
 
 
-		function post_meta_flags($post, $class)
+		public function post_meta_flags($post, $class)
 		{
 			$postid=@$post['raw']['opostid'];
 			if (!isset($postid))
