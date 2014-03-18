@@ -693,8 +693,22 @@
 
 		public function title()
 		{
-			if (isset($this->content['title']))
-				$this->output($this->content['title']);
+			$q_view = @$this->content['q_view'];
+
+			// link title where appropriate
+			$url = isset($q_view['url']) ? $q_view['url'] : false;
+
+			if (isset($this->content['title'])) {
+				$this->output(
+					$url ? '<a href="'.$url.'">' : '',
+					$this->content['title'],
+					$url ? '</a>' : ''
+				);
+			}
+
+			// add closed note in title
+			if (!empty($q_view['closed']))
+				$this->output(' ['.$q_view['closed']['state'].']');
 		}
 
 		public function favorite_inner_html($favorite)
@@ -1478,6 +1492,8 @@
 			$this->output(
 				'<div class="qa-q-item-title">',
 				'<a href="'.$q_item['url'].'">'.$q_item['title'].'</a>',
+				// add closed note in title
+				empty($q_item['closed']) ? '' : ' ['.$q_item['closed']['state'].']',
 				'</div>'
 			);
 		}

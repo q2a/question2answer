@@ -75,21 +75,30 @@
 			),
 		);
 
-		$qa_content['q_list']['qs']=array();
+		$qa_content['q_list']['qs'] = array();
 
 		if (count($questions)) {
-			$qa_content['title']=$sometitle;
+			$qa_content['title'] = $sometitle;
 
-			$defaults=qa_post_html_defaults('Q');
+			$defaults = qa_post_html_defaults('Q');
 			if (isset($categorypathprefix))
-				$defaults['categorypathprefix']=$categorypathprefix;
+				$defaults['categorypathprefix'] = $categorypathprefix;
 
-			foreach ($questions as $question)
-				$qa_content['q_list']['qs'][]=qa_any_to_q_html_fields($question, $userid, qa_cookie_get(),
-					$usershtml, null, qa_post_html_options($question, $defaults));
+			foreach ($questions as $question) {
+				$fields = qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, qa_post_html_options($question, $defaults));
 
-		} else
-			$qa_content['title']=$nonetitle;
+				if (!empty($fields['raw']['closedbyid'])) {
+					$fields['closed'] = array(
+						'state' => qa_lang_html('main/closed'),
+					);
+				}
+
+				$qa_content['q_list']['qs'][] = $fields;
+			}
+
+		}
+		else
+			$qa_content['title'] = $nonetitle;
 
 		if (isset($userid) && isset($categoryid)) {
 			$favoritemap=qa_get_favorite_non_qs_map();
