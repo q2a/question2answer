@@ -109,6 +109,10 @@ form, fieldset {
 	border: none;
 }
 
+input[type="text"].qa-search-field {
+    padding: 4px 5px;
+}
+
 input[type="text"], input[type="password"], textarea, select, checkbox, radio {
 	border: 1px solid #ddd;
 	padding: 5px;

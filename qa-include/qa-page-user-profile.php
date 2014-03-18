@@ -435,7 +435,7 @@
 			//	Category-specific levels
 
 				if (qa_using_categories()) {
-					$catleveladd=qa_get('catleveladd') ? true : false;
+					$catleveladd = (bool) qa_get('catleveladd');
 
 					if ((!$catleveladd) && !count($userlevels))
 						$qa_content['form_profile']['fields']['level']['suffix']=strtr(qa_lang_html('users/category_level_add'), array(
@@ -547,7 +547,7 @@
 
 		if (($loginlevel>=QA_USER_LEVEL_ADMIN) && !qa_user_permit_error()) {
 			$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
-			$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
+			$isconfirmed = (bool) ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED);
 			$htmlemail=qa_html(isset($inemail) ? $inemail : $useraccount['email']);
 
 			$qa_content['form_profile']['fields']['email']=array(
@@ -610,7 +610,7 @@
 				if (!isset($value))
 					$value=@$userprofile[$userfield['title']];
 
-				$valuehtml=qa_html($value, (($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) && !$fieldsediting) ? true : false);
+				$valuehtml=qa_html($value, (($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) && !$fieldsediting));
 			}
 
 			$label=trim(qa_user_userfield_label($userfield), ':');

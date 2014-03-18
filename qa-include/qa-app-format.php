@@ -1493,82 +1493,86 @@
 	(or null for no maximum) and $excludecategoryid to a category that should not be included.
 */
 	{
-		$pathcategories=qa_category_path($navcategories, $categoryid);
-
-		$startpath='';
+		$pathcategories = qa_category_path($navcategories, $categoryid);
+		
+		$startpath = '';
 		foreach ($pathcategories as $category)
-			$startpath.='/'.$category['categoryid'];
+			$startpath .= '/' . $category['categoryid'];
 
-		if (!isset($maxdepth))
-			$maxdepth=QA_CATEGORY_DEPTH;
-		$maxdepth=min(QA_CATEGORY_DEPTH, $maxdepth);
+		if (isset($maxdepth))
+			$maxdepth = min(QA_CATEGORY_DEPTH, $maxdepth);
+		else
+			$maxdepth = QA_CATEGORY_DEPTH;
 
-		$qa_content['script_rel'][]='qa-content/qa-ask.js?'.QA_VERSION;
-		$qa_content['script_onloads'][]='qa_category_select('.qa_js($fieldname).', '.qa_js($startpath).');';
-
-		$qa_content['script_var']['qa_cat_exclude']=$excludecategoryid;
-		$qa_content['script_var']['qa_cat_allownone']=(int)$allownone;
-		$qa_content['script_var']['qa_cat_allownosub']=(int)$allownosub;
-		$qa_content['script_var']['qa_cat_maxdepth']=$maxdepth;
-
-		$field['type']='select';
-		$field['tags']='name="'.$fieldname.'_0" id="'.$fieldname.'_0" onchange="qa_category_select('.qa_js($fieldname).');"';
-		$field['options']=array();
+		$qa_content['script_rel'][] = 'qa-content/qa-ask.js?' . QA_VERSION;
+		$qa_content['script_onloads'][] = sprintf('qa_category_select(%s, %s);', qa_js($fieldname), qa_js($startpath));
+		
+		$qa_content['script_var'] = array(
+			'qa_cat_exclude' => $excludecategoryid,
+			'qa_cat_allownone' => (int) $allownone,
+			'qa_cat_allownosub' => (int) $allownosub,
+			'qa_cat_maxdepth' => $maxdepth,
+		);
+		
+		$field['type'] = 'select';
+		$field['tags'] = sprintf('name="%s_0" id="%s_0" onchange="qa_category_select(%s);"', $fieldname, $fieldname, qa_js($fieldname));
+		$field['options'] = array();
 
 		// create the menu that will be shown if Javascript is disabled
 
 		if ($allownone)
-			$field['options']['']=qa_lang_html('main/no_category'); // this is also copied to first menu created by Javascript
+			$field['options'][''] = qa_lang_html('main/no_category'); // this is also copied to first menu created by Javascript
 
-		$keycategoryids=array();
+		$keycategoryids = array();
 
 		if ($allownosub) {
-			$category=@$navcategories[$categoryid];
-			$upcategory=$category;
+			$category = @$navcategories[$categoryid];
 
-			while (true) { // first get supercategories
-				$upcategory=@$navcategories[$upcategory['parentid']];
-
-				if (!isset($upcategory))
-					break;
-
-				$keycategoryids[$upcategory['categoryid']]=true;
+			$upcategory = @$navcategories[$category['parentid']]; // first get supercategories
+			while (isset($upcategory)) {
+				$keycategoryids[$upcategory['categoryid']] = true;
+				$upcategory = @$navcategories[$upcategory['parentid']];
 			}
 
-			$keycategoryids=array_reverse($keycategoryids, true);
-
-			$depth=count($keycategoryids); // number of levels above
+			$keycategoryids = array_reverse($keycategoryids, true);
+			
+			$depth = count($keycategoryids); // number of levels above
 
 			if (isset($category)) {
 				$depth++; // to count category itself
 
 				foreach ($navcategories as $navcategory) // now get siblings and self
 					if (!strcmp($navcategory['parentid'], $category['parentid']))
-						$keycategoryids[$navcategory['categoryid']]=true;
+						$keycategoryids[$navcategory['categoryid']] = true;
 			}
-
-			if ($depth<$maxdepth)
+			
+			if ($depth < $maxdepth)
 				foreach ($navcategories as $navcategory) // now get children, if not too deep
 					if (!strcmp($navcategory['parentid'], $categoryid))
-						$keycategoryids[$navcategory['categoryid']]=true;
+						$keycategoryids[$navcategory['categoryid']] = true;
 
 		} else {
-			$haschildren=false;
+			$haschildren = false;
 
 			foreach ($navcategories as $navcategory) // check if it has any children
-				if (!strcmp($navcategory['parentid'], $categoryid))
-					$haschildren=true;
+				if (!strcmp($navcategory['parentid'], $categoryid)) {
+					$haschildren = true;
+					break;
+				}
 
 			if (!$haschildren)
-				$keycategoryids[$categoryid]=true; // show this category if it has no children
+				$keycategoryids[$categoryid] = true; // show this category if it has no children
 		}
 
 		foreach ($keycategoryids as $keycategoryid => $dummy)
 			if (strcmp($keycategoryid, $excludecategoryid))
-				$field['options'][$keycategoryid]=qa_category_path_html($navcategories, $keycategoryid);
-
-		$field['value']=@$field['options'][$categoryid];
-		$field['note']='<div id="'.$fieldname.'_note"><noscript style="color:red;">'.qa_lang_html('question/category_js_note').'</noscript></div>';
+				$field['options'][$keycategoryid] = qa_category_path_html($navcategories, $keycategoryid);
+		
+		$field['value'] = @$field['options'][$categoryid];
+		$field['note'] =
+			'<div id="' . $fieldname . '_note">' .
+				'<noscript style="color:red;">' . qa_lang_html('question/category_js_note') . '</noscript>' .
+			'</div>';
 	}
 
 

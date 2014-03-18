@@ -44,7 +44,7 @@
 	}
 
 
-	function qa_send_notification($userid, $email, $handle, $subject, $body, $subs)
+	function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, $html = false)
 /*
 	Send email to person with $userid and/or $email and/or $handle (null/invalid values are ignored or retrieved from
 	user database as appropriate). Email uses $subject and $body, after substituting each key in $subs with its
@@ -77,7 +77,12 @@
 
 				} else {
 					$useraccount=qa_db_select_with_pending(
-						qa_db_user_account_selectspec($userid, true)
+						array(
+							'columns' => array('email', 'handle'),
+							'source' => '^users WHERE userid = #',
+							'arguments' => array($userid),
+							'single' => true,
+						)
 					);
 
 					if ($needhandle)
@@ -103,7 +108,7 @@
 				'toname' => $handle,
 				'subject' => strtr($subject, $subs),
 				'body' => (empty($handle) ? '' : qa_lang_sub('emails/to_handle_prefix', $handle)).strtr($body, $subs),
-				'html' => false,
+				'html' => $html,
 			));
 
 		} else
