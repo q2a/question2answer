@@ -324,9 +324,9 @@
 	{
 		$in=array(
 			'name' => qa_post_text('a_name'),
-			'notify' => qa_post_text('a_notify') ? true : false,
+			'notify' =>  !empty(qa_post_text('a_notify')),
 			'email' => qa_post_text('a_email'),
-			'queued' => qa_user_moderation_reason(qa_user_level_for_post($question)) ? true : false,
+			'queued' => qa_user_moderation_reason(qa_user_level_for_post($question)) !== false,
 		);
 
 		qa_get_post_content('a_editor', 'a_content', $in['editor'], $in['content'], $in['format'], $in['text']);
@@ -386,9 +386,9 @@
 
 		$in=array(
 			'name' => qa_post_text($prefix.'name'),
-			'notify' => qa_post_text($prefix.'notify') ? true : false,
+			'notify' => !empty(qa_post_text($prefix.'notify')),
 			'email' => qa_post_text($prefix.'email'),
-			'queued' => qa_user_moderation_reason(qa_user_level_for_post($parent)) ? true : false,
+			'queued' => qa_user_moderation_reason(qa_user_level_for_post($parent)) !== false,
 		);
 
 		qa_get_post_content($prefix.'editor', $prefix.'content', $in['editor'], $in['content'], $in['format'], $in['text']);
@@ -443,9 +443,9 @@
 			'content' => $post['content'],
 			'format' => $post['format'],
 			'text' => qa_viewer_text($post['content'], $post['format']),
-			'notify' => isset($post['notify']) ? true : false,
+			'notify' => isset($post['notify']),
 			'email' => qa_email_validate($post['notify']) ? $post['notify'] : null,
-			'queued' => qa_user_moderation_reason(qa_user_level_for_post($post)) ? true : false,
+			'queued' => qa_user_moderation_reason(qa_user_level_for_post($post)) !== false,
 		);
 
 		if ($post['basetype']=='Q') {

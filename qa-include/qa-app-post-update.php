@@ -54,11 +54,11 @@
 	{
 		qa_post_unindex($oldquestion['postid']);
 
-		$wasqueued=($oldquestion['type']=='Q_QUEUED');
-		$titlechanged=strcmp($oldquestion['title'], $title) ? true : false;
-		$contentchanged=strcmp($oldquestion['content'], $content) || strcmp($oldquestion['format'], $format);
-		$tagschanged=strcmp($oldquestion['tags'], $tagstring) ? true : false;
-		$setupdated=($titlechanged || $contentchanged || $tagschanged) && (!$wasqueued) && !$silent;
+		$wasqueued = ($oldquestion['type'] == 'Q_QUEUED');
+		$titlechanged = strcmp($oldquestion['title'], $title) !== 0;
+		$contentchanged = strcmp($oldquestion['content'], $content) !== 0 || strcmp($oldquestion['format'], $format) !== 0;
+		$tagschanged = strcmp($oldquestion['tags'], $tagstring) !== 0;
+		$setupdated = ($titlechanged || $contentchanged || $tagschanged) && (!$wasqueued) && !$silent;
 
 		qa_db_post_set_content($oldquestion['postid'], $title, $content, $format, $tagstring, $notify,
 			$setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null,
@@ -72,18 +72,19 @@
 		if ($setupdated && $remoderate) {
 			require_once QA_INCLUDE_DIR.'qa-app-posts.php';
 
-			$answers=qa_post_get_question_answers($oldquestion['postid']);
-			$commentsfollows=qa_post_get_question_commentsfollows($oldquestion['postid']);
-			$closepost=qa_post_get_question_closepost($oldquestion['postid']);
+			$answers = qa_post_get_question_answers($oldquestion['postid']);
+			$commentsfollows = qa_post_get_question_commentsfollows($oldquestion['postid']);
+			$closepost = qa_post_get_question_closepost($oldquestion['postid']);
 
 			foreach ($answers as $answer)
 				qa_post_unindex($answer['postid']);
 
-			foreach ($commentsfollows as $comment)
-				if ($comment['basetype']=='C')
+			foreach ($commentsfollows as $comment) {
+				if ($comment['basetype'] == 'C')
 					qa_post_unindex($comment['postid']);
+			}
 
-			if (@$closepost['parentid']==$oldquestion['postid'])
+			if (@$closepost['parentid'] == $oldquestion['postid'])
 				qa_post_unindex($closepost['postid']);
 
 			qa_db_post_set_type($oldquestion['postid'], 'Q_QUEUED');
@@ -94,7 +95,8 @@
 			if ($oldquestion['flagcount'])
 				qa_db_flaggedcount_update();
 
-		} elseif ($oldquestion['type']=='Q') { // not hidden or queued
+		}
+		else if ($oldquestion['type'] == 'Q') { // not hidden or queued
 			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $title, $content, $format, $text, $tagstring, $oldquestion['categoryid']);
 		}
 

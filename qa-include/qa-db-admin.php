@@ -220,7 +220,7 @@
 	Return whether there are any blobs whose content has been stored as a file on disk
 */
 	{
-		return count(qa_db_read_all_values(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NULL LIMIT 1'))) ? true : false;
+		return qa_db_read_one_value(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NULL LIMIT 1'), true) != null;
 	}
 
 
@@ -229,7 +229,7 @@
 	Return whether there are any blobs whose content has been stored in the database
 */
 	{
-		return count(qa_db_read_all_values(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NOT NULL LIMIT 1'))) ? true : false;
+		return qa_db_read_one_value(qa_db_query_sub('SELECT blobid FROM ^blobs WHERE content IS NOT NULL LIMIT 1'), true) != null;
 	}
 
 

@@ -110,9 +110,9 @@
 		$userlevel=qa_user_level_for_categories($categoryids);
 
 		$in['name']=qa_post_text('name');
-		$in['notify']=qa_post_text('notify') ? true : false;
+		$in['notify'] = strlen(qa_post_text('notify')) > 0;
 		$in['email']=qa_post_text('email');
-		$in['queued']=qa_user_moderation_reason($userlevel) ? true : false;
+		$in['queued'] = qa_user_moderation_reason($userlevel) !== false;
 
 		qa_get_post_content('editor', 'content', $in['editor'], $in['content'], $in['format'], $in['text']);
 
