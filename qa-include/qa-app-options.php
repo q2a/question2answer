@@ -390,19 +390,19 @@
 					break;
 
 				case 'show_custom_sidebar':
-					$value = (bool) strlen(qa_opt('custom_sidebar'));
+					$value = strlen(qa_opt('custom_sidebar')) > 0;
 					break;
 
 				case 'show_custom_header':
-					$value = (bool) strlen(qa_opt('custom_header'));
+					$value = strlen(qa_opt('custom_header')) > 0;
 					break;
 
 				case 'show_custom_footer':
-					$value = (bool) strlen(qa_opt('custom_footer'));
+					$value = strlen(qa_opt('custom_footer')) > 0;
 					break;
 
 				case 'show_custom_in_head':
-					$value = (bool) strlen(qa_opt('custom_in_head'));
+					$value = strlen(qa_opt('custom_in_head')) > 0;
 					break;
 
 				case 'custom_sidebar':

@@ -435,7 +435,7 @@
 			//	Category-specific levels
 
 				if (qa_using_categories()) {
-					$catleveladd = (bool) qa_get('catleveladd');
+					$catleveladd = strlen(qa_get('catleveladd')) > 0;
 
 					if ((!$catleveladd) && !count($userlevels))
 						$qa_content['form_profile']['fields']['level']['suffix']=strtr(qa_lang_html('users/category_level_add'), array(
@@ -545,10 +545,10 @@
 
 	//	Show email address only if we're an administrator
 
-		if (($loginlevel>=QA_USER_LEVEL_ADMIN) && !qa_user_permit_error()) {
-			$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
-			$isconfirmed = (bool) ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED);
-			$htmlemail=qa_html(isset($inemail) ? $inemail : $useraccount['email']);
+		if (($loginlevel >= QA_USER_LEVEL_ADMIN) && !qa_user_permit_error()) {
+			$doconfirms = qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
+			$isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) > 0;
+			$htmlemail = qa_html(isset($inemail) ? $inemail : $useraccount['email']);
 
 			$qa_content['form_profile']['fields']['email']=array(
 				'type' => $userediting ? 'text' : 'static',

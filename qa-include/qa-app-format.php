@@ -149,7 +149,7 @@
 
 				$favoritenonqs=qa_db_get_pending_result('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));
 
-				foreach ($favoritenonqs as $favorite)
+				foreach ($favoritenonqs as $favorite) {
 					switch ($favorite['type']) {
 						case QA_ENTITY_USER:
 							$qa_favorite_non_qs_map['user'][$favorite['userid']]=true;
@@ -163,6 +163,7 @@
 							$qa_favorite_non_qs_map['category'][$favorite['categorybackpath']]=true;
 							break;
 					}
+				}
 			}
 		}
 
@@ -1455,7 +1456,7 @@
 */
 	{
 		$pathcategories = qa_category_path($navcategories, $categoryid);
-		
+
 		$startpath = '';
 		foreach ($pathcategories as $category)
 			$startpath .= '/' . $category['categoryid'];
@@ -1467,14 +1468,14 @@
 
 		$qa_content['script_rel'][] = 'qa-content/qa-ask.js?' . QA_VERSION;
 		$qa_content['script_onloads'][] = sprintf('qa_category_select(%s, %s);', qa_js($fieldname), qa_js($startpath));
-		
+
 		$qa_content['script_var'] = array(
 			'qa_cat_exclude' => $excludecategoryid,
 			'qa_cat_allownone' => (int) $allownone,
 			'qa_cat_allownosub' => (int) $allownosub,
 			'qa_cat_maxdepth' => $maxdepth,
 		);
-		
+
 		$field['type'] = 'select';
 		$field['tags'] = sprintf('name="%s_0" id="%s_0" onchange="qa_category_select(%s);"', $fieldname, $fieldname, qa_js($fieldname));
 		$field['options'] = array();
@@ -1496,7 +1497,7 @@
 			}
 
 			$keycategoryids = array_reverse($keycategoryids, true);
-			
+
 			$depth = count($keycategoryids); // number of levels above
 
 			if (isset($category)) {
@@ -1506,7 +1507,7 @@
 					if (!strcmp($navcategory['parentid'], $category['parentid']))
 						$keycategoryids[$navcategory['categoryid']] = true;
 			}
-			
+
 			if ($depth < $maxdepth)
 				foreach ($navcategories as $navcategory) // now get children, if not too deep
 					if (!strcmp($navcategory['parentid'], $categoryid))
@@ -1528,7 +1529,7 @@
 		foreach ($keycategoryids as $keycategoryid => $dummy)
 			if (strcmp($keycategoryid, $excludecategoryid))
 				$field['options'][$keycategoryid] = qa_category_path_html($navcategories, $keycategoryid);
-		
+
 		$field['value'] = @$field['options'][$categoryid];
 		$field['note'] =
 			'<div id="' . $fieldname . '_note">' .
