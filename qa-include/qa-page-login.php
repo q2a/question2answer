@@ -143,7 +143,7 @@
 				'type' => 'checkbox',
 				'label' => qa_lang_html('users/remember_label'),
 				'tags' => 'name="remember"',
-				'value' => !empty(@$inremember),
+				'value' => !empty($inremember),
 			),
 		),
 

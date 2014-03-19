@@ -113,7 +113,7 @@
 				$result['question_postid']=$result['question']['postid'];
 
 			if (isset($result['page_pageid']) && !isset($result['page']))
- 				$result['page']=@$pageidpage[$result['page_pageid']];
+				$result['page']=@$pageidpage[$result['page_pageid']];
 
 			if (!isset($result['title'])) {
 				if (isset($result['question']))
