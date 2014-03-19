@@ -25,16 +25,18 @@
 */
 
 /*
-	Plugin Name: WYSIWYG Editor
-	Plugin URI:
-	Plugin Description: Wrapper for CKEditor WYSIWYG rich text editor
-	Plugin Version: 1.1.1
-	Plugin Date: 2011-12-06
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.3
-	Plugin Update Check URI:
+	[metadata]
+	Plugin Name [name]: WYSIWYG Editor
+	Plugin URI [uri]: 
+	Plugin Description [description]: Wrapper for CKEditor WYSIWYG rich text editor
+	Plugin Version [version]: 1.1.1
+	Plugin Date [date]: 2011-12-06
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [q2a_version]: 1.3
+	Plugin Update Check URI [update_uri]: 
+	[/metadata]
 */
 
 

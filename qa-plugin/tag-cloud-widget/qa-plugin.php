@@ -25,16 +25,18 @@
 */
 
 /*
-	Plugin Name: Tag Cloud Widget
-	Plugin URI:
-	Plugin Description: Provides a list of tags with size indicating popularity
-	Plugin Version: 1.0.1
-	Plugin Date: 2011-12-06
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.4
-	Plugin Update Check URI:
+	[metadata]
+	Plugin Name [name]: Tag Cloud Widget
+	Plugin URI [uri]: 
+	Plugin Description [description]: Provides a list of tags with size indicating popularity
+	Plugin Version [version]: 1.0.1
+	Plugin Date [date]: 2011-12-06
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [q2a_version]: 1.4
+	Plugin Update Check URI [update_uri]: 
+	[/metadata]
 */
 
 

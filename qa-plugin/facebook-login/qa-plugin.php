@@ -25,17 +25,19 @@
 */
 
 /*
-	Plugin Name: Facebook Login
-	Plugin URI:
-	Plugin Description: Allows users to log in via Facebook
-	Plugin Version: 1.1.5
-	Plugin Date: 2012-09-13
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.5
-	Plugin Minimum PHP Version: 5
-	Plugin Update Check URI:
+    [metadata]
+	Plugin Name [name]: Facebook Login
+	Plugin URI [uri]: 
+	Plugin Description [description]: Allows users to log in via Facebook
+	Plugin Version [version]: 1.1.5
+	Plugin Date [date]: 2012-09-13
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [q2a_version]: 1.5
+	Plugin Minimum PHP Version [php_version]: 5
+	Plugin Update Check URI [update_uri]:
+    [/metadata]
 */
 
 

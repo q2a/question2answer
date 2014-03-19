@@ -102,8 +102,9 @@
 	Set up and verify the PHP environment for Q2A, including unregistering globals if necessary
 */
 	{
-		if (qa_php_version_below('4.3'))
-			qa_fatal_error('This requires PHP 4.3 or later');
+		$min_php_version = '5.1.6';
+		if (qa_php_version_below($min_php_version))
+			qa_fatal_error('This requires PHP ' . $min_php_version . ' or later');
 
 		error_reporting(E_ALL); // be ultra-strict about error checking
 
@@ -271,36 +272,48 @@
 		qa_register_module('widget', 'qa-widget-related-qs.php', 'qa_related_qs', 'Related Questions');
 	}
 
-
+	function qa_addon_metadata($contents)
+/*
+	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file. This function returns
+	a key-value array that contains all values in square brackets between the [metadata] and [/metadata] tags as keys.
+	The values of the array are whitespace (spaces and tabs) trimmed texts to the right of the colon. Keys that have
+	empty values or values only filled with whitespaces will not be returned
+*/
+	{
+		$metadata = array();
+		// Make sure data matched is between the [metadata] tag and use that subset do decrese future searches effort
+		if (preg_match('/\[metadata\](.*?)\[\/metadata\]/is', $contents, $matches))
+			// Get all [.*] fields with their values
+			if (preg_match_all('/\[(.*?)\]\h*\:\h*([^\h\r\n].*?)\h*$/im', $matches[1], $matches) > 0)
+				$metadata = array_combine($matches[1], $matches[2]);
+		return $metadata;
+	}
+	
+	
 	function qa_load_plugin_files()
 /*
 	Load all the qa-plugin.php files from plugins that are compatible with this version of Q2A
 */
 	{
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		$pluginfiles=glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
-
+		
+		$pluginfiles = glob(QA_PLUGIN_DIR . '*/qa-plugin.php');
+		
 		foreach ($pluginfiles as $pluginfile)
 			if (file_exists($pluginfile)) {
-				$contents=file_get_contents($pluginfile);
+				$contents = file_get_contents($pluginfile);
+				$metadata = qa_addon_metadata($contents);
+				if ((isset($metadata['q2a_version']) && qa_qa_version_below($metadata['q2a_version'])) ||
+					(isset($metadata['php_version']) && qa_qa_version_below($metadata['php_version'])))
+					continue; // skip plugin which requires a later version of Q2A or PHP
 
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*Question2Answer[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if (qa_qa_version_below($matches[1]))
-						continue; // skip plugin which requires a later version of Q2A
-
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*PHP[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if (qa_php_version_below($matches[1]))
-						continue; // skip plugin which requires a later version of PHP
-
-				$qa_plugin_directory=dirname($pluginfile).'/';
-				$qa_plugin_urltoroot=substr($qa_plugin_directory, strlen(QA_BASE_DIR));
+				$qa_plugin_directory = dirname($pluginfile) . '/';
+				$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
 
 				require_once $pluginfile;
-
-				$qa_plugin_directory=null;
-				$qa_plugin_urltoroot=null;
 			}
+		$qa_plugin_directory = null;
+		$qa_plugin_urltoroot = null;
 	}
 
 
@@ -1130,7 +1143,7 @@
 
 	function qa_path_to_root()
 /*
-	Return the relative path to the Q2A root (if it's was previously set by qa_set_request())
+	Return the relative path to the Q2A root (if it was previously set by qa_set_request())
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }

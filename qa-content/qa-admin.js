@@ -134,9 +134,9 @@ function qa_admin_click(target)
 	return false;
 }
 
-function qa_version_check(uri, versionkey, version, urikey, elem)
+function qa_version_check(uri, version, elem)
 {
-	var params={uri:uri, versionkey:versionkey, version:version, urikey:urikey};
+	var params={uri:uri, version:version};
 
 	qa_ajax_post('version', params,
 		function (lines) {

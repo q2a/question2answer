@@ -25,16 +25,18 @@
 */
 
 /*
-	Plugin Name: Basic AdSense
-	Plugin URI:
-	Plugin Description: Provides a basic widget for displaying Google AdSense ads
-	Plugin Version: 1.0
-	Plugin Date: 2011-03-27
-	Plugin Author: Question2Answer
-	Plugin Author URI: http://www.question2answer.org/
-	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.4
-	Plugin Update Check URI:
+	[metadata]
+	Plugin Name [name]: Basic AdSense
+	Plugin URI [uri]: 
+	Plugin Description [description]: Provides a basic widget for displaying Google AdSense ads
+	Plugin Version [version]: 1.0
+	Plugin Date [date]: 2011-03-27
+	Plugin Author [author]: Question2Answer
+	Plugin Author URI [author_uri]: http://www.question2answer.org/
+	Plugin License [license]: GPLv2
+	Plugin Minimum Question2Answer Version [version]: 1.4
+	Plugin Update Check URI [update_uri]: 
+	[/metadata]
 */
 
 
