@@ -576,9 +576,12 @@
 
 	function qa_admin_addon_metadata($contents, $fields)
 /*
-	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields
+	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields.
+	This function is now DEPRECATED.
 */
 	{
+		trigger_error('Function qa_admin_addon_metadata is deprecated; use qa_addon_metadata instead', E_USER_NOTICE);
+
 		$metadata=array();
 
 		foreach ($fields as $key => $field)

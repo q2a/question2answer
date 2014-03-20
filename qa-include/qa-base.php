@@ -272,6 +272,38 @@
 	}
 
 
+	function qa_addon_metadata($contents, $type)
+/*
+	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, specified by $type ('Plugin' or 'Theme').
+	Name, Description, Min Q2A & Min PHP are not currently used by themes.
+*/
+	{
+		$fields = array(
+			'name' => 'Name',
+			'uri' => 'URI',
+			'description' => 'Description',
+			'version' => 'Version',
+			'date' => 'Date',
+			'author' => 'Author',
+			'author_uri' => 'Author URI',
+			'license' => 'License',
+			'min_q2a' => 'Minimum Question2Answer Version',
+			'min_php' => 'Minimum PHP Version',
+			'update' => 'Update Check URI',
+		);
+		$metadata = array();
+
+		foreach ($fields as $key => $field) {
+			// prepend 'Theme'/'Plugin' and search for key data
+			$fieldregex = str_replace(' ', '[ \t]*', preg_quote("$type $field", '/'));
+			if (preg_match('/'.$fieldregex.':[ \t]*([^\n\f]*)[\n\f]/i', $contents, $matches))
+				$metadata[$key] = trim($matches[1]);
+		}
+
+		return $metadata;
+	}
+
+
 	function qa_load_plugin_files()
 /*
 	Load all the qa-plugin.php files from plugins that are compatible with this version of Q2A

@@ -107,21 +107,9 @@
 			$hash=qa_admin_plugin_directory_hash($plugindirectory);
 			$showthisform=$showpluginforms && (qa_get('show')==$hash);
 
-			$contents=file_get_contents($pluginfile);
-
-			$metadata=qa_admin_addon_metadata($contents, array(
-				'name' => 'Plugin Name',
-				'uri' => 'Plugin URI',
-				'description' => 'Plugin Description',
-				'version' => 'Plugin Version',
-				'date' => 'Plugin Date',
-				'author' => 'Plugin Author',
-				'author_uri' => 'Plugin Author URI',
-				'license' => 'Plugin License',
-				'min_q2a' => 'Plugin Minimum Question2Answer Version',
-				'min_php' => 'Plugin Minimum PHP Version',
-				'update' => 'Plugin Update Check URI',
-			));
+			// limit plugin parsing to first 8kB
+			$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
+			$metadata = qa_addon_metadata($contents, 'Plugin');
 
 			if (strlen(@$metadata['name']))
 				$namehtml=qa_html($metadata['name']);
@@ -153,7 +141,7 @@
 				$updatehtml='(<span id="'.$elementid.'">...</span>)';
 
 				$qa_content['script_onloads'][]=array(
-					"qa_version_check(".qa_js($metadata['update']).", 'Plugin Version', ".qa_js($metadata['version'], true).", 'Plugin URI', ".qa_js($elementid).");"
+					"qa_version_check(".qa_js($metadata['update']).", 'Plugin', ".qa_js($metadata['version'], true).", ".qa_js($elementid).");"
 				);
 
 			} else

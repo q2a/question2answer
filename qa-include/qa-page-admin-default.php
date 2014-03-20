@@ -985,21 +985,13 @@
 				case 'site_theme_mobile':
 					$themeoptions=qa_admin_theme_options();
 					if (!isset($themeoptions[$value]))
-						$value='Classic'; // check here because we also need $value for qa_admin_addon_metadata()
+						$value='Classic'; // check here because we also need $value for qa_addon_metadata()
 
 					qa_optionfield_make_select($optionfield, $themeoptions, $value, 'Classic');
 
-					$contents=file_get_contents(QA_THEME_DIR.$value.'/qa-styles.css');
-
-					$metadata=qa_admin_addon_metadata($contents, array(
-						'uri' => 'Theme URI',
-						'version' => 'Theme Version',
-						'date' => 'Theme Date',
-						'author' => 'Theme Author',
-						'author_uri' => 'Theme Author URI',
-						'license' => 'Theme License',
-						'update' => 'Theme Update Check URI',
-					));
+					// limit theme parsing to first 8kB
+					$contents = file_get_contents(QA_THEME_DIR.$value.'/qa-styles.css', false, NULL, -1, 8192);
+					$metadata = qa_addon_metadata($contents, 'Theme');
 
 					if (strlen(@$metadata['version']))
 						$namehtml='v'.qa_html($metadata['version']);
@@ -1030,7 +1022,7 @@
 						$updatehtml='(<span id="'.$elementid.'">...</span>)';
 
 						$qa_content['script_onloads'][]=array(
-							"qa_version_check(".qa_js($metadata['update']).", 'Theme Version', ".qa_js($metadata['version'], true).", 'Theme URI', ".qa_js($elementid).");"
+							"qa_version_check(".qa_js($metadata['update']).", 'Theme', ".qa_js($metadata['version'], true).", ".qa_js($elementid).");"
 						);
 
 					} else
