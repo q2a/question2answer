@@ -311,28 +311,29 @@
 	{
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
 
-		$pluginfiles=glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
+		$pluginfiles = glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
 
-		foreach ($pluginfiles as $pluginfile)
-			if (file_exists($pluginfile)) {
-				$contents=file_get_contents($pluginfile);
+		foreach ($pluginfiles as $pluginfile) {
+			// limit plugin parsing to first 8kB
+			$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
+			$metadata = qa_addon_metadata($contents, 'Plugin');
 
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*Question2Answer[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if (qa_qa_version_below($matches[1]))
-						continue; // skip plugin which requires a later version of Q2A
+			// skip plugin which requires a later version of Q2A
+			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a']))
+				continue;
+			// skip plugin which requires a later version of PHP
+			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php']))
+				continue;
 
-				if (preg_match('/Plugin[ \t]*Minimum[ \t]*PHP[ \t]*Version\:[ \t]*([0-9\.]+)\s/i', $contents, $matches))
-					if (qa_php_version_below($matches[1]))
-						continue; // skip plugin which requires a later version of PHP
+			// these variables are utilized in the qa_register_plugin_* functions
+			$qa_plugin_directory = dirname($pluginfile).'/';
+			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
 
-				$qa_plugin_directory=dirname($pluginfile).'/';
-				$qa_plugin_urltoroot=substr($qa_plugin_directory, strlen(QA_BASE_DIR));
+			require_once $pluginfile;
+		}
 
-				require_once $pluginfile;
-
-				$qa_plugin_directory=null;
-				$qa_plugin_urltoroot=null;
-			}
+		$qa_plugin_directory = null;
+		$qa_plugin_urltoroot = null;
 	}
 
 
