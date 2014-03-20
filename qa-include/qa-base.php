@@ -272,27 +272,32 @@
 	}
 
 
-	function qa_addon_metadata($contents, $type)
+	function qa_addon_metadata($contents, $type, $versiononly=false)
 /*
 	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, specified by $type ('Plugin' or 'Theme').
+	If $versiononly is true, only version metadata is parsed.
 	Name, Description, Min Q2A & Min PHP are not currently used by themes.
 */
 	{
 		$fields = array(
-			'name' => 'Name',
-			'uri' => 'URI',
-			'description' => 'Description',
-			'version' => 'Version',
-			'date' => 'Date',
-			'author' => 'Author',
-			'author_uri' => 'Author URI',
-			'license' => 'License',
 			'min_q2a' => 'Minimum Question2Answer Version',
 			'min_php' => 'Minimum PHP Version',
-			'update' => 'Update Check URI',
 		);
-		$metadata = array();
+		if (!$versiononly) {
+			$fields = array_merge($fields, $fields = array(
+				'name' => 'Name',
+				'uri' => 'URI',
+				'description' => 'Description',
+				'version' => 'Version',
+				'date' => 'Date',
+				'author' => 'Author',
+				'author_uri' => 'Author URI',
+				'license' => 'License',
+				'update' => 'Update Check URI',
+			));
+		}
 
+		$metadata = array();
 		foreach ($fields as $key => $field) {
 			// prepend 'Theme'/'Plugin' and search for key data
 			$fieldregex = str_replace(' ', '[ \t]*', preg_quote("$type $field", '/'));
@@ -316,7 +321,7 @@
 		foreach ($pluginfiles as $pluginfile) {
 			// limit plugin parsing to first 8kB
 			$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
-			$metadata = qa_addon_metadata($contents, 'Plugin');
+			$metadata = qa_addon_metadata($contents, 'Plugin', true);
 
 			// skip plugin which requires a later version of Q2A
 			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a']))
