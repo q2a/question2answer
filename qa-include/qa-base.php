@@ -25,8 +25,8 @@
 */
 
 
-	define('QA_VERSION', '1.6.3'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2014-01-19');
+	define('QA_VERSION', '1.7.0-alpha1'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2014-03-20');
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -102,8 +102,8 @@
 	Set up and verify the PHP environment for Q2A, including unregistering globals if necessary
 */
 	{
-		if (qa_php_version_below('4.3'))
-			qa_fatal_error('This requires PHP 4.3 or later');
+		if (qa_php_version_below('5.1.6'))
+			qa_fatal_error('Q2A requires PHP 5.1.6 or later');
 
 		error_reporting(E_ALL); // be ultra-strict about error checking
 
@@ -275,7 +275,7 @@
 	function qa_addon_metadata($contents, $type, $versiononly=false)
 /*
 	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, specified by $type ('Plugin' or 'Theme').
-	If $versiononly is true, only version metadata is parsed.
+	If $versiononly is true, only min version metadata is parsed.
 	Name, Description, Min Q2A & Min PHP are not currently used by themes.
 */
 	{
@@ -1168,7 +1168,7 @@
 
 	function qa_path_to_root()
 /*
-	Return the relative path to the Q2A root (if it's was previously set by qa_set_request())
+	Return the relative path to the Q2A root (if it was previously set by qa_set_request())
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
