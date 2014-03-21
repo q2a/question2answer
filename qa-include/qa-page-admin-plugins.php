@@ -111,23 +111,24 @@
 			$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
 			$metadata = qa_addon_metadata($contents, 'Plugin');
 
-			if (strlen(@$metadata['name']))
+			if (isset($metadata['name']) && strlen($metadata['name']))
 				$namehtml=qa_html($metadata['name']);
 			else
 				$namehtml=qa_lang_html('admin/unnamed_plugin');
 
-			if (strlen(@$metadata['uri']))
+			if (isset($metadata['uri']) && strlen($metadata['uri']))
 				$namehtml='<a href="'.qa_html($metadata['uri']).'">'.$namehtml.'</a>';
 
 			$namehtml='<b>'.$namehtml.'</b>';
 
-			if (strlen(@$metadata['version']))
+			$metaver = isset($metadata['version']) && strlen($metadata['version']);
+			if ($metaver)
 				$namehtml.=' v'.qa_html($metadata['version']);
 
-			if (strlen(@$metadata['author'])) {
+			if (isset($metadata['author']) && strlen($metadata['author'])) {
 				$authorhtml=qa_html($metadata['author']);
 
-				if (strlen(@$metadata['author_uri']))
+				if (isset($metadata['author_uri']) && strlen($metadata['author_uri']))
 					$authorhtml='<a href="'.qa_html($metadata['author_uri']).'">'.$authorhtml.'</a>';
 
 				$authorhtml=qa_lang_html_sub('main/by_x', $authorhtml);
@@ -135,7 +136,7 @@
 			} else
 				$authorhtml='';
 
-			if (strlen(@$metadata['version']) && strlen(@$metadata['update'])) {
+			if ($metaver && isset($metadata['update']) && strlen($metadata['update'])) {
 				$elementid='version_check_'.md5($plugindirectory);
 
 				$updatehtml='(<span id="'.$elementid.'">...</span>)';
@@ -147,7 +148,7 @@
 			} else
 				$updatehtml='';
 
-			if (strlen(@$metadata['description']))
+			if (isset($metadata['description']))
 				$deschtml=qa_html($metadata['description']);
 			else
 				$deschtml='';
