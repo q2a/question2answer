@@ -324,7 +324,7 @@
 	{
 		$in=array(
 			'name' => qa_post_text('a_name'),
-			'notify' =>  !empty(qa_post_text('a_notify')),
+			'notify' =>  qa_post_text('a_notify') !== null,
 			'email' => qa_post_text('a_email'),
 			'queued' => qa_user_moderation_reason(qa_user_level_for_post($question)) !== false,
 		);
@@ -386,7 +386,7 @@
 
 		$in=array(
 			'name' => qa_post_text($prefix.'name'),
-			'notify' => !empty(qa_post_text($prefix.'notify')),
+			'notify' => qa_post_text($prefix.'notify') !== null,
 			'email' => qa_post_text($prefix.'email'),
 			'queued' => qa_user_moderation_reason(qa_user_level_for_post($parent)) !== false,
 		);

@@ -450,7 +450,7 @@
 
 		if ($question['isbyuser']) {
 			$in['name']=qa_post_text('q_name');
-			$in['notify'] = !empty(qa_post_text('q_notify'));
+			$in['notify'] = qa_post_text('q_notify') !== null;
 			$in['email']=qa_post_text('q_email');
 		}
 
@@ -781,7 +781,7 @@
 
 		if ($answer['isbyuser']) {
 			$in['name']=qa_post_text($prefix.'name');
-			$in['notify'] = !empty(qa_post_text($prefix.'notify'));
+			$in['notify'] = qa_post_text($prefix.'notify') !== null;
 			$in['email']=qa_post_text($prefix.'email');
 		}
 
@@ -982,7 +982,7 @@
 
 		if ($comment['isbyuser']) {
 			$in['name']=qa_post_text($prefix.'name');
-			$in['notify'] = !empty(qa_post_text($prefix.'notify'));
+			$in['notify'] = qa_post_text($prefix.'notify') !== null;
 			$in['email']=qa_post_text($prefix.'email');
 		}
 
