@@ -1508,12 +1508,10 @@
 		$qa_content['script_rel'][] = 'qa-content/qa-ask.js?' . QA_VERSION;
 		$qa_content['script_onloads'][] = sprintf('qa_category_select(%s, %s);', qa_js($fieldname), qa_js($startpath));
 
-		$qa_content['script_var'] = array(
-			'qa_cat_exclude' => $excludecategoryid,
-			'qa_cat_allownone' => (int) $allownone,
-			'qa_cat_allownosub' => (int) $allownosub,
-			'qa_cat_maxdepth' => $maxdepth,
-		);
+		$qa_content['script_var']['qa_cat_exclude'] = $excludecategoryid;
+		$qa_content['script_var']['qa_cat_allownone'] = (int) $allownone;
+		$qa_content['script_var']['qa_cat_allownosub'] = (int) $allownosub;
+		$qa_content['script_var']['qa_cat_maxdepth'] = $maxdepth;
 
 		$field['type'] = 'select';
 		$field['tags'] = sprintf('name="%s_0" id="%s_0" onchange="qa_category_select(%s);"', $fieldname, $fieldname, qa_js($fieldname));
