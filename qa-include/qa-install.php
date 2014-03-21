@@ -36,14 +36,16 @@
 
 //	Output start of HTML early, so we can see a nicely-formatted list of database queries when upgrading
 
-?>
+?><!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8">
-		<style type="text/css">
-			body,input {font-size:16px; font-family:Verdana, Arial, Helvetica, sans-serif;}
-			body {text-align:center; width:640px; margin:64px auto;}
-			table {margin: 16px auto;}
+		<meta charset="utf-8">
+		<style>
+			body,input { font: 16px Verdana, Arial, Helvetica, sans-serif; }
+			body { text-align: center; width: 640px; margin: 64px auto; }
+			table { margin: 16px auto; }
+			.msg-success { color: #080; }
+			.msg-error { color: #900; }
 		</style>
 	</head>
 	<body>
@@ -285,10 +287,10 @@
 <?php
 
 	if (strlen($success))
-		echo '<p><font color="#006600">'.nl2br(qa_html($success)).'</font></p>'; // green
+		echo '<p class="msg-success">'.nl2br(qa_html($success)).'</p>';
 
 	if (strlen($errorhtml))
-		echo '<p><font color="#990000">'.nl2br($errorhtml).'</font></p>'; // red
+		echo '<p class="msg-error">'.nl2br($errorhtml).'</p>';
 
 	if (strlen($suggest))
 		echo '<p>'.$suggest.'</p>';
@@ -302,7 +304,7 @@
 		foreach ($fields as $name => $prompt) {
 			echo '<tr><td>'.qa_html($prompt).'</td><td><input type="text" size="24" name="'.qa_html($name).'" value="'.qa_html(@${'in'.$name}).'"></td>';
 			if (isset($fielderrors[$name]))
-				echo '<td><font color="#990000"><small>'.qa_html($fielderrors[$name]).'</small></font></td>';
+				echo '<td class="msg-error"><small>'.qa_html($fielderrors[$name]).'</small></td>';
 			echo '</tr>';
 		}
 
