@@ -186,7 +186,7 @@
 		}
 	}
 
-	if (is_resource(qa_db_connection(false)) && !@$pass_failure_from_install) {
+	if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 		$check=qa_db_check_tables(); // see where the database is at
 
 		switch ($check) {
