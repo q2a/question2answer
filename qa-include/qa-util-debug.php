@@ -24,6 +24,20 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+	function qa_debug($var)
+/*
+	Simple method to output a preformatted variable
+*/
+	{
+		if ($var === null)
+			echo "\nNULL\n";
+		else {
+			$css = 'padding: 10px; background-color: #eee; color: #444; font-size: 11px; text-align: left';
+			echo "\n<pre style='$css'>", print_r($var, true), "</pre>\n";
+		}
+	}
+
+
 	function qa_usage_init()
 /*
 	Initialize the counts of resource usage
