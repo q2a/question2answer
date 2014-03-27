@@ -1779,64 +1779,46 @@ div.header-banner {
 	text-decoration: underline;
 }
 
-/* Tags, users and categories */
-.qa-top-tags-table {
+
+/* Tags and Users ranking */
+
+.qa-ranking-item {
+	display: inline-block;
+	margin: 0 5px 15px 0;
+	vertical-align: top;
+	width: 220px;
+	min-height: 30px;
+	line-height: 1.3;
+}
+
+.qa-top-users-item {
+}
+.qa-top-users-avatar {
 	float: left;
-	border-collapse: collapse;
-	margin-bottom: 1em;
+	margin-right: 6px;
 }
-
-.qa-top-tags-count {
-	border: 1px solid #ccc;
-	border-right: 1px dashed #aaa;
-	color: #fff;
-	text-align: right;
-	padding: 6px 8px 6px 12px;
-	background: #0179b5;
-	font-weight: 700;
-}
-
-.qa-top-tags-label {
-	background: #fff;
-	padding: 4px 16px 0 8px;
-}
-
-.qa-top-tags-label .qa-tag-link {
-	font-weight: 400;
-}
-
-.qa-top-tags-spacer {
-	padding: 0 4px;
-}
-
-.qa-top-users-table {
-	float: left;
-	border-collapse: collapse;
-	margin-bottom: 1em;
-}
-
 .qa-top-users-label {
-	border: 1px solid #ddd;
-	border-right: 1px solid #ddd;
-	text-align: left;
-	padding: 6px 16px 6px 12px;
-	background: #fff;
+	display: block;
 }
-
 .qa-top-users-score {
-	background: #0179b5;
-	color: #fff;
-	font-weight: bold;
-	text-align: right;
-	border-color: #ddd;
-	border-style: solid solid solid none;
-	border-width: 1px;
-	padding: 6px 12px;
+	display: block;
 }
 
-.qa-top-users-spacer {
-	padding: 0 4px;
+.qa-top-tags-item {
+	width: 165px;
 }
+.qa-top-tags-count {
+	display: inline-block;
+	min-width: 40px;
+	text-align: right;
+	padding-right: 3px;
+}
+.qa-top-tags-label {
+	display: inline-block;
+}
+
+
+/* Categories */
 
 .qa-browse-cat-list {
 	list-style: none;

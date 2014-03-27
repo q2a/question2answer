@@ -58,19 +58,24 @@
 	);
 
 	if (count($users)) {
-		foreach ($users as $userid => $user)
-			$qa_content['ranking']['items'][]=array(
-				'label' =>
-					(QA_FINAL_EXTERNAL_USERS
-						? qa_get_external_avatar_html($user['userid'], qa_opt('avatar_users_size'), true)
-						: qa_get_user_avatar_html($user['flags'], $user['email'], $user['handle'],
-							$user['avatarblobid'], $user['avatarwidth'], $user['avatarheight'], qa_opt('avatar_users_size'), true)
-					).' '.$usershtml[$user['userid']],
+		foreach ($users as $userid => $user) {
+			if (QA_FINAL_EXTERNAL_USERS)
+				$avatarhtml = qa_get_external_avatar_html($user['userid'], qa_opt('avatar_users_size'), true);
+			else {
+				$avatarhtml = qa_get_user_avatar_html($user['flags'], $user['email'], $user['handle'],
+					$user['avatarblobid'], $user['avatarwidth'], $user['avatarheight'], qa_opt('avatar_users_size'), true);
+			}
+
+			// avatar and handle now listed separately for use in themes
+			$qa_content['ranking']['items'][] = array(
+				'avatar' => $avatarhtml,
+				'label' => $usershtml[$user['userid']],
 				'score' => qa_html(number_format($user['points'])),
 				'raw' => $user,
 			);
-
-	} else
+		}
+	}
+	else
 		$qa_content['title']=qa_lang_html('main/no_active_users');
 
 	$qa_content['page_links']=qa_html_page_links(qa_request(), $start, $pagesize, $usercount, qa_opt('pages_prev_next'));

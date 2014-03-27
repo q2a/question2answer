@@ -307,7 +307,7 @@
 			'page_size_tag_qs' => 20,
 			'page_size_tags' => 30,
 			'page_size_una_qs' => 20,
-			'page_size_users' => 20,
+			'page_size_users' => 30,
 			'page_size_wall' => 10,
 			'pages_prev_next' => 3,
 			'permit_anon_view_ips' => QA_PERMIT_EDITORS,

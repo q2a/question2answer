@@ -305,16 +305,14 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 /* Tags, users and categories */
 
-.qa-top-tags-table {float:left; border-collapse:collapse; margin-bottom:1em;}
-.qa-top-tags-count {border:1px solid #C0B600; border-right:1px dashed #E9E697; color:#8D006A; text-align:right; padding:6px 8px 6px 12px;}
-.qa-top-tags-label {border:1px solid #C0B600; border-left:none; background:#FFFFE6; padding:4px 16px 0 8px;}
-	.qa-top-tags-label .qa-tag-link {font-weight:normal;}
-.qa-top-tags-spacer {padding:0 4px;}
+.qa-ranking-item { display:inline-block; margin:0 5px 15px 0; padding:3px; vertical-align:top; width:220px; line-height:1.3; }
+.qa-top-users-item { border:1px solid #c0b600; background:#ffffe6; }
+.qa-top-users-avatar { float:left; margin-right:6px; }
+.qa-top-users-label, .qa-top-users-score { display:block; }
 
-.qa-top-users-table {float:left; border-collapse:collapse; margin-bottom:1em;}
-.qa-top-users-label {border:1px solid #C0B600; border-right:1px dashed #c1c5a9; padding:6px 16px 6px 12px; text-align:left;}
-.qa-top-users-score {background:#ffffe6; border-color:#C0B600; border-style:solid solid solid none; border-width:1px; color:#8D006A; padding:6px 12px; text-align:right;}
-.qa-top-users-spacer {padding:0 4px;}
+.qa-top-tags-item { width:170px; border:1px solid #c0b600; background:#ffffe6; }
+.qa-top-tags-count { display:inline-block; min-width:40px; text-align:right; padding-right:3px; }
+.qa-top-tags-label { display:inline-block; }
 
 .qa-browse-cat-list {list-style:none; padding:0; margin:0; margin-left:2em;}
 .qa-browse-cat-list-1 {font-size:18px; margin-top:1em;}

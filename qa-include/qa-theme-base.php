@@ -1248,73 +1248,44 @@
 		{
 			$this->part_title($ranking);
 
-			$class=(@$ranking['type']=='users') ? 'qa-top-users' : 'qa-top-tags';
+			if (!isset($ranking['type']))
+				$ranking['type'] = 'items';
+			$class = 'qa-top-'.$ranking['type'];
 
-			$rows=min($ranking['rows'], count($ranking['items']));
-
-			if ($rows>0) {
-				$this->output('<table class="'.$class.'-table">');
-
-				$columns=ceil(count($ranking['items'])/$rows);
-
-				for ($row=0; $row<$rows; $row++) {
-					$this->set_context('ranking_row', $row);
-					$this->output('<tr>');
-
-					for ($column=0; $column<$columns; $column++) {
-						$this->set_context('ranking_column', $column);
-						$this->ranking_item(@$ranking['items'][$column*$rows+$row], $class, $column>0);
-					}
-
-					$this->clear_context('ranking_column');
-
-					$this->output('</tr>');
-				}
-
-				$this->clear_context('ranking_row');
-
-				$this->output('</table>');
+			foreach ($ranking['items'] as $item) {
+				$this->output('<span class="qa-ranking-item '.$class.'-item">');
+				$this->ranking_item($item, $class);
+				$this->output('</span>');
 			}
 		}
 
-		public function ranking_item($item, $class, $spacer)
+		public function ranking_item($item, $class, $spacer=false) // $spacer is deprecated
 		{
-			if ($spacer)
-				$this->ranking_spacer($class);
+			if (isset($item['count']))
+				$this->ranking_count($item, $class);
 
-			if (empty($item)) {
-				$this->ranking_spacer($class);
-				$this->ranking_spacer($class);
+			if (isset($item['avatar']))
+				$this->avatar($item, $class);
 
-			} else {
-				if (isset($item['count']))
-					$this->ranking_count($item, $class);
+			$this->ranking_label($item, $class);
 
-				$this->ranking_label($item, $class);
-
-				if (isset($item['score']))
-					$this->ranking_score($item, $class);
-			}
-		}
-
-		public function ranking_spacer($class)
-		{
-			$this->output('<td class="'.$class.'-spacer">&nbsp;</td>');
+			if (isset($item['score']))
+				$this->ranking_score($item, $class);
 		}
 
 		public function ranking_count($item, $class)
 		{
-			$this->output('<td class="'.$class.'-count">'.$item['count'].' &#215;'.'</td>');
+			$this->output('<span class="'.$class.'-count">'.$item['count'].' &#215;'.'</span>');
 		}
 
 		public function ranking_label($item, $class)
 		{
-			$this->output('<td class="'.$class.'-label">'.$item['label'].'</td>');
+			$this->output('<span class="'.$class.'-label">'.$item['label'].'</span>');
 		}
 
 		public function ranking_score($item, $class)
 		{
-			$this->output('<td class="'.$class.'-score">'.$item['score'].'</td>');
+			$this->output('<span class="'.$class.'-score">'.$item['score'].'</span>');
 		}
 
 		public function message_list_and_form($list)
@@ -1613,10 +1584,14 @@
 			$this->output_split(@$post['views'], 'qa-view-count');
 		}
 
-		public function avatar($post, $class)
+		public function avatar($item, $class, $prefix=null)
 		{
-			if (isset($post['avatar']))
-				$this->output('<span class="'.$class.'-avatar">', $post['avatar'], '</span>');
+			if (isset($item['avatar'])) {
+				if (isset($prefix))
+					$this->output($prefix);
+
+				$this->output('<span class="'.$class.'-avatar">', $item['avatar'], '</span>');
+			}
 		}
 
 		public function a_selection($post)
