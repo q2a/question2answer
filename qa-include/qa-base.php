@@ -787,7 +787,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once 'qa-htmLawed.php';
+		require_once 'vendor/htmLawed.php';
 
 		global $qa_sanitize_html_newwindow;
 
