@@ -84,6 +84,7 @@
 		'no_updates_content' => 'No recent updates for my content',
 		'no_updates_favorites' => 'No updates for my favorites',
 		'private_message_title' => 'Send a private message',
+		'private_messages_title' => 'Private messages',
 		'recent_activity_from_x' => 'Recent activity from ^',
 		'recent_updates_content' => 'Recent updates for my content',
 		'recent_updates_favorites' => 'Recent updates for my favorites',
