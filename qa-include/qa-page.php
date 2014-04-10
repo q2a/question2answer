@@ -422,7 +422,7 @@
 			'ip/' => 'qa-page-ip.php',
 			'login' => 'qa-page-login.php',
 			'logout' => 'qa-page-logout.php',
-			'messages' => 'qa-page-messages.php',
+			'messages/' => 'qa-page-messages.php',
 			'message/' => 'qa-page-message.php',
 			'questions/' => 'qa-page-questions.php',
 			'register' => 'qa-page-register.php',
