@@ -994,7 +994,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$uc = 'a-z\x{00a1}-\x{ffff}';
-		$url_regex = '#\b((?:https?|ftp)://(?:[0-9'.$uc.'][0-9'.$uc.'-]*\.)+['.$uc.']{2,}(?::\d{2,5})?(?:/(?:[^\s]*[^\s\.])?)?)#iu';
+		$url_regex = '#\b((?:https?|ftp)://(?:[0-9'.$uc.'][0-9'.$uc.'-]*\.)+['.$uc.']{2,}(?::\d{2,5})?(?:/(?:[^\s<>]*[^\s<>\.])?)?)#iu';
 
 		// get matches and their positions
 		if (preg_match_all($url_regex, $html, $matches, PREG_OFFSET_CAPTURE)) {
