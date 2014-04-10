@@ -1301,6 +1301,22 @@
 	}
 
 
+	function qa_db_messages_columns()
+/*
+	Return columns for standard messages selectspec
+*/
+	{
+		return array(
+			'messageid', 'fromuserid', 'touserid', 'content', 'format',
+			'created' => 'UNIX_TIMESTAMP(^messages.created)',
+			'fromflags' => '^users.flags', 'fromlevel' => '^users.level',
+			'fromemail' => '^users.email', 'fromhandle' => '^users.handle',
+			'fromavatarblobid' => 'BINARY ^users.avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
+			'fromavatarwidth' => '^users.avatarwidth', 'fromavatarheight' => '^users.avatarheight',
+		);
+	}
+
+
 	function qa_db_recent_messages_selectspec($fromidentifier, $fromisuserid, $toidentifier, $toisuserid, $count=null, $start=0)
 /*
 	If $fromidentifier is not null, return the selectspec to get recent private messages which have been sent from
@@ -1309,22 +1325,76 @@
 	for the user identified by $toidentifier+$toisuserid. Return $count (if null, a default is used) messages.
 */
 	{
-		$count=isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
+		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
+
+		if (isset($fromidentifier)) {
+			$fromsub = $fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)';
+			$where = 'fromuserid=' . $fromsub . " AND type='PRIVATE'";
+		}
+		else
+			$where = "type='PUBLIC'";
+		$tosub = $toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)';
+
+		$source = '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE ' . $where . ' AND touserid=' . $tosub . ' ORDER BY ^messages.created DESC LIMIT #,#';
+
+		$arguments = isset($fromidentifier) ? array($fromidentifier, $toidentifier, $start, $count) : array($toidentifier, $start, $count);
 
 		return array(
-			'columns' => array(
-				'messageid', 'fromuserid', 'touserid', 'content', 'format', 'created' => 'UNIX_TIMESTAMP(^messages.created)',
-				'fromflags' => '^users.flags', 'fromlevel' => '^users.level', 'fromemail' => '^users.email', 'fromhandle' => '^users.handle',
-				'fromavatarblobid' => 'BINARY ^users.avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
-				'fromavatarwidth' => '^users.avatarwidth', 'fromavatarheight' => '^users.avatarheight',
-			),
+			'columns' => qa_db_messages_columns(),
+			'source' => $source,
+			'arguments' => $arguments,
+			'arraykey' => 'messageid',
+			'sortdesc' => 'created',
+		);
+	}
 
-			'source' => '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE '.(isset($fromidentifier)
-				? ('fromuserid='.($fromisuserid ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)")." AND type='PRIVATE'")
-				: "type='PUBLIC'"
-			).' AND touserid='.($toisuserid ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)").' ORDER BY ^messages.created DESC LIMIT #,#',
 
-			'arguments' => isset($fromidentifier) ? array($fromidentifier, $toidentifier, $start, $count) : array($toidentifier, $start, $count),
+	function qa_db_messages_inbox_selectspec($type, $toidentifier, $toisuserid, $count=null, $start=0)
+/*
+	Get selectspec for messages *to* specified user.
+	$type is either 'public' or 'private'.
+	$toidentifier is a handle or userid depending on the value of $toisuserid.
+	Return $count (or default) messages.
+*/
+	{
+		$type = strtoupper($type);
+		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
+
+		$where = 'touserid=' . ($toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
+		$source = '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
+
+		$arguments = array($toidentifier, $type, $start, $count);
+
+		return array(
+			'columns' => qa_db_messages_columns(),
+			'source' => $source,
+			'arguments' => $arguments,
+			'arraykey' => 'messageid',
+			'sortdesc' => 'created',
+		);
+	}
+
+
+	function qa_db_messages_outbox_selectspec($type, $fromidentifier, $fromisuserid, $count=null, $start=0)
+/*
+	Get selectspec for messages *from* specified user.
+	$type is either 'public' or 'private'.
+	$fromidentifier is a handle or userid depending on the value of $fromisuserid.
+	Return $count (or default) messages.
+*/
+	{
+		$type = strtoupper($type);
+		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
+
+		$where = 'fromuserid=' . ($fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
+		$source = '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
+
+		$arguments = array($fromidentifier, $type, $start, $count);
+
+		return array(
+			'columns' => qa_db_messages_columns(),
+			'source' => $source,
+			'arguments' => $arguments,
 			'arraykey' => 'messageid',
 			'sortdesc' => 'created',
 		);
