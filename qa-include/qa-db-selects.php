@@ -1309,10 +1309,16 @@
 		return array(
 			'messageid', 'fromuserid', 'touserid', 'content', 'format',
 			'created' => 'UNIX_TIMESTAMP(^messages.created)',
-			'fromflags' => '^users.flags', 'fromlevel' => '^users.level',
-			'fromemail' => '^users.email', 'fromhandle' => '^users.handle',
-			'fromavatarblobid' => 'BINARY ^users.avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
-			'fromavatarwidth' => '^users.avatarwidth', 'fromavatarheight' => '^users.avatarheight',
+
+			'fromflags' => 'ufrom.flags', 'fromlevel' => 'ufrom.level',
+			'fromemail' => 'ufrom.email', 'fromhandle' => 'ufrom.handle',
+			'fromavatarblobid' => 'BINARY ufrom.avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
+			'fromavatarwidth' => 'ufrom.avatarwidth', 'fromavatarheight' => 'ufrom.avatarheight',
+
+			'toflags' => 'uto.flags', 'tolevel' => 'uto.level',
+			'toemail' => 'uto.email', 'tohandle' => 'uto.handle',
+			'toavatarblobid' => 'BINARY uto.avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
+			'toavatarwidth' => 'uto.avatarwidth', 'toavatarheight' => 'uto.avatarheight',
 		);
 	}
 
@@ -1335,7 +1341,7 @@
 			$where = "type='PUBLIC'";
 		$tosub = $toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)';
 
-		$source = '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE ' . $where . ' AND touserid=' . $tosub . ' ORDER BY ^messages.created DESC LIMIT #,#';
+		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' AND touserid=' . $tosub . ' ORDER BY ^messages.created DESC LIMIT #,#';
 
 		$arguments = isset($fromidentifier) ? array($fromidentifier, $toidentifier, $start, $count) : array($toidentifier, $start, $count);
 
@@ -1361,7 +1367,7 @@
 		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
 
 		$where = 'touserid=' . ($toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
-		$source = '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
+		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
 
 		$arguments = array($toidentifier, $type, $start, $count);
 
@@ -1387,7 +1393,7 @@
 		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
 
 		$where = 'fromuserid=' . ($fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
-		$source = '^messages LEFT JOIN ^users ON fromuserid=^users.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
+		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
 
 		$arguments = array($fromidentifier, $type, $start, $count);
 
