@@ -459,8 +459,14 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			return strlen($handle) ? ('<a href="'.qa_path_html('user/'.$handle).'" class="qa-user-link'
-				.($favorited ? ' qa-user-favorited' : '').($microformats ? ' url nickname' : '').'">'.qa_html($handle).'</a>') : '';
+			if (!strlen($handle))
+				return '';
+
+			$url = qa_path_html('user/'.$handle);
+			$favclass = $favorited ? ' qa-user-favorited' : '';
+			$mfclass = $microformats ? ' url nickname' : '';
+
+			return '<a href="'.$url.'" class="qa-user-link'.$favclass.$mfclass.'">'.qa_html($handle).'</a>';
 		}
 
 

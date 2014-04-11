@@ -619,14 +619,14 @@
 
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$fields=array('raw' => $message);
-		$fields['tags']='id="m'.qa_html($message['messageid']).'"';
+		$fields = array('raw' => $message);
+		$fields['tags'] = 'id="m'.qa_html($message['messageid']).'"';
 
 	//	Message content
 
-		$viewer=qa_load_viewer($message['content'], $message['format']);
+		$viewer = qa_load_viewer($message['content'], $message['format']);
 
-		$fields['content']=$viewer->get_html($message['content'], $message['format'], array(
+		$fields['content'] = $viewer->get_html($message['content'], $message['format'], array(
 			'blockwordspreg' => @$options['blockwordspreg'],
 			'showurllinks' => @$options['showurllinks'],
 			'linksnewwindow' => @$options['linksnewwindow'],
@@ -634,14 +634,14 @@
 
 	//	Set ordering of meta elements which can be language-specific
 
-		$fields['meta_order']=qa_lang_html('main/meta_order');
+		$fields['meta_order'] = qa_lang_html('main/meta_order');
 
-		$fields['what']=qa_lang_html('main/written');
+		$fields['what'] = qa_lang_html('main/written');
 
 	//	When it was written
 
 		if (@$options['whenview'])
-			$fields['when']=qa_when_to_html($message['created'], @$options['fulldatedays']);
+			$fields['when'] = qa_when_to_html($message['created'], @$options['fulldatedays']);
 
 	//	Who wrote it, and their avatar
 

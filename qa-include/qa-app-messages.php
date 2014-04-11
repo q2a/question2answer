@@ -40,11 +40,11 @@
 
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ((!QA_FINAL_EXTERNAL_USERS) && qa_opt('allow_user_walls')) {
-			if ( ($touserflags & QA_USER_FLAGS_NO_WALL_POSTS) && !(isset($fromuserid) && ($fromuserid==$touserid)) )
+		if (!QA_FINAL_EXTERNAL_USERS && qa_opt('allow_user_walls')) {
+			if ( ($touserflags & QA_USER_FLAGS_NO_WALL_POSTS) && !(isset($fromuserid) && $fromuserid == $touserid) )
 				return qa_lang_html('profile/post_wall_blocked');
 
-			else
+			else {
 				switch (qa_user_permit_error('permit_post_wall', QA_LIMIT_WALL_POSTS)) {
 					case 'limit':
 						return qa_lang_html('profile/post_wall_limit');
@@ -66,6 +66,7 @@
 						return false;
 						break;
 				}
+			}
 		}
 
 		return qa_lang_html('users/no_permission');
@@ -83,7 +84,7 @@
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
 
-		$messageid=qa_db_message_create($userid, $touserid, $content, $format, true);
+		$messageid = qa_db_message_create($userid, $touserid, $content, $format, true);
 		qa_db_user_recount_posts($touserid);
 
 		qa_report_event('u_wall_post', $userid, $handle, $cookieid, array(
@@ -126,18 +127,18 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$userid=qa_get_logged_in_userid();
-		$userdeleteall=!(qa_user_permit_error('permit_hide_show') || qa_user_permit_error('permit_delete_hidden'));
+		$userid = qa_get_logged_in_userid();
+		$userdeleteall = !(qa_user_permit_error('permit_hide_show') || qa_user_permit_error('permit_delete_hidden'));
 			// reuse "Hiding or showing any post" and "Deleting hidden posts" permissions
-		$userrecent=($start==0) && isset($userid); // User can delete all of the recent messages they wrote on someone's wall...
+		$userrecent = $start == 0 && isset($userid); // User can delete all of the recent messages they wrote on someone's wall...
 
 		foreach ($usermessages as $key => $message) {
-			if ($message['fromuserid']!=$userid)
-				$userrecent=false; // ... until we come across one that they didn't write (which could be a reply)
+			if ($message['fromuserid'] != $userid)
+				$userrecent = false; // ... until we come across one that they didn't write (which could be a reply)
 
 			$usermessages[$key]['deleteable'] =
-				($message['touserid']==$userid) || // if it's this user's wall
-				($userrecent && ($message['fromuserid']==$userid)) || // if it's one the user wrote that no one replied to yet
+				$message['touserid'] == $userid || // if it's this user's wall
+				($userrecent && $message['fromuserid'] == $userid) || // if it's one the user wrote that no one replied to yet
 				$userdeleteall; // if the user has enough permissions  to delete from any wall
 		}
 
@@ -153,12 +154,12 @@
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 
-		$options=qa_message_html_defaults();
+		$options = qa_message_html_defaults();
 
-		$htmlfields=qa_message_html_fields($message, $options);
+		$htmlfields = qa_message_html_fields($message, $options);
 
-		if ($message['deleteable'])
-			$htmlfields['form']=array(
+		if ($message['deleteable']) {
+			$htmlfields['form'] = array(
 				'style' => 'light',
 
 				'buttons' => array(
@@ -169,6 +170,7 @@
 					),
 				),
 			);
+		}
 
 		return $htmlfields;
 	}
@@ -179,8 +181,9 @@
 	Returns an element to add to $qa_content['message_list']['messages'] with a link to view all wall posts
 */
 	{
+		$url = qa_path_html( 'user/'.$handle.'/wall', array('start' => $start) );
 		return array(
-			'content' => '<a href="'.qa_path_html('user/'.$handle.'/wall', array('start' => $start)).'">'.qa_lang_html('profile/wall_view_more').'</a>',
+			'content' => '<a href="'.$url.'">'.qa_lang_html('profile/wall_view_more').'</a>',
 		);
 	}
 
