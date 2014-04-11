@@ -37,6 +37,8 @@
 	$handle = qa_request_part(1);
 	$loginuserid = qa_get_logged_in_userid();
 
+	$qa_content = qa_content_prepare();
+
 
 //	Check we have a handle, we're not using Q2A's single-sign on integration and that we're logged in
 
@@ -47,13 +49,12 @@
 		qa_redirect('users');
 
 	if (!isset($loginuserid)) {
-		$qa_content = qa_content_prepare();
 		$qa_content['error'] = qa_insert_login_links(qa_lang_html('misc/message_must_login'), qa_request());
 		return $qa_content;
 	}
 
 
-//	Find the user profile and questions and answers for this handle
+//	Find the user profile and their recent private messages
 
 	list($toaccount, $torecent, $fromrecent) = qa_db_select_with_pending(
 		qa_db_user_account_selectspec($handle, false),
@@ -68,36 +69,34 @@
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
 
-//	Check that we have permission and haven't reached the limit
-
-	$errorhtml = null;
+//	Check that we have permission and haven't reached the limit, but don't quit just yet
 
 	switch (qa_user_permit_error(null, QA_LIMIT_MESSAGES)) {
 		case 'limit':
-			$errorhtml = qa_lang_html('misc/message_limit');
+			$pageerror = qa_lang_html('misc/message_limit');
 			break;
 
 		case false:
 			break;
 
 		default:
-			$errorhtml = qa_lang_html('users/no_permission');
+			$pageerror = qa_lang_html('users/no_permission');
 			break;
-	}
-
-	if (isset($errorhtml)) {
-		$qa_content = qa_content_prepare();
-		$qa_content['error'] = $errorhtml;
-		return $qa_content;
 	}
 
 
 //	Process sending a message to user
 
-	$messagesent = (qa_get_state() == 'message-sent');
+	$messagesent = qa_get_state() == 'message-sent';
 
 	if (qa_post_text('domessage')) {
 		$inmessage = qa_post_text('message');
+
+		if (isset($pageerror)) {
+			// not permitted to post, so quit here
+			$qa_content['error'] = $pageerror;
+			return $qa_content;
+		}
 
 		if ( !qa_check_form_security_code('message-'.$handle, qa_post_text('code')) )
 			$pageerror = qa_lang_html('misc/form_security_again');
@@ -153,7 +152,7 @@
 
 //	Prepare content for theme
 
-	$qa_content = qa_content_prepare();
+	$hideForm = !empty($pageerror) || $messagesent;
 
 	$qa_content['title'] = qa_lang_html('misc/private_message_title');
 
@@ -164,9 +163,11 @@
 
 		'style' => 'tall',
 
+		'ok' => $messagesent ? qa_lang_html('misc/message_sent') : null,
+
 		'fields' => array(
 			'message' => array(
-				'type' => $messagesent ? 'static' : '',
+				'type' => $hideForm ? 'static' : '',
 				'label' => qa_lang_html_sub('misc/message_for_x', qa_get_one_user_html($handle, false)),
 				'tags' => 'name="message" id="message"',
 				'value' => qa_html(@$inmessage, $messagesent),
@@ -191,8 +192,7 @@
 
 	$qa_content['focusid'] = 'message';
 
-	if ($messagesent) {
-		$qa_content['form_message']['ok'] = qa_lang_html('misc/message_sent');
+	if ($hideForm) {
 		unset($qa_content['form_message']['buttons']);
 
 		if (qa_opt('show_message_history'))
@@ -227,7 +227,6 @@
 
 
 	$qa_content['raw']['account'] = $toaccount; // for plugin layers to access
-
 
 	return $qa_content;
 
