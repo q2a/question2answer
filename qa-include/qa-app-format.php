@@ -645,12 +645,21 @@
 
 	//	Who wrote it, and their avatar
 
-		if (@$options['whoview'])
-			$fields['who']=qa_lang_html_sub_split('main/by_x', qa_get_one_user_html($message['fromhandle'], false));
-
-		if (@$options['avatarsize']>0)
-			$fields['avatar']=qa_get_user_avatar_html(@$message['fromflags'], @$message['fromemail'], @$message['fromhandle'],
-				@$message['fromavatarblobid'], @$message['fromavatarwidth'], @$message['fromavatarheight'], $options['avatarsize']);
+		if (@$options['towhomview']) {
+			// for sent private messages page (i.e. show who message was sent to)
+			$fields['who'] = qa_lang_html_sub_split('main/to_x', qa_get_one_user_html($message['tohandle'], false));
+			$fields['avatar'] = qa_get_user_avatar_html(@$message['toflags'], @$message['toemail'], @$message['tohandle'],
+				@$message['toavatarblobid'], @$message['toavatarwidth'], @$message['toavatarheight'], $options['avatarsize']);
+		}
+		else {
+			// for everything else (questions, answers, activity, wall messages)
+			if (@$options['whoview'])
+				$fields['who'] = qa_lang_html_sub_split('main/by_x', qa_get_one_user_html($message['fromhandle'], false));
+			if (@$options['avatarsize'] > 0) {
+				$fields['avatar'] = qa_get_user_avatar_html(@$message['fromflags'], @$message['fromemail'], @$message['fromhandle'],
+					@$message['fromavatarblobid'], @$message['fromavatarwidth'], @$message['fromavatarheight'], $options['avatarsize']);
+			}
+		}
 
 	//	That's it!
 

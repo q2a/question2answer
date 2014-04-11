@@ -39,7 +39,7 @@
 
 //	Check which box we're showing (inbox/sent), we're not using Q2A's single-sign on integration and that we're logged in
 
-	$showInbox = qa_request_part(1) !== 'sent';
+	$showingInbox = qa_request_part(1) !== 'sent';
 
 	if (QA_FINAL_EXTERNAL_USERS)
 		qa_fatal_error('User accounts are handled by external code');
@@ -56,7 +56,7 @@
 
 //	Find the user profile and questions and answers for this handle
 
-	$pmSpec = $showInbox
+	$pmSpec = $showingInbox
 		? qa_db_messages_inbox_selectspec('private', $loginUserId, true)
 		: qa_db_messages_outbox_selectspec('private', $loginUserId, true);
 
@@ -66,29 +66,33 @@
 //	Prepare content for theme
 
 	$qa_content = qa_content_prepare();
-	$qa_content['title'] = $showInbox ? qa_lang_html('misc/pm_inbox_title') : qa_lang_html('misc/pm_outbox_title');
+	$qa_content['title'] = $showingInbox ? qa_lang_html('misc/pm_inbox_title') : qa_lang_html('misc/pm_outbox_title');
 
 	$qa_content['message_list'] = array(
 		'tags' => 'id="privatemessages"',
 		'messages' => array(),
 	);
 
-	$options = qa_message_html_defaults();
+	$htmlDefaults = qa_message_html_defaults();
+	if (!$showingInbox) {
+		$htmlDefaults['towhomview'] = true;
+	}
+
 	foreach ($userMessages as $message) {
-		$qa_content['message_list']['messages'][] = qa_message_html_fields($message, $options);
+		$qa_content['message_list']['messages'][] = qa_message_html_fields($message, $htmlDefaults);
 	}
 
 	$qa_content['navigation']['sub'] = array(
 		'inbox' => array(
 			'label' => qa_lang_html('misc/inbox'),
 			'url' => qa_path_html('messages'),
-			'selected' => $showInbox,
+			'selected' => $showingInbox,
 		),
 
 		'outbox' => array(
 			'label' => qa_lang_html('misc/outbox'),
 			'url' => qa_path_html('messages/sent'),
-			'selected' => !$showInbox,
+			'selected' => !$showingInbox,
 		)
 	);
 

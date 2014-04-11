@@ -171,6 +171,7 @@
 		'suggest_category_qs' => 'To see more, click for all the ^1questions in this category^2.',
 		'suggest_qs_tags' => 'To see more, click for the ^1full list of questions^2 or ^3popular tags^4.',
 		'suggest_qs' => 'To see more, click for the ^1full list of questions^2.',
+		'to_x' => 'to ^',
 		'unanswered_qs_in_x' => 'Questions without answers in ^',
 		'unanswered_qs_title' => 'Recent questions without answers',
 		'unselected_qs_in_x' => 'Questions without a selected answer in ^',
