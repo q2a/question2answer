@@ -68,6 +68,7 @@
 		
 		$codetolanguage=array( // 2-letter language codes as per ISO 639-1
 			'ar' => 'Arabic - العربية',
+			'az' => 'Azerbaijani - Azərbaycanca',
 			'bg' => 'Bulgarian - Български',
 			'bn' => 'Bengali - বাংলা',
 			'ca' => 'Catalan - Català',
