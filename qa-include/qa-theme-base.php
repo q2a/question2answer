@@ -1279,25 +1279,30 @@
 					$this->ranking_score($item, $class);
 			}
 		}
+
+		function ranking_cell($class, $class_suffix, $content)
+		{
+			$this->output('<td class="'.$class.'-'.$class_suffix.'">'.$content.'</td>');
+		}
 		
 		function ranking_spacer($class)
 		{
-			$this->output('<td class="'.$class.'-spacer">&nbsp;</td>');
+			$this->ranking_cell($class, 'spacer', '&nbsp;');
 		}
 		
 		function ranking_count($item, $class)
 		{
-			$this->output('<td class="'.$class.'-count">'.$item['count'].' &#215;'.'</td>');
+			$this->ranking_cell($class, 'count', $item['count'].' &#215;');
 		}
 		
 		function ranking_label($item, $class)
 		{
-			$this->output('<td class="'.$class.'-label">'.$item['label'].'</td>');
+			$this->ranking_cell($class, 'label', $item['label']);
 		}
 		
 		function ranking_score($item, $class)
 		{
-			$this->output('<td class="'.$class.'-score">'.$item['score'].'</td>');
+			$this->ranking_cell($class, 'score', $item['score']);
 		}
 		
 		function message_list_and_form($list)
