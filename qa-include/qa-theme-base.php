@@ -71,15 +71,15 @@
 	*/
 		{
 			foreach ($elements as $element) {
-				$delta=substr_count($element, '<')-substr_count($element, '<!')-2*substr_count($element, '</')-substr_count($element, '/>');
+				$delta = substr_count($element, '<') - substr_count($element, '<!') - 2*substr_count($element, '</') - substr_count($element, '/>');
 
-				if ($delta<0)
-					$this->indent+=$delta;
+				if ($delta < 0)
+					$this->indent += $delta;
 
 				echo str_repeat("\t", max(0, $this->indent)).str_replace('/>', '>', $element)."\n";
 
-				if ($delta>0)
-					$this->indent+=$delta;
+				if ($delta > 0)
+					$this->indent += $delta;
 
 				$this->lines++;
 			}
@@ -91,7 +91,7 @@
 		Output each passed parameter on a separate line - see output_array() comments
 	*/
 		{
-			$args=func_get_args();
+			$args = func_get_args();
 			$this->output_array($args);
 		}
 
@@ -113,7 +113,7 @@
 		with appropriate CSS classes based on $class, using $outertag and $innertag in the markup.
 	*/
 		{
-			if (empty($parts) && (strtolower($outertag)!='td'))
+			if (empty($parts) && strtolower($outertag) != 'td')
 				return;
 
 			$this->output(
@@ -131,7 +131,7 @@
 		Set some context, which be accessed via $this->context for a function to know where it's being used on the page
 	*/
 		{
-			$this->context[$key]=$value;
+			$this->context[$key] = $value;
 		}
 
 
@@ -180,12 +180,13 @@
 		Post-output cleanup. For now, check that the indenting ended right, and if not, output a warning in an HTML comment
 	*/
 		{
-			if ($this->indent)
+			if ($this->indent) {
 				echo "<!--\nIt's no big deal, but your HTML could not be indented properly. To fix, please:\n".
 					"1. Use this->output() to output all HTML.\n".
 					"2. Balance all paired tags like <td>...</td> or <div>...</div>.\n".
 					"3. Use a slash at the end of unpaired tags like <img/> or <input/>.\n".
 					"Thanks!\n-->\n";
+			}
 		}
 
 
@@ -236,8 +237,8 @@
 
 		public function head_title()
 		{
-			$pagetitle=strlen($this->request) ? strip_tags(@$this->content['title']) : '';
-			$headtitle=(strlen($pagetitle) ? ($pagetitle.' - ') : '').$this->content['site_title'];
+			$pagetitle = strlen($this->request) ? strip_tags(@$this->content['title']) : '';
+			$headtitle = (strlen($pagetitle) ? ($pagetitle.' - ') : '').$this->content['site_title'];
 
 			$this->output('<title>'.$headtitle.'</title>');
 		}
@@ -270,25 +271,28 @@
 
 		public function head_script()
 		{
-			if (isset($this->content['script']))
+			if (isset($this->content['script'])) {
 				foreach ($this->content['script'] as $scriptline)
 					$this->output_raw($scriptline);
+			}
 		}
 
 		public function head_css()
 		{
 			$this->output('<link rel="stylesheet" type="text/css" href="'.$this->rooturl.$this->css_name().'"/>');
 
-			if (isset($this->content['css_src']))
+			if (isset($this->content['css_src'])) {
 				foreach ($this->content['css_src'] as $css_src)
 					$this->output('<link rel="stylesheet" type="text/css" href="'.$css_src.'"/>');
+			}
 
-			if (!empty($this->content['notices']))
+			if (!empty($this->content['notices'])) {
 				$this->output(
 					'<style><!--',
 					'.qa-body-js-on .qa-notice {display:none;}',
 					'//--></style>'
 				);
+			}
 		}
 
 		public function css_name()
@@ -298,9 +302,10 @@
 
 		public function head_lines()
 		{
-			if (isset($this->content['head_lines']))
+			if (isset($this->content['head_lines'])) {
 				foreach ($this->content['head_lines'] as $line)
 					$this->output_raw($line);
+			}
 		}
 
 		public function head_custom()
@@ -380,11 +385,12 @@
 
 		public function body_tags()
 		{
-			$class='qa-template-'.qa_html($this->template);
+			$class = 'qa-template-'.qa_html($this->template);
 
-			if (isset($this->content['categoryids']))
+			if (isset($this->content['categoryids'])) {
 				foreach ($this->content['categoryids'] as $categoryid)
-					$class.=' qa-category-'.qa_html($categoryid);
+					$class .= ' qa-category-'.qa_html($categoryid);
+			}
 
 			$this->output('class="'.$class.' qa-body-js-off"');
 		}
@@ -401,9 +407,10 @@
 
 		public function notices()
 		{
-			if (!empty($this->content['notices']))
+			if (!empty($this->content['notices'])) {
 				foreach ($this->content['notices'] as $notice)
 					$this->notice($notice);
+			}
 		}
 
 		public function notice($notice)
@@ -460,7 +467,7 @@
 
 		public function search()
 		{
-			$search=$this->content['search'];
+			$search = $this->content['search'];
 
 			$this->output(
 				'<div class="qa-search">',
@@ -489,20 +496,21 @@
 
 		public function nav($navtype, $level=null)
 		{
-			$navigation=@$this->content['navigation'][$navtype];
+			$navigation = @$this->content['navigation'][$navtype];
 
-			if (($navtype=='user') || isset($navigation)) {
+			if ($navtype == 'user' || isset($navigation)) {
 				$this->output('<div class="qa-nav-'.$navtype.'">');
 
-				if ($navtype=='user')
+				if ($navtype == 'user')
 					$this->logged_in();
 
 				// reverse order of 'opposite' items since they float right
-				foreach (array_reverse($navigation, true) as $key => $navlink)
+				foreach (array_reverse($navigation, true) as $key => $navlink) {
 					if (@$navlink['opposite']) {
 						unset($navigation[$key]);
-						$navigation[$key]=$navlink;
+						$navigation[$key] = $navlink;
 					}
+				}
 
 				$this->set_context('nav_type', $navtype);
 				$this->nav_list($navigation, 'nav-'.$navtype, $level);
@@ -517,7 +525,7 @@
 		{
 			$this->output('<ul class="qa-'.$class.'-list'.(isset($level) ? (' qa-'.$class.'-list-'.$level) : '').'">');
 
-			$index=0;
+			$index = 0;
 
 			foreach ($navigation as $key => $navlink) {
 				$this->set_context('nav_key', $key);
@@ -541,7 +549,7 @@
 
 		public function nav_item($key, $navlink, $class, $level=null)
 		{
-			$suffix=strtr($key, array( // map special character in navigation key
+			$suffix = strtr($key, array( // map special character in navigation key
 				'$' => '',
 				'/' => '-',
 			));
@@ -558,7 +566,7 @@
 
 		public function nav_link($navlink, $class)
 		{
-			if (isset($navlink['url']))
+			if (isset($navlink['url'])) {
 				$this->output(
 					'<a href="'.$navlink['url'].'" class="qa-'.$class.'-link'.
 					(@$navlink['selected'] ? (' qa-'.$class.'-selected') : '').
@@ -567,14 +575,15 @@
 					(isset($navlink['target']) ? (' target="'.$navlink['target'].'"') : '').'>'.$navlink['label'].
 					'</a>'
 				);
-
-			else
+			}
+			else {
 				$this->output(
 					'<span class="qa-'.$class.'-nolink'.(@$navlink['selected'] ? (' qa-'.$class.'-selected') : '').
 					(@$navlink['favorited'] ? (' qa-'.$class.'-favorited') : '').'"'.
 					(strlen(@$navlink['popup']) ? (' title="'.$navlink['popup'].'"') : '').
 					'>'.$navlink['label'].'</span>'
 				);
+			}
 
 			if (strlen(@$navlink['note']))
 				$this->output('<span class="qa-'.$class.'-note">'.$navlink['note'].'</span>');
@@ -609,7 +618,7 @@
 
 		public function sidebar()
 		{
-			$sidebar=@$this->content['sidebar'];
+			$sidebar = @$this->content['sidebar'];
 
 			if (!empty($sidebar)) {
 				$this->output('<div class="qa-sidebar">');
@@ -620,7 +629,7 @@
 
 		public function feed()
 		{
-			$feed=@$this->content['feed'];
+			$feed = @$this->content['feed'];
 
 			if (!empty($feed)) {
 				$this->output('<div class="qa-feed">');
@@ -631,7 +640,7 @@
 
 		public function main()
 		{
-			$content=$this->content;
+			$content = $this->content;
 
 			$this->output('<div class="qa-main'.(@$this->content['hidden'] ? ' qa-main-hidden' : '').'">');
 
@@ -641,13 +650,7 @@
 
 			$this->widgets('main', 'high');
 
-			/*if (isset($content['main_form_tags']))
-				$this->output('<form '.$content['main_form_tags'].'>');*/
-
 			$this->main_parts($content);
-
-			/*if (isset($content['main_form_tags']))
-				$this->output('</form>');*/
 
 			$this->widgets('main', 'low');
 
@@ -661,7 +664,7 @@
 
 		public function page_title_error()
 		{
-			$favorite=@$this->content['favorite'];
+			$favorite = @$this->content['favorite'];
 
 			if (isset($favorite))
 				$this->output('<form '.$favorite['form_tags'].'>');
@@ -682,7 +685,7 @@
 
 		public function favorite()
 		{
-			$favorite=@$this->content['favorite'];
+			$favorite = @$this->content['favorite'];
 
 			if (isset($favorite)) {
 				$this->output('<span class="qa-favoriting" '.@$favorite['favorite_tags'].'>');
@@ -725,12 +728,13 @@
 
 		public function error($error)
 		{
-			if (strlen($error))
+			if (strlen($error)) {
 				$this->output(
 					'<div class="qa-error">',
 					$error,
 					'</div>'
 				);
+			}
 		}
 
 		public function main_parts($content)
@@ -745,46 +749,46 @@
 
 		public function main_part($key, $part)
 		{
-			$partdiv=(
-				(strpos($key, 'custom')===0) ||
-				(strpos($key, 'form')===0) ||
-				(strpos($key, 'q_list')===0) ||
-				(strpos($key, 'q_view')===0) ||
-				(strpos($key, 'a_form')===0) ||
-				(strpos($key, 'a_list')===0) ||
-				(strpos($key, 'ranking')===0) ||
-				(strpos($key, 'message_list')===0) ||
-				(strpos($key, 'nav_list')===0)
+			$partdiv = (
+				strpos($key, 'custom') === 0 ||
+				strpos($key, 'form') === 0 ||
+				strpos($key, 'q_list') === 0 ||
+				strpos($key, 'q_view') === 0 ||
+				strpos($key, 'a_form') === 0 ||
+				strpos($key, 'a_list') === 0 ||
+				strpos($key, 'ranking') === 0 ||
+				strpos($key, 'message_list') === 0 ||
+				strpos($key, 'nav_list') === 0
 			);
 
 			if ($partdiv)
 				$this->output('<div class="qa-part-'.strtr($key, '_', '-').'">'); // to help target CSS to page parts
 
-			if (strpos($key, 'custom')===0)
+			if (strpos($key, 'custom') === 0)
 				$this->output_raw($part);
 
-			elseif (strpos($key, 'form')===0)
+			elseif (strpos($key, 'form') === 0)
 				$this->form($part);
 
-			elseif (strpos($key, 'q_list')===0)
+			elseif (strpos($key, 'q_list') === 0)
 				$this->q_list_and_form($part);
 
-			elseif (strpos($key, 'q_view')===0)
+			elseif (strpos($key, 'q_view') === 0)
 				$this->q_view($part);
 
-			elseif (strpos($key, 'a_form')===0)
+			elseif (strpos($key, 'a_form') === 0)
 				$this->a_form($part);
 
-			elseif (strpos($key, 'a_list')===0)
+			elseif (strpos($key, 'a_list') === 0)
 				$this->a_list($part);
 
-			elseif (strpos($key, 'ranking')===0)
+			elseif (strpos($key, 'ranking') === 0)
 				$this->ranking($part);
 
-			elseif (strpos($key, 'message_list')===0)
+			elseif (strpos($key, 'message_list') === 0)
 				$this->message_list_and_form($part);
 
-			elseif (strpos($key, 'nav_list')===0) {
+			elseif (strpos($key, 'nav_list') === 0) {
 				$this->part_title($part);
 				$this->nav_list($part['nav'], $part['type'], 1);
 			}
@@ -852,9 +856,9 @@
 		public function form_columns($form)
 		{
 			if (isset($form['ok']) || !empty($form['fields']) )
-				$columns=($form['style']=='wide') ? 3 : 1;
+				$columns = ($form['style'] == 'wide') ? 3 : 1;
 			else
-				$columns=0;
+				$columns = 0;
 
 			return $columns;
 		}
@@ -875,7 +879,7 @@
 			if (@$form['boxed'])
 				$this->output('<div class="qa-form-table-boxed">');
 
-			$columns=$this->form_columns($form);
+			$columns = $this->form_columns($form);
 
 			if ($columns)
 				$this->output('<table class="qa-form-'.$form['style'].'-table">');
@@ -895,7 +899,7 @@
 
 		public function form_ok($form, $columns)
 		{
-			if (!empty($form['ok']))
+			if (!empty($form['ok'])) {
 				$this->output(
 					'<tr>',
 					'<td colspan="'.$columns.'" class="qa-form-'.$form['style'].'-ok">',
@@ -903,6 +907,7 @@
 					'</td>',
 					'</tr>'
 				);
+			}
 		}
 
 		public function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
@@ -923,7 +928,7 @@
 				foreach ($form['fields'] as $key => $field) {
 					$this->set_context('field_key', $key);
 
-					if (@$field['type']=='blank')
+					if (@$field['type'] == 'blank')
 						$this->form_spacer($form, $columns);
 					else
 						$this->form_field_rows($form, $columns, $field);
@@ -935,56 +940,59 @@
 
 		public function form_field_rows($form, $columns, $field)
 		{
-			$style=$form['style'];
+			$style = $form['style'];
 
 			if (isset($field['style'])) { // field has different style to most of form
-				$style=$field['style'];
-				$colspan=$columns;
-				$columns=($style=='wide') ? 3 : 1;
-			} else
-				$colspan=null;
+				$style = $field['style'];
+				$colspan = $columns;
+				$columns = ($style == 'wide') ? 3 : 1;
+			}
+			else
+				$colspan = null;
 
-			$prefixed=((@$field['type']=='checkbox') && ($columns==1) && !empty($field['label']));
-			$suffixed=(((@$field['type']=='select') || (@$field['type']=='number')) && ($columns==1) && !empty($field['label'])) && (!@$field['loose']);
-			$skipdata=@$field['tight'];
-			$tworows=($columns==1) && (!empty($field['label'])) && (!$skipdata) &&
+			$prefixed = (@$field['type'] == 'checkbox') && ($columns == 1) && !empty($field['label']);
+			$suffixed = (@$field['type'] == 'select' || @$field['type'] == 'number') && $columns == 1 && !empty($field['label']) && !@$field['loose'];
+			$skipdata = @$field['tight'];
+			$tworows = ($columns == 1) && (!empty($field['label'])) && (!$skipdata) &&
 				( (!($prefixed||$suffixed)) || (!empty($field['error'])) || (!empty($field['note'])) );
 
-			if (isset($field['id']))
+			if (isset($field['id'])) {
 				if ($columns == 1)
 					$this->output('<tbody id="'.$field['id'].'">', '<tr>');
 				else
 					$this->output('<tr id="'.$field['id'].'">');
+			}
 			else
 				$this->output('<tr>');
 
-			if (($columns>1) || !empty($field['label']))
+			if ($columns > 1 || !empty($field['label']))
 				$this->form_label($field, $style, $columns, $prefixed, $suffixed, $colspan);
 
-			if ($tworows)
+			if ($tworows) {
 				$this->output(
 					'</tr>',
 					'<tr>'
 				);
+			}
 
 			if (!$skipdata)
 				$this->form_data($field, $style, $columns, !($prefixed||$suffixed), $colspan);
 
 			$this->output('</tr>');
 
-			if (($columns==1) && isset($field['id']))
+			if ($columns == 1 && isset($field['id']))
 				$this->output('</tbody>');
 		}
 
 		public function form_label($field, $style, $columns, $prefixed, $suffixed, $colspan)
 		{
-			$extratags='';
+			$extratags = '';
 
-			if ( ($columns>1) && ((@$field['type']=='select-radio') || (@$field['rows']>1)) )
-				$extratags.=' style="vertical-align:top;"';
+			if ($columns > 1 && (@$field['type'] == 'select-radio' || @$field['rows'] > 1))
+				$extratags .= ' style="vertical-align:top;"';
 
 			if (isset($colspan))
-				$extratags.=' colspan="'.$colspan.'"';
+				$extratags .= ' colspan="'.$colspan.'"';
 
 			$this->output('<td class="qa-form-'.$style.'-label"'.$extratags.'>');
 
@@ -1021,8 +1029,8 @@
 						$this->form_note($field, $style, $columns);
 
 					$this->form_error($field, $style, $columns);
-
-				} elseif (!empty($field['note']))
+				}
+				elseif (!empty($field['note']))
 					$this->form_note($field, $style, $columns);
 
 				$this->output('</td>');
@@ -1069,7 +1077,7 @@
 					break;
 
 				default:
-					if ((@$field['type']=='textarea') || (@$field['rows']>1))
+					if (@$field['type'] == 'textarea' || @$field['rows'] > 1)
 						$this->form_text_multi_row($field, $style);
 					else
 						$this->form_text_single_row($field, $style);
@@ -1096,13 +1104,14 @@
 		public function form_buttons($form, $columns)
 		{
 			if (!empty($form['buttons'])) {
-				$style=@$form['style'];
+				$style = @$form['style'];
 
-				if ($columns)
+				if ($columns) {
 					$this->output(
 						'<tr>',
 						'<td colspan="'.$columns.'" class="qa-form-'.$style.'-buttons">'
 					);
+				}
 
 				foreach ($form['buttons'] as $key => $button) {
 					$this->set_context('button_key', $key);
@@ -1117,17 +1126,18 @@
 
 				$this->clear_context('button_key');
 
-				if ($columns)
+				if ($columns) {
 					$this->output(
 						'</td>',
 						'</tr>'
 					);
+				}
 			}
 		}
 
 		public function form_button_data($button, $key, $style)
 		{
-			$baseclass='qa-form-'.$style.'-button qa-form-'.$style.'-button-'.$key;
+			$baseclass = 'qa-form-'.$style.'-button qa-form-'.$style.'-button-'.$key;
 
 			$this->output('<input'.rtrim(' '.@$button['tags']).' value="'.@$button['label'].'" title="'.@$button['popup'].'" type="submit"'.
 				(isset($style) ? (' class="'.$baseclass.'"') : '').'/>');
@@ -1135,13 +1145,14 @@
 
 		public function form_button_note($button, $style)
 		{
-			if (!empty($button['note']))
+			if (!empty($button['note'])) {
 				$this->output(
 					'<span class="qa-form-'.$style.'-note">',
 					$button['note'],
 					'</span>',
 					'<br/>'
 				);
+			}
 		}
 
 		public function form_button_spacer($style)
@@ -1156,9 +1167,10 @@
 
 		public function form_hidden_elements($hidden)
 		{
-			if (!empty($hidden))
+			if (!empty($hidden)) {
 				foreach ($hidden as $name => $value)
 					$this->output('<input type="hidden" name="'.$name.'" value="'.$value.'"/>');
+			}
 		}
 
 		public function form_prefix($field, $style)
@@ -1198,20 +1210,20 @@
 			$this->output('<select '.@$field['tags'].' class="qa-form-'.$style.'-select">');
 
 			foreach ($field['options'] as $tag => $value)
-				$this->output('<option value="'.$tag.'"'.(($value==@$field['value']) ? ' selected' : '').'>'.$value.'</option>');
+				$this->output('<option value="'.$tag.'"'.(($value == @$field['value']) ? ' selected' : '').'>'.$value.'</option>');
 
 			$this->output('</select>');
 		}
 
 		public function form_select_radio($field, $style)
 		{
-			$radios=0;
+			$radios = 0;
 
 			foreach ($field['options'] as $tag => $value) {
 				if ($radios++)
 					$this->output('<br/>');
 
-				$this->output('<input '.@$field['tags'].' type="radio" value="'.$tag.'"'.(($value==@$field['value']) ? ' checked' : '').' class="qa-form-'.$style.'-radio"/> '.$value);
+				$this->output('<input '.@$field['tags'].' type="radio" value="'.$tag.'"'.(($value == @$field['value']) ? ' checked' : '').' class="qa-form-'.$style.'-radio"/> '.$value);
 			}
 		}
 
@@ -1232,14 +1244,14 @@
 
 		public function form_error($field, $style, $columns)
 		{
-			$tag=($columns>1) ? 'span' : 'div';
+			$tag = ($columns > 1) ? 'span' : 'div';
 
 			$this->output('<'.$tag.' class="qa-form-'.$style.'-error">'.$field['error'].'</'.$tag.'>');
 		}
 
 		public function form_note($field, $style, $columns)
 		{
-			$tag=($columns>1) ? 'span' : 'div';
+			$tag = ($columns > 1) ? 'span' : 'div';
 
 			$this->output('<'.$tag.' class="qa-form-'.$style.'-note">'.@$field['note'].'</'.$tag.'>');
 		}
@@ -1359,14 +1371,15 @@
 
 		public function list_vote_disabled($items)
 		{
-			$disabled=false;
+			$disabled = false;
 
 			if (count($items)) {
-				$disabled=true;
+				$disabled = true;
 
-				foreach ($items as $item)
-					if (@$item['vote_on_page']!='disabled')
-						$disabled=false;
+				foreach ($items as $item) {
+					if (@$item['vote_on_page'] != 'disabled')
+						$disabled = false;
+				}
 			}
 
 			return $disabled;
@@ -1490,7 +1503,7 @@
 		public function voting($post)
 		{
 			if (isset($post['vote_view'])) {
-				$this->output('<div class="qa-voting '.(($post['vote_view']=='updown') ? 'qa-voting-updown' : 'qa-voting-net').'" '.@$post['vote_tags'].'>');
+				$this->output('<div class="qa-voting '.(($post['vote_view'] == 'updown') ? 'qa-voting-updown' : 'qa-voting-net').'" '.@$post['vote_tags'].'>');
 				$this->voting_inner_html($post);
 				$this->output('</div>');
 			}
@@ -1505,7 +1518,7 @@
 
 		public function vote_buttons($post)
 		{
-			$this->output('<div class="qa-vote-buttons '.(($post['vote_view']=='updown') ? 'qa-vote-buttons-updown' : 'qa-vote-buttons-net').'">');
+			$this->output('<div class="qa-vote-buttons '.(($post['vote_view'] == 'updown') ? 'qa-vote-buttons-updown' : 'qa-vote-buttons-net').'">');
 
 			switch (@$post['vote_state'])
 			{
@@ -1549,13 +1562,14 @@
 			// You can also use $post['upvotes_raw'], $post['downvotes_raw'], $post['netvotes_raw'] to get
 			// raw integer vote counts, for graphing or showing in other non-textual ways
 
-			$this->output('<div class="qa-vote-count '.(($post['vote_view']=='updown') ? 'qa-vote-count-updown' : 'qa-vote-count-net').'"'.@$post['vote_count_tags'].'>');
+			$this->output('<div class="qa-vote-count '.(($post['vote_view'] == 'updown') ? 'qa-vote-count-updown' : 'qa-vote-count-net').'"'.@$post['vote_count_tags'].'>');
 
-			if ($post['vote_view']=='updown') {
+			if ($post['vote_view'] == 'updown') {
 				$this->output_split($post['upvotes_view'], 'qa-upvote-count');
 				$this->output_split($post['downvotes_view'], 'qa-downvote-count');
 
-			} else
+			}
+			else
 				$this->output_split($post['netvotes_view'], 'qa-netvote-count');
 
 			$this->output('</div>');
@@ -1652,9 +1666,9 @@
 			if (isset($prefix))
 				$this->output($prefix);
 
-			$order=explode('^', @$post['meta_order']);
+			$order = explode('^', @$post['meta_order']);
 
-			foreach ($order as $element)
+			foreach ($order as $element) {
 				switch ($element) {
 					case 'what':
 						$this->post_meta_what($post, $class);
@@ -1672,13 +1686,14 @@
 						$this->post_meta_who($post, $class);
 						break;
 				}
+			}
 
 			$this->post_meta_flags($post, $class);
 
 			if (!empty($post['what_2'])) {
 				$this->output($separator);
 
-				foreach ($order as $element)
+				foreach ($order as $element) {
 					switch ($element) {
 						case 'what':
 							$this->output('<span class="'.$class.'-what">'.$post['what_2'].'</span>');
@@ -1692,6 +1707,7 @@
 							$this->output_split(@$post['who_2'], $class.'-who');
 							break;
 					}
+				}
 			}
 
 			$this->output('</span>');
@@ -1700,9 +1716,9 @@
 		public function post_meta_what($post, $class)
 		{
 			if (isset($post['what'])) {
-				$classes=$class.'-what';
+				$classes = $class.'-what';
 				if (@$post['what_your'])
-					$classes.=' '.$class.'-what-your';
+					$classes .= ' '.$class.'-what-your';
 
 				if (isset($post['what_url']))
 					$this->output('<a href="'.$post['what_url'].'" class="'.$classes.'">'.$post['what'].'</a>');
@@ -1738,8 +1754,8 @@
 				// You can also use $post['level'] to get the author's privilege level (as a string)
 
 				if (isset($post['who']['points'])) {
-					$post['who']['points']['prefix']='('.$post['who']['points']['prefix'];
-					$post['who']['points']['suffix'].=')';
+					$post['who']['points']['prefix'] = '('.$post['who']['points']['prefix'];
+					$post['who']['points']['suffix'] .= ')';
 					$this->output_split($post['who']['points'], $class.'-who-points');
 				}
 
@@ -1781,7 +1797,7 @@
 
 		public function page_links()
 		{
-			$page_links=@$this->content['page_links'];
+			$page_links = @$this->content['page_links'];
 
 			if (!empty($page_links)) {
 				$this->output('<div class="qa-page-links">');
@@ -1805,7 +1821,7 @@
 			if (!empty($page_items)) {
 				$this->output('<ul class="qa-page-links-list">');
 
-				$index=0;
+				$index = 0;
 
 				foreach ($page_items as $page_link) {
 					$this->set_context('page_index', $index++);
@@ -1830,8 +1846,8 @@
 
 		public function page_link_content($page_link)
 		{
-			$label=@$page_link['label'];
-			$url=@$page_link['url'];
+			$label = @$page_link['label'];
+			$url = @$page_link['url'];
 
 			switch ($page_link['type']) {
 				case 'this':
@@ -1866,7 +1882,7 @@
 
 		public function suggest_next()
 		{
-			$suggest=@$this->content['suggest_next'];
+			$suggest = @$this->content['suggest_next'];
 
 			if (!empty($suggest)) {
 				$this->output('<div class="qa-suggest-next">');
@@ -1957,7 +1973,7 @@
 		public function q_view_closed($q_view)
 		{
 			if (!empty($q_view['closed'])) {
-				$haslink=isset($q_view['closed']['url']);
+				$haslink = isset($q_view['closed']['url']);
 
 				$this->output(
 					'<div class="qa-q-view-closed">',
@@ -1972,7 +1988,7 @@
 
 		public function q_view_extra($q_view)
 		{
-			if (!empty($q_view['extra']))
+			if (!empty($q_view['extra'])) {
 				$this->output(
 					'<div class="qa-q-view-extra">',
 					$q_view['extra']['label'],
@@ -1981,6 +1997,7 @@
 					'</span>',
 					'</div>'
 				);
+			}
 		}
 
 		public function q_view_buttons($q_view)
@@ -2030,7 +2047,7 @@
 
 		public function a_list_item($a_item)
 		{
-			$extraclass=@$a_item['classes'].($a_item['hidden'] ? ' qa-a-list-item-hidden' : ($a_item['selected'] ? ' qa-a-list-item-selected' : ''));
+			$extraclass = @$a_item['classes'].($a_item['hidden'] ? ' qa-a-list-item-hidden' : ($a_item['selected'] ? ' qa-a-list-item-selected' : ''));
 
 			$this->output('<div class="qa-a-list-item '.$extraclass.'" '.@$a_item['tags'].'>');
 
@@ -2135,7 +2152,7 @@
 
 		public function c_list_item($c_item)
 		{
-			$extraclass=@$c_item['classes'].(@$c_item['hidden'] ? ' qa-c-item-hidden' : '');
+			$extraclass = @$c_item['classes'].(@$c_item['hidden'] ? ' qa-c-item-hidden' : '');
 
 			$this->output('<div class="qa-c-list-item '.$extraclass.'" '.@$c_item['tags'].'>');
 
