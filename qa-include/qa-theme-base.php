@@ -1711,7 +1711,11 @@
 				if (isset($prefix))
 					$this->output($prefix);
 
-				$this->output('<span class="'.$class.'-avatar">', $item['avatar'], '</span>');
+				$this->output(
+					'<span class="'.$class.'-avatar">',
+					$item['avatar'],
+					'</span>'
+				);
 			}
 		}
 
@@ -1747,23 +1751,17 @@
 		public function post_avatar_meta($post, $class, $avatarprefix=null, $metaprefix=null, $metaseparator='<br/>')
 		{
 			$this->output('<span class="'.$class.'-avatar-meta">');
-			$this->post_avatar($post, $class, $avatarprefix);
+			$this->avatar($post, $class, $avatarprefix);
 			$this->post_meta($post, $class, $metaprefix, $metaseparator);
 			$this->output('</span>');
 		}
 
+		/**
+		 * @deprecated Deprecated from 1.7; please use avatar() instead.
+		 */
 		public function post_avatar($post, $class, $prefix=null)
 		{
-			if (isset($post['avatar'])) {
-				if (isset($prefix))
-					$this->output($prefix);
-
-				$this->output(
-					'<span class="'.$class.'-avatar">',
-					$post['avatar'],
-					'</span>'
-				);
-			}
+			$this->avatar($post, $class, $prefix=null);
 		}
 
 		public function post_meta($post, $class, $prefix=null, $separator='<br/>')
