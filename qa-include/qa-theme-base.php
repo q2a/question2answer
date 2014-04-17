@@ -47,6 +47,9 @@
 		protected $lines = 0;
 		protected $context = array();
 
+		// whether to use new block layout in rankings (true) or fall back to tables (false)
+		protected $ranking_block_layout = false;
+
 		protected $rooturl;
 		protected $template;
 		protected $content;
@@ -1264,6 +1267,13 @@
 				$ranking['type'] = 'items';
 			$class = 'qa-top-'.$ranking['type'];
 
+			if (!$this->ranking_block_layout) {
+				// old, less semantic table layout
+				$this->ranking_table($ranking, $class);
+				return;
+			}
+
+			// new block layout
 			foreach ($ranking['items'] as $item) {
 				$this->output('<span class="qa-ranking-item '.$class.'-item">');
 				$this->ranking_item($item, $class);
@@ -1273,32 +1283,119 @@
 
 		public function ranking_item($item, $class, $spacer=false) // $spacer is deprecated
 		{
+			if (!$this->ranking_block_layout) {
+				// old table layout
+				$this->ranking_table_item($item, $class, $spacer);
+				return;
+			}
+
 			if (isset($item['count']))
-				$this->ranking_count($item, $class);
+				$this->ranking_cell($item['count'].' &#215;', $class.'-count');
 
 			if (isset($item['avatar']))
 				$this->avatar($item, $class);
 
-			$this->ranking_label($item, $class);
+			$this->ranking_cell($item['label'], $class.'-label');
 
 			if (isset($item['score']))
-				$this->ranking_score($item, $class);
+				$this->ranking_cell($item['score'], $class.'-score');
 		}
 
+		public function ranking_cell($content, $class)
+		{
+			$tag = $this->ranking_block_layout ? 'span': 'td';
+			$this->output('<'.$tag.' class="'.$class.'">' . $content . '</'.$tag.'>');
+		}
+
+
+		/**
+		 * @deprecated Table-based layout of users/tags is deprecated from 1.7 onwards and may be
+		 * removed in a future version. Themes can switch to the new layout by setting the member
+		 * variable $ranking_block_layout to false.
+		 */
+		public function ranking_table($ranking, $class)
+		{
+			$rows = min($ranking['rows'], count($ranking['items']));
+
+			if ($rows > 0) {
+				$this->output('<table class="'.$class.'-table">');
+				$columns = ceil(count($ranking['items']) / $rows);
+
+				for ($row = 0; $row < $rows; $row++) {
+					$this->set_context('ranking_row', $row);
+					$this->output('<tr>');
+
+					for ($column = 0; $column < $columns; $column++) {
+						$this->set_context('ranking_column', $column);
+						$this->ranking_table_item(@$ranking['items'][$column*$rows+$row], $class, $column>0);
+					}
+
+					$this->clear_context('ranking_column');
+					$this->output('</tr>');
+				}
+				$this->clear_context('ranking_row');
+				$this->output('</table>');
+			}
+		}
+
+		/**
+		 * @deprecated See ranking_table above.
+		 */
+		public function ranking_table_item($item, $class, $spacer)
+		{
+			if ($spacer)
+				$this->ranking_spacer($class);
+
+			if (empty($item)) {
+				$this->ranking_spacer($class);
+				$this->ranking_spacer($class);
+
+			} else {
+				if (isset($item['count']))
+					$this->ranking_count($item, $class);
+
+				if (isset($item['avatar']))
+					$item['label'] = $item['avatar'].' '.$item['label'];
+
+				$this->ranking_label($item, $class);
+
+				if (isset($item['score']))
+					$this->ranking_score($item, $class);
+			}
+		}
+
+		/**
+		 * @deprecated See ranking_table above.
+		 */
+		public function ranking_spacer($class)
+		{
+			$this->output('<td class="'.$class.'-spacer">&nbsp;</td>');
+		}
+
+		/**
+		 * @deprecated See ranking_table above.
+		 */
 		public function ranking_count($item, $class)
 		{
-			$this->output('<span class="'.$class.'-count">'.$item['count'].' &#215;'.'</span>');
+			$this->output('<td class="'.$class.'-count">'.$item['count'].' &#215;</td>');
 		}
 
+		/**
+		 * @deprecated See ranking_table above.
+		 */
 		public function ranking_label($item, $class)
 		{
-			$this->output('<span class="'.$class.'-label">'.$item['label'].'</span>');
+			$this->output('<td class="'.$class.'-label">'.$item['label'].'</td>');
 		}
 
+		/**
+		 * @deprecated See ranking_table above.
+		 */
 		public function ranking_score($item, $class)
 		{
-			$this->output('<span class="'.$class.'-score">'.$item['score'].'</span>');
+			$this->output('<td class="'.$class.'-score">'.$item['score'].'</td>');
 		}
+
 
 		public function message_list_and_form($list)
 		{

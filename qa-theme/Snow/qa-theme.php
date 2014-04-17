@@ -2,6 +2,9 @@
 
 class qa_html_theme extends qa_html_theme_base
 {
+	// use new ranking layout
+	protected $ranking_block_layout = true;
+
 	// outputs login form if user not logged in
 	public function nav_user_search()
 	{
@@ -158,8 +161,3 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 }
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/

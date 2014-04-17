@@ -8,7 +8,7 @@
 
 	File: qa-theme/Candy/qa-theme.php
 	Version: See define()s at top of qa-include/qa-base.php
-	Description: Override something in base theme class for Candy theme
+	Description: Override base theme class for Candy theme
 
 
 	This program is free software; you can redistribute it and/or
@@ -26,14 +26,12 @@
 
 class qa_html_theme extends qa_html_theme_base
 {
+	// use new ranking layout
+	protected $ranking_block_layout = true;
+
 	public function nav_user_search() // reverse the usual order
 	{
 		$this->search();
 		$this->nav('user');
 	}
 }
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
