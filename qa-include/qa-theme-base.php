@@ -66,6 +66,16 @@
 			$this->request = $request;
 		}
 
+		/**
+		 * @deprecated PHP4-style constructor deprecated from 1.7; please use proper `__construct`
+		 * function instead.
+		 */
+		public function qa_html_theme_base($template, $content, $rooturl, $request)
+		{
+			self::__construct($template, $content, $rooturl, $request);
+		}
+
+
 		public function output_array($elements)
 	/*
 		Output each element in $elements on a separate line, with automatic HTML indenting.
