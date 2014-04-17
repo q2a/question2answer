@@ -1749,6 +1749,8 @@
 					qa_fatal_error('Class for layer must be declared as "class qa_html_theme_layer extends qa_html_theme_base" in '.$layer['directory'].$layer['include']);
 
 				$searchwordreplace=array(
+					'qa_html_theme_base::qa_html_theme_base' => $classname.'::__construct', // PHP5 constructor fix
+					'parent::qa_html_theme_base' => 'parent::__construct', // PHP5 constructor fix
 					'qa_html_theme_layer' => $newclassname,
 					'qa_html_theme_base' => $classname,
 					'QA_HTML_THEME_LAYER_DIRECTORY' => "'".$layer['directory']."'",
