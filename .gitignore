@@ -1,2 +1,5 @@
 # Ignore config file in development
 qa-config.php
+.idea/
+qa-include/vendor/*
+composer.lock
