@@ -24,7 +24,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-
 	define('QA_VERSION', '1.7.0-alpha1'); // also used as suffix for .js and .css requests
 	define('QA_BUILD_DATE', '2014-03-20');
 
@@ -32,6 +31,8 @@
 
 	qa_initialize_php();
 	qa_initialize_constants_1();
+
+    include(QA_INCLUDE_DIR.'vendor/autoload.php');
 
 	if (defined('QA_WORDPRESS_LOAD_FILE')) // if relevant, load WordPress integration in global scope
 		require_once QA_WORDPRESS_LOAD_FILE;
@@ -787,7 +788,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once 'vendor/htmLawed.php';
+		require_once 'external/htmLawed.php';
 
 		global $qa_sanitize_html_newwindow;
 

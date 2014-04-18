@@ -126,8 +126,6 @@
 
 	//	@error_log(print_r($params, true));
 
-		require_once QA_INCLUDE_DIR.'vendor/PHPMailer/PHPMailerAutoload.php';
-
 		$mailer=new PHPMailer();
 		$mailer->CharSet='utf-8';
 
