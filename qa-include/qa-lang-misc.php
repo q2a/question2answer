@@ -74,6 +74,7 @@
 		'nav_my_favorites' => 'My favorites',
 		'nav_user_activity' => 'Recent activity',
 		'nav_user_as' => 'All answers',
+		'nav_user_pms' => 'Private messages',
 		'nav_user_qs' => 'All questions',
 		'nav_user_wall' => 'Wall',
 		'no_activity_from_x' => 'No activity from ^',

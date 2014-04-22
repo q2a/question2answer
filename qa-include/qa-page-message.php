@@ -223,6 +223,8 @@
 			foreach ($showmessages as $message)
 				$qa_content['message_list']['messages'][] = qa_message_html_fields($message, $options);
 		}
+
+		$qa_content['navigation']['sub'] = qa_messages_sub_navigation();
 	}
 
 

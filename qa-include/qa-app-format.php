@@ -1304,6 +1304,11 @@
 				'url' => qa_path_html('user/'.$handle.'/wall'),
 			),
 
+			'messages' => array(
+				'label' => qa_lang_html('misc/nav_user_pms'),
+				'url' => qa_path_html('messages'),
+			),
+
 			'activity' => array(
 				'label' => qa_lang_html('misc/nav_user_activity'),
 				'url' => qa_path_html('user/'.$handle.'/activity'),
@@ -1331,6 +1336,33 @@
 
 		if (!$ismyuser)
 			unset($navigation['favorites']);
+
+		if (!$ismyuser || !qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
+			unset($navigation['messages']);
+
+		return $navigation;
+	}
+
+
+	function qa_messages_sub_navigation($selected=null)
+/*
+	Return the sub navigation structure for private message pages
+*/
+	{
+		$navigation = array(
+			'inbox' => array(
+				'label' => qa_lang_html('misc/inbox'),
+				'url' => qa_path_html('messages'),
+			),
+
+			'outbox' => array(
+				'label' => qa_lang_html('misc/outbox'),
+				'url' => qa_path_html('messages/sent'),
+			)
+		);
+
+		if (isset($navigation[$selected]))
+			$navigation[$selected]['selected'] = true;
 
 		return $navigation;
 	}

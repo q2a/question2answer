@@ -39,7 +39,13 @@
 
 //	Check which box we're showing (inbox/sent), we're not using Q2A's single-sign on integration and that we're logged in
 
-	$showingInbox = qa_request_part(1) !== 'sent';
+	$req = qa_request_part(1);
+	if ($req === null)
+		$showBox = 'inbox';
+	else if ($req === 'sent')
+		$showBox = 'outbox';
+	else
+		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
 	if (QA_FINAL_EXTERNAL_USERS)
 		qa_fatal_error('User accounts are handled by external code');
@@ -50,23 +56,21 @@
 		return $qa_content;
 	}
 
-	if ( !qa_opt('allow_private_messages') )
+	if (!qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
 
 //	Find the user profile and questions and answers for this handle
 
-	$pmSpec = $showingInbox
-		? qa_db_messages_inbox_selectspec('private', $loginUserId, true)
-		: qa_db_messages_outbox_selectspec('private', $loginUserId, true);
-
+	$func = 'qa_db_messages_'.$showBox.'_selectspec';
+	$pmSpec = $func('private', $loginUserId, true);
 	$userMessages = qa_db_select_with_pending($pmSpec);
 
 
 //	Prepare content for theme
 
 	$qa_content = qa_content_prepare();
-	$qa_content['title'] = $showingInbox ? qa_lang_html('misc/pm_inbox_title') : qa_lang_html('misc/pm_outbox_title');
+	$qa_content['title'] = qa_lang_html('misc/pm_'.$showBox.'_title');
 
 	$qa_content['message_list'] = array(
 		'tags' => 'id="privatemessages"',
@@ -74,26 +78,12 @@
 	);
 
 	$htmlDefaults = qa_message_html_defaults();
-	if (!$showingInbox) {
+	if ($showBox === 'outbox')
 		$htmlDefaults['towhomview'] = true;
-	}
 
-	foreach ($userMessages as $message) {
+	foreach ($userMessages as $message)
 		$qa_content['message_list']['messages'][] = qa_message_html_fields($message, $htmlDefaults);
-	}
 
-	$qa_content['navigation']['sub'] = array(
-		'inbox' => array(
-			'label' => qa_lang_html('misc/inbox'),
-			'url' => qa_path_html('messages'),
-			'selected' => $showingInbox,
-		),
-
-		'outbox' => array(
-			'label' => qa_lang_html('misc/outbox'),
-			'url' => qa_path_html('messages/sent'),
-			'selected' => !$showingInbox,
-		)
-	);
+	$qa_content['navigation']['sub'] = qa_messages_sub_navigation($showBox);
 
 	return $qa_content;
