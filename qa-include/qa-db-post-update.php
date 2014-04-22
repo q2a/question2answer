@@ -116,7 +116,7 @@
 	function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_CONTENT, $name=null)
 /*
 	Set the text fields in the database of $postid to $title, $content, $tagstring, $notify and $name, and record that
-	$lastuserid did it from $lastip (if at least one is specified) with $updatetype. or backwards compatibility if $name
+	$lastuserid did it from $lastip (if at least one is specified) with $updatetype. For backwards compatibility if $name
 	is null then the name will not be changed.
 */
 	{

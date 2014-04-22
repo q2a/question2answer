@@ -1336,11 +1336,12 @@
 	}
 
 
+	/**
+	 * Return the sub navigation structure for user account pages.
+	 *
+	 * @deprecated Deprecated from 1.6.3; use `qa_user_sub_navigation()` instead.
+	 */
 	function qa_account_sub_navigation()
-/*
-	Return the sub navigation structure for user account pages.
-	RETIRED FROM USE IN Q2A 1.6.3 BUT RETAINED FOR BACKWARDS COMPATIBILITY
-*/
 	{
 		return array(
 			'account' => array(

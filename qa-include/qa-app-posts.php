@@ -328,13 +328,13 @@
 	}
 
 
+	/**
+	 * Return the handle corresponding to $userid, unless it is null in which case return null.
+	 *
+	 * @deprecated Deprecated from 1.7; use `qa_userid_to_handle($userid)` instead.
+	 */
 	function qa_post_userid_to_handle($userid)
-/*
-	Return the handle corresponding to $userid, unless it is null in which case return null.
-	This function is now DEPRECATED.
-*/
 	{
-		trigger_error('Function qa_post_userid_to_handle is deprecated; use qa_userid_to_handle instead', E_USER_NOTICE);
 		return qa_userid_to_handle($userid);
 	}
 

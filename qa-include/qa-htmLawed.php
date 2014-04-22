@@ -1,5 +1,7 @@
 <?php
-trigger_error('File qa-htmLawed.php is deprecated; please use vendor/htmLawed.php instead.', E_USER_NOTICE);
+/**
+ * @deprecated This file is deprecated from Q2A 1.7; use vendor/htmLawed.php instead.
+ */
 
 /*
 htmLawed 1.1.14, 8 August 2012

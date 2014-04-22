@@ -55,11 +55,12 @@
 	}
 
 
+	/**
+	 * Return how many more times user $userid and/or the requesting IP can perform $action (a QA_LIMIT_* constant) this hour.
+	 *
+	 * @deprecated Deprecated from 1.6.0; use `qa_user_limits_remaining($action)` instead.
+	 */
 	function qa_limits_remaining($userid, $action)
-/*
-	Return how many more times user $userid and/or the requesting IP can perform $action this hour, where $action is one
-	of the QA_LIMIT_* constants above. This function is no longer used and only included for backwards compatibility.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
