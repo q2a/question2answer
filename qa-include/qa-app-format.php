@@ -652,7 +652,7 @@
 				@$message['toavatarblobid'], @$message['toavatarwidth'], @$message['toavatarheight'], $options['avatarsize']);
 		}
 		else {
-			// for everything else (questions, answers, activity, wall messages)
+			// for everything else (received private messages, wall messages)
 			if (@$options['whoview'])
 				$fields['who'] = qa_lang_html_sub_split('main/by_x', qa_get_one_user_html($message['fromhandle'], false));
 			if (@$options['avatarsize'] > 0) {

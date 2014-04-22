@@ -35,6 +35,7 @@
 	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 
 	$loginUserId = qa_get_logged_in_userid();
+	$loginUserHandle = qa_get_logged_in_handle();
 
 
 //	Check which box we're showing (inbox/sent), we're not using Q2A's single-sign on integration and that we're logged in
@@ -81,8 +82,22 @@
 	if ($showBox === 'outbox')
 		$htmlDefaults['towhomview'] = true;
 
-	foreach ($userMessages as $message)
-		$qa_content['message_list']['messages'][] = qa_message_html_fields($message, $htmlDefaults);
+	foreach ($userMessages as $message) {
+		$msgFormat = qa_message_html_fields($message, $htmlDefaults);
+		$replyHandle = $showBox == 'inbox' ? $message['fromhandle'] : $message['tohandle'];
+
+		$msgFormat['form'] = array(
+			'style' => 'light',
+			'buttons' => array(
+				'reply' => array(
+					'tags' => 'onclick="window.location.href=\''.qa_path_html('message/'.$replyHandle).'\'"',
+					'label' => qa_lang_html('question/reply_button'),
+				),
+			),
+		);
+
+		$qa_content['message_list']['messages'][] = $msgFormat;
+	}
 
 	$qa_content['navigation']['sub'] = qa_messages_sub_navigation($showBox);
 
