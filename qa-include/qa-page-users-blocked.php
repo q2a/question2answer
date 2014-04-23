@@ -42,7 +42,14 @@
 
 //	Get list of blocked users
 
-	$users = qa_db_select_with_pending(qa_db_users_with_flag_selectspec(QA_USER_FLAGS_USER_BLOCKED));
+	$start = qa_get_start();
+	$pagesize = qa_opt('page_size_users');
+
+	$userSpecCount = qa_db_selectspec_count( qa_db_users_with_flag_selectspec(QA_USER_FLAGS_USER_BLOCKED) );
+	$userSpec = qa_db_users_with_flag_selectspec(QA_USER_FLAGS_USER_BLOCKED, $start, $pagesize);
+
+	list($numUsers, $users) = qa_db_select_with_pending($userSpecCount, $userSpec);
+	$count = $numUsers['count'];
 
 
 //	Check we have permission to view this page (moderator or above)
@@ -63,7 +70,7 @@
 
 	$qa_content = qa_content_prepare();
 
-	$qa_content['title'] = count($users) ? qa_lang_html('users/blocked_users') : qa_lang_html('users/no_blocked_users');
+	$qa_content['title'] = $count > 0 ? qa_lang_html('users/blocked_users') : qa_lang_html('users/no_blocked_users');
 
 	$qa_content['ranking'] = array(
 		'items' => array(),
@@ -78,6 +85,8 @@
 			'raw' => $user,
 		);
 	}
+
+	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
 	$qa_content['navigation']['sub'] = qa_users_sub_navigation();
 

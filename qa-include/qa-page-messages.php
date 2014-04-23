@@ -68,8 +68,8 @@
 
 	// get number of messages then actual messages for this page
 	$func = 'qa_db_messages_'.$showBox.'_selectspec';
-	$pmSpecCount = qa_db_messages_count_selectspec( $func('private', $loginUserId, true) );
-	$pmSpec = $func('private', $loginUserId, true, $pagesize, $start);
+	$pmSpecCount = qa_db_selectspec_count( $func('private', $loginUserId, true) );
+	$pmSpec = $func('private', $loginUserId, true, $start, $pagesize);
 
 	list($numMessages, $userMessages) = qa_db_select_with_pending($pmSpecCount, $pmSpec);
 	$count = $numMessages['count'];

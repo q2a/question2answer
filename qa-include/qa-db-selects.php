@@ -114,6 +114,20 @@
 	}
 
 
+	function qa_db_selectspec_count($selectSpec)
+/*
+	Modify a selectspec to count the number of items. This assumes the original selectspec does not have a LIMIT clause.
+	Currently works with message inbox/outbox functions and user-flags function.
+*/
+	{
+		$selectSpec['columns'] = array('count' => 'COUNT(*)');
+		$selectSpec['single'] = true;
+		unset($selectSpec['arraykey']);
+
+		return $selectSpec;
+	}
+
+
 	function qa_db_posts_basic_selectspec($voteuserid=null, $full=false, $user=true)
 /*
 	Return the common selectspec used to build any selectspecs which retrieve posts from the database.
@@ -1288,15 +1302,24 @@
 	}
 
 
-	function qa_db_users_with_flag_selectspec($flag)
+	function qa_db_users_with_flag_selectspec($flag, $start=0, $limit=null)
 /*
 	Return the selectspec to get information about users with the $flag bit set (unindexed query)
 */
 	{
+		$source = '^users WHERE (flags & #)';
+		$arguments = array($flag);
+
+		if (isset($limit)) {
+			$limit = min($limit, QA_DB_RETRIEVE_USERS);
+			$source .= ' LIMIT #,#';
+			array_push($arguments, $start, $limit);
+		}
+
 		return array(
 			'columns' => array('^users.userid', 'handle', 'flags', 'level'),
-			'source' => '^users WHERE (flags & #)',
-			'arguments' => array($flag),
+			'source' => $source,
+			'arguments' => $arguments,
 		);
 	}
 
@@ -1355,12 +1378,11 @@
 	}
 
 
-	function qa_db_messages_inbox_selectspec($type, $toidentifier, $toisuserid, $limit=null, $start=0)
+	function qa_db_messages_inbox_selectspec($type, $toidentifier, $toisuserid, $start=0, $limit=null)
 /*
-	Get selectspec for messages *to* specified user.
-	$type is either 'public' or 'private'.
+	Get selectspec for messages *to* specified user. $type is either 'public' or 'private'.
 	$toidentifier is a handle or userid depending on the value of $toisuserid.
-	Return $limit messages, or all of them if $limit is null (used for COUNT(*) query below).
+	Returns $limit messages, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
 		$type = strtoupper($type);
@@ -1386,12 +1408,11 @@
 	}
 
 
-	function qa_db_messages_outbox_selectspec($type, $fromidentifier, $fromisuserid, $limit=null, $start=0)
+	function qa_db_messages_outbox_selectspec($type, $fromidentifier, $fromisuserid, $start=0, $limit=null)
 /*
-	Get selectspec for messages *from* specified user.
-	$type is either 'public' or 'private'.
+	Get selectspec for messages *from* specified user. $type is either 'public' or 'private'.
 	$fromidentifier is a handle or userid depending on the value of $fromisuserid.
-	Return $limit messages, or all of them if $limit is null (used for COUNT(*) query below).
+	Returns $limit messages, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
 		$type = strtoupper($type);
@@ -1414,19 +1435,6 @@
 			'arraykey' => 'messageid',
 			'sortdesc' => 'created',
 		);
-	}
-
-
-	function qa_db_messages_count_selectspec($selectSpec)
-/*
-	Modify a messages selectspec to count messages.
-*/
-	{
-		$selectSpec['columns'] = array('count' => 'COUNT(*)');
-		$selectSpec['single'] = true;
-		unset($selectSpec['arraykey']);
-
-		return $selectSpec;
 	}
 
 
