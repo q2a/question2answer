@@ -1300,15 +1300,15 @@
 			}
 
 			if (isset($item['count']))
-				$this->ranking_cell($item['count'].' &#215;', $class.'-count');
+				$this->ranking_count($item, $class);
 
 			if (isset($item['avatar']))
 				$this->avatar($item, $class);
 
-			$this->ranking_cell($item['label'], $class.'-label');
+			$this->ranking_label($item, $class);
 
 			if (isset($item['score']))
-				$this->ranking_cell($item['score'], $class.'-score');
+				$this->ranking_score($item, $class);
 		}
 
 		public function ranking_cell($content, $class)
@@ -1317,6 +1317,20 @@
 			$this->output('<'.$tag.' class="'.$class.'">' . $content . '</'.$tag.'>');
 		}
 
+		public function ranking_count($item, $class)
+		{
+			$this->ranking_cell($item['count'].' &#215;', $class.'-count');
+		}
+
+		public function ranking_label($item, $class)
+		{
+			$this->ranking_cell($item['label'], $class.'-label');
+		}
+
+		public function ranking_score($item, $class)
+		{
+			$this->ranking_cell($item['score'], $class.'-score');
+		}
 
 		/**
 		 * @deprecated Table-based layout of users/tags is deprecated from 1.7 onwards and may be
@@ -1380,30 +1394,6 @@
 		public function ranking_spacer($class)
 		{
 			$this->output('<td class="'.$class.'-spacer">&nbsp;</td>');
-		}
-
-		/**
-		 * @deprecated See ranking_table above.
-		 */
-		public function ranking_count($item, $class)
-		{
-			$this->output('<td class="'.$class.'-count">'.$item['count'].' &#215;</td>');
-		}
-
-		/**
-		 * @deprecated See ranking_table above.
-		 */
-		public function ranking_label($item, $class)
-		{
-			$this->output('<td class="'.$class.'-label">'.$item['label'].'</td>');
-		}
-
-		/**
-		 * @deprecated See ranking_table above.
-		 */
-		public function ranking_score($item, $class)
-		{
-			$this->output('<td class="'.$class.'-score">'.$item['score'].'</td>');
 		}
 
 
