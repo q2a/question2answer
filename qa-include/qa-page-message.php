@@ -36,6 +36,7 @@
 
 	$handle = qa_request_part(1);
 	$loginuserid = qa_get_logged_in_userid();
+	$fromhandle = qa_get_logged_in_handle();
 
 	$qa_content = qa_content_prepare();
 
@@ -50,6 +51,12 @@
 
 	if (!isset($loginuserid)) {
 		$qa_content['error'] = qa_insert_login_links(qa_lang_html('misc/message_must_login'), qa_request());
+		return $qa_content;
+	}
+
+	if ($handle === $fromhandle) {
+		// prevent users sending messages to themselves
+		$qa_content['error'] = qa_lang_html('users/no_permission');
 		return $qa_content;
 	}
 
@@ -114,7 +121,6 @@
 				else
 					$messageid = null;
 
-				$fromhandle = qa_get_logged_in_handle();
 				$canreply = !(qa_get_logged_in_flags() & QA_USER_FLAGS_NO_MESSAGES);
 
 				$more = strtr(qa_lang($canreply ? 'emails/private_message_reply' : 'emails/private_message_info'), array(
