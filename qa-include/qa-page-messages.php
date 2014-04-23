@@ -61,11 +61,18 @@
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
 
-//	Find the user profile and questions and answers for this handle
+//	Find the messages for this user
 
+	$start = qa_get_start();
+	$pagesize = qa_opt('page_size_wall');
+
+	// get number of messages then actual messages for this page
 	$func = 'qa_db_messages_'.$showBox.'_selectspec';
-	$pmSpec = $func('private', $loginUserId, true);
-	$userMessages = qa_db_select_with_pending($pmSpec);
+	$pmSpecCount = qa_db_messages_count_selectspec( $func('private', $loginUserId, true) );
+	$pmSpec = $func('private', $loginUserId, true, $pagesize, $start);
+
+	list($numMessages, $userMessages) = qa_db_select_with_pending($pmSpecCount, $pmSpec);
+	$count = $numMessages['count'];
 
 
 //	Prepare content for theme
@@ -98,6 +105,8 @@
 
 		$qa_content['message_list']['messages'][] = $msgFormat;
 	}
+
+	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
 	$qa_content['navigation']['sub'] = qa_messages_sub_navigation($showBox);
 

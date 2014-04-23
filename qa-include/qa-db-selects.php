@@ -1355,21 +1355,26 @@
 	}
 
 
-	function qa_db_messages_inbox_selectspec($type, $toidentifier, $toisuserid, $count=null, $start=0)
+	function qa_db_messages_inbox_selectspec($type, $toidentifier, $toisuserid, $limit=null, $start=0)
 /*
 	Get selectspec for messages *to* specified user.
 	$type is either 'public' or 'private'.
 	$toidentifier is a handle or userid depending on the value of $toisuserid.
-	Return $count (or default) messages.
+	Return $limit messages, or all of them if $limit is null (used for COUNT(*) query below).
 */
 	{
 		$type = strtoupper($type);
-		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
 
 		$where = 'touserid=' . ($toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
-		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
+		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC';
+		$arguments = array($toidentifier, $type);
 
-		$arguments = array($toidentifier, $type, $start, $count);
+		if (isset($limit)) {
+			$limit = min($limit, QA_DB_RETRIEVE_MESSAGES);
+			$source .= ' LIMIT #,#';
+			$arguments[] = $start;
+			$arguments[] = $limit;
+		}
 
 		return array(
 			'columns' => qa_db_messages_columns(),
@@ -1381,21 +1386,26 @@
 	}
 
 
-	function qa_db_messages_outbox_selectspec($type, $fromidentifier, $fromisuserid, $count=null, $start=0)
+	function qa_db_messages_outbox_selectspec($type, $fromidentifier, $fromisuserid, $limit=null, $start=0)
 /*
 	Get selectspec for messages *from* specified user.
 	$type is either 'public' or 'private'.
 	$fromidentifier is a handle or userid depending on the value of $fromisuserid.
-	Return $count (or default) messages.
+	Return $limit messages, or all of them if $limit is null (used for COUNT(*) query below).
 */
 	{
 		$type = strtoupper($type);
-		$count = isset($count) ? min($count, QA_DB_RETRIEVE_MESSAGES) : QA_DB_RETRIEVE_MESSAGES;
 
 		$where = 'fromuserid=' . ($fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
-		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC LIMIT #,#';
+		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC';
+		$arguments = array($fromidentifier, $type);
 
-		$arguments = array($fromidentifier, $type, $start, $count);
+		if (isset($limit)) {
+			$limit = min($limit, QA_DB_RETRIEVE_MESSAGES);
+			$source .= ' LIMIT #,#';
+			$arguments[] = $start;
+			$arguments[] = $limit;
+		}
 
 		return array(
 			'columns' => qa_db_messages_columns(),
@@ -1404,6 +1414,19 @@
 			'arraykey' => 'messageid',
 			'sortdesc' => 'created',
 		);
+	}
+
+
+	function qa_db_messages_count_selectspec($selectSpec)
+/*
+	Modify a messages selectspec to count messages.
+*/
+	{
+		$selectSpec['columns'] = array('count' => 'COUNT(*)');
+		$selectSpec['single'] = true;
+		unset($selectSpec['arraykey']);
+
+		return $selectSpec;
 	}
 
 
