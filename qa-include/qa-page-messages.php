@@ -64,7 +64,7 @@
 //	Find the messages for this user
 
 	$start = qa_get_start();
-	$pagesize = qa_opt('page_size_wall');
+	$pagesize = qa_opt('page_size_pms');
 
 	// get number of messages then actual messages for this page
 	$func = 'qa_db_messages_'.$showBox.'_selectspec';

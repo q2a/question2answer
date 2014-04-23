@@ -163,6 +163,7 @@
 		'page_size_ask_tags' => 'Maximum tag hints to show:',
 		'page_size_home' => 'Length of Q&A page:',
 		'page_size_hot_qs' => 'Length of Hot! page:',
+		'page_size_pms' => 'Private messages per page:',
 		'page_size_q_as' => 'Maximum answers per page:',
 		'page_size_qs' => 'Length of Questions page:',
 		'page_size_related_qs' => 'Maximum related questions:',

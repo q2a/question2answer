@@ -298,6 +298,7 @@
 			'page_size_ask_tags' => 5,
 			'page_size_home' => 20,
 			'page_size_hot_qs' => 20,
+			'page_size_pms' => 10,
 			'page_size_q_as' => 10,
 			'page_size_qs' => 20,
 			'page_size_related_qs' => 5,

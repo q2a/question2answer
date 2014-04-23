@@ -118,6 +118,7 @@
 		'page_size_ask_tags' => 'number',
 		'page_size_home' => 'number',
 		'page_size_hot_qs' => 'number',
+		'page_size_pms' => 'number',
 		'page_size_q_as' => 'number',
 		'page_size_qs' => 'number',
 		'page_size_related_qs' => 'number',
@@ -234,6 +235,7 @@
 		'page_size_ask_tags' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_home' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_hot_qs' => QA_DB_RETRIEVE_QS_AS,
+		'page_size_pms' => QA_DB_RETRIEVE_MESSAGES,
 		'page_size_qs' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_related_qs' => QA_DB_RETRIEVE_QS_AS,
 		'page_size_search' => QA_DB_RETRIEVE_QS_AS,
@@ -255,6 +257,7 @@
 		'page_size_ask_tags' => 3,
 		'page_size_home' => 1,
 		'page_size_hot_qs' => 1,
+		'page_size_pms' => 1,
 		'page_size_q_as' => 1,
 		'page_size_qs' => 1,
 		'page_size_search' => 1,
@@ -307,7 +310,7 @@
 
 				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 
-				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
+				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
 
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');
@@ -333,6 +336,7 @@
 
 			if (!QA_FINAL_EXTERNAL_USERS)
 				$checkboxtodisplay = array_merge($checkboxtodisplay, array(
+					'page_size_pms' => 'option_allow_private_messages && option_show_message_history',
 					'page_size_wall' => 'option_allow_user_walls',
 					'avatar_profile_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 					'avatar_users_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
