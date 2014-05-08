@@ -95,12 +95,17 @@
 			'type' => 'users'
 		);
 
-		foreach ($users as $user)
+		foreach ($users as $user) {
+			$avatarhtml = qa_get_user_avatar_html($user['flags'], $user['email'], $user['handle'],
+					$user['avatarblobid'], $user['avatarwidth'], $user['avatarheight'], qa_opt('avatar_users_size'), true);
+
 			$qa_content['ranking_users']['items'][]=array(
-				'label' => qa_get_user_avatar_html($user['flags'], $user['email'], $user['handle'],
-					$user['avatarblobid'], $user['avatarwidth'], $user['avatarheight'], qa_opt('avatar_users_size'), true).' '.$usershtml[$user['userid']],
+				'avatar' => $avatarhtml,
+				'label' => $usershtml[$user['userid']],
 				'score' => qa_html(number_format($user['points'])),
+				'raw' => $user,
 			);
+		}
 	}
 
 
