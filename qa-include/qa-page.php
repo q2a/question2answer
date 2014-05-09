@@ -224,7 +224,8 @@
 			setcookie('qa_admin_last', $_COOKIE['qa_admin_last'], 0, '/', QA_COOKIE_DOMAIN); // ...and in future
 		}
 
-		qa_set_form_security_key();
+		if (isset($qa_content))
+			qa_set_form_security_key();
 
 		return $qa_content;
 	}
