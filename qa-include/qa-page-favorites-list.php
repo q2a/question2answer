@@ -76,9 +76,12 @@
 	extract($favswitch[$favtype]); // get switch variables
 
 	$pagesize = qa_opt($page_opt);
-	$items = qa_db_select_with_pending(
+	list($totalItems, $items) = qa_db_select_with_pending(
+		qa_db_selectspec_count($fn_spec($userid)),
 		$fn_spec($userid, $pagesize, $start)
 	);
+
+	$count = $totalItems['count'];
 	$usershtml = qa_userids_handles_html($items);
 
 
@@ -95,7 +98,7 @@
 
 	$qa_content['suggest_next'] = qa_lang_html_sub('misc/suggest_favorites_add', '<span class="qa-favorite-image">&nbsp;</span>');
 
-	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, 100, qa_opt('pages_prev_next'));
+	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
 	$qa_content['navigation']['sub'] = qa_user_sub_navigation(qa_get_logged_in_handle(), 'favorites', true);
 

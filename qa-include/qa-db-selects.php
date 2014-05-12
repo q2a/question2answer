@@ -1481,13 +1481,14 @@
 	function qa_db_user_favorite_qs_selectspec($userid, $limit=null, $start=0)
 /*
 	Return the selectspec to retrieve an array of $userid's favorited questions, with the usual information.
+	Returns $limit questions, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
 		$selectspec = qa_db_posts_basic_selectspec($userid);
 
-		$selectspec['source'] .= ' JOIN ^userfavorites AS selectfave ON ^posts.postid=selectfave.entityid WHERE selectfave.userid=$ AND selectfave.entitytype=$ AND ^posts.type="Q" ORDER BY created DESC';
+		$selectspec['source'] .= ' JOIN ^userfavorites AS selectfave ON ^posts.postid=selectfave.entityid WHERE selectfave.userid=$ AND selectfave.entitytype=$ AND ^posts.type="Q" ORDER BY ^posts.created DESC';
 		$selectspec['arguments'][] = $userid;
 		$selectspec['arguments'][] = QA_ENTITY_QUESTION;
 
@@ -1507,11 +1508,12 @@
 	function qa_db_user_favorite_users_selectspec($userid, $limit=null, $start=0)
 /*
 	Return the selectspec to retrieve an array of $userid's favorited users, with information about those users' accounts.
+	Returns $limit users, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
-		$source = '^users JOIN ^userpoints ON ^users.userid=^userpoints.userid JOIN ^userfavorites ON ^users.userid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY handle';
+		$source = '^users JOIN ^userpoints ON ^users.userid=^userpoints.userid JOIN ^userfavorites ON ^users.userid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY ^users.handle';
 		$arguments = array($userid, QA_ENTITY_USER);
 
 		if (isset($limit)) {
@@ -1533,11 +1535,12 @@
 	function qa_db_user_favorite_tags_selectspec($userid, $limit=null, $start=0)
 /*
 	Return the selectspec to retrieve an array of $userid's favorited tags, with information about those tags.
+	Returns $limit tags, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
-		$source = '^words JOIN ^userfavorites ON ^words.wordid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY tagcount DESC';
+		$source = '^words JOIN ^userfavorites ON ^words.wordid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY ^words.tagcount DESC';
 		$arguments = array($userid, QA_ENTITY_TAG);
 
 		if (isset($limit)) {
