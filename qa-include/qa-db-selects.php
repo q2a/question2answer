@@ -1478,50 +1478,79 @@
 	}
 
 
-	function qa_db_user_favorite_qs_selectspec($userid)
+	function qa_db_user_favorite_qs_selectspec($userid, $limit=null, $start=0)
 /*
 	Return the selectspec to retrieve an array of $userid's favorited questions, with the usual information.
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
-		$selectspec=qa_db_posts_basic_selectspec($userid);
+		$selectspec = qa_db_posts_basic_selectspec($userid);
 
-		$selectspec['source'].=" JOIN ^userfavorites AS selectfave ON ^posts.postid=selectfave.entityid WHERE selectfave.userid=$ AND selectfave.entitytype=$ AND ^posts.type='Q'";
-		array_push($selectspec['arguments'], $userid, QA_ENTITY_QUESTION);
-		$selectspec['sortdesc']='created';
+		$selectspec['source'] .= ' JOIN ^userfavorites AS selectfave ON ^posts.postid=selectfave.entityid WHERE selectfave.userid=$ AND selectfave.entitytype=$ AND ^posts.type="Q" ORDER BY created DESC';
+		$selectspec['arguments'][] = $userid;
+		$selectspec['arguments'][] = QA_ENTITY_QUESTION;
+
+		if (isset($limit)) {
+			$limit = min($limit, QA_DB_RETRIEVE_QS_AS);
+			$selectspec['source'] .= ' LIMIT #,#';
+			$selectspec['arguments'][] = $start;
+			$selectspec['arguments'][] = $limit;
+		}
+
+		$selectspec['sortdesc'] = 'created';
 
 		return $selectspec;
 	}
 
 
-	function qa_db_user_favorite_users_selectspec($userid)
+	function qa_db_user_favorite_users_selectspec($userid, $limit=null, $start=0)
 /*
 	Return the selectspec to retrieve an array of $userid's favorited users, with information about those users' accounts.
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
+		$source = '^users JOIN ^userpoints ON ^users.userid=^userpoints.userid JOIN ^userfavorites ON ^users.userid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY handle';
+		$arguments = array($userid, QA_ENTITY_USER);
+
+		if (isset($limit)) {
+			$limit = min($limit, QA_DB_RETRIEVE_USERS);
+			$source .= ' LIMIT #,#';
+			$arguments[] = $start;
+			$arguments[] = $limit;
+		}
+
 		return array(
 			'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
-			'source' => "^users JOIN ^userpoints ON ^users.userid=^userpoints.userid JOIN ^userfavorites ON ^users.userid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$",
-			'arguments' => array($userid, QA_ENTITY_USER),
+			'source' => $source,
+			'arguments' => $arguments,
 			'sortasc' => 'handle',
 		);
 	}
 
 
-	function qa_db_user_favorite_tags_selectspec($userid)
+	function qa_db_user_favorite_tags_selectspec($userid, $limit=null, $start=0)
 /*
 	Return the selectspec to retrieve an array of $userid's favorited tags, with information about those tags.
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
+		$source = '^words JOIN ^userfavorites ON ^words.wordid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY tagcount DESC';
+		$arguments = array($userid, QA_ENTITY_TAG);
+
+		if (isset($limit)) {
+			$limit = min($limit, QA_DB_RETRIEVE_TAGS);
+			$source .= ' LIMIT #,#';
+			$arguments[] = $start;
+			$arguments[] = $limit;
+		}
+
 		return array(
 			'columns' => array('word', 'tagcount'),
-			'source' => "^words JOIN ^userfavorites ON ^words.wordid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$",
-			'arguments' => array($userid, QA_ENTITY_TAG),
+			'source' => $source,
+			'arguments' => $arguments,
 			'sortdesc' => 'tagcount',
 		);
 	}
