@@ -851,6 +851,12 @@
 				$this->output('<h2'.rtrim(' '.@$part['title_tags']).'>'.@$part['title'].'</h2>');
 		}
 
+		public function part_footer($part)
+		{
+			if (isset($part['footer']))
+				$this->output($part['footer']);
+		}
+
 		public function form($form)
 		{
 			if (!empty($form)) {
@@ -1289,6 +1295,8 @@
 				$this->ranking_item($item, $class);
 				$this->output('</span>');
 			}
+
+			$this->part_footer($ranking);
 		}
 
 		public function ranking_item($item, $class, $spacer=false) // $spacer is deprecated
@@ -1484,20 +1492,23 @@
 
 		public function q_list_and_form($q_list)
 		{
-			if (!empty($q_list)) {
-				$this->part_title($q_list);
+			if (empty($q_list))
+				return;
 
-				if (!empty($q_list['form']))
-					$this->output('<form '.$q_list['form']['tags'].'>');
+			$this->part_title($q_list);
 
-				$this->q_list($q_list);
+			if (!empty($q_list['form']))
+				$this->output('<form '.$q_list['form']['tags'].'>');
 
-				if (!empty($q_list['form'])) {
-					unset($q_list['form']['tags']); // we already output the tags before the qs
-					$this->q_list_form($q_list);
-					$this->output('</form>');
-				}
+			$this->q_list($q_list);
+
+			if (!empty($q_list['form'])) {
+				unset($q_list['form']['tags']); // we already output the tags before the qs
+				$this->q_list_form($q_list);
+				$this->output('</form>');
 			}
+
+			$this->part_footer($q_list);
 		}
 
 		public function q_list_form($q_list)
