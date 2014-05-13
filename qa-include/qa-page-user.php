@@ -32,25 +32,27 @@
 
 //	Determine the identify of the user
 
-	$handle=qa_request_part(1);
+	$handle = qa_request_part(1);
+
 	if (!strlen($handle)) {
-		$handle=qa_get_logged_in_handle();
-		qa_redirect(isset($handle) ? ('user/'.$handle) : 'users');
+		$handle = qa_get_logged_in_handle();
+		qa_redirect(isset($handle) ? 'user/'.$handle : 'users');
 	}
 
 
 //	Get the HTML to display for the handle, and if we're using external users, determine the userid
 
 	if (QA_FINAL_EXTERNAL_USERS) {
-		$userid=qa_handle_to_userid($handle);
+		$userid = qa_handle_to_userid($handle);
 		if (!isset($userid))
 			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
-		$usershtml=qa_get_users_html(array($userid), false, qa_path_to_root(), true);
-		$userhtml=@$usershtml[$userid];
+		$usershtml = qa_get_users_html(array($userid), false, qa_path_to_root(), true);
+		$userhtml = @$usershtml[$userid];
 
-	} else
-		$userhtml=qa_html($handle);
+	}
+	else
+		$userhtml = qa_html($handle);
 
 
 //	Display the appropriate page based on the request
@@ -58,30 +60,30 @@
 	switch (qa_request_part(2)) {
 		case 'wall':
 			qa_set_template('user-wall');
-			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-wall.php';
+			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-wall.php';
 			break;
 
 		case 'activity':
 			qa_set_template('user-activity');
-			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-activity.php';
+			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-activity.php';
 			break;
 
 		case 'questions':
 			qa_set_template('user-questions');
-			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-questions.php';
+			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-questions.php';
 			break;
 
 		case 'answers':
 			qa_set_template('user-answers');
-			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-answers.php';
+			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-answers.php';
 			break;
 
 		case null:
-			$qa_content=include QA_INCLUDE_DIR.'qa-page-user-profile.php';
+			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-profile.php';
 			break;
 
 		default:
-			$qa_content=include QA_INCLUDE_DIR.'qa-page-not-found.php';
+			$qa_content = include QA_INCLUDE_DIR.'qa-page-not-found.php';
 			break;
 	}
 
