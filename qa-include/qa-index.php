@@ -51,14 +51,20 @@
 	//	Determine the request and root of the installation, and the requested start position used by many pages
 
 		function qa_index_set_request()
+	/*
+		Apache and Nginx behave slightly differently:
+		- Apache qa-rewrite unescapes characters, converts `+` to ` `, cuts off at `#` or `&`
+		- Nginx qa-rewrite unescapes characters, retains `+`, contains true path
+	*/
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 			$relativedepth=0;
 
-			if (isset($_GET['qa-rewrite'])) { // URLs rewritten by .htaccess
+			if (isset($_GET['qa-rewrite'])) { // URLs rewritten by .htaccess or nginx
 				$urlformat=QA_URL_FORMAT_NEAT;
-				$requestparts=explode('/', qa_gpc_to_string($_GET['qa-rewrite']));
+				$qa_rewrite = strtr(qa_gpc_to_string($_GET['qa-rewrite']), '+', ' '); // strtr required by Nginx
+				$requestparts=explode('/', $qa_rewrite);
 				unset($_GET['qa-rewrite']);
 
 				if (!empty($_SERVER['REQUEST_URI'])) { // workaround for the fact that Apache unescapes characters while rewriting
@@ -79,17 +85,23 @@
 					}
 
 					// Generally we assume that $_GET['qa-rewrite'] has the right path depth, but this won't be the case if there's
-					// a & or # somewhere in the middle of the path, due to apache unescaping. So we make a special case for that.
-					$keepparts=count($requestparts);
-					$requestparts=explode('/', urldecode($origpath)); // new request calculated from $_SERVER['REQUEST_URI']
+					// a & or # somewhere in the middle of the path, due to Apache unescaping. So we make a special case for that.
+					// If 'REQUEST_URI' and 'qa-rewrite' already match (as on Nginx), we can skip this.
+					$normalizedpath = urldecode($origpath);
+					if (substr($normalizedpath, -strlen($qa_rewrite)) !== $qa_rewrite) {
+						$keepparts=count($requestparts);
+						$requestparts=explode('/', urldecode($origpath)); // new request calculated from $_SERVER['REQUEST_URI']
 
-					for ($part=count($requestparts)-1; $part>=0; $part--)
-						if (is_numeric(strpos($requestparts[$part], '&')) || is_numeric(strpos($requestparts[$part], '#'))) {
-							$keepparts+=count($requestparts)-$part-1; // this is how many parts we lost
-							break;
+						// loop forwards so we capture all parts
+						for ($part=0, $max=count($requestparts); $part<$max; $part++) {
+							if (is_numeric(strpos($requestparts[$part], '&')) || is_numeric(strpos($requestparts[$part], '#'))) {
+								$keepparts += count($requestparts) - $part - 1; // this is how many parts remain
+								break;
+							}
 						}
 
-					$requestparts=array_slice($requestparts, -$keepparts); // remove any irrelevant parts from the beginning
+						$requestparts=array_slice($requestparts, -$keepparts); // remove any irrelevant parts from the beginning
+					}
 				}
 
 				$relativedepth=count($requestparts);
