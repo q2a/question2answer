@@ -87,9 +87,10 @@
 	$htmldefaults['whoview'] = false;
 	$htmldefaults['avatarsize'] = 0;
 
-	foreach ($questions as $question)
+	foreach ($questions as $question) {
 		$qa_content['q_list']['qs'][] = qa_post_html_fields($question, $loginuserid, qa_cookie_get(),
 			$usershtml, null, qa_post_html_options($question, $htmldefaults));
+	}
 
 	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 

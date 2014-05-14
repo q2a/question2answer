@@ -71,7 +71,7 @@
 
 	$wallposterrorhtml = qa_wall_error_html($loginuserid, $useraccount['userid'], $useraccount['flags']);
 
-	foreach ($usermessages as $message)
+	foreach ($usermessages as $message) {
 		if ($message['deleteable'] && qa_clicked('m'.$message['messageid'].'_dodelete')) {
 			if (!qa_check_form_security_code('wall-'.$useraccount['handle'], qa_post_text('code')))
 				$errors['page'] = qa_lang_html('misc/form_security_again');
@@ -81,6 +81,7 @@
 				qa_redirect(qa_request(), $_GET);
 			}
 		}
+	}
 
 	if (qa_clicked('dowallpost')) {
 		$inmessage = qa_post_text('message');
@@ -124,7 +125,7 @@
 		'messages' => array(),
 	);
 
-	if ($start==0) { // only allow posting on first page
+	if ($start == 0) { // only allow posting on first page
 		if ($wallposterrorhtml)
 			$qa_content['message_list']['error'] = $wallposterrorhtml; // an error that means we are not allowed to post
 
@@ -155,8 +156,8 @@
 
 //	Sub menu for navigation in user pages
 
-	$qa_content['navigation']['sub'] = qa_user_sub_navigation( $handle, 'wall',
-		isset($loginuserid) && ($loginuserid == (QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid'])) );
+	$ismyuser = isset($loginuserid) && $loginuserid == (QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid']);
+	$qa_content['navigation']['sub'] = qa_user_sub_navigation($handle, 'wall', $ismyuser);
 
 
 	return $qa_content;

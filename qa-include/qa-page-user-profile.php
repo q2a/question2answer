@@ -361,7 +361,7 @@
 //	General information about the user, only available if we're using internal user management
 
 	if (!QA_FINAL_EXTERNAL_USERS) {
-		$membertime = qa_time_to_string(qa_opt('db_time')-$useraccount['created']);
+		$membertime = qa_time_to_string(qa_opt('db_time') - $useraccount['created']);
 		$joindate = qa_when_to_html($useraccount['created'], 0);
 
 		$qa_content['form_profile'] = array(
@@ -405,11 +405,12 @@
 
 	//	Private message link
 
-		if ( qa_opt('allow_private_messages') && isset($loginuserid) && ($loginuserid != $userid) && !($useraccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) && !$userediting )
+		if ( qa_opt('allow_private_messages') && isset($loginuserid) && ($loginuserid != $userid) && !($useraccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) && !$userediting ) {
 			$qa_content['form_profile']['fields']['level']['value'] .= strtr(qa_lang_html('profile/send_private_message'), array(
 				'^1' => '<a href="'.qa_path_html('message/'.$handle).'">',
 				'^2' => '</a>',
 			));
+		}
 
 
 	//	Levels editing or viewing (add category-specific levels)
@@ -428,12 +429,13 @@
 				$leveloptions = array();
 				$catleveloptions = array('' => qa_lang_html('users/category_level_none'));
 
-				foreach ($showlevels as $showlevel)
+				foreach ($showlevels as $showlevel) {
 					if ($showlevel <= $maxlevelassign) {
 						$leveloptions[$showlevel] = qa_html(qa_user_level_string($showlevel));
 						if ($showlevel > QA_USER_LEVEL_BASIC)
 							$catleveloptions[$showlevel] = $leveloptions[$showlevel];
 					}
+				}
 
 				$qa_content['form_profile']['fields']['level']['options'] = $leveloptions;
 
@@ -443,11 +445,12 @@
 				if (qa_using_categories()) {
 					$catleveladd = strlen(qa_get('catleveladd')) > 0;
 
-					if ((!$catleveladd) && !count($userlevels))
+					if ((!$catleveladd) && !count($userlevels)) {
 						$qa_content['form_profile']['fields']['level']['suffix'] = strtr(qa_lang_html('users/category_level_add'), array(
 							'^1' => '<a href="'.qa_path_html(qa_request(), array('state' => 'edit', 'catleveladd' => 1)).'">',
 							'^2' => '</a>',
 						));
+					}
 					else
 						$qa_content['form_profile']['fields']['level']['suffix'] = qa_lang_html('users/level_in_general');
 
@@ -455,7 +458,7 @@
 						$userlevels[] = array('entitytype' => QA_ENTITY_CATEGORY);
 
 					$index = 0;
-					foreach ($userlevels as $userlevel)
+					foreach ($userlevels as $userlevel) {
 						if ($userlevel['entitytype'] == QA_ENTITY_CATEGORY) {
 							$index++;
 							$id = 'ls_'.+$index;
@@ -481,6 +484,7 @@
 
 							unset($qa_content['form_profile']['fields']['uc_'.$index.'_cat']['note']);
 						}
+					}
 
 					$qa_content['script_lines'][] = array(
 						"function qa_update_category_levels()",
@@ -531,7 +535,7 @@
 		$showpermits = array();
 		$permitoptions = qa_get_permit_options();
 
-		foreach ($permitoptions as $permitoption)
+		foreach ($permitoptions as $permitoption) {
 			if ( // if not available to approved and email confirmed users with no points, but yes available to the user, it's something special
 				qa_permit_error($permitoption, $userid, QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_EMAIL_CONFIRMED, 0) &&
 				!qa_permit_error($permitoption, $userid, $useraccount['level'], $useraccount['flags'], $userpoints['points'])
@@ -541,8 +545,9 @@
 				else
 					$showpermits[] = qa_lang('profile/'.$permitoption); // then show it as an extra priviliege
 			}
+		}
 
-		if (count($showpermits))
+		if (count($showpermits)) {
 			$qa_content['form_profile']['fields']['permits'] = array(
 				'type' => 'static',
 				'label' => qa_lang_html('profile/extra_privileges'),
@@ -550,6 +555,7 @@
 				'rows' => count($showpermits),
 				'id' => 'permits',
 			);
+		}
 
 
 	//	Show email address only if we're an administrator
@@ -569,7 +575,6 @@
 					($userediting ? '' : qa_lang_html('users/only_shown_admins')),
 				'id' => 'email',
 			);
-
 		}
 
 
@@ -588,7 +593,7 @@
 				'id' => 'lastlogin',
 			);
 
-			if (isset($useraccount['written']))
+			if (isset($useraccount['written'])) {
 				$qa_content['form_profile']['fields']['lastwrite'] = array(
 					'type' => 'static',
 					'label' => qa_lang_html('users/last_write_label'),
@@ -600,9 +605,9 @@
 					'note' => $userediting ? null : qa_lang_html('users/only_shown_moderators'),
 					'id' => 'lastwrite',
 				);
+			}
 			else
 				unset($qa_content['form_profile']['fields']['lastwrite']);
-
 		}
 
 
@@ -654,10 +659,9 @@
 	//	Edit form or button, if appropriate
 
 		if ($userediting) {
-
 			if (
 				(qa_opt('avatar_allow_gravatar') && ($useraccount['flags'] & QA_USER_FLAGS_SHOW_GRAVATAR)) ||
-				(qa_opt('avatar_allow_upload') && (($useraccount['flags'] & QA_USER_FLAGS_SHOW_AVATAR)) && isset($useraccount['avatarblobid']))
+				(qa_opt('avatar_allow_upload') && ($useraccount['flags'] & QA_USER_FLAGS_SHOW_AVATAR) && isset($useraccount['avatarblobid']))
 			) {
 				$qa_content['form_profile']['fields']['removeavatar'] = array(
 					'type' => 'checkbox',
@@ -891,19 +895,22 @@
 		);
 	}
 
-	if (@$userpoints['points'])
+	if (@$userpoints['points']) {
 		$qa_content['form_activity']['fields']['points']['value'] .=
 			qa_lang_html_sub('profile/ranked_x', '<span class="qa-uf-user-rank">'.number_format($userrank).'</span>');
+	}
 
-	if (@$userpoints['aselects'])
+	if (@$userpoints['aselects']) {
 		$qa_content['form_activity']['fields']['questions']['value'] .= ($userpoints['aselects'] == 1)
 			? qa_lang_html_sub('profile/1_with_best_chosen', '<span class="qa-uf-user-q-selects">1</span>', '1')
 			: qa_lang_html_sub('profile/x_with_best_chosen', '<span class="qa-uf-user-q-selects">'.number_format($userpoints['aselects']).'</span>');
+	}
 
-	if (@$userpoints['aselecteds'])
+	if (@$userpoints['aselecteds']) {
 		$qa_content['form_activity']['fields']['answers']['value'] .= ($userpoints['aselecteds'] == 1)
 			? qa_lang_html_sub('profile/1_chosen_as_best', '<span class="qa-uf-user-a-selecteds">1</span>', '1')
 			: qa_lang_html_sub('profile/x_chosen_as_best', '<span class="qa-uf-user-a-selecteds">'.number_format($userpoints['aselecteds']).'</span>');
+	}
 
 
 
