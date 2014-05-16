@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 56);
+	define('QA_DB_VERSION_CURRENT', 57);
 
 
 	function qa_db_user_column_type_verify()
@@ -169,12 +169,15 @@
 				'type' => "ENUM('PUBLIC', 'PRIVATE') NOT NULL DEFAULT 'PRIVATE'",
 				'fromuserid' => $useridcoltype.' NOT NULL',
 				'touserid' => $useridcoltype.' NOT NULL',
+				'fromhidden' => 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0',
+				'tohidden' => 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0',
 				'content' => 'VARCHAR('.QA_DB_MAX_CONTENT_LENGTH.') NOT NULL',
 				'format' => 'VARCHAR('.QA_DB_MAX_FORMAT_LENGTH.') CHARACTER SET ascii NOT NULL',
 				'created' => 'DATETIME NOT NULL',
 				'PRIMARY KEY (messageid)',
 				'KEY type (type, fromuserid, touserid, created)',
 				'KEY touserid (touserid, type, created)',
+				'KEY fromhidden (fromhidden, tohidden)',
 			),
 
 			'userfavorites' => array(
@@ -1405,6 +1408,25 @@
 					break;
 
 			//	Up to here: Version 1.6 (release)
+
+				case 57:
+					if (!QA_FINAL_EXTERNAL_USERS) {
+						// might be using messages table shared with another installation, so check if we need to upgrade
+						$keycolumns = qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^messages')));
+
+						if (isset($keycolumns['fromhidden']))
+							qa_db_upgrade_progress('Skipping upgrading messages table since it was already upgraded by another Q2A site sharing it.');
+						else {
+							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN fromhidden '.$definitions['messages']['fromhidden'].' AFTER touserid');
+							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN tohidden '.$definitions['messages']['tohidden'].' AFTER fromhidden');
+							qa_db_upgrade_query('ALTER TABLE ^messages ADD KEY fromhidden (fromhidden, tohidden)');
+
+							qa_db_upgrade_query($locktablesquery);
+						}
+					}
+					break;
+
+			//	Up to here: Verison 1.7 alpha 1
 
 			}
 
