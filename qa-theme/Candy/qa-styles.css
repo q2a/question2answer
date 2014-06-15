@@ -126,7 +126,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-nav-main-item {float:left; padding-left:10px;}
 .qa-nav-main-item-opp {float:right; padding-right:10px;}
 .qa-nav-main-link {background:#efeb9c url(nav-main-bg.png) repeat-x left top; color:#597700; display:block; padding:14px 10px;}
-.qa-nav-main-link:hover,.qa-nav-main-selected {url(nav-main-sel-bg.png) repeat-x left top; border-left:1px solid #e9e697; border-right:1px solid #e9e697; color:#8d006a; padding:14px 9px; text-decoration:none;}
+.qa-nav-main-link:hover,.qa-nav-main-selected {background: url(nav-main-sel-bg.png) repeat-x left top; border-left:1px solid #e9e697; border-right:1px solid #e9e697; color:#8d006a; padding:14px 9px; text-decoration:none;}
 .qa-nav-main-hot .qa-nav-main-link {color:#c33;}
 
 .qa-nav-sub {clear:both; background:url(nav-sub-bg.png) repeat-x left top;}
@@ -446,7 +446,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-nav-footer-link {color:#FFF; text-decoration:underline !important;}
 	.qa-nav-footer-link:hover {color:#f5d495;}
 .qa-attribution {float:right;}
-	.qa-attribution a {color:#FFF; text-decoration:underline; !important;}
+	.qa-attribution a {color:#FFF; text-decoration:underline !important;}
 	.qa-attribution a:hover {color:#f5d495;}
 
 /* Classes passed to theme */
