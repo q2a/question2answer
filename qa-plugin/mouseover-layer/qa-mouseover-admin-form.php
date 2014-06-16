@@ -28,19 +28,18 @@
 
 		public function option_default($option)
 		{
-			if ($option=='mouseover_content_max_len')
+			if ($option === 'mouseover_content_max_len')
 				return 480;
 		}
 
 
 		public function admin_form(&$qa_content)
 		{
-			$saved=false;
+			$saved = qa_clicked('mouseover_save_button');
 
-			if (qa_clicked('mouseover_save_button')) {
-				qa_opt('mouseover_content_on', (int)qa_post_text('mouseover_content_on_field'));
-				qa_opt('mouseover_content_max_len', (int)qa_post_text('mouseover_content_max_len_field'));
-				$saved=true;
+			if ($saved) {
+				qa_opt('mouseover_content_on', (int) qa_post_text('mouseover_content_on_field'));
+				qa_opt('mouseover_content_max_len', (int) qa_post_text('mouseover_content_max_len_field'));
 			}
 
 			qa_set_display_rules($qa_content, array(
@@ -63,7 +62,7 @@
 						'label' => 'Maximum length of preview:',
 						'suffix' => 'characters',
 						'type' => 'number',
-						'value' => (int)qa_opt('mouseover_content_max_len'),
+						'value' => (int) qa_opt('mouseover_content_max_len'),
 						'tags' => 'name="mouseover_content_max_len_field"',
 					),
 				),
