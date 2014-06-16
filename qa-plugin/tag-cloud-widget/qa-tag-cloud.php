@@ -28,24 +28,26 @@
 
 		public function option_default($option)
 		{
-			if ($option=='tag_cloud_count_tags')
+			if ($option === 'tag_cloud_count_tags')
 				return 100;
-			if ($option=='tag_cloud_font_size')
+			if ($option === 'tag_cloud_font_size')
 				return 24;
-			if ($option=='tag_cloud_size_popular')
+			if ($option === 'tag_cloud_minimal_font_size')
+				return 5;
+			if ($option === 'tag_cloud_size_popular')
 				return true;
 		}
 
 
 		public function admin_form()
 		{
-			$saved=false;
+			$saved = qa_clicked('tag_cloud_save_button');
 
-			if (qa_clicked('tag_cloud_save_button')) {
-				qa_opt('tag_cloud_count_tags', (int)qa_post_text('tag_cloud_count_tags_field'));
-				qa_opt('tag_cloud_font_size', (int)qa_post_text('tag_cloud_font_size_field'));
-				qa_opt('tag_cloud_size_popular', (int)qa_post_text('tag_cloud_size_popular_field'));
-				$saved=true;
+			if ($saved) {
+				qa_opt('tag_cloud_count_tags', (int) qa_post_text('tag_cloud_count_tags_field'));
+				qa_opt('tag_cloud_font_size', (int) qa_post_text('tag_cloud_font_size_field'));
+				qa_opt('tag_cloud_minimal_font_size', (int) qa_post_text('tag_cloud_minimal_font_size_field'));
+				qa_opt('tag_cloud_size_popular', (int) qa_post_text('tag_cloud_size_popular_field'));
 			}
 
 			return array(
@@ -55,17 +57,25 @@
 					array(
 						'label' => 'Maximum tags to show:',
 						'type' => 'number',
-						'value' => (int)qa_opt('tag_cloud_count_tags'),
+						'value' => (int) qa_opt('tag_cloud_count_tags'),
 						'suffix' => 'tags',
 						'tags' => 'name="tag_cloud_count_tags_field"',
 					),
 
 					array(
-						'label' => 'Starting font size:',
+						'label' => 'Biggest font size:',
 						'suffix' => 'pixels',
 						'type' => 'number',
-						'value' => (int)qa_opt('tag_cloud_font_size'),
+						'value' => (int) qa_opt('tag_cloud_font_size'),
 						'tags' => 'name="tag_cloud_font_size_field"',
+					),
+
+					array(
+						'label' => 'Smallest allowed font size:',
+						'suffix' => 'pixels',
+						'type' => 'number',
+						'value' => (int) qa_opt('tag_cloud_minimal_font_size'),
+						'tags' => 'name="tag_cloud_minimal_font_size_field"',
 					),
 
 					array(
@@ -98,39 +108,39 @@
 
 		public function allow_region($region)
 		{
-			return ($region=='side');
+			return ($region === 'side');
 		}
 
 
 		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR . 'qa-db-selects.php';
 
-			$populartags=qa_db_single_select(qa_db_popular_tags_selectspec(0, (int)qa_opt('tag_cloud_count_tags')));
+			$populartags = qa_db_single_select(qa_db_popular_tags_selectspec(0, (int) qa_opt('tag_cloud_count_tags')));
 
-			reset($populartags);
-			$maxcount=current($populartags);
+			$maxcount = reset($populartags);
 
-			$themeobject->output(
-				'<h2 style="margin-top:0; padding-top:0;">',
-				qa_lang_html('main/popular_tags'),
-				'</h2>'
-			);
+			$themeobject->output(sprintf('<h2 style="margin-top: 0; padding-top: 0;">%s</h2>', qa_lang_html('main/popular_tags')));
 
-			$themeobject->output('<div style="font-size:10px;">');
+			$themeobject->output('<div style="font-size: 10px;">');
 
-			$maxsize=qa_opt('tag_cloud_font_size');
-			$scale=qa_opt('tag_cloud_size_popular');
-			$blockwordspreg=qa_get_block_words_preg();
+			$maxsize = qa_opt('tag_cloud_font_size');
+			$minsize = qa_opt('tag_cloud_minimal_font_size');
+			$scale = qa_opt('tag_cloud_size_popular');
+			$blockwordspreg = qa_get_block_words_preg();
 
 			foreach ($populartags as $tag => $count) {
-				if (count(qa_block_words_match_all($tag, $blockwordspreg)))
-					continue; // skip censored tags
+				$matches = qa_block_words_match_all($tag, $blockwordspreg);
+				if (empty($matches)) {
+					if ($scale) {
+						$size = number_format($maxsize * $count / $maxcount, 1);
+						if ($size < $minsize)  //  Size is too small so stop processing
+							break;
+					} else
+						$size = $maxsize;
 
-				$size=number_format(($scale ? ($maxsize*$count/$maxcount) : $maxsize), 1);
-
-				if (($size>=5) || !$scale)
-					$themeobject->output('<a href="'.qa_path_html('tag/'.$tag).'" style="font-size:'.$size.'px; vertical-align:baseline;">'.qa_html($tag).'</a>');
+					$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
+				}
 			}
 
 			$themeobject->output('</div>');
