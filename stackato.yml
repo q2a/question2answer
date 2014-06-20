@@ -1,4 +1,4 @@
-name: q2a
+name: question2answer
 instances: 1
 framework: php
 mem: 256M
