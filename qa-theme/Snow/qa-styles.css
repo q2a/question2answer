@@ -406,13 +406,6 @@ input[type="submit"].qa-search-button:hover {
 	width: 24px;
 }
 
-.qa-logged-in-avatar .qa-avatar-image {
-	max-width: 100%;
-	height: auto;
-	min-width: 24px; /* pull request */
-	min-height: 24px; /* pull request */
-}
-
 /* end */
 .qa-logged-in-points {
 	float: left;
