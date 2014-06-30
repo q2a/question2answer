@@ -66,64 +66,13 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$codetolanguage=array( // 2-letter language codes as per ISO 639-1
-			'ar' => 'Arabic - العربية',
-			'bg' => 'Bulgarian - Български',
-			'bn' => 'Bengali - বাংলা',
-			'ca' => 'Catalan - Català',
-			'cs' => 'Czech - Čeština',
-			'cy' => 'Welsh - Cymraeg',
-			'da' => 'Danish - Dansk',
-			'de' => 'German - Deutsch',
-			'el' => 'Greek - Ελληνικά',
-			'en-GB' => 'English (UK)',
-			'es' => 'Spanish - Español',
-			'et' => 'Estonian - Eesti',
-			'fa' => 'Persian - فارسی',
-			'fi' => 'Finnish - Suomi',
-			'fr' => 'French - Français',
-			'he' => 'Hebrew - עברית',
-			'hr' => 'Croatian - Hrvatski',
-			'hu' => 'Hungarian - Magyar',
-			'id' => 'Indonesian - Bahasa Indonesia',
-			'is' => 'Icelandic - Íslenska',
-			'it' => 'Italian - Italiano',
-			'ja' => 'Japanese - 日本語',
-			'ka' => 'Georgian - ქართული ენა',
-			'kh' => 'Khmer - ភាសាខ្មែរ',
-			'ko' => 'Korean - 한국어',
-			'ku-CKB' => 'Kurdish Central - کورد',
-			'lt' => 'Lithuanian - Lietuvių',
-			'lv' => 'Latvian - Latviešu',
-			'nl' => 'Dutch - Nederlands',
-			'no' => 'Norwegian - Norsk',
-			'pl' => 'Polish - Polski',
-			'pt' => 'Portuguese - Português',
-			'ro' => 'Romanian - Română',
-			'ru' => 'Russian - Русский',
-			'sk' => 'Slovak - Slovenčina',
-			'sl' => 'Slovenian - Slovenščina',
-			'sq' => 'Albanian - Shqip',
-			'sr' => 'Serbian - Српски',
-			'sv' => 'Swedish - Svenska',
-			'th' => 'Thai - ไทย',
-			'tr' => 'Turkish - Türkçe',
-			'ug' => 'Uyghur - ئۇيغۇرچە',
-			'uk' => 'Ukrainian - Українська',
-			'vi' => 'Vietnamese - Tiếng Việt',
-			'zh-TW' => 'Chinese Traditional - 繁體中文',
-			'zh' => 'Chinese Simplified - 简体中文',
-		);
+		$options = array('' => 'English (US)');
 
-		$options=array('' => 'English (US)');
-
-		$directory=@opendir(QA_LANG_DIR);
-		if (is_resource($directory)) {
-			while (($code=readdir($directory))!==false)
-				if (is_dir(QA_LANG_DIR.$code) && isset($codetolanguage[$code]))
-					$options[$code]=$codetolanguage[$code];
-
-			closedir($directory);
+		foreach (glob(QA_LANG_DIR . '*/qa-lang-metadata.php') as $filename) {
+			$code = basename(dirname($filename));
+			$metadata = include QA_LANG_DIR . $code . '/qa-lang-metadata.php';
+			if (isset($metadata['display_name']))
+				$options[$code] = $metadata['display_name'];
 		}
 
 		asort($options, SORT_STRING);
