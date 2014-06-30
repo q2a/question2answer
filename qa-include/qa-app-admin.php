@@ -66,7 +66,11 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$codetolanguage=array( // 2-letter language codes as per ISO 639-1
+		/*
+		 * @deprecated The hardcoded language ids will be removed in favor of language metadata files.
+		 * See qa-lang/en-GB directory for a clear example of how to use them.
+		 */
+		$codetolanguage = array( // 2-letter language codes as per ISO 639-1
 			'ar' => 'Arabic - العربية',
 			'az' => 'Azerbaijani - Azərbaycanca',
 			'bg' => 'Bulgarian - Български',
@@ -117,15 +121,22 @@
 			'zh' => 'Chinese Simplified - 简体中文',
 		);
 
-		$options=array('' => 'English (US)');
+		$options = array('' => 'English (US)');
 
-		$directory=@opendir(QA_LANG_DIR);
+		$directory = @opendir(QA_LANG_DIR);
 		if (is_resource($directory)) {
-			while (($code=readdir($directory))!==false)
-				if (is_dir(QA_LANG_DIR.$code) && isset($codetolanguage[$code]))
-					$options[$code]=$codetolanguage[$code];
-
+			while (($code = readdir($directory)) !== false) {
+				if (is_dir(QA_LANG_DIR . $code) && isset($codetolanguage[$code]))
+					$options[$code] = $codetolanguage[$code];
+			}
 			closedir($directory);
+		}
+
+		foreach (glob(QA_LANG_DIR . '*/qa-lang-metadata.php') as $filename) {
+			$code = basename(dirname($filename));
+			$metadata = include QA_LANG_DIR . $code . '/qa-lang-metadata.php';
+			if (isset($metadata['display_name']))
+				$options[$code] = $metadata['display_name'];
 		}
 
 		asort($options, SORT_STRING);
