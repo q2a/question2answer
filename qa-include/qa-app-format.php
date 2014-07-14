@@ -960,8 +960,12 @@
 					(!@$laterquestion['opersonal']) && // the other one was not personal
 					(abs($laterquestion['_time']-$question['_time'])<300) // the two events were within 5 minutes of each other
 				)
-			)
+			) {
+				if (isset($laterquestion)) {
+					unset($keepquestions[$question['postid']]);
+				}
 				$keepquestions[$question['postid']]=$question;
+			}
 		}
 
 		return $keepquestions;
