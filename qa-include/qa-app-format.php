@@ -922,50 +922,48 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR . 'qa-util-sort.php';
 
 		foreach ($questions as $key => $question) { // collect information about action referenced by each $question
 			if (isset($question['opostid'])) {
-				$questions[$key]['_time']=$question['otime'];
-				$questions[$key]['_type']=$question['obasetype'];
-				$questions[$key]['_userid']=@$question['ouserid'];
+				$questions[$key]['_time'] = $question['otime'];
+				$questions[$key]['_type'] = $question['obasetype'];
+				$questions[$key]['_userid'] = @$question['ouserid'];
 			} else {
-				$questions[$key]['_time']=$question['created'];
-				$questions[$key]['_type']='Q';
-				$questions[$key]['_userid']=$question['userid'];
+				$questions[$key]['_time'] = $question['created'];
+				$questions[$key]['_type'] = 'Q';
+				$questions[$key]['_userid'] = $question['userid'];
 			}
 
-			$questions[$key]['sort']=-$questions[$key]['_time'];
+			$questions[$key]['sort'] = -$questions[$key]['_time'];
 		}
-
 		qa_sort_by($questions, 'sort');
 
-		$keepquestions=array(); // now remove duplicate references to same question
+		$keepquestions = array(); // now remove duplicate references to same question
 		foreach ($questions as $question) { // going in order from most recent to oldest
-			$laterquestion=@$keepquestions[$question['postid']];
+			$laterquestion = @$keepquestions[$question['postid']];
 
-			if (
-				(!isset($laterquestion)) // keep this reference if there is no more recent one
-			|| // or ...
-				(
-					(@$laterquestion['oupdatetype']) && // the more recent reference was an edit
-					(!@$question['oupdatetype']) && // this is not an edit
-					($laterquestion['_type']==$question['_type']) && // the same part (Q/A/C) is referenced here
-					($laterquestion['_userid']==$question['_userid']) && // the same user made the later edit
-					(abs($laterquestion['_time']-$question['_time'])<300) // the edit was within 5 minutes of creation
-				)
-			|| // or ...
-				(
-					(@$question['opersonal']) && // this question (in an update list) is personal to the user
-					(!@$laterquestion['opersonal']) && // the other one was not personal
-					(abs($laterquestion['_time']-$question['_time'])<300) // the two events were within 5 minutes of each other
-				)
-			) {
-				if (isset($laterquestion)) {
-					unset($keepquestions[$question['postid']]);
+			if (isset($laterquestion)) {
+				if (
+					(abs($laterquestion['_time'] - $question['_time']) < 300)  // the two events were within 5 minutes of each other
+				&&
+					(
+						(@$laterquestion['oupdatetype']) &&  // the more recent reference was an edit
+						(!@$question['oupdatetype']) &&  // this is not an edit
+						($laterquestion['_type'] == $question['_type']) &&  // the same part (Q/A/C) is referenced here
+						($laterquestion['_userid'] == $question['_userid'])  // the same user made the later edit
+					)
+				|| // or ...
+					(
+						(@$question['opersonal']) &&  // this question (in an update list) is personal to the user
+						(!@$laterquestion['opersonal'])  // the other one was not personal
+					)
+				) {
+					unset($keepquestions[$question['postid']]);  // Remove any previous instance of the post to force a new position
+					$keepquestions[$question['postid']] = $question;
 				}
-				$keepquestions[$question['postid']]=$question;
-			}
+			} else  // keep this reference if there is no more recent one
+				$keepquestions[$question['postid']] = $question;
 		}
 
 		return $keepquestions;
