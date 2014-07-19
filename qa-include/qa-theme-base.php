@@ -1225,11 +1225,29 @@
 		}
 
 		public function form_select($field, $style)
+		/**
+		 * Parameters received:
+		 *  * tags: Optional. Tags or attributes added after the "<select" html tag
+		 *  * options: Required. A key-value array containing all the options in the select. This parameter can be an empty array
+		 *    which would result in an empty HTML select
+		 *  * value: Optional. The selected value from the 'options' parameter
+		 *  * match_by: Optional. Possible values are 'key' or 'value'. Defaults to 'value'. Determines if the value set in the 'value'
+		 *    parameter is compared to the key or to the value from the 'options' parameter. This parameter has no effect if the 'value'
+		 *    parameter is not set
+		 */
 		{
-			$this->output('<select '.@$field['tags'].' class="qa-form-'.$style.'-select">');
+			$this->output('<select ' . (isset($field['tags']) ? $field['tags'] : '') . ' class="qa-form-' . $style . '-select">');
 
-			foreach ($field['options'] as $tag => $value)
-				$this->output('<option value="'.$tag.'"'.(($value == @$field['value']) ? ' selected' : '').'>'.$value.'</option>');
+			// Only match by key if it is explicitly specified. Otherwise, for backwards compatibility, match by value
+			$matchbykey = isset($field['match_by']) && $field['match_by'] === 'key';
+
+			foreach ($field['options'] as $key => $value) {
+				$selected = isset($field['value']) && (
+					($matchbykey && $key === $field['value']) ||
+					(!$matchbykey && $value === $field['value'])
+				);
+				$this->output('<option value="' . $key . '"' . ($selected ? ' selected' : '') . '>' . $value . '</option>');
+			}
 
 			$this->output('</select>');
 		}
