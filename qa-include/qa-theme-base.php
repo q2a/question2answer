@@ -1083,6 +1083,10 @@
 					$this->form_select($field, $style);
 					break;
 
+				case 'multi-select':
+					$this->form_multi_select($field, $style);
+					break;
+
 				case 'select-radio':
 					$this->form_select_radio($field, $style);
 					break;
@@ -1224,6 +1228,27 @@
 			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-number"/>');
 		}
 
+		private function form_select_generic($multi, $options, $values, $matchby, $tags, $style)
+		/**
+		 * Creates selects or multiple selects
+		 */
+		{
+			$this->output('<select ' . ($multi ? 'multiple ' : '') . (isset($tags) ? $tags : '') . ' class="qa-form-' . $style . ($multi ? '-multi' : '') . '-select">');
+
+			// Only match by key if it is explicitly specified. Otherwise, for compatibility with the form_select method, match by value
+			$matchbykey = $matchby === 'key';
+
+			foreach ($options as $key => $value) {
+				$selected = isset($values) && (
+					($matchbykey && in_array($key, $values)) ||
+					(!$matchbykey && in_array($value, $values))
+				);
+				$this->output('<option value="' . $key . '"' . ($selected ? ' selected' : '') . '>' . $value . '</option>');
+			}
+
+			$this->output('</select>');
+		}
+
 		public function form_select($field, $style)
 		/**
 		 * Parameters received:
@@ -1236,20 +1261,29 @@
 		 *    parameter is not set
 		 */
 		{
-			$this->output('<select ' . (isset($field['tags']) ? $field['tags'] : '') . ' class="qa-form-' . $style . '-select">');
+			// Wrap the value in an array to always use the in_array to simplify readability and avoid checking for $multi in form_select_generic
+			$values = isset($field['value']) ? array($field['value']) : null;
+			$matchby = isset($field['match_by']) ? $field['match_by'] : null;
+			$tags = isset($field['tags']) ? $field['tags'] : null;
+			$this->form_select_generic(false, $field['options'], $values, $matchby, $tags, $style);
+		}
 
-			// Only match by key if it is explicitly specified. Otherwise, for backwards compatibility, match by value
-			$matchbykey = isset($field['match_by']) && $field['match_by'] === 'key';
-
-			foreach ($field['options'] as $key => $value) {
-				$selected = isset($field['value']) && (
-					($matchbykey && $key === $field['value']) ||
-					(!$matchbykey && $value === $field['value'])
-				);
-				$this->output('<option value="' . $key . '"' . ($selected ? ' selected' : '') . '>' . $value . '</option>');
-			}
-
-			$this->output('</select>');
+		public function form_multi_select($field, $style)
+		/**
+		 * Parameters received:
+		 *  * tags: Optional. Tags or attributes added after the "<select" html tag
+		 *  * options: Required. A key-value array containing all the options in the select. This parameter can be an empty array
+		 *    which would result in an empty HTML select
+		 *  * values: Optional. An indexed array with the selected values from the 'options' parameter
+		 *  * match_by: Optional. Possible values are 'key' or 'value'. Defaults to 'value'. Determines if the value set in the 'value'
+		 *    parameter is compared to the key or to the value from the 'options' parameter. This parameter has no effect if the 'value'
+		 *    parameter is not set
+		 */
+		{
+			$values = isset($field['values']) ? $field['values'] : null;
+			$matchby = isset($field['match_by']) ? $field['match_by'] : null;
+			$tags = isset($field['tags']) ? $field['tags'] : null;
+			$this->form_select_generic(true, $field['options'], $values, $matchby, $tags, $style);
 		}
 
 		public function form_select_radio($field, $style)
