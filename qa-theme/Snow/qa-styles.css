@@ -166,13 +166,13 @@ h1 {
 	color: #444;
 	font-size: 20px;
 	font-weight: 700;
-	margin: 0.5em 0 25px;
+	margin: 0 0 25px;
 	font-family: Arial,Helvetica,sans-serif;
 	font-weight: 700;
 	line-height: 1.1em;
 	border-bottom: 1px solid #ddd;
 	position: relative;
-	padding: 14px 25px 5px 0;
+	padding: 0 25px 5px 0;
 }
 
 h2 {
@@ -726,11 +726,10 @@ div.header-banner {
 }
 
 .qa-rss-icon {
-	/* text-align:right;
-	float:right; */
-	position: absolute;
-	bottom: 0;
-	right: 4px;
+       position: relative;
+       float: right;
+       top: 4px;
+       right: 2px;
 }
 
 
@@ -1010,7 +1009,6 @@ div.header-banner {
 	margin-right:8px; */
 	position: absolute;
 	right: 0;
-	bottom: 24px;
 }
 
 .qa-favorite-button, .qa-unfavorite-button {
