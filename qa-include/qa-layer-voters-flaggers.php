@@ -97,6 +97,46 @@
 			return $votersflaggers;
 		}
 
+	//	Returns a list of handles that have flagged the post
+
+		public function get_post_voters_with_flag($post) {
+			$voters = array();
+
+			if (isset($post['raw']['opostid']))
+				$postid = $post['raw']['opostid'];
+			elseif (isset($post['raw']['postid']))
+				$postid = $post['raw']['postid'];
+
+			if (isset($postid)) {
+				$votersflaggers = $this->get_post_voters_flaggers($post, $postid);
+
+				if (isset($votersflaggers))
+					foreach ($votersflaggers as $voterflagger)
+						if ($voterflagger['flag'] > 0)
+							$voters[] = $voterflagger['handle'];
+			}
+			return $voters;
+		}
+
+	//	Returns a key-value array containing 2 indexed arrays: one with the users who have downvoted the question and other for users who have upvoted it
+
+		public function get_post_voters_with_upvote_or_downvote($post) {
+			$voters = array(
+				'up' => array(),
+				'down' => array(),
+			);
+
+			$votersflaggers = $this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
+
+			if (isset($votersflaggers))
+				foreach ($votersflaggers as $voterflagger)
+					if ($voterflagger['vote'] > 0)
+						$voters['up'][] = $voterflagger['handle'];
+					elseif ($voterflagger['vote'] < 0)
+						$voters['down'][] = $voterflagger['handle'];
+
+			return $voters;
+		}
 
 	//	Collect up all required postids for the entire page to save DB queries - common case where whole page output
 
@@ -123,7 +163,6 @@
 			qa_html_theme_base::main();
 		}
 
-
 	//	Other functions which also collect up required postids for lists to save DB queries - helps with widget output and Ajax calls
 
 		public function q_list_items($q_items)
@@ -147,63 +186,41 @@
 			qa_html_theme_base::c_list_items($c_items);
 		}
 
-
 	//	Actual output of the voters and flaggers
 
-		public function vote_count($post)
-		{
-			$votersflaggers=$this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
+		public function vote_count($post) {
+			$voterswithupordown = $this->get_post_voters_with_upvote_or_downvote($post);
 
-			$tooltip='';
+			$tooltip = '';
 
-			if (isset($votersflaggers)) {
-				$uphandles='';
-				$downhandles='';
-
-				foreach ($votersflaggers as $voterflagger) {
-					if ($voterflagger['vote']>0)
-						$uphandles.=(strlen($uphandles) ? ', ' : '').qa_html($voterflagger['handle']);
-
-					if ($voterflagger['vote']<0)
-						$downhandles.=(strlen($downhandles) ? ', ' : '').qa_html($voterflagger['handle']);
-
-					$tooltip=trim((strlen($uphandles) ? ('&uarr; '.$uphandles) : '')."\n\n".(strlen($downhandles) ? ('&darr; '.$downhandles) : ''));
-				}
+			if (!empty($voterswithupordown['up'])) {
+				$tooltip .= '&uarr; ' . qa_html(implode(', ', $voterswithupordown['up']));
+				if (!empty($voterswithupordown['down']))
+					$tooltip .= "\n\n";
 			}
+			if (!empty($voterswithupordown['down']))
+				$tooltip .= '&darr; ' . qa_html(implode(', ', $voterswithupordown['down']));
 
-			$post['vote_count_tags']=@$post['vote_count_tags'].' title="'.$tooltip.'"';
+			$post['vote_count_tags'] = (isset($post['vote_count_tags']) ? $post['vote_count_tags'] : '') . ' title="' . $tooltip . '"';
 
 			qa_html_theme_base::vote_count($post);
 		}
 
+		public function post_meta_flags($post, $class) {
+			$voterswithflag = $this->get_post_voters_with_flag($post);
 
-		public function post_meta_flags($post, $class)
-		{
-			$postid=@$post['raw']['opostid'];
-			if (!isset($postid))
-				$postid=@$post['raw']['postid'];
+			$tooltip = trim(qa_html(implode(', ', $voterswithflag)));
 
-			$tooltip='';
-
-			if (isset($postid)) {
-				$votersflaggers=$this->get_post_voters_flaggers($post, $postid);
-
-				if (isset($votersflaggers))
-					foreach ($votersflaggers as $voterflagger)
-						if ($voterflagger['flag']>0)
-							$tooltip.=(strlen($tooltip) ? ', ' : '').qa_html($voterflagger['handle']);
-			}
-
-			if (strlen($tooltip))
-				$this->output('<span title="&#9873; '.$tooltip.'">');
+			if (!empty($voterswithflag))
+				$this->output('<span title="&#9873; ' . $tooltip . '">');
 
 			qa_html_theme_base::post_meta_flags($post, $class);
 
-			if (strlen($tooltip))
+			if (!empty($voterswithflag))
 				$this->output('</span>');
 		}
 
-	}
+}
 
 
 /*
