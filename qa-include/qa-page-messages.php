@@ -79,10 +79,21 @@
 
 	$qa_content = qa_content_prepare();
 	$qa_content['title'] = qa_lang_html('misc/pm_'.$showBox.'_title');
+	$qa_content['script_rel'][] = 'qa-content/qa-user.js?'.QA_VERSION;
 
 	$qa_content['message_list'] = array(
 		'tags' => 'id="privatemessages"',
 		'messages' => array(),
+		'form' => array(
+			'tags' => 'name="pmessage" method="post" action="'.qa_self_html().'"',
+			'style' => 'tall',
+			'hidden' => array(
+				'qa_click' => '', // for simulating clicks in Javascript
+				'handle' => qa_html($loginUserHandle),
+				'start' => qa_html($start),
+				'code' => qa_get_form_security_code('pm-'.$loginUserHandle),
+			),
+		),
 	);
 
 	$htmlDefaults = qa_message_html_defaults();
@@ -99,6 +110,11 @@
 				'reply' => array(
 					'tags' => 'onclick="window.location.href=\''.qa_path_html('message/'.$replyHandle).'\'"',
 					'label' => qa_lang_html('question/reply_button'),
+				),
+				'delete' => array(
+					'tags' => 'name="m'.qa_html($message['messageid']).'_dodelete" onclick="return qa_pm_click('.qa_js($message['messageid']).', this, '.qa_js($showBox).');"',
+					'label' => qa_lang_html('question/delete_button'),
+					'popup' => qa_lang_html('profile/delete_pm_popup'),
 				),
 			),
 		);

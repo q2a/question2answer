@@ -96,3 +96,38 @@ function qa_wall_post_click(messageid, target)
 
 	return false;
 }
+
+
+function qa_pm_click(messageid, target, box)
+{
+	var params = {};
+
+	params.messageid = messageid;
+	params.box = box;
+	params.handle = document.forms.pmessage.handle.value;
+	params.code = document.forms.pmessage.code.value;
+
+	params[target.name] = target.value;
+
+	qa_ajax_post('click_pm', params,
+		function (lines) {
+			if (lines[0]=='1') {
+				var l = document.getElementById('m'+messageid);
+				var h = lines.slice(1).join("\n");
+
+				if (h.length)
+					qa_set_outer_html(l, 'pmessage', h)
+				else
+					qa_conceal(l, 'pmessage');
+
+			} else {
+				document.forms.pmessage.qa_click.value = target.name;
+				document.forms.pmessage.submit();
+			}
+		}
+	);
+
+	qa_show_waiting_after(target, false);
+
+	return false;
+}

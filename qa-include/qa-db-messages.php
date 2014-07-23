@@ -45,13 +45,30 @@
 	}
 
 
-	function qa_db_message_delete($messageid)
+	function qa_db_message_user_hide($messageid, $box)
 /*
-	Delete the message with $messageid from the database
+	Hide the message with $messageid, in $box (inbox|outbox) from the user.
 */
 	{
+		$field = ($box === 'inbox' ? 'tohidden' : 'fromhidden');
+
 		qa_db_query_sub(
-			'DELETE FROM ^messages WHERE messageid=#',
+			"UPDATE ^messages SET $field=1 WHERE messageid=#",
+			$messageid
+		);
+	}
+
+
+	function qa_db_message_delete($messageid, $public=true)
+/*
+	Delete the message with $messageid from the database.
+*/
+	{
+		// delete PM only if both sender and receiver have hidden it
+		$clause = $public ? '' : ' AND fromhidden=1 AND tohidden=1';
+
+		qa_db_query_sub(
+			'DELETE FROM ^messages WHERE messageid=#'.$clause,
 			$messageid
 		);
 	}

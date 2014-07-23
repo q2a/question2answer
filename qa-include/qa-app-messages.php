@@ -188,6 +188,20 @@
 	}
 
 
+	function qa_pm_delete($userid, $handle, $cookieid, $message, $box)
+/*
+	Hides the private message described in $message (as obtained via qa_db_messages_inbox_selectspec() or qa_db_messages_outbox_selectspec()).
+	If both sender and receiver have hidden the message, it gets deleted from the database.
+	Note: currently no event is reported here, so $handle/$cookieid are unused.
+*/
+	{
+		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
+
+		qa_db_message_user_hide($message['messageid'], $box);
+		qa_db_message_delete($message['messageid'], false);
+	}
+
+
 /*
 	Omit PHP closing tag to help avoid accidental output
 */
