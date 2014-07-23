@@ -1419,7 +1419,7 @@
 						else {
 							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN fromhidden '.$definitions['messages']['fromhidden'].' AFTER touserid');
 							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN tohidden '.$definitions['messages']['tohidden'].' AFTER fromhidden');
-							qa_db_upgrade_query('ALTER TABLE ^messages ADD KEY fromhidden (fromhidden, tohidden)');
+							qa_db_upgrade_query('ALTER TABLE ^messages ADD KEY fromhidden (fromhidden), ADD KEY tohidden (tohidden)');
 
 							qa_db_upgrade_query($locktablesquery);
 						}
