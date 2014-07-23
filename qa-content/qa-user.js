@@ -70,6 +70,7 @@ function qa_wall_post_click(messageid, target)
 
 	params.messageid=messageid;
 	params.handle=document.forms.wallpost.handle.value;
+	params.start=document.forms.wallpost.start.value;
 	params.code=document.forms.wallpost.code.value;
 
 	params[target.name]=target.value;
@@ -105,6 +106,7 @@ function qa_pm_click(messageid, target, box)
 	params.messageid = messageid;
 	params.box = box;
 	params.handle = document.forms.pmessage.handle.value;
+	params.start = document.forms.pmessage.start.value;
 	params.code = document.forms.pmessage.code.value;
 
 	params[target.name] = target.value;
