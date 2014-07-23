@@ -1387,7 +1387,7 @@
 	{
 		$type = strtoupper($type);
 
-		$where = 'touserid=' . ($toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
+		$where = 'touserid=' . ($toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$ AND tohidden=0';
 		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC';
 		$arguments = array($toidentifier, $type);
 
@@ -1417,7 +1417,7 @@
 	{
 		$type = strtoupper($type);
 
-		$where = 'fromuserid=' . ($fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$';
+		$where = 'fromuserid=' . ($fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)') . ' AND type=$ AND fromhidden=0';
 		$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' ORDER BY ^messages.created DESC';
 		$arguments = array($fromidentifier, $type);
 
