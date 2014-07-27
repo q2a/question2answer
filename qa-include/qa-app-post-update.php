@@ -450,6 +450,13 @@
 		$useridvotes=qa_db_uservote_post_get($oldquestion['postid']);
 		$oldpath=qa_db_post_get_category_path($oldquestion['postid']);
 
+		$params = array(
+			'postid' => $oldquestion['postid'],
+			'oldquestion' => $oldquestion,
+		);
+
+		qa_report_event('q_delete_before', $userid, $handle, $cookieid, $params);
+
 		qa_post_unindex($oldquestion['postid']);
 		qa_db_post_delete($oldquestion['postid']); // also deletes any related voteds due to foreign key cascading
 		qa_update_counts_for_q(null);
@@ -460,10 +467,7 @@
 			qa_db_points_update_ifuser($voteruserid, ($vote>0) ? 'qupvotes' : 'qdownvotes');
 				// could do this in one query like in qa_db_users_recalc_points() but this will do for now - unlikely to be many votes
 
-		qa_report_event('q_delete', $userid, $handle, $cookieid, array(
-			'postid' => $oldquestion['postid'],
-			'oldquestion' => $oldquestion,
-		));
+		qa_report_event('q_delete', $userid, $handle, $cookieid, $params);
 	}
 
 
@@ -696,6 +700,14 @@
 
 		$useridvotes=qa_db_uservote_post_get($oldanswer['postid']);
 
+		$params = array(
+			'postid' => $oldanswer['postid'],
+			'parentid' => $oldanswer['parentid'],
+			'oldanswer' => $oldanswer,
+		);
+
+		qa_report_event('a_delete_before', $userid, $handle, $cookieid, $params);
+
 		qa_post_unindex($oldanswer['postid']);
 		qa_db_post_delete($oldanswer['postid']); // also deletes any related voteds due to cascading
 
@@ -712,11 +724,7 @@
 			qa_db_points_update_ifuser($voteruserid, ($vote>0) ? 'aupvotes' : 'adownvotes');
 				// could do this in one query like in qa_db_users_recalc_points() but this will do for now - unlikely to be many votes
 
-		qa_report_event('a_delete', $userid, $handle, $cookieid, array(
-			'postid' => $oldanswer['postid'],
-			'parentid' => $oldanswer['parentid'],
-			'oldanswer' => $oldanswer,
-		));
+		qa_report_event('a_delete', $userid, $handle, $cookieid, $params);
 	}
 
 
@@ -1009,18 +1017,22 @@
 		if ($oldcomment['type']!='C_HIDDEN')
 			qa_fatal_error('Tried to delete a non-hidden comment');
 
-		qa_post_unindex($oldcomment['postid']);
-		qa_db_post_delete($oldcomment['postid']);
-		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
-		qa_db_ccount_update();
-
-		qa_report_event('c_delete', $userid, $handle, $cookieid, array(
+		$params = array(
 			'postid' => $oldcomment['postid'],
 			'parentid' => $oldcomment['parentid'],
 			'oldcomment' => $oldcomment,
 			'parenttype' => $parent['basetype'],
 			'questionid' => $question['postid'],
-		));
+		);
+
+		qa_report_event('c_delete_before', $userid, $handle, $cookieid, $params);
+
+		qa_post_unindex($oldcomment['postid']);
+		qa_db_post_delete($oldcomment['postid']);
+		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
+		qa_db_ccount_update();
+
+		qa_report_event('c_delete', $userid, $handle, $cookieid, $params);
 	}
 
 
