@@ -381,7 +381,7 @@
 			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
 				array_push($showoptions, 'show_fewer_cs_from', 'show_fewer_cs_count', 'show_c_reply_buttons');
 
-			$showoptins[] = '';
+			$showoptions[] = '';
 
 			$widgets = qa_db_single_select(qa_db_widgets_selectspec());
 
