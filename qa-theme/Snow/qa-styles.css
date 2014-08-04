@@ -2350,16 +2350,21 @@ a.qa-browse-cat-link:visited {
 	font-size: 14px;
 	color: #666;
 	padding: 10px;
+	display: table;
 }
 
 .qa-activity-count-item {
 	margin: 0;
+	display: table-row;
 }
 
 .qa-activity-count-data {
 	font-size: 24px;
 	font-weight: 700;
 	color: #0179b5;
+	display: table-cell;
+	text-align: right;
+	padding-right: 0.25em;
 }
 
 /* Footer parts */
