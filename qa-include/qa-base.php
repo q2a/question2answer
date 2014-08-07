@@ -844,10 +844,14 @@
 
 	function qa_js($value, $forcequotes=false)
 /*
-	Return JavaScript representation of $value, putting in quotes if non-numeric or if $forcequotes is true
+	Return JavaScript representation of $value, putting in quotes if non-numeric or if $forcequotes is true. In the
+	case of boolean values they are returned as the appropriate true or false string
 */
 	{
-		if (is_numeric($value) && !$forcequotes)
+		$boolean = is_bool($value);
+		if ($boolean)
+			$value = $value ? 'true' : 'false';
+		if ((is_numeric($value) || $boolean) && !$forcequotes)
 			return $value;
 		else
 			return "'".strtr($value, array(
