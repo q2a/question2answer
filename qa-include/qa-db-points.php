@@ -150,6 +150,7 @@
 
 		if (qa_should_update_counts() && isset($userid)) {
 			require_once QA_INCLUDE_DIR.'qa-app-options.php';
+			require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
 
 			$calculations=qa_db_points_calculations();
 
