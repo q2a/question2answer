@@ -33,7 +33,7 @@
 			if ($option === 'tag_cloud_font_size')
 				return 24;
 			if ($option === 'tag_cloud_minimal_font_size')
-				return 5;
+				return 8;
 			if ($option === 'tag_cloud_size_popular')
 				return true;
 		}
@@ -134,8 +134,8 @@
 				if (empty($matches)) {
 					if ($scale) {
 						$size = number_format($maxsize * $count / $maxcount, 1);
-						if ($size < $minsize)  //  Size is too small so stop processing
-							break;
+						if ($size < $minsize)
+							$size = $minsize;
 					} else
 						$size = $maxsize;
 

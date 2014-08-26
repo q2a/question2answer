@@ -33,9 +33,10 @@
 				// Collect the question ids of all items in the question list (so we can do this in one DB query)
 
 				$postids = array();
-				foreach ($q_list['qs'] as $question)
-						if (isset($question['raw']['postid']))
-								$postids[] = $question['raw']['postid'];
+				foreach ($q_list['qs'] as $question) {
+					if (isset($question['raw']['postid']))
+							$postids[] = $question['raw']['postid'];
+				}
 
 				if (!empty($postids)) {
 
@@ -52,7 +53,7 @@
 
 					// Now add the popup to the title for each question
 
-					foreach ($q_list['qs'] as $index => $question)
+					foreach ($q_list['qs'] as $index => $question) {
 						if (isset($postinfo[$question['raw']['postid']])) {
 							$thispost = $postinfo[$question['raw']['postid']];
 							$text = qa_viewer_text($thispost['content'], $thispost['format'], array('blockwordspreg' => $blockwordspreg));
@@ -60,6 +61,7 @@
 							$title = isset($question['title']) ? $question['title'] : '';
 							$q_list['qs'][$index]['title'] = sprintf('<span title="%s">%s</span>', qa_html($text), $title);
 						}
+					}
 				}
 			}
 
