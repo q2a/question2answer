@@ -415,7 +415,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-nav-footer-link {color:#FFF; text-decoration:underline !important;}
 	.qa-nav-footer-link:hover {color:#f5d495;}
 .qa-attribution {float:right;}
-	.qa-attribution a {color:#FFF; text-decoration:underline; !important;}
+	.qa-attribution a {color:#FFF; text-decoration:underline !important;}
 	.qa-attribution a:hover {color:#f5d495;}
 
 /* Classes in HTML passed to theme class */
