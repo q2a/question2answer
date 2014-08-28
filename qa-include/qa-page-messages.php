@@ -108,7 +108,7 @@
 			'style' => 'light',
 			'buttons' => array(
 				'reply' => array(
-					'tags' => 'onclick="window.location.href=\''.qa_path_html('message/'.$replyHandle).'\'"',
+					'tags' => 'onclick="window.location.href=\''.qa_path_html('message/'.$replyHandle).'\';return false"',
 					'label' => qa_lang_html('question/reply_button'),
 				),
 				'delete' => array(
