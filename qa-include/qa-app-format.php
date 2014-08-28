@@ -944,25 +944,25 @@
 			$laterquestion = @$keepquestions[$question['postid']];
 
 			if (isset($laterquestion)) {
-				if (
-					(abs($laterquestion['_time'] - $question['_time']) < 300)  // the two events were within 5 minutes of each other
-				&&
-					(
-						(@$laterquestion['oupdatetype']) &&  // the more recent reference was an edit
-						(!@$question['oupdatetype']) &&  // this is not an edit
-						($laterquestion['_type'] == $question['_type']) &&  // the same part (Q/A/C) is referenced here
-						($laterquestion['_userid'] == $question['_userid'])  // the same user made the later edit
-					)
-				|| // or ...
-					(
-						(@$question['opersonal']) &&  // this question (in an update list) is personal to the user
-						(!@$laterquestion['opersonal'])  // the other one was not personal
-					)
-				) {
-					unset($keepquestions[$question['postid']]);  // Remove any previous instance of the post to force a new position
+				// the two events were within 5 minutes of each other
+				$close_events = abs($laterquestion['_time'] - $question['_time']) < 300;
+
+				$later_edit =
+					@$laterquestion['oupdatetype'] &&  // the more recent reference was an edit
+					!@$question['oupdatetype'] &&  // this is not an edit
+					$laterquestion['_type'] == $question['_type'] &&  // the same part (Q/A/C) is referenced here
+					$laterquestion['_userid'] == $question['_userid'];  // the same user made the later edit
+
+				// this question (in an update list) is personal to the user, but the other one was not
+				$this_personal = @$question['opersonal'] && !@$laterquestion['opersonal'];
+
+				if ($close_events && ($later_edit || $this_personal)) {
+					// Remove any previous instance of the post to force a new position
+					unset($keepquestions[$question['postid']]);
 					$keepquestions[$question['postid']] = $question;
 				}
-			} else  // keep this reference if there is no more recent one
+			}
+			else  // keep this reference if there is no more recent one
 				$keepquestions[$question['postid']] = $question;
 		}
 
