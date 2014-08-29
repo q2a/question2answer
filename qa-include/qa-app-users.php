@@ -564,8 +564,7 @@
 	Return whether someone is logged in at the moment
 */
 	{
-		$userid=qa_get_logged_in_userid();
-		return isset($userid);
+		return qa_get_logged_in_userid() != null;
 	}
 
 
@@ -784,7 +783,7 @@
 	}
 
 
-	function qa_user_permit_error($permitoption=null, $limitaction=null, $userlevel=null, $checkblocks=true)
+	function qa_user_permit_error($permitoption = null, $limitaction = null, $userlevel = null, $checkblocks = true)
 /*
 	Check whether the logged in user has permission to perform $permitoption. If $permitoption is null, this simply
 	checks whether the user is blocked. Optionally provide an $limitaction (see top of qa-app-limits.php) to also check
@@ -805,30 +804,33 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR . 'qa-app-limits.php';
 
-		$userid=qa_get_logged_in_userid();
+		$userid = qa_get_logged_in_userid();
 		if (!isset($userlevel))
-			$userlevel=qa_get_logged_in_level();
+			$userlevel = qa_get_logged_in_level();
 
-		$flags=qa_get_logged_in_flags();
+		$flags = qa_get_logged_in_flags();
 		if (!$checkblocks)
-			$flags&=~QA_USER_FLAGS_USER_BLOCKED;
+			$flags &= ~QA_USER_FLAGS_USER_BLOCKED;
 
 		$error=qa_permit_error($permitoption, $userid, $userlevel, $flags);
 
-		if ($checkblocks && (!$error) && qa_is_ip_blocked())
-			$error='ipblock';
+		if (!$error) {
+			if ($checkblocks && qa_is_ip_blocked())
+				$error = 'ipblock';
 
-		if ((!$error) && isset($userid) && ($flags & QA_USER_FLAGS_MUST_CONFIRM) && qa_opt('confirm_user_emails'))
-			$error='confirm';
+			if (isset($userid)) {
+				if ($flags & QA_USER_FLAGS_MUST_CONFIRM && qa_opt('confirm_user_emails'))
+					$error = 'confirm';
+				if ($flags & QA_USER_FLAGS_MUST_APPROVE && qa_opt('moderate_users'))
+					$error = 'approve';
+			}
 
-		if ((!$error) && isset($userid) && ($flags & QA_USER_FLAGS_MUST_APPROVE) && qa_opt('moderate_users'))
-			$error='approve';
-
-		if (isset($limitaction) && !$error)
-			if (qa_user_limits_remaining($limitaction)<=0)
-				$error='limit';
+			if (isset($limitaction))
+				if (qa_user_limits_remaining($limitaction) <= 0)
+					$error = 'limit';
+		}
 
 		return $error;
 	}
@@ -845,7 +847,7 @@
 
 		$permit=isset($permitoption) ? qa_opt($permitoption) : QA_PERMIT_ALL;
 
-		if (isset($userid) && (($permit==QA_PERMIT_POINTS) || ($permit==QA_PERMIT_POINTS_CONFIRMED) || ($permit==QA_PERMIT_APPROVED_POINTS)) ) {
+		if (isset($userid) && in_array($permit, array(QA_PERMIT_POINTS, QA_PERMIT_POINTS_CONFIRMED, QA_PERMIT_APPROVED_POINTS))) {
 				// deal with points threshold by converting as appropriate
 
 			if ( (!isset($userpoints)) && ($userid==qa_get_logged_in_userid()) )
@@ -870,63 +872,49 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ($permit>=QA_PERMIT_ALL)
-			$error=false;
+		$error = false;
 
-		elseif ($permit>=QA_PERMIT_USERS)
-			$error=isset($userid) ? false : 'login';
-
-		elseif ($permit>=QA_PERMIT_CONFIRMED) {
-			if (!isset($userid))
-				$error='login';
-
-			elseif (
-				QA_FINAL_EXTERNAL_USERS || // not currently supported by single sign-on integration
-				($userlevel>=QA_PERMIT_APPROVED) || // if user approved or assigned to a higher level, no need
-				($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) || // actual confirmation
-				(!qa_opt('confirm_user_emails')) // if this option off, we can't ask it of the user
+		if ($permit < QA_PERMIT_ALL && $permit >= QA_PERMIT_USERS && !isset($userid))
+			$error = 'login';
+		elseif ($permit >= QA_PERMIT_CONFIRMED) {
+			if (isset($userid)) {
+				if (
+					!QA_FINAL_EXTERNAL_USERS && // not currently supported by single sign-on integration
+					$userlevel < QA_PERMIT_APPROVED && // if user approved or assigned to a higher level, no need
+					!($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) && // actual confirmation
+					qa_opt('confirm_user_emails') // if this option off, we can't ask it of the user
+				)
+					$error = 'confirm';
+			} else
+				$error = 'login';
+		} elseif ($permit >= QA_PERMIT_APPROVED) {
+			if (isset($userid)) {
+				if (
+					$userlevel < QA_USER_LEVEL_APPROVED && // user has been approved
+					qa_opt('moderate_users') // if this option off, we can't ask it of the user
+				)
+					$error = 'approve';
+			} else
+				$error = 'login';
+		} elseif (
+			!isset($userid) || (
+				($permit >= QA_PERMIT_EXPERTS && $userlevel < QA_USER_LEVEL_EXPERT) ||
+				($permit >= QA_PERMIT_EDITORS && $userlevel < QA_USER_LEVEL_EDITOR) ||
+				($permit >= QA_PERMIT_MODERATORS && $userlevel < QA_USER_LEVEL_MODERATOR) ||
+				($permit >= QA_PERMIT_ADMINS && $userlevel < QA_USER_LEVEL_ADMIN) ||
+				($permit >= QA_PERMIT_SUPERS && $userlevel < QA_USER_LEVEL_SUPER)
 			)
-				$error=false;
+		)
+			$error = 'level';
 
-			else
-				$error='confirm';
-
-		} elseif ($permit>=QA_PERMIT_APPROVED) {
-			if (!isset($userid))
-				$error='login';
-
-			elseif (
-				($userlevel>=QA_USER_LEVEL_APPROVED) || // user has been approved
-				(!qa_opt('moderate_users')) // if this option off, we can't ask it of the user
-			)
-				$error=false;
-
-			else
-				$error='approve';
-
-		} elseif ($permit>=QA_PERMIT_EXPERTS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_EXPERT)) ? false : 'level';
-
-		elseif ($permit>=QA_PERMIT_EDITORS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_EDITOR)) ? false : 'level';
-
-		elseif ($permit>=QA_PERMIT_MODERATORS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_MODERATOR)) ? false : 'level';
-
-		elseif ($permit>=QA_PERMIT_ADMINS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_ADMIN)) ? false : 'level';
-
-		else
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_SUPER)) ? false : 'level';
-
-		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED) && ($error!='level'))
-			$error='userblock';
+		if (isset($userid) && $userflags & QA_USER_FLAGS_USER_BLOCKED && $error != 'level')
+			$error = 'userblock';
 
 		return $error;
 	}
 
 
-	function qa_user_captcha_reason($userlevel=null)
+	function qa_user_captcha_reason($userlevel = null)
 /*
 	Return whether a captcha is required for posts submitted by the current user. You can pass in a QA_USER_LEVEL_*
 	constant in $userlevel to consider the user at a different level to usual (e.g. if they are performing this action
@@ -941,20 +929,17 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$reason=false;
+		$reason = false;
 		if (!isset($userlevel))
-			$userlevel=qa_get_logged_in_level();
+			$userlevel = qa_get_logged_in_level();
 
-		if ($userlevel < QA_USER_LEVEL_APPROVED) { // approved users and above aren't shown captchas
-			$userid=qa_get_logged_in_userid();
-
-			if (qa_opt('captcha_on_anon_post') && !isset($userid))
-				$reason='login';
+		if ($userlevel < QA_USER_LEVEL_APPROVED) // approved users and above aren't shown captchas
+			if (qa_opt('captcha_on_anon_post') && !qa_is_logged_in())
+				$reason = 'login';
 			elseif (qa_opt('moderate_users') && qa_opt('captcha_on_unapproved'))
-				$reason='approve';
+				$reason = 'approve';
 			elseif (qa_opt('confirm_user_emails') && qa_opt('captcha_on_unconfirmed') && !(qa_get_logged_in_flags() & QA_USER_FLAGS_EMAIL_CONFIRMED) )
-				$reason='confirm';
-		}
+				$reason = 'confirm';
 
 		return $reason;
 	}
@@ -996,9 +981,8 @@ in a category for which they have elevated privileges).
 			($userlevel < QA_USER_LEVEL_EXPERT) && // experts and above aren't moderated
 			qa_user_permit_error('permit_moderate') // if the user can approve posts, no point in moderating theirs
 		) {
-			$userid=qa_get_logged_in_userid();
 
-			if (isset($userid)) {
+			if (qa_is_logged_in()) {
 				if (qa_opt('moderate_users') && qa_opt('moderate_unapproved') && ($userlevel<QA_USER_LEVEL_APPROVED))
 					$reason='approve';
 				elseif (qa_opt('confirm_user_emails') && qa_opt('moderate_unconfirmed') && !(qa_get_logged_in_flags() & QA_USER_FLAGS_EMAIL_CONFIRMED) )

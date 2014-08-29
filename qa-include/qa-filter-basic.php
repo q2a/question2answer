@@ -66,10 +66,6 @@
 			$this->validate_length($errors, 'title', @$question['title'], qa_opt('min_len_q_title'),
 				max(qa_opt('min_len_q_title'), min(qa_opt('max_len_q_title'), QA_DB_MAX_TITLE_LENGTH)));
 
-			$this->validate_length($errors, 'content', @$question['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-
-			$this->validate_length($errors, 'content', @$question['text'], qa_opt('min_len_q_content'), null); // for display
-
 			if (isset($question['tags'])) {
 				$counttags=count($question['tags']);
 				$mintags=min(qa_opt('min_num_q_tags'), qa_opt('max_num_q_tags'));
@@ -82,23 +78,19 @@
 					$this->validate_length($errors, 'tags', qa_tags_to_tagstring($question['tags']), 0, QA_DB_MAX_TAGS_LENGTH); // for storage
 			}
 
-			$this->validate_post_email($errors, $question);
+			$this->perform_generic_post_validations($question, $errors, qa_opt('min_len_q_content'));
 		}
 
 
 		public function filter_answer(&$answer, &$errors, $question, $oldanswer)
 		{
-			$this->validate_length($errors, 'content', @$answer['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-			$this->validate_length($errors, 'content', @$answer['text'], qa_opt('min_len_a_content'), null); // for display
-			$this->validate_post_email($errors, $answer);
+			$this->perform_generic_post_validations($answer, $errors, qa_opt('min_len_a_content'));
 		}
 
 
 		public function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
 		{
-			$this->validate_length($errors, 'content', @$comment['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-			$this->validate_length($errors, 'content', @$comment['text'], qa_opt('min_len_c_content'), null); // for display
-			$this->validate_post_email($errors, $comment);
+			$this->perform_generic_post_validations($comment, $errors, qa_opt('min_len_c_content'));
 		}
 
 
@@ -134,6 +126,17 @@
 				if (isset($error))
 					$errors['email']=$error;
 			}
+		}
+
+
+		private function perform_generic_post_validations($post, &$errors, $minlength)
+	/*
+		Performs the content, text and email validations that are shared among all the post types
+	*/
+		{
+			$this->validate_length($errors, 'content', @$post['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
+			$this->validate_length($errors, 'content', @$post['text'], $minlength, null); // for display
+			$this->validate_post_email($errors, $post);
 		}
 
 	}

@@ -102,6 +102,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$test = qa_random_alphanum($len);
 
 		$this->assertEquals(strlen($test), $len);
+		$this->assertEquals(preg_match('/[^a-z0-9]/', $test), 0);  // Returns FALSE if there is an error
 	}
 
 	function test__qa_email_validate()
@@ -109,13 +110,17 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$goodEmails = array(
 			'hello@example.com',
 			'q.a@question2answer.org',
-			'example@newdomain.app'
+			'example@newdomain.app',
+			'another-email!`_#$%^&*=.{}@otherdomain.com.ar',
+			'other-valid\'+@somewhat.long.email.addresses',
 		);
 		$badEmails = array(
 			'nobody@nowhere',
 			'pokémon@example.com',
 			'email @ with spaces',
 			'some random string',
+			'with(round)-or-[square]-or-<angle>-brackets@test.com',
+			'another-"invalid"-\|;:?/address@test.com',
 		);
 
 		foreach ($goodEmails as $email) {
@@ -153,6 +158,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 
 		$this->assertTrue( qa_string_matches_one($this->strBasic, $matches) );
 		$this->assertFalse( qa_string_matches_one($this->strBasic, $nonMatches) );
+		$this->assertFalse( qa_string_matches_one('', $nonMatches) );
 	}
 
 }

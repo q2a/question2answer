@@ -1062,58 +1062,65 @@
 	loading an option now will cause a problem (see issue in qa_default_option()). The part of
 	$identifier before the slash (/) replaces the * in the qa-lang-*.php file references, and the
 	part after the / is the key of the array element to be taken from that file's returned result.
+
+	Phrases are first looked for in a directory named 'custom' under the QA_LANG_DIR directory. If
+	the directory doesn't exist or the phrase is not present in the specified file then it is
+	looked for under the directory matching the selected language for the site. If the site is not
+	using a language other than the default or the phrase is not found in the specified file then
+	the default language file is used. If it is not found there either then a string with the
+	identifier is returned.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		global $qa_lang_file_pattern, $qa_phrases_custom, $qa_phrases_lang, $qa_phrases_default;
 
-		list($group, $label)=explode('/', $identifier, 2);
+		list($group, $label) = explode('/', $identifier, 2);  // EG: $group = 'admin' and $label = 'admin_title'
 
-	//	First look for a custom phrase
+	//	First look for a custom phrase by looking for the 'custom' directory
 
-		if (!isset($qa_phrases_custom[$group])) { // only load each language file once
-			$phrases=@include QA_LANG_DIR.'custom/qa-lang-'.$group.'.php'; // can tolerate missing file or directory
-			$qa_phrases_custom[$group]=is_array($phrases) ? $phrases : array();
+		if (!isset($qa_phrases_custom[$group])) {  // Only load each language file once
+			$phrases = @include QA_LANG_DIR . 'custom/qa-lang-' . $group . '.php';  // Can tolerate a missing file or directory
+			$qa_phrases_custom[$group] = is_array($phrases) ? $phrases : array();
 		}
 
 		if (isset($qa_phrases_custom[$group][$label]))
 			return $qa_phrases_custom[$group][$label];
 
-	//	Second look for a localized file
+	//	Second look for a localized file by looking for the language defined for the site
 
-		$languagecode=qa_opt('site_language');
+		$languagecode = qa_opt('site_language');
 
-		if (strlen($languagecode)) {
-			if (!isset($qa_phrases_lang[$group])) {
-				if (isset($qa_lang_file_pattern[$group]))
-					$include=str_replace('*', $languagecode, $qa_lang_file_pattern[$group]);
+		if (strlen($languagecode) > 0) {
+			if (!isset($qa_phrases_lang[$group])) {  // Only load each language file once
+				if (isset($qa_lang_file_pattern[$group]))  // If the group has been set by qa_register_phrases
+					$include = str_replace('*', $languagecode, $qa_lang_file_pattern[$group]);  // Use the file pattern
 				else
-					$include=QA_LANG_DIR.$languagecode.'/qa-lang-'.$group.'.php';
+					$include = QA_LANG_DIR . $languagecode . '/qa-lang-' . $group . '.php';  // Use the file from the selected site language
 
-				$phrases=@include $include;
-				$qa_phrases_lang[$group]=is_array($phrases) ? $phrases : array();
+				$phrases = @include $include;
+				$qa_phrases_lang[$group] = is_array($phrases) ? $phrases : array();
 			}
 
 			if (isset($qa_phrases_lang[$group][$label]))
 				return $qa_phrases_lang[$group][$label];
 		}
 
-	//	Finally load the default
+	//	Finally load the default language files
 
-		if (!isset($qa_phrases_default[$group])) { // only load each default language file once
+		if (!isset($qa_phrases_default[$group])) {  // Only load each language file once
 			if (isset($qa_lang_file_pattern[$group]))
-				$include=str_replace('*', 'default', $qa_lang_file_pattern[$group]);
+				$include = str_replace('*', 'default', $qa_lang_file_pattern[$group]);
 			else
-				$include=QA_INCLUDE_DIR.'qa-lang-'.$group.'.php';
+				$include = QA_INCLUDE_DIR . 'qa-lang-' . $group . '.php';
 
-			$qa_phrases_default[$group]=@include_once $include;
+			$qa_phrases_default[$group] = @include_once $include;
 		}
 
 		if (isset($qa_phrases_default[$group][$label]))
 			return $qa_phrases_default[$group][$label];
 
-		return '['.$identifier.']'; // as a last resort, return the identifier to help in development
+		return '[' . $identifier . ']';  // As a last resort, return the identifier to help in development
 	}
 
 

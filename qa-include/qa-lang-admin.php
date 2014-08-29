@@ -54,7 +54,7 @@
 		'blobs_to_disk_note' => '- migrate all uploaded images and documents from the database to disk files',
 		'block_button' => 'block',
 		'block_ips_note' => 'Use a hyphen for ranges or * to match any number. Examples: 192.168.0.4 , 192.168.0.0-192.168.0.31 , 192.168.0.*',
-		'block_words_note' => 'Use a * to match any letters. Examples: doh (will only match exact word doh) , doh* (will match doh or dohno) , do*h (will match doh, dooh, dough).',
+		'block_words_note' => 'Use a * to match any letter. Examples: doh (will only match exact word doh) , doh* (will match doh or dohno) , do*h (will match doh, dooh, dough).',
 		'cancel_mailing_button' => 'Cancel Mailing',
 		'categories_introduction' => 'To get started with categories, click the \'Add Category\' button.',
 		'categories_not_shown' => 'Some questions have categories which will not be displayed.',
