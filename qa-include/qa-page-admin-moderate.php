@@ -111,18 +111,26 @@
 			if (isset($htmlfields['what_url'])) // link directly to relevant content
 				$htmlfields['url']=$htmlfields['what_url'];
 
+			$posttype = qa_strtolower(isset($question['obasetype']) ? $question['obasetype'] : $question['basetype']);
+
 			$htmlfields['form']=array(
 				'style' => 'light',
 
 				'buttons' => array(
+					// Possible values for the popup (enumerated to let text searches match in the future):
+					// question/approve_q_popup, question/approve_a_popup and question/approve_c_popup
 					'approve' => array(
 						'tags' => 'name="admin_'.$postid.'_approve" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/approve_button'),
+						'popup' => qa_lang_html(sprintf('question/approve_%s_popup', $posttype)),
 					),
 
+					// Possible values for the popup (enumerated to let text searches match in the future):
+					// question/reject_q_popup, question/reject_a_popup and question/reject_c_popup
 					'reject' => array(
 						'tags' => 'name="admin_'.$postid.'_reject" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/reject_button'),
+						'popup' => qa_lang_html(sprintf('question/reject_%s_popup', $posttype)),
 					),
 				),
 			);

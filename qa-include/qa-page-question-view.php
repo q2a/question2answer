@@ -316,6 +316,7 @@
 				$buttons['reshow']=array(
 					'tags' => 'name="q_doreshow"'.$clicksuffix,
 					'label' => qa_lang_html('question/reshow_button'),
+					'popup' => qa_lang_html('question/reshow_q_popup'),
 				);
 
 			if ($question['deleteable'])
@@ -494,6 +495,7 @@
 				$buttons['reshow']=array(
 					'tags' => 'name="'.$prefix.'doreshow"'.$clicksuffix,
 					'label' => qa_lang_html('question/reshow_button'),
+					'popup' => qa_lang_html('question/reshow_a_popup'),
 				);
 
 			if ($answer['deleteable'])
@@ -615,6 +617,7 @@
 				$buttons['reshow']=array(
 					'tags' => 'name="'.$prefix.'doreshow"'.$clicksuffix,
 					'label' => qa_lang_html('question/reshow_button'),
+					'popup' => qa_lang_html('question/reshow_c_popup'),
 				);
 
 			if ($comment['deleteable'])
