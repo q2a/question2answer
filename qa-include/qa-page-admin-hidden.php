@@ -132,16 +132,24 @@
 
 			$buttons=array();
 
+			$posttype = qa_strtolower(isset($question['obasetype']) ? $question['obasetype'] : $question['basetype']);
+
 			if (!qa_user_post_permit_error('permit_hide_show', $question))
+				// Possible values for the popup (enumerated to let text searches match in the future):
+				// question/reshow_q_popup, question/reshow_a_popup and question/reshow_c_popup
 				$buttons['reshow']=array(
 					'tags' => 'name="admin_'.qa_html($qhiddenpostid[$key]).'_reshow" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/reshow_button'),
+					'popup' => qa_lang_html(sprintf('question/reshow_%s_popup', $posttype)),
 				);
 
 			if ((!qa_user_post_permit_error('permit_delete_hidden', $question)) && !$dependcounts[$qhiddenpostid[$key]])
+				// Possible values for the popup (enumerated to let text searches match in the future):
+				// question/delete_q_popup, question/delete_a_popup and question/delete_c_popup
 				$buttons['delete']=array(
 					'tags' => 'name="admin_'.qa_html($qhiddenpostid[$key]).'_delete" onclick="return qa_admin_click(this);"',
 					'label' => qa_lang_html('question/delete_button'),
+					'popup' => qa_lang_html(sprintf('question/delete_%s_popup', $posttype)),
 				);
 
 			if (count($buttons))

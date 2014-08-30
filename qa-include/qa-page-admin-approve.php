@@ -114,11 +114,13 @@
 					'approve' => array(
 						'tags' => 'name="admin_'.$user['userid'].'_userapprove" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/approve_button'),
+						'popup' => qa_lang_html('admin/approve_user_popup'),
 					),
 
 					'block' => array(
 						'tags' => 'name="admin_'.$user['userid'].'_userblock" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('admin/block_button'),
+						'popup' => qa_lang_html('admin/block_user_popup'),
 					),
 				),
 			);
