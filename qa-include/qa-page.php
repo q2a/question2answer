@@ -50,7 +50,7 @@
 		$pass_failure_error=$error;
 		$pass_failure_query=$query;
 
-		require QA_INCLUDE_DIR.'qa-install.php';
+		require_once QA_INCLUDE_DIR.'qa-install.php';
 
 		qa_exit('error');
 	}
