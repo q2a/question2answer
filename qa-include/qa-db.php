@@ -403,7 +403,8 @@
 
 	function qa_db_list_tables_lc()
 /*
-	Return an array of the names of all tables in the Q2A database, converted to lower case
+	Return an array of the names of all tables in the Q2A database, converted to lower case.
+	No longer used by Q2A and shouldn't be needed.
 */
 	{
 		return array_map('strtolower', qa_db_list_tables());

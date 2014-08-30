@@ -26,12 +26,12 @@
 
 	class qa_event_logger {
 
-		public function init_queries($tableslc)
+		public function init_queries($table_list)
 		{
 			if (qa_opt('event_logger_to_database')) {
 				$tablename=qa_db_add_table_prefix('eventlog');
 
-				if (!in_array($tablename, $tableslc)) {
+				if (!in_array($tablename, $table_list)) {
 					require_once QA_INCLUDE_DIR.'qa-app-users.php';
 					require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
 

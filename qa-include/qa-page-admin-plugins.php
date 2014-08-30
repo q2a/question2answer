@@ -42,7 +42,7 @@
 
 	$pluginoptionmodules = array();
 
-	$tables = qa_db_list_tables_lc();
+	$tables = qa_db_list_tables();
 	$moduletypes = qa_list_module_types();
 
 	foreach ($moduletypes as $type) {

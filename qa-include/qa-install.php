@@ -149,7 +149,7 @@
 
 			$module=qa_load_module($moduletype, $modulename);
 
-			$queries=$module->init_queries(qa_db_list_tables_lc());
+			$queries=$module->init_queries(qa_db_list_tables());
 
 			if (!empty($queries)) {
 				if (!is_array($queries))
@@ -243,7 +243,7 @@
 					$buttons=array('super' => 'Create Super Administrator');
 
 				} else {
-					$tables=qa_db_list_tables_lc();
+					$tables=qa_db_list_tables();
 
 					$moduletypes=qa_list_module_types();
 

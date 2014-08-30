@@ -532,17 +532,12 @@
 	}
 
 
-	function qa_array_to_lower_keys($array)
+	function qa_array_to_keys($array)
 /*
-	Return $array with all keys converted to lower case
+	Return array with all values from $array as keys
 */
 	{
-		$keyarray=array();
-
-		foreach ($array as $value)
-			$keyarray[strtolower($value)]=true;
-
-		return $keyarray;
+		return array_combine($array, array_fill(0, count($array), true));
 	}
 
 
@@ -551,12 +546,12 @@
 	Return a list of tables missing from the database, [table name] => [column/index definitions]
 */
 	{
-		$keydbtables=qa_array_to_lower_keys(qa_db_list_tables());
+		$keydbtables=qa_array_to_keys(qa_db_list_tables());
 
 		$missing=array();
 
 		foreach ($definitions as $rawname => $definition)
-			if (!isset($keydbtables[strtolower(qa_db_add_table_prefix($rawname))]))
+			if (!isset($keydbtables[qa_db_add_table_prefix($rawname)]))
 				$missing[$rawname]=$definition;
 
 		return $missing;
@@ -568,12 +563,12 @@
 	Return a list of columns missing from $table in the database, given the full definition set in $definition
 */
 	{
-		$keycolumns=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^'.$table)));
+		$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^'.$table)));
 
 		$missing=array();
 
 		foreach ($definition as $colname => $coldefn)
-			if ( (!is_int($colname)) && !isset($keycolumns[strtolower($colname)]) )
+			if ( (!is_int($colname)) && !isset($keycolumns[$colname]) )
 				$missing[$colname]=$coldefn;
 
 		return $missing;
@@ -738,10 +733,10 @@
 
 	//	Write-lock all Q2A tables before we start so no one can read or write anything
 
-		$keydbtables=qa_array_to_lower_keys(qa_db_list_tables());
+		$keydbtables=qa_array_to_keys(qa_db_list_tables());
 
 		foreach ($definitions as $rawname => $definition)
-			if (isset($keydbtables[strtolower(qa_db_add_table_prefix($rawname))]))
+			if (isset($keydbtables[qa_db_add_table_prefix($rawname)]))
 				$locks[]='^'.$rawname.' WRITE';
 
 		$locktablesquery='LOCK TABLES '.implode(', ', $locks);
@@ -1027,7 +1022,7 @@
 			//	Up to here: Version 1.4 developer preview
 
 				case 25:
-					$keycolumns=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^blobs')));
+					$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^blobs')));
 						// might be using blobs table shared with another installation, so check if we need to upgrade
 
 					if (isset($keycolumns['filename']))
@@ -1108,7 +1103,7 @@
 
 				case 34:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						$keytables=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW TABLES')));
+						$keytables=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW TABLES')));
 							// might be using messages table shared with another installation, so check if we need to upgrade
 
 						if (isset($keytables[qa_db_add_table_prefix('messages')]))
@@ -1305,7 +1300,7 @@
 
 				case 48:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						$keycolumns=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^messages')));
+						$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^messages')));
 							// might be using messages table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['type']))
@@ -1332,7 +1327,7 @@
 
 				case 51:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						$keycolumns=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^userfields')));
+						$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^userfields')));
 							// might be using userfields table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['permit']))
@@ -1347,7 +1342,7 @@
 
 				case 52:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						$keyindexes=qa_array_to_lower_keys(qa_db_read_all_assoc(qa_db_query_sub('SHOW INDEX FROM ^users'), null, 'Key_name'));
+						$keyindexes=qa_array_to_keys(qa_db_read_all_assoc(qa_db_query_sub('SHOW INDEX FROM ^users'), null, 'Key_name'));
 
 						if (isset($keyindexes['created']))
 							qa_db_upgrade_progress('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
@@ -1387,7 +1382,7 @@
 
 				case 55:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						$keycolumns=qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^users')));
+						$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^users')));
 							// might be using messages table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['wallposts']))
@@ -1412,7 +1407,7 @@
 				case 57:
 					if (!QA_FINAL_EXTERNAL_USERS) {
 						// might be using messages table shared with another installation, so check if we need to upgrade
-						$keycolumns = qa_array_to_lower_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^messages')));
+						$keycolumns = qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^messages')));
 
 						if (isset($keycolumns['fromhidden']))
 							qa_db_upgrade_progress('Skipping upgrading messages table since it was already upgraded by another Q2A site sharing it.');
