@@ -28,6 +28,17 @@
 	define('QA_VERSION', '1.7.0-alpha1'); // also used as suffix for .js and .css requests
 	define('QA_BUILD_DATE', '2014-03-20');
 
+
+//	Autoloader for Q2A classes
+
+	function qa_autoload($class)
+	{
+		if (strpos($class, 'Q2A_') === 0)
+			require QA_INCLUDE_DIR . strtr($class, '_', '/') . '.php';
+	}
+	spl_autoload_register('qa_autoload');
+
+
 //	Execution section of this file - remainder contains function definitions
 
 	qa_initialize_php();
