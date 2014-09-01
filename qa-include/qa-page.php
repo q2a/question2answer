@@ -465,8 +465,10 @@
 
 		global $qa_template, $qa_page_error_html;
 
-		if (QA_DEBUG_PERFORMANCE)
-			qa_usage_mark('control');
+		if (QA_DEBUG_PERFORMANCE) {
+			global $qa_usage;
+			$qa_usage->mark('control');
+		}
 
 		$request=qa_request();
 		$requestlower=qa_request();
@@ -779,6 +781,8 @@
 
 //	Below are the steps that actually execute for this file - all the above are function definitions
 
+	global $qa_usage;
+
 	qa_report_process_stage('init_page');
 	qa_db_connect('qa_page_db_fail_handler');
 
@@ -787,27 +791,26 @@
 	qa_check_login_modules();
 
 	if (QA_DEBUG_PERFORMANCE)
-		qa_usage_mark('setup');
+		$qa_usage->mark('setup');
 
 	qa_check_page_clicks();
 
-	$qa_content=qa_get_request_content();
+	$qa_content = qa_get_request_content();
 
 	if (is_array($qa_content)) {
 		if (QA_DEBUG_PERFORMANCE)
-			qa_usage_mark('view');
+			$qa_usage->mark('view');
 
 		qa_output_content($qa_content);
 
 		if (QA_DEBUG_PERFORMANCE)
-			qa_usage_mark('theme');
+			$qa_usage->mark('theme');
 
-		if (qa_do_content_stats($qa_content))
-			if (QA_DEBUG_PERFORMANCE)
-				qa_usage_mark('stats');
+		if (qa_do_content_stats($qa_content) && QA_DEBUG_PERFORMANCE)
+			$qa_usage->mark('stats');
 
 		if (QA_DEBUG_PERFORMANCE)
-			qa_usage_output();
+			$qa_usage->output();
 	}
 
 	qa_db_disconnect();

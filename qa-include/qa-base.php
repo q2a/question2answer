@@ -196,8 +196,8 @@
 	//	Start performance monitoring
 
 		if (QA_DEBUG_PERFORMANCE) {
-			require_once 'qa-util-debug.php';
-			qa_usage_init();
+			global $qa_usage;
+			$qa_usage = new Q2A_Util_Usage;
 		}
 
 	//	More for WordPress integration
