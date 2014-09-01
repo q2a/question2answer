@@ -1473,6 +1473,16 @@
 		return $options[$name];
 	}
 
+	function qa_debug($var)
+/*
+	Simple method to output a preformatted variable
+*/
+	{
+		echo "\n" . '<pre style="padding: 10px; background-color: #eee; color: #444; font-size: 11px; text-align: left">';
+		echo $var === null ? 'NULL' : print_r($var, true);
+		echo '</pre>' . "\n";
+	}
+
 
 //	Event and process stage reporting
 
