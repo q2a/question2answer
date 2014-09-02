@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-misc.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Miscellaneous language phrases
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -58,6 +58,7 @@
 		'form_security_reload' => 'Please reload the page then try again',
 		'hide_all_ip_button' => 'Hide all posts from this IP',
 		'host_name' => 'Host name:',
+		'inbox' => 'Inbox',
 		'matches_blocked_ips' => 'Matches blocked IP addresses:',
 		'message_empty' => 'Please enter your message to send to this user',
 		'message_explanation' => 'This will be sent as a notification from ^. Your email address will not be revealed unless you include it in the message.',
@@ -66,6 +67,9 @@
 		'message_must_login' => 'Please ^1log in^2 or ^3register^4 to send private messages.',
 		'message_recent_history' => 'Recent correspondence with ^',
 		'message_sent' => 'Your private message below was sent',
+		'more_favorite_qs' => 'More favorite questions...',
+		'more_favorite_tags' => 'More favorite tags...',
+		'more_favorite_users' => 'More favorite users...',
 		'my_favorites_title' => 'My favorites',
 		'nav_all_my_updates' => 'All my updates',
 		'nav_my_content' => 'My content',
@@ -73,6 +77,7 @@
 		'nav_my_favorites' => 'My favorites',
 		'nav_user_activity' => 'Recent activity',
 		'nav_user_as' => 'All answers',
+		'nav_user_pms' => 'Private messages',
 		'nav_user_qs' => 'All questions',
 		'nav_user_wall' => 'Wall',
 		'no_activity_from_x' => 'No activity from ^',
@@ -83,7 +88,10 @@
 		'no_recent_updates' => 'No recent updates',
 		'no_updates_content' => 'No recent updates for my content',
 		'no_updates_favorites' => 'No updates for my favorites',
+		'outbox' => 'Sent items',
 		'private_message_title' => 'Send a private message',
+		'pm_inbox_title' => 'Private messages received',
+		'pm_outbox_title' => 'Private messages sent',
 		'recent_activity_from_x' => 'Recent activity from ^',
 		'recent_updates_content' => 'Recent updates for my content',
 		'recent_updates_favorites' => 'Recent updates for my favorites',
@@ -113,7 +121,7 @@
 		'your_q_reshown' => 'your question reshown',
 		'your_q_retagged' => 'your question retagged',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

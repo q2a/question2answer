@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-question.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for question page
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -45,7 +45,10 @@
 		'answer_must_confirm' => 'Please ^5confirm your email address^6 to answer this question.',
 		'answer_must_login' => 'Please ^1log in^2 or ^3register^4 to answer this question.',
 		'answer_q_popup' => 'Answer this question',
+		'approve_a_popup' => 'Approve this answer',
 		'approve_button' => 'approve',
+		'approve_c_popup' => 'Approve this comment',
+		'approve_q_popup' => 'Approve this question',
 		'ask_button' => 'Ask the Question',
 		'ask_follow_from_a' => 'Your question will be related to this answer:',
 		'ask_follow_title' => 'Ask a related question',
@@ -139,17 +142,23 @@
 		'recat_button' => 'recategorize',
 		'recat_popup' => 'Change this question\'s category',
 		'recat_q_title' => 'Recategorize question',
+		'reject_a_popup' => 'Reject this answer',
 		'reject_button' => 'reject',
+		'reject_c_popup' => 'Reject this comment',
+		'reject_q_popup' => 'Reject this question',
 		'remove_q_favorites' => 'Remove this question from my favorites',
 		'reopen_button' => 'reopen',
 		'reply_button' => 'reply',
 		'reply_c_popup' => 'Reply to this comment',
+		'reshow_a_popup' => 'Reshow this answer',
 		'reshow_button' => 'reshow',
+		'reshow_c_popup' => 'Reshow this comment',
+		'reshow_q_popup' => 'Reshow this question',
 		'retag_button' => 'retag',
 		'retag_cat_popup' => 'Change this question\'s category or tags',
 		'retag_popup' => 'Change this question\'s tags',
 		'retag_q_title' => 'Retag question',
-		'save_silent_label' => 'Save silently to hide that this was edited', 
+		'save_silent_label' => 'Save silently to hide that this was edited',
 		'select_popup' => 'Click to select as best answer',
 		'select_text' => 'Best answer',
 		'show_1_comment' => 'Show 1 comment',
@@ -164,7 +173,7 @@
 		'your_comment_a' => 'Your comment on this answer:',
 		'your_comment_q' => 'Your comment on this question:',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

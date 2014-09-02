@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-options.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for all options, as shown in admin center
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -27,7 +27,7 @@
 	return array(
 		'allow_change_usernames' => 'Allow users with posts to change their username:',
 		'allow_close_questions' => 'Allow questions to be manually closed:',
-		'allow_login_email_only' => 'Only log in by email address (not username):', 
+		'allow_login_email_only' => 'Only log in by email address (not username):',
 		'allow_multi_answers' => 'Allow multiple answers per user:',
 		'allow_no_category' => 'Allow questions with no category',
 		'allow_no_sub_category' => 'Allow questions with a category but no sub-category',
@@ -163,6 +163,7 @@
 		'page_size_ask_tags' => 'Maximum tag hints to show:',
 		'page_size_home' => 'Length of Q&A page:',
 		'page_size_hot_qs' => 'Length of Hot! page:',
+		'page_size_pms' => 'Private messages per page:',
 		'page_size_q_as' => 'Maximum answers per page:',
 		'page_size_qs' => 'Length of Questions page:',
 		'page_size_related_qs' => 'Maximum related questions:',
@@ -283,7 +284,7 @@
 		'voting_on_q_page_only' => 'Allow voting on question page only:',
 		'voting_on_qs' => 'Allow voting on questions:',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

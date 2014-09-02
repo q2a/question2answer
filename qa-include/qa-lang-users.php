@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-users.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for user management
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -129,7 +129,7 @@
 		'send_reset_note' => 'A message will be sent to your email address with instructions.',
 		'special_users' => 'Special users',
 		'unblock_user_button' => 'Unblock User',
-		'unsubscribe_complete' => 'You have been unsubscribed from mass mailings sent out by ^0. You may resubscribe at any time via your ^1account^2 page.', 
+		'unsubscribe_complete' => 'You have been unsubscribed from mass mailings sent out by ^0. You may resubscribe at any time via your ^1account^2 page.',
 		'unsubscribe_title' => 'Unsubscribe',
 		'unsubscribe_wrong_log_in' => 'Code not correct - please ^1log in^2 to unsubscribe',
 		'unsubscribe' => 'Unsubscribe:',
@@ -138,7 +138,7 @@
 		'website' => 'Website',
 		'x_ago_from_y' => '^1 ago from ^2',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

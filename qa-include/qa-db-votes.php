@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-votes.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Database-level access to votes tables
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -36,14 +36,14 @@
 */
 	{
 		$vote=max(min(($vote), 1), -1);
-		
+
 		qa_db_query_sub(
 			'INSERT INTO ^uservotes (postid, userid, vote, flag) VALUES (#, #, #, 0) ON DUPLICATE KEY UPDATE vote=#',
 			$postid, $userid, $vote, $vote
 		);
 	}
 
-	
+
 	function qa_db_uservote_get($postid, $userid)
 /*
 	Get the vote for $userid on $postid from the database (or NULL if none)
@@ -54,8 +54,8 @@
 			$postid, $userid
 		), true);
 	}
-	
-	
+
+
 	function qa_db_userflag_set($postid, $userid, $flag)
 /*
 	Set the flag for $userid on $postid to $flag (true or false) in the database
@@ -68,8 +68,8 @@
 			$postid, $userid, $flag, $flag
 		);
 	}
-	
-	
+
+
 	function qa_db_userflags_clear_all($postid)
 /*
 	Clear all flags for $postid in the database
@@ -80,8 +80,8 @@
 			$postid
 		);
 	}
-	
-	
+
+
 	function qa_db_post_recount_votes($postid)
 /*
 	Recalculate the cached count of upvotes, downvotes and netvotes for $postid in the database
@@ -93,8 +93,8 @@
 				$postid, $postid
 			);
 	}
-	
-	
+
+
 	function qa_db_post_recount_flags($postid)
 /*
 	Recalculate the cached count of flags for $postid in the database
@@ -106,8 +106,8 @@
 				$postid, $postid
 			);
 	}
-	
-	
+
+
 	function qa_db_uservote_post_get($postid)
 /*
 	Returns all non-zero votes on post $postid from the database as an array of [userid] => [vote]
@@ -118,8 +118,8 @@
 			$postid
 		), 'userid', 'vote');
 	}
-	
-	
+
+
 	function qa_db_uservoteflag_user_get($userid)
 /*
 	Returns all the postids from the database for posts that $userid has voted on or flagged
@@ -130,8 +130,8 @@
 			$userid
 		));
 	}
-	
-	
+
+
 	function qa_db_uservoteflag_posts_get($postids)
 /*
 	Return information about all the non-zero votes and/or flags on the posts in postids, including user handles for internal user management
@@ -149,7 +149,7 @@
 				$postids
 			));
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

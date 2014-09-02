@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-plugin/facebook-login/qa-facebook-login-page.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Page which performs Facebook login action
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,22 +25,22 @@
 */
 
 	class qa_facebook_login_page {
-		
-		var $directory;
-		var $urltoroot;
 
-		function load_module($directory, $urltoroot)
+		private $directory;
+		private $urltoroot;
+
+		public function load_module($directory, $urltoroot)
 		{
 			$this->directory=$directory;
 			$this->urltoroot=$urltoroot;
 		}
 
-		function match_request($request)
+		public function match_request($request)
 		{
 			return ($request=='facebook-login');
 		}
-		
-		function process_request($request)
+
+		public function process_request($request)
 		{
 			if ($request=='facebook-login') {
 				$app_id=qa_opt('facebook_app_id');
@@ -52,28 +52,28 @@
 				if (strlen($app_id) && strlen($app_secret)) {
 					if (!function_exists('json_decode')) { // work around fact that PHP might not have JSON extension installed
 						require_once $this->directory.'JSON.php';
-				
+
 						function json_decode($json)
 						{
 							$decoder=new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 							return $decoder->decode($json);
 						}
 					}
-					
+
 					require_once $this->directory.'facebook.php';
-			
+
 					$facebook = new Facebook(array(
 						'appId'  => $app_id,
 						'secret' => $app_secret,
 						'cookie' => true,
 					));
-			
+
 					$fb_userid=$facebook->getUser();
-					
+
 					if ($fb_userid) {
 						try {
 							$user=$facebook->api('/me?fields=email,name,verified,location,website,about,picture');
-				
+
 							if (is_array($user))
 								qa_log_in_external_user('facebook', $fb_userid, array(
 									'email' => @$user['email'],
@@ -93,13 +93,13 @@
 						qa_redirect_raw($facebook->getLoginUrl(array('redirect_uri' => $tourl)));
 					}
 				}
-				
+
 				qa_redirect_raw($tourl);
 			}
 		}
-		
+
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output
