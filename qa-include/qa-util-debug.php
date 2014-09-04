@@ -23,7 +23,7 @@ function qa_usage_get()
 function qa_usage_delta($oldusage, $newusage)
 {
 	// equivalent function is now private
-	return null;
+	return array();
 }
 
 function qa_usage_mark($stage)
@@ -35,7 +35,7 @@ function qa_usage_mark($stage)
 function qa_usage_line($stage, $usage, $totalusage)
 {
 	// equivalent function is now private
-	return null;
+	return '';
 }
 
 function qa_usage_output()

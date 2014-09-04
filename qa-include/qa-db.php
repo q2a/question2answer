@@ -30,11 +30,11 @@
 	}
 
 
+	/**
+	 * Indicates to the Q2A database layer that database connections are permitted fro this point forwards
+	 * (before this point, some plugins may not have had a chance to override some database access functions).
+	 */
 	function qa_db_allow_connect()
-/*
-	Indicates to the Q2A database layer that database connections are permitted fro this point forwards
-	(before this point, some plugins may not have had a chance to override some database access functions)
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -44,11 +44,11 @@
 	}
 
 
+	/**
+	 * Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary).
+	 * Uses mysqli as of Q2A 1.7.
+	 */
 	function qa_db_connect($failhandler=null)
-/*
-	Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary).
-	Uses mysqli as of Q2A 1.6.4.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -74,13 +74,9 @@
 		if ($conn_error)
 			qa_db_fail_error('connect', $db->connect_errno, $conn_error);
 
-	/*
-		From Q2A 1.5, we explicitly set the character encoding of the MySQL connection, instead of
-		using lots of "SELECT BINARY col"-style queries. Testing showed that overhead is minimal,
-		so this seems worth trading off against the benefit of more straightforward queries,
-		especially for plugin developers.
-	*/
-
+		// From Q2A 1.5, we explicitly set the character encoding of the MySQL connection, instead of using lots of "SELECT BINARY col"-style queries.
+		// Testing showed that overhead is minimal, so this seems worth trading off against the benefit of more straightforward queries, especially
+		// for plugin developers.
 		if (!$db->set_charset('utf8'))
 			qa_db_fail_error('set_charset', $db->errno, $db->error);
 
@@ -90,10 +86,10 @@
 	}
 
 
+	/**
+	 * If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately.
+	 */
 	function qa_db_fail_error($type, $errno=null, $error=null, $query=null)
-/*
-	If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -111,10 +107,10 @@
 	}
 
 
+	/**
+	 * Return the current connection to the Q2A database, connecting if necessary and $connect is true.
+	 */
 	function qa_db_connection($connect=true)
-/*
-	Return the current connection to the Q2A database, connecting if necessary and $connect is true
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -131,10 +127,10 @@
 	}
 
 
+	/**
+	 * Disconnect from the Q2A database.
+	 */
 	function qa_db_disconnect()
-/*
-	Disconnect from the Q2A database
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -153,11 +149,11 @@
 	}
 
 
+	/**
+	 * Run the raw $query, call the global failure handler if necessary, otherwise return the result resource.
+	 * If appropriate, also track the resources used by database queries, and the queries themselves, for performance debugging.
+	 */
 	function qa_db_query_raw($query)
-/*
-	Run the raw $query, call the global failure handler if necessary, otherwise return the result resource.
-	If appropriate, also track the resources used by database queries, and the queries themselves, for performance debugging.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -192,10 +188,10 @@
 	}
 
 
+	/**
+	 * Lower-level function to execute a query, which automatically retries if there is a MySQL deadlock error.
+	 */
 	function qa_db_query_execute($query)
-/*
-	Lower-level function to execute a query, which automatically retries if there is a MySQL deadlock error
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -214,10 +210,10 @@
 	}
 
 
+	/**
+	 * Return $string escaped for use in queries to the Q2A database (to which a connection must have been made).
+	 */
 	function qa_db_escape_string($string)
-/*
-	Return $string escaped for use in queries to the Q2A database (to which a connection must have been made)
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -226,11 +222,11 @@
 	}
 
 
+	/**
+	 * Return $argument escaped for MySQL. Add quotes around it if $alwaysquote is true or it's not numeric.
+	 * If $argument is an array, return a comma-separated list of escaped elements, with or without $arraybrackets.
+	 */
 	function qa_db_argument_to_mysql($argument, $alwaysquote, $arraybrackets=false)
-/*
-	Return $argument escaped for MySQL. Add quotes around it if $alwaysquote is true or it's not numeric.
-	If $argument is an array, return a comma-separated list of escaped elements, with or without $arraybrackets.
-*/
 	{
 		if (is_array($argument)) {
 			$parts=array();
@@ -257,10 +253,10 @@
 	}
 
 
+	/**
+	 * Return the full name (with prefix) of database table $rawname, usually if it used after a ^ symbol.
+	 */
 	function qa_db_add_table_prefix($rawname)
-/*
-	Return the full name (with prefix) of database table $rawname, usually if it used after a ^ symbol
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -287,23 +283,23 @@
 	}
 
 
+	/**
+	 * Callback function to add table prefixes, as used in qa_db_apply_sub().
+	 */
 	function qa_db_prefix_callback($matches)
-/*
-	Callback function to add table prefixes, as used in qa_db_apply_sub()
-*/
 	{
 		return qa_db_add_table_prefix($matches[1]);
 	}
 
 
+	/**
+	 * Substitute ^, $ and # symbols in $query. ^ symbols are replaced with the table prefix set in qa-config.php.
+	 * $ and # symbols are replaced in order by the corresponding element in $arguments (if the element is an array,
+	 * it is converted recursively into comma-separated list). Each element in $arguments is escaped.
+	 * $ is replaced by the argument in quotes (even if it's a number), # only adds quotes if the argument is non-numeric.
+	 * It's important to use $ when matching a textual column since MySQL won't use indexes to compare text against numbers.
+	 */
 	function qa_db_apply_sub($query, $arguments)
-/*
-	Substitute ^, $ and # symbols in $query. ^ symbols are replaced with the table prefix set in qa-config.php.
-	$ and # symbols are replaced in order by the corresponding element in $arguments (if the element is an array,
-	it is converted recursively into comma-separated list). Each element in $arguments is escaped.
-	$ is replaced by the argument in quotes (even if it's a number), # only adds quotes if the argument is non-numeric.
-	It's important to use $ when matching a textual column since MySQL won't use indexes to compare text against numbers.
-*/
 	{
 		$query = preg_replace_callback('/\^([A-Za-z_0-9]+)/', 'qa_db_prefix_callback', $query);
 
@@ -338,10 +334,10 @@
 	}
 
 
+	/**
+	 * Run $query after substituting ^, # and $ symbols, and return the result resource (or call fail handler).
+	 */
 	function qa_db_query_sub($query) // arguments for substitution retrieved using func_get_args()
-/*
-	Run $query after substituting ^, # and $ symbols, and return the result resource (or call fail handler)
-*/
 	{
 		$funcargs=func_get_args();
 
@@ -349,59 +345,59 @@
 	}
 
 
+	/**
+	 * Return the value of the auto-increment column for the last inserted row.
+	 */
 	function qa_db_last_insert_id()
-/*
-	Return the value of the auto-increment column for the last inserted row
-*/
 	{
 		$db = qa_db_connection();
 		return $db->insert_id;
 	}
 
 
+	/**
+	 * Does what it says on the tin.
+	 */
 	function qa_db_affected_rows()
-/*
-	Does what it says on the tin
-*/
 	{
 		$db = qa_db_connection();
 		return $db->affected_rows;
 	}
 
 
+	/**
+	 * For the previous INSERT ... ON DUPLICATE KEY UPDATE query, return whether an insert operation took place.
+	 */
 	function qa_db_insert_on_duplicate_inserted()
-/*
-	For the previous INSERT ... ON DUPLICATE KEY UPDATE query, return whether an insert operation took place
-*/
 	{
 		return (qa_db_affected_rows() == 1);
 	}
 
 
+	/**
+	 * Return a random integer (as a string) for use in a BIGINT column.
+	 * Actual limit is 18,446,744,073,709,551,615 - we aim for 18,446,743,999,999,999,999.
+	 */
 	function qa_db_random_bigint()
-/*
-	Return a random integer (as a string) for use in a BIGINT column.
-	Actual limit is 18,446,744,073,709,551,615 - we aim for 18,446,743,999,999,999,999
-*/
 	{
 		return sprintf('%d%06d%06d', mt_rand(1,18446743), mt_rand(0,999999), mt_rand(0,999999));
 	}
 
 
+	/**
+	 * Return an array of the names of all tables in the Q2A database, converted to lower case.
+	 * No longer used by Q2A and shouldn't be needed.
+	 */
 	function qa_db_list_tables_lc()
-/*
-	Return an array of the names of all tables in the Q2A database, converted to lower case.
-	No longer used by Q2A and shouldn't be needed.
-*/
 	{
 		return array_map('strtolower', qa_db_list_tables());
 	}
 
 
+	/**
+	 * Return an array of the names of all tables in the Q2A database.
+	 */
 	function qa_db_list_tables()
-/*
-	Return an array of the names of all tables in the Q2A database
-*/
 	{
 		return qa_db_read_all_values(qa_db_query_raw('SHOW TABLES'));
 	}
@@ -453,10 +449,10 @@
 */
 
 
+	/**
+	 * Return the data specified by a single $selectspec - see long comment above.
+	 */
 	function qa_db_single_select($selectspec)
-/*
-	Return the data specified by a single $selectspec - see long comment above.
-*/
 	{
 		$query = 'SELECT ';
 
@@ -474,11 +470,11 @@
 	}
 
 
+	/**
+	 * Return the data specified by each element of $selectspecs, where the keys of the
+	 * returned array match the keys of the supplied $selectspecs array. See long comment above.
+	 */
 	function qa_db_multi_select($selectspecs)
-/*
-	Return the data specified by each element of $selectspecs, where the keys of the
-	returned array match the keys of the supplied $selectspecs array. See long comment above.
-*/
 	{
 		if (!count($selectspecs))
 			return array();
@@ -585,10 +581,10 @@
 	}
 
 
+	/**
+	 * Post-process $outresult according to $selectspec, applying 'sortasc', 'sortdesc', 'arrayvalue' and 'single'.
+	 */
 	function qa_db_post_select(&$outresult, $selectspec)
-/*
-	Post-process $outresult according to $selectspec, applying 'sortasc', 'sortdesc', 'arrayvalue' and 'single'
-*/
 	{
 		// PHP's sorting algorithm is not 'stable', so we use '_order_' element to keep stability.
 		// By contrast, MySQL's ORDER BY does seem to give the results in a reliable order.
@@ -628,12 +624,12 @@
 	}
 
 
+	/**
+	 * Return the full results from the $result resource as an array. The key of each element in the returned array
+	 * is from column $key if specified, otherwise it's integer. The value of each element in the returned array
+	 * is from column $value if specified, otherwise it's a named array of all columns, given an array of arrays.
+	 */
 	function qa_db_read_all_assoc($result, $key=null, $value=null)
-/*
-	Return the full results from the $result resource as an array. The key of each element in the returned array
-	is from column $key if specified, otherwise it's integer. The value of each element in the returned array
-	is from column $value if specified, otherwise it's a named array of all columns, given an array of arrays.
-*/
 	{
 		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading all assoc from invalid result');
@@ -651,11 +647,11 @@
 	}
 
 
+	/**
+	 * Return the first row from the $result resource as an array of [column name] => [column value].
+	 * If there's no first row, throw a fatal error unless $allowempty is true.
+	 */
 	function qa_db_read_one_assoc($result, $allowempty=false)
-/*
-	Return the first row from the $result resource as an array of [column name] => [column value].
-	If there's no first row, throw a fatal error unless $allowempty is true.
-*/
 	{
 		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading one assoc from invalid result');
@@ -672,10 +668,10 @@
 	}
 
 
+	/**
+	 * Return a numbered array containing the first (and presumably only) column from the $result resource.
+	 */
 	function qa_db_read_all_values($result)
-/*
-	Return a numbered array containing the first (and presumably only) column from the $result resource
-*/
 	{
 		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading column from invalid result');
@@ -689,11 +685,11 @@
 	}
 
 
+	/**
+	 * Return the first column of the first row (and presumably only cell) from the $result resource.
+	 * If there's no first row, throw a fatal error unless $allowempty is true.
+	 */
 	function qa_db_read_one_value($result, $allowempty=false)
-/*
-	Return the first column of the first row (and presumably only cell) from the $result resource.
-	If there's no first row, throw a fatal error unless $allowempty is true.
-*/
 	{
 		if (!($result instanceof mysqli_result))
 			qa_fatal_error('Reading one value from invalid result');
@@ -710,11 +706,11 @@
 	}
 
 
+	/**
+	 * Suspend the updating of counts (of many different types) in the database, to save time when making a lot of changes
+	 * if $suspend is true, otherwise reinstate it. A counter is kept to allow multiple calls.
+	 */
 	function qa_suspend_update_counts($suspend=true)
-/*
-	Suspend the updating of counts (of many different types) in the database, to save time when making a lot of changes
-	if $suspend is true, otherwise reinstate it. A counter is kept to allow multiple calls.
-*/
 	{
 		global $qa_update_counts_suspended;
 
@@ -722,17 +718,12 @@
 	}
 
 
+	/**
+	 * Returns whether counts should currently be updated (i.e. if count updating has not been suspended).
+	 */
 	function qa_should_update_counts()
-/*
-	Returns whether counts should currently be updated (i.e. if count updating has not been suspended)
-*/
 	{
 		global $qa_update_counts_suspended;
 
 		return ($qa_update_counts_suspended <= 0);
 	}
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/

@@ -18,7 +18,7 @@ class Q2A_Util_Usage
 	private $databaseQueryLog;
 
 	/**
-	 * Initialize the counts of resource usage
+	 * Initialize the counts of resource usage.
 	 */
 	public function __construct()
 	{
@@ -30,7 +30,7 @@ class Q2A_Util_Usage
 	}
 
 	/**
-	 * Return an array representing the resource usage as of now
+	 * Return an array representing the resource usage as of now.
 	 */
 	public function getCurrent()
 	{
@@ -56,7 +56,7 @@ class Q2A_Util_Usage
 	}
 
 	/**
-	 * Mark the beginning of a new stage of script execution and store usages accordingly
+	 * Mark the beginning of a new stage of script execution and store usages accordingly.
 	 */
 	public function mark($stage)
 	{
@@ -66,7 +66,7 @@ class Q2A_Util_Usage
 	}
 
 	/**
-	 * Logs query and updates database usage stats
+	 * Logs query and updates database usage stats.
 	 */
 	public function logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns)
 	{
@@ -86,7 +86,7 @@ class Q2A_Util_Usage
 	}
 
 	/**
-	 * Output an (ugly) block of HTML detailing all resource usage and database queries
+	 * Output an (ugly) block of HTML detailing all resource usage and database queries.
 	 */
 	public function output()
 	{
@@ -130,7 +130,7 @@ class Q2A_Util_Usage
 
 
 	/**
-	 * Return the difference between two resource usage arrays, as an array
+	 * Return the difference between two resource usage arrays, as an array.
 	 */
 	private function delta($oldusage, $newusage)
 	{
@@ -143,7 +143,7 @@ class Q2A_Util_Usage
 	}
 
 	/**
-	 * Return HTML to represent the resource $usage, showing appropriate proportions of $totalusage
+	 * Return HTML to represent the resource $usage, showing appropriate proportions of $totalusage.
 	 */
 	private function line($stage, $usage, $totalusage)
 	{
