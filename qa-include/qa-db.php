@@ -162,34 +162,21 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		if (QA_DEBUG_PERFORMANCE) {
-			global $qa_database_usage, $qa_database_queries;
+			global $qa_usage;
 
+			// time the query
 			$oldtime = array_sum(explode(' ', microtime()));
 			$result = qa_db_query_execute($query);
 			$usedtime = array_sum(explode(' ', microtime())) - $oldtime;
 
-			if (is_array($qa_database_usage)) {
-				$qa_database_usage['clock'] += $usedtime;
-
-				if (strlen($qa_database_queries) < 1048576) { // don't keep track of big tests
-					$gotrows = $gotcolumns = null;
-					if ($result instanceof mysqli_result) {
-						$gotrows = $result->num_rows;
-						$gotcolumns = $result->field_count;
-					}
-
-					$rowcolstring = '';
-					if (is_numeric($gotrows))
-						$rowcolstring .= ' - ' . $gotrows . ($gotrows == 1 ? ' row' : ' rows');
-					if (is_numeric($gotcolumns))
-						$rowcolstring .= ' - ' . $gotcolumns . ($gotcolumns == 1 ? ' column' : ' columns');
-
-					$qa_database_queries .= $query . "\n\n" . sprintf('%.2f ms', $usedtime*1000) . $rowcolstring . "\n\n";
-				}
-
-				$qa_database_usage['queries']++;
+			// fetch counts
+			$gotrows = $gotcolumns = null;
+			if ($result instanceof mysqli_result) {
+				$gotrows = $result->num_rows;
+				$gotcolumns = $result->field_count;
 			}
 
+			$qa_usage->logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns);
 		}
 		else
 			$result = qa_db_query_execute($query);

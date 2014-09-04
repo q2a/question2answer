@@ -11,21 +11,22 @@
 
 class Q2A_Util_Usage
 {
-	public $database_usage;
-	public $database_queries;
-	public $usage_start;
-	public $usage_last;
+	private $stages;
+	private $startUsage;
+	private $prevUsage;
+	private $databaseUsage;
+	private $databaseQueryLog;
 
 	/**
 	 * Initialize the counts of resource usage
 	 */
 	public function __construct()
 	{
-		global $qa_database_usage, $qa_database_queries, $qa_usage_start, $qa_usage_last;
+		$this->stages = array();
+		$this->databaseUsage = array('queries'=>0, 'clock'=>0);
+		$this->databaseQueryLog = '';
 
-		$qa_database_usage = array('queries'=>0, 'clock'=>0);
-		$qa_database_queries = '';
-		$qa_usage_last = $qa_usage_start = $this->getCurrent();
+		$this->prevUsage = $this->startUsage = $this->getCurrent();
 	}
 
 	/**
@@ -33,14 +34,12 @@ class Q2A_Util_Usage
 	 */
 	public function getCurrent()
 	{
-		global $qa_database_usage;
-
 		$usage = array(
 			'files' => count(get_included_files()),
-			'queries' => $qa_database_usage['queries'],
+			'queries' => $this->databaseUsage['queries'],
 			'ram' => function_exists('memory_get_usage') ? memory_get_usage() : 0,
 			'clock' => array_sum(explode(' ', microtime())),
-			'mysql' => $qa_database_usage['clock'],
+			'mysql' => $this->databaseUsage['clock'],
 		);
 
 		if (function_exists('getrusage')) {
@@ -61,11 +60,29 @@ class Q2A_Util_Usage
 	 */
 	public function mark($stage)
 	{
-		global $qa_usage_last, $qa_usage_stages;
-
 		$usage = $this->getCurrent();
-		$qa_usage_stages[$stage] = $this->delta($qa_usage_last, $usage);
-		$qa_usage_last = $usage;
+		$this->stages[$stage] = $this->delta($this->prevUsage, $usage);
+		$this->prevUsage = $usage;
+	}
+
+	/**
+	 * Logs query and updates database usage stats
+	 */
+	public function logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns)
+	{
+		$this->databaseUsage['clock'] += $usedtime;
+
+		if (strlen($this->databaseQueryLog) < 1048576) { // don't keep track of big tests
+			$rowcolstring = '';
+			if (is_numeric($gotrows))
+				$rowcolstring .= ' - ' . $gotrows . ($gotrows == 1 ? ' row' : ' rows');
+			if (is_numeric($gotcolumns))
+				$rowcolstring .= ' - ' . $gotcolumns . ($gotcolumns == 1 ? ' column' : ' columns');
+
+			$this->databaseQueryLog .= $query . "\n\n" . sprintf('%.2f ms', $usedtime*1000) . $rowcolstring . "\n\n";
+		}
+
+		$this->databaseUsage['queries']++;
 	}
 
 	/**
@@ -73,9 +90,7 @@ class Q2A_Util_Usage
 	 */
 	public function output()
 	{
-		global $qa_usage_start, $qa_usage_stages, $qa_database_queries;
-
-		$totaldelta = $this->delta($qa_usage_start, $this->getCurrent());
+		$totaldelta = $this->delta($this->startUsage, $this->getCurrent());
 ?>
 		<style>
 		.debug-table { border-collapse: collapse; box-sizing: border-box; width: 100%; margin: 20px auto; }
@@ -93,7 +108,7 @@ class Q2A_Util_Usage
 			<tr>
 				<td colspan="2"><?php
 					echo $this->line('Total', $totaldelta, $totaldelta) . "<br>\n";
-					foreach ($qa_usage_stages as $stage => $stagedelta)
+					foreach ($this->stages as $stage => $stagedelta)
 						echo '<br>' . $this->line(ucfirst($stage), $stagedelta, $totaldelta) . "\n";
 				?></td>
 			</tr>
@@ -105,7 +120,7 @@ class Q2A_Util_Usage
 					?></textarea>
 				</td>
 				<td class="debug-cell-queries">
-					<textarea class="debug-output" cols="40" rows="20"><?=qa_html($qa_database_queries)?></textarea>
+					<textarea class="debug-output" cols="40" rows="20"><?=qa_html($this->databaseQueryLog)?></textarea>
 				</td>
 			</tr>
 		</tbody>
