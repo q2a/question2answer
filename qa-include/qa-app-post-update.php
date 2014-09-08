@@ -838,7 +838,7 @@
 
 		qa_update_q_counts_for_a($question['postid']);
 		qa_db_ccount_update();
-		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts'));
+		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts', 'avoteds'));
 
 		if ($setupdated && $remoderate) {
 			qa_db_queuedcount_update();
