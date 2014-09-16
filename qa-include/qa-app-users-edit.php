@@ -223,6 +223,7 @@
 
 		qa_db_user_delete($userid);
 		qa_db_uapprovecount_update();
+		qa_db_userpointscount_update();
 
 		foreach ($postids as $postid) { // hoping there aren't many of these - saves a lot of new SQL code...
 			qa_db_post_recount_votes($postid);
