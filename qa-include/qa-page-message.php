@@ -94,7 +94,11 @@
 
 //	Process sending a message to user
 
-	$messagesent = qa_get_state() == 'message-sent';
+	// check for messages or errors
+	$state = qa_get_state();
+	$messagesent = $state == 'message-sent';
+	if ($state == 'email-error')
+		$pageerror = qa_lang_html('main/email_error');
 
 	if (qa_post_text('domessage')) {
 		$inmessage = qa_post_text('message');
@@ -139,8 +143,6 @@
 				if (qa_send_notification($toaccount['userid'], $toaccount['email'], $toaccount['handle'],
 						qa_lang('emails/private_message_subject'), qa_lang('emails/private_message_body'), $subs))
 					$messagesent = true;
-				else
-					$pageerror = qa_lang_html('main/general_error');
 
 				qa_report_event('u_message', $loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), array(
 					'userid' => $toaccount['userid'],
@@ -149,8 +151,9 @@
 					'message' => $inmessage,
 				));
 
-				if ($messagesent && qa_opt('show_message_history')) // show message as part of general history
-					qa_redirect(qa_request(), array('state' => 'message-sent'));
+				// show message as part of general history
+				if (qa_opt('show_message_history'))
+					qa_redirect(qa_request(), array('state' => ($messagesent ? 'message-sent' : 'email-error')));
 			}
 		}
 	}

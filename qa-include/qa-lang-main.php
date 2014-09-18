@@ -80,6 +80,7 @@
 		'date_month_12' => 'Dec',
 		'date_year_digits' => 4, // 2 or 4
 		'edited' => 'edited',
+		'email_error' => 'An error occurred trying to send the email.',
 		'field_required' => 'Please enter something in this field',
 		'general_error' => 'A server error occurred - please try again.',
 		'hidden' => 'hidden',
