@@ -204,40 +204,35 @@
 
 //	Process hide, show, delete, flag, unflag, edit or save button for comments
 
-	foreach ($commentsfollows as $commentid => $comment)
-		if ($comment['basetype']=='C') {
-			$commentparent=@$answers[$comment['parentid']];
-			if (!isset($commentparent))
-				$commentparent=$question;
-
-			$commentparenttype=$commentparent['basetype'];
-
-			$prefix='c'.$commentid.'_';
+	foreach ($commentsfollows as $commentid => $comment) {
+		if ($comment['basetype'] == 'C') {
+			$cparentid = $comment['parentid'];
+			$commentparent = isset($answers[$cparentid]) ? $answers[$cparentid] : $question;
+			$prefix = 'c'.$commentid.'_';
 
 			if (qa_page_q_single_click_c($comment, $question, $commentparent, $pageerror))
-				qa_page_q_refresh($pagestart, 'showcomments-'.$comment['parentid'], $commentparenttype, $comment['parentid']);
+				qa_page_q_refresh($pagestart, 'showcomments-'.$cparentid, $commentparent['basetype'], $cparentid);
 
 			if ($comment['editbutton']) {
 				if (qa_clicked($prefix.'doedit')) {
 					if (qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) // extra check here ensures error message is visible
 						qa_page_q_refresh($pagestart, 'edit-'.$commentid, 'C', $commentid);
-
-				} elseif (qa_clicked($prefix.'dosave') && qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) {
-
+				}
+				elseif (qa_clicked($prefix.'dosave') && qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) {
 					if (qa_page_q_edit_c_submit($comment, $question, $commentparent, $ceditin[$commentid], $cediterrors[$commentid]))
 						qa_page_q_refresh($pagestart, null, 'C', $commentid);
-
 					else {
-						$formtype='c_edit';
-						$formpostid=$commentid; // keep editing if an error
+						$formtype = 'c_edit';
+						$formpostid = $commentid; // keep editing if an error
 					}
-
-				} elseif (($pagestate==('edit-'.$commentid)) && qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) {
-					$formtype='c_edit';
-					$formpostid=$commentid;
+				}
+				elseif (($pagestate == ('edit-'.$commentid)) && qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) {
+					$formtype = 'c_edit';
+					$formpostid = $commentid;
 				}
 			}
 		}
+	}
 
 
 //	Functions used above - also see functions in qa-page-question-submit.php (which are shared with Ajax)
