@@ -421,10 +421,10 @@
 				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 				$qa_cached_logged_in_user=qa_db_get_pending_result('loggedinuser', qa_db_user_account_selectspec($userid, true));
 
-				if (!isset($qa_cached_logged_in_user)) { // the user can no longer be found (should be because they're deleted)
+				if (!isset($qa_cached_logged_in_user)) {
+					// the user can no longer be found (should only apply to deleted users)
 					qa_clear_session_user();
-					qa_fatal_error('The logged in user cannot be found');
-						// it's too late here to proceed because the caller may already be branching based on whether someone is logged in
+					qa_redirect(''); // implicit exit;
 				}
 			}
 
