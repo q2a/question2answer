@@ -220,12 +220,12 @@
 			if ($comment['editbutton']) {
 				if (qa_clicked($prefix.'doedit')) {
 					if (qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) // extra check here ensures error message is visible
-						qa_page_q_refresh($pagestart, 'edit-'.$commentid, $commentparenttype, $comment['parentid']);
+						qa_page_q_refresh($pagestart, 'edit-'.$commentid, 'C', $commentid);
 
 				} elseif (qa_clicked($prefix.'dosave') && qa_page_q_permit_edit($comment, 'permit_edit_c', $pageerror)) {
 
 					if (qa_page_q_edit_c_submit($comment, $question, $commentparent, $ceditin[$commentid], $cediterrors[$commentid]))
-						qa_page_q_refresh($pagestart, null, $commentparenttype, $comment['parentid']);
+						qa_page_q_refresh($pagestart, null, 'C', $commentid);
 
 					else {
 						$formtype='c_edit';
