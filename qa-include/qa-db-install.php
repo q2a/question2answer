@@ -177,7 +177,8 @@
 				'PRIMARY KEY (messageid)',
 				'KEY type (type, fromuserid, touserid, created)',
 				'KEY touserid (touserid, type, created)',
-				'KEY fromhidden (fromhidden, tohidden)',
+				'KEY fromhidden (fromhidden)',
+				'KEY tohidden (tohidden)',
 			),
 
 			'userfavorites' => array(
