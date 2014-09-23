@@ -44,26 +44,27 @@
 
 //	Get information about possible additional fields
 
-	$userfields=qa_db_select_with_pending(
+	$userfields = qa_db_select_with_pending(
 		qa_db_userfields_selectspec()
 	);
 
-	foreach ($userfields as $index => $userfield)
+	foreach ($userfields as $index => $userfield) {
 		if (!($userfield['flags'] & QA_FIELD_FLAGS_ON_REGISTER))
 			unset($userfields[$index]);
+	}
 
 
 //	Check we haven't suspended registration, and this IP isn't blocked
 
 	if (qa_opt('suspend_register_users')) {
-		$qa_content=qa_content_prepare();
-		$qa_content['error']=qa_lang_html('users/register_suspended');
+		$qa_content = qa_content_prepare();
+		$qa_content['error'] = qa_lang_html('users/register_suspended');
 		return $qa_content;
 	}
 
 	if (qa_user_permit_error()) {
-		$qa_content=qa_content_prepare();
-		$qa_content['error']=qa_lang_html('users/no_permission');
+		$qa_content = qa_content_prepare();
+		$qa_content['error'] = qa_lang_html('users/no_permission');
 		return $qa_content;
 	}
 
@@ -76,25 +77,25 @@
 		if (qa_user_limits_remaining(QA_LIMIT_REGISTRATIONS)) {
 			require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
 
-			$inemail=qa_post_text('email');
-			$inpassword=qa_post_text('password');
-			$inhandle=qa_post_text('handle');
+			$inemail = qa_post_text('email');
+			$inpassword = qa_post_text('password');
+			$inhandle = qa_post_text('handle');
 
-			$inprofile=array();
+			$inprofile = array();
 			foreach ($userfields as $userfield)
-				$inprofile[$userfield['fieldid']]=qa_post_text('field_'.$userfield['fieldid']);
+				$inprofile[$userfield['fieldid']] = qa_post_text('field_'.$userfield['fieldid']);
 
-			if (!qa_check_form_security_code('register', qa_post_text('code')))
-				$pageerror=qa_lang_html('misc/form_security_again');
-
+			if (!qa_check_form_security_code('register', qa_post_text('code'))) {
+				$pageerror = qa_lang_html('misc/form_security_again');
+			}
 			else {
-				$errors=array_merge(
+				$errors = array_merge(
 					qa_handle_email_filter($inhandle, $inemail),
 					qa_password_validate($inpassword)
 				);
 
 				if (count($inprofile)) {
-					$filtermodules=qa_load_modules_with('filter', 'filter_profile');
+					$filtermodules = qa_load_modules_with('filter', 'filter_profile');
 					foreach ($filtermodules as $filtermodule)
 						$filtermodule->filter_profile($inprofile, $errors, null, null);
 				}
@@ -102,17 +103,18 @@
 				if (qa_opt('captcha_on_register'))
 					qa_captcha_validate_post($errors);
 
-				if (empty($errors)) { // register and redirect
+				if (empty($errors)) {
+					// register and redirect
 					qa_limits_increment(null, QA_LIMIT_REGISTRATIONS);
 
-					$userid=qa_create_new_user($inemail, $inpassword, $inhandle);
+					$userid = qa_create_new_user($inemail, $inpassword, $inhandle);
 
 					foreach ($userfields as $userfield)
 						qa_db_user_profile_set($userid, $userfield['title'], $inprofile[$userfield['fieldid']]);
 
 					qa_set_logged_in_user($userid, $inhandle);
 
-					$topath=qa_get('to');
+					$topath = qa_get('to');
 
 					if (isset($topath))
 						qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
@@ -121,22 +123,23 @@
 				}
 			}
 
-		} else
-			$pageerror=qa_lang('users/register_limit');
+		}
+		else
+			$pageerror = qa_lang('users/register_limit');
 	}
 
 
 //	Prepare content for theme
 
-	$qa_content=qa_content_prepare();
+	$qa_content = qa_content_prepare();
 
-	$qa_content['title']=qa_lang_html('users/register_title');
+	$qa_content['title'] = qa_lang_html('users/register_title');
 
-	$qa_content['error']=@$pageerror;
+	$qa_content['error'] = @$pageerror;
 
-	$custom=qa_opt('show_custom_register') ? trim(qa_opt('custom_register')) : '';
+	$custom = qa_opt('show_custom_register') ? trim(qa_opt('custom_register')) : '';
 
-	$qa_content['form']=array(
+	$qa_content['form'] = array(
 		'tags' => 'method="post" action="'.qa_self_html().'"',
 
 		'style' => 'tall',
@@ -188,13 +191,13 @@
 		unset($qa_content['form']['fields']['custom']);
 
 	foreach ($userfields as $userfield) {
-		$value=@$inprofile[$userfield['fieldid']];
+		$value = @$inprofile[$userfield['fieldid']];
 
-		$label=trim(qa_user_userfield_label($userfield), ':');
+		$label = trim(qa_user_userfield_label($userfield), ':');
 		if (strlen($label))
-			$label.=':';
+			$label .= ':';
 
-		$qa_content['form']['fields'][$userfield['title']]=array(
+		$qa_content['form']['fields'][$userfield['title']] = array(
 			'label' => qa_html($label),
 			'tags' => 'name="field_'.$userfield['fieldid'].'"',
 			'value' => qa_html($value),
@@ -206,18 +209,19 @@
 	if (qa_opt('captcha_on_register'))
 		qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
 
-	$loginmodules=qa_load_modules_with('login', 'login_html');
+	$loginmodules = qa_load_modules_with('login', 'login_html');
 
 	foreach ($loginmodules as $module) {
 		ob_start();
 		$module->login_html(qa_opt('site_url').qa_get('to'), 'register');
-		$html=ob_get_clean();
+		$html = ob_get_clean();
 
 		if (strlen($html))
-			@$qa_content['custom'].='<br>'.$html.'<br>';
+			@$qa_content['custom'] .= '<br>'.$html.'<br>';
 	}
 
-	$qa_content['focusid']=isset($errors['handle']) ? 'handle'
+	// prioritize 'handle' for keyboard focus
+	$qa_content['focusid'] = isset($errors['handle']) ? 'handle'
 		: (isset($errors['password']) ? 'password'
 			: (isset($errors['email']) ? 'email' : 'handle'));
 
