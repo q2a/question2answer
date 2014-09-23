@@ -207,6 +207,7 @@
 		'show_message_history' => 'checkbox',
 		'show_notice_visitor' => 'checkbox',
 		'show_notice_welcome' => 'checkbox',
+		'show_register_terms' => 'checkbox',
 		'show_selected_first' => 'checkbox',
 		'show_url_links' => 'checkbox',
 		'show_user_points' => 'checkbox',
@@ -308,7 +309,7 @@
 			if (!QA_FINAL_EXTERNAL_USERS) {
 				require_once QA_INCLUDE_DIR.'qa-util-image.php';
 
-				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
+				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_register_terms', 'register_terms', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 
 				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
 
@@ -326,6 +327,7 @@
 
 			$checkboxtodisplay = array(
 				'custom_register' => 'option_show_custom_register',
+				'register_terms' => 'option_show_register_terms',
 				'custom_welcome' => 'option_show_custom_welcome',
 				'notice_welcome' => 'option_show_notice_welcome',
 				'notice_visitor' => 'option_show_notice_visitor',
@@ -1087,6 +1089,7 @@
 					break;
 
 				case 'show_custom_register':
+				case 'show_register_terms':
 				case 'show_custom_welcome':
 				case 'show_notice_welcome':
 				case 'show_notice_visitor':
@@ -1094,6 +1097,7 @@
 					break;
 
 				case 'custom_register':
+				case 'register_terms':
 				case 'custom_welcome':
 				case 'notice_welcome':
 				case 'notice_visitor':

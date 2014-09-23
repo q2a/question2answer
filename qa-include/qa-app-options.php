@@ -340,11 +340,12 @@
 			'show_a_c_links' => 1,
 			'show_a_form_immediate' => 'if_no_as',
 			'show_c_reply_buttons' => 1,
-			'show_custom_welcome' => 1,
+			'show_custom_welcome' => 0,
 			'show_fewer_cs_count' => 5,
 			'show_fewer_cs_from' => 10,
 			'show_full_date_days' => 7,
 			'show_message_history' => 1,
+			'show_register_terms' => 0,
 			'show_selected_first' => 1,
 			'show_url_links' => 1,
 			'show_user_points' => 1,
@@ -404,8 +405,12 @@
 					$value = strlen(qa_opt('custom_in_head')) > 0;
 					break;
 
+				case 'register_terms':
+					$value = qa_lang_html_sub('options/default_terms', qa_html(qa_opt('site_title')));
+					break;
+
 				case 'custom_sidebar':
-					$value=qa_lang_html_sub('options/default_sidebar', qa_html(qa_opt('site_title')));
+					$value = qa_lang_html_sub('options/default_sidebar', qa_html(qa_opt('site_title')));
 					break;
 
 				case 'editor_for_qs':
