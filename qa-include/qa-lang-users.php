@@ -128,6 +128,7 @@
 		'send_reset_button' => 'Send Reset Password Email',
 		'send_reset_note' => 'A message will be sent to your email address with instructions.',
 		'special_users' => 'Special users',
+		'terms_not_accepted' => 'You must tick this.',
 		'unblock_user_button' => 'Unblock User',
 		'unsubscribe_complete' => 'You have been unsubscribed from mass mailings sent out by ^0. You may resubscribe at any time via your ^1account^2 page.',
 		'unsubscribe_title' => 'Unsubscribe',

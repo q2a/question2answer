@@ -80,6 +80,7 @@
 			$inemail = qa_post_text('email');
 			$inpassword = qa_post_text('password');
 			$inhandle = qa_post_text('handle');
+			$interms = (int) qa_post_text('terms');
 
 			$inprofile = array();
 			foreach ($userfields as $userfield)
@@ -93,6 +94,9 @@
 					qa_handle_email_filter($inhandle, $inemail),
 					qa_password_validate($inpassword)
 				);
+
+				if (!$interms)
+					$errors['terms'] = qa_lang_html('users/terms_not_accepted');
 
 				if (count($inprofile)) {
 					$filtermodules = qa_load_modules_with('filter', 'filter_profile');
@@ -137,19 +141,12 @@
 
 	$qa_content['error'] = @$pageerror;
 
-	$custom = qa_opt('show_custom_register') ? trim(qa_opt('custom_register')) : '';
-
 	$qa_content['form'] = array(
 		'tags' => 'method="post" action="'.qa_self_html().'"',
 
 		'style' => 'tall',
 
 		'fields' => array(
-			'custom' => array(
-				'type' => 'custom',
-				'note' => $custom,
-			),
-
 			'handle' => array(
 				'label' => qa_lang_html('users/handle_label'),
 				'tags' => 'name="handle" id="handle"',
@@ -187,8 +184,26 @@
 		),
 	);
 
-	if (!strlen($custom))
-		unset($qa_content['form']['fields']['custom']);
+	// prepend custom message
+	$custom = qa_opt('show_custom_register') ? trim(qa_opt('custom_register')) : '';
+	if (strlen($custom)) {
+		array_unshift($qa_content['form']['fields'], array(
+			'type' => 'custom',
+			'note' => $custom,
+		));
+	}
+
+	// show terms/conditions checkbox
+	$terms = qa_opt('show_register_terms') ? trim(qa_opt('register_terms')) : '';
+	if (strlen($terms)) {
+		$qa_content['form']['fields']['terms'] = array(
+			'type' => 'checkbox',
+			'label' => $terms,
+			'tags' => 'name="terms" id="terms"',
+			'value' => qa_html(@$interms),
+			'error' => qa_html(@$errors['terms']),
+		);
+	}
 
 	foreach ($userfields as $userfield) {
 		$value = @$inprofile[$userfield['fieldid']];
