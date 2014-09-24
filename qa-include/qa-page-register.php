@@ -44,6 +44,8 @@
 
 //	Get information about possible additional fields
 
+	$show_terms = qa_opt('show_register_terms');
+
 	$userfields = qa_db_select_with_pending(
 		qa_db_userfields_selectspec()
 	);
@@ -90,14 +92,17 @@
 				$pageerror = qa_lang_html('misc/form_security_again');
 			}
 			else {
+				// core validation
 				$errors = array_merge(
 					qa_handle_email_filter($inhandle, $inemail),
 					qa_password_validate($inpassword)
 				);
 
-				if (!$interms)
+				// T&Cs validation
+				if ($show_terms && !$interms)
 					$errors['terms'] = qa_lang_html('users/terms_not_accepted');
 
+				// filter module validation
 				if (count($inprofile)) {
 					$filtermodules = qa_load_modules_with('filter', 'filter_profile');
 					foreach ($filtermodules as $filtermodule)
@@ -193,12 +198,11 @@
 		));
 	}
 
-	// show terms/conditions checkbox
-	$terms = qa_opt('show_register_terms') ? trim(qa_opt('register_terms')) : '';
-	if (strlen($terms)) {
+	// show T&Cs checkbox
+	if ($show_terms) {
 		$qa_content['form']['fields']['terms'] = array(
 			'type' => 'checkbox',
-			'label' => $terms,
+			'label' => trim(qa_opt('register_terms')),
 			'tags' => 'name="terms" id="terms"',
 			'value' => qa_html(@$interms),
 			'error' => qa_html(@$errors['terms']),
