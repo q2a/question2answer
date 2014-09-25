@@ -210,7 +210,7 @@
 
 		public function doctype()
 		{
-			$this->output('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">');
+			$this->output('<!DOCTYPE html>');
 		}
 
 		public function html()
@@ -234,7 +234,7 @@
 		{
 			$this->output(
 				'<head>',
-				'<meta http-equiv="content-type" content="'.$this->content['content_type'].'"/>'
+				'<meta charset="'.$this->content['charset'].'"/>'
 			);
 
 			$this->head_title();
@@ -292,18 +292,18 @@
 
 		public function head_css()
 		{
-			$this->output('<link rel="stylesheet" type="text/css" href="'.$this->rooturl.$this->css_name().'"/>');
+			$this->output('<link rel="stylesheet" href="'.$this->rooturl.$this->css_name().'"/>');
 
 			if (isset($this->content['css_src'])) {
 				foreach ($this->content['css_src'] as $css_src)
-					$this->output('<link rel="stylesheet" type="text/css" href="'.$css_src.'"/>');
+					$this->output('<link rel="stylesheet" href="'.$css_src.'"/>');
 			}
 
 			if (!empty($this->content['notices'])) {
 				$this->output(
-					'<style><!--',
+					'<style>',
 					'.qa-body-js-on .qa-notice {display:none;}',
-					'//--></style>'
+					'</style>'
 				);
 			}
 		}
@@ -356,7 +356,7 @@
 		public function body_script()
 		{
 			$this->output(
-				'<script type="text/javascript">',
+				'<script>',
 				"var b=document.getElementsByTagName('body')[0];",
 				"b.className=b.className.replace('qa-body-js-off', 'qa-body-js-on');",
 				'</script>'

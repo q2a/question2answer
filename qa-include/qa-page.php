@@ -479,9 +479,12 @@
 			$categoryids=array($categoryids);
 
 		$lastcategoryid=count($categoryids) ? end($categoryids) : null;
+		$charset = 'utf-8';
 
 		$qa_content=array(
-			'content_type' => 'text/html; charset=utf-8',
+			'content_type' => 'text/html; charset='.$charset,
+
+			'charset' => $charset,
 
 			'site_title' => qa_html(qa_opt('site_title')),
 

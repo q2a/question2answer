@@ -29,7 +29,7 @@
 	define('QA_BUILD_DATE', '2014-03-20');
 
 
-	/*
+	/**
 	 * Autoloads some Q2A classes so it's possible to use them without adding a require_once first. From version 1.7 onwards.
 	 * These loosely follow PHP-FIG's PSR-0 standard where faux namespaces are separated by underscores. This is being done
 	 * slowly and carefully to maintain backwards compatibility, and does not apply to plugins, themes, nor most of the core
