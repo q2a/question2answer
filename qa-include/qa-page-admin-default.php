@@ -281,7 +281,7 @@
 	switch ($adminsection) {
 		case 'general':
 			$subtitle = 'admin/general_title';
-			$showoptions = array('site_title', 'site_url', 'neat_urls', 'site_language', 'site_theme', 'site_theme_mobile', 'tags_or_categories', 'site_maintenance');
+			$showoptions = array('site_title', 'site_url', 'neat_urls', 'site_language', 'site_theme', 'site_theme_mobile', 'site_text_direction', 'tags_or_categories', 'site_maintenance');
 			break;
 
 		case 'emails':
@@ -1043,6 +1043,11 @@
 					}
 
 					$optionfield['suffix'] = $namehtml.' '.$authorhtml.' '.$updatehtml;
+					break;
+
+				case 'site_text_direction':
+					$directions = array('ltr'=>'LTR', 'rtl'=>'RTL');
+					qa_optionfield_make_select($optionfield, $directions, $value, 'ltr');
 					break;
 
 				case 'tags_or_categories':

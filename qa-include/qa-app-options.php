@@ -351,6 +351,7 @@
 			'show_user_points' => 1,
 			'show_user_titles' => 1,
 			'show_when_created' => 1,
+			'site_text_direction' => 'ltr',
 			'site_theme' => 'Snow',
 			'smtp_port' => 25,
 			'sort_answers_by' => 'created',

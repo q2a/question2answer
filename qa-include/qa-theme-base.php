@@ -47,15 +47,17 @@
 		protected $lines = 0;
 		protected $context = array();
 
+		protected $template;
+		protected $content;
+		protected $rooturl;
+		protected $request;
+		protected $isRTL; // (boolean) whether text direction is Right-To-Left
+
 		// whether to use new block layout in rankings (true) or fall back to tables (false)
 		protected $ranking_block_layout = false;
 
-		protected $rooturl;
-		protected $template;
-		protected $content;
-		protected $request;
 
-		public function __construct($template, $content, $rooturl, $request)
+		public function __construct($template, $content, $rooturl, $request, $textdir='ltr')
 	/*
 		Initialize the object and assign local variables
 	*/
@@ -64,15 +66,16 @@
 			$this->content = $content;
 			$this->rooturl = $rooturl;
 			$this->request = $request;
+			$this->isRTL = $textdir === 'rtl';
 		}
 
 		/**
 		 * @deprecated PHP4-style constructor deprecated from 1.7; please use proper `__construct`
 		 * function instead.
 		 */
-		public function qa_html_theme_base($template, $content, $rooturl, $request)
+		public function qa_html_theme_base($template, $content, $rooturl, $request, $textdir='ltr')
 		{
-			self::__construct($template, $content, $rooturl, $request);
+			self::__construct($template, $content, $rooturl, $request, $textdir);
 		}
 
 
