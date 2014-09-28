@@ -150,6 +150,21 @@
 			));
 	}
 
+	/**
+	 * Remove all votes assigned to a post that had been cast by the owner of the post.
+	 *
+	 * @param int $postid The post id which will be removed all votes from its owner.
+	 */
+	function qa_db_remove_owner_votes_from_post($postid)
+	{
+		qa_db_query_sub(
+			'DELETE uv FROM ^uservotes uv ' .
+			'JOIN ^posts p ' .
+			'ON uv.postid = p.postid AND uv.userid = p.userid ' .
+			'WHERE uv.postid = #', $postid
+		);
+	}
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output
