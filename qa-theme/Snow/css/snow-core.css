@@ -480,6 +480,10 @@ blockquote p {
   margin-right: -41px;
 }
 
+.qa-form-wide-error, .qa-form-tall-error {
+  color: #dd3322;
+}
+
 .qa-error {
   background: #e74c3c;
   color: white;
