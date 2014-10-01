@@ -2056,11 +2056,13 @@ input[type="submit"], button {
   width: 50px;
 }
 
+element.style {
+}
 .qa-form-tall-note {
-  background-color: #f5f7f7;
   font-size: 0.75em;
   line-height: 2em;
-  padding: 5px;
+  padding-left: 5px;
+  color: #707476;
 }
 
 .qa-form-tall-button, .qa-form-wide-button {
