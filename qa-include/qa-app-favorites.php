@@ -40,38 +40,41 @@
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
-		if ($favorite)
-			qa_db_favorite_create($userid, $entitytype, $entityid);
-		else
-			qa_db_favorite_delete($userid, $entitytype, $entityid);
+		// Make sure the user is not favoriting themselves
+		if ($entitytype != QA_ENTITY_USER || $userid != $entityid) {
+			if ($favorite)
+				qa_db_favorite_create($userid, $entitytype, $entityid);
+			else
+				qa_db_favorite_delete($userid, $entitytype, $entityid);
 
-		switch ($entitytype) {
-			case QA_ENTITY_QUESTION:
-				$action=$favorite ? 'q_favorite' : 'q_unfavorite';
-				$params=array('postid' => $entityid);
-				break;
+			switch ($entitytype) {
+				case QA_ENTITY_QUESTION:
+					$action=$favorite ? 'q_favorite' : 'q_unfavorite';
+					$params=array('postid' => $entityid);
+					break;
 
-			case QA_ENTITY_USER:
-				$action=$favorite ? 'u_favorite' : 'u_unfavorite';
-				$params=array('userid' => $entityid);
-				break;
+				case QA_ENTITY_USER:
+					$action=$favorite ? 'u_favorite' : 'u_unfavorite';
+					$params=array('userid' => $entityid);
+					break;
 
-			case QA_ENTITY_TAG:
-				$action=$favorite ? 'tag_favorite' : 'tag_unfavorite';
-				$params=array('wordid' => $entityid);
-				break;
+				case QA_ENTITY_TAG:
+					$action=$favorite ? 'tag_favorite' : 'tag_unfavorite';
+					$params=array('wordid' => $entityid);
+					break;
 
-			case QA_ENTITY_CATEGORY:
-				$action=$favorite ? 'cat_favorite' : 'cat_unfavorite';
-				$params=array('categoryid' => $entityid);
-				break;
+				case QA_ENTITY_CATEGORY:
+					$action=$favorite ? 'cat_favorite' : 'cat_unfavorite';
+					$params=array('categoryid' => $entityid);
+					break;
 
-			default:
-				qa_fatal_error('Favorite type not recognized');
-				break;
+				default:
+					qa_fatal_error('Favorite type not recognized');
+					break;
+			}
+
+			qa_report_event($action, $userid, $handle, $cookieid, $params);
 		}
-
-		qa_report_event($action, $userid, $handle, $cookieid, $params);
 	}
 
 
