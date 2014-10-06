@@ -2056,8 +2056,6 @@ input[type="submit"], button {
   width: 50px;
 }
 
-element.style {
-}
 .qa-form-tall-note {
   font-size: 0.75em;
   line-height: 2em;
@@ -4091,7 +4089,7 @@ table tr td.qa-form-tall-ok {
   background-position: center;
   background-repeat: no-repeat;
 }
-.qam-icons-info .qam-icon-item .show {
+.qam-icons-info .qam-icon-item .reshow {
   background-image: url('../images/icons/show-white.png?1404150100');
   background-position: center;
   background-repeat: no-repeat;
@@ -4100,7 +4098,7 @@ table tr td.qa-form-tall-ok {
   height: 32px;
   text-align: center;
 }
-.qam-icons-info .qam-icon-item .show:hover, .qam-icons-info .qam-icon-item .show:focus {
+.qam-icons-info .qam-icon-item .reshow:hover, .qam-icons-info .qam-icon-item .reshow:focus {
   background-image: url('../images/icons/show-white.png?1404150100');
   background-position: center;
   background-repeat: no-repeat;
