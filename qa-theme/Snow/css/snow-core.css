@@ -2340,6 +2340,7 @@ table tr td.qa-form-tall-ok {
 @media (min-width: 980px) {
   .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
     float: right;
+    clear: right;
   }
 }
 .qa-template-user .qa-part-form-activity h2, .qa-template-user .qa-part-message-list h2 {
