@@ -2247,7 +2247,6 @@ table tr td.qa-form-tall-ok {
 @media (min-width: 980px) {
   .qa-template-user .qa-part-form-profile {
     float: left;
-    min-height: 600px;
   }
 }
 .qa-template-user .qa-part-form-profile .qa-form-tall-image {
