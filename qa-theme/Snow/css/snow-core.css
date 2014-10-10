@@ -366,7 +366,7 @@ blockquote p {
 .qam-search.emerald .qa-search {
   background: #2ecc71;
   color: white;
-  padding: 10px;
+  padding: 5px;
   margin-bottom: 5px;
 }
 .qam-search.emerald .qa-search a {
@@ -1055,7 +1055,7 @@ blockquote p {
   margin-bottom: 5px;
   margin-top: 0px;
   position: relative;
-  line-height: 1.6em;
+  line-height: 1.5em;
 }
 .qa-main h1:first-of-type a {
   color: white;
