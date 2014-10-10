@@ -477,7 +477,7 @@ blockquote p {
   }
 }
 .qam-search.the-top .qa-search .qa-search-field {
-  margin-right: -41px;
+  margin-right: -40px;
 }
 
 .qa-form-wide-error, .qa-form-tall-error {
@@ -4259,15 +4259,17 @@ table tr td.qa-form-tall-ok, table tr td.qa-form-wide-ok {
 
 @media (max-width: 979px) {
   .qam-ask-search-box {
-    margin: 10px 10px 0 10px;
+    margin: 10px 0;
+    padding: 0 10px;
     *zoom: 1;
-  }
-  .qam-ask-search-box:before, .qam-ask-search-box:after {
-    content: "";
     display: table;
+    width: 100%;
   }
   .qam-ask-search-box:after {
     clear: both;
+  }
+  .qam-ask-search-box .qam-ask-mobile {
+    display: table-cell;
   }
   .qam-ask-search-box .qam-ask-mobile a {
     background: #1abc9c;
@@ -4280,8 +4282,6 @@ table tr td.qa-form-tall-ok, table tr td.qa-form-wide-ok {
     border: none;
     font-weight: normal;
     margin: 0;
-    width: 80%;
-    float: left;
   }
   .qam-ask-search-box .qam-ask-mobile a a {
     color: white;
@@ -4328,9 +4328,7 @@ table tr td.qa-form-tall-ok, table tr td.qa-form-wide-ok {
     background-position: center;
     background-color: #1abc9c;
     width: 20%;
-    height: 64px;
-    display: block;
-    float: right;
+    display: table-cell;
     border-left: 1px solid #1dd2af;
     cursor: pointer;
   }
