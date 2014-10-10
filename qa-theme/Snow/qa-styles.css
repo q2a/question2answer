@@ -89,7 +89,7 @@ form, fieldset{
 }
 input[type="text"],input[type="password"],textarea,select,checkbox,radio{
 	border:1px solid #ddd;
-	padding:5px;
+	padding:4px;
 	color:#777;
 	border-radius: 3px;
 	line-height: normal;
