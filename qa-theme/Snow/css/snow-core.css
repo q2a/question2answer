@@ -1080,7 +1080,6 @@ blockquote p {
 }
 .qa-main h1:first-of-type .qam-title-rss {
   float: right;
-  margin: 8px 0 0;
   color: #ecf0f1;
 }
 .qa-main h1:first-of-type .qam-title-rss:hover {
