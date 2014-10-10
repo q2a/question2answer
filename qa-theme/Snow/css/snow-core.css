@@ -1967,7 +1967,7 @@ td.qa-form-tall-label, td.qa-form-tall-data, td.qa-form-tall-buttons {
   margin: 0;
 }
 
-.qa-part-form-message td.qa-form-tall-ok {
+.qa-part-form-message td.qa-form-tall-ok, .qa-part-form-message td.qa-form-wide-ok {
   padding: 0;
 }
 .qa-part-form-message .qam-pm-message {
@@ -2212,7 +2212,7 @@ input[type="submit"], button {
   border: none;
 }
 
-table tr td.qa-form-tall-ok {
+table tr td.qa-form-tall-ok, table tr td.qa-form-wide-ok {
   background-color: #27ae60;
   padding: 10px;
   display: table-cell;
