@@ -680,31 +680,33 @@
 
 		public function page_title_error()
 		{
-			$favorite = @$this->content['favorite'];
+			if (isset($this->content['title'])) {
+				$favorite = isset($this->content['favorite']) ? $this->content['favorite'] : null;
 
-			if (isset($favorite))
-				$this->output('<form '.$favorite['form_tags'].'>');
+				if (isset($favorite))
+					$this->output('<form ' . $favorite['form_tags'] . '>');
 
-			$this->output('<h1>');
-			$this->favorite();
-			$this->title();
-			$this->output('</h1>');
+				$this->output('<h1>');
+				$this->favorite();
+				$this->title();
+				$this->output('</h1>');
 
-			if (isset($this->content['error']))
-				$this->error(@$this->content['error']);
-
-			if (isset($favorite)) {
-				$this->form_hidden_elements(@$favorite['form_hidden']);
-				$this->output('</form>');
+				if (isset($favorite)) {
+					$formhidden = isset($favorite['form_hidden']) ? $favorite['form_hidden'] : null;
+					$this->form_hidden_elements($formhidden);
+					$this->output('</form>');
+				}
 			}
+			if (isset($this->content['error']))
+				$this->error($this->content['error']);
 		}
 
 		public function favorite()
 		{
-			$favorite = @$this->content['favorite'];
-
+			$favorite = isset($this->content['favorite']) ? $this->content['favorite'] : null;
 			if (isset($favorite)) {
-				$this->output('<span class="qa-favoriting" '.@$favorite['favorite_tags'].'>');
+				$favoritetags = isset($favorite['favorite_tags']) ? $favorite['favorite_tags'] : '';
+				$this->output('<span class="qa-favoriting" ' . $favoritetags . '>');
 				$this->favorite_inner_html($favorite);
 				$this->output('</span>');
 			}
