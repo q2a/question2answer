@@ -177,7 +177,7 @@
 		if (isset($answerid) && !isset($answers[$answerid]))
 			qa_fatal_error('Answer ID could not be found: '.$answerid);
 
-		qa_question_set_selchildid($byuserid, $byuserid, null, $oldquestion, $answerid, $answers);
+		qa_question_set_selchildid($byuserid, $byhandle, null, $oldquestion, $answerid, $answers);
 	}
 
 
