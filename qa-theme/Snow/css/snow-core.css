@@ -366,7 +366,7 @@ blockquote p {
 .qam-search.emerald .qa-search {
   background: #2ecc71;
   color: white;
-  padding: 10px;
+  padding: 5px;
   margin-bottom: 5px;
 }
 .qam-search.emerald .qa-search a {
@@ -477,7 +477,11 @@ blockquote p {
   }
 }
 .qam-search.the-top .qa-search .qa-search-field {
-  margin-right: -41px;
+  margin-right: -40px;
+}
+
+.qa-form-wide-error, .qa-form-tall-error {
+  color: #dd3322;
 }
 
 .qa-error {
@@ -922,6 +926,15 @@ blockquote p {
   cursor: pointer;
 }
 
+#qa-rememberme {
+  vertical-align: middle;
+  margin: 0;
+}
+
+#qa-rememberbox {
+  padding-bottom: 10px;
+}
+
 .qa-nav-user {
   white-space: nowrap;
   margin: -10px;
@@ -1051,7 +1064,7 @@ blockquote p {
   margin-bottom: 5px;
   margin-top: 0px;
   position: relative;
-  line-height: 1.6em;
+  line-height: 1.5em;
 }
 .qa-main h1:first-of-type a {
   color: white;
@@ -1076,7 +1089,6 @@ blockquote p {
 }
 .qa-main h1:first-of-type .qam-title-rss {
   float: right;
-  margin: 8px 0 0;
   color: #ecf0f1;
 }
 .qa-main h1:first-of-type .qam-title-rss:hover {
@@ -1964,7 +1976,7 @@ td.qa-form-tall-label, td.qa-form-tall-data, td.qa-form-tall-buttons {
   margin: 0;
 }
 
-.qa-part-form-message td.qa-form-tall-ok {
+.qa-part-form-message td.qa-form-tall-ok, .qa-part-form-message td.qa-form-wide-ok {
   padding: 0;
 }
 .qa-part-form-message .qam-pm-message {
@@ -2013,6 +2025,9 @@ input, input[type="text"], input[type="password"], textarea, select {
   -webkit-transition-duration: 1.5s;
   transition-duration: 1.5s;
 }
+input[type="checkbox"] {
+  vertical-align: middle;
+}
 input:focus, input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
   background: #fafafa;
   border-color: #3498db;
@@ -2053,10 +2068,10 @@ input[type="submit"], button {
 }
 
 .qa-form-tall-note {
-  background-color: #f5f7f7;
   font-size: 0.75em;
   line-height: 2em;
-  padding: 5px;
+  padding-left: 5px;
+  color: #707476;
 }
 
 .qa-form-tall-button, .qa-form-wide-button {
@@ -2171,7 +2186,7 @@ input[type="submit"], button {
 .qa-form-wide-note {
   font-size: 0.75em;
   line-height: 2em;
-  color: #bdc3c7;
+  color: #707476;
 }
 
 .qa-form-tall-label, .qa-form-wide-label {
@@ -2209,7 +2224,7 @@ input[type="submit"], button {
   border: none;
 }
 
-table tr td.qa-form-tall-ok {
+table tr td.qa-form-tall-ok, table tr td.qa-form-wide-ok {
   background-color: #27ae60;
   padding: 10px;
   display: table-cell;
@@ -2243,7 +2258,6 @@ table tr td.qa-form-tall-ok {
 @media (min-width: 980px) {
   .qa-template-user .qa-part-form-profile {
     float: left;
-    min-height: 600px;
   }
 }
 .qa-template-user .qa-part-form-profile .qa-form-tall-image {
@@ -2336,6 +2350,7 @@ table tr td.qa-form-tall-ok {
 @media (min-width: 980px) {
   .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
     float: right;
+    clear: right;
   }
 }
 .qa-template-user .qa-part-form-activity h2, .qa-template-user .qa-part-message-list h2 {
@@ -4085,7 +4100,7 @@ table tr td.qa-form-tall-ok {
   background-position: center;
   background-repeat: no-repeat;
 }
-.qam-icons-info .qam-icon-item .show {
+.qam-icons-info .qam-icon-item .reshow {
   background-image: url('../images/icons/show-white.png?1404150100');
   background-position: center;
   background-repeat: no-repeat;
@@ -4094,7 +4109,7 @@ table tr td.qa-form-tall-ok {
   height: 32px;
   text-align: center;
 }
-.qam-icons-info .qam-icon-item .show:hover, .qam-icons-info .qam-icon-item .show:focus {
+.qam-icons-info .qam-icon-item .reshow:hover, .qam-icons-info .qam-icon-item .reshow:focus {
   background-image: url('../images/icons/show-white.png?1404150100');
   background-position: center;
   background-repeat: no-repeat;
@@ -4256,15 +4271,17 @@ table tr td.qa-form-tall-ok {
 
 @media (max-width: 979px) {
   .qam-ask-search-box {
-    margin: 10px 10px 0 10px;
+    margin: 10px 0;
+    padding: 0 10px;
     *zoom: 1;
-  }
-  .qam-ask-search-box:before, .qam-ask-search-box:after {
-    content: "";
     display: table;
+    width: 100%;
   }
   .qam-ask-search-box:after {
     clear: both;
+  }
+  .qam-ask-search-box .qam-ask-mobile {
+    display: table-cell;
   }
   .qam-ask-search-box .qam-ask-mobile a {
     background: #1abc9c;
@@ -4277,8 +4294,6 @@ table tr td.qa-form-tall-ok {
     border: none;
     font-weight: normal;
     margin: 0;
-    width: 80%;
-    float: left;
   }
   .qam-ask-search-box .qam-ask-mobile a a {
     color: white;
@@ -4325,9 +4340,7 @@ table tr td.qa-form-tall-ok {
     background-position: center;
     background-color: #1abc9c;
     width: 20%;
-    height: 64px;
-    display: block;
-    float: right;
+    display: table-cell;
     border-left: 1px solid #1dd2af;
     cursor: pointer;
   }
