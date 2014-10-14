@@ -926,6 +926,15 @@ blockquote p {
   cursor: pointer;
 }
 
+#qa-rememberme {
+  vertical-align: middle;
+  margin: 0;
+}
+
+#qa-rememberbox {
+  padding-bottom: 10px;
+}
+
 .qa-nav-user {
   white-space: nowrap;
   margin: -10px;
@@ -2015,6 +2024,9 @@ input, input[type="text"], input[type="password"], textarea, select {
   transition-property: all;
   -webkit-transition-duration: 1.5s;
   transition-duration: 1.5s;
+}
+input[type="checkbox"] {
+  vertical-align: middle;
 }
 input:focus, input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
   background: #fafafa;
