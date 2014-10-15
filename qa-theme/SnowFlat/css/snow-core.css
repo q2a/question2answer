@@ -418,7 +418,7 @@ blockquote p {
   margin: 0 10px 10px;
 }
 .qam-search.the-top .qa-search-field {
-  margin-right: -41px;
+  margin-right: -40px;
 }
 
 .qa-error {
@@ -1017,7 +1017,6 @@ blockquote p {
 }
 .qa-main h1:first-of-type .qam-title-rss {
   float: right;
-  margin: 8px 0 0;
   color: #ecf0f1;
 }
 .qa-main h1:first-of-type .qam-title-rss:hover {
@@ -4214,6 +4213,9 @@ input[type="submit"], button {
 }
 
 @media (max-width: 979px) {
+  .qam-ask-mobile {
+    display: table-cell;
+  }
   .qam-ask-mobile a {
     background: #1abc9c;
     color: white;
@@ -4225,8 +4227,6 @@ input[type="submit"], button {
     border: none;
     font-weight: normal;
     margin: 0;
-    width: 80%;
-    float: left;
   }
   .qam-ask-mobile a a {
     color: white;
@@ -4273,10 +4273,8 @@ input[type="submit"], button {
     background-repeat: no-repeat;
     background-position: center;
     background-color: #1abc9c;
-    width: 20%;
-    height: 64px;
-    display: block;
-    float: right;
+    width: 64px;
+    display: table-cell;
     border-left: 1px solid #1dd2af;
     cursor: pointer;
   }
