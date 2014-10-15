@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-widget-ask-box.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Widget module class for ask a question box
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -25,50 +25,24 @@
 */
 
 	class qa_ask_box {
-		
-		function allow_template($template)
+
+		public function allow_template($template)
 		{
-			$allow=false;
-			
-			switch ($template)
-			{
-				case 'activity':
-				case 'categories':
-				case 'custom':
-				case 'feedback':
-				case 'qa':
-				case 'questions':
-				case 'hot':
-				case 'search':
-				case 'tag':
-				case 'tags':
-				case 'unanswered':
-					$allow=true;
-					break;
-			}
-			
-			return $allow;
+			$allowed = array(
+				'activity', 'categories', 'custom', 'feedback', 'qa', 'questions',
+				'hot', 'search', 'tag', 'tags', 'unanswered'
+			);
+			return in_array($template, $allowed);
 		}
 
-		
-		function allow_region($region)
+
+		public function allow_region($region)
 		{
-			$allow=false;
-			
-			switch ($region)
-			{
-				case 'main':
-				case 'side':
-				case 'full':
-					$allow=true;
-					break;
-			}
-			
-			return $allow;
+			return in_array($region, array('main', 'side', 'full'));
 		}
-	
-	
-		function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+
+
+		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
 			if (isset($qa_content['categoryids']))
 				$params=array('cat' => end($qa_content['categoryids']));
@@ -87,7 +61,7 @@
 ?>
 			</tr>
 			<tr>
-<?php			
+<?php
 			}
 ?>
 				<td class="qa-form-tall-data" style="padding:8px;" width="*">
@@ -100,9 +74,9 @@
 </div>
 <?php
 		}
-	
+
 	}
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

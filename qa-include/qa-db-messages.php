@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-messages.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Database-level access to messages table for private message history
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -40,18 +40,35 @@
 			'INSERT INTO ^messages (type, fromuserid, touserid, content, format, created) VALUES ($, #, #, $, $, NOW())',
 			$public ? 'PUBLIC' : 'PRIVATE', $fromuserid, $touserid, $content, $format
 		);
-		
+
 		return qa_db_last_insert_id();
 	}
-	
 
-	function qa_db_message_delete($messageid)
+
+	function qa_db_message_user_hide($messageid, $box)
 /*
-	Delete the message with $messageid from the database
+	Hide the message with $messageid, in $box (inbox|outbox) from the user.
 */
 	{
+		$field = ($box === 'inbox' ? 'tohidden' : 'fromhidden');
+
 		qa_db_query_sub(
-			'DELETE FROM ^messages WHERE messageid=#',
+			"UPDATE ^messages SET $field=1 WHERE messageid=#",
+			$messageid
+		);
+	}
+
+
+	function qa_db_message_delete($messageid, $public=true)
+/*
+	Delete the message with $messageid from the database.
+*/
+	{
+		// delete PM only if both sender and receiver have hidden it
+		$clause = $public ? '' : ' AND fromhidden=1 AND tohidden=1';
+
+		qa_db_query_sub(
+			'DELETE FROM ^messages WHERE messageid=#'.$clause,
 			$messageid
 		);
 	}

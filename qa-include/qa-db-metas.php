@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-metas.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Database-level access to metas tables
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -38,7 +38,7 @@
 		qa_db_meta_set('usermetas', 'userid', $userid, $key, $value);
 	}
 
-	
+
 	function qa_db_usermeta_clear($userid, $key)
 /*
 	Clear the metadata for user $userid with $key ($key can also be an array of keys)
@@ -47,7 +47,7 @@
 		qa_db_meta_clear('usermetas', 'userid', $userid, $key);
 	}
 
-	
+
 	function qa_db_usermeta_get($userid, $key)
 /*
 	Return the metadata value for user $userid with $key ($key can also be an array of keys in which case this
@@ -56,7 +56,7 @@
 	{
 		return qa_db_meta_get('usermetas', 'userid', $userid, $key);
 	}
-	
+
 
 	function qa_db_postmeta_set($postid, $key, $value)
 /*
@@ -66,7 +66,7 @@
 		qa_db_meta_set('postmetas', 'postid', $postid, $key, $value);
 	}
 
-	
+
 	function qa_db_postmeta_clear($postid, $key)
 /*
 	Clear the metadata for post $postid with $key ($key can also be an array of keys)
@@ -75,7 +75,7 @@
 		qa_db_meta_clear('postmetas', 'postid', $postid, $key);
 	}
 
-	
+
 	function qa_db_postmeta_get($postid, $key)
 /*
 	Return the metadata value for post $postid with $key ($key can also be an array of keys in which case this
@@ -94,7 +94,7 @@
 		qa_db_meta_set('categorymetas', 'categoryid', $categoryid, $key, $value);
 	}
 
-	
+
 	function qa_db_categorymeta_clear($categoryid, $key)
 /*
 	Clear the metadata for category $categoryid with $key ($key can also be an array of keys)
@@ -103,7 +103,7 @@
 		qa_db_meta_clear('categorymetas', 'categoryid', $categoryid, $key);
 	}
 
-	
+
 	function qa_db_categorymeta_get($categoryid, $key)
 /*
 	Return the metadata value for category $categoryid with $key ($key can also be an array of keys in which
@@ -112,7 +112,7 @@
 	{
 		return qa_db_meta_get('categorymetas', 'categoryid', $categoryid, $key);
 	}
-	
+
 
 	function qa_db_tagmeta_set($tag, $key, $value)
 /*
@@ -122,7 +122,7 @@
 		qa_db_meta_set('tagmetas', 'tag', $tag, $key, $value);
 	}
 
-	
+
 	function qa_db_tagmeta_clear($tag, $key)
 /*
 	Clear the metadata for tag $tag with $key ($key can also be an array of keys)
@@ -131,7 +131,7 @@
 		qa_db_meta_clear('tagmetas', 'tag', $tag, $key);
 	}
 
-	
+
 	function qa_db_tagmeta_get($tag, $key)
 /*
 	Return the metadata value for tag $tag with $key ($key can also be an array of keys in which case this
@@ -142,7 +142,7 @@
 	}
 
 
-	function qa_db_meta_set($metatable, $idcolumn, $idvalue, $title, $content)	
+	function qa_db_meta_set($metatable, $idcolumn, $idvalue, $title, $content)
 /*
 	Internal general function to set metadata
 */
@@ -153,7 +153,7 @@
 		);
 	}
 
-	
+
 	function qa_db_meta_clear($metatable, $idcolumn, $idvalue, $title)
 /*
 	Internal general function to clear metadata
@@ -165,7 +165,7 @@
 					'DELETE FROM ^'.$metatable.' WHERE '.$idcolumn.'=$ AND title IN ($)',
 					$idvalue, $title
 				);
-			
+
 		} else
 			qa_db_query_sub(
 				'DELETE FROM ^'.$metatable.' WHERE '.$idcolumn.'=$ AND title=$',
@@ -173,7 +173,7 @@
 			);
 	}
 
-	
+
 	function qa_db_meta_get($metatable, $idcolumn, $idvalue, $title)
 /*
 	Internal general function to return metadata
@@ -187,7 +187,7 @@
 				), 'title', 'content');
 			else
 				return array();
-		
+
 		} else
 			return qa_db_read_one_value(qa_db_query_sub(
 				'SELECT content FROM ^'.$metatable.' WHERE '.$idcolumn.'=$ AND title=$',
@@ -195,7 +195,7 @@
 			), true);
 	}
 
-	
+
 /*
 	Omit PHP closing tag to help avoid accidental output
 */

@@ -3,7 +3,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-theme/Candy/qa-styles.css
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: CSS file for included Candy theme
@@ -13,7 +13,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -23,13 +23,13 @@
 */
 
 /*
-	Theme URI: 
+	Theme URI:
 	Theme Version: 1.5
 	Theme Date: 2012-09-11
 	Theme Author: Question2Answer
 	Theme Author URI: http://www.question2answer.org/
 	Theme License: GPLv2
-	Theme Update Check URI: 
+	Theme Update Check URI:
 */
 
 
@@ -126,7 +126,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-nav-main-item {float:left; padding-left:10px;}
 .qa-nav-main-item-opp {float:right; padding-right:10px;}
 .qa-nav-main-link {background:#efeb9c url(nav-main-bg.png) repeat-x left top; color:#597700; display:block; padding:14px 10px;}
-.qa-nav-main-link:hover,.qa-nav-main-selected {url(nav-main-sel-bg.png) repeat-x left top; border-left:1px solid #e9e697; border-right:1px solid #e9e697; color:#8d006a; padding:14px 9px; text-decoration:none;}
+.qa-nav-main-link:hover,.qa-nav-main-selected {background: url(nav-main-sel-bg.png) repeat-x left top; border-left:1px solid #e9e697; border-right:1px solid #e9e697; color:#8d006a; padding:14px 9px; text-decoration:none;}
 .qa-nav-main-hot .qa-nav-main-link {color:#c33;}
 
 .qa-nav-sub {clear:both; background:url(nav-sub-bg.png) repeat-x left top;}
@@ -267,7 +267,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 	.qa-vote-down-button {background-position:-27px 0; color:#f1c96b;}
 	.qa-vote-down-disabled {background-position:-27px -116px; color:#CCC;}
 	.qa-vote-down-button:hover {background-position:-27px -29px; color:#f1c96b;}
-	
+
 .qa-voted-up-button {background:url(vote-buttons.png); border:0; color:#f1c96b; font-size:1px; height:29px; width:27px;}
 	.qa-voted-up-button {background-position:0 -87px; color:#f1c96b;}
 	.qa-voted-up-button:hover {background-position:0 -29px; color:#f1c96b;}
@@ -305,16 +305,14 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 /* Tags, users and categories */
 
-.qa-top-tags-table {float:left; border-collapse:collapse; margin-bottom:1em;}
-.qa-top-tags-count {border:1px solid #C0B600; border-right:1px dashed #E9E697; color:#8D006A; text-align:right; padding:6px 8px 6px 12px;}
-.qa-top-tags-label {border:1px solid #C0B600; border-left:none; background:#FFFFE6; padding:4px 16px 0 8px;}
-	.qa-top-tags-label .qa-tag-link {font-weight:normal;}
-.qa-top-tags-spacer {padding:0 4px;}
+.qa-ranking-item { display:inline-block; margin:0 5px 15px 0; padding:3px; vertical-align:top; width:220px; line-height:1.3; }
+.qa-top-users-item { border:1px solid #c0b600; background:#ffffe6; }
+.qa-top-users-avatar { float:left; margin-right:6px; }
+.qa-top-users-label, .qa-top-users-score { display:block; }
 
-.qa-top-users-table {float:left; border-collapse:collapse; margin-bottom:1em;}
-.qa-top-users-label {border:1px solid #C0B600; border-right:1px dashed #c1c5a9; padding:6px 16px 6px 12px; text-align:left;}
-.qa-top-users-score {background:#ffffe6; border-color:#C0B600; border-style:solid solid solid none; border-width:1px; color:#8D006A; padding:6px 12px; text-align:right;}
-.qa-top-users-spacer {padding:0 4px;}
+.qa-top-tags-item { width:170px; border:1px solid #c0b600; background:#ffffe6; }
+.qa-top-tags-count { display:inline-block; min-width:40px; text-align:right; padding-right:3px; }
+.qa-top-tags-label { display:inline-block; }
 
 .qa-browse-cat-list {list-style:none; padding:0; margin:0; margin-left:2em;}
 .qa-browse-cat-list-1 {font-size:18px; margin-top:1em;}
@@ -448,7 +446,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-nav-footer-link {color:#FFF; text-decoration:underline !important;}
 	.qa-nav-footer-link:hover {color:#f5d495;}
 .qa-attribution {float:right;}
-	.qa-attribution a {color:#FFF; text-decoration:underline; !important;}
+	.qa-attribution a {color:#FFF; text-decoration:underline !important;}
 	.qa-attribution a:hover {color:#f5d495;}
 
 /* Classes passed to theme */

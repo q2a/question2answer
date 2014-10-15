@@ -5,7 +5,7 @@
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-page-logout.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for logout page (not much to do)
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -32,12 +32,12 @@
 
 	if (QA_FINAL_EXTERNAL_USERS)
 		qa_fatal_error('User logout is handled by external code');
-	
+
 	if (qa_is_logged_in())
 		qa_set_logged_in_user(null);
-		
+
 	qa_redirect(''); // back to home page
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output

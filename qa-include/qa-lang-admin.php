@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-lang-admin.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description: Language phrases for admin center
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -37,6 +37,7 @@
 		'add_widget_button' => 'Add Widget',
 		'add_widget_link' => ' - ^1add widget^2',
 		'admin_title' => 'Administration center',
+		'approve_user_popup' => 'Approve user',
 		'after_footer' => 'After links in footer',
 		'after_main_menu' => 'After tabs at top',
 		'after_x_tab' => 'After "^" tab',
@@ -54,6 +55,7 @@
 		'blobs_to_disk_note' => '- migrate all uploaded images and documents from the database to disk files',
 		'block_button' => 'block',
 		'block_ips_note' => 'Use a hyphen for ranges or * to match any number. Examples: 192.168.0.4 , 192.168.0.0-192.168.0.31 , 192.168.0.*',
+		'block_user_popup' => 'Block user',
 		'block_words_note' => 'Use a * to match any letters. Examples: doh (will only match exact word doh) , doh* (will match doh or dohno) , do*h (will match doh, dooh, dough).',
 		'cancel_mailing_button' => 'Cancel Mailing',
 		'categories_introduction' => 'To get started with categories, click the \'Add Category\' button.',
@@ -260,8 +262,8 @@
 		'users_title' => 'Users',
 		'users_voted' => 'Users who voted:',
 		'version_get_x' => 'get ^',
-		'version_requires_php' => '^1 requires PHP ^2', 
-		'version_requires_q2a' => '^1 requires Q2A ^2', 
+		'version_requires_php' => '^1 requires PHP ^2',
+		'version_requires_q2a' => '^1 requires Q2A ^2',
 		'version_latest_unknown' => 'latest unknown',
 		'version_latest' => 'latest',
 		'viewing_title' => 'Viewing',
@@ -273,7 +275,7 @@
 		'widget_pages_explanation' => 'Show widget in this position on the following pages:',
 		'widgets_explanation' => 'Available widgets:',
 	);
-	
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output
