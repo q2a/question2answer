@@ -42,9 +42,9 @@
 
 	$req = qa_request_part(1);
 	if ($req === null)
-		$showBox = 'inbox';
+		$showOutbox = false;
 	else if ($req === 'sent')
-		$showBox = 'outbox';
+		$showOutbox = true;
 	else
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
@@ -67,7 +67,7 @@
 	$pagesize = qa_opt('page_size_pms');
 
 	// get number of messages then actual messages for this page
-	$func = 'qa_db_messages_'.$showBox.'_selectspec';
+	$func = $showOutbox ? 'qa_db_messages_outbox_selectspec' : 'qa_db_messages_inbox_selectspec';
 	$pmSpecCount = qa_db_selectspec_count( $func('private', $loginUserId, true) );
 	$pmSpec = $func('private', $loginUserId, true, $start, $pagesize);
 
@@ -78,7 +78,7 @@
 //	Prepare content for theme
 
 	$qa_content = qa_content_prepare();
-	$qa_content['title'] = qa_lang_html('misc/pm_'.$showBox.'_title');
+	$qa_content['title'] = qa_lang_html( $showOutbox ? 'misc/pm_outbox_title' : 'misc/pm_inbox_title' );
 	$qa_content['script_rel'][] = 'qa-content/qa-user.js?'.QA_VERSION;
 
 	$qa_content['message_list'] = array(
@@ -97,12 +97,12 @@
 	);
 
 	$htmlDefaults = qa_message_html_defaults();
-	if ($showBox === 'outbox')
+	if ($showOutbox)
 		$htmlDefaults['towhomview'] = true;
 
 	foreach ($userMessages as $message) {
 		$msgFormat = qa_message_html_fields($message, $htmlDefaults);
-		$replyHandle = $showBox == 'inbox' ? $message['fromhandle'] : $message['tohandle'];
+		$replyHandle = $showOutbox ? $message['tohandle'] : $message['fromhandle'];
 
 		$msgFormat['form'] = array(
 			'style' => 'light',
@@ -112,7 +112,7 @@
 					'label' => qa_lang_html('question/reply_button'),
 				),
 				'delete' => array(
-					'tags' => 'name="m'.qa_html($message['messageid']).'_dodelete" onclick="return qa_pm_click('.qa_js($message['messageid']).', this, '.qa_js($showBox).');"',
+					'tags' => 'name="m'.qa_html($message['messageid']).'_dodelete" onclick="return qa_pm_click('.qa_js($message['messageid']).', this, '.qa_js($showOutbox ? 'outbox' : 'inbox').');"',
 					'label' => qa_lang_html('question/delete_button'),
 					'popup' => qa_lang_html('profile/delete_pm_popup'),
 				),
@@ -124,6 +124,6 @@
 
 	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
-	$qa_content['navigation']['sub'] = qa_messages_sub_navigation($showBox);
+	$qa_content['navigation']['sub'] = qa_messages_sub_navigation($showOutbox ? 'outbox' : 'inbox');
 
 	return $qa_content;
