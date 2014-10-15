@@ -291,17 +291,20 @@
 				$buttons['reopen']=array(
 					'tags' => 'name="q_doreopen"'.$clicksuffix,
 					'label' => qa_lang_html('question/reopen_button'),
+					'popup' => qa_lang_html('question/reopen_q_popup'),
 				);
 
 			if ($question['moderatable']) {
 				$buttons['approve']=array(
 					'tags' => 'name="q_doapprove"'.$clicksuffix,
 					'label' => qa_lang_html('question/approve_button'),
+					'popup' => qa_lang_html('question/approve_q_popup'),
 				);
 
 				$buttons['reject']=array(
 					'tags' => 'name="q_doreject"'.$clicksuffix,
 					'label' => qa_lang_html('question/reject_button'),
+					'popup' => qa_lang_html('question/reject_q_popup'),
 				);
 			}
 
@@ -330,6 +333,7 @@
 				$buttons['claim']=array(
 					'tags' => 'name="q_doclaim"'.$clicksuffix,
 					'label' => qa_lang_html('question/claim_button'),
+					'popup' => qa_lang_html('question/claim_q_popup'),
 				);
 
 			if ($question['answerbutton']) // don't show if shown by default
@@ -476,11 +480,13 @@
 				$buttons['approve']=array(
 					'tags' => 'name="'.$prefix.'doapprove"'.$clicksuffix,
 					'label' => qa_lang_html('question/approve_button'),
+					'popup' => qa_lang_html('question/approve_a_popup'),
 				);
 
 				$buttons['reject']=array(
 					'tags' => 'name="'.$prefix.'doreject"'.$clicksuffix,
 					'label' => qa_lang_html('question/reject_button'),
+					'popup' => qa_lang_html('question/reject_a_popup'),
 				);
 			}
 
@@ -509,6 +515,7 @@
 				$buttons['claim']=array(
 					'tags' => 'name="'.$prefix.'doclaim"'.$clicksuffix,
 					'label' => qa_lang_html('question/claim_button'),
+					'popup' => qa_lang_html('question/claim_a_popup'),
 				);
 
 			if ($answer['followable'])
@@ -598,11 +605,13 @@
 				$buttons['approve']=array(
 					'tags' => 'name="'.$prefix.'doapprove"'.$clicksuffix,
 					'label' => qa_lang_html('question/approve_button'),
+					'popup' => qa_lang_html('question/approve_c_popup'),
 				);
 
 				$buttons['reject']=array(
 					'tags' => 'name="'.$prefix.'doreject"'.$clicksuffix,
 					'label' => qa_lang_html('question/reject_button'),
+					'popup' => qa_lang_html('question/reject_c_popup'),
 				);
 			}
 
@@ -631,6 +640,7 @@
 				$buttons['claim']=array(
 					'tags' => 'name="'.$prefix.'doclaim"'.$clicksuffix,
 					'label' => qa_lang_html('question/claim_button'),
+					'popup' => qa_lang_html('question/claim_c_popup'),
 				);
 
 			if ($parent['commentbutton'] && qa_opt('show_c_reply_buttons') && ($comment['type']=='C'))
