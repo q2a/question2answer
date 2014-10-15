@@ -389,7 +389,7 @@ class qa_html_theme extends qa_html_theme_base
 		$sidebar = @$this->content['sidebar'];
 
 		if (!empty($sidebar)) {
-			$this->output('<div class="qa-sidebar emerald ' . $qam_snow->welcome_widget_color . '">');
+			$this->output('<div class="qa-sidebar wet-asphalt ' . $qam_snow->welcome_widget_color . '">');
 			$this->output_raw($sidebar);
 			$this->output('</div>', '');
 		}
@@ -608,7 +608,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function qam_search($addon_class = FALSE, $ids = FALSE)
 	{
-		$default_color = 'emerald';
+		$default_color = 'turquoise';
 
 		$id = (($ids) ? ' id="' . $ids . '"' : NULL);
 
