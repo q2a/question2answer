@@ -657,25 +657,25 @@ class qa_html_theme extends qa_html_theme_base
 	private function icons_info()
 	{
 		$icons = array(
-			'answer'  => 'Answer',
-			'comment' => 'Comment',
-			'hide'    => 'Hide',
-			'show'    => 'Show',
-			'close'   => 'Close',
-			'reopen'  => 'Re-Open',
-			'flag'    => 'Flag',
-			'unflag'  => 'Un-Flag',
-			'edit'    => 'Edit',
-			'delete'  => 'Delete',
-			'approve' => 'Approve',
-			'reject'  => 'Reject',
-			'reply'   => 'Reply',
+			'answer',
+			'comment',
+			'hide',
+			'reshow',
+			'close',
+			'reopen',
+			'flag',
+			'unflag',
+			'edit',
+			'delete',
+			'approve',
+			'reject',
+			'reply',
 		);
 
 		$icons_info = '<div class="qam-icons-info">';
 
-		foreach ($icons as $icon => $label)
-		{
+		foreach ($icons as $icon) {
+			$label = ucwords(qa_lang_html('question/' . $icon . '_button'));
 			$icons_info .= '<div class="qam-icon-item"><span class="' . $icon . '"></span> ' . $label . '</div>';
 		}
 		$icons_info .= '</div> <!-- END qam-icons-info -->';
