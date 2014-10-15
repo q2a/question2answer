@@ -112,6 +112,21 @@
 				$htmlfields['url']=$htmlfields['what_url'];
 
 			$posttype = qa_strtolower(isset($question['obasetype']) ? $question['obasetype'] : $question['basetype']);
+			switch ($posttype) {
+				case 'q':
+				default:
+					$approveKey = 'question/approve_q_popup';
+					$rejectKey = 'question/reject_q_popup';
+					break;
+				case 'a':
+					$approveKey = 'question/approve_a_popup';
+					$rejectKey = 'question/reject_a_popup';
+					break;
+				case 'c':
+					$approveKey = 'question/approve_c_popup';
+					$rejectKey = 'question/reject_c_popup';
+					break;
+			}
 
 			$htmlfields['form']=array(
 				'style' => 'light',
@@ -121,14 +136,14 @@
 					'approve' => array(
 						'tags' => 'name="admin_'.$postid.'_approve" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/approve_button'),
-						'popup' => qa_lang_html(sprintf('question/approve_%s_popup', $posttype)),
+						'popup' => qa_lang_html($approveKey),
 					),
 
 					// Possible values for popup: reject_q_popup, reject_a_popup, reject_c_popup
 					'reject' => array(
 						'tags' => 'name="admin_'.$postid.'_reject" onclick="return qa_admin_click(this);"',
 						'label' => qa_lang_html('question/reject_button'),
-						'popup' => qa_lang_html(sprintf('question/reject_%s_popup', $posttype)),
+						'popup' => qa_lang_html($rejectKey),
 					),
 				),
 			);
