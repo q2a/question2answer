@@ -60,7 +60,7 @@ class qa_html_theme extends qa_html_theme_base
 		 * If you change the theme name from `Snow` to anything, make sure to
 		 * change in below condition
 		 */
-		if (qa_opt('site_theme') === 'Snow') {
+		if (qa_opt('site_theme') === 'SnowFlat') {
 			require_once('inc/qam-snow-theme.php');
 		}
 	}
