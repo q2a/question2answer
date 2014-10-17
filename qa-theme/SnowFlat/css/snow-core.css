@@ -4200,11 +4200,12 @@ input[type="submit"], button {
 }
 @media (max-width: 979px) {
   .qam-ask-search-box {
-    margin: 10px 10px 0 10px;
+    padding: 10px 10px 0 10px;
+    display: table;
+    width: 100%;
     *zoom: 1;
   }
   .qam-ask-search-box:before, .qam-ask-search-box:after {
-    content: "";
     display: table;
   }
   .qam-ask-search-box:after {
