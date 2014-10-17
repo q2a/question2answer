@@ -1966,7 +1966,7 @@ input[type="submit"], button {
   text-align: center;
 }
 
-.qa-part-form {
+.qa-part-form, .qa-part-form-2 {
   background: white;
   padding: 20px;
   margin-bottom: 5px;
@@ -1987,7 +1987,7 @@ input[type="submit"], button {
   padding: 5px;
 }
 
-.qa-form-tall-button, .qa-form-wide-button {
+.qa-form-tall-button, .qa-form-wide-button, .qa-part-form-2 input[type="submit"] {
   padding: 10px 15px;
   text-transform: capitalize;
   border: none;
