@@ -2154,18 +2154,10 @@ input[type="submit"], button {
 }
 
 /*------[ users ]------*/
-.qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list, .qa-part-form-password {
-  background: white;
-  padding: 20px;
-  margin-bottom: 5px;
-  font-size: 0.875em;
-  line-height: 1.71429em;
-}
-
 .qa-template-user .qa-main {
   width: 100%;
 }
-.qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+.qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list, .qa-part-form-password {
   background: white;
   padding: 20px;
   margin-bottom: 5px;
