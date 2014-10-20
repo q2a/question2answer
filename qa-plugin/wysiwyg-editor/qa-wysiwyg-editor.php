@@ -151,8 +151,9 @@ class qa_wysiwyg_editor
 				"	removeDialogTabs: 'image:advanced;link:advanced;table:advanced',",
 				// Use native spell checking (note: Ctrl+right-click is required for native context menu).
 				"	disableNativeSpellChecker: false,",
-				// Set language (note: appropriate language file must be extracted from ckeditor/lang/languages.zip).
-				"	defaultLanguage: " . qa_js(qa_opt('site_language')) . ",",
+				// Set language, falling back to English if not available (see CUSTOMIZE.md for how to add your language to the editor).
+				"	defaultLanguage: 'en',",
+				"	language: " . qa_js(qa_opt('site_language')) . ",",
 
 				// File uploads
 				($uploadimages ? "	filebrowserImageUploadUrl: $imageUploadUrl," : ""),
