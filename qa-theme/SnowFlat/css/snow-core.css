@@ -1966,7 +1966,7 @@ input[type="submit"], button {
   text-align: center;
 }
 
-.qa-part-form {
+.qa-part-form, .qa-part-form-2 {
   background: white;
   padding: 20px;
   margin-bottom: 5px;
@@ -1987,7 +1987,7 @@ input[type="submit"], button {
   padding: 5px;
 }
 
-.qa-form-tall-button, .qa-form-wide-button {
+.qa-form-tall-button, .qa-form-wide-button, .qa-part-form-2 input[type="submit"] {
   padding: 10px 15px;
   text-transform: capitalize;
   border: none;
@@ -2154,18 +2154,10 @@ input[type="submit"], button {
 }
 
 /*------[ users ]------*/
-.qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list, .qa-part-form-password {
-  background: white;
-  padding: 20px;
-  margin-bottom: 5px;
-  font-size: 0.875em;
-  line-height: 1.71429em;
-}
-
 .qa-template-user .qa-main {
   width: 100%;
 }
-.qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+.qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list, .qa-part-form-password {
   background: white;
   padding: 20px;
   margin-bottom: 5px;
@@ -4200,11 +4192,12 @@ input[type="submit"], button {
 }
 @media (max-width: 979px) {
   .qam-ask-search-box {
-    margin: 10px 10px 0 10px;
+    padding: 10px 10px 0 10px;
+    display: table;
+    width: 100%;
     *zoom: 1;
   }
   .qam-ask-search-box:before, .qam-ask-search-box:after {
-    content: "";
     display: table;
   }
   .qam-ask-search-box:after {
