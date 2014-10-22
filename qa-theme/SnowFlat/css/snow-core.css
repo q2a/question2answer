@@ -207,7 +207,7 @@ blockquote p {
 
 .qa-search-field {
   margin: 0 -40px 0 0;
-  padding-right: 40px;
+  padding: 0 40px 0 0;
   vertical-align: bottom;
   width: 100%;
   height: 36px;
@@ -460,7 +460,8 @@ blockquote p {
   font-weight: bold;
   border-bottom: none;
 }
-.qa-notice .qa-notice-close-button {
+
+.qa-notice-close-button {
   margin: 0;
   float: right;
   width: 24px;
@@ -478,7 +479,7 @@ blockquote p {
   -webkit-transition-duration: 0.5s;
   transition-duration: 0.5s;
 }
-.qa-notice .qa-notice-close-button:hover, .qa-notice .qa-notice-close-button:focus {
+.qa-notice-close-button:hover, .qa-notice-close-button:focus {
   background-image: url('../images/icons/close-red.png?1405770460');
   outline: none;
   border: none;
@@ -985,7 +986,8 @@ blockquote p {
   overflow: hidden;
   *zoom: 1;
 }
-.qa-main h1:first-of-type {
+
+h1 {
   background: #3498db;
   color: white;
   padding: 8px 10px;
@@ -994,73 +996,79 @@ blockquote p {
   position: relative;
   line-height: 1.5em;
 }
-.qa-main h1:first-of-type a {
+h1 a {
   color: white;
   font-weight: bold;
   border-bottom: 2px dotted white;
 }
-.qa-main h1:first-of-type a:hover {
+h1 a:hover {
   color: white;
   font-weight: bold;
   border-bottom: none;
 }
-.qa-main h1:first-of-type a {
+h1 a {
   line-height: inherit;
   border: none;
   text-decoration: none;
   opacity: 0.85;
 }
-.qa-main h1:first-of-type a:hover, .qa-main h1:first-of-type a:focus, .qa-main h1:first-of-type a:visited {
+h1 a:hover, h1 a:focus, h1 a:visited {
   line-height: inherit !important;
   color: white;
   opacity: 1;
 }
-.qa-main h1:first-of-type .qam-title-rss {
+
+.qam-title-rss {
   float: right;
   color: #ecf0f1;
 }
-.qa-main h1:first-of-type .qam-title-rss:hover {
+.qam-title-rss:hover {
   color: white;
 }
-.qa-main h1:first-of-type .qam-title-rss:before {
+.qam-title-rss:before {
   width: auto !important;
 }
-.qa-main .entry-content table, .qa-main .qa-c-item-content table {
+
+[class^="qa-category-"] h1, [class*="qa-category-"] h1, .qa-template-tag h1 {
+  padding-right: 52px !important;
+}
+
+.entry-content table, .qa-c-item-content table {
   width: 100%;
-  text-align: left;
   border-collapse: collapse;
   border: 1px solid #ecf0f1;
   font-size: 14px;
   margin-bottom: 20px;
 }
-.qa-main .entry-content table tr:hover, .qa-main .qa-c-item-content table tr:hover {
+.entry-content tr:hover, .qa-c-item-content tr:hover {
   background-color: #ecf0f1;
 }
-.qa-main .entry-content table tr th, .qa-main .entry-content table tr td, .qa-main .qa-c-item-content table tr th, .qa-main .qa-c-item-content table tr td {
+.entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
   padding: 10px;
   border-width: 1px;
   border-style: solid;
+  text-align: left;
 }
-.qa-main .entry-content table tr th, .qa-main .qa-c-item-content table tr th {
+.entry-content th, .qa-c-item-content th {
   background-color: #bdc3c7;
   border-color: #95a5a6;
   font-weight: 700;
 }
-.qa-main .entry-content table tr td, .qa-main .qa-c-item-content table tr td {
+.entry-content td, .qa-c-item-content td {
   border-color: #ecf0f1;
 }
-.qa-main .entry-content ul, .qa-main .qa-c-item-content ul {
+.entry-content ul, .qa-c-item-content ul {
   margin: 20px 0;
   padding: 0;
   list-style-position: outside;
 }
-.qa-main .entry-content ul li, .qa-main .qa-c-item-content ul li {
+.entry-content ul > li, .qa-c-item-content ul > li {
   list-style: none;
   margin: 10px 0;
   position: relative;
   padding-left: 1.6em;
 }
-.qa-main .entry-content ul li:before, .qa-main .qa-c-item-content ul li:before {
+.entry-content ul > li:before, .qa-c-item-content ul > li:before {
   font-family: "fontello";
   font-style: normal;
   font-weight: normal;
@@ -1079,21 +1087,22 @@ blockquote p {
   line-height: 1em;
   margin-left: .2em;
 }
-.qa-main .entry-content ul li ul, .qa-main .qa-c-item-content ul li ul {
+.entry-content ul > li > ul, .qa-c-item-content ul > li > ul {
   margin-left: 20px;
 }
-.qa-main .entry-content ol, .qa-main .qa-c-item-content ol {
+.entry-content ol, .qa-c-item-content ol {
   margin: 20px 0 20px 20px;
   padding: 0;
   list-style-position: outside;
 }
-.qa-main .entry-content ol li, .qa-main .qa-c-item-content ol li {
+.entry-content ol > li, .qa-c-item-content ol > li {
   margin: 10px 0;
 }
-.qa-main .entry-content ol li ol, .qa-main .qa-c-item-content ol li ol {
+.entry-content ol > li > ol, .qa-c-item-content ol > li > ol {
   margin-left: 40px;
 }
-.qa-main .qa-waiting {
+
+.qa-waiting {
   background: url('../images/spinner-icon-14x14.gif?1410117644') no-repeat center;
   display: inline-block;
   font-size: 0;
@@ -1102,12 +1111,21 @@ blockquote p {
   vertical-align: middle;
   width: 14px;
 }
-.qa-main .qa-favoriting {
+
+.qa-favoriting {
   position: absolute;
   right: 10px;
   top: 5px;
 }
-.qa-main .qa-favoriting .qa-favorite-button, .qa-main .qa-favoriting .qa-unfavorite-button {
+.qa-favoriting .qa-waiting {
+  left: 50%;
+  margin: -7px 0 0 -7px;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+}
+
+.qa-favorite-button, .qa-unfavorite-button {
   background-image: url('../images/star.png?1407059306');
   background-repeat: no-repeat;
   width: 38px;
@@ -1119,7 +1137,7 @@ blockquote p {
   -webkit-transition-duration: 0s;
   transition-duration: 0s;
 }
-.qa-main .qa-favoriting .qa-favorite-button:hover, .qa-main .qa-favoriting .qa-unfavorite-button:hover {
+.qa-favorite-button:hover, .qa-unfavorite-button:hover {
   background-color: #f39c12;
   background-position: center -38px;
   -webkit-transition-property: background-position;
@@ -1127,24 +1145,15 @@ blockquote p {
   -webkit-transition-duration: 0s;
   transition-duration: 0s;
 }
-.qa-main .qa-favoriting .qa-favorite-button {
+
+.qa-favorite-button {
   background-color: #ecf0f1;
   background-position: center top;
 }
-.qa-main .qa-favoriting .qa-unfavorite-button {
+
+.qa-unfavorite-button {
   background-color: #f1c40f;
   background-position: center bottom;
-}
-.qa-main .qa-favoriting .qa-waiting {
-  left: 50%;
-  margin: -7px 0 0 -7px;
-  padding: 0;
-  position: absolute;
-  top: 50%;
-}
-
-[class^="qa-category-"] .qa-main h1:first-of-type, [class*="qa-category-"] .qa-main h1:first-of-type, .qa-template-tag .qa-main h1:first-of-type {
-  padding-right: 52px !important;
 }
 
 /*------[ qa list parts ]------*/
