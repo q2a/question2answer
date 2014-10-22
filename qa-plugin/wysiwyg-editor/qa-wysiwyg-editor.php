@@ -151,7 +151,7 @@ class qa_wysiwyg_editor
 				"	removeDialogTabs: 'image:advanced;link:advanced;table:advanced',",
 				// Use native spell checking (note: Ctrl+right-click is required for native context menu).
 				"	disableNativeSpellChecker: false,",
-				// Set language, falling back to English if not available (see CUSTOMIZE.md for how to add your language to the editor).
+				// Set language to Q2A site language, falling back to English if not available.
 				"	defaultLanguage: 'en',",
 				"	language: " . qa_js(qa_opt('site_language')) . ",",
 
