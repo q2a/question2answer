@@ -1966,10 +1966,13 @@ input[type="submit"], button {
   text-align: center;
 }
 
-.qa-part-form {
+.qa-part-form, .qa-part-form-2 {
   background: white;
   padding: 20px;
   margin-bottom: 5px;
+}
+.qa-part-form > h2:first-child, .qa-part-form-2 > h2:first-child {
+  margin-top: 0;
 }
 
 .qa-form-tall-text {
@@ -1987,7 +1990,7 @@ input[type="submit"], button {
   padding: 5px;
 }
 
-.qa-form-tall-button, .qa-form-wide-button {
+.qa-form-tall-button, .qa-form-wide-button, .qa-form-basic-button {
   padding: 10px 15px;
   text-transform: capitalize;
   border: none;
@@ -1997,31 +2000,31 @@ input[type="submit"], button {
   background: #3498db;
   color: white;
 }
-.qa-form-tall-button:hover, .qa-form-tall-button:focus, .qa-form-wide-button:hover, .qa-form-wide-button:focus {
+.qa-form-tall-button:hover, .qa-form-tall-button:focus, .qa-form-wide-button:hover, .qa-form-wide-button:focus, .qa-form-basic-button:hover, .qa-form-basic-button:focus {
   border: none;
   outline: none;
   -webkit-transition-duration: 0s;
   transition-duration: 0s;
 }
-.qa-form-tall-button a, .qa-form-wide-button a {
+.qa-form-tall-button a, .qa-form-wide-button a, .qa-form-basic-button a {
   -webkit-transition-duration: 0s;
   transition-duration: 0s;
 }
-.qa-form-tall-button a:hover, .qa-form-wide-button a:hover {
+.qa-form-tall-button a:hover, .qa-form-wide-button a:hover, .qa-form-basic-button a:hover {
   -webkit-transition-duration: 0s;
   transition-duration: 0s;
 }
-.qa-form-tall-button:hover, .qa-form-tall-button:focus, .qa-form-wide-button:hover, .qa-form-wide-button:focus {
+.qa-form-tall-button:hover, .qa-form-tall-button:focus, .qa-form-wide-button:hover, .qa-form-wide-button:focus, .qa-form-basic-button:hover, .qa-form-basic-button:focus {
   background-color: #4aa3df;
 }
-.qa-form-tall-button a, .qa-form-wide-button a {
+.qa-form-tall-button a, .qa-form-wide-button a, .qa-form-basic-button a {
   color: white;
 }
-.qa-form-tall-button a:hover, .qa-form-wide-button a:hover {
+.qa-form-tall-button a:hover, .qa-form-wide-button a:hover, .qa-form-basic-button a:hover {
   color: white;
 }
 @media (max-width: 767px) {
-  .qa-form-tall-button, .qa-form-wide-button {
+  .qa-form-tall-button, .qa-form-wide-button, .qa-form-basic-button {
     width: 100%;
     display: block;
     margin-bottom: 1em !important;
@@ -2164,13 +2167,6 @@ input[type="submit"], button {
 
 .qa-template-user .qa-main {
   width: 100%;
-}
-.qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
-  background: white;
-  padding: 20px;
-  margin-bottom: 5px;
-  font-size: 0.875em;
-  line-height: 1.71429em;
 }
 @media (min-width: 980px) {
   .qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
@@ -4200,15 +4196,9 @@ input[type="submit"], button {
 }
 @media (max-width: 979px) {
   .qam-ask-search-box {
-    margin: 10px 10px 0 10px;
-    *zoom: 1;
-  }
-  .qam-ask-search-box:before, .qam-ask-search-box:after {
-    content: "";
+    padding: 10px 10px 0 10px;
     display: table;
-  }
-  .qam-ask-search-box:after {
-    clear: both;
+    width: 100%;
   }
 }
 
