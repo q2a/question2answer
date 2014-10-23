@@ -1,0 +1,465 @@
+/*
+    Snow Theme for Question2Answer
+    Copyright (C) 2014  Q2A Market <http://www.q2amarket.com>
+
+    File:           snow-core-rtl.css
+    Version:        Snow 1.4
+    Description:    Snow theme core stylesheet for RTL version
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/*------[ variables css ]------*/
+/*------[ mixins ]------*/
+body {
+  direction: rtl;
+}
+
+pre {
+  border-left: 0;
+  border-right: 11px solid #3498db;
+  margin: 1.7em 0.3em 1.7em 0;
+  padding: 0.1em 0.7em 0.3em 0.5em;
+}
+
+blockquote {
+  border-left: 0;
+  border-right: 11px solid #3498db;
+}
+
+.qa-search-field {
+  margin: 0 0 0 -40px;
+  padding: 0 0 0 40px;
+}
+
+.qa-search-button {
+  position: relative;
+}
+
+.qam-title-rss {
+  float: left;
+}
+
+.entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
+  text-align: left;
+}
+.entry-content ul > li:before, .qa-c-item-content ul > li:before {
+  right: 0;
+}
+
+[class^="qa-category-"] h1, [class*="qa-category-"] h1, .qa-template-tag h1 {
+  padding-left: 52px !important;
+}
+
+@media (max-width: 979px) {
+  .qam-search-mobile {
+    border-left: 0;
+    border-right: 1px solid #1dd2af;
+  }
+  .qam-search-mobile.orange {
+    border-right-color: #f4a62a;
+  }
+  .qam-search-mobile.carrot {
+    border-right-color: #e98b39;
+  }
+  .qam-search-mobile.alizarin {
+    border-right-color: #ea6153;
+  }
+  .qam-search-mobile.turquoise {
+    border-right-color: #1dd2af;
+  }
+  .qam-search-mobile.emerald {
+    border-right-color: #40d47e;
+  }
+  .qam-search-mobile.peter-river {
+    border-right-color: #4aa3df;
+  }
+  .qam-search-mobile.amethyst {
+    border-right-color: #a66bbe;
+  }
+  .qam-search-mobile.wet-asphalt {
+    border-right-color: #3d566e;
+  }
+}
+@media (max-width: 979px) {
+  .qam-main-nav-wrapper .qam-menu-toggle {
+    float: right;
+    margin-left: 10px;
+  }
+}
+
+.qa-logo {
+  margin-left: 1px;
+}
+@media (min-width: 980px) {
+  .qa-logo {
+    float: right;
+  }
+}
+
+@media (max-width: 979px) {
+  .qa-nav-main {
+    right: 0;
+  }
+}
+@media (min-width: 980px) {
+  .qa-nav-main {
+    float: right;
+  }
+}
+
+@media (min-width: 980px) {
+  .qa-nav-main-item {
+    float: right;
+  }
+}
+
+@media (min-width: 980px) {
+  .qa-nav-main-item-opp {
+    float: left;
+  }
+}
+.qa-nav-main-item-opp:last-child {
+  margin-left: 0;
+  margin-right: 50px;
+}
+
+@media (max-width: 979px) {
+  .qa-nav-sub-item {
+    float: right;
+  }
+}
+
+@media (max-width: 979px) {
+  .qam-account-items-wrapper {
+    left: 8px;
+  }
+}
+@media (min-width: 980px) {
+  .qam-account-items-wrapper {
+    float: left;
+  }
+}
+
+.qam-account-items-wrapper .qam-account-items {
+  left: 0;
+  top: 52px;
+}
+
+.qa-nav-user .qa-logged-in:before {
+  margin: 0 0 0 10px;
+}
+.qa-nav-user .qam-logged-in-points:before {
+  margin: 0 0 0 10px;
+}
+
+.qa-nav-user-item.qa-nav-user-updates:before {
+  margin: 0 0 0 10px;
+}
+.qa-nav-user-item.qa-nav-user-logout:before {
+  margin: 0 0 0 10px;
+}
+
+.qa-q-list-item.qa-q-favorited {
+  border-right: 1px solid #8e44ad;
+}
+
+.qa-q-item-stats {
+  float: right;
+}
+
+@media (min-width: 800px) {
+  .qa-voting {
+    float: right;
+  }
+}
+
+@media (min-width: 800px) {
+  .qa-a-count, .qa-view-count {
+    float: right;
+  }
+}
+
+.qa-q-item-main {
+  float: right;
+  padding-right: 10px;
+}
+@media (max-width: 240px) {
+  .qa-q-item-main {
+    padding-right: 0;
+  }
+}
+
+.qa-q-item-title .qam-q-list-close-icon {
+  float: right;
+  margin: 5px 0 0 5px;
+}
+
+.qa-q-item-avatar {
+  margin: 0 0 0 5px;
+}
+@media (min-width: 480px) {
+  .qa-q-item-avatar {
+    float: right;
+  }
+}
+
+.qa-q-item-meta {
+  float: right;
+}
+.qa-q-item-meta .qa-category-link.qa-cat-favorited {
+  padding-right: 14px;
+}
+.qa-q-item-meta .qa-category-link.qa-cat-favorited:before {
+  right: 0;
+}
+.qa-q-item-meta .qa-user-link.qa-user-favorited {
+  padding-right: 14px;
+}
+.qa-q-item-meta .qa-user-link.qa-user-favorited:before {
+  right: 0;
+}
+
+.qa-tag-link.qa-tag-favorited, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited, .qa-widget-side > div > a.qa-tag-favorited {
+  padding-right: 25px;
+}
+.qa-tag-link.qa-tag-favorited:before, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before, .qa-widget-side > div > a.qa-tag-favorited:before {
+  right: 0;
+}
+
+.qa-template-users .qa-top-users-label .qa-user-link, .qa-template-favorites .qa-top-users-label .qa-user-link {
+  float: right;
+}
+@media (min-width: 980px) {
+  .qa-template-users .qa-top-users-label .qa-user-link:hover:after, .qa-template-users .qa-top-users-label .qa-user-link:focus:after, .qa-template-favorites .qa-top-users-label .qa-user-link:hover:after, .qa-template-favorites .qa-top-users-label .qa-user-link:focus:after {
+    -ms-transform: translate(-80px, 0);
+    -webkit-transform: translate(-80px, 0);
+    transform: translate(-80px, 0);
+  }
+}
+.qa-template-users .qa-top-users-label .qa-user-link:before, .qa-template-favorites .qa-top-users-label .qa-user-link:before {
+  right: -5px;
+  border-left: 5px solid #e74c3c;
+}
+@media (min-width: 980px) {
+  .qa-template-users .qa-top-users-label .qa-user-link:after, .qa-template-favorites .qa-top-users-label .qa-user-link:after {
+    left: 0;
+    border-right: 7px solid #e74c3c;
+  }
+}
+.qa-template-users .qa-top-users-label .qa-user-link.qa-user-favorited, .qa-template-favorites .qa-top-users-label .qa-user-link.qa-user-favorited {
+  padding-right: 22px;
+}
+.qa-template-users .qa-avatar-link, .qa-template-favorites .qa-avatar-link {
+  float: right;
+  margin-left: 1em;
+}
+.qa-template-users .qam-user-score-icon, .qa-template-favorites .qam-user-score-icon {
+  padding: 2px 1.8em 2px 6px;
+  float: left;
+}
+.qa-template-users .qam-user-score-icon:before, .qa-template-favorites .qam-user-score-icon:before {
+  right: 0;
+}
+
+.qa-template-categories ul.qa-browse-cat-list li.qa-browse-cat-item .qa-browse-cat-link:before, .qa-template-favorites ul.qa-browse-cat-list li.qa-browse-cat-item .qa-browse-cat-link:before {
+  left: -5px;
+  border-right: 5px solid #c0392b;
+}
+.qa-template-categories ul.qa-browse-cat-list li.qa-browse-cat-item .qa-browse-cat-note a, .qa-template-favorites ul.qa-browse-cat-list li.qa-browse-cat-item .qa-browse-cat-note a {
+  left: 5px;
+  padding: 2px 2em 2px 10px;
+}
+.qa-template-categories ul.qa-browse-cat-list li.qa-browse-cat-item .qa-browse-cat-note a:before, .qa-template-favorites ul.qa-browse-cat-list li.qa-browse-cat-item .qa-browse-cat-note a:before {
+  right: 0;
+}
+
+@media (min-width: 980px) {
+  .qa-template-user .qa-part-form-profile {
+    float: right;
+  }
+}
+@media (min-width: 980px) {
+  .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+    float: left;
+  }
+}
+
+.qa-form-light-button {
+  float: left;
+  margin: 0 5px 0 0;
+}
+
+.qa-form-light-button-answer {
+  float: right;
+  margin: 0 0 0 5px;
+}
+
+.qa-form-light-button-comment {
+  float: right;
+}
+
+.qa-template-question h1:first-of-type img.qam-q-view-close-icon {
+  float: right;
+  margin: 8px 0 5px 0;
+}
+.qa-template-question .qa-q-view-stats {
+  float: right;
+}
+
+.qa-part-q-view .qa-q-view-avatar {
+  left: 20px;
+}
+@media (max-width: 979px) {
+  .qa-part-q-view .qa-q-view-meta {
+    clear: right;
+  }
+}
+@media (min-width: 980px) {
+  .qa-part-q-view .qa-q-view-main {
+    float: right;
+    margin: 0 20px 0 0;
+  }
+}
+.qa-part-q-view .qa-q-view-closed {
+  padding: 10px 54px 10px 10px;
+}
+.qa-part-q-view .qa-q-view-closed:before {
+  right: 0;
+}
+.qa-part-q-view .qa-q-view-closed:hover {
+  background: #e74c3c;
+  color: white;
+  padding: 10px 54px 10px 10px;
+  margin-bottom: 5px;
+}
+.qa-part-q-view .qa-q-view-closed:hover a {
+  color: white;
+  font-weight: bold;
+  border-bottom: 2px dotted white;
+}
+.qa-part-q-view .qa-q-view-closed:hover a:hover {
+  color: white;
+  font-weight: bold;
+  border-bottom: none;
+}
+
+@media (min-width: 980px) {
+  .qa-a-list .qa-a-item-main {
+    float: right;
+    margin: 0 20px 0 0;
+  }
+}
+.qa-a-list .qa-a-item-avatar {
+  left: 20px;
+}
+.qa-a-list .qa-a-selection {
+  position: absolute;
+}
+@media (max-width: 979px) {
+  .qa-a-list .qa-a-selection {
+    right: 100px;
+  }
+}
+@media (min-width: 980px) {
+  .qa-a-list .qa-a-selection {
+    right: 20px;
+  }
+}
+.qa-a-list .qa-a-selection .qa-waiting {
+  right: 50%;
+  margin: -7px -7px 0 0;
+}
+
+.qa-c-list-item .qa-form-light-button {
+  float: left;
+  margin: 0 5px 0 0;
+}
+.qa-c-list-item .qa-form-light-button-comment {
+  float: right;
+}
+
+.qa-c-item-avatar {
+  left: 10px;
+}
+
+.qa-activity-count .qa-activity-count-item {
+  float: right;
+}
+
+.qa-nav-cat ul .qa-nav-cat-item .qa-nav-cat-link.qa-nav-cat-favorited {
+  padding-right: 20px;
+}
+.qa-nav-cat ul .qa-nav-cat-item .qa-nav-cat-link.qa-nav-cat-favorited:before {
+  right: 0;
+}
+.qa-nav-cat ul .qa-nav-cat-item .qa-nav-cat-note {
+  float: left;
+}
+
+.qa-feed .qa-feed-link:before {
+  float: right;
+  margin-left: 15px;
+}
+
+@media (min-width: 980px) {
+  .qam-footer-col {
+    float: right;
+  }
+}
+
+@media (min-width: 480px) {
+  .qa-nav-footer {
+    float: right;
+  }
+}
+.qa-nav-footer .qa-nav-footer-list .qa-nav-footer-item {
+  float: right;
+}
+.qa-nav-footer .qa-nav-footer-list .qa-nav-footer-item a.qa-nav-footer-link {
+  padding: 0 0 0 5px;
+  border-width: 0 0 0 1px;
+}
+
+@media (min-width: 480px) {
+  .qa-attribution {
+    float: left;
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+  }
+}
+
+@media (min-width: 480px) {
+  .qam-attribution {
+    float: left;
+    padding: 0 5px 0 0;
+  }
+}
+
+.qam-icons-info .qam-icon-item {
+  border-left: 1px solid #354b60;
+}
+.qam-icons-info .qam-icon-item:first-child {
+  border-right: 1px solid #354b60;
+}
+
+@media (min-width: 980px) {
+  .qa-main {
+    float: right;
+  }
+}
+
+@media (min-width: 980px) {
+  .qa-sidepanel {
+    float: left;
+  }
+}
