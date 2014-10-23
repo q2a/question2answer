@@ -417,9 +417,6 @@ blockquote p {
   display: none;
   margin: 0 10px 10px;
 }
-.qam-search.the-top .qa-search-field {
-  margin-right: -40px;
-}
 
 .qa-error {
   background: #e74c3c;
@@ -898,7 +895,7 @@ blockquote p {
   line-height: normal;
 }
 .qa-nav-user .qa-logged-in {
-  display: blcok;
+  display: block;
   padding: 10px 20px;
   border-bottom: 1px solid #2c3e50;
 }
@@ -1738,7 +1735,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 .qa-template-users .qa-avatar-link img, .qa-template-favorites .qa-avatar-link img {
   border: 1px solid #cbd7e3;
 }
-.qa-template-users .qam-usre-score-icon, .qa-template-favorites .qam-usre-score-icon {
+.qa-template-users .qam-user-score-icon, .qa-template-favorites .qam-user-score-icon {
   display: inline-block;
   padding: 2px 6px 2px 1.8em;
   background-color: #2ecc71;
@@ -1746,7 +1743,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
   position: relative;
   float: right;
 }
-.qa-template-users .qam-usre-score-icon:before, .qa-template-favorites .qam-usre-score-icon:before {
+.qa-template-users .qam-user-score-icon:before, .qa-template-favorites .qam-user-score-icon:before {
   background-color: #27ae60;
   content: '\e810';
   font-family: "fontello";

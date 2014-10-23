@@ -346,7 +346,8 @@
 
 		public function body_hidden()
 		{
-			$this->output('<div style="position:absolute; left:-9999px; top:-9999px;">');
+			$indent = $this->isRTL ? '9999px' : '-9999px';
+			$this->output('<div style="position:absolute; left:'.$indent.'; top:-9999px;">');
 			$this->waiting_template();
 			$this->output('</div>');
 		}
