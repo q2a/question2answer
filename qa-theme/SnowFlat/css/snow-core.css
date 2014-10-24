@@ -2453,6 +2453,12 @@ input[type="submit"], button {
   transition-duration: 0s;
   background: #2c3e50;
   color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  text-indent: -9999px;
   float: right;
   display: block;
   margin: 0 0 0 5px;
@@ -2480,234 +2486,118 @@ input[type="submit"], button {
 .qa-form-light-button a:hover {
   color: white;
 }
+.qa-form-light-button:hover, .qa-form-light-button:focus {
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
 .qa-form-light-button-edit, .qa-form-light-button-retagcat {
   background-image: url('../images/icons/edit-white.png?1404150090');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-edit:hover, .qa-form-light-button-edit:focus, .qa-form-light-button-retagcat:hover, .qa-form-light-button-retagcat:focus {
   background-image: url('../images/icons/edit-white.png?1404150090');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-flag {
   background-image: url('../images/icons/flag-white.png?1404150096');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-flag:hover, .qa-form-light-button-flag:focus {
   background-image: url('../images/icons/flag-white.png?1404150096');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-unflag, .qa-form-light-button-clearflags {
   background-image: url('../images/icons/un-flag-white.png?1404150136');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-unflag:hover, .qa-form-light-button-unflag:focus, .qa-form-light-button-clearflags:hover, .qa-form-light-button-clearflags:focus {
   background-image: url('../images/icons/un-flag-white.png?1404150136');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-hide {
   background-image: url('../images/icons/hide-white.png?1404150104');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-hide:hover, .qa-form-light-button-hide:focus {
   background-image: url('../images/icons/hide-white.png?1404150104');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-follow {
   background-image: url('../images/icons/link-white.png?1404150108');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-follow:hover, .qa-form-light-button-follow:focus {
   background-image: url('../images/icons/link-white.png?1404150108');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-reshow {
   background-image: url('../images/icons/show-white.png?1404150100');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-reshow:hover, .qa-form-light-button-reshow:focus {
   background-image: url('../images/icons/show-white.png?1404150100');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-claim {
   background-image: url('../images/icons/claim-white.png?1404150132');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-claim:hover, .qa-form-light-button-claim:focus {
   background-image: url('../images/icons/claim-white.png?1404150132');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-delete {
   background-image: url('../images/icons/delete-white.png?1404150126');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-delete:hover, .qa-form-light-button-delete:focus {
   background-image: url('../images/icons/delete-white.png?1404150126');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-approve {
   background-image: url('../images/icons/approve-white.png?1404150364');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
   padding-left: 18px;
 }
 .qa-form-light-button-approve:hover, .qa-form-light-button-approve:focus {
   background-image: url('../images/icons/approve-white.png?1404150364');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-reject {
   background-image: url('../images/icons/rejected-white.png?1404150412');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-reject:hover, .qa-form-light-button-reject:focus {
   background-image: url('../images/icons/rejected-white.png?1404150412');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-close {
   background-image: url('../images/icons/close-white.png?1404150114');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-close:hover, .qa-form-light-button-close:focus {
   background-image: url('../images/icons/close-white.png?1404150114');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-reopen {
   background-image: url('../images/icons/open-white.png?1404150118');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-reopen:hover, .qa-form-light-button-reopen:focus {
   background-image: url('../images/icons/open-white.png?1404150118');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-block {
   background-image: url('../images/icons/rejected-white.png?1404150412');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-block:hover, .qa-form-light-button-block:focus {
   background-image: url('../images/icons/rejected-white.png?1404150412');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-reply {
   background-image: url('../images/icons/reply-white.png?1407960514');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
 }
 .qa-form-light-button-reply:hover, .qa-form-light-button-reply:focus {
   background-image: url('../images/icons/reply-white.png?1407960514');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-form-light-button-answer {
   background-image: url('../images/icons/answer-white.png?1404150036');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
   background-color: #27ae60;
   float: left;
   margin: 0 5px 0 0;
 }
 .qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus {
   background-image: url('../images/icons/answer-white.png?1404150036');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus {
   background-color: #2ecc71;
@@ -2715,19 +2605,11 @@ input[type="submit"], button {
 
 .qa-form-light-button-comment {
   background-image: url('../images/icons/comment-white.png?1404151058');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
-  text-align: center;
   float: left;
   margin: 0;
 }
 .qa-form-light-button-comment:hover, .qa-form-light-button-comment:focus {
   background-image: url('../images/icons/comment-white.png?1404151058');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-q-view-stats {
@@ -3059,7 +2941,7 @@ input[type="submit"], button {
   position: relative;
 }
 .qa-c-list-item .qa-form-light-button {
-  padding: 0px;
+  padding: 10px 15px;
   text-transform: capitalize;
   border: none;
   font-size: 14px;
@@ -3067,6 +2949,12 @@ input[type="submit"], button {
   transition-duration: 0s;
   background: #bdc3c7;
   color: #34495e;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  text-indent: -9999px;
   float: right;
   display: block;
   margin: 0 0 0 5px;
@@ -3094,190 +2982,90 @@ input[type="submit"], button {
 .qa-c-list-item .qa-form-light-button a:hover {
   color: #34495e;
 }
-.qa-c-list-item .qa-form-light-button-comment {
-  background-image: url('../images/icons/comment.png?1315006054');
+.qa-c-list-item .qa-form-light-button:hover, .qa-c-list-item .qa-form-light-button:focus {
   background-position: center;
   background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
+}
+.qa-c-list-item .qa-form-light-button-comment {
+  background-image: url('../images/icons/comment.png?1315006054');
   float: left;
   margin: 0;
 }
 .qa-c-list-item .qa-form-light-button-comment:hover, .qa-c-list-item .qa-form-light-button-comment:focus {
   background-image: url('../images/icons/comment.png?1315006054');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-edit, .qa-c-list-item .qa-form-light-button-retagcat {
   background-image: url('../images/icons/edit.png?1315013936');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-edit:hover, .qa-c-list-item .qa-form-light-button-edit:focus, .qa-c-list-item .qa-form-light-button-retagcat:hover, .qa-c-list-item .qa-form-light-button-retagcat:focus {
   background-image: url('../images/icons/edit.png?1315013936');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-flag {
   background-image: url('../images/icons/flag.png?1404149956');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-flag:hover, .qa-c-list-item .qa-form-light-button-flag:focus {
   background-image: url('../images/icons/flag.png?1404149956');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-unflag, .qa-c-list-item .qa-form-light-button-clearflags {
   background-image: url('../images/icons/un-flag.png?1404149976');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-unflag:hover, .qa-c-list-item .qa-form-light-button-unflag:focus, .qa-c-list-item .qa-form-light-button-clearflags:hover, .qa-c-list-item .qa-form-light-button-clearflags:focus {
   background-image: url('../images/icons/un-flag.png?1404149976');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-hide {
   background-image: url('../images/icons/hide.png?1315102022');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-hide:hover, .qa-c-list-item .qa-form-light-button-hide:focus {
   background-image: url('../images/icons/hide.png?1315102022');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-follow {
   background-image: url('../images/icons/link.png?1315105664');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-follow:hover, .qa-c-list-item .qa-form-light-button-follow:focus {
   background-image: url('../images/icons/link.png?1315105664');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-reshow {
   background-image: url('../images/icons/show.png?1315101916');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-reshow:hover, .qa-c-list-item .qa-form-light-button-reshow:focus {
   background-image: url('../images/icons/show.png?1315101916');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-claim {
   background-image: url('../images/icons/claim.png?1315173456');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-claim:hover, .qa-c-list-item .qa-form-light-button-claim:focus {
   background-image: url('../images/icons/claim.png?1315173456');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-delete {
   background-image: url('../images/icons/delete.png?1315172144');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-delete:hover, .qa-c-list-item .qa-form-light-button-delete:focus {
   background-image: url('../images/icons/delete.png?1315172144');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-approve {
   background-image: url('../images/icons/approve.png?1315006388');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
   padding-left: 18px;
 }
 .qa-c-list-item .qa-form-light-button-approve:hover, .qa-c-list-item .qa-form-light-button-approve:focus {
   background-image: url('../images/icons/approve.png?1315006388');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-reject {
   background-image: url('../images/icons/rejected.png?1315158208');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-reject:hover, .qa-c-list-item .qa-form-light-button-reject:focus {
   background-image: url('../images/icons/rejected.png?1315158208');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-close {
   background-image: url('../images/icons/close.png?1315160964');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-close:hover, .qa-c-list-item .qa-form-light-button-close:focus {
   background-image: url('../images/icons/close.png?1315160964');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 .qa-c-list-item .qa-form-light-button-reopen {
   background-image: url('../images/icons/open.png?1315161038');
-  background-position: center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
-  text-align: center;
 }
 .qa-c-list-item .qa-form-light-button-reopen:hover, .qa-c-list-item .qa-form-light-button-reopen:focus {
   background-image: url('../images/icons/open.png?1315161038');
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .qa-c-item-avatar-meta {
