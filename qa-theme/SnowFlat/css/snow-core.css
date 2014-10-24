@@ -2157,9 +2157,43 @@ input[type="submit"], button {
 
 .qa-template-ask .qa-part-form table tbody tr:hover {
   background-color: transparent;
+.qa-ask-similar {
+  background-color: #ecf0f1;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #dde4e6;
 }
 .qa-template-ask .qa-part-form table tbody tr td {
   border: none;
+
+.qa-ask-similar-title {
+  background: #e74c3c;
+  color: white;
+  padding: 10px;
+  margin-bottom: 5px;
+  margin: -10px -10px 10px -10px;
+}
+.qa-ask-similar-title a {
+  color: white;
+  border-bottom: 1px dotted white;
+}
+.qa-ask-similar-title a:hover {
+  color: white;
+  border-bottom: 0;
+}
+
+.qa-q-title-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.qa-q-title-item {
+  padding: 2px 0;
+  border-bottom: 1px solid #d9dcde;
+}
+.qa-q-title-item:last-child {
+  border-bottom: none;
 }
 
 /*------[ users ]------*/
@@ -2389,45 +2423,12 @@ input[type="submit"], button {
   margin: -10px -10px 5px -10px;
 }
 
-/*------[ ask ]------*/
-.qa-template-ask .qa-part-form table tbody tr td {
-  border: none;
-}
-
-#similar .qa-ask-similar {
+.qa-favorite-image {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
   background-color: #ecf0f1;
-  padding: 10px;
-  margin-bottom: 5px;
-  border: 1px solid #dde4e6;
-}
-#similar .qa-ask-similar p {
-  background: #e74c3c;
-  color: white;
-  padding: 10px;
-  margin-bottom: 5px;
-  margin: -10px -10px 10px -10px;
-}
-#similar .qa-ask-similar p a {
-  color: white;
-  font-weight: bold;
-  border-bottom: 2px dotted white;
-}
-#similar .qa-ask-similar p a:hover {
-  color: white;
-  font-weight: bold;
-  border-bottom: none;
-}
-#similar .qa-ask-similar .qa-q-title-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-#similar .qa-ask-similar .qa-q-title-list .qa-q-title-item {
-  padding: 2px 0;
-  border-bottom: 1px solid #d9dcde;
-}
-#similar .qa-ask-similar .qa-q-title-list .qa-q-title-item:last-child {
-  border-bottom: none;
+  background-image: url('../images/favorite-icon-15x15.png?1407059306');
 }
 
 .qa-suggest-next {

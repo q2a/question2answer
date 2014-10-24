@@ -2355,7 +2355,7 @@
 			$this->output('<div class="qa-ask-similar">');
 
 			if (strlen($pretext) > 0)
-				$this->output('<p>'.$pretext.'</p>');
+				$this->output('<p class="qa-ask-similar-title">'.$pretext.'</p>');
 			$this->q_title_list($q_list, 'target="_blank"');
 
 			$this->output('</div>');
