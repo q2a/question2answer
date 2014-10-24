@@ -168,7 +168,7 @@ class qa_html_theme extends qa_html_theme_base
 			$class .= ' qam-approve-users';
 		}
 
-		$class .= ' ' . $qam_snow->fixed_topbar;
+		$class .= ' qam-body-' . $qam_snow->fixed_topbar;
 
 		$this->output('class="' . $class . ' qa-body-js-off"');
 	}
@@ -348,7 +348,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('</div> <!-- END qam-footer-row -->');
 
 		// key to icons in footer
-		$this->output($this->icons_info());
+		// $this->output($this->icons_info());
 
 		qa_html_theme_base::footer();
 		$this->output('</div> <!-- END qam-footer-box -->', '');
