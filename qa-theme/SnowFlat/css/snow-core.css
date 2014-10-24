@@ -2612,6 +2612,18 @@ input[type="submit"], button {
   background-image: url('../images/icons/comment-white.png?1404151058');
 }
 
+.qa-form-light-button-answer, .qa-form-light-button-comment {
+  width: auto;
+  padding: 0 10px 0 30px;
+  background-position: 8px center;
+  font-size: 13px;
+  line-height: 32px;
+  text-indent: 0;
+}
+.qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus, .qa-form-light-button-comment:hover, .qa-form-light-button-comment:focus {
+  background-position: 8px center;
+}
+
 .qa-q-view-stats {
   float: left;
 }
