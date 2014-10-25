@@ -347,17 +347,17 @@ blockquote {
   right: 0;
 }
 .qa-q-view-closed:hover {
-  background: #e74c3c;
-  color: white;
   padding: 10px 54px 10px 10px;
   margin-bottom: 5px;
+  background: #e74c3c;
+  color: #fff;
 }
 .qa-q-view-closed:hover a {
-  color: white;
-  border-bottom: 1px dotted white;
+  color: #fff;
+  border-bottom: 1px dotted #fff;
 }
 .qa-q-view-closed:hover a:hover {
-  color: white;
+  color: #fff;
   border-bottom: 0;
 }
 
