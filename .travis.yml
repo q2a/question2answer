@@ -22,8 +22,7 @@ before_script:
 
 script:
   ## PHP_CodeSniffer
-  - phpcs --report=emacs --standard=PSR1 .
-  - phpcs --report=emacs --standard=PSR2 .
+  - phpcs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
   ## PHP Copy/Paste Detector
   - php phpcpd.phar --verbose .
   ## PHP Mess Detector
