@@ -2194,13 +2194,13 @@ input[type="submit"], button {
 }
 
 @media (min-width: 980px) {
-  .qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list {
+  .qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
     width: 49.8%;
   }
 }
 
 @media (min-width: 980px) {
-  .qa-part-form-activity, .qa-part-message-list {
+  .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
     float: right;
     clear: right;
   }

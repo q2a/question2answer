@@ -320,8 +320,9 @@ h1 {
 }
 
 @media (min-width: 980px) {
-  .qa-part-form-activity, .qa-part-message-list {
+  .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
     float: left;
+    clear: left;
   }
 }
 
