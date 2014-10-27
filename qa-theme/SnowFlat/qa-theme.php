@@ -420,6 +420,12 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$q_view = @$this->content['q_view'];
 
+		// RSS feed link in title
+		$feed = @$this->content['feed'];
+		if (!empty($feed)) {
+			$this->output('<a href="' . $feed['url'] . '" title="' . @$feed['label'] . '"><i class="icon-rss qam-title-rss"></i></a>');
+		}
+
 		// link title where appropriate
 		$url = isset($q_view['url']) ? $q_view['url'] : false;
 
@@ -431,12 +437,6 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output(
 					$closed, $url ? '<a href="' . $url . '">' : '', $this->content['title'], $url ? '</a>' : ''
 			);
-		}
-
-		$feed = @$this->content['feed'];
-
-		if (!empty($feed)) {
-			$this->output('<a href="' . $feed['url'] . '" title="' . @$feed['label'] . '"><i class="icon-rss qam-title-rss"></i></a>');
 		}
 	}
 

@@ -462,10 +462,10 @@ blockquote p {
 }
 @media (max-width: 979px) {
   .qam-menu-toggle {
-    font-size: 34px;
+    display: block; /* turn on menu icon */
     float: left;
-    display: block;
-    margin-right: 10px;
+    font-size: 34px;
+    margin: 0 10px 0 0;
   }
   .qam-menu-toggle.current {
     color: #fff;
@@ -479,7 +479,7 @@ blockquote p {
 
 .qa-logo {
   font-size: 24px;
-  margin-right: 1px;
+  margin: 0 1px 0 0;
 }
 @media (max-width: 979px) {
   .qa-logo {
@@ -607,7 +607,7 @@ blockquote p {
     margin: 0 1px;
   }
   .qa-nav-main-item-opp:last-child {
-    margin-left: 50px;
+    margin: 0 0 0 50px;
   }
 }
 
@@ -643,7 +643,7 @@ blockquote p {
   .qa-nav-main-link:before {
     display: inline-block;
     width: 24px;
-    margin-right: 15px;
+    margin: 0 15px 0 0;
   }
 }
 @media (min-width: 980px) {
@@ -911,7 +911,7 @@ blockquote p {
 }
 
 h1 {
-  padding: 8px 20px;
+  padding: 8px 52px 8px 20px;
   margin-bottom: 5px;
   background: #3498db;
   color: #fff;
@@ -950,10 +950,6 @@ h1 a:hover, h1 a:focus, h1 a:visited {
   width: auto !important;
 }
 
-[class^="qa-category-"] h1, [class*="qa-category-"] h1, .qa-template-tag h1 {
-  padding-right: 52px !important;
-}
-
 .entry-content table, .qa-c-item-content table {
   width: 100%;
   border-collapse: collapse;
@@ -979,15 +975,13 @@ h1 a:hover, h1 a:focus, h1 a:visited {
   border-color: #ecf0f1;
 }
 .entry-content ul, .qa-c-item-content ul {
-  margin: 20px 0;
+  margin: 20px 0 20px 20px;
   padding: 0;
-  list-style-position: outside;
 }
 .entry-content ul > li, .qa-c-item-content ul > li {
   list-style: none;
-  margin: 10px 0;
+  margin: .4em 0;
   position: relative;
-  padding-left: 1.6em;
 }
 .entry-content ul > li:before, .qa-c-item-content ul > li:before {
   font-family: "fontello";
@@ -996,31 +990,29 @@ h1 a:hover, h1 a:focus, h1 a:visited {
   speak: none;
   content: '\e82c';
   position: absolute;
-  left: 0;
+  left: -1.6em;
   top: 4px;
   display: inline-block;
   text-decoration: inherit;
   width: 1em;
-  margin-right: .2em;
+  margin: 0 .2em;
   text-align: center;
   font-variant: normal;
   text-transform: none;
   line-height: 1em;
-  margin-left: .2em;
 }
 .entry-content ul > li > ul, .qa-c-item-content ul > li > ul {
-  margin-left: 20px;
+  margin: 0 0 0 20px;
 }
 .entry-content ol, .qa-c-item-content ol {
   margin: 20px 0 20px 20px;
   padding: 0;
-  list-style-position: outside;
 }
 .entry-content ol > li, .qa-c-item-content ol > li {
-  margin: 10px 0;
+  margin: .4em 0;
 }
 .entry-content ol > li > ol, .qa-c-item-content ol > li > ol {
-  margin-left: 40px;
+  margin: 0 0 0 20px;
 }
 
 .qa-waiting {
@@ -1039,11 +1031,11 @@ h1 a:hover, h1 a:focus, h1 a:visited {
   top: 5px;
 }
 .qa-favoriting .qa-waiting {
+  position: absolute;
   left: 50%;
+  top: 50%;
   margin: -7px 0 0 -7px;
   padding: 0;
-  position: absolute;
-  top: 50%;
 }
 
 .qa-favorite-button, .qa-unfavorite-button {
@@ -3312,6 +3304,7 @@ input[type="submit"], button {
 }
 
 .qa-feed {
+  font-size: 13px;
   padding: 20px;
   margin-bottom: 5px;
   background: #fff;
@@ -3967,5 +3960,3 @@ input[type="submit"], button {
     float: right;
   }
 }
-
-/*# sourceMappingURL=snow-core.css.map */

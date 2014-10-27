@@ -37,6 +37,11 @@ blockquote {
   border-right: 11px solid #3498db;
 }
 
+h1 {
+  padding: 8px 20px 8px 52px;
+}
+
+
 .qa-search-field {
   margin: 0 0 0 -40px;
   padding: 0 0 0 40px;
@@ -51,14 +56,28 @@ blockquote {
 }
 
 .entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
-  text-align: left;
+  text-align: right;
+}
+.entry-content ul, .qa-c-item-content ul {
+  margin: 20px 20px 20px 0;
 }
 .entry-content ul > li:before, .qa-c-item-content ul > li:before {
-  right: 0;
+  left: auto;
+  right: -1.6em;
+}
+.entry-content ul > li > ul, .qa-c-item-content ul > li > ul {
+  margin: 0 20px 0 0;
+}
+.entry-content ol, .qa-c-item-content ol {
+  margin: 20px 20px 20px 0;
+}
+.entry-content ol > li > ol, .qa-c-item-content ol > li > ol {
+  margin: 0 20px 0 0;
 }
 
-[class^="qa-category-"] h1, [class*="qa-category-"] h1, .qa-template-tag h1 {
-  padding-left: 52px !important;
+.qa-favoriting {
+  right: auto;
+  left: 10px;
 }
 
 @media (max-width: 979px) {
@@ -94,12 +113,12 @@ blockquote {
 @media (max-width: 979px) {
   .qam-menu-toggle {
     float: right;
-    margin-left: 10px;
+    margin: 0 0 0 10px;
   }
 }
 
 .qa-logo {
-  margin-left: 1px;
+  margin: 0 0 0 1px;
 }
 @media (min-width: 980px) {
   .qa-logo {
@@ -128,10 +147,15 @@ blockquote {
   .qa-nav-main-item-opp {
     float: left;
   }
+  .qa-nav-main-item-opp:last-child {
+    margin: 0 50px 0 0;
+  }
 }
-.qa-nav-main-item-opp:last-child {
-  margin-left: 0;
-  margin-right: 50px;
+
+@media (max-width: 979px) {
+  .qa-nav-main-link:before {
+    margin: 0 0 0 15px;
+  }
 }
 
 @media (max-width: 979px) {
@@ -142,6 +166,7 @@ blockquote {
 
 @media (max-width: 979px) {
   .qam-account-items-wrapper {
+    right: auto;
     left: 8px;
   }
 }
@@ -152,8 +177,8 @@ blockquote {
 }
 
 .qam-account-items {
+  right: auto;
   left: 0;
-  top: 52px;
 }
 
 .qa-logged-in:before {
@@ -468,5 +493,3 @@ blockquote {
     float: left;
   }
 }
-
-/*# sourceMappingURL=snow-rtl.css.map */
