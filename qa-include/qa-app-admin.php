@@ -123,20 +123,18 @@
 
 		$options = array('' => 'English (US)');
 
-		$directory = @opendir(QA_LANG_DIR);
-		if (is_resource($directory)) {
-			while (($code = readdir($directory)) !== false) {
-				if (is_dir(QA_LANG_DIR . $code) && isset($codetolanguage[$code]))
-					$options[$code] = $codetolanguage[$code];
+		// find all language folders
+		foreach (glob(QA_LANG_DIR.'*', GLOB_NOSORT) as $directory) {
+			$code = basename($directory);
+			$metadatafile = QA_LANG_DIR . $code . '/metadata.php';
+			if (is_file($metadatafile)) {
+				$metadata = include $metadatafile;
+				if (isset($metadata['display_name']))
+					$options[$code] = $metadata['display_name'];
 			}
-			closedir($directory);
-		}
-
-		foreach (glob(QA_LANG_DIR . '*/qa-lang-metadata.php') as $filename) {
-			$code = basename(dirname($filename));
-			$metadata = include QA_LANG_DIR . $code . '/qa-lang-metadata.php';
-			if (isset($metadata['display_name']))
-				$options[$code] = $metadata['display_name'];
+			// otherwise use an entry from above
+			else if (isset($codetolanguage[$code]))
+				$options[$code] = $codetolanguage[$code];
 		}
 
 		asort($options, SORT_STRING);

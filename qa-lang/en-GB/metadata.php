@@ -1,5 +1,4 @@
 <?php
-
 /*
 	Question2Answer (c) Gideon Greenspan
 
@@ -24,11 +23,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	return array(
-		'display_name' => 'English (UK)',
-	);
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+return array(
+	'display_name' => 'English (UK)',
+);
