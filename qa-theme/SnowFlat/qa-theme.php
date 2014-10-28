@@ -84,10 +84,9 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function head_css()
 	{
-		// add Snow CSS file
-		$this->content['css_src'][] = $this->rooturl . $this->css_dir . 'snow-core.css?' . QA_VERSION;
+		// add RTL CSS file
 		if ($this->isRTL)
-			$this->content['css_src'][] = $this->rooturl . $this->css_dir . 'snow-rtl.css?' . QA_VERSION;
+			$this->content['css_src'][] = $this->rooturl . $this->css_dir . 'qa-styles-rtl.css?' . QA_VERSION;
 
 		// add Ubuntu font CSS file
 		$this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
