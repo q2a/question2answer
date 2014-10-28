@@ -1,35 +1,12 @@
 /*
-	Question2Answer by Gideon Greenspan and contributors
-
-	http://www.question2answer.org/
-
-	
-	File: qa-theme/Classic/qa-styles.css
-	Version: See define()s at top of qa-include/qa-base.php
-	Description: CSS file for included Classic theme
-
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-	
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	More about this license: http://www.question2answer.org/license.php
-*/
-
-/*
-	Theme URI: 
+	Theme Name: Classic
+	Theme URI:
 	Theme Version: 1.5
 	Theme Date: 2012-09-11
 	Theme Author: Question2Answer
 	Theme Author URI: http://www.question2answer.org/
 	Theme License: GPLv2
-	Theme Update Check URI: 
+	Theme Update Check URI:
 */
 
 
@@ -248,7 +225,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 	.qa-vote-down-button {background-position:-17px 0; color:#38544e;}
 	.qa-vote-down-disabled {background-position:-17px -60px; color:#38544e;}
 	.qa-vote-down-button:hover {background-position:-17px -15px; color:#65968e;}
-	
+
 .qa-voted-up-button {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; height:15px; width:17px;}
 	.qa-voted-up-button {background-position:0 -30px; color:#f3cb7f;}
 	.qa-voted-up-button:hover {background-position:0 -45px; color:#f3cb7f;}
@@ -280,16 +257,14 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 
 /* Tags, users and categories */
 
-.qa-top-tags-table {float:left; border-collapse:collapse; margin-bottom:1em;}
-.qa-top-tags-count {border:1px solid #658296; border-right:1px dashed #c1ced6; color:#235272; text-align:right; padding:6px 8px 6px 12px;}
-.qa-top-tags-label {border:1px solid #658296; border-left:none; background:#e7eff4; padding:3px 16px 0px 8px;}
-	.qa-top-tags-label .qa-tag-link {font-weight:normal;}
-.qa-top-tags-spacer {padding:0 4px;}
+.qa-ranking-item { display:inline-block; margin:0 5px 15px 0; padding:3px; vertical-align:top; width:220px; line-height:1.3; }
+.qa-top-users-item { border:1px solid #c1c5a9; background:#e9ebde; }
+.qa-top-users-avatar { float:left; margin-right:6px; }
+.qa-top-users-label, .qa-top-users-score { display:block; }
 
-.qa-top-users-table {float:left; border-collapse:collapse; margin-bottom:1em;}
-.qa-top-users-label {border:1px solid #c1c5a9; border-right:1px dashed #c1c5a9; padding:6px 16px 6px 12px; text-align:left;}
-.qa-top-users-score {border:1px solid #c1c5a9; border-left:none; background:#e9ebde; color:#414944; text-align:right; padding:6px 12px;}
-.qa-top-users-spacer {padding:0 4px;}
+.qa-top-tags-item { width:170px; border:1px solid #658296; background:#e7eff4; }
+.qa-top-tags-count { display:inline-block; min-width:40px; text-align:right; padding-right:3px; }
+.qa-top-tags-label { display:inline-block; }
 
 .qa-browse-cat-list {list-style:none; padding:0; margin:0; margin-left:2.5em;}
 .qa-browse-cat-list-1 {font-size:16px;}
@@ -417,7 +392,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-nav-footer-link {color:#FFF; text-decoration:underline !important;}
 	.qa-nav-footer-link:hover {color:#f5d495;}
 .qa-attribution {float:right;}
-	.qa-attribution a {color:#FFF; text-decoration:underline; !important;}
+	.qa-attribution a {color:#FFF; text-decoration:underline !important;}
 	.qa-attribution a:hover {color:#f5d495;}
 
 /* Classes in HTML passed to theme class */

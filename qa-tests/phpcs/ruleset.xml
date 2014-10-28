@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="Q2AStandard">
+	<description>Q2A coding standard</description>
+
+	<exclude-pattern>qa-include/vendor/*</exclude-pattern>
+	<exclude-pattern>qa-config.php</exclude-pattern>
+
+	<rule ref="PSR1"/>
+
+	<rule ref="PSR2">
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+		<exclude name="Generic.WhiteSpace.ScopeIndent"/>
+		<exclude name="Squiz.ControlStructures.ControlSignature"/>
+		<exclude name="Generic.ControlStructures.InlineControlStructure"/>
+		<exclude name="PSR2.Methods.FunctionCallSignature"/>
+	</rule>
+
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+</ruleset>

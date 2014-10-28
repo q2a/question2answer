@@ -1,11 +1,11 @@
 <?php
-	
+
 /*
 	Question2Answer by Gideon Greenspan and contributors
 
 	http://www.question2answer.org/
 
-	
+
 	File: qa-include/qa-db-post-update.php
 	Version: See define()s at top of qa-include/qa-base.php
 	Description:  Database functions for changing a question, answer or comment
@@ -15,7 +15,7 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-	
+
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,8 +31,8 @@
 
 
 	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
-	
-	
+
+
 	function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid=null, $lastip=null)
 /*
 	Update the selected answer in the database for $questionid to $selchildid, and optionally record that $lastuserid did it from $lastip
@@ -44,20 +44,20 @@
 			"x.postid=a.selchildid AND x.updatetype=$",
 			$questionid, QA_UPDATE_SELECTED
 		);
-		
+
 		qa_db_query_sub(
 			'UPDATE ^posts SET selchildid=# WHERE postid=#',
 			$selchildid, $questionid
 		);
-		
+
 		if (isset($selchildid) && isset($lastuserid) && isset($lastip))
 			qa_db_query_sub(
 				"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
 				QA_UPDATE_SELECTED, $lastuserid, $lastip, $selchildid
 			);
 	}
-	
-	
+
+
 	function qa_db_post_set_closed($questionid, $closedbyid, $lastuserid=null, $lastip=null)
 /*
 	Set $questionid to be closed by post $closedbyid (null if not closed) in the database, and optionally record that
@@ -76,7 +76,7 @@
 			);
 	}
 
-	
+
 	function qa_db_post_set_type($postid, $type, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_TYPE)
 /*
 	Set the type in the database of $postid to $type, and optionally record that $lastuserid did it from $lastip
@@ -94,7 +94,7 @@
 			);
 	}
 
-	
+
 	function qa_db_post_set_parent($postid, $parentid, $lastuserid=null, $lastip=null)
 /*
 	Set the parent in the database of $postid to $parentid, and optionally record that $lastuserid did it from $lastip (if at least one is specified)
@@ -112,11 +112,11 @@
 			);
 	}
 
-	
+
 	function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_CONTENT, $name=null)
 /*
 	Set the text fields in the database of $postid to $title, $content, $tagstring, $notify and $name, and record that
-	$lastuserid did it from $lastip (if at least one is specified) with $updatetype. or backwards compatibility if $name
+	$lastuserid did it from $lastip (if at least one is specified) with $updatetype. For backwards compatibility if $name
 	is null then the name will not be changed.
 */
 	{
@@ -132,7 +132,7 @@
 			);
 	}
 
-	
+
 	function qa_db_post_set_userid($postid, $userid)
 /*
 	Set the author in the database of $postid to $userid, and set the lastuserid to $userid as well if appropriate
@@ -143,8 +143,8 @@
 			$userid, $userid, $postid
 		);
 	}
-	
-	
+
+
 	function qa_db_post_set_category($postid, $categoryid, $lastuserid=null, $lastip=null)
 /*
 	Set the (exact) category in the database of $postid to $categoryid, and optionally record that $lastuserid did it from $lastip (if at least one is specified)
@@ -161,8 +161,8 @@
 				$categoryid, $postid
 			);
 	}
-	
-	
+
+
 	function qa_db_posts_set_category_path($postids, $path)
 /*
 	Set the category path in the database of each of $postids to $path retrieved via qa_db_post_get_category_path()
@@ -174,8 +174,8 @@
 				$path['categoryid'], $path['catidpath1'], $path['catidpath2'], $path['catidpath3'], $postids
 			); // requires QA_CATEGORY_DEPTH=4
 	}
-	
-	
+
+
 	function qa_db_post_set_created($postid, $created)
 /*
 	Set the created date of $postid to $created, which is a unix timestamp. If created is null, set to now.
@@ -192,8 +192,8 @@
 				$postid
 			);
 	}
-	
-	
+
+
 	function qa_db_post_set_updated($postid, $updated)
 /*
 	Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is nul, set to now.
@@ -210,8 +210,8 @@
 				$postid
 			);
 	}
-	
-	
+
+
 	function qa_db_post_delete($postid)
 /*
 	Deletes post $postid from the database (will also delete any votes on the post due to foreign key cascading)
@@ -223,7 +223,7 @@
 		);
 	}
 
-	
+
 	function qa_db_titlewords_get_post_wordids($postid)
 /*
 	Return an array of wordids that were indexed in the database for the title of $postid
@@ -235,7 +235,7 @@
 		));
 	}
 
-	
+
 	function qa_db_titlewords_delete_post($postid)
 /*
 	Remove all entries in the database index of title words for $postid
@@ -259,7 +259,7 @@
 		));
 	}
 
-	
+
 	function qa_db_contentwords_delete_post($postid)
 /*
 	Remove all entries in the database index of content words for $postid
@@ -270,8 +270,8 @@
 			$postid
 		);
 	}
-	
-	
+
+
 	function qa_db_tagwords_get_post_wordids($postid)
 /*
 	Return an array of wordids that were indexed in the database for the individual words in tags of $postid
@@ -282,8 +282,8 @@
 			$postid
 		));
 	}
-	
-	
+
+
 	function qa_db_tagwords_delete_post($postid)
 /*
 	Remove all entries in the database index of individual words in tags of $postid
@@ -307,7 +307,7 @@
 		));
 	}
 
-	
+
 	function qa_db_posttags_delete_post($postid)
 /*
 	Remove all entries in the database index of whole tags for $postid
@@ -318,8 +318,8 @@
 			$postid
 		);
 	}
-	
-	
+
+
 	function qa_db_posts_filter_q_postids($postids)
 /*
 	Return the array $postids containing only those elements which are the postid of a qustion in the database
@@ -333,8 +333,8 @@
 		else
 			return array();
 	}
-	
-	
+
+
 	function qa_db_posts_get_userids($postids)
 /*
 	Return an array of all the userids of authors of posts in the array $postids
@@ -349,7 +349,7 @@
 			return array();
 	}
 
-	
+
 	function qa_db_flaggedcount_update()
 /*
 	Update the cached count of the number of flagged posts in the database

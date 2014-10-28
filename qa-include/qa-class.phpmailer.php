@@ -1,34 +1,10 @@
 <?php
-/*~ class.phpmailer.php
-.---------------------------------------------------------------------------.
-|  Software: PHPMailer - PHP email class                                    |
-|   Version: 2.0.4                                                          |
-|   Contact: via sourceforge.net support pages (also www.codeworxtech.com)  |
-|      Info: http://phpmailer.sourceforge.net                               |
-|   Support: http://sourceforge.net/projects/phpmailer/                     |
-| ------------------------------------------------------------------------- |
-|    Author: Andy Prevost (project admininistrator)                         |
-|    Author: Brent R. Matzelle (original founder)                           |
-| Copyright (c) 2004-2007, Andy Prevost. All Rights Reserved.               |
-| Copyright (c) 2001-2003, Brent R. Matzelle                                |
-| ------------------------------------------------------------------------- |
-|   License: Distributed under the Lesser General Public License (LGPL)     |
-|            http://www.gnu.org/copyleft/lesser.html                        |
-| This program is distributed in the hope that it will be useful - WITHOUT  |
-| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or     |
-| FITNESS FOR A PARTICULAR PURPOSE.                                         |
-| ------------------------------------------------------------------------- |
-| We offer a number of paid services (www.codeworxtech.com):                |
-| - Web Hosting on highly optimized fast and secure servers                 |
-| - Technology Consulting                                                   |
-| - Oursourcing (highly qualified programmers and graphic designers)        |
-'---------------------------------------------------------------------------'
-
 /**
  * PHPMailer - PHP email transport class
  * @package PHPMailer
  * @author Andy Prevost
  * @copyright 2004 - 2009 Andy Prevost
+ * @deprecated This file is deprecated; please use Q2A built-in functions for sending emails.
  */
 
 class PHPMailer {
