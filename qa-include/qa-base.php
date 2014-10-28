@@ -997,6 +997,33 @@
 	}
 
 
+	function qa_post_limit_exceeded()
+/*
+	Checks whether an HTTP request has exceeded the post_max_size PHP variable. This happens whenever an HTTP request
+	is too big to be properly processed by PHP, usually because there is an attachment in the HTTP request. A warning
+	is added to the server's log displaying the size of the file that triggered this situation. It is important to note
+	that whenever this happens the $_POST and $_FILES superglobals are empty.
+*/
+	{
+		if (in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT')) && empty($_POST) && empty($_FILES)) {
+			$postmaxsize = ini_get('post_max_size');  // Gets the current post_max_size configuration
+			$unit = substr($postmaxsize, -1);
+			if (!is_numeric($unit)) {
+				$postmaxsize = substr($postmaxsize, 0, -1);
+			}
+			switch (strtoupper($unit)) {  // Gets an integer value that can be compared against the size of the HTTP request
+				case 'G':
+					$postmaxsize *= 1024;
+				case 'M':
+					$postmaxsize *= 1024;
+				case 'K':
+					$postmaxsize *= 1024;
+			}
+			return $_SERVER['CONTENT_LENGTH'] > $postmaxsize;
+		}
+	}
+
+
 	function qa_is_http_post()
 /*
 	Return true if we are responding to an HTTP POST request
@@ -1035,33 +1062,6 @@
 			'MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera', 'Gecko', 'MIDP', 'PLAYSTATION', 'Teleca',
 			'BlackBerry', 'UP.Browser', 'Polaris', 'MAUI_WAP_Browser', 'iPad', 'iPhone', 'iPod'
 		));
-	}
-
-
-	function qa_is_post_max_size_limit_exceeded()
-/*
-	Checks whether an HTTP request has exceeded the post_max_size PHP variable. This happens whenever an HTTP request
-	is too big to be properly processed by PHP, usually because there is an attachment in the HTTP request. A warning
-	is added to the server's log displaying the size of the file that triggered this situation. It is important to note
-	that whenever this happens the $_POST and $_FILES superglobals are empty.
-*/
-	{
-		if (in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT')) && empty($_POST) && empty($_FILES)) {
-			$postmaxsize = ini_get('post_max_size');  // Gets the current post_max_size configuration
-			$unit = substr($postmaxsize, -1);
-			if (!is_numeric($unit)) {
-				$postmaxsize = substr($postmaxsize, 0, -1);
-			}
-			switch (strtoupper($unit)) {  // Gets an integer value that can be compared against the size of the HTTP request
-				case 'G':
-					$postmaxsize *= 1024;
-				case 'M':
-					$postmaxsize *= 1024;
-				case 'K':
-					$postmaxsize *= 1024;
-			}
-			return $_SERVER['CONTENT_LENGTH'] > $postmaxsize;
-		}
 	}
 
 

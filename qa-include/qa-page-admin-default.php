@@ -662,7 +662,7 @@
 	$formokhtml = null;
 
 	// If the post_max_size is exceeded then the $_POST array is empty so no field processing can be done
-	if (qa_is_post_max_size_limit_exceeded())
+	if (qa_post_limit_exceeded())
 		$errors['avatar_default_show'] = qa_lang('main/file_upload_limit_exceeded');
 	else
 		if (qa_clicked('doresetoptions')) {
