@@ -1230,17 +1230,14 @@
 			$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-number"/>');
 		}
 
-		public function form_select($field, $style)
 		/**
-		 * Parameters received:
-		 *  * tags: Optional. Tags or attributes added after the "<select" html tag
-		 *  * options: Required. A key-value array containing all the options in the select. This parameter can be an empty array
-		 *    which would result in an empty HTML select
-		 *  * value: Optional. The selected value from the 'options' parameter
-		 *  * match_by: Optional. Possible values are 'key' or 'value'. Defaults to 'value'. Determines if the value set in the 'value'
-		 *    parameter is compared to the key or to the value from the 'options' parameter. This parameter has no effect if the 'value'
-		 *    parameter is not set
+		 * Output a <select> element. The $field array may contain the following keys:
+		 *   options: (required) a key-value array containing all the options in the select.
+		 *   tags: any attributes to be added to the select.
+		 *   value: the selected value from the 'options' parameter.
+		 *   match_by: whether to match the 'value' (default) or 'key' of each option to determine if it is to be selected.
 		 */
+		public function form_select($field, $style)
 		{
 			$this->output('<select ' . (isset($field['tags']) ? $field['tags'] : '') . ' class="qa-form-' . $style . '-select">');
 
