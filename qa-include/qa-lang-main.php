@@ -82,6 +82,7 @@
 		'edited' => 'edited',
 		'email_error' => 'An error occurred trying to send the email.',
 		'field_required' => 'Please enter something in this field',
+		'file_upload_limit_exceeded' => 'The size of the file exceeds the server\'s limits',
 		'general_error' => 'A server error occurred - please try again.',
 		'hidden' => 'hidden',
 		'highest_users' => 'Top scoring users',

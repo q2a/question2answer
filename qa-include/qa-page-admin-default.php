@@ -661,104 +661,111 @@
 
 	$formokhtml = null;
 
-	if (qa_clicked('doresetoptions')) {
-		if (!qa_check_form_security_code('admin/'.$adminsection, qa_post_text('code')))
-			$securityexpired = true;
+	// If the post_max_size is exceeded then the $_POST array is empty so no field processing can be done
+	if (qa_is_post_max_size_limit_exceeded())
+		$errors['avatar_default_show'] = qa_lang('main/file_upload_limit_exceeded');
+	else
+		if (qa_clicked('doresetoptions')) {
+			if (!qa_check_form_security_code('admin/' . $adminsection, qa_post_text('code')))
+				$securityexpired = true;
 
-		else {
-			qa_reset_options($getoptions);
-			$formokhtml = qa_lang_html('admin/options_reset');
-		}
-	}
-	elseif (qa_clicked('dosaveoptions')) {
-		if (!qa_check_form_security_code('admin/'.$adminsection, qa_post_text('code')))
-			$securityexpired = true;
-
-		else {
-			foreach ($getoptions as $optionname) {
-				$optionvalue = qa_post_text('option_'.$optionname);
-
-				if (
-					(@$optiontype[$optionname] == 'number') ||
-					(@$optiontype[$optionname] == 'checkbox') ||
-					((@$optiontype[$optionname] == 'number-blank') && strlen($optionvalue))
-				)
-					$optionvalue = (int)$optionvalue;
-
-				if (isset($optionmaximum[$optionname]))
-					$optionvalue = min($optionmaximum[$optionname], $optionvalue);
-
-				if (isset($optionminimum[$optionname]))
-					$optionvalue = max($optionminimum[$optionname], $optionvalue);
-
-				switch ($optionname) {
-					case 'site_url':
-						if (substr($optionvalue, -1) != '/') // seems to be a very common mistake and will mess up URLs
-							$optionvalue .= '/';
-						break;
-
-					case 'hot_weight_views':
-					case 'hot_weight_answers':
-					case 'hot_weight_votes':
-					case 'hot_weight_q_age':
-					case 'hot_weight_a_age':
-						if (qa_opt($optionname) != $optionvalue)
-							$recalchotness = true;
-						break;
-
-					case 'block_ips_write':
-						require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-						$optionvalue = implode(' , ', qa_block_ips_explode($optionvalue));
-						break;
-
-					case 'block_bad_words':
-						require_once QA_INCLUDE_DIR.'qa-util-string.php';
-						$optionvalue = implode(' , ', qa_block_words_explode($optionvalue));
-						break;
-				}
-
-				qa_set_option($optionname, $optionvalue);
+			else {
+				qa_reset_options($getoptions);
+				$formokhtml = qa_lang_html('admin/options_reset');
 			}
+		} elseif (qa_clicked('dosaveoptions')) {
+			if (!qa_check_form_security_code('admin/' . $adminsection, qa_post_text('code')))
+				$securityexpired = true;
 
-			$formokhtml = qa_lang_html('admin/options_saved');
+			else {
+				foreach ($getoptions as $optionname) {
+					$optionvalue = qa_post_text('option_' . $optionname);
 
-		//	Uploading default avatar
+					if (
+							(@$optiontype[$optionname] == 'number') ||
+							(@$optiontype[$optionname] == 'checkbox') ||
+							((@$optiontype[$optionname] == 'number-blank') && strlen($optionvalue))
+					)
+						$optionvalue = (int) $optionvalue;
 
-			if (is_array(@$_FILES['avatar_default_file']) && $_FILES['avatar_default_file']['size']) {
-				require_once QA_INCLUDE_DIR.'qa-util-image.php';
+					if (isset($optionmaximum[$optionname]))
+						$optionvalue = min($optionmaximum[$optionname], $optionvalue);
 
-				$oldblobid = qa_opt('avatar_default_blobid');
+					if (isset($optionminimum[$optionname]))
+						$optionvalue = max($optionminimum[$optionname], $optionvalue);
 
-				$toobig = qa_image_file_too_big($_FILES['avatar_default_file']['tmp_name'], qa_opt('avatar_store_size'));
+					switch ($optionname) {
+						case 'site_url':
+							if (substr($optionvalue, -1) != '/') // seems to be a very common mistake and will mess up URLs
+								$optionvalue .= '/';
+							break;
 
-				if ($toobig)
-					$errors['avatar_default_show'] = qa_lang_sub('main/image_too_big_x_pc', (int)($toobig*100));
+						case 'hot_weight_views':
+						case 'hot_weight_answers':
+						case 'hot_weight_votes':
+						case 'hot_weight_q_age':
+						case 'hot_weight_a_age':
+							if (qa_opt($optionname) != $optionvalue)
+								$recalchotness = true;
+							break;
 
-				else {
-					$imagedata = qa_image_constrain_data(file_get_contents($_FILES['avatar_default_file']['tmp_name']), $width, $height, qa_opt('avatar_store_size'));
+						case 'block_ips_write':
+							require_once QA_INCLUDE_DIR . 'qa-app-limits.php';
+							$optionvalue = implode(' , ', qa_block_ips_explode($optionvalue));
+							break;
 
-					if (isset($imagedata)) {
-						require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
-
-						$newblobid = qa_create_blob($imagedata, 'jpeg');
-
-						if (isset($newblobid)) {
-							qa_set_option('avatar_default_blobid', $newblobid);
-							qa_set_option('avatar_default_width', $width);
-							qa_set_option('avatar_default_height', $height);
-							qa_set_option('avatar_default_show', 1);
-						}
-
-						if (strlen($oldblobid))
-							qa_delete_blob($oldblobid);
-
+						case 'block_bad_words':
+							require_once QA_INCLUDE_DIR . 'qa-util-string.php';
+							$optionvalue = implode(' , ', qa_block_words_explode($optionvalue));
+							break;
 					}
-					else
-						$errors['avatar_default_show'] = qa_lang_sub('main/image_not_read', implode(', ', qa_gd_image_formats()));
+
+					qa_set_option($optionname, $optionvalue);
+				}
+
+				$formokhtml = qa_lang_html('admin/options_saved');
+
+				//	Uploading default avatar
+				if (is_array(@$_FILES['avatar_default_file'])) {
+					$avatarfileerror = $_FILES['avatar_default_file']['error'];
+
+					// Note if $_FILES['avatar_default_file']['error'] === 1 then upload_max_filesize has been exceeded
+					if ($avatarfileerror === 1)
+						$errors['avatar_default_show'] = qa_lang('main/file_upload_limit_exceeded');
+					elseif ($avatarfileerror === 0 && $_FILES['avatar_default_file']['size'] > 0) {
+						require_once QA_INCLUDE_DIR . 'qa-util-image.php';
+
+						$oldblobid = qa_opt('avatar_default_blobid');
+
+						$toobig = qa_image_file_too_big($_FILES['avatar_default_file']['tmp_name'], qa_opt('avatar_store_size'));
+
+						if ($toobig)
+							$errors['avatar_default_show'] = qa_lang_sub('main/image_too_big_x_pc', (int) ($toobig * 100));
+
+						else {
+							$imagedata = qa_image_constrain_data(file_get_contents($_FILES['avatar_default_file']['tmp_name']), $width, $height, qa_opt('avatar_store_size'));
+
+							if (isset($imagedata)) {
+								require_once QA_INCLUDE_DIR . 'qa-app-blobs.php';
+
+								$newblobid = qa_create_blob($imagedata, 'jpeg');
+
+								if (isset($newblobid)) {
+									qa_set_option('avatar_default_blobid', $newblobid);
+									qa_set_option('avatar_default_width', $width);
+									qa_set_option('avatar_default_height', $height);
+									qa_set_option('avatar_default_show', 1);
+								}
+
+								if (strlen($oldblobid))
+									qa_delete_blob($oldblobid);
+							} else
+								$errors['avatar_default_show'] = qa_lang_sub('main/image_not_read', implode(', ', qa_gd_image_formats()));
+						}
+					}
 				}
 			}
 		}
-	}
 
 
 //	Mailings management
