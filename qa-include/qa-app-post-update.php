@@ -821,6 +821,8 @@
 	Handles indexing (based on $text), user points, cached counts and event reports.
 */
 	{
+		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
+
 		$parent=isset($answers[$parentid]) ? $answers[$parentid] : $question;
 
 		qa_post_unindex($oldanswer['postid']);
@@ -846,7 +848,12 @@
 
 		qa_update_q_counts_for_a($question['postid']);
 		qa_db_ccount_update();
-		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts'));
+		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts', 'avoteds'));
+
+		$useridvotes=qa_db_uservote_post_get($oldanswer['postid']);
+		foreach ($useridvotes as $voteruserid => $vote)
+			qa_db_points_update_ifuser($voteruserid, ($vote>0) ? 'aupvotes' : 'adownvotes');
+				// could do this in one query like in qa_db_users_recalc_points() but this will do for now - unlikely to be many votes
 
 		if ($setupdated && $remoderate) {
 			qa_db_queuedcount_update();
