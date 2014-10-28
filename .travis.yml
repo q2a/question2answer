@@ -12,7 +12,6 @@ before_script:
   - curl -o phpcpd.phar https://phar.phpunit.de/phpcpd.phar
   ## PHP Mess Detector
   - pear config-set preferred_state beta
-  - printf "\n" | pecl install imagick
   - pear channel-discover pear.phpmd.org
   - pear channel-discover pear.pdepend.org
   - pear install --alldeps phpmd/PHP_PMD
@@ -22,17 +21,13 @@ before_script:
 
 script:
   ## PHP_CodeSniffer
-  - phpcs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
+  - phpcs --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
   ## PHP Copy/Paste Detector
-  - php phpcpd.phar --verbose .
+  - php phpcpd.phar .
   ## PHP Mess Detector
-  - phpmd . text cleancode
-  - phpmd . text codesize
-  - phpmd . text controversial
-  - phpmd . text design
-  - phpmd . text naming
-  - phpmd . text unusedcode
+  - phpmd --exclude qa-include/vendor/ . text codesize
+  - phpmd --exclude qa-include/vendor/ . text unusedcode
   ## PHPLOC
   - php phploc.phar .
   ## PHPUNIT
-  - phpunit .
+  - phpunit --bootstrap qa-tests/autoload.php qa-tests
