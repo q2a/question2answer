@@ -2118,11 +2118,6 @@ input[type="submit"], button {
   width: auto;
 }
 
-@media (min-width: 980px) {
-  .qa-part-form-profile {
-    float: left;
-  }
-}
 .qa-part-form-profile .qa-form-tall-image {
   text-align: center;
 }
@@ -2198,7 +2193,11 @@ input[type="submit"], button {
     width: 49.8%;
   }
 }
-
+@media (min-width: 980px) {
+  .qa-template-user .qa-part-form-profile {
+    float: left;
+  }
+}
 @media (min-width: 980px) {
   .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
     float: right;
