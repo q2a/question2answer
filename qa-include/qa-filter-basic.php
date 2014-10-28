@@ -116,14 +116,12 @@
 		Add textual element $field to $errors if length of $input is not between $minlength and $maxlength
 	*/
 		{
-			if (isset($input)) {
-				$length=qa_strlen($input);
+			$length = isset($input) ? qa_strlen($input) : 0;
 
-				if ($length < $minlength)
-					$errors[$field]=($minlength==1) ? qa_lang('main/field_required') : qa_lang_sub('main/min_length_x', $minlength);
-				elseif (isset($maxlength) && ($length > $maxlength))
-					$errors[$field]=qa_lang_sub('main/max_length_x', $maxlength);
-			}
+			if ($length < $minlength)
+				$errors[$field] = ($minlength == 1) ? qa_lang('main/field_required') : qa_lang_sub('main/min_length_x', $minlength);
+			elseif (isset($maxlength) && ($length > $maxlength))
+				$errors[$field] = qa_lang_sub('main/max_length_x', $maxlength);
 		}
 
 
