@@ -56,15 +56,14 @@
 		public function admin_form(&$qa_content)
 		{
 			$eventoptions = $this->prepare_event_options();
-			$selectedevents = qa_post_array('event_logger_enabled_events_field');
-			if (!isset($selectedevents))
-				$selectedevents = array();
 
 		//	Process form input
 
 			$saved=false;
 
 			if (qa_clicked('event_logger_save_button')) {
+				$selectedevents = qa_post_array('event_logger_enabled_events_field');
+
 				qa_opt('event_logger_to_database', (int)qa_post_text('event_logger_to_database_field'));
 				qa_opt('event_logger_to_files', qa_post_text('event_logger_to_files_field'));
 				qa_opt('event_logger_directory', qa_post_text('event_logger_directory_field'));
@@ -149,7 +148,7 @@
 						'options' => $eventoptions,
 						'tags' => 'name="event_logger_enabled_events_field[]" size="10"',
 						'match_by' => 'key',
-						'values' => $selectedevents,
+						'values' => $this->string_to_array(qa_opt('event_logger_enabled_events')),
 						'note' => 'It is possible to select multiple events by clicking them holding Ctrl or the Command (Mac) key',
 					),
 
