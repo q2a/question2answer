@@ -975,19 +975,21 @@
 
 	function qa_post_array($field)
 /*
-	Return an array for incoming POST field, or null if it's not defined.
+	Return an array for incoming POST field, or null if it's not an array or not defined.
 	While we're at it, trim() surrounding white space for each value and convert them to Unix line endings.
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if (isset($_POST[$field])) {
-			$result = array();
-			foreach ($_POST[$field] as $key => $value)
-				$result[$key] = preg_replace('/\r\n?/', "\n", trim(qa_gpc_to_string($value)));
-			return $result;
+		if (!isset($_POST[$field]) || !is_array($_POST[$field])) {
+			return null;
 		}
-		return null;
+
+		$result = array();
+		foreach ($_POST[$field] as $key => $value)
+			$result[$key] = preg_replace('/\r\n?/', "\n", trim(qa_gpc_to_string($value)));
+
+		return $result;
 	}
 
 
