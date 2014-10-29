@@ -477,13 +477,19 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		qa_db_post_set_userid($oldquestion['postid'], $userid);
+		require_once QA_INCLUDE_DIR . 'qa-db-votes.php';
+
+		$postid = $oldquestion['postid'];
+
+		qa_db_post_set_userid($postid, $userid);
+		qa_db_uservote_remove_own($postid);
+		qa_db_post_recount_votes($postid);
 
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects', 'qvoteds', 'upvoteds', 'downvoteds'));
-		qa_db_points_update_ifuser($userid, array('qposts', 'aselects', 'qvoteds', 'upvoteds', 'downvoteds'));
+		qa_db_points_update_ifuser($userid, array('qposts', 'aselects', 'qvoteds', 'qupvotes', 'qdownvotes', 'upvoteds', 'downvoteds'));
 
 		qa_report_event('q_claim', $userid, $handle, $cookieid, array(
-			'postid' => $oldquestion['postid'],
+			'postid' => $postid,
 			'oldquestion' => $oldquestion,
 		));
 	}
@@ -734,13 +740,19 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		qa_db_post_set_userid($oldanswer['postid'], $userid);
+		require_once QA_INCLUDE_DIR . 'qa-db-votes.php';
+
+		$postid = $oldanswer['postid'];
+
+		qa_db_post_set_userid($postid, $userid);
+		qa_db_uservote_remove_own($postid);
+		qa_db_post_recount_votes($postid);
 
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'avoteds', 'upvoteds', 'downvoteds'));
-		qa_db_points_update_ifuser($userid, array('aposts', 'aselecteds', 'avoteds', 'upvoteds', 'downvoteds'));
+		qa_db_points_update_ifuser($userid, array('aposts', 'aselecteds', 'avoteds', 'aupvotes', 'adownvotes', 'upvoteds', 'downvoteds'));
 
 		qa_report_event('a_claim', $userid, $handle, $cookieid, array(
-			'postid' => $oldanswer['postid'],
+			'postid' => $postid,
 			'parentid' => $oldanswer['parentid'],
 			'oldanswer' => $oldanswer,
 		));
@@ -1049,18 +1061,23 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		qa_db_post_set_userid($oldcomment['postid'], $userid);
+		require_once QA_INCLUDE_DIR . 'qa-db-votes.php';
+
+		$postid = $oldcomment['postid'];
+
+		qa_db_post_set_userid($postid, $userid);
+		qa_db_uservote_remove_own($postid);
+		qa_db_post_recount_votes($postid);
 
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 		qa_db_points_update_ifuser($userid, array('cposts'));
 
 		qa_report_event('c_claim', $userid, $handle, $cookieid, array(
-			'postid' => $oldcomment['postid'],
+			'postid' => $postid,
 			'parentid' => $oldcomment['parentid'],
 			'oldcomment' => $oldcomment,
 		));
 	}
-
 
 /*
 	Omit PHP closing tag to help avoid accidental output
