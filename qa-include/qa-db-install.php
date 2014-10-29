@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 57);
+	define('QA_DB_VERSION_CURRENT', 58);
 
 
 	function qa_db_user_column_type_verify()
@@ -1422,7 +1422,17 @@
 					}
 					break;
 
-			//	Up to here: Verison 1.7 alpha 1
+				case 58:
+					// Note: need to use full table names here as aliases trigger error "Table 'x' was not locked with LOCK TABLES"
+					qa_db_upgrade_query('DELETE FROM ^userfavorites WHERE entitytype="U" AND userid=entityid');
+					qa_db_upgrade_query('DELETE ^uservotes FROM ^uservotes JOIN ^posts ON ^uservotes.postid=^posts.postid AND ^uservotes.userid=^posts.userid');
+					qa_db_upgrade_query($locktablesquery);
+
+					$keyrecalc['dorecountposts'] = true;
+					$keyrecalc['dorecalcpoints'] = true;
+					break;
+
+			//	Up to here: Verison 1.7 beta
 
 			}
 
