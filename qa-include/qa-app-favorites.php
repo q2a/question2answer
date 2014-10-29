@@ -30,51 +30,59 @@
 	}
 
 
+	/**
+	 * Set an entity to be favorited or removed from favorites. Handles event reporting.
+	 *
+	 * @param int $userid ID of user assigned to the favorite
+	 * @param string $handle Username of user
+	 * @param string $cookieid Cookie ID of user
+	 * @param string $entitytype Entity type code (one of QA_ENTITY_* constants)
+	 * @param string $entityid ID of the entity being favorited (e.g. postid for questions)
+	 * @param bool $favorite Whether to add favorite (true) or remove favorite (false)
+	 */
 	function qa_user_favorite_set($userid, $handle, $cookieid, $entitytype, $entityid, $favorite)
-/*
-	If $favorite is true, set $entitytype and $entityid to be favorites of $userid with $handle and $cookieid, otherwise
-	remove them from its favorites list. Handles event reporting.
-*/
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-favorites.php';
 		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
 		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
 		// Make sure the user is not favoriting themselves
-		if ($entitytype != QA_ENTITY_USER || $userid != $entityid) {
-			if ($favorite)
-				qa_db_favorite_create($userid, $entitytype, $entityid);
-			else
-				qa_db_favorite_delete($userid, $entitytype, $entityid);
-
-			switch ($entitytype) {
-				case QA_ENTITY_QUESTION:
-					$action=$favorite ? 'q_favorite' : 'q_unfavorite';
-					$params=array('postid' => $entityid);
-					break;
-
-				case QA_ENTITY_USER:
-					$action=$favorite ? 'u_favorite' : 'u_unfavorite';
-					$params=array('userid' => $entityid);
-					break;
-
-				case QA_ENTITY_TAG:
-					$action=$favorite ? 'tag_favorite' : 'tag_unfavorite';
-					$params=array('wordid' => $entityid);
-					break;
-
-				case QA_ENTITY_CATEGORY:
-					$action=$favorite ? 'cat_favorite' : 'cat_unfavorite';
-					$params=array('categoryid' => $entityid);
-					break;
-
-				default:
-					qa_fatal_error('Favorite type not recognized');
-					break;
-			}
-
-			qa_report_event($action, $userid, $handle, $cookieid, $params);
+		if ($entitytype == QA_ENTITY_USER && $userid == $entityid) {
+			return;
 		}
+
+		if ($favorite)
+			qa_db_favorite_create($userid, $entitytype, $entityid);
+		else
+			qa_db_favorite_delete($userid, $entitytype, $entityid);
+
+		switch ($entitytype) {
+			case QA_ENTITY_QUESTION:
+				$action=$favorite ? 'q_favorite' : 'q_unfavorite';
+				$params=array('postid' => $entityid);
+				break;
+
+			case QA_ENTITY_USER:
+				$action=$favorite ? 'u_favorite' : 'u_unfavorite';
+				$params=array('userid' => $entityid);
+				break;
+
+			case QA_ENTITY_TAG:
+				$action=$favorite ? 'tag_favorite' : 'tag_unfavorite';
+				$params=array('wordid' => $entityid);
+				break;
+
+			case QA_ENTITY_CATEGORY:
+				$action=$favorite ? 'cat_favorite' : 'cat_unfavorite';
+				$params=array('categoryid' => $entityid);
+				break;
+
+			default:
+				qa_fatal_error('Favorite type not recognized');
+				break;
+		}
+
+		qa_report_event($action, $userid, $handle, $cookieid, $params);
 	}
 
 
