@@ -2356,31 +2356,19 @@ input[type="submit"], button {
 	margin: 0 0 0 5px;
 }
 .qa-form-light-button:hover, .qa-form-light-button:focus {
+	background-color: #476481;
+	background-position: center;
+	background-repeat: no-repeat;
 	border: none;
 	outline: none;
 	-webkit-transition-duration: 0s;
 	transition-duration: 0s;
 }
-.qa-form-light-button a {
-	-webkit-transition-duration: 0s;
-	transition-duration: 0s;
-}
-.qa-form-light-button a:hover {
-	-webkit-transition-duration: 0s;
-	transition-duration: 0s;
-}
-.qa-form-light-button:hover, .qa-form-light-button:focus {
-	background-color: #34495e;
-}
-.qa-form-light-button a {
-	color: #fff;
-}
+.qa-form-light-button a,
 .qa-form-light-button a:hover {
 	color: #fff;
-}
-.qa-form-light-button:hover, .qa-form-light-button:focus {
-	background-position: center;
-	background-repeat: no-repeat;
+	-webkit-transition-duration: 0s;
+	transition-duration: 0s;
 }
 
 .qa-form-light-button-edit, .qa-form-light-button-retagcat {
@@ -2504,7 +2492,9 @@ input[type="submit"], button {
 	background-image: url('images/icons/comment-white.png?1404151058');
 }
 
-.qa-form-light-button-answer, .qa-form-light-button-comment {
+.qa-form-light-button-answer,
+.qa-form-light-button-comment,
+.qa-form-light-button-claim {
 	width: auto;
 	padding: 0 10px 0 30px;
 	background-position: 8px center;
@@ -2512,7 +2502,9 @@ input[type="submit"], button {
 	line-height: 32px;
 	text-indent: 0;
 }
-.qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus, .qa-form-light-button-comment:hover, .qa-form-light-button-comment:focus {
+.qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus,
+.qa-form-light-button-comment:hover, .qa-form-light-button-comment:focus,
+.qa-form-light-button-claim:hover, .qa-form-light-button-claim:focus {
 	background-position: 8px center;
 }
 
