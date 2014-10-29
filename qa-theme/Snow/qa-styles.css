@@ -110,7 +110,7 @@ form, fieldset {
 }
 
 input[type="text"].qa-search-field {
-    padding: 4px 5px;
+	padding: 4px 5px;
 }
 
 input[type="text"], input[type="password"], textarea, select, checkbox, radio {
@@ -221,7 +221,7 @@ img {
 }
 
 .qa-q-view-follows-link {
-	color: #3B5998  !important;
+	color: #3B5998 !important;
 }
 
 p {
@@ -2008,7 +2008,7 @@ a.qa-browse-cat-link:visited {
 	opacity: 0.5px;
 }
 
-/* Answer view  */
+/* Answer view */
 .qa-a-list-item {
 	background: #fff;
 	zoom: 1;

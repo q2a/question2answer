@@ -1,24 +1,21 @@
 <?php
 /*
-  Snow Theme for Question2Answer Package
-  Copyright (C) 2014  Q2A Market <http://www.q2amarket.com>
+	Snow Theme for Question2Answer Package
+	Copyright (C) 2014 Q2A Market <http://www.q2amarket.com>
 
-  File:           qa-theme.php
-  Version:        Snow 1.4
-  Description:    Q2A theme class
+	File: qa-theme.php
+	Version: Snow 1.4
+	Description: Q2A theme class
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
  */
 
 /**
@@ -268,9 +265,9 @@ class qa_html_theme extends qa_html_theme_base
 			}
 
 			// search and replace within the string
-			$search  = array(' - <', '> - ');
+			$search = array(' - <', '> - ');
 			$replace = array(' <', '> ');
-			$output  = $this->output('<span class="qa-' . $class . '-note ' . $qam_note_class . '">' . str_replace($search, $replace, $navlink['note']) . '</span>');
+			$output = $this->output('<span class="qa-' . $class . '-note ' . $qam_note_class . '">' . str_replace($search, $replace, $navlink['note']) . '</span>');
 		}
 	}
 
@@ -336,17 +333,9 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output($qam_snow->footer_custom_content);
 		$this->output('<div class="qam-footer-box">');
 
-		// footer columns
-		// $this->output($qam_snow->footers['footer_columns']);
-
 		$this->output('<div class="qam-footer-row">');
 		$this->widgets('full', 'bottom');
-		// for ($i = 0; $i < 4; $i++)
-		//     $this->output('<div class="qam-footer-col">' . $i . '</div>');
 		$this->output('</div> <!-- END qam-footer-row -->');
-
-		// key to icons in footer
-		// $this->output($this->icons_info());
 
 		qa_html_theme_base::footer();
 		$this->output('</div> <!-- END qam-footer-box -->', '');
