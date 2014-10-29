@@ -478,7 +478,7 @@
 		$postid = $oldquestion['postid'];
 
 		qa_db_post_set_userid($postid, $userid);
-		qa_db_remove_owner_votes_from_post($postid);
+		qa_db_uservote_remove_own($postid);
 		qa_db_post_recount_votes($postid);
 
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects', 'qvoteds', 'upvoteds', 'downvoteds'));
@@ -737,7 +737,7 @@
 		$postid = $oldanswer['postid'];
 
 		qa_db_post_set_userid($postid, $userid);
-		qa_db_remove_owner_votes_from_post($postid);
+		qa_db_uservote_remove_own($postid);
 		qa_db_post_recount_votes($postid);
 
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'avoteds', 'upvoteds', 'downvoteds'));
@@ -1047,7 +1047,7 @@
 		$postid = $oldcomment['postid'];
 
 		qa_db_post_set_userid($postid, $userid);
-		qa_db_remove_owner_votes_from_post($postid);
+		qa_db_uservote_remove_own($postid);
 		qa_db_post_recount_votes($postid);
 
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));

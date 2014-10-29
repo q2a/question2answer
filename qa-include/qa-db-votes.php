@@ -153,15 +153,12 @@
 	/**
 	 * Remove all votes assigned to a post that had been cast by the owner of the post.
 	 *
-	 * @param int $postid The post id which will be removed all votes from its owner.
+	 * @param int $postid The post ID from which the owner's votes will be removed.
 	 */
-	function qa_db_remove_owner_votes_from_post($postid)
+	function qa_db_uservote_remove_own($postid)
 	{
 		qa_db_query_sub(
-			'DELETE uv FROM ^uservotes uv ' .
-			'JOIN ^posts p ' .
-			'ON uv.postid = p.postid AND uv.userid = p.userid ' .
-			'WHERE uv.postid = #', $postid
+			'DELETE uv FROM ^uservotes uv JOIN ^posts p ON uv.postid=p.postid AND uv.userid=p.userid WHERE uv.postid=#', $postid
 		);
 	}
 
