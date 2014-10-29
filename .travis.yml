@@ -1,8 +1,13 @@
 language: php
 php:
-  - 5.3.3
+  - 5.3
   - 5.4
   - 5.5
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
 
 before_script:
   ## PHP_CodeSniffer
