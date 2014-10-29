@@ -347,7 +347,7 @@
 	$qa_content['title'] = qa_lang_html_sub('profile/user_x', $userhtml);
 	$qa_content['error'] = @$errors['page'];
 
-	if (isset($loginuserid) && !QA_FINAL_EXTERNAL_USERS) {
+	if (isset($loginuserid) && $loginuserid != $useraccount['userid'] && !QA_FINAL_EXTERNAL_USERS) {
 		$favoritemap = qa_get_favorite_non_qs_map();
 		$favorite = @$favoritemap['user'][$useraccount['userid']];
 
