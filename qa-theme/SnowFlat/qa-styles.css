@@ -1057,7 +1057,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	background-position: center bottom;
 }
 
-/*------[ qa list parts ]------*/
+/*------[ q-list ]------*/
 .qa-q-list-item {
 	padding: 10px;
 	margin-bottom: 5px;
@@ -2303,9 +2303,16 @@ input[type="submit"], button {
 	border-bottom: 0;
 }
 
-.qa-part-ranking-users, .qa-part-ranking-tags, .qa-part-nav-list-categories {
+.qa-link-next {
+	margin-bottom: 0;
+}
+
+.qa-part-q-list .qa-link-next,
+.qa-part-ranking-users,
+.qa-part-ranking-tags,
+.qa-part-nav-list-categories {
 	padding: 10px;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	background: #fff;
 }
 .qa-part-ranking-users h2, .qa-part-ranking-tags h2, .qa-part-nav-list-categories h2 {

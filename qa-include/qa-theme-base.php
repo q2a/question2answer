@@ -1307,14 +1307,14 @@
 			if (!$this->ranking_block_layout) {
 				// old, less semantic table layout
 				$this->ranking_table($ranking, $class);
-				return;
 			}
-
-			// new block layout
-			foreach ($ranking['items'] as $item) {
-				$this->output('<span class="qa-ranking-item '.$class.'-item">');
-				$this->ranking_item($item, $class);
-				$this->output('</span>');
+			else {
+				// new block layout
+				foreach ($ranking['items'] as $item) {
+					$this->output('<span class="qa-ranking-item '.$class.'-item">');
+					$this->ranking_item($item, $class);
+					$this->output('</span>');
+				}
 			}
 
 			$this->part_footer($ranking);
