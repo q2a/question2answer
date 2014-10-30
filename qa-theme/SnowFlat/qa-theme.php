@@ -50,7 +50,6 @@ class qa_html_theme extends qa_html_theme_base
 
 		// theme subdirectories
 		$this->js_dir = 'js/';
-		$this->css_dir = 'css/';
 		$this->img_url = 'images/';
 		$this->icon_url = $this->img_url . 'icons/';
 
@@ -86,7 +85,7 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		// add RTL CSS file
 		if ($this->isRTL)
-			$this->content['css_src'][] = $this->rooturl . $this->css_dir . 'qa-styles-rtl.css?' . QA_VERSION;
+			$this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
 		// add Ubuntu font CSS file
 		$this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
