@@ -60,23 +60,23 @@
 //	Perform the appropriate Ajax operation
 
 	$routing=array(
-		'notice' => 'qa-ajax-notice.php',
-		'favorite' => 'qa-ajax-favorite.php',
-		'vote' => 'qa-ajax-vote.php',
-		'recalc' => 'qa-ajax-recalc.php',
-		'mailing' => 'qa-ajax-mailing.php',
-		'version' => 'qa-ajax-version.php',
-		'category' => 'qa-ajax-category.php',
-		'asktitle' => 'qa-ajax-asktitle.php',
-		'answer' => 'qa-ajax-answer.php',
-		'comment' => 'qa-ajax-comment.php',
-		'click_a' => 'qa-ajax-click-answer.php',
-		'click_c' => 'qa-ajax-click-comment.php',
-		'click_admin' => 'qa-ajax-click-admin.php',
-		'show_cs' => 'qa-ajax-show-comments.php',
-		'wallpost' => 'qa-ajax-wallpost.php',
-		'click_wall' => 'qa-ajax-click-wall.php',
-		'click_pm' => 'qa-ajax-click-pm.php',
+		'notice' => 'notice.php',
+		'favorite' => 'favorite.php',
+		'vote' => 'vote.php',
+		'recalc' => 'recalc.php',
+		'mailing' => 'mailing.php',
+		'version' => 'version.php',
+		'category' => 'category.php',
+		'asktitle' => 'asktitle.php',
+		'answer' => 'answer.php',
+		'comment' => 'comment.php',
+		'click_a' => 'click-answer.php',
+		'click_c' => 'click-comment.php',
+		'click_admin' => 'click-admin.php',
+		'show_cs' => 'show-comments.php',
+		'wallpost' => 'wallpost.php',
+		'click_wall' => 'click-wall.php',
+		'click_pm' => 'click-pm.php',
 	);
 
 	$operation=qa_post_text('qa_operation');
@@ -84,7 +84,7 @@
 	if (isset($routing[$operation])) {
 		qa_db_connect('qa_ajax_db_fail_handler');
 
-		require QA_INCLUDE_DIR.$routing[$operation];
+		require QA_INCLUDE_DIR.'ajax/'.$routing[$operation];
 
 		qa_db_disconnect();
 	}
