@@ -60,26 +60,26 @@
 	switch (qa_request_part(2)) {
 		case 'wall':
 			qa_set_template('user-wall');
-			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-wall.php';
+			$qa_content = include QA_INCLUDE_DIR.'pages/user-wall.php';
 			break;
 
 		case 'activity':
 			qa_set_template('user-activity');
-			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-activity.php';
+			$qa_content = include QA_INCLUDE_DIR.'pages/user-activity.php';
 			break;
 
 		case 'questions':
 			qa_set_template('user-questions');
-			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-questions.php';
+			$qa_content = include QA_INCLUDE_DIR.'pages/user-questions.php';
 			break;
 
 		case 'answers':
 			qa_set_template('user-answers');
-			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-answers.php';
+			$qa_content = include QA_INCLUDE_DIR.'pages/user-answers.php';
 			break;
 
 		case null:
-			$qa_content = include QA_INCLUDE_DIR.'qa-page-user-profile.php';
+			$qa_content = include QA_INCLUDE_DIR.'pages/user-profile.php';
 			break;
 
 		default:

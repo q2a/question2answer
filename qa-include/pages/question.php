@@ -35,7 +35,7 @@
 	require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 	require_once QA_INCLUDE_DIR.'qa-app-captcha.php';
-	require_once QA_INCLUDE_DIR.'qa-page-question-view.php';
+	require_once QA_INCLUDE_DIR.'pages/question-view.php';
 	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
 
 	$questionid=qa_request_part(0);
@@ -162,7 +162,7 @@
 	}
 
 	if (qa_is_http_post() || strlen($pagestate))
-		require QA_INCLUDE_DIR.'qa-page-question-post.php';
+		require QA_INCLUDE_DIR.'pages/question-post.php';
 
 	$formrequested=isset($formtype);
 

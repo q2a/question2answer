@@ -53,8 +53,8 @@
 		require_once QA_INCLUDE_DIR.'qa-app-format.php';
 		require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
 		require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
-		require_once QA_INCLUDE_DIR.'qa-page-question-view.php';
-		require_once QA_INCLUDE_DIR.'qa-page-question-submit.php';
+		require_once QA_INCLUDE_DIR.'pages/question-view.php';
+		require_once QA_INCLUDE_DIR.'pages/question-submit.php';
 		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
 

@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-	require_once QA_INCLUDE_DIR.'qa-page-question-submit.php';
+	require_once QA_INCLUDE_DIR.'pages/question-submit.php';
 
 
 	$code=qa_post_text('code');
