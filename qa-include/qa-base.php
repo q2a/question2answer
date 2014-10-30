@@ -1175,7 +1175,7 @@
 			if (isset($qa_lang_file_pattern[$group]))
 				$include=str_replace('*', 'default', $qa_lang_file_pattern[$group]);
 			else
-				$include=QA_INCLUDE_DIR.'lang/qa-lang-'.$group.'.php';
+				$include=QA_INCLUDE_DIR.'qa-lang-'.$group.'.php';
 
 			$qa_phrases_default[$group]=@include_once $include;
 		}
