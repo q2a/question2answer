@@ -480,7 +480,7 @@
 	{
 		global $qa_lang_file_pattern;
 
-		if (file_exists(QA_INCLUDE_DIR.'qa-lang-'.$name.'.php'))
+		if (file_exists(QA_INCLUDE_DIR.'lang/qa-lang-'.$name.'.php'))
 			qa_fatal_error('The name "'.$name.'" for phrases is reserved and cannot be used by plugins.'."\n\nPhrases: ".$pattern);
 
 		if (isset($qa_lang_file_pattern[$name]))
@@ -1175,7 +1175,7 @@
 			if (isset($qa_lang_file_pattern[$group]))
 				$include=str_replace('*', 'default', $qa_lang_file_pattern[$group]);
 			else
-				$include=QA_INCLUDE_DIR.'qa-lang-'.$group.'.php';
+				$include=QA_INCLUDE_DIR.'lang/qa-lang-'.$group.'.php';
 
 			$qa_phrases_default[$group]=@include_once $include;
 		}
