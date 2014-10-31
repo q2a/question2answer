@@ -25,9 +25,9 @@
 */
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/cookies.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'pages/question-view.php';
 	require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 

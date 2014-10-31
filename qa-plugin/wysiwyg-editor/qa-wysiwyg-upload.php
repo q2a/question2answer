@@ -41,7 +41,7 @@ class qa_wysiwyg_upload
 			if (!qa_opt('wysiwyg_editor_upload_images'))
 				$message = qa_lang('users/no_permission');
 
-			require_once QA_INCLUDE_DIR.'qa-app-upload.php';
+			require_once QA_INCLUDE_DIR.'app/upload.php';
 
 			$upload = qa_upload_file_one(
 				qa_opt('wysiwyg_editor_upload_max_size'),

@@ -31,10 +31,10 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-app-post-update.php';
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/post-create.php';
+	require_once QA_INCLUDE_DIR.'app/post-update.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 

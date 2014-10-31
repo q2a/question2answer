@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
 
 
 	function qa_suspend_notifications($suspend=true)

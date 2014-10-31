@@ -29,8 +29,8 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
+	require_once QA_INCLUDE_DIR.'app/admin.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 

@@ -43,8 +43,8 @@
 	function qa_user_favorite_set($userid, $handle, $cookieid, $entitytype, $entityid, $favorite)
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-favorites.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		// Make sure the user is not favoriting themselves
 		if ($entitytype == QA_ENTITY_USER && $userid == $entityid) {
@@ -126,7 +126,7 @@
 		if (QA_FINAL_EXTERNAL_USERS)
 			return null;
 
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
 
 		$ranking = array(
 			'items' => array(),

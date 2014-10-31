@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-captcha.php';
+	require_once QA_INCLUDE_DIR.'app/captcha.php';
 	require_once QA_INCLUDE_DIR.'qa-db-users.php';
 
 
@@ -74,10 +74,10 @@
 //	Process submitted form
 
 	if (qa_clicked('doregister')) {
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		if (qa_user_limits_remaining(QA_LIMIT_REGISTRATIONS)) {
-			require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+			require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 			$inemail = qa_post_text('email');
 			$inpassword = qa_post_text('password');

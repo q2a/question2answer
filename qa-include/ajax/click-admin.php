@@ -24,9 +24,9 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+	require_once QA_INCLUDE_DIR.'app/admin.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/cookies.php';
 
 
 	$entityid=qa_post_text('entityid');

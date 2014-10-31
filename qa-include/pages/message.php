@@ -30,9 +30,9 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/limits.php';
 
 	$handle = qa_request_part(1);
 	$loginuserid = qa_get_logged_in_userid();
@@ -118,7 +118,7 @@
 
 			if (empty($errors)) {
 				require_once QA_INCLUDE_DIR.'qa-db-messages.php';
-				require_once QA_INCLUDE_DIR.'qa-app-emails.php';
+				require_once QA_INCLUDE_DIR.'app/emails.php';
 
 				if (qa_opt('show_message_history'))
 					$messageid = qa_db_message_create($loginuserid, $toaccount['userid'], $inmessage, '', false);

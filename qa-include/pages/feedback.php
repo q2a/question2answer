@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-captcha.php';
+	require_once QA_INCLUDE_DIR.'app/captcha.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 
@@ -63,7 +63,7 @@
 	$feedbacksent=false;
 
 	if (qa_clicked('dofeedback')) {
-		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
+		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 		$inmessage=qa_post_text('message');

@@ -33,7 +33,7 @@
 
 	qa_report_process_stage('init_feed');
 
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
 
 
 //	Functions used within this file
@@ -244,7 +244,7 @@
 			break;
 
 		case 'search':
-			require_once QA_INCLUDE_DIR.'qa-app-search.php';
+			require_once QA_INCLUDE_DIR.'app/search.php';
 
 			$query=$feedparams[0];
 
@@ -273,8 +273,8 @@
 
 //	Remove duplicate questions (perhaps referenced in an answer and a comment) and cut down to size
 
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/updates.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 	if ( ($feedtype!='search') && ($feedtype!='hot') ) // leave search results and hot questions sorted by relevance

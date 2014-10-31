@@ -24,11 +24,11 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-app-votes.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/cookies.php';
+	require_once QA_INCLUDE_DIR.'app/votes.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 

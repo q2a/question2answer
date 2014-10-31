@@ -30,8 +30,8 @@
 	}
 
 
-	require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-app-post-update.php';
+	require_once QA_INCLUDE_DIR.'app/post-create.php';
+	require_once QA_INCLUDE_DIR.'app/post-update.php';
 
 
 	function qa_page_q_single_click_q($question, $answers, $commentsfollows, $closepost, &$error)
@@ -41,8 +41,8 @@
 	none). If there is an error to display, it will be passed out in $error.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-post-update.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/post-update.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		$userid=qa_get_logged_in_userid();
 		$handle=qa_get_logged_in_handle();
@@ -91,7 +91,7 @@
 		}
 
 		if (qa_clicked('q_doflag') && $question['flagbutton'] && qa_page_q_click_check_form_code($question, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			$error=qa_flag_error_html($question, $userid, qa_request());
 			if (!$error) {
@@ -102,14 +102,14 @@
 		}
 
 		if (qa_clicked('q_dounflag') && $question['unflaggable'] && qa_page_q_click_check_form_code($question, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			qa_flag_clear($question, $userid, $handle, $cookieid);
 			return true;
 		}
 
 		if (qa_clicked('q_doclearflags') && $question['clearflaggable'] && qa_page_q_click_check_form_code($question, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			qa_flags_clear_all($question, $userid, $handle, $cookieid);
 			return true;
@@ -186,7 +186,7 @@
 		}
 
 		if (qa_clicked($prefix.'doflag') && $answer['flagbutton'] && qa_page_q_click_check_form_code($answer, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			$error=qa_flag_error_html($answer, $userid, qa_request());
 			if (!$error) {
@@ -198,14 +198,14 @@
 		}
 
 		if (qa_clicked($prefix.'dounflag') && $answer['unflaggable'] && qa_page_q_click_check_form_code($answer, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			qa_flag_clear($answer, $userid, $handle, $cookieid);
 			return true;
 		}
 
 		if (qa_clicked($prefix.'doclearflags') && $answer['clearflaggable'] && qa_page_q_click_check_form_code($answer, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			qa_flags_clear_all($answer, $userid, $handle, $cookieid);
 			return true;
@@ -271,7 +271,7 @@
 		}
 
 		if (qa_clicked($prefix.'doflag') && $comment['flagbutton'] && qa_page_q_click_check_form_code($parent, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			$error=qa_flag_error_html($comment, $userid, qa_request());
 			if (!$error) {
@@ -283,14 +283,14 @@
 		}
 
 		if (qa_clicked($prefix.'dounflag') && $comment['unflaggable'] && qa_page_q_click_check_form_code($parent, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			qa_flag_clear($comment, $userid, $handle, $cookieid);
 			return true;
 		}
 
 		if (qa_clicked($prefix.'doclearflags') && $comment['clearflaggable'] && qa_page_q_click_check_form_code($parent, $error)) {
-			require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+			require_once QA_INCLUDE_DIR.'app/votes.php';
 
 			qa_flags_clear_all($comment, $userid, $handle, $cookieid);
 			return true;

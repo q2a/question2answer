@@ -1271,7 +1271,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		if (!isset($neaturls)) {
-			require_once QA_INCLUDE_DIR.'qa-app-options.php';
+			require_once QA_INCLUDE_DIR.'app/options.php';
 			$neaturls=qa_opt('neat_urls');
 		}
 
@@ -1356,7 +1356,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 		$title=qa_block_words_replace($title, qa_get_block_words_preg());
@@ -1533,7 +1533,7 @@
 		if ((!isset($value)) && isset($qa_options_cache[$name]))
 			return $qa_options_cache[$name]; // quick shortcut to reduce calls to qa_get_options()
 
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
 
 		if (isset($value))
 			qa_set_option($name, $value);

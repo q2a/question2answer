@@ -30,9 +30,9 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/limits.php';
 
 	$loginUserId = qa_get_logged_in_userid();
 	$loginUserHandle = qa_get_logged_in_handle();

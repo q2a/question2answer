@@ -40,7 +40,7 @@
 			if (isset($params['delayed']))
 				return;
 
-			require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+			require_once QA_INCLUDE_DIR.'app/limits.php';
 
 			switch ($event) {
 				case 'q_queue':
@@ -99,12 +99,12 @@
 				is_numeric(array_search($event, $writeactions))
 			) {
 				if (isset($userid)) {
-					require_once QA_INCLUDE_DIR.'qa-app-users.php';
+					require_once QA_INCLUDE_DIR.'app/users.php';
 
 					qa_user_report_action($userid, $event);
 
 				} elseif (isset($cookieid)) {
-					require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+					require_once QA_INCLUDE_DIR.'app/cookies.php';
 
 					qa_cookie_report_action($cookieid, $event);
 				}

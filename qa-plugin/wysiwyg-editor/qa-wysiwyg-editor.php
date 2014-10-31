@@ -37,7 +37,7 @@ class qa_wysiwyg_editor
 	public function option_default($option)
 	{
 		if ($option == 'wysiwyg_editor_upload_max_size') {
-			require_once QA_INCLUDE_DIR.'qa-app-upload.php';
+			require_once QA_INCLUDE_DIR.'app/upload.php';
 
 			return min(qa_get_max_upload_size(), 1048576);
 		}
@@ -45,7 +45,7 @@ class qa_wysiwyg_editor
 
 	public function admin_form(&$qa_content)
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-upload.php';
+		require_once QA_INCLUDE_DIR.'app/upload.php';
 
 		$saved = false;
 

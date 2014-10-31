@@ -40,7 +40,7 @@
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$updatedsql=isset($timestamp) ? ('FROM_UNIXTIME('.qa_db_argument_to_mysql($timestamp, false).')') : 'NOW()';
 
@@ -120,7 +120,7 @@
 	$timestamp for the event time or leave as null to use now. Also handles truncation of event streams.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$updatedsql=isset($timestamp) ? ('FROM_UNIXTIME('.qa_db_argument_to_mysql($timestamp, false).')') : 'NOW()';
 

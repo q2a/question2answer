@@ -30,7 +30,7 @@
 	}
 
 
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+	require_once QA_INCLUDE_DIR.'app/updates.php';
 
 
 	function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid=null, $lastip=null)

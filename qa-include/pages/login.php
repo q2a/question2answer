@@ -49,7 +49,7 @@
 	$inremember=qa_post_text('remember');
 
 	if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword)) ) {
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		if (qa_user_limits_remaining(QA_LIMIT_LOGINS)) {
 			require_once QA_INCLUDE_DIR.'qa-db-users.php';
@@ -73,7 +73,7 @@
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
 					if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
-						require_once QA_INCLUDE_DIR.'qa-app-users.php';
+						require_once QA_INCLUDE_DIR.'app/users.php';
 
 						qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
 

@@ -70,7 +70,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
 
 	/*
 		Important note on character encoding in database and PHP connection to MySQL
@@ -727,7 +727,7 @@
 	Upgrade the database schema to the latest version, outputting progress to the browser
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-recalc.php';
+		require_once QA_INCLUDE_DIR.'app/recalc.php';
 
 		$definitions=qa_db_table_definitions();
 		$keyrecalc=array();

@@ -30,8 +30,8 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-q-list.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/q-list.php';
 
 
 //	Get list of unanswered questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php

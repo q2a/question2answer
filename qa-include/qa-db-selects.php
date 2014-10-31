@@ -39,7 +39,7 @@
 	result, otherwise return an array of results indexed as per the parameters.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
 
 		global $qa_db_pending_selectspecs, $qa_db_pending_results;
 
@@ -153,7 +153,7 @@
 		);
 
 		if (isset($voteuserid)) {
-			require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+			require_once QA_INCLUDE_DIR.'app/updates.php';
 
 			$selectspec['columns']['uservote']='^uservotes.vote';
 			$selectspec['columns']['userflag']='^uservotes.flag';
@@ -776,7 +776,7 @@
 
 		if (!empty($handlewords)) {
 			if (QA_FINAL_EXTERNAL_USERS) {
-				require_once QA_INCLUDE_DIR.'qa-app-users.php';
+				require_once QA_INCLUDE_DIR.'app/users.php';
 
 				$userids=qa_get_userids_from_public($handlewords);
 
@@ -1444,7 +1444,7 @@
 	The $identifier should be a handle, word, backpath or postid for users, tags, categories and questions respectively.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$selectspec=array(
 			'columns' => array('flags' => 'COUNT(*)'),
@@ -1484,7 +1484,7 @@
 	Returns $limit questions, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$selectspec = qa_db_posts_basic_selectspec($userid);
 
@@ -1511,7 +1511,7 @@
 	Returns $limit users, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$source = '^users JOIN ^userpoints ON ^users.userid=^userpoints.userid JOIN ^userfavorites ON ^users.userid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY ^users.handle';
 		$arguments = array($userid, QA_ENTITY_USER);
@@ -1538,7 +1538,7 @@
 	Returns $limit tags, or all of them if $limit is null (used in qa_db_selectspec_count).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$source = '^words JOIN ^userfavorites ON ^words.wordid=^userfavorites.entityid WHERE ^userfavorites.userid=$ AND ^userfavorites.entitytype=$ ORDER BY ^words.tagcount DESC';
 		$arguments = array($userid, QA_ENTITY_TAG);
@@ -1564,7 +1564,7 @@
 	Return the selectspec to retrieve an array of $userid's favorited categories, with information about those categories.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		return array(
 			'columns' => array('categoryid', 'title', 'tags', 'qcount', 'backpath', 'content'),
@@ -1581,7 +1581,7 @@
 	the type of item, the array for each item will contain a userid, category backpath or tag word.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		return array(
 			'columns' => array('type' => 'entitytype', 'userid' => 'IF (entitytype=$, entityid, NULL)', 'categorybackpath' => '^categories.backpath', 'tags' => '^words.word'),
@@ -1599,7 +1599,7 @@
 	favorited and which no longer post to user streams (see long comment in qa-db-favorites.php).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$selectspec=qa_db_posts_basic_selectspec($userid);
 
@@ -1680,7 +1680,7 @@
 	information about these contexts (currently, categories).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$selectspec=array(
 			'columns' => array('entityid', 'entitytype', 'level'),

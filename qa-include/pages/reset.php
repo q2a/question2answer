@@ -42,7 +42,7 @@
 //	Process incoming form
 
 	if (qa_clicked('doreset')) {
-		require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+		require_once QA_INCLUDE_DIR.'app/users-edit.php';
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 
 		$inemailhandle=qa_post_text('emailhandle');

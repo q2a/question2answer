@@ -29,14 +29,14 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
+	require_once QA_INCLUDE_DIR.'app/cookies.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
-	require_once QA_INCLUDE_DIR.'qa-app-captcha.php';
+	require_once QA_INCLUDE_DIR.'app/captcha.php';
 	require_once QA_INCLUDE_DIR.'pages/question-view.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+	require_once QA_INCLUDE_DIR.'app/updates.php';
 
 	$questionid=qa_request_part(0);
 	$userid=qa_get_logged_in_userid();

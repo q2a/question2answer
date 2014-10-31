@@ -45,7 +45,7 @@
 
 //	Output the blob in question
 
-	require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+	require_once QA_INCLUDE_DIR.'app/blobs.php';
 
 	qa_db_connect('qa_blob_db_fail_handler');
 

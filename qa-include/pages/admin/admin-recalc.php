@@ -29,8 +29,8 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
-	require_once QA_INCLUDE_DIR.'qa-app-recalc.php';
+	require_once QA_INCLUDE_DIR.'app/admin.php';
+	require_once QA_INCLUDE_DIR.'app/recalc.php';
 
 
 //	Check we have administrative privileges
@@ -125,7 +125,7 @@
 		return $qa_content;
 
 	} else {
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 
 		$qa_content=qa_content_prepare();
 

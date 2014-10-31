@@ -94,7 +94,7 @@
 	['handle'] and/or ['lasthandle'] are required in each element.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
 
 		if (QA_FINAL_EXTERNAL_USERS) {
 			$keyuserids=array();
@@ -256,7 +256,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		if (isset($options['blockwordspreg']))
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
@@ -615,7 +615,7 @@
 	Pass viewing options in $options (see qa_message_html_defaults() in qa-app-options.php)
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
 
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -732,7 +732,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$fields=qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, $options);
 
@@ -1071,7 +1071,7 @@
 	Return $htmlmessage with ^1...^6 substituted for links to log in or register or confirm email and come back to $topage with $params
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
 
 		$userlinks=qa_get_login_links(qa_path_to_root(), isset($topage) ? qa_path($topage, $params, '') : null);
 

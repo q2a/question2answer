@@ -149,7 +149,7 @@
 
 	function qa_avatar_html_from_userid($userid, $size, $padding)
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 
 		global $qa_cache_wp_user_emails;
 

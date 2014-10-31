@@ -29,10 +29,10 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
+	require_once QA_INCLUDE_DIR.'app/cookies.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 
@@ -131,7 +131,7 @@
 							$qa_page_error_html=qa_lang_html('misc/form_security_again');
 
 						else {
-							require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+							require_once QA_INCLUDE_DIR.'app/votes.php';
 							require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 							$userid=qa_get_logged_in_userid();
@@ -155,7 +155,7 @@
 							$qa_page_error_html=qa_lang_html('misc/form_security_again');
 
 						else {
-							require_once QA_INCLUDE_DIR.'qa-app-favorites.php';
+							require_once QA_INCLUDE_DIR.'app/favorites.php';
 
 							qa_user_favorite_set(qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), $entitytype, $entityid, $favorite);
 							qa_redirect(qa_request(), $_GET);

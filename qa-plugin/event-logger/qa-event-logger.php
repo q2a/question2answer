@@ -32,7 +32,7 @@
 				$tablename=qa_db_add_table_prefix('eventlog');
 
 				if (!in_array($tablename, $table_list)) {
-					require_once QA_INCLUDE_DIR.'qa-app-users.php';
+					require_once QA_INCLUDE_DIR.'app/users.php';
 					require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
 
 					return 'CREATE TABLE ^eventlog ('.

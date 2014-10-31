@@ -32,8 +32,8 @@
 	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
 	require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
-	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
+	require_once QA_INCLUDE_DIR.'app/admin.php';
 
 
 	$adminsection = strtolower(qa_request_part(1));
@@ -623,7 +623,7 @@
 			break;
 
 		case 'mailing':
-			require_once QA_INCLUDE_DIR.'qa-app-mailing.php';
+			require_once QA_INCLUDE_DIR.'app/mailing.php';
 
 			$subtitle = 'admin/mailing_title';
 

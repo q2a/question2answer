@@ -30,9 +30,9 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/limits.php';
+	require_once QA_INCLUDE_DIR.'app/updates.php';
 
 
 //	$handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
@@ -76,7 +76,7 @@
 	$loginlevel = qa_get_logged_in_level();
 
 	if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we can know and show more
-		require_once QA_INCLUDE_DIR.'qa-app-messages.php';
+		require_once QA_INCLUDE_DIR.'app/messages.php';
 
 		if ((!is_array($userpoints)) && !is_array($useraccount))
 			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
@@ -153,7 +153,7 @@
 				qa_redirect(qa_request(), array('state' => 'edit'));
 
 			elseif (qa_clicked('dosave')) {
-				require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+				require_once QA_INCLUDE_DIR.'app/users-edit.php';
 				require_once QA_INCLUDE_DIR.'qa-db-users.php';
 
 				$inemail = qa_post_text('email');
@@ -172,7 +172,7 @@
 						qa_db_user_set_flag($userid, QA_USER_FLAGS_SHOW_GRAVATAR, false);
 
 						if (isset($useraccount['avatarblobid'])) {
-							require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+							require_once QA_INCLUDE_DIR.'app/blobs.php';
 
 							qa_db_user_set($userid, 'avatarblobid', null);
 							qa_db_user_set($userid, 'avatarwidth', null);
@@ -256,21 +256,21 @@
 
 			else {
 				if ($approvebutton && qa_clicked('doapprove')) {
-					require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+					require_once QA_INCLUDE_DIR.'app/users-edit.php';
 					qa_set_user_level($userid, $useraccount['handle'], QA_USER_LEVEL_APPROVED, $useraccount['level']);
 					qa_redirect(qa_request());
 				}
 
 				if (isset($maxlevelassign) && ($maxuserlevel < QA_USER_LEVEL_MODERATOR)) {
 					if (qa_clicked('doblock')) {
-						require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+						require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 						qa_set_user_blocked($userid, $useraccount['handle'], true);
 						qa_redirect(qa_request());
 					}
 
 					if (qa_clicked('dounblock')) {
-						require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+						require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 						qa_set_user_blocked($userid, $useraccount['handle'], false);
 						qa_redirect(qa_request());
@@ -278,7 +278,7 @@
 
 					if (qa_clicked('dohideall') && !qa_user_permit_error('permit_hide_show')) {
 						require_once QA_INCLUDE_DIR.'qa-db-admin.php';
-						require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+						require_once QA_INCLUDE_DIR.'app/posts.php';
 
 						$postids = qa_db_get_user_visible_postids($userid);
 
@@ -289,7 +289,7 @@
 					}
 
 					if (qa_clicked('dodelete') && ($loginlevel >= QA_USER_LEVEL_ADMIN)) {
-						require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+						require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 						qa_delete_user($userid);
 

@@ -29,8 +29,8 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+	require_once QA_INCLUDE_DIR.'app/post-create.php';
+	require_once QA_INCLUDE_DIR.'app/updates.php';
 	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
 	require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 	require_once QA_INCLUDE_DIR.'qa-db-points.php';
@@ -70,7 +70,7 @@
 		}
 
 		if ($setupdated && $remoderate) {
-			require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+			require_once QA_INCLUDE_DIR.'app/posts.php';
 
 			$answers = qa_post_get_question_answers($oldquestion['postid']);
 			$commentsfollows = qa_post_get_question_commentsfollows($oldquestion['postid']);
@@ -257,8 +257,8 @@
 	reports. See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$washidden=($oldquestion['type']=='Q_HIDDEN');
 		$wasqueued=($oldquestion['type']=='Q_QUEUED');
@@ -533,7 +533,7 @@
 			$setupdated ? $userid : null, $setupdated ? qa_remote_ip_address() : null, QA_UPDATE_CONTENT, $name);
 
 		if ($setupdated && $remoderate) {
-			require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+			require_once QA_INCLUDE_DIR.'app/posts.php';
 
 			$commentsfollows=qa_post_get_answer_commentsfollows($oldanswer['postid']);
 
@@ -595,7 +595,7 @@
 	a higher-level function which is easier to use.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 
 		$washidden=($oldanswer['type']=='A_HIDDEN');
 		$wasqueued=($oldanswer['type']=='A_QUEUED');
@@ -921,7 +921,7 @@
 	points, cached counts and event reports. See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 
 		if (!isset($parent))
 			$parent=$question; // for backwards compatibility with old answer parameter

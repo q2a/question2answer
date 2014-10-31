@@ -36,7 +36,7 @@
 	user flags $touserflags. If there is no such reason the function returns false.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -81,7 +81,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
 
 		$messageid = qa_db_message_create($userid, $touserid, $content, $format, true);
@@ -152,7 +152,7 @@
 	qa_db_recent_messages_selectspec() and then qa_wall_posts_add_rules()).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 
 		$options = qa_message_html_defaults();
 

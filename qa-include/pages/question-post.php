@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+	require_once QA_INCLUDE_DIR.'app/limits.php';
 	require_once QA_INCLUDE_DIR.'pages/question-submit.php';
 
 

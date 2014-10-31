@@ -29,9 +29,9 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
-	require_once QA_INCLUDE_DIR.'qa-app-search.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
+	require_once QA_INCLUDE_DIR.'app/search.php';
 
 
 //	Perform the search if appropriate

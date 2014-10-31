@@ -62,8 +62,8 @@
 		echo $content;
 
 	} else {
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
-		require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
+		require_once QA_INCLUDE_DIR.'app/blobs.php';
 		require_once QA_INCLUDE_DIR.'qa-util-image.php';
 
 

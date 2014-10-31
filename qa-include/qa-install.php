@@ -114,7 +114,7 @@
 			if (QA_FINAL_EXTERNAL_USERS) {
 				if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
 					require_once QA_INCLUDE_DIR.'qa-db-admin.php';
-					require_once QA_INCLUDE_DIR.'qa-app-format.php';
+					require_once QA_INCLUDE_DIR.'app/format.php';
 
 					qa_db_page_move(qa_db_page_create(get_option('blogname'), QA_PAGE_FLAGS_EXTERNAL, get_option('home'), null, null, null), 'O', 1);
 						// create link back to WordPress home page
@@ -164,7 +164,7 @@
 
 		if (qa_clicked('super')) {
 			require_once QA_INCLUDE_DIR.'qa-db-users.php';
-			require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+			require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 			$inemail=qa_post_text('email');
 			$inpassword=qa_post_text('password');
@@ -176,7 +176,7 @@
 			);
 
 			if (empty($fielderrors)) {
-				require_once QA_INCLUDE_DIR.'qa-app-users.php';
+				require_once QA_INCLUDE_DIR.'app/users.php';
 
 				$userid=qa_create_new_user($inemail, $inpassword, $inhandle, QA_USER_LEVEL_SUPER);
 				qa_set_logged_in_user($userid, $inhandle);

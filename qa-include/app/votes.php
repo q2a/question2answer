@@ -41,8 +41,8 @@
 		// The 'login', 'confirm', 'limit', 'userblock' and 'ipblock' permission errors are reported to the user here.
 		// Others ('approve', 'level') prevent the buttons being clickable in the first place, in qa_get_vote_view(...)
 
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		if (
 			is_array($post) &&
@@ -94,7 +94,7 @@
 		require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
 		require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		$vote=(int)min(1, max(-1, $vote));
 		$oldvote=(int)qa_db_uservote_get($post['postid'], $userid);
@@ -152,9 +152,9 @@
 		// Others ('approve', 'level') prevent the flag button being shown, in qa_page_q_post_rules(...)
 
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		if (
 			is_array($post) &&
@@ -198,7 +198,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 
 		qa_db_userflag_set($oldpost['postid'], $userid, true);
@@ -242,7 +242,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 
 		qa_db_userflag_set($oldpost['postid'], $userid, false);
@@ -279,7 +279,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
 
 		qa_db_userflags_clear_all($oldpost['postid']);

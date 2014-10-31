@@ -131,7 +131,7 @@
 				$html=qa_html($content, true);
 
 				if (@$options['showurllinks']) {
-					require_once QA_INCLUDE_DIR.'qa-app-format.php';
+					require_once QA_INCLUDE_DIR.'app/format.php';
 					$html=qa_html_convert_urls($html, qa_opt('links_in_new_window'));
 				}
 

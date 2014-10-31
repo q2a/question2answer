@@ -38,7 +38,7 @@
 				return;
 
 			require_once QA_INCLUDE_DIR.'qa-db-events.php';
-			require_once QA_INCLUDE_DIR.'qa-app-events.php';
+			require_once QA_INCLUDE_DIR.'app/events.php';
 
 			switch ($event) {
 				case 'q_post':

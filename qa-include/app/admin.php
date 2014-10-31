@@ -37,7 +37,7 @@
 */
 	{
 		if (!qa_is_logged_in()) {
-			require_once QA_INCLUDE_DIR.'qa-app-format.php';
+			require_once QA_INCLUDE_DIR.'app/format.php';
 
 			$qa_content=qa_content_prepare();
 
@@ -229,7 +229,7 @@
 	ranging from $widest to $narrowest. Set $doconfirms to whether email confirmations are on
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
 
 		$options=array(
 			QA_PERMIT_ALL => qa_lang_html('options/permit_all'),
@@ -490,21 +490,21 @@
 				switch ($action) {
 					case 'userapprove':
 						if ($useraccount['level']<=QA_USER_LEVEL_APPROVED) { // don't demote higher level users
-							require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+							require_once QA_INCLUDE_DIR.'app/users-edit.php';
 							qa_set_user_level($useraccount['userid'], $useraccount['handle'], QA_USER_LEVEL_APPROVED, $useraccount['level']);
 							return true;
 						}
 						break;
 
 					case 'userblock':
-						require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+						require_once QA_INCLUDE_DIR.'app/users-edit.php';
 						qa_set_user_blocked($useraccount['userid'], $useraccount['handle'], true);
 						return true;
 						break;
 				}
 
 		} else { // something to do with a post
-			require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+			require_once QA_INCLUDE_DIR.'app/posts.php';
 
 			$post=qa_post_get_full($entityid);
 
@@ -548,7 +548,7 @@
 						break;
 
 					case 'clearflags':
-						require_once QA_INCLUDE_DIR.'qa-app-votes.php';
+						require_once QA_INCLUDE_DIR.'app/votes.php';
 
 						if (!qa_user_post_permit_error('permit_hide_show', $post)) {
 							qa_flags_clear_all($post, $userid, qa_get_logged_in_handle(), null);

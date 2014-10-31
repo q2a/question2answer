@@ -45,7 +45,7 @@
 	$userconfirmed=false;
 
 	if (isset($loginuserid) && qa_clicked('dosendconfirm')) { // button clicked to send a link
-		require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+		require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 		if (!qa_check_form_security_code('confirm', qa_post_text('code')))
 			$pageerror=qa_lang_html('misc/form_security_again');
@@ -57,7 +57,7 @@
 
 	} elseif (strlen($incode)) { // non-empty code detected from the URL
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-		require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+		require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 		if (!empty($inhandle)) { // match based on code and handle provided on URL
 			$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inhandle, false));

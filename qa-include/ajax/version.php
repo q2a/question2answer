@@ -24,7 +24,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
+	require_once QA_INCLUDE_DIR.'app/admin.php';
 
 
 	$uri = qa_post_text('uri');

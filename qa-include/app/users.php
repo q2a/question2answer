@@ -238,7 +238,7 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+			require_once QA_INCLUDE_DIR.'app/cookies.php';
 
 			qa_start_session();
 
@@ -300,7 +300,7 @@
 				qa_set_logged_in_user($users[0]['userid'], $users[0]['handle'], false, $source);
 
 			else { // create and log in user
-				require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+				require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 				qa_db_user_login_sync(true);
 
@@ -478,7 +478,7 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			require_once QA_INCLUDE_DIR.'qa-app-format.php';
+			require_once QA_INCLUDE_DIR.'app/format.php';
 
 			if (qa_opt('avatar_allow_gravatar') && ($flags & QA_USER_FLAGS_SHOW_GRAVATAR))
 				$html=qa_get_gravatar_html($email, $size);
@@ -713,7 +713,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$level=qa_get_logged_in_level();
 
@@ -805,7 +805,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		$userid=qa_get_logged_in_userid();
 		if (!isset($userlevel))

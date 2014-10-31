@@ -114,7 +114,7 @@
 	Pass the user's existing $emailcode if there is one, otherwise a new one will be set up
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
+		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 
 		if (!strlen(trim($emailcode))) {

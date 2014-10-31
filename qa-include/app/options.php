@@ -416,7 +416,7 @@
 
 				case 'editor_for_qs':
 				case 'editor_for_as':
-					require_once QA_INCLUDE_DIR.'qa-app-format.php';
+					require_once QA_INCLUDE_DIR.'app/format.php';
 
 					$value='-'; // to match none by default, i.e. choose based on who is best at editing HTML
 					qa_load_editor('', 'html', $value);
@@ -532,7 +532,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
 
 		return array(
 			'tagsview' => ($basetype=='Q') && qa_using_tags(),

@@ -24,8 +24,8 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/limits.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 
@@ -43,10 +43,10 @@
 //	Check if the question exists, is not closed, and whether the user has permission to do this
 
 	if ((@$question['basetype']=='Q') && (!isset($question['closedbyid'])) && !qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
-		require_once QA_INCLUDE_DIR.'qa-app-captcha.php';
-		require_once QA_INCLUDE_DIR.'qa-app-format.php';
-		require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
-		require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+		require_once QA_INCLUDE_DIR.'app/captcha.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
+		require_once QA_INCLUDE_DIR.'app/post-create.php';
+		require_once QA_INCLUDE_DIR.'app/cookies.php';
 		require_once QA_INCLUDE_DIR.'pages/question-view.php';
 		require_once QA_INCLUDE_DIR.'pages/question-submit.php';
 

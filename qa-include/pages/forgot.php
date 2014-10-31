@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-captcha.php';
+	require_once QA_INCLUDE_DIR.'app/captcha.php';
 
 
 //	Check we're not using single-sign on integration and that we're not logged in
@@ -45,7 +45,7 @@
 //	Start the 'I forgot my password' process, sending email if appropriate
 
 	if (qa_clicked('doforgot')) {
-		require_once QA_INCLUDE_DIR.'qa-app-users-edit.php';
+		require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 		$inemailhandle=qa_post_text('emailhandle');
 

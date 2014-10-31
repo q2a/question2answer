@@ -24,10 +24,10 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-app-favorites.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/cookies.php';
+	require_once QA_INCLUDE_DIR.'app/favorites.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 
 
 	$entitytype=qa_post_text('entitytype');

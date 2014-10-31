@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-recalc.php';
-	require_once QA_INCLUDE_DIR.'qa-app-admin.php';
+	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
 
 

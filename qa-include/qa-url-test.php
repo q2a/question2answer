@@ -25,7 +25,7 @@
 */
 
 	if (qa_gpc_to_string(@$_GET['param'])==QA_URL_TEST_STRING) {
-		require_once QA_INCLUDE_DIR.'qa-app-admin.php';
+		require_once QA_INCLUDE_DIR.'app/admin.php';
 
 		echo '<html><body style="margin:0; padding:0;">';
 		echo '<table width="100%" height="100%" cellspacing="0" cellpadding="0">';

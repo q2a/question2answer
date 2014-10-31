@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 
 
 	$categoryslugs=qa_request_parts(1);

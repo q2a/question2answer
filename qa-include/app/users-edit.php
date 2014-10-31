@@ -160,9 +160,9 @@
 
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		require_once QA_INCLUDE_DIR.'qa-db-points.php';
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
-		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
-		require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
+		require_once QA_INCLUDE_DIR.'app/emails.php';
+		require_once QA_INCLUDE_DIR.'app/cookies.php';
 
 		$userid=qa_db_user_create($email, $password, $handle, $level, qa_remote_ip_address());
 		qa_db_points_update_ifuser($userid, null);
@@ -246,7 +246,7 @@
 
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
+		require_once QA_INCLUDE_DIR.'app/emails.php';
 
 		$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($userid, true));
 
@@ -281,7 +281,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
-		require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+		require_once QA_INCLUDE_DIR.'app/cookies.php';
 
 		qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, true);
 		qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_CONFIRM, false);
@@ -342,8 +342,8 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-db-users.php';
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
-		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
+		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 		qa_db_user_set($userid, 'emailcode', qa_db_user_rand_emailcode());
@@ -366,9 +366,9 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
-		require_once QA_INCLUDE_DIR.'qa-app-options.php';
-		require_once QA_INCLUDE_DIR.'qa-app-emails.php';
-		require_once QA_INCLUDE_DIR.'qa-app-cookies.php';
+		require_once QA_INCLUDE_DIR.'app/options.php';
+		require_once QA_INCLUDE_DIR.'app/emails.php';
+		require_once QA_INCLUDE_DIR.'app/cookies.php';
 		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 
 		$password=qa_random_alphanum(max(QA_MIN_PASSWORD_LEN, QA_NEW_PASSWORD_LEN));
@@ -413,7 +413,7 @@
 		$imagedata=qa_image_constrain_data($imagedata, $width, $height, qa_opt('avatar_store_size'));
 
 		if (isset($imagedata)) {
-			require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+			require_once QA_INCLUDE_DIR.'app/blobs.php';
 
 			$newblobid=qa_create_blob($imagedata, 'jpeg', null, $userid, null, qa_remote_ip_address());
 

@@ -24,8 +24,8 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'qa-app-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-recalc.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+	require_once QA_INCLUDE_DIR.'app/recalc.php';
 
 
 	if (qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN) {

@@ -30,8 +30,8 @@
 	}
 
 
-	require_once QA_INCLUDE_DIR.'qa-app-format.php';
-	require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
+	require_once QA_INCLUDE_DIR.'app/limits.php';
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
@@ -103,7 +103,7 @@
 		$in['tags']=qa_get_tags_field_value('tags');
 
 	if (qa_clicked('doask')) {
-		require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
+		require_once QA_INCLUDE_DIR.'app/post-create.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 		$categoryids=array_keys(qa_category_path($categories, @$in['categoryid']));

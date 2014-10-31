@@ -71,9 +71,9 @@
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
 	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
 	require_once QA_INCLUDE_DIR.'qa-db-users.php';
-	require_once QA_INCLUDE_DIR.'qa-app-options.php';
-	require_once QA_INCLUDE_DIR.'qa-app-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-app-post-update.php';
+	require_once QA_INCLUDE_DIR.'app/options.php';
+	require_once QA_INCLUDE_DIR.'app/post-create.php';
+	require_once QA_INCLUDE_DIR.'app/post-update.php';
 
 
 	function qa_recalc_perform_step(&$state)
@@ -95,7 +95,7 @@
 				$pages=qa_db_pages_get_for_reindexing($next, 10);
 
 				if (count($pages)) {
-					require_once QA_INCLUDE_DIR.'qa-app-format.php';
+					require_once QA_INCLUDE_DIR.'app/format.php';
 
 					$lastpageid=max(array_keys($pages));
 
@@ -134,7 +134,7 @@
 				$posts=qa_db_posts_get_for_reindexing($next, 10);
 
 				if (count($posts)) {
-					require_once QA_INCLUDE_DIR.'qa-app-format.php';
+					require_once QA_INCLUDE_DIR.'app/format.php';
 
 					$lastpostid=max(array_keys($posts));
 
@@ -271,8 +271,8 @@
 				$questionids=qa_db_qs_get_for_event_refilling($next, 1);
 
 				if (count($questionids)) {
-					require_once QA_INCLUDE_DIR.'qa-app-events.php';
-					require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+					require_once QA_INCLUDE_DIR.'app/events.php';
+					require_once QA_INCLUDE_DIR.'app/updates.php';
 					require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
 					$lastquestionid=max($questionids);
@@ -428,7 +428,7 @@
 				$posts=qa_db_posts_get_for_deleting('C', $next, 1);
 
 				if (count($posts)) {
-					require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+					require_once QA_INCLUDE_DIR.'app/posts.php';
 
 					$postid=$posts[0];
 
@@ -446,7 +446,7 @@
 				$posts=qa_db_posts_get_for_deleting('A', $next, 1);
 
 				if (count($posts)) {
-					require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+					require_once QA_INCLUDE_DIR.'app/posts.php';
 
 					$postid=$posts[0];
 
@@ -464,7 +464,7 @@
 				$posts=qa_db_posts_get_for_deleting('Q', $next, 1);
 
 				if (count($posts)) {
-					require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+					require_once QA_INCLUDE_DIR.'app/posts.php';
 
 					$postid=$posts[0];
 
@@ -486,7 +486,7 @@
 				$blob=qa_db_get_next_blob_in_db($next);
 
 				if (isset($blob)) {
-					require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+					require_once QA_INCLUDE_DIR.'app/blobs.php';
 					require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
 
 					if (qa_write_blob_file($blob['blobid'], $blob['content'], $blob['format']))
@@ -508,7 +508,7 @@
 				$blob=qa_db_get_next_blob_on_disk($next);
 
 				if (isset($blob)) {
-					require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+					require_once QA_INCLUDE_DIR.'app/blobs.php';
 					require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
 
 					$content=qa_read_blob_file($blob['blobid'], $blob['format']);

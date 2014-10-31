@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-events.php';
-	require_once QA_INCLUDE_DIR.'qa-app-updates.php';
+	require_once QA_INCLUDE_DIR.'app/updates.php';
 
 
 	function qa_create_event_for_q_user($questionid, $lastpostid, $updatetype, $lastuserid, $otheruserid=null, $timestamp=null)
@@ -78,7 +78,7 @@
 	{
 		if (isset($categoryid)) {
 			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-			require_once QA_INCLUDE_DIR.'qa-app-format.php';
+			require_once QA_INCLUDE_DIR.'app/format.php';
 
 			$categories=qa_category_path(qa_db_single_select(qa_db_category_nav_selectspec($categoryid, true)), $categoryid);
 			foreach ($categories as $category)

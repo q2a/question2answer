@@ -77,8 +77,8 @@
 
 	//	Check per-user upload limits
 
-		require_once QA_INCLUDE_DIR.'qa-app-users.php';
-		require_once QA_INCLUDE_DIR.'qa-app-limits.php';
+		require_once QA_INCLUDE_DIR.'app/users.php';
+		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		switch (qa_user_permit_error(null, QA_LIMIT_UPLOADS))
 		{
@@ -183,7 +183,7 @@
 
 	//	Create the blob and return
 
-		require_once QA_INCLUDE_DIR.'qa-app-blobs.php';
+		require_once QA_INCLUDE_DIR.'app/blobs.php';
 
 		$userid=qa_get_logged_in_userid();
 		$cookieid=isset($userid) ? qa_cookie_get() : qa_cookie_get_create();

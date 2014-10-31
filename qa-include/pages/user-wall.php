@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-app-messages.php';
+	require_once QA_INCLUDE_DIR.'app/messages.php';
 
 
 //	Check we're not using single-sign on integration, which doesn't allow walls
