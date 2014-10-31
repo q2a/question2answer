@@ -899,7 +899,7 @@ blockquote p {
 }
 
 h1 {
-	padding: 8px 52px 8px 20px;
+	padding: 8px 8px 8px 20px;
 	margin-bottom: 5px;
 	background: #3498db;
 	color: #fff;
@@ -1014,16 +1014,11 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 
 .qa-favoriting {
-	position: absolute;
-	right: 10px;
-	top: 5px;
+	float: right;
 }
 .qa-favoriting .qa-waiting {
 	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin: -7px 0 0 -7px;
-	padding: 0;
+	margin: 14px 0 0 -26px;
 }
 
 .qa-favorite-button, .qa-unfavorite-button {
