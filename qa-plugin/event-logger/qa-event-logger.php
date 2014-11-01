@@ -33,7 +33,7 @@
 
 				if (!in_array($tablename, $table_list)) {
 					require_once QA_INCLUDE_DIR.'app/users.php';
-					require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+					require_once QA_INCLUDE_DIR.'db/maxima.php';
 
 					return 'CREATE TABLE ^eventlog ('.
 						'datetime DATETIME NOT NULL,'.

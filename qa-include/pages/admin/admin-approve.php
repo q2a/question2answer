@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+	require_once QA_INCLUDE_DIR.'db/admin.php';
 
 
 //	Check we're not using single-sign on integration

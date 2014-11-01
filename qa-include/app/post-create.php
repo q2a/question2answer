@@ -29,10 +29,10 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
-	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-db-points.php';
-	require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
+	require_once QA_INCLUDE_DIR.'db/maxima.php';
+	require_once QA_INCLUDE_DIR.'db/post-create.php';
+	require_once QA_INCLUDE_DIR.'db/points.php';
+	require_once QA_INCLUDE_DIR.'db/hotness.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 
@@ -53,14 +53,14 @@
 	See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+		require_once QA_INCLUDE_DIR.'db/selects.php';
 
 		$postid=qa_db_post_create($queued ? 'Q_QUEUED' : 'Q', @$followanswer['postid'], $userid, isset($userid) ? null : $cookieid,
 			qa_remote_ip_address(), $title, $content, $format, $tagstring, qa_combine_notify_email($userid, $notify, $email),
 			$categoryid, isset($userid) ? null : $name);
 
 		if (isset($extravalue))	{
-			require_once QA_INCLUDE_DIR.'qa-db-metas.php';
+			require_once QA_INCLUDE_DIR.'db/metas.php';
 			qa_db_postmeta_set($postid, 'qa_q_extra', $extravalue);
 		}
 

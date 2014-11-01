@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-options.php';
+	require_once QA_INCLUDE_DIR.'db/options.php';
 
 	define('QA_PERMIT_ALL', 150);
 	define('QA_PERMIT_USERS', 120);
@@ -59,7 +59,7 @@
 			qa_preload_options();
 
 		if (!$qa_options_loaded) {
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 
 			qa_load_options_results(array(
 				qa_db_get_pending_result('options'),
@@ -139,7 +139,7 @@
 			);
 
 			if (QA_OPTIMIZE_DISTANT_DB) {
-				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+				require_once QA_INCLUDE_DIR.'db/selects.php';
 
 				foreach ($selectspecs as $pendingid => $selectspec)
 					qa_db_queue_pending_select($pendingid, $selectspec);

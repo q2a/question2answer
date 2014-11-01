@@ -112,7 +112,7 @@
 			global $qa_cached_logged_in_points;
 
 			if (!isset($qa_cached_logged_in_points)) {
-				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+				require_once QA_INCLUDE_DIR.'db/selects.php';
 
 				$qa_cached_logged_in_points=qa_db_select_with_pending(qa_db_user_points_selectspec(qa_get_logged_in_userid(), true));
 			}
@@ -249,7 +249,7 @@
 				// Logging in from a second browser will make the previous browser's 'Remember me' no longer
 				// work - I'm not sure if this is the right behavior - could see it either way.
 
-				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+				require_once QA_INCLUDE_DIR.'db/selects.php';
 
 				$userinfo=qa_db_single_select(qa_db_user_account_selectspec($userid, true));
 
@@ -288,7 +288,7 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			require_once QA_INCLUDE_DIR.'db/users.php';
 
 			$users=qa_db_user_login_find($source, $identifier);
 			$countusers=count($users);
@@ -373,7 +373,7 @@
 
 					// Try to recover session from the database if PHP session has timed out
 					if ( (!isset($_SESSION['qa_session_userid_'.$suffix])) && (!empty($handle)) && (!empty($sessioncode)) ) {
-						require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+						require_once QA_INCLUDE_DIR.'db/selects.php';
 
 						$userinfo=qa_db_single_select(qa_db_user_account_selectspec($handle, false)); // don't get any pending
 
@@ -418,7 +418,7 @@
 			$userid=qa_get_logged_in_userid();
 
 			if (isset($userid) && !isset($qa_cached_logged_in_user)) {
-				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+				require_once QA_INCLUDE_DIR.'db/selects.php';
 				$qa_cached_logged_in_user=qa_db_get_pending_result('loggedinuser', qa_db_user_account_selectspec($userid, true));
 
 				if (!isset($qa_cached_logged_in_user)) {
@@ -511,7 +511,7 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			require_once QA_INCLUDE_DIR.'db/users.php';
 
 			qa_db_user_written($userid, qa_remote_ip_address());
 		}
@@ -613,7 +613,7 @@
 	Return an array of all the specific (e.g. per category) level privileges for the logged in user, retrieving from the database if necessary
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+		require_once QA_INCLUDE_DIR.'db/selects.php';
 
 		return qa_db_get_pending_result('userlevels', qa_db_user_levels_selectspec(qa_get_logged_in_userid(), true));
 	}
@@ -628,7 +628,7 @@
 			$rawuseridhandles=qa_get_public_from_userids($userids);
 
 		else {
-			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			require_once QA_INCLUDE_DIR.'db/users.php';
 			$rawuseridhandles=qa_db_user_get_userid_handles($userids);
 		}
 
@@ -663,7 +663,7 @@
 			$rawhandleuserids=qa_get_userids_from_public($handles);
 
 		else {
-			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			require_once QA_INCLUDE_DIR.'db/users.php';
 			$rawhandleuserids=qa_db_user_get_handle_userids($handles);
 		}
 
@@ -695,7 +695,7 @@
 			$handleuserids=qa_get_userids_from_public(array($handle));
 
 		else {
-			require_once QA_INCLUDE_DIR.'qa-db-users.php';
+			require_once QA_INCLUDE_DIR.'db/users.php';
 			$handleuserids=qa_db_user_get_handle_userids(array($handle));
 		}
 

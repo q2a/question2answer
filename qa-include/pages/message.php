@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'app/limits.php';
@@ -117,7 +117,7 @@
 				$errors['message'] = qa_lang('misc/message_empty');
 
 			if (empty($errors)) {
-				require_once QA_INCLUDE_DIR.'qa-db-messages.php';
+				require_once QA_INCLUDE_DIR.'db/messages.php';
 				require_once QA_INCLUDE_DIR.'app/emails.php';
 
 				if (qa_opt('show_message_history'))

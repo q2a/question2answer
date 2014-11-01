@@ -43,7 +43,7 @@
 
 	if (qa_clicked('doreset')) {
 		require_once QA_INCLUDE_DIR.'app/users-edit.php';
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		$inemailhandle=qa_post_text('emailhandle');
 		$incode=trim(qa_post_text('code')); // trim to prevent passing in blank values to match uninitiated DB rows
@@ -60,7 +60,7 @@
 				$matchusers=qa_db_user_find_by_handle($inemailhandle);
 
 			if (count($matchusers)==1) { // if match more than one (should be impossible), consider it a non-match
-				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+				require_once QA_INCLUDE_DIR.'db/selects.php';
 
 				$inuserid=$matchusers[0];
 				$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));

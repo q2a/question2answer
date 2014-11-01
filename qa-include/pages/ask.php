@@ -32,7 +32,7 @@
 
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'app/limits.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'qa-util-sort.php';
 
 
@@ -135,7 +135,7 @@
 				$errors['categoryid']=qa_lang_html('question/category_ask_not_allowed');
 
 			if ($captchareason) {
-				require_once 'qa-app-captcha.php';
+				require_once QA_INCLUDE_DIR . 'app/captcha.php';
 				qa_captcha_validate_post($errors);
 			}
 
@@ -275,7 +275,7 @@
 		isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email']);
 
 	if ($captchareason) {
-		require_once 'qa-app-captcha.php';
+		require_once QA_INCLUDE_DIR . 'app/captcha.php';
 		qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors, qa_captcha_reason_note($captchareason));
 	}
 

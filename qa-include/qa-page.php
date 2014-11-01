@@ -33,7 +33,7 @@
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'app/options.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 //	Functions which are called at the bottom of this file
@@ -132,7 +132,7 @@
 
 						else {
 							require_once QA_INCLUDE_DIR.'app/votes.php';
-							require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+							require_once QA_INCLUDE_DIR.'db/selects.php';
 
 							$userid=qa_get_logged_in_userid();
 
@@ -174,11 +174,11 @@
 								setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN);
 
 							elseif ($noticeid=='welcome') {
-								require_once QA_INCLUDE_DIR.'qa-db-users.php';
+								require_once QA_INCLUDE_DIR.'db/users.php';
 								qa_db_user_set_flag(qa_get_logged_in_userid(), QA_USER_FLAGS_WELCOME_NOTICE, false);
 
 							} else {
-								require_once QA_INCLUDE_DIR.'qa-db-notices.php';
+								require_once QA_INCLUDE_DIR.'db/notices.php';
 								qa_db_usernotice_delete(qa_get_logged_in_userid(), $noticeid);
 							}
 
@@ -375,7 +375,7 @@
 */
 	{
 		if (isset($qa_content['inc_views_postid'])) {
-			require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
+			require_once QA_INCLUDE_DIR.'db/hotness.php';
 			qa_db_hotness_update($qa_content['inc_views_postid'], null, true);
 			return true;
 		}

@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 
 
@@ -108,7 +108,7 @@
 			if (qa_clicked('dohideall') && !qa_user_maximum_permit_error('permit_hide_show')) {
 				// allow moderator in one category to hide posts across all categories if they are identified via IP page
 
-				require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+				require_once QA_INCLUDE_DIR.'db/admin.php';
 				require_once QA_INCLUDE_DIR.'app/posts.php';
 
 				$postids=qa_db_get_ip_visible_postids($ip);

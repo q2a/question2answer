@@ -52,8 +52,8 @@
 		require_once QA_INCLUDE_DIR.'app/limits.php';
 
 		if (qa_user_limits_remaining(QA_LIMIT_LOGINS)) {
-			require_once QA_INCLUDE_DIR.'qa-db-users.php';
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/users.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 
 			if (!qa_check_form_security_code('login', qa_post_text('code')))
 				$pageerror=qa_lang_html('misc/form_security_again');

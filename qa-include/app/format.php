@@ -144,7 +144,7 @@
 			$loginuserid=qa_get_logged_in_userid();
 
 			if (isset($loginuserid)) {
-				require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+				require_once QA_INCLUDE_DIR.'db/selects.php';
 				require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 				$favoritenonqs=qa_db_get_pending_result('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));

@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-events.php';
+	require_once QA_INCLUDE_DIR.'db/events.php';
 	require_once QA_INCLUDE_DIR.'app/updates.php';
 
 
@@ -60,7 +60,7 @@
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
-		require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
+		require_once QA_INCLUDE_DIR.'db/post-create.php';
 
 		$tagwordids=qa_db_word_mapto_ids(array_unique(qa_tagstring_to_tags($tagstring)));
 		foreach ($tagwordids as $wordid)
@@ -77,7 +77,7 @@
 */
 	{
 		if (isset($categoryid)) {
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 			require_once QA_INCLUDE_DIR.'app/format.php';
 
 			$categories=qa_category_path(qa_db_single_select(qa_db_category_nav_selectspec($categoryid, true)), $categoryid);

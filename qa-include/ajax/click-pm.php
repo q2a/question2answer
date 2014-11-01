@@ -27,7 +27,7 @@
 	require_once QA_INCLUDE_DIR.'app/messages.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'app/cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 	$loginUserId = qa_get_logged_in_userid();

@@ -29,9 +29,9 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/admin.php';
+	require_once QA_INCLUDE_DIR.'db/maxima.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'app/options.php';
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 
@@ -710,7 +710,7 @@
 							break;
 
 						case 'block_ips_write':
-							require_once QA_INCLUDE_DIR . 'qa-app-limits.php';
+							require_once QA_INCLUDE_DIR . 'app/limits.php';
 							$optionvalue = implode(' , ', qa_block_ips_explode($optionvalue));
 							break;
 
@@ -746,7 +746,7 @@
 							$imagedata = qa_image_constrain_data(file_get_contents($_FILES['avatar_default_file']['tmp_name']), $width, $height, qa_opt('avatar_store_size'));
 
 							if (isset($imagedata)) {
-								require_once QA_INCLUDE_DIR . 'qa-app-blobs.php';
+								require_once QA_INCLUDE_DIR . 'app/blobs.php';
 
 								$newblobid = qa_create_blob($imagedata, 'jpeg');
 

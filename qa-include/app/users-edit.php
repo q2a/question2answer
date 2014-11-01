@@ -39,7 +39,7 @@
 	to all filter modules and also rejects existing values in database unless they belongs to $olduser (if set).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		$errors=array();
 
@@ -86,8 +86,8 @@
 */
 	{
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
-		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/maxima.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		if (!strlen($handle))
 			$handle=qa_lang('users/registered_user');
@@ -158,8 +158,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
-		require_once QA_INCLUDE_DIR.'qa-db-points.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
+		require_once QA_INCLUDE_DIR.'db/points.php';
 		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'app/cookies.php';
@@ -214,10 +214,10 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
-		require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
-		require_once QA_INCLUDE_DIR.'qa-db-points.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
+		require_once QA_INCLUDE_DIR.'db/post-update.php';
+		require_once QA_INCLUDE_DIR.'db/points.php';
 
 		$postids=qa_db_uservoteflag_user_get($userid); // posts this user has flagged or voted on, whose counts need updating
 
@@ -244,8 +244,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
-		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
+		require_once QA_INCLUDE_DIR.'db/selects.php';
 		require_once QA_INCLUDE_DIR.'app/emails.php';
 
 		$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($userid, true));
@@ -264,7 +264,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		$emailcode=qa_db_user_rand_emailcode();
 		qa_db_user_set($userid, 'emailcode', $emailcode);
@@ -280,7 +280,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 		require_once QA_INCLUDE_DIR.'app/cookies.php';
 
 		qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, true);
@@ -299,7 +299,7 @@
 	Pass the previous user level in $oldlevel. Reports the appropriate event, assumes change performed by the logged in user.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		qa_db_user_set($userid, 'level', $level);
 		qa_db_uapprovecount_update();
@@ -322,7 +322,7 @@
 	event, assumes change performed by the logged in user.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		qa_db_user_set_flag($userid, QA_USER_FLAGS_USER_BLOCKED, $blocked);
 		qa_db_uapprovecount_update();
@@ -341,10 +341,10 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'app/emails.php';
-		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+		require_once QA_INCLUDE_DIR.'db/selects.php';
 
 		qa_db_user_set($userid, 'emailcode', qa_db_user_rand_emailcode());
 
@@ -369,7 +369,7 @@
 		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'app/cookies.php';
-		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+		require_once QA_INCLUDE_DIR.'db/selects.php';
 
 		$password=qa_random_alphanum(max(QA_MIN_PASSWORD_LEN, QA_NEW_PASSWORD_LEN));
 

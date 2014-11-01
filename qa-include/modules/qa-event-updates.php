@@ -37,7 +37,7 @@
 			if (@$params['silent']) // don't create updates about silent edits, and possibly other silent events in future
 				return;
 
-			require_once QA_INCLUDE_DIR.'qa-db-events.php';
+			require_once QA_INCLUDE_DIR.'db/events.php';
 			require_once QA_INCLUDE_DIR.'app/events.php';
 
 			switch ($event) {

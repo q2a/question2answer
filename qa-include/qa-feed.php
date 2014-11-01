@@ -174,7 +174,7 @@
 
 //	Retrieve the appropriate questions and other information for this feed
 
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 	$sitetitle=qa_opt('site_title');
 	$siteurl=qa_opt('site_url');

@@ -31,7 +31,7 @@
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 //	Get current list of pages and determine the state of this admin page
@@ -114,7 +114,7 @@
 			qa_set_option($optionname, (int)qa_post_text('option_'.$optionname));
 
 	} elseif (qa_clicked('dosavepage')) {
-		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+		require_once QA_INCLUDE_DIR.'db/admin.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 		if (!qa_check_form_security_code('admin/pages', qa_post_text('code')))

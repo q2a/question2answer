@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-users.php';
+	require_once QA_INCLUDE_DIR.'db/users.php';
 	require_once QA_INCLUDE_DIR.'app/captcha.php';
 
 

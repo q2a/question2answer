@@ -54,7 +54,7 @@
 		private function retrieve_queued_voters_flaggers()
 		{
 			if (count($this->qa_voters_flaggers_queue)) {
-				require_once QA_INCLUDE_DIR.'qa-db-votes.php';
+				require_once QA_INCLUDE_DIR.'db/votes.php';
 
 				$postids=array_keys($this->qa_voters_flaggers_queue);
 

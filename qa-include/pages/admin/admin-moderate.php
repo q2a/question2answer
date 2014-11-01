@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 
 

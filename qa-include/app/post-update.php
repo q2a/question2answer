@@ -31,10 +31,10 @@
 
 	require_once QA_INCLUDE_DIR.'app/post-create.php';
 	require_once QA_INCLUDE_DIR.'app/updates.php';
-	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
-	require_once QA_INCLUDE_DIR.'qa-db-points.php';
-	require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
+	require_once QA_INCLUDE_DIR.'db/post-create.php';
+	require_once QA_INCLUDE_DIR.'db/post-update.php';
+	require_once QA_INCLUDE_DIR.'db/points.php';
+	require_once QA_INCLUDE_DIR.'db/hotness.php';
 
 
 	define('QA_POST_STATUS_NORMAL', 0);
@@ -65,7 +65,7 @@
 			($titlechanged || $contentchanged) ? QA_UPDATE_CONTENT : QA_UPDATE_TAGS, $name);
 
 		if (isset($extravalue)) {
-			require_once QA_INCLUDE_DIR.'qa-db-metas.php';
+			require_once QA_INCLUDE_DIR.'db/metas.php';
 			qa_db_postmeta_set($oldquestion['postid'], 'qa_q_extra', $extravalue);
 		}
 
@@ -367,7 +367,7 @@
 			));
 
 		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 			qa_report_event('q_post', $oldquestion['userid'], $oldquestion['handle'], $oldquestion['cookieid'], $eventparams + array(
@@ -436,7 +436,7 @@
 	See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
 
 		if ($oldquestion['type']!='Q_HIDDEN')
 			qa_fatal_error('Tried to delete a non-hidden question');
@@ -477,7 +477,7 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		require_once QA_INCLUDE_DIR . 'qa-db-votes.php';
+		require_once QA_INCLUDE_DIR . 'db/votes.php';
 
 		$postid = $oldquestion['postid'];
 
@@ -699,7 +699,7 @@
 	See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
 
 		if ($oldanswer['type']!='A_HIDDEN')
 			qa_fatal_error('Tried to delete a non-hidden answer');
@@ -740,7 +740,7 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		require_once QA_INCLUDE_DIR . 'qa-db-votes.php';
+		require_once QA_INCLUDE_DIR . 'db/votes.php';
 
 		$postid = $oldanswer['postid'];
 
@@ -833,7 +833,7 @@
 	Handles indexing (based on $text), user points, cached counts and event reports.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-votes.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
 
 		$parent=isset($answers[$parentid]) ? $answers[$parentid] : $question;
 
@@ -1002,7 +1002,7 @@
 			));
 
 		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 			$commentsfollows=qa_db_single_select(qa_db_full_child_posts_selectspec(null, $oldcomment['parentid']));
@@ -1061,7 +1061,7 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		require_once QA_INCLUDE_DIR . 'qa-db-votes.php';
+		require_once QA_INCLUDE_DIR . 'db/votes.php';
 
 		$postid = $oldcomment['postid'];
 

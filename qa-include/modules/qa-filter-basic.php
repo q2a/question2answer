@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+	require_once QA_INCLUDE_DIR.'db/maxima.php';
 	require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 

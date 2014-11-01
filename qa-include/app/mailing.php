@@ -35,7 +35,7 @@
 	Start a mailing to all users, unless one has already been started
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+		require_once QA_INCLUDE_DIR.'db/admin.php';
 
 		if (strlen(qa_opt('mailing_last_userid'))==0) {
 			qa_opt('mailing_last_timestamp', time());
@@ -63,7 +63,7 @@
 	Allow the mailing to proceed forwards, for the appropriate amount of time and users, based on the options
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		$lastuserid=qa_opt('mailing_last_userid');
 
@@ -115,7 +115,7 @@
 */
 	{
 		require_once QA_INCLUDE_DIR.'app/emails.php';
-		require_once QA_INCLUDE_DIR.'qa-db-users.php';
+		require_once QA_INCLUDE_DIR.'db/users.php';
 
 		if (!strlen(trim($emailcode))) {
 			$emailcode=qa_db_user_rand_emailcode();

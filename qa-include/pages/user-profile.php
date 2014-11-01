@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'app/limits.php';
 	require_once QA_INCLUDE_DIR.'app/updates.php';
@@ -154,7 +154,7 @@
 
 			elseif (qa_clicked('dosave')) {
 				require_once QA_INCLUDE_DIR.'app/users-edit.php';
-				require_once QA_INCLUDE_DIR.'qa-db-users.php';
+				require_once QA_INCLUDE_DIR.'db/users.php';
 
 				$inemail = qa_post_text('email');
 
@@ -277,7 +277,7 @@
 					}
 
 					if (qa_clicked('dohideall') && !qa_user_permit_error('permit_hide_show')) {
-						require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+						require_once QA_INCLUDE_DIR.'db/admin.php';
 						require_once QA_INCLUDE_DIR.'app/posts.php';
 
 						$postids = qa_db_get_user_visible_postids($userid);
@@ -325,7 +325,7 @@
 //	Process bonus setting button
 
 	if ( ($loginlevel >= QA_USER_LEVEL_ADMIN) && qa_clicked('dosetbonus') ) {
-		require_once QA_INCLUDE_DIR.'qa-db-points.php';
+		require_once QA_INCLUDE_DIR.'db/points.php';
 
 		$inbonus = (int)qa_post_text('bonus');
 

@@ -29,9 +29,9 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-recalc.php';
+	require_once QA_INCLUDE_DIR.'db/recalc.php';
 	require_once QA_INCLUDE_DIR.'app/admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+	require_once QA_INCLUDE_DIR.'db/admin.php';
 
 
 //	Check admin privileges (do late to allow one DB query)

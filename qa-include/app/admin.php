@@ -406,8 +406,8 @@
 	Return the error that needs to displayed on all admin pages, or null if none
 */
 	{
-		if (file_exists(QA_INCLUDE_DIR.'qa-db-install.php')) // file can be removed for extra security
-			include_once QA_INCLUDE_DIR.'qa-db-install.php';
+		if (file_exists(QA_INCLUDE_DIR.'db/install.php')) // file can be removed for extra security
+			include_once QA_INCLUDE_DIR.'db/install.php';
 
 		if (defined('QA_DB_VERSION_CURRENT') && (qa_opt('db_version')<QA_DB_VERSION_CURRENT) && (qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN))
 			return strtr(
@@ -482,7 +482,7 @@
 		$userid=qa_get_logged_in_userid();
 
 		if ( (!QA_FINAL_EXTERNAL_USERS) && (($action=='userapprove') || ($action=='userblock')) ) { // approve/block moderated users
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 
 			$useraccount=qa_db_select_with_pending(qa_db_user_account_selectspec($entityid, true));
 

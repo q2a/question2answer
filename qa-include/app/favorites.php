@@ -42,7 +42,7 @@
 	 */
 	function qa_user_favorite_set($userid, $handle, $cookieid, $entitytype, $entityid, $favorite)
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-favorites.php';
+		require_once QA_INCLUDE_DIR.'db/favorites.php';
 		require_once QA_INCLUDE_DIR.'app/limits.php';
 		require_once QA_INCLUDE_DIR.'app/updates.php';
 

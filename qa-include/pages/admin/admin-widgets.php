@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 //	Get current list of widgets and determine the state of this admin page
@@ -122,7 +122,7 @@
 		qa_redirect('admin/layout');
 
 	elseif (qa_clicked('dosavewidget')) {
-		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+		require_once QA_INCLUDE_DIR.'db/admin.php';
 
 		if (!qa_check_form_security_code('admin/widgets', qa_post_text('code')))
 			$securityexpired=true;

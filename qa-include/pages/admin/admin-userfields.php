@@ -30,7 +30,7 @@
 	}
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 //	Get current list of user fields and determine the state of this admin page
@@ -61,7 +61,7 @@
 		qa_redirect('admin/users');
 
 	elseif (qa_clicked('dosavefield')) {
-		require_once QA_INCLUDE_DIR.'qa-db-admin.php';
+		require_once QA_INCLUDE_DIR.'db/admin.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 		if (!qa_check_form_security_code('admin/userfields', qa_post_text('code')))

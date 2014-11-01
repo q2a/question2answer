@@ -49,7 +49,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-cookies.php';
+		require_once QA_INCLUDE_DIR.'db/cookies.php';
 
 		$cookieid=qa_cookie_get();
 
@@ -71,7 +71,7 @@
 	relating to $questionid, $answerid and/or $commentid
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-cookies.php';
+		require_once QA_INCLUDE_DIR.'db/cookies.php';
 
 		qa_db_cookie_written($cookieid, qa_remote_ip_address());
 	}

@@ -58,7 +58,7 @@
 		if ($qa_notifications_suspended>0)
 			return false;
 
-		require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+		require_once QA_INCLUDE_DIR.'db/selects.php';
 		require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 		if (isset($userid)) {

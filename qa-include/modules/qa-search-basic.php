@@ -34,7 +34,7 @@
 
 		public function index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
 		{
-			require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
+			require_once QA_INCLUDE_DIR.'db/post-create.php';
 
 		//	Get words from each textual element
 
@@ -84,7 +84,7 @@
 
 		public function unindex_post($postid)
 		{
-			require_once QA_INCLUDE_DIR.'qa-db-post-update.php';
+			require_once QA_INCLUDE_DIR.'db/post-update.php';
 
 			$titlewordids=qa_db_titlewords_get_post_wordids($postid);
 			qa_db_titlewords_delete_post($postid);
@@ -124,7 +124,7 @@
 
 		public function process_search($query, $start, $count, $userid, $absoluteurls, $fullcontent)
 		{
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 			require_once QA_INCLUDE_DIR.'qa-util-string.php';
 
 			$words=qa_string_to_words($query);

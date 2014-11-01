@@ -40,7 +40,7 @@
 
 		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 		{
-			require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+			require_once QA_INCLUDE_DIR.'db/selects.php';
 
 			if (@$qa_content['q_view']['raw']['type']!='Q') // question might not be visible, etc...
 				return;

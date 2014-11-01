@@ -27,7 +27,7 @@
 	require_once QA_INCLUDE_DIR.'app/messages.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'app/cookies.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 	$message=qa_post_text('message');

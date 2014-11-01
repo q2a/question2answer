@@ -45,7 +45,7 @@
 
 //	Retrieve the scaled image from the cache if available
 
-	require_once QA_INCLUDE_DIR.'qa-db-cache.php';
+	require_once QA_INCLUDE_DIR.'db/cache.php';
 
 	qa_db_connect('qa_image_db_fail_handler');
 

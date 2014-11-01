@@ -65,12 +65,12 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-recalc.php';
-	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
-	require_once QA_INCLUDE_DIR.'qa-db-points.php';
-	require_once QA_INCLUDE_DIR.'qa-db-selects.php';
-	require_once QA_INCLUDE_DIR.'qa-db-admin.php';
-	require_once QA_INCLUDE_DIR.'qa-db-users.php';
+	require_once QA_INCLUDE_DIR.'db/recalc.php';
+	require_once QA_INCLUDE_DIR.'db/post-create.php';
+	require_once QA_INCLUDE_DIR.'db/points.php';
+	require_once QA_INCLUDE_DIR.'db/selects.php';
+	require_once QA_INCLUDE_DIR.'db/admin.php';
+	require_once QA_INCLUDE_DIR.'db/users.php';
 	require_once QA_INCLUDE_DIR.'app/options.php';
 	require_once QA_INCLUDE_DIR.'app/post-create.php';
 	require_once QA_INCLUDE_DIR.'app/post-update.php';
@@ -487,7 +487,7 @@
 
 				if (isset($blob)) {
 					require_once QA_INCLUDE_DIR.'app/blobs.php';
-					require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+					require_once QA_INCLUDE_DIR.'db/blobs.php';
 
 					if (qa_write_blob_file($blob['blobid'], $blob['content'], $blob['format']))
 						qa_db_blob_set_content($blob['blobid'], null);
@@ -509,7 +509,7 @@
 
 				if (isset($blob)) {
 					require_once QA_INCLUDE_DIR.'app/blobs.php';
-					require_once QA_INCLUDE_DIR.'qa-db-blobs.php';
+					require_once QA_INCLUDE_DIR.'db/blobs.php';
 
 					$content=qa_read_blob_file($blob['blobid'], $blob['format']);
 					qa_db_blob_set_content($blob['blobid'], $content);

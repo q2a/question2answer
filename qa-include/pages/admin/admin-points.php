@@ -29,8 +29,8 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-recalc.php';
-	require_once QA_INCLUDE_DIR.'qa-db-points.php';
+	require_once QA_INCLUDE_DIR.'db/recalc.php';
+	require_once QA_INCLUDE_DIR.'db/points.php';
 	require_once QA_INCLUDE_DIR.'app/options.php';
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'qa-util-sort.php';

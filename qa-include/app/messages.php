@@ -82,7 +82,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'app/format.php';
-		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
+		require_once QA_INCLUDE_DIR.'db/messages.php';
 
 		$messageid = qa_db_message_create($userid, $touserid, $content, $format, true);
 		qa_db_user_recount_posts($touserid);
@@ -106,7 +106,7 @@
 	by user $userid with handle $handle, and $cookieid is the user's current cookie (all used for reporting the event).
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
+		require_once QA_INCLUDE_DIR.'db/messages.php';
 
 		qa_db_message_delete($message['messageid']);
 		qa_db_user_recount_posts($message['touserid']);
@@ -195,7 +195,7 @@
 	Note: currently no event is reported here, so $handle/$cookieid are unused.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-messages.php';
+		require_once QA_INCLUDE_DIR.'db/messages.php';
 
 		qa_db_message_user_hide($message['messageid'], $box);
 		qa_db_message_delete($message['messageid'], false);

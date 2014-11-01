@@ -64,7 +64,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-limits.php';
+		require_once QA_INCLUDE_DIR.'db/limits.php';
 
 		$dblimits=qa_db_limits_get($userid, qa_remote_ip_address(), $action);
 
@@ -205,7 +205,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-limits.php';
+		require_once QA_INCLUDE_DIR.'db/limits.php';
 
 		$period=(int)(qa_opt('db_time')/3600);
 

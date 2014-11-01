@@ -25,8 +25,8 @@
 */
 
 	require_once QA_INCLUDE_DIR.'app/users.php';
-	require_once QA_INCLUDE_DIR.'qa-db-notices.php';
-	require_once QA_INCLUDE_DIR.'qa-db-users.php';
+	require_once QA_INCLUDE_DIR.'db/notices.php';
+	require_once QA_INCLUDE_DIR.'db/users.php';
 
 
 	$noticeid=qa_post_text('noticeid');
