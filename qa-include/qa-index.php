@@ -150,7 +150,8 @@
 			reset($requestparts);
 			$key = key($requestparts);
 
-			$replacement = isset($requestparts[$key]) ? array_search($requestparts[$key], qa_get_request_map()) : false;
+			$requestkey = isset($requestparts[$key]) ? $requestparts[$key] : null;
+			$replacement = array_search($requestkey, qa_get_request_map());
 			if ($replacement !== false)
 				$requestparts[$key] = $replacement;
 
