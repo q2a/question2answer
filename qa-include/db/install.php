@@ -69,7 +69,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+		require_once QA_INCLUDE_DIR.'db/maxima.php';
 		require_once QA_INCLUDE_DIR.'app/users.php';
 
 	/*

@@ -39,7 +39,7 @@
 	qa-db-favorites.php). Also handles truncation.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+		require_once QA_INCLUDE_DIR.'db/maxima.php';
 		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		$updatedsql=isset($timestamp) ? ('FROM_UNIXTIME('.qa_db_argument_to_mysql($timestamp, false).')') : 'NOW()';

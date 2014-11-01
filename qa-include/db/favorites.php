@@ -168,7 +168,7 @@
 	//	Otherwise if we're going to record this in user-specific streams ...
 
 		} else {
-			require_once QA_INCLUDE_DIR.'qa-db-events.php';
+			require_once QA_INCLUDE_DIR.'db/events.php';
 
 		//	... copy across recent events from the shared stream
 

@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+	require_once QA_INCLUDE_DIR.'db/maxima.php';
 
 
 	function qa_db_cache_set($type, $cacheid, $content)

@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-maxima.php';
+	require_once QA_INCLUDE_DIR.'db/maxima.php';
 
 
 	function qa_db_select_with_pending() // any number of parameters read via func_get_args()

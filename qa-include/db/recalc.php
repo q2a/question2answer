@@ -29,7 +29,7 @@
 		exit;
 	}
 
-	require_once QA_INCLUDE_DIR.'qa-db-post-create.php';
+	require_once QA_INCLUDE_DIR.'db/post-create.php';
 
 
 //	For reindexing pages...
@@ -213,7 +213,7 @@
 	Recalculate the cached answer counts for posts $firstpostid to $lastpostid in the database, along with the highest netvotes of any of their answers
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-hotness.php';
+		require_once QA_INCLUDE_DIR.'db/hotness.php';
 
 		qa_db_query_sub(
 			'UPDATE ^posts AS x, (SELECT parents.postid, COUNT(children.postid) AS acount, COALESCE(GREATEST(MAX(children.netvotes), 0), 0) AS amaxvote FROM ^posts AS parents LEFT JOIN ^posts AS children ON parents.postid=children.parentid AND children.type=\'A\' WHERE parents.postid>=# AND parents.postid<=# GROUP BY postid) AS a SET x.acount=a.acount, x.amaxvote=a.amaxvote WHERE x.postid=a.postid',
@@ -250,7 +250,7 @@
 	Recalculate all userpoints columns for users $firstuserid to $lastuserid in the database
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-db-points.php';
+		require_once QA_INCLUDE_DIR.'db/points.php';
 
 		$qa_userpoints_calculations=qa_db_points_calculations();
 
