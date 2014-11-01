@@ -150,8 +150,8 @@
 
 			header('Content-type: text/xml; charset=utf-8');
 
-			echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-			echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+			echo '<?xml version="1.0" encoding="UTF-8"?>';
+			echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
 
 		//	Question pages
@@ -289,7 +289,7 @@
 
 		//	Finish up...
 
-			echo "</urlset>\n";
+			echo "</urlset>";
 
 			return null;
 		}
@@ -297,10 +297,10 @@
 
 		private function sitemap_output($request, $priority)
 		{
-			echo "\t<url>\n".
-				"\t\t<loc>".qa_xml(qa_path($request, null, $this->siteurl))."</loc>\n".
-				"\t\t<priority>".max(0, min(1.0, $priority))."</priority>\n".
-				"\t</url>\n";
+			echo "<url>".
+				"<loc>".qa_xml(qa_path($request, null, $this->siteurl))."</loc>".
+				"<priority>".max(0, min(1.0, $priority))."</priority>".
+				"</url>";
 		}
 
 	}
