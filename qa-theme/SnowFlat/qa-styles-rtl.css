@@ -429,7 +429,7 @@ h1 {
 
 .qa-feed-link:before {
   float: right;
-  margin-left: 15px;
+  margin-left: 5px;
 }
 
 @media (min-width: 980px) {
