@@ -1424,6 +1424,7 @@
 
 				case 58:
 					// Note: need to use full table names here as aliases trigger error "Table 'x' was not locked with LOCK TABLES"
+					qa_db_upgrade_query('DELETE FROM ^messages WHERE type="PRIVATE" AND fromuserid=touserid');
 					qa_db_upgrade_query('DELETE FROM ^userfavorites WHERE entitytype="U" AND userid=entityid');
 					qa_db_upgrade_query('DELETE ^uservotes FROM ^uservotes JOIN ^posts ON ^uservotes.postid=^posts.postid AND ^uservotes.userid=^posts.userid');
 					qa_db_upgrade_query($locktablesquery);
