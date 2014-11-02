@@ -26,15 +26,10 @@
 
 	class qa_xml_sitemap {
 
-		private $directory;
-		private $urltoroot;
+		const FETCH_COUNT = 100;
+		const CATEGORY_FETCH_COUNT = 2;
 
-		public function load_module($directory, $urltoroot)
-		{
-			$this->directory=$directory;
-			$this->urltoroot=$urltoroot;
-		}
-
+		private $siteurl;
 
 		public function option_default($option)
 		{
@@ -151,12 +146,12 @@
 		{
 			@ini_set('display_errors', 0); // we don't want to show PHP errors inside XML
 
-			$siteurl=qa_opt('site_url');
+			$this->siteurl = qa_opt('site_url');
 
 			header('Content-type: text/xml; charset=utf-8');
 
-			echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-			echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+			echo '<?xml version="1.0" encoding="UTF-8"?>';
+			echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
 
 		//	Question pages
@@ -168,41 +163,47 @@
 
 				$nextpostid=0;
 
-				while (1) {
+				while (true) {
 					$questions=qa_db_read_all_assoc(qa_db_query_sub(
-						"SELECT postid, title, hotness FROM ^posts WHERE postid>=# AND type='Q' ORDER BY postid LIMIT 100",
-						$nextpostid
+						"SELECT postid, title, hotness FROM ^posts WHERE postid>=# AND type='Q' ORDER BY postid LIMIT #",
+						$nextpostid,
+						self::FETCH_COUNT
 					));
-
-					if (!count($questions))
-						break;
 
 					foreach ($questions as $question) {
 						$this->sitemap_output(qa_q_request($question['postid'], $question['title']),
 							0.1+0.9*($question['hotness']-$hotstats['base'])/(1+$hotstats['spread']));
-						$nextpostid=max($nextpostid, $question['postid']+1);
+					}
+
+					if (count($questions) < self::FETCH_COUNT)
+						break;
+					else {
+						$lastpost = end($questions);
+						$nextpostid = $lastpost['postid'] + 1;
 					}
 				}
 			}
-
 
 		//	User pages
 
 			if ((!QA_FINAL_EXTERNAL_USERS) && qa_opt('xml_sitemap_show_users')) {
 				$nextuserid=0;
 
-				while (1) {
+				while (true) {
 					$users=qa_db_read_all_assoc(qa_db_query_sub(
-						"SELECT userid, handle FROM ^users WHERE userid>=# ORDER BY userid LIMIT 100",
-						$nextuserid
+						"SELECT userid, handle FROM ^users WHERE userid>=# ORDER BY userid LIMIT #",
+						$nextuserid,
+						self::FETCH_COUNT
 					));
 
-					if (!count($users))
-						break;
-
-					foreach ($users as $user) {
+					foreach ($users as $user)
 						$this->sitemap_output('user/'.$user['handle'], 0.25);
-						$nextuserid=max($nextuserid, $user['userid']+1);
+
+					if (count($users) < self::FETCH_COUNT)
+						break;
+					else {
+						$lastuser = end($users);
+						$nextuserid = $lastuser['userid'] + 1;
 					}
 				}
 			}
@@ -213,18 +214,21 @@
 			if (qa_using_tags() && qa_opt('xml_sitemap_show_tag_qs')) {
 				$nextwordid=0;
 
-				while (1) {
+				while (true) {
 					$tagwords=qa_db_read_all_assoc(qa_db_query_sub(
-						"SELECT wordid, word, tagcount FROM ^words WHERE wordid>=# AND tagcount>0 ORDER BY wordid LIMIT 100",
-						$nextwordid
+						"SELECT wordid, word, tagcount FROM ^words WHERE wordid>=# AND tagcount>0 ORDER BY wordid LIMIT #",
+						$nextwordid,
+						self::FETCH_COUNT
 					));
 
-					if (!count($tagwords))
-						break;
-
-					foreach ($tagwords as $tagword) {
+					foreach ($tagwords as $tagword)
 						$this->sitemap_output('tag/'.$tagword['word'], 0.5/(1+(1/$tagword['tagcount']))); // priority between 0.25 and 0.5 depending on tag frequency
-						$nextwordid=max($nextwordid, $tagword['wordid']+1);
+
+					if (count($tagwords) < self::FETCH_COUNT)
+						break;
+					else {
+						$lastword = end($tagwords);
+						$nextwordid = $lastword['wordid'] + 1;
 					}
 				}
 			}
@@ -235,18 +239,21 @@
 			if (qa_using_categories() && qa_opt('xml_sitemap_show_category_qs')) {
 				$nextcategoryid=0;
 
-				while (1) {
+				while (true) {
 					$categories=qa_db_read_all_assoc(qa_db_query_sub(
-						"SELECT categoryid, backpath FROM ^categories WHERE categoryid>=# AND qcount>0 ORDER BY categoryid LIMIT 2",
-						$nextcategoryid
+						"SELECT categoryid, backpath FROM ^categories WHERE categoryid>=# AND qcount>0 ORDER BY categoryid LIMIT #",
+						$nextcategoryid,
+						self::CATEGORY_FETCH_COUNT
 					));
 
-					if (!count($categories))
-						break;
-
-					foreach ($categories as $category) {
+					foreach ($categories as $category)
 						$this->sitemap_output('questions/'.implode('/', array_reverse(explode('/', $category['backpath']))), 0.5);
-						$nextcategoryid=max($nextcategoryid, $category['categoryid']+1);
+
+					if (count($categories) < self::CATEGORY_FETCH_COUNT)
+						break;
+					else {
+						$lastcategory = end($categories);
+						$nextcategoryid = $lastcategory['categoryid'] + 1;
 					}
 				}
 			}
@@ -259,19 +266,22 @@
 
 				$nextcategoryid=0;
 
-				while (1) { // only find categories with a child
+				while (true) { // only find categories with a child
 					$categories=qa_db_read_all_assoc(qa_db_query_sub(
 						"SELECT parent.categoryid, parent.backpath FROM ^categories AS parent ".
-						"JOIN ^categories AS child ON child.parentid=parent.categoryid WHERE parent.categoryid>=# GROUP BY parent.categoryid LIMIT 100",
-						$nextcategoryid
+						"JOIN ^categories AS child ON child.parentid=parent.categoryid WHERE parent.categoryid>=# GROUP BY parent.categoryid LIMIT #",
+						$nextcategoryid,
+						self::FETCH_COUNT
 					));
 
-					if (!count($categories))
-						break;
-
-					foreach ($categories as $category) {
+					foreach ($categories as $category)
 						$this->sitemap_output('categories/'.implode('/', array_reverse(explode('/', $category['backpath']))), 0.5);
-						$nextcategoryid=max($nextcategoryid, $category['categoryid']+1);
+
+					if (count($categories) < self::FETCH_COUNT)
+						break;
+					else {
+						$lastcategory = end($categories);
+						$nextcategoryid = $lastcategory['categoryid'] + 1;
 					}
 				}
 			}
@@ -279,7 +289,7 @@
 
 		//	Finish up...
 
-			echo "</urlset>\n";
+			echo "</urlset>";
 
 			return null;
 		}
@@ -287,10 +297,10 @@
 
 		private function sitemap_output($request, $priority)
 		{
-			echo "\t<url>\n".
-				"\t\t<loc>".qa_xml(qa_path($request, null, qa_opt('site_url')))."</loc>\n".
-				"\t\t<priority>".max(0, min(1.0, $priority))."</priority>\n".
-				"\t</url>\n";
+			echo "<url>".
+				"<loc>".qa_xml(qa_path($request, null, $this->siteurl))."</loc>".
+				"<priority>".max(0, min(1.0, $priority))."</priority>".
+				"</url>";
 		}
 
 	}

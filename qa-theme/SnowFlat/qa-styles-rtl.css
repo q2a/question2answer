@@ -18,7 +18,7 @@ blockquote {
 }
 
 h1 {
-  padding: 8px 20px 8px 52px;
+  padding: 8px 20px 8px 8px;
 }
 
 
@@ -56,9 +56,13 @@ h1 {
 }
 
 .qa-favoriting {
-  right: auto;
-  left: 10px;
+  float: left;
 }
+.qa-favoriting .qa-waiting {
+  position: absolute;
+  margin: 14px -26px 0 0;
+}
+
 
 @media (max-width: 979px) {
   .qam-search-mobile {
@@ -425,7 +429,7 @@ h1 {
 
 .qa-feed-link:before {
   float: right;
-  margin-left: 15px;
+  margin-left: 5px;
 }
 
 @media (min-width: 980px) {

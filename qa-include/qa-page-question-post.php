@@ -696,7 +696,6 @@
 		$commentonoptions=array();
 
 		$lastbeforeid=$question['postid']; // used to find last post created before this answer - this is default given
-		$lastbeforetime=$question['created'];
 
 		if ($question['commentable'])
 			$commentonoptions[$question['postid']]=
@@ -707,9 +706,8 @@
 				$commentonoptions[$otheranswer['postid']]=
 					qa_lang_html('question/comment_on_a').qa_html(qa_shorten_string_line(qa_viewer_text($otheranswer['content'], $otheranswer['format']), 80));
 
-				if ($otheranswer['created']>$lastbeforetime) {
-					$lastbeforeid=$otheranswer['postid'];
-					$lastebeforetime=$otheranswer['created'];
+				if ($otheranswer['created'] > $question['created']) {
+					$lastbeforeid = $otheranswer['postid'];
 				}
 			}
 

@@ -391,7 +391,7 @@
 		if ( (!QA_FINAL_EXTERNAL_USERS) && qa_opt('moderate_users') && ($level>=QA_USER_LEVEL_MODERATOR)) {
 			$count=qa_opt('cache_uapprovecount');
 
-			$navigation['admin/moderate-users']=array(
+			$navigation['admin/approve']=array(
 				'label' => qa_lang_html('admin/approve_users_title').($count ? (' ('.$count.')') : ''),
 				'url' => qa_path_html('admin/approve'),
 			);
