@@ -1732,12 +1732,6 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	background-color: #f5f7f7;
 }
 
-[class^="qa-part-form-plugin-"] {
-	padding: 20px;
-	margin-bottom: 5px;
-	background: #fff;
-}
-
 .qa-part-form-plugin-options {
 	margin-top: -5px !important;
 	padding-top: 0;
@@ -1856,12 +1850,12 @@ input[type="submit"], button {
 	text-align: center;
 }
 
-.qa-part-form, .qa-part-form-2 {
+.qa-part-form, [class^="qa-part-form-"] {
 	padding: 20px;
 	margin-bottom: 5px;
 	background: #fff;
 }
-.qa-part-form > h2:first-child, .qa-part-form-2 > h2:first-child {
+.qa-part-form > h2:first-child, [class^="qa-part-form-"] > h2:first-child {
 	margin-top: 0;
 }
 
@@ -2077,14 +2071,13 @@ input[type="submit"], button {
 }
 
 /*------[ users ]------*/
-.qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list, .qa-part-form-password {
+.qa-template-user .qa-main {
+	width: 100%;
+}
+.qa-part-message-list {
 	padding: 20px;
 	margin-bottom: 5px;
 	background: #fff;
-}
-
-.qa-template-user .qa-main {
-	width: 100%;
 }
 .qa-template-user .qa-form-wide-buttons,
 .qa-template-user .qa-form-tall-buttons {
@@ -2167,19 +2160,19 @@ input[type="submit"], button {
 }
 
 @media (min-width: 980px) {
-	.qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+	.qa-template-user [class^="qa-part-form-"], .qa-template-user .qa-part-message-list {
 		width: 49.8%;
+	}
+}
+@media (min-width: 980px) {
+	.qa-template-user [class^="qa-part-form-"], .qa-template-user .qa-part-message-list {
+		float: right;
+		clear: right;
 	}
 }
 @media (min-width: 980px) {
 	.qa-template-user .qa-part-form-profile {
 		float: left;
-	}
-}
-@media (min-width: 980px) {
-	.qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
-		float: right;
-		clear: right;
 	}
 }
 .qa-part-form-activity h2, .qa-part-message-list h2 {

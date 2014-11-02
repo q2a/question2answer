@@ -304,15 +304,14 @@ h1 {
 }
 
 @media (min-width: 980px) {
-	.qa-part-form-profile {
-		float: right;
-	}
-}
-
-@media (min-width: 980px) {
-	.qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+	.qa-template-user [class^="qa-part-form-"], .qa-template-user .qa-part-message-list {
 		float: left;
 		clear: left;
+	}
+}
+@media (min-width: 980px) {
+	.qa-template-user .qa-part-form-profile {
+		float: right;
 	}
 }
 
