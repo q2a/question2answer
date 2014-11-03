@@ -3,4 +3,4 @@
  * @deprecated This file is deprecated from Q2A 1.7; use the below file instead.
  */
 
-require_once 'vendor/htmLawed.php';
+require_once 'db/votes.php';
