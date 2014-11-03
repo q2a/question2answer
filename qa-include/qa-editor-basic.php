@@ -3,4 +3,4 @@
  * @deprecated This file is deprecated from Q2A 1.7; use the below file instead.
  */
 
-require_once 'modules/qa-editor-basic.php';
+require_once 'plugins/qa-editor-basic.php';
