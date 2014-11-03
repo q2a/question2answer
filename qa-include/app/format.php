@@ -1763,7 +1763,7 @@
 
 		if (!qa_user_maximum_permit_error('permit_view_voters_flaggers'))
 			$loadlayers[]=array(
-				'directory' => QA_INCLUDE_DIR,
+				'directory' => QA_INCLUDE_DIR.'plugins/',
 				'include' => 'qa-layer-voters-flaggers.php',
 				'urltoroot' => null,
 			);

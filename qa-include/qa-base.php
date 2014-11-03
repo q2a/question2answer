@@ -279,16 +279,16 @@
 	Register all modules that come as part of the Q2A core (as opposed to plugins)
 */
 	{
-		qa_register_module('filter', 'modules/qa-filter-basic.php', 'qa_filter_basic', '');
-		qa_register_module('editor', 'modules/qa-editor-basic.php', 'qa_editor_basic', '');
-		qa_register_module('viewer', 'modules/qa-viewer-basic.php', 'qa_viewer_basic', '');
-		qa_register_module('event', 'modules/qa-event-limits.php', 'qa_event_limits', 'Q2A Event Limits');
-		qa_register_module('event', 'modules/qa-event-notify.php', 'qa_event_notify', 'Q2A Event Notify');
-		qa_register_module('event', 'modules/qa-event-updates.php', 'qa_event_updates', 'Q2A Event Updates');
-		qa_register_module('search', 'modules/qa-search-basic.php', 'qa_search_basic', '');
-		qa_register_module('widget', 'modules/qa-widget-activity-count.php', 'qa_activity_count', 'Activity Count');
-		qa_register_module('widget', 'modules/qa-widget-ask-box.php', 'qa_ask_box', 'Ask Box');
-		qa_register_module('widget', 'modules/qa-widget-related-qs.php', 'qa_related_qs', 'Related Questions');
+		qa_register_module('filter', 'plugins/qa-filter-basic.php', 'qa_filter_basic', '');
+		qa_register_module('editor', 'plugins/qa-editor-basic.php', 'qa_editor_basic', '');
+		qa_register_module('viewer', 'plugins/qa-viewer-basic.php', 'qa_viewer_basic', '');
+		qa_register_module('event', 'plugins/qa-event-limits.php', 'qa_event_limits', 'Q2A Event Limits');
+		qa_register_module('event', 'plugins/qa-event-notify.php', 'qa_event_notify', 'Q2A Event Notify');
+		qa_register_module('event', 'plugins/qa-event-updates.php', 'qa_event_updates', 'Q2A Event Updates');
+		qa_register_module('search', 'plugins/qa-search-basic.php', 'qa_search_basic', '');
+		qa_register_module('widget', 'plugins/qa-widget-activity-count.php', 'qa_activity_count', 'Activity Count');
+		qa_register_module('widget', 'plugins/qa-widget-ask-box.php', 'qa_ask_box', 'Ask Box');
+		qa_register_module('widget', 'plugins/qa-widget-related-qs.php', 'qa_related_qs', 'Related Questions');
 	}
 
 
