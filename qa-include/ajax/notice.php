@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-ajax-notice.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Server-side response to Ajax requests to close a notice
 
 

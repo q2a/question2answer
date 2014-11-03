@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-external-example/qa-external-users.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Example of how to integrate with your own user database
 
 

@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-app-messages.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Handling private or public messages (wall posts)
 
 

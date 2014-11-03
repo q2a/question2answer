@@ -1,13 +1,9 @@
 <?php
-
 /*
-	Question2Answer (c) Gideon Greenspan
-
+	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-
 	File: qa-theme/Candy/qa-theme.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Override base theme class for Classic theme
 
 

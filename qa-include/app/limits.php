@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-app-limits.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Monitoring and rate-limiting user actions (application level)
 
 

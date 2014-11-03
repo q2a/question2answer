@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-app-posts.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Higher-level functions to create and manipulate posts
 
 

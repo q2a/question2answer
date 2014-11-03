@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-page-reset.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Controller for password reset page (comes after forgot page)
 
 

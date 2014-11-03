@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-plugin/opensearch-support/qa-opensearch-page.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Page module class for XML sitemap plugin
 
 

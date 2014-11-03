@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-event-limits.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Event module for updating per-user limits
 
 

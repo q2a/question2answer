@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-include/qa-page-question-view.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Common functions for question page viewing, either regular or via Ajax
 
 

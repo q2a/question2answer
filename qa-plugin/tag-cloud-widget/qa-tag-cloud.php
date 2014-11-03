@@ -1,13 +1,9 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-plugin/tag-cloud-widget/qa-tag-cloud.php
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Widget module class for tag cloud plugin
 
 
