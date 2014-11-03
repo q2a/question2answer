@@ -53,7 +53,7 @@
 		protected $ranking_block_layout = false;
 
 
-		public function __construct($template, $content, $rooturl, $request, $textdir='ltr')
+		public function __construct($template, $content, $rooturl, $request)
 	/*
 		Initialize the object and assign local variables
 	*/
@@ -62,16 +62,17 @@
 			$this->content = $content;
 			$this->rooturl = $rooturl;
 			$this->request = $request;
-			$this->isRTL = $textdir === 'rtl';
+
+			$this->isRTL = isset($content['direction']) && $content['direction'] === 'rtl';
 		}
 
 		/**
 		 * @deprecated PHP4-style constructor deprecated from 1.7; please use proper `__construct`
 		 * function instead.
 		 */
-		public function qa_html_theme_base($template, $content, $rooturl, $request, $textdir='ltr')
+		public function qa_html_theme_base($template, $content, $rooturl, $request)
 		{
-			self::__construct($template, $content, $rooturl, $request, $textdir);
+			self::__construct($template, $content, $rooturl, $request);
 		}
 
 

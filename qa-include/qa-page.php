@@ -479,8 +479,9 @@
 
 		$qa_content=array(
 			'content_type' => 'text/html; charset='.$charset,
-
 			'charset' => $charset,
+
+			'direction' => qa_opt('site_text_direction'),
 
 			'site_title' => qa_html(qa_opt('site_title')),
 

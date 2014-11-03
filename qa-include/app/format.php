@@ -1806,7 +1806,7 @@
 
 	//	Finally, instantiate the object
 
-		$themeclass=new $classname($template, $content, $themeroothtml, $request, qa_opt('site_text_direction'));
+		$themeclass=new $classname($template, $content, $themeroothtml, $request);
 
 		return $themeclass;
 	}
