@@ -746,7 +746,7 @@
 				$module = qa_load_module($moduletype, $modulename);
 
 				if (method_exists($module, $method))
-					$modules[$moduletype] = $module;
+					$modules[$modulename] = $module;
 			}
 		}
 
