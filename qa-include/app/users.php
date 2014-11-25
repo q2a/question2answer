@@ -57,7 +57,7 @@
 	//	If we're using single sign-on integration (WordPress or otherwise), load PHP file for that
 
 		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH'))
-			require_once QA_INCLUDE_DIR.'qa-external-users-wp.php';
+			require_once QA_INCLUDE_DIR.'util/external-users-wp.php';
 		else
 			require_once QA_EXTERNAL_DIR.'qa-external-users.php';
 
