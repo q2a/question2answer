@@ -534,7 +534,7 @@
 	Return array with all values from $array as keys
 */
 	{
-		return array_combine($array, array_fill(0, count($array), true));
+		return empty($array) ? array() : array_combine($array, array_fill(0, count($array), true));
 	}
 
 
