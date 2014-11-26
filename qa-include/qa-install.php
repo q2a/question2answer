@@ -30,24 +30,6 @@
 	qa_report_process_stage('init_install');
 
 
-//	Output start of HTML early, so we can see a nicely-formatted list of database queries when upgrading
-
-?><!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<style>
-			body,input { font: 16px Verdana, Arial, Helvetica, sans-serif; }
-			body { text-align: center; width: 640px; margin: 64px auto; }
-			table { margin: 16px auto; }
-			.msg-success { color: #080; }
-			.msg-error { color: #900; }
-		</style>
-	</head>
-	<body>
-<?php
-
-
 //	Define database failure handler for install process, if not defined already (file could be included more than once)
 
 	if (!function_exists('qa_install_db_fail_handler')) {
@@ -80,6 +62,52 @@
 	$fields=array();
 	$fielderrors=array();
 	$hidden=array();
+
+
+//	Process user handling higher up to avoid 'headers already sent' warning
+	if (!isset($pass_failure_type) && qa_clicked('super')) {
+		require_once QA_INCLUDE_DIR.'db/users.php';
+		require_once QA_INCLUDE_DIR.'app/users-edit.php';
+
+		$inemail=qa_post_text('email');
+		$inpassword=qa_post_text('password');
+		$inhandle=qa_post_text('handle');
+
+		$fielderrors=array_merge(
+			qa_handle_email_filter($inhandle, $inemail),
+			qa_password_validate($inpassword)
+		);
+
+		if (empty($fielderrors)) {
+			require_once QA_INCLUDE_DIR.'app/users.php';
+
+			$userid=qa_create_new_user($inemail, $inpassword, $inhandle, QA_USER_LEVEL_SUPER);
+			qa_set_logged_in_user($userid, $inhandle);
+
+			qa_set_option('feedback_email', $inemail);
+
+			$success.="Congratulations - Your Question2Answer site is ready to go!\n\nYou are logged in as the super administrator and can start changing settings.\n\nThank you for installing Question2Answer.";
+		}
+	}
+
+
+//	Output start of HTML early, so we can see a nicely-formatted list of database queries when upgrading
+
+?><!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			body, input { font: 16px Verdana, Arial, Helvetica, sans-serif; }
+			body { text-align: center; width: 640px; margin: 64px auto; }
+			table { margin: 16px auto; }
+			.msg-success { color: #080; }
+			.msg-error { color: #900; }
+		</style>
+	</head>
+	<body>
+<?php
+
 
 	if (isset($pass_failure_type)) { // this page was requested due to query failure, via the fail handler
 		switch ($pass_failure_type) {
@@ -158,30 +186,6 @@
 			$success.='The '.$modulename.' '.$moduletype.' module has completed database initialization.';
 		}
 
-		if (qa_clicked('super')) {
-			require_once QA_INCLUDE_DIR.'db/users.php';
-			require_once QA_INCLUDE_DIR.'app/users-edit.php';
-
-			$inemail=qa_post_text('email');
-			$inpassword=qa_post_text('password');
-			$inhandle=qa_post_text('handle');
-
-			$fielderrors=array_merge(
-				qa_handle_email_filter($inhandle, $inemail),
-				qa_password_validate($inpassword)
-			);
-
-			if (empty($fielderrors)) {
-				require_once QA_INCLUDE_DIR.'app/users.php';
-
-				$userid=qa_create_new_user($inemail, $inpassword, $inhandle, QA_USER_LEVEL_SUPER);
-				qa_set_logged_in_user($userid, $inhandle);
-
-				qa_set_option('feedback_email', $inemail);
-
-				$success.="Congratulations - Your Question2Answer site is ready to go!\n\nYou are logged in as the super administrator and can start changing settings.\n\nThank you for installing Question2Answer.";
-			}
-		}
 	}
 
 	if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
