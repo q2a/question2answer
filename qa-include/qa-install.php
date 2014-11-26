@@ -101,8 +101,11 @@
 			body, input { font: 16px Verdana, Arial, Helvetica, sans-serif; }
 			body { text-align: center; width: 640px; margin: 64px auto; }
 			table { margin: 16px auto; }
+			th, td { padding: 2px; }
+			th { text-align: right; font-weight: normal; }
+			td { text-align: left; }
 			.msg-success { color: #080; }
-			.msg-error { color: #900; }
+			.msg-error { color: #b00; }
 		</style>
 	</head>
 	<body>
@@ -239,7 +242,11 @@
 
 				if ( (!QA_FINAL_EXTERNAL_USERS) && (qa_db_count_users()==0) ) {
 					$errorhtml.="There are currently no users in the Question2Answer database.\n\nPlease enter your details below to create the super administrator:";
-					$fields=array('handle' => 'Username:', 'password' => 'Password:', 'email' => 'Email address:');
+					$fields=array(
+						'handle' => array('label'=>'Username:', 'type'=>'text'),
+						'password' => array('label'=>'Password:', 'type'=>'password'),
+						'email' => array('label'=>'Email address:', 'type'=>'text'),
+					);
 					$buttons=array('super' => 'Create Super Administrator');
 
 				} else {
@@ -301,10 +308,14 @@
 	if (count($fields)) {
 		echo '<table>';
 
-		foreach ($fields as $name => $prompt) {
-			echo '<tr><td>'.qa_html($prompt).'</td><td><input type="text" size="24" name="'.qa_html($name).'" value="'.qa_html(@${'in'.$name}).'"></td>';
+		foreach ($fields as $name => $field) {
+			echo '<tr>';
+			echo '<th>'.qa_html($field['label']).'</th>';
+			echo '<td><input type="'.qa_html($field['type']).'" size="24" name="'.qa_html($name).'" value="'.qa_html(@${'in'.$name}).'"></td>';
 			if (isset($fielderrors[$name]))
 				echo '<td class="msg-error"><small>'.qa_html($fielderrors[$name]).'</small></td>';
+			else
+				echo '<td></td>';
 			echo '</tr>';
 		}
 
