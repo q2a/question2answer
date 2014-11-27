@@ -288,12 +288,14 @@
 	}
 
 
+	/**
+	 * Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, specified by $type ('Plugin' or 'Theme').
+	 * If $versiononly is true, only min version metadata is parsed.
+	 * Name, Description, Min Q2A & Min PHP are not currently used by themes.
+	 *
+	 * @deprecated Deprecated from 1.7; Q2A_Util_Metadata class and metadata.json files should be used instead
+	 */
 	function qa_addon_metadata($contents, $type, $versiononly=false)
-/*
-	Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, specified by $type ('Plugin' or 'Theme').
-	If $versiononly is true, only min version metadata is parsed.
-	Name, Description, Min Q2A & Min PHP are not currently used by themes.
-*/
 	{
 		$fields = array(
 			'min_q2a' => 'Minimum Question2Answer Version',
@@ -334,10 +336,18 @@
 
 		$pluginfiles = glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
 
+		$metadataUtil = new Q2A_Util_Metadata();
 		foreach ($pluginfiles as $pluginfile) {
-			// limit plugin parsing to first 8kB
-			$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
-			$metadata = qa_addon_metadata($contents, 'Plugin', true);
+			// these variables are utilized in the qa_register_plugin_* functions
+			$qa_plugin_directory = dirname($pluginfile) . '/';
+			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
+
+			$metadata = $metadataUtil->fetchFromAddonPath($qa_plugin_directory);
+			if (empty($metadata)) {
+				// limit plugin parsing to first 8kB
+				$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
+				$metadata = qa_addon_metadata($contents, 'Plugin', true);
+			}
 
 			// skip plugin which requires a later version of Q2A
 			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a']))
@@ -345,10 +355,6 @@
 			// skip plugin which requires a later version of PHP
 			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php']))
 				continue;
-
-			// these variables are utilized in the qa_register_plugin_* functions
-			$qa_plugin_directory = dirname($pluginfile).'/';
-			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
 
 			require_once $pluginfile;
 		}

@@ -100,14 +100,18 @@
 		$showpluginforms = true;
 
 	if (count($pluginfiles)) {
+		$metadataUtil = new Q2A_Util_Metadata();
 		foreach ($pluginfiles as $pluginindex => $pluginfile) {
 			$plugindirectory = dirname($pluginfile).'/';
 			$hash = qa_admin_plugin_directory_hash($plugindirectory);
 			$showthisform = $showpluginforms && (qa_get('show') == $hash);
 
-			// limit plugin parsing to first 8kB
-			$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
-			$metadata = qa_addon_metadata($contents, 'Plugin');
+			$metadata = $metadataUtil->fetchFromAddonPath($plugindirectory);
+			if (empty($metadata)) {
+				// limit plugin parsing to first 8kB
+				$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
+				$metadata = qa_addon_metadata($contents, 'Plugin');
+			}
 
 			if (isset($metadata['name']) && strlen($metadata['name']))
 				$namehtml = qa_html($metadata['name']);

@@ -1006,9 +1006,14 @@
 
 					qa_optionfield_make_select($optionfield, $themeoptions, $value, 'Classic');
 
-					// limit theme parsing to first 8kB
-					$contents = file_get_contents(QA_THEME_DIR.$value.'/qa-styles.css', false, NULL, -1, 8192);
-					$metadata = qa_addon_metadata($contents, 'Theme');
+					$metadataUtil = new Q2A_Util_Metadata();
+					$themedirectory = QA_THEME_DIR . $value . '/';
+					$metadata = $metadataUtil->fetchFromAddonPath($themedirectory);
+					if (empty($metadata)) {
+						// limit theme parsing to first 8kB
+						$contents = file_get_contents($themedirectory . 'qa-styles.css', false, NULL, -1, 8192);
+						$metadata = qa_addon_metadata($contents, 'Theme');
+					}
 
 					if (strlen(@$metadata['version']))
 						$namehtml = 'v'.qa_html($metadata['version']);
