@@ -242,9 +242,16 @@
 
 		foreach ($qa_content['navigation'] as $navtype => $navigation)
 			if (is_array($navigation) && ($navtype!='cat'))
-				foreach ($navigation as $navprefix => $navlink)
-					if (substr($requestlower.'$', 0, strlen($navprefix)) == $navprefix)
-						$qa_content['navigation'][$navtype][$navprefix]['selected']=true;
+				foreach ($navigation as $navprefix => $navlink) {
+					if (isset($navlink['selectpaths'])) {
+						foreach ($navlink['selectpaths'] as $path) {
+							if (strpos($requestlower.'$', $path) === 0)
+								$qa_content['navigation'][$navtype][$navprefix]['selected'] = true;
+						}
+					}
+					else if ($requestlower === $navprefix || $requestlower.'$' === $navprefix)
+						$qa_content['navigation'][$navtype][$navprefix]['selected'] = true;
+				}
 
 	//	Slide down notifications
 
@@ -566,18 +573,21 @@
 			$qa_content['navigation']['main']['tag']=array(
 				'url' => qa_path_html('tags'),
 				'label' => qa_lang_html('main/nav_tags'),
+				'selectpaths' => array('tags$', 'tag/'),
 			);
 
 		if (qa_using_categories() && qa_opt('nav_categories'))
 			$qa_content['navigation']['main']['categories']=array(
 				'url' => qa_path_html('categories'),
 				'label' => qa_lang_html('main/nav_categories'),
+				'selectpaths' => array('categories$', 'categories/'),
 			);
 
 		if (qa_opt('nav_users'))
 			$qa_content['navigation']['main']['user']=array(
 				'url' => qa_path_html('users'),
 				'label' => qa_lang_html('main/nav_users'),
+				'selectpaths' => array('users$', 'users/', 'user/'),
 			);
 
 		// Only the 'level' permission error prevents the menu option being shown - others reported on qa-page-ask.php
@@ -598,6 +608,7 @@
 			$qa_content['navigation']['main']['admin']=array(
 				'url' => qa_path_html('admin'),
 				'label' => qa_lang_html('main/nav_admin'),
+				'selectpaths' => array('admin/'),
 			);
 
 
