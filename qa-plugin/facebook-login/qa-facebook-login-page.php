@@ -46,16 +46,6 @@
 					$tourl=qa_path_absolute('');
 
 				if (strlen($app_id) && strlen($app_secret)) {
-					if (!function_exists('json_decode')) { // work around fact that PHP might not have JSON extension installed
-						require_once $this->directory.'JSON.php';
-
-						function json_decode($json)
-						{
-							$decoder=new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-							return $decoder->decode($json);
-						}
-					}
-
 					require_once $this->directory.'facebook.php';
 
 					$facebook = new Facebook(array(

@@ -1602,6 +1602,26 @@
 	}
 
 
+	/**
+	 * JSON compatibility layer for PHP 5.1
+	 */
+	if (!function_exists('json_encode') && !function_exists('json_decode')) {
+		require_once QA_INCLUDE_DIR.'vendor/JSON.php';
+
+		function json_encode($json)
+		{
+			$service = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+			return $service->encode($json);
+		}
+
+		function json_decode($json)
+		{
+			$service = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+			return $service->decode($json);
+		}
+	}
+
+
 /*
 	Omit PHP closing tag to help avoid accidental output
 */
