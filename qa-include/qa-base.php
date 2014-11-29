@@ -1610,13 +1610,13 @@
 
 		function json_encode($json)
 		{
-			$service = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+			$service = new Services_JSON();
 			return $service->encode($json);
 		}
 
-		function json_decode($json)
+		function json_decode($json, $assoc = false)
 		{
-			$service = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+			$service = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
 			return $service->decode($json);
 		}
 	}
