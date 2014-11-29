@@ -22,12 +22,12 @@
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 
-
 	$uri = qa_post_text('uri');
 	$type = (qa_post_text('type') === 'Theme' ? 'Theme' : 'Plugin');
 	$version = qa_post_text('version');
 
-	$metadata = qa_addon_metadata(qa_retrieve_url($uri), $type);
+	$metadataUtil = new Q2A_Util_Metadata();
+	$metadata = $metadataUtil->fetchFromUrl($uri);
 
 	if (strlen(@$metadata['version'])) {
 		if (strcmp($metadata['version'], $version)) {
