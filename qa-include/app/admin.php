@@ -120,14 +120,12 @@
 		$options = array('' => 'English (US)');
 
 		// find all language folders
-		foreach (glob(QA_LANG_DIR.'*', GLOB_NOSORT) as $directory) {
+		$metadataUtil = new Q2A_Util_Metadata();
+		foreach (glob(QA_LANG_DIR.'*', GLOB_NOSORT | GLOB_MARK) as $directory) {
 			$code = basename($directory);
-			$metadatafile = QA_LANG_DIR . $code . '/metadata.php';
-			if (is_file($metadatafile)) {
-				$metadata = include $metadatafile;
-				if (isset($metadata['display_name']))
-					$options[$code] = $metadata['display_name'];
-			}
+			$metadata = $metadataUtil->fetchFromAddonPath($directory);
+			if (isset($metadata['display_name']))
+				$options[$code] = $metadata['display_name'];
 			// otherwise use an entry from above
 			else if (isset($codetolanguage[$code]))
 				$options[$code] = $codetolanguage[$code];
