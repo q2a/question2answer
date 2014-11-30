@@ -187,6 +187,11 @@ class qa_html_theme_base
 		}
 	}
 
+	/**
+	 * Pre-output initialization. Immediately called after loading of the module. Content and template variables are
+	 * already setup at this point. Useful to perform layer initialization in the earliest and safest stage possible
+	 */
+	public function initialize() { }
 
 	public function finish()
 /*
