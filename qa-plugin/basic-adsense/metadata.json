@@ -1,0 +1,13 @@
+{
+	"name": "Basic AdSense",
+	"uri": "",
+	"description": "Provides a basic widget for displaying Google Adsense ads",
+	"version": "1.0",
+	"date": "2011-03-27",
+	"author": "Question2Answer",
+	"author_uri": "http://www.question2answer.org",
+	"license": "GPLv2",
+	"update": "http://localhost/webs/q2a-dev/qa-plugin/basic-adsense/metadata_1.json",
+	"min_q2a": "1.4",
+	"min_php": ""
+}

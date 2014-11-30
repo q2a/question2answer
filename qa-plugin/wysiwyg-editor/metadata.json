@@ -1,0 +1,13 @@
+{
+	"name": "WYSIWYG Editor",
+	"uri": "",
+	"description": "Wrapper for CKEditor WYSIWYG rich text editor",
+	"version": "1.1.1",
+	"date": "2011-12-06",
+	"author": "Question2Answer",
+	"author_uri": "http://www.question2answer.org",
+	"license": "GPLv2",
+	"update": "",
+	"min_q2a": "1.3",
+	"min_php": ""
+}

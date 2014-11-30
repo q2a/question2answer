@@ -1,0 +1,13 @@
+{
+	"name": "XML Sitemap",
+	"uri": "",
+	"description": "Generates sitemap.xml file for submission to search engines",
+	"version": "1.1.1",
+	"date": "2011-12-06",
+	"author": "Question2Answer",
+	"author_uri": "http://www.question2answer.org",
+	"license": "GPLv2",
+	"update": "",
+	"min_q2a": "1.5",
+	"min_php": ""
+}

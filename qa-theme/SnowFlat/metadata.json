@@ -1,0 +1,13 @@
+{
+	"name": "Snow Flat",
+	"uri": "",
+	"description": "ShowFlat responsive theme with RTL support",
+	"version": "1.4",
+	"date": "2014-03-11",
+	"author": "Q2A Market",
+	"author_uri": "http://www.q2amarket.com",
+	"license": "GPLv2",
+	"update": "",
+	"min_q2a": "1.7",
+	"min_php": ""
+}

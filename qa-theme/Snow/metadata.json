@@ -1,0 +1,13 @@
+{
+	"name": "Snow",
+	"uri": "",
+	"description": "Non-responsive theme without RTL support",
+	"version": "1.3",
+	"date": "2013-11-13",
+	"author": "Q2A Market",
+	"author_uri": "http://www.q2amarket.com",
+	"license": "GPLv2",
+	"update": "",
+	"min_q2a": "",
+	"min_php": ""
+}
