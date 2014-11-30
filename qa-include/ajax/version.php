@@ -23,7 +23,6 @@
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 
 	$uri = qa_post_text('uri');
-	$type = (qa_post_text('type') === 'Theme' ? 'Theme' : 'Plugin');
 	$version = qa_post_text('version');
 
 	$metadataUtil = new Q2A_Util_Metadata();
