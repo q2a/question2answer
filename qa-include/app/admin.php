@@ -137,26 +137,25 @@
 	}
 
 
-	function qa_admin_theme_options()
-/*
-	Return a sorted array of available themes, [theme name] => [theme name]
-*/
-	{
+	/**
+	 * Return a sorted array of available themes, [theme name] => [theme name]
+	 */
+	function qa_admin_theme_options() {
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$options=array();
-
-		$directory=@opendir(QA_THEME_DIR);
-		if (is_resource($directory)) {
-			while (($theme=readdir($directory))!==false)
-				if ( (substr($theme, 0, 1)!='.') && file_exists(QA_THEME_DIR.$theme.'/qa-styles.css') )
-					$options[$theme]=$theme;
-
-			closedir($directory);
+		$metadataUtil = new Q2A_Util_Metadata();
+		foreach (glob(QA_THEME_DIR . '*', GLOB_NOSORT | GLOB_MARK) as $directory) {
+			$theme = basename($directory);
+			$metadata = $metadataUtil->fetchFromAddonPath($directory);
+			if (empty($metadata)) {
+				// limit theme parsing to first 8kB
+				$contents = file_get_contents($directory . '/qa-styles.css', false, NULL, -1, 8192);
+				$metadata = qa_addon_metadata($contents, 'Theme');
+			}
+			$options[$theme] = isset($metadata['name']) ? $metadata['name'] : $theme;
 		}
 
 		asort($options, SORT_STRING);
-
 		return $options;
 	}
 
