@@ -354,7 +354,7 @@ abstract class BaseFacebook
       // directly, since response isn't JSON format.
       $access_token_response = $this->_oauthRequest(
         $this->getUrl('graph', '/oauth/access_token'),
-        $params = array(
+        array(
           'client_id' => $this->getAppId(),
           'client_secret' => $this->getAppSecret(),
           'grant_type' => 'fb_exchange_token',
@@ -775,7 +775,7 @@ abstract class BaseFacebook
       $access_token_response =
         $this->_oauthRequest(
           $this->getUrl('graph', '/oauth/access_token'),
-          $params = array('client_id' => $this->getAppId(),
+          array('client_id' => $this->getAppId(),
                           'client_secret' => $this->getAppSecret(),
                           'redirect_uri' => $redirect_uri,
                           'code' => $code));
@@ -1025,8 +1025,7 @@ abstract class BaseFacebook
     }
 
     // check sig
-    $expected_sig = hash_hmac('sha256', $payload,
-                              $this->getAppSecret(), $raw = true);
+    $expected_sig = hash_hmac('sha256', $payload, $this->getAppSecret(), true);
     if ($sig !== $expected_sig) {
       self::errorLog('Bad Signed JSON signature!');
       return null;
@@ -1050,7 +1049,7 @@ abstract class BaseFacebook
     $data['issued_at'] = time();
     $json = json_encode($data);
     $b64 = self::base64UrlEncode($json);
-    $raw_sig = hash_hmac('sha256', $b64, $this->getAppSecret(), $raw = true);
+    $raw_sig = hash_hmac('sha256', $b64, $this->getAppSecret(), true);
     $sig = self::base64UrlEncode($raw_sig);
     return $sig.'.'.$b64;
   }
