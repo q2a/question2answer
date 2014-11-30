@@ -363,6 +363,7 @@
 	//	Load the appropriate theme class and output the page
 
 		$themeclass=qa_load_theme_class(qa_get_site_theme(), (substr($qa_template, 0, 7)=='custom-') ? 'custom' : $qa_template, $qa_content, qa_request());
+		$themeclass->initialize();
 
 		header('Content-type: '.$qa_content['content_type']);
 
