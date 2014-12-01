@@ -4,6 +4,9 @@
 
 	<exclude-pattern>qa-include/vendor/*</exclude-pattern>
 	<exclude-pattern>qa-config.php</exclude-pattern>
+	<exclude-pattern>qa-plugin/recaptcha-captcha/recaptchalib.php</exclude-pattern>
+	<exclude-pattern>qa-plugin/facebook-login/facebook.php</exclude-pattern>
+	<exclude-pattern>qa-plugin/facebook-login/base_facebook.php</exclude-pattern>
 
 	<rule ref="PSR1"/>
 
