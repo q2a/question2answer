@@ -102,11 +102,12 @@
 	if (!empty($pluginfiles)) {
 		$metadataUtil = new Q2A_Util_Metadata();
 		$sortedPluginFiles = array();
+
 		foreach ($pluginfiles as $pluginFile) {
 			$metadata = $metadataUtil->fetchFromAddonPath(dirname($pluginFile));
 			if (empty($metadata)) {
 				// limit plugin parsing to first 8kB
-				$contents = file_get_contents($pluginFile, false, NULL, -1, 8192);
+				$contents = file_get_contents($pluginFile, false, null, -1, 8192);
 				$metadata = qa_addon_metadata($contents, 'Plugin');
 			}
 			$metadata['name'] = isset($metadata['name']) && !empty($metadata['name'])
@@ -115,7 +116,9 @@
 			;
 			$sortedPluginFiles[$pluginFile] = $metadata;
 		}
+
 		qa_sort_by($sortedPluginFiles, 'name');
+
 		$pluginIndex = -1;
 		foreach ($sortedPluginFiles as $pluginFile => $metadata) {
 			$pluginIndex++;

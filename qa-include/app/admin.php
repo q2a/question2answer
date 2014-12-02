@@ -55,14 +55,14 @@
 	}
 
 
+	/**
+	 *	Return a sorted array of available languages, [short code] => [long name]
+	 */
 	function qa_admin_language_options()
-/*
-	Return a sorted array of available languages, [short code] => [long name]
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		/*
+		/**
 		 * @deprecated The hardcoded language ids will be removed in favor of language metadata files.
 		 * See qa-lang/en-GB directory for a clear example of how to use them.
 		 */
@@ -121,7 +121,7 @@
 
 		// find all language folders
 		$metadataUtil = new Q2A_Util_Metadata();
-		foreach (glob(QA_LANG_DIR . '*', GLOB_NOSORT | GLOB_ONLYDIR) as $directory) {
+		foreach (glob(QA_LANG_DIR . '*', GLOB_ONLYDIR) as $directory) {
 			$code = basename($directory);
 			$metadata = $metadataUtil->fetchFromAddonPath($directory);
 			if (isset($metadata['display_name']))
@@ -143,12 +143,12 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$metadataUtil = new Q2A_Util_Metadata();
-		foreach (glob(QA_THEME_DIR . '*', GLOB_NOSORT | GLOB_ONLYDIR) as $directory) {
+		foreach (glob(QA_THEME_DIR . '*', GLOB_ONLYDIR) as $directory) {
 			$theme = basename($directory);
 			$metadata = $metadataUtil->fetchFromAddonPath($directory);
 			if (empty($metadata)) {
 				// limit theme parsing to first 8kB
-				$contents = file_get_contents($directory . '/qa-styles.css', false, NULL, -1, 8192);
+				$contents = file_get_contents($directory . '/qa-styles.css', false, null, -1, 8192);
 				$metadata = qa_addon_metadata($contents, 'Theme');
 			}
 			$options[$theme] = isset($metadata['name']) ? $metadata['name'] : $theme;
