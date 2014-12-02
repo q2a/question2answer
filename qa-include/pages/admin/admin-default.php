@@ -307,7 +307,7 @@
 
 				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_register_terms', 'register_terms', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 
-				array_push($showoptions, '' ,'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
+				array_push($showoptions, '', 'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
 
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');
@@ -1142,7 +1142,7 @@
 					$optionfield['note'] = qa_lang_html('admin/pixels');
 					break;
 
-				case 'avatar_default_show';
+				case 'avatar_default_show':
 					$qa_content['form']['tags'] .= 'enctype="multipart/form-data"';
 					$optionfield['label'] .= ' <span style="margin:2px 0; display:inline-block;">'.
 						qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), 32).
@@ -1287,7 +1287,7 @@
 					$optionfield['label'] = '<span id="moderate_points_label_off" style="display:none;">'.$optionfield['label'].'</span><span id="moderate_points_label_on">'.qa_lang_html('options/moderate_points_limit').'</span>';
 					break;
 
-				case 'moderate_points_limit';
+				case 'moderate_points_limit':
 					unset($optionfield['label']);
 					$optionfield['note'] = qa_lang_html('admin/points');
 					break;

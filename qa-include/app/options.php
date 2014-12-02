@@ -107,7 +107,9 @@
 	/**
 	 * @deprecated Deprecated since Q2A 1.3 now that all options are retrieved together.
 	 */
-	function qa_options_set_pending($names) {}
+	function qa_options_set_pending($names)
+	{
+	}
 
 
 	function qa_preload_options()

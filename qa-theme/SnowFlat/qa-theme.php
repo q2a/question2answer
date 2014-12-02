@@ -261,7 +261,7 @@ class qa_html_theme extends qa_html_theme_base
 
 			$qam_note_class = '';
 			if (strpos($navlink['note'], '> -') !== false) {
-				$qam_note_class = !empty($navlink['note']) ? ' qam-cat-note' : NULL;
+				$qam_note_class = !empty($navlink['note']) ? ' qam-cat-note' : null;
 			}
 
 			// search and replace within the string
@@ -418,7 +418,7 @@ class qa_html_theme extends qa_html_theme_base
 
 		// add closed image
 		$closed = (!empty($q_view['closed']) ?
-						'<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="question-closed" width="24" height="24" title="' . qa_lang('main/closed') . '" />' : NULL );
+						'<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="question-closed" width="24" height="24" title="' . qa_lang('main/closed') . '" />' : null );
 
 		if (isset($this->content['title'])) {
 			$this->output(
@@ -594,11 +594,11 @@ class qa_html_theme extends qa_html_theme_base
 	 * @since Snow 1.4
 	 * @version 1.0
 	 */
-	public function qam_search($addon_class = FALSE, $ids = FALSE)
+	public function qam_search($addon_class = false, $ids = false)
 	{
 		$default_color = 'turquoise';
 
-		$id = (($ids) ? ' id="' . $ids . '"' : NULL);
+		$id = (($ids) ? ' id="' . $ids . '"' : null);
 
 		$this->output('<div class="qam-search ' . $default_color . ' ' . $addon_class . '" ' . $id . ' >');
 		qa_html_theme_base::search();
@@ -617,7 +617,7 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$css = '<style>';
 
-		$css .= ( (!qa_is_logged_in() ) ? '.qa-nav-user{margin:0 !important;}' : NULL );
+		$css .= ( (!qa_is_logged_in() ) ? '.qa-nav-user{margin:0 !important;}' : null );
 		if (qa_request_part(1) !== qa_get_logged_in_handle()) {
 			$css .= '@media (max-width: 979px){';
 			$css .= 'body.qa-template-user.fixed, body[class^="qa-template-user-"].fixed, body[class*="qa-template-user-"].fixed{';
@@ -670,6 +670,4 @@ class qa_html_theme extends qa_html_theme_base
 
 		return $icons_info;
 	}
-
-
 }

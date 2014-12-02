@@ -1780,7 +1780,7 @@
 		 */
 		public function post_avatar($post, $class, $prefix=null)
 		{
-			$this->avatar($post, $class, $prefix=null);
+			$this->avatar($post, $class, $prefix);
 		}
 
 		public function post_meta($post, $class, $prefix=null, $separator='<br/>')

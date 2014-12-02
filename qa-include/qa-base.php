@@ -556,11 +556,11 @@
 
 //	Low-level functions used throughout Q2A
 
+	/**
+	 * Calls eval() on the PHP code in $eval which came from the file $filename. It supplements PHP's regular error reporting by
+	 * displaying/logging (as appropriate) the original source filename, if an error occurred when evaluating the code.
+	 */
 	function qa_eval_from_file($eval, $filename)
-/*
-	Calls eval() on the PHP code in $eval which came from the file $filename. It supplements PHP's regular error reporting by
-	displaying/logging (as appropriate) the original source filename, if an error occurred when evaluating the code.
-*/
 	{
 		// could also use ini_set('error_append_string') but apparently it doesn't work for errors logged on disk
 
@@ -585,18 +585,25 @@
 	}
 
 
+	/**
+	 * Call $function with the arguments in the $args array (doesn't work with call-by-reference functions)
+	 */
 	function qa_call($function, $args)
-/*
-	Call $function with the arguments in the $args array (doesn't work with call-by-reference functions)
-*/
 	{
-		switch (count($args)) { // call_user_func_array(...) is very slow, so we break out most cases
-			case 0: return $function();
-			case 1: return $function($args[0]);
-			case 2: return $function($args[0], $args[1]);
-			case 3: return $function($args[0], $args[1], $args[2]);
-			case 4: return $function($args[0], $args[1], $args[2], $args[3]);
-			case 5: return $function($args[0], $args[1], $args[2], $args[3], $args[4]);
+		// call_user_func_array(...) is very slow, so we break out most common cases first
+		switch (count($args)) {
+			case 0:
+				return $function();
+			case 1:
+				return $function($args[0]);
+			case 2:
+				return $function($args[0], $args[1]);
+			case 3:
+				return $function($args[0], $args[1], $args[2]);
+			case 4:
+				return $function($args[0], $args[1], $args[2], $args[3]);
+			case 5:
+				return $function($args[0], $args[1], $args[2], $args[3], $args[4]);
 		}
 
 		return call_user_func_array($function, $args);

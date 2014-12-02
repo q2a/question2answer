@@ -204,7 +204,7 @@ class qam_snow_theme
 	{
 		$this->data['ask_search_box_color']  = $this->qam_opt('ask_search_box_color');
 		$this->data['welcome_widget_color']  = $this->qam_opt('welcome_widget_color');
-		$this->data['fixed_topbar']          = (($this->qam_opt('fixed_topbar')) ? 'fixed' : NULL);
+		$this->data['fixed_topbar']          = (($this->qam_opt('fixed_topbar')) ? 'fixed' : null);
 		$this->data['header_custom_content'] = $this->qam_opt('header_custom_content');
 		$this->data['footer_custom_content'] = $this->qam_opt('above_footer_custom_content');
 
@@ -315,7 +315,7 @@ class qam_snow_theme
 			return $points;
 		}
 
-		return NULL;
+		return null;
 	}
 
 	/**
@@ -339,8 +339,8 @@ class qam_snow_theme
 
 		return $html;
 	}
-
 }
+
 
 /* ---------------------------------------------------------------------------- */
 

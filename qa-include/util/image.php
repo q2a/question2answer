@@ -47,11 +47,13 @@
 
 			switch (strtolower(substr($gotbytes, -1))) {
 				case 'g':
-					$gotbytes*=1024;
+					$gotbytes *= 1024;
+					// fall-through
 				case 'm':
-					$gotbytes*=1024;
+					$gotbytes *= 1024;
+					// fall-through
 				case 'k':
-					$gotbytes*=1024;
+					$gotbytes *= 1024;
 			}
 
 			if ($gotbytes>0) { // otherwise we clearly don't know our limit

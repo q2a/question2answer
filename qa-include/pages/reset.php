@@ -89,7 +89,7 @@
 	if (empty($inemailhandle) || isset($errors['emailhandle']))
 		$forgotpath=qa_path('forgot');
 	else
-		$forgotpath=qa_path('forgot',  array('e' => $inemailhandle));
+		$forgotpath=qa_path('forgot', array('e' => $inemailhandle));
 
 	$qa_content['form']=array(
 		'tags' => 'method="post" action="'.qa_self_html().'"',

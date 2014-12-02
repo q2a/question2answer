@@ -573,7 +573,7 @@ class Q2A_Util_String
 			// replace all word separators with spaces of same length
 
 			if (empty(self::$utf8PunctuationKeepLength)) {
-				foreach (self::$utf8Punctuation as $key=>$value)
+				foreach (self::$utf8Punctuation as $key => $value)
 					self::$utf8PunctuationKeepLength[$key] = str_repeat(' ', strlen($key));
 			}
 

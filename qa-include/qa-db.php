@@ -376,7 +376,7 @@
 	 */
 	function qa_db_random_bigint()
 	{
-		return sprintf('%d%06d%06d', mt_rand(1,18446743), mt_rand(0,999999), mt_rand(0,999999));
+		return sprintf('%d%06d%06d', mt_rand(1, 18446743), mt_rand(0, 999999), mt_rand(0, 999999));
 	}
 
 

@@ -2,7 +2,8 @@
 
 class BaseTest extends PHPUnit_Framework_TestCase
 {
-	public function test__qa_js() {
+	public function test__qa_js()
+	{
 		$test = qa_js('test');
 		$this->assertEquals($test, "'test'");
 
