@@ -618,8 +618,9 @@
 	Return the URL (relative to the current page) to navigate to the options panel for plugin module $name of $type
 */
 	{
-		$info=qa_get_module_info($type, $name);
-		return qa_admin_plugin_options_path($info['directory']);
+		$info = qa_get_module_info($type, $name);
+		$dir = rtrim($info['directory'], '/');
+		return qa_admin_plugin_options_path($dir);
 	}
 
 

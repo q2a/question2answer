@@ -49,7 +49,8 @@
 
 			if (method_exists($module, 'admin_form')) {
 				$info = qa_get_module_info($type, $name);
-				$pluginoptionmodules[$info['directory']][] = array(
+				$dir = rtrim($info['directory'], '/');
+				$pluginoptionmodules[$dir][] = array(
 					'type' => $type,
 					'name' => $name,
 				);
@@ -122,7 +123,7 @@
 		$pluginIndex = -1;
 		foreach ($sortedPluginFiles as $pluginFile => $metadata) {
 			$pluginIndex++;
-			$plugindirectory = dirname($pluginFile) . '/';
+			$plugindirectory = dirname($pluginFile);
 			$hash = qa_admin_plugin_directory_hash($plugindirectory);
 			$showthisform = $showpluginforms && (qa_get('show') == $hash);
 
@@ -172,7 +173,7 @@
 					qa_admin_plugin_options_path($plugindirectory).'">'.qa_lang_html('admin/options').'</a>';
 
 			$pluginhtml = $namehtml.' '.$authorhtml.' '.$updatehtml.'<br>'.$deschtml.(strlen($deschtml) ? '<br>' : '').
-				'<small style="color:#666">'.qa_html($plugindirectory).'</small>';
+				'<small style="color:#666">'.qa_html($plugindirectory).'/</small>';
 
 			if (qa_qa_version_below(@$metadata['min_q2a']))
 				$pluginhtml = '<strike style="color:#999">'.$pluginhtml.'</strike><br><span style="color:#f00">'.
