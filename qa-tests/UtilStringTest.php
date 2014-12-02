@@ -7,7 +7,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 	private $strAccents = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƲĘŕ ƮĦȨ ĿÆƶȳ Ƌơǥ';
 	private $blockWordString = 't*d o*n b*t style';
 
-	function test__qa_string_to_words()
+	public function test__qa_string_to_words()
 	{
 		$test1 = qa_string_to_words($this->strBasic);
 		$expected1 = array('so', 'i', 'tied', 'an', 'onion', 'to', 'my', 'belt', 'which', 'was', 'the', 'style', 'at', 'the', 'time');
@@ -19,7 +19,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected2, $test2);
 	}
 
-	function test__qa_string_remove_accents()
+	public function test__qa_string_remove_accents()
 	{
 		$test = qa_string_remove_accents($this->strAccents);
 		$expected = 'The quicK ssroWn Fot jUOIps OVEr THE LAEzy Dog';
@@ -27,7 +27,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	function test__qa_tags_to_tagstring()
+	public function test__qa_tags_to_tagstring()
 	{
 		$test = qa_tags_to_tagstring( array('Hello', 'World') );
 		$expected = 'Hello,World';
@@ -35,7 +35,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	function test__qa_tagstring_to_tags()
+	public function test__qa_tagstring_to_tags()
 	{
 		$test = qa_tagstring_to_tags('hello,world');
 		$expected = array('hello', 'world');
@@ -43,7 +43,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	function test__qa_shorten_string_line()
+	public function test__qa_shorten_string_line()
 	{
 		// qa_shorten_string_line ($string, $length)
 
@@ -54,7 +54,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertNotFalse(strpos($test, '...'));
 	}
 
-	function test__qa_block_words_explode()
+	public function test__qa_block_words_explode()
 	{
 		$test = qa_block_words_explode($this->blockWordString);
 		$expected = array('t*d', 'o*n', 'b*t', 'style');
@@ -62,7 +62,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	function test__qa_block_words_to_preg()
+	public function test__qa_block_words_to_preg()
 	{
 		$test = qa_block_words_to_preg($this->blockWordString);
 		$expected = '(?<= )t[^ ]*d(?= )|(?<= )o[^ ]*n(?= )|(?<= )b[^ ]*t(?= )|(?<= )style(?= )';
@@ -70,7 +70,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	function test__qa_block_words_match_all()
+	public function test__qa_block_words_match_all()
 	{
 		$test1 = qa_block_words_match_all('onion belt', '');
 
@@ -87,7 +87,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test2);
 	}
 
-	function test__qa_block_words_replace()
+	public function test__qa_block_words_replace()
 	{
 		$wordpreg = qa_block_words_to_preg($this->blockWordString);
 		$test = qa_block_words_replace('tired of my ocean boat style', $wordpreg);
@@ -96,7 +96,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $test);
 	}
 
-	function test__qa_random_alphanum()
+	public function test__qa_random_alphanum()
 	{
 		$len = 50;
 		$test = qa_random_alphanum($len);
@@ -104,7 +104,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(strlen($test), $len);
 	}
 
-	function test__qa_email_validate()
+	public function test__qa_email_validate()
 	{
 		$goodEmails = array(
 			'hello@example.com',
@@ -125,28 +125,28 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 			$this->assertFalse( qa_email_validate($email) );
 	}
 
-	function test__qa_strlen()
+	public function test__qa_strlen()
 	{
 		$test = qa_strlen($this->strAccents);
 
 		$this->assertEquals($test, 43);
 	}
 
-	function test__qa_strtolower()
+	public function test__qa_strtolower()
 	{
 		$test = qa_strtolower('hElLo WoRld');
 
 		$this->assertEquals($test, 'hello world');
 	}
 
-	function test__qa_substr()
+	public function test__qa_substr()
 	{
 		$test = qa_substr($this->strBasic, 5, 24);
 
 		$this->assertEquals($test, 'tied an onion to my belt');
 	}
 
-	function test__qa_string_matches_one()
+	public function test__qa_string_matches_one()
 	{
 		$matches = array( 'dyed', 'shallot', 'belt', 'fashion' );
 		$nonMatches = array( 'dyed', 'shallot', 'buckle', 'fashion' );
@@ -155,23 +155,4 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse( qa_string_matches_one($this->strBasic, $nonMatches) );
 	}
 
-	function test__qa_js() {
-		$test = qa_js('test');
-		$this->assertEquals($test, "'test'");
-
-		$test = qa_js('test', true);
-		$this->assertEquals($test, "'test'");
-
-		$test = qa_js(123);
-		$this->assertEquals($test, 123);
-
-		$test = qa_js(123, true);
-		$this->assertEquals($test, "'123'");
-
-		$test = qa_js(true);
-		$this->assertEquals($test, 'true');
-
-		$test = qa_js(true, true);
-		$this->assertEquals($test, "'true'");
-	}
 }

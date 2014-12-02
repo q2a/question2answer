@@ -8,10 +8,13 @@
 	<exclude-pattern>qa-plugin/facebook-login/facebook.php</exclude-pattern>
 	<exclude-pattern>qa-plugin/facebook-login/base_facebook.php</exclude-pattern>
 
-	<rule ref="PSR1"/>
+	<rule ref="PSR1">
+		<exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+	</rule>
 
 	<rule ref="PSR2">
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+		<exclude name="Generic.Files.LineLength.TooLong"/>
 
 		<exclude name="Squiz.ControlStructures.ControlSignature"/>
 		<exclude name="Generic.ControlStructures.InlineControlStructure"/>
