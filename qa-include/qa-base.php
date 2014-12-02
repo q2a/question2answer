@@ -338,11 +338,9 @@
 
 		$metadataUtil = new Q2A_Util_Metadata();
 		foreach ($pluginfiles as $pluginfile) {
-			// these variables are utilized in the qa_register_plugin_* functions
-			$qa_plugin_directory = dirname($pluginfile) . '/';
-			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
+			$pluginDirectory = dirname($pluginfile);
 
-			$metadata = $metadataUtil->fetchFromAddonPath($qa_plugin_directory);
+			$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
 			if (empty($metadata)) {
 				// limit plugin parsing to first 8kB
 				$contents = file_get_contents($pluginfile, false, NULL, -1, 8192);
@@ -355,6 +353,10 @@
 			// skip plugin which requires a later version of PHP
 			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php']))
 				continue;
+
+			// these variables are utilized in the qa_register_plugin_* functions
+			$qa_plugin_directory = $pluginDirectory . '/';
+			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
 
 			require_once $pluginfile;
 		}

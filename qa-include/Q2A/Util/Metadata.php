@@ -44,7 +44,7 @@ class Q2A_Util_Metadata
 	 */
 	public function fetchFromAddonPath($path)
 	{
-		$metadataFile = $path . self::METADATA_FILE_JSON;
+		$metadataFile = $path . '/' . self::METADATA_FILE_JSON;
 		if (is_file($metadataFile)) {
 			$content = file_get_contents($metadataFile);
 			return $this->getArrayFromJson($content);

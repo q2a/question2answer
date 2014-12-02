@@ -103,8 +103,7 @@
 		$metadataUtil = new Q2A_Util_Metadata();
 		$sortedPluginFiles = array();
 		foreach ($pluginfiles as $pluginFile) {
-			$pluginDirectory = dirname($pluginFile) . '/';
-			$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
+			$metadata = $metadataUtil->fetchFromAddonPath(dirname($pluginFile));
 			if (empty($metadata)) {
 				// limit plugin parsing to first 8kB
 				$contents = file_get_contents($pluginFile, false, NULL, -1, 8192);
@@ -120,7 +119,7 @@
 		$pluginIndex = -1;
 		foreach ($sortedPluginFiles as $pluginFile => $metadata) {
 			$pluginIndex++;
-			$plugindirectory = dirname($pluginFile . '/');
+			$plugindirectory = dirname($pluginFile) . '/';
 			$hash = qa_admin_plugin_directory_hash($plugindirectory);
 			$showthisform = $showpluginforms && (qa_get('show') == $hash);
 

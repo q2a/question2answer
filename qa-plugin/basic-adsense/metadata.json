@@ -7,7 +7,7 @@
 	"author": "Question2Answer",
 	"author_uri": "http://www.question2answer.org",
 	"license": "GPLv2",
-	"update": "http://localhost/webs/q2a-dev/qa-plugin/basic-adsense/metadata_1.json",
+	"update": "",
 	"min_q2a": "1.4",
 	"min_php": ""
 }
