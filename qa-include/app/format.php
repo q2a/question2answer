@@ -281,8 +281,9 @@
 		if ($isquestion && isset($post['closedbyid']))
 			$fields['classes']=ltrim($fields['classes'].' qa-q-closed');
 
-		if ($microformats)
+		if ($microformats) {
 			$fields['classes'].=' hentry '.($isquestion ? 'question' : ($isanswer ? ($isselected ? 'answer answer-selected' : 'answer') : 'comment'));
+		}
 
 	//	Question-specific stuff (title, URL, tags, answer count, category)
 
@@ -503,7 +504,7 @@
 
 		$fields['meta_order']=qa_lang_html('main/meta_order'); // sets ordering of meta elements which can be language-specific
 
-		if (@$options['whatview'] ) {
+		if (@$options['whatview']) {
 			$fields['what']=qa_lang_html($isquestion ? 'main/asked' : ($isanswer ? 'main/answered' : 'main/commented'));
 
 			if (@$options['whatlink'] && strlen(@$options['q_request']))

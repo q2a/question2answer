@@ -127,7 +127,7 @@
 			if (isset($metadata['display_name']))
 				$options[$code] = $metadata['display_name'];
 			// otherwise use an entry from above
-			else if (isset($codetolanguage[$code]))
+			elseif (isset($codetolanguage[$code]))
 				$options[$code] = $codetolanguage[$code];
 		}
 
@@ -139,7 +139,8 @@
 	/**
 	 * Return a sorted array of available themes, [theme name] => [theme name]
 	 */
-	function qa_admin_theme_options() {
+	function qa_admin_theme_options()
+	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$metadataUtil = new Q2A_Util_Metadata();

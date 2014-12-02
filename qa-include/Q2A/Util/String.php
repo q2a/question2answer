@@ -685,5 +685,4 @@ class Q2A_Util_String
 
 		return false;
 	}
-
 }

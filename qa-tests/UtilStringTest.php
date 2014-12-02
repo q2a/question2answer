@@ -154,5 +154,4 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue( qa_string_matches_one($this->strBasic, $matches) );
 		$this->assertFalse( qa_string_matches_one($this->strBasic, $nonMatches) );
 	}
-
 }

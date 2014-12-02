@@ -358,7 +358,7 @@
 					$commentsall=$answerid;
 				}
 
-			} else if (($formtype=='c_edit') && (@$commentsfollows[$formpostid]['parentid']==$answerid)) { // ...being edited
+			} elseif (($formtype=='c_edit') && (@$commentsfollows[$formpostid]['parentid']==$answerid)) { // ...being edited
 				$a_view['c_form']=qa_page_q_edit_c_form($qa_content, 'c'.$formpostid, $commentsfollows[$formpostid],
 					@$ceditin[$formpostid], @$cediterrors[$formpostid]);
 

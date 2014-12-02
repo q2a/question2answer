@@ -1103,7 +1103,7 @@ in a category for which they have elevated privileges).
 		if (!isset($value))
 			$silentproblems[]='code missing';
 
-		else if (!strlen($value))
+		elseif (!strlen($value))
 			$silentproblems[]='code empty';
 
 		else {
@@ -1135,7 +1135,7 @@ in a category for which they have elevated privileges).
 							$silentproblems[]='key cookie missing';
 						elseif (!strlen($key))
 							$silentproblems[]='key cookie empty';
-						else if (strlen($key)!=QA_FORM_KEY_LENGTH)
+						elseif (strlen($key)!=QA_FORM_KEY_LENGTH)
 							$reportproblems[]='key cookie '.$key.' invalid';
 					}
 				}

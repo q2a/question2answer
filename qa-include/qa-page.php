@@ -249,7 +249,7 @@
 								$qa_content['navigation'][$navtype][$navprefix]['selected'] = true;
 						}
 					}
-					else if ($requestlower === $navprefix || $requestlower.'$' === $navprefix)
+					elseif ($requestlower === $navprefix || $requestlower.'$' === $navprefix)
 						$qa_content['navigation'][$navtype][$navprefix]['selected'] = true;
 				}
 

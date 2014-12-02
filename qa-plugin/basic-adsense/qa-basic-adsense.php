@@ -73,6 +73,7 @@ class qa_basic_adsense
 		switch ($region) {
 			case 'full': // Leaderboard
 				$divstyle='width:728px; margin:0 auto;';
+				// fall-through
 
 			case 'main': // Leaderboard
 				$width=728;

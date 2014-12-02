@@ -177,5 +177,4 @@ class Q2A_Util_Usage
 			$usage['ram'] ? ($usage['ram'] * 100 / $totalusage['ram']) : 0
 		);
 	}
-
 }

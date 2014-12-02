@@ -236,7 +236,7 @@
 				$result = implode(',', $parts);
 
 		}
-		else if (isset($argument)) {
+		elseif (isset($argument)) {
 			if ($alwaysquote || !is_numeric($argument))
 				$result = "'".qa_db_escape_string($argument)."'";
 			else

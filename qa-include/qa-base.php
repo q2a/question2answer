@@ -1048,8 +1048,10 @@
 			switch (strtoupper($unit)) {  // Gets an integer value that can be compared against the size of the HTTP request
 				case 'G':
 					$postmaxsize *= 1024;
+					// fall-through
 				case 'M':
 					$postmaxsize *= 1024;
+					// fall-through
 				case 'K':
 					$postmaxsize *= 1024;
 			}

@@ -39,7 +39,7 @@
 	$req = qa_request_part(1);
 	if ($req === null)
 		$showOutbox = false;
-	else if ($req === 'sent')
+	elseif ($req === 'sent')
 		$showOutbox = true;
 	else
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';

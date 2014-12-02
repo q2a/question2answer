@@ -33,17 +33,19 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$mindb=16777215; // from MEDIUMBLOB column type
+		$mindb = 16777215; // from MEDIUMBLOB column type
 
-		$minphp=trim(ini_get('upload_max_filesize'));
+		$minphp = trim(ini_get('upload_max_filesize'));
 
 		switch (strtolower(substr($minphp, -1))) {
 			case 'g':
-				$minphp*=1024;
+				$minphp *= 1024;
+				// fall-through
 			case 'm':
-				$minphp*=1024;
+				$minphp *= 1024;
+				// fall-through
 			case 'k':
-				$minphp*=1024;
+				$minphp *= 1024;
 		}
 
 		return min($mindb, $minphp);

@@ -92,7 +92,7 @@
 				qa_db_flaggedcount_update();
 
 		}
-		else if ($oldquestion['type'] == 'Q') { // not hidden or queued
+		elseif ($oldquestion['type'] == 'Q') { // not hidden or queued
 			qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $title, $content, $format, $text, $tagstring, $oldquestion['categoryid']);
 		}
 

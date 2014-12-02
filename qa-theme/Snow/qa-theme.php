@@ -159,5 +159,4 @@ class qa_html_theme extends qa_html_theme_base
 
 		qa_html_theme_base::attribution();
 	}
-
 }
