@@ -20,30 +20,28 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	class qa_ask_box {
+class qa_ask_box
+{
+	public function allow_template($template)
+	{
+		$allowed = array(
+			'activity', 'categories', 'custom', 'feedback', 'qa', 'questions',
+			'hot', 'search', 'tag', 'tags', 'unanswered'
+		);
+		return in_array($template, $allowed);
+	}
 
-		public function allow_template($template)
-		{
-			$allowed = array(
-				'activity', 'categories', 'custom', 'feedback', 'qa', 'questions',
-				'hot', 'search', 'tag', 'tags', 'unanswered'
-			);
-			return in_array($template, $allowed);
-		}
+	public function allow_region($region)
+	{
+		return in_array($region, array('main', 'side', 'full'));
+	}
 
-
-		public function allow_region($region)
-		{
-			return in_array($region, array('main', 'side', 'full'));
-		}
-
-
-		public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
-		{
-			if (isset($qa_content['categoryids']))
-				$params=array('cat' => end($qa_content['categoryids']));
-			else
-				$params=null;
+	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+	{
+		if (isset($qa_content['categoryids']))
+			$params=array('cat' => end($qa_content['categoryids']));
+		else
+			$params=null;
 ?>
 <div class="qa-ask-box">
 	<form method="post" action="<?php echo qa_path_html('ask', $params); ?>">
@@ -69,11 +67,5 @@
 	</form>
 </div>
 <?php
-		}
-
 	}
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+}

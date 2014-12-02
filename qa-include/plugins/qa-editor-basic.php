@@ -20,58 +20,43 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
+class qa_editor_basic
+{
+	public function load_module($localdir, $htmldir)
+	{
 	}
 
+	public function calc_quality($content, $format)
+	{
+		if ($format=='')
+			return 1.0;
 
-	class qa_editor_basic {
+		if ($format=='html')
+			return 0.2;
 
-		public function load_module($localdir, $htmldir)
-		{
-		}
-
-
-		public function calc_quality($content, $format)
-		{
-			if ($format=='')
-				return 1.0;
-
-			if ($format=='html')
-				return 0.2;
-
-			return 0;
-		}
-
-
-		public function get_field(&$qa_content, $content, $format, $fieldname, $rows /* $autofocus parameter deprecated */)
-		{
-			return array(
-				'type' => 'textarea',
-				'tags' => 'name="'.$fieldname.'" id="'.$fieldname.'"',
-				'value' => qa_html($content),
-				'rows' => $rows,
-			);
-		}
-
-		public function focus_script($fieldname)
-		{
-			return "document.getElementById('".$fieldname."').focus();";
-		}
-
-
-		public function read_post($fieldname)
-		{
-			return array(
-				'format' => '',
-				'content' => qa_post_text($fieldname),
-			);
-		}
-
+		return 0;
 	}
 
+	public function get_field(&$qa_content, $content, $format, $fieldname, $rows /* $autofocus parameter deprecated */)
+	{
+		return array(
+			'type' => 'textarea',
+			'tags' => 'name="'.$fieldname.'" id="'.$fieldname.'"',
+			'value' => qa_html($content),
+			'rows' => $rows,
+		);
+	}
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+	public function focus_script($fieldname)
+	{
+		return "document.getElementById('".$fieldname."').focus();";
+	}
+
+	public function read_post($fieldname)
+	{
+		return array(
+			'format' => '',
+			'content' => qa_post_text($fieldname),
+		);
+	}
+}
