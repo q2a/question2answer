@@ -35,19 +35,15 @@
 */
 
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-	if (!QA_FINAL_EXTERNAL_USERS) { // login modules don't work with external user integration
-		qa_register_plugin_module('login', 'qa-facebook-login.php', 'qa_facebook_login', 'Facebook Login');
-		qa_register_plugin_module('page', 'qa-facebook-login-page.php', 'qa_facebook_login_page', 'Facebook Login Page');
-		qa_register_plugin_layer('qa-facebook-layer.php', 'Facebook Login Layer');
-	}
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+// login modules don't work with external user integration
+if (!QA_FINAL_EXTERNAL_USERS) {
+	qa_register_plugin_module('login', 'qa-facebook-login.php', 'qa_facebook_login', 'Facebook Login');
+	qa_register_plugin_module('page', 'qa-facebook-login-page.php', 'qa_facebook_login_page', 'Facebook Login Page');
+	qa_register_plugin_layer('qa-facebook-layer.php', 'Facebook Login Layer');
+}

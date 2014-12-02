@@ -20,11 +20,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	return array(
-		'page_title' => 'Example plugin page (UK English)',
-	);
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+return array(
+	'page_title' => 'Example plugin page (UK English)',
+);

@@ -245,8 +245,3 @@ class qa_wysiwyg_editor
 		return qa_html(number_format($bytes/1048576, 1));
 	}
 }
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/

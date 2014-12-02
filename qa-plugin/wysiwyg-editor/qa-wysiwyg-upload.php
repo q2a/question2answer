@@ -56,8 +56,3 @@ class qa_wysiwyg_upload
 		return null;
 	}
 }
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/

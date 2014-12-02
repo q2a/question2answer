@@ -34,16 +34,11 @@
 */
 
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-	qa_register_plugin_module('editor', 'qa-wysiwyg-editor.php', 'qa_wysiwyg_editor', 'WYSIWYG Editor');
-	qa_register_plugin_module('page', 'qa-wysiwyg-upload.php', 'qa_wysiwyg_upload', 'WYSIWYG Upload');
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+qa_register_plugin_module('editor', 'qa-wysiwyg-editor.php', 'qa_wysiwyg_editor', 'WYSIWYG Editor');
+qa_register_plugin_module('page', 'qa-wysiwyg-upload.php', 'qa_wysiwyg_upload', 'WYSIWYG Upload');

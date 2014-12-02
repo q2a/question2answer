@@ -34,15 +34,10 @@
 */
 
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-	qa_register_plugin_module('widget', 'qa-tag-cloud.php', 'qa_tag_cloud', 'Tag Cloud');
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+qa_register_plugin_module('widget', 'qa-tag-cloud.php', 'qa_tag_cloud', 'Tag Cloud');

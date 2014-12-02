@@ -34,16 +34,11 @@
 */
 
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-	qa_register_plugin_layer('qa-opensearch-layer.php', 'OpenSearch Layer');
-	qa_register_plugin_module('page', 'qa-opensearch-page.php', 'qa_opensearch_xml', 'OpenSearch XML');
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+qa_register_plugin_layer('qa-opensearch-layer.php', 'OpenSearch Layer');
+qa_register_plugin_module('page', 'qa-opensearch-page.php', 'qa_opensearch_xml', 'OpenSearch XML');
