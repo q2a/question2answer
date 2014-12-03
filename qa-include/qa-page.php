@@ -246,20 +246,18 @@
 			}
 
 			foreach ($navigation as $navprefix => $navlink) {
-				$sel = false;
+				$selected =& $qa_content['navigation'][$navtype][$navprefix]['selected'];
 				if (isset($navlink['selectpaths'])) {
 					// match specified paths
 					foreach ($navlink['selectpaths'] as $path) {
 						if (strpos($requestlower.'$', $path) === 0)
-							$sel = true;
+							$selected = true;
 					}
 				}
 				elseif ($requestlower === $navprefix || $requestlower.'$' === $navprefix) {
 					// exact match for array key
-					$sel = true;
+					$selected = true;
 				}
-
-				$qa_content['navigation'][$navtype][$navprefix]['selected'] = $sel;
 			}
 		}
 
