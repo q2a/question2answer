@@ -168,7 +168,7 @@ function qa_ajax_post(operation, params, callback)
 		else
 			callback([]);
 
-	}, 'text').error(function(jqXHR) { if (jqXHR.readyState>0) callback([]) });
+	}, 'text').fail(function(jqXHR) { if (jqXHR.readyState>0) callback([]) });
 }
 
 function qa_ajax_error()
