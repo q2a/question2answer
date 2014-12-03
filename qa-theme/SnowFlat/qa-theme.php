@@ -228,10 +228,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * The method has been overridden just to remove the '-' from the note
-	 * for the category page (notes). I know it is not good idea to override
-	 * this just for '-' it. But I did
-	 * intentionally to avoid such issue during the updates.
+	 * The method has been overridden to remove the '-' from the note for the category page (notes).
 	 *
 	 * @since Snow 1.4
 	 * @param type $navlink
@@ -239,36 +236,13 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function nav_link($navlink, $class)
 	{
-		if (isset($navlink['url'])) {
-			$this->output(
-					'<a href="' . $navlink['url'] . '" class="qa-' . $class . '-link' .
-					(@$navlink['selected'] ? (' qa-' . $class . '-selected') : '') .
-					(@$navlink['favorited'] ? (' qa-' . $class . '-favorited') : '') .
-					'"' . (strlen(@$navlink['popup']) ? (' title="' . $navlink['popup'] . '"') : '') .
-					(isset($navlink['target']) ? (' target="' . $navlink['target'] . '"') : '') . '>' . $navlink['label'] .
-					'</a>'
-			);
-		} else {
-			$this->output(
-					'<span class="qa-' . $class . '-nolink' . (@$navlink['selected'] ? (' qa-' . $class . '-selected') : '') .
-					(@$navlink['favorited'] ? (' qa-' . $class . '-favorited') : '') . '"' .
-					(strlen(@$navlink['popup']) ? (' title="' . $navlink['popup'] . '"') : '') .
-					'>' . $navlink['label'] . '</span>'
-			);
-		}
-
 		if (strlen(@$navlink['note'])) {
-
-			$qam_note_class = '';
-			if (strpos($navlink['note'], '> -') !== false) {
-				$qam_note_class = !empty($navlink['note']) ? ' qam-cat-note' : null;
-			}
-
-			// search and replace within the string
 			$search = array(' - <', '> - ');
 			$replace = array(' <', '> ');
-			$output = $this->output('<span class="qa-' . $class . '-note ' . $qam_note_class . '">' . str_replace($search, $replace, $navlink['note']) . '</span>');
+			$navlink['note'] = str_replace($search, $replace, $navlink['note']);
 		}
+
+		parent::nav_link($navlink, $class);
 	}
 
 	/**
