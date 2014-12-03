@@ -594,14 +594,14 @@ class qa_html_theme extends qa_html_theme_base
 	 * @since Snow 1.4
 	 * @version 1.0
 	 */
-	public function qam_search($addon_class = false, $ids = false)
+	private function qam_search($addon_class = false, $ids = false)
 	{
 		$default_color = 'turquoise';
 
 		$id = (($ids) ? ' id="' . $ids . '"' : null);
 
 		$this->output('<div class="qam-search ' . $default_color . ' ' . $addon_class . '" ' . $id . ' >');
-		qa_html_theme_base::search();
+		$this->search();
 		$this->output('</div>');
 	}
 
