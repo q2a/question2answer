@@ -236,22 +236,32 @@
 
 		global $qa_template;
 
-		$requestlower=strtolower(qa_request());
+		$requestlower = strtolower(qa_request());
 
 	//	Set appropriate selected flags for navigation (not done in qa_content_prepare() since it also applies to sub-navigation)
 
-		foreach ($qa_content['navigation'] as $navtype => $navigation)
-			if (is_array($navigation) && ($navtype!='cat'))
-				foreach ($navigation as $navprefix => $navlink) {
-					if (isset($navlink['selectpaths'])) {
-						foreach ($navlink['selectpaths'] as $path) {
-							if (strpos($requestlower.'$', $path) === 0)
-								$qa_content['navigation'][$navtype][$navprefix]['selected'] = true;
-						}
+		foreach ($qa_content['navigation'] as $navtype => $navigation) {
+			if (!is_array($navigation) || $navtype == 'cat') {
+				continue;
+			}
+
+			foreach ($navigation as $navprefix => $navlink) {
+				$sel = false;
+				if (isset($navlink['selectpaths'])) {
+					// match specified paths
+					foreach ($navlink['selectpaths'] as $path) {
+						if (strpos($requestlower.'$', $path) === 0)
+							$sel = true;
 					}
-					elseif ($requestlower === $navprefix || $requestlower.'$' === $navprefix)
-						$qa_content['navigation'][$navtype][$navprefix]['selected'] = true;
 				}
+				elseif ($requestlower === $navprefix || $requestlower.'$' === $navprefix) {
+					// exact match for array key
+					$sel = true;
+				}
+
+				$qa_content['navigation'][$navtype][$navprefix]['selected'] = $sel;
+			}
+		}
 
 	//	Slide down notifications
 
