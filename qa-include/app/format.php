@@ -2043,6 +2043,24 @@
 		);
 	}
 
+	/**
+	 * Format a number using the decimal point and thousand separator specified in the language files
+	 * @param integer $number Number to be formatted
+	 * @param integer $decimals Amount of decimals to use
+	 * @return string The formatted number as a string
+	 */
+	function qa_format_number($number, $decimals = 0)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		return number_format(
+			$number,
+			$decimals,
+			qa_lang_html('main/_decimal_point'),
+			qa_lang_html('main/_thousands_separator')
+		);
+	}
+
 
 /*
 	Omit PHP closing tag to help avoid accidental output
