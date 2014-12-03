@@ -111,7 +111,7 @@
 
 	} elseif (qa_clicked('dosavepage')) {
 		require_once QA_INCLUDE_DIR.'db/admin.php';
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		if (!qa_check_form_security_code('admin/pages', qa_post_text('code')))
 			$securityexpired=true;

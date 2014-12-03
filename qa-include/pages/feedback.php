@@ -60,7 +60,7 @@
 
 	if (qa_clicked('dofeedback')) {
 		require_once QA_INCLUDE_DIR.'app/emails.php';
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$inmessage=qa_post_text('message');
 		$inname=qa_post_text('name');

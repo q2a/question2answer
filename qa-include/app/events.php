@@ -55,7 +55,7 @@
 	null to use now.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 		require_once QA_INCLUDE_DIR.'db/post-create.php';
 
 		$tagwordids=qa_db_word_mapto_ids(array_unique(qa_tagstring_to_tags($tagstring)));

@@ -303,7 +303,7 @@
 			$showoptions = array('show_notice_visitor', 'notice_visitor');
 
 			if (!QA_FINAL_EXTERNAL_USERS) {
-				require_once QA_INCLUDE_DIR.'qa-util-image.php';
+				require_once QA_INCLUDE_DIR.'util/image.php';
 
 				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_register_terms', 'register_terms', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
 
@@ -706,12 +706,12 @@
 							break;
 
 						case 'block_ips_write':
-							require_once QA_INCLUDE_DIR . 'app/limits.php';
+							require_once QA_INCLUDE_DIR.'app/limits.php';
 							$optionvalue = implode(' , ', qa_block_ips_explode($optionvalue));
 							break;
 
 						case 'block_bad_words':
-							require_once QA_INCLUDE_DIR . 'qa-util-string.php';
+							require_once QA_INCLUDE_DIR.'util/string.php';
 							$optionvalue = implode(' , ', qa_block_words_explode($optionvalue));
 							break;
 					}
@@ -729,7 +729,7 @@
 					if ($avatarfileerror === 1)
 						$errors['avatar_default_show'] = qa_lang('main/file_upload_limit_exceeded');
 					elseif ($avatarfileerror === 0 && $_FILES['avatar_default_file']['size'] > 0) {
-						require_once QA_INCLUDE_DIR . 'qa-util-image.php';
+						require_once QA_INCLUDE_DIR.'util/image.php';
 
 						$oldblobid = qa_opt('avatar_default_blobid');
 
@@ -742,7 +742,7 @@
 							$imagedata = qa_image_constrain_data(file_get_contents($_FILES['avatar_default_file']['tmp_name']), $width, $height, qa_opt('avatar_store_size'));
 
 							if (isset($imagedata)) {
-								require_once QA_INCLUDE_DIR . 'app/blobs.php';
+								require_once QA_INCLUDE_DIR.'app/blobs.php';
 
 								$newblobid = qa_create_blob($imagedata, 'jpeg');
 
@@ -956,7 +956,7 @@
 
 			switch ($optionname) { // special treatment for certain options
 				case 'site_language':
-					require_once QA_INCLUDE_DIR.'qa-util-string.php';
+					require_once QA_INCLUDE_DIR.'util/string.php';
 
 					qa_optionfield_make_select($optionfield, qa_admin_language_options(), $value, '');
 
@@ -1685,7 +1685,7 @@
 			break;
 
 		case 'mailing':
-			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+			require_once QA_INCLUDE_DIR.'util/sort.php';
 
 			if (isset($mailingprogress)) {
 				unset($qa_content['form']['buttons']['save']);

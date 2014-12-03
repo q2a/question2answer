@@ -55,7 +55,7 @@
 			return false;
 
 		require_once QA_INCLUDE_DIR.'db/selects.php';
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		if (isset($userid)) {
 			$needemail=!qa_email_validate(@$email); // take from user if invalid, e.g. @ used in practice

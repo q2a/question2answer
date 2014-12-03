@@ -31,7 +31,7 @@
 	require_once QA_INCLUDE_DIR.'app/post-create.php';
 	require_once QA_INCLUDE_DIR.'app/post-update.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
-	require_once QA_INCLUDE_DIR.'qa-util-string.php';
+	require_once QA_INCLUDE_DIR.'util/string.php';
 
 
 	function qa_post_create($type, $parentid, $title, $content, $format='', $categoryid=null, $tags=null, $userid=null, $notify=null, $email=null, $extravalue=null, $name=null)

@@ -3,7 +3,7 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-util-debug.php
+	File: qa-include/Q2A/Util/Usage.php
 	Description: Debugging stuff, currently used for tracking resource usage
 
 

@@ -149,7 +149,7 @@
 
 	//	If appropriate, get more accurate image size and apply constraints to it
 
-		require_once QA_INCLUDE_DIR.'qa-util-image.php';
+		require_once QA_INCLUDE_DIR.'util/image.php';
 
 		if ($isimage && qa_has_gd_image()) {
 			$image=@imagecreatefromstring($content);

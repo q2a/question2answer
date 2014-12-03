@@ -3,7 +3,7 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-util-image.php
+	File: qa-include/util/image.php
 	Description: Some useful image-related functions (using GD)
 
 

@@ -60,7 +60,7 @@
 	} else {
 		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'app/blobs.php';
-		require_once QA_INCLUDE_DIR.'qa-util-image.php';
+		require_once QA_INCLUDE_DIR.'util/image.php';
 
 
 	//	Otherwise retrieve the raw image and scale as appropriate

@@ -39,7 +39,7 @@
 	function qa_autoload($class)
 	{
 		if (strpos($class, 'Q2A_') === 0)
-			require QA_INCLUDE_DIR . strtr($class, '_', '/') . '.php';
+			require QA_INCLUDE_DIR.strtr($class, '_', '/') . '.php';
 	}
 	spl_autoload_register('qa_autoload');
 
@@ -1090,7 +1090,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$useragent=@$_SERVER['HTTP_USER_AGENT'];
 
@@ -1108,7 +1108,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		// inspired by: http://dangerousprototypes.com/docs/PhpBB3_MOD:_Replacement_mobile_browser_detection_for_mobile_themes
 
@@ -1188,7 +1188,7 @@
 			if (isset($qa_lang_file_pattern[$group]))
 				$include=str_replace('*', 'default', $qa_lang_file_pattern[$group]);
 			else
-				$include=QA_INCLUDE_DIR.'qa-lang-'.$group.'.php';
+				$include=QA_INCLUDE_DIR.'lang/qa-lang-'.$group.'.php';
 
 			$qa_phrases_default[$group]=@include_once $include;
 		}
@@ -1370,7 +1370,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'app/options.php';
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$title=qa_block_words_replace($title, qa_get_block_words_preg());
 

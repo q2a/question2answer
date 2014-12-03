@@ -21,7 +21,7 @@
 */
 
 require_once QA_INCLUDE_DIR.'db/maxima.php';
-require_once QA_INCLUDE_DIR.'qa-util-string.php';
+require_once QA_INCLUDE_DIR.'util/string.php';
 
 class qa_filter_basic
 {

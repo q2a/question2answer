@@ -29,7 +29,7 @@
 	require_once QA_INCLUDE_DIR.'db/post-create.php';
 	require_once QA_INCLUDE_DIR.'db/points.php';
 	require_once QA_INCLUDE_DIR.'db/hotness.php';
-	require_once QA_INCLUDE_DIR.'qa-util-string.php';
+	require_once QA_INCLUDE_DIR.'util/string.php';
 
 
 	function qa_combine_notify_email($userid, $notify, $email)
@@ -220,7 +220,7 @@
 		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'app/format.php';
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		if (!isset($parent))
 			$parent=$question; // for backwards compatibility with old answer parameter

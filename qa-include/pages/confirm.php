@@ -103,7 +103,7 @@
 			);
 
 	} elseif (isset($loginuserid)) { // if logged in, allow sending a fresh link
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		if (strlen($incode))
 			$qa_content['error']=qa_lang_html('users/confirm_wrong_resend');

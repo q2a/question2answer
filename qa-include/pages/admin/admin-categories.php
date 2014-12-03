@@ -127,7 +127,7 @@
 			}
 
 		} else {
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			require_once QA_INCLUDE_DIR.'util/string.php';
 
 			$inname=qa_post_text('name');
 			$incontent=qa_post_text('content');

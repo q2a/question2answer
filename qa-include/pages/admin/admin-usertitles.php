@@ -52,7 +52,7 @@
 		qa_redirect('admin/users');
 
 	elseif (qa_clicked('dosavetitle')) {
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		if (!qa_check_form_security_code('admin/usertitles', qa_post_text('code')))
 			$securityexpired=true;

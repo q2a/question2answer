@@ -160,10 +160,10 @@ class qa_html_theme_base
 	public function reorder_parts($parts, $beforekey=null, $reorderrelative=true)
 /*
 	Reorder the parts of the page according to the $parts array which contains part keys in their new order. Call this
-	before main_parts(). See the docs for qa_array_reorder() in qa-util-sort.php for the other parameters.
+	before main_parts(). See the docs for qa_array_reorder() in util/sort.php for the other parameters.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 		qa_array_reorder($this->content, $parts, $beforekey, $reorderrelative);
 	}
@@ -935,10 +935,10 @@ class qa_html_theme_base
 	public function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
 /*
 	Reorder the fields of $form according to the $keys array which contains the field keys in their new order. Call
-	before any fields are output. See the docs for qa_array_reorder() in qa-util-sort.php for the other parameters.
+	before any fields are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 		if (is_array($form['fields']))
 			qa_array_reorder($form['fields'], $keys, $beforekey, $reorderrelative);
@@ -1114,10 +1114,10 @@ class qa_html_theme_base
 	public function form_reorder_buttons(&$form, $keys, $beforekey=null, $reorderrelative=true)
 /*
 	Reorder the buttons of $form according to the $keys array which contains the button keys in their new order. Call
-	before any buttons are output. See the docs for qa_array_reorder() in qa-util-sort.php for the other parameters.
+	before any buttons are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 		if (is_array($form['buttons']))
 			qa_array_reorder($form['buttons'], $keys, $beforekey, $reorderrelative);

@@ -21,7 +21,7 @@
 */
 
 	require_once QA_INCLUDE_DIR.'db/selects.php';
-	require_once QA_INCLUDE_DIR.'qa-util-string.php';
+	require_once QA_INCLUDE_DIR.'util/string.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 

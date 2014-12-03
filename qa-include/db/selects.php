@@ -1006,7 +1006,7 @@
 	{
 		$count=isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$selectspec=qa_db_posts_basic_selectspec($voteuserid, $full);
 

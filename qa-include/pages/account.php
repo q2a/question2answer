@@ -29,7 +29,7 @@
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'app/users.php';
 	require_once QA_INCLUDE_DIR.'db/selects.php';
-	require_once QA_INCLUDE_DIR.'qa-util-image.php';
+	require_once QA_INCLUDE_DIR.'util/image.php';
 
 
 //	Check we're not using single-sign on integration, that we're logged in
@@ -66,7 +66,7 @@
 		$errors['avatar'] = qa_lang('main/file_upload_limit_exceeded');
 	else {
 		if (qa_clicked('dosaveprofile') && !$isblocked) {
-			require_once QA_INCLUDE_DIR . 'app/users-edit.php';
+			require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 			$inhandle = $changehandle ? qa_post_text('handle') : $useraccount['handle'];
 			$inemail = qa_post_text('email');
@@ -116,7 +116,7 @@
 					if ($avatarfileerror === 1)
 						$errors['avatar'] = qa_lang('main/file_upload_limit_exceeded');
 					elseif ($avatarfileerror === 0 && $_FILES['file']['size'] > 0) {
-						require_once QA_INCLUDE_DIR . 'app/limits.php';
+						require_once QA_INCLUDE_DIR.'app/limits.php';
 
 						switch (qa_user_permit_error(null, QA_LIMIT_UPLOADS)) {
 							case 'limit':
@@ -168,7 +168,7 @@
 	//	Process change password if clicked
 
 		if (qa_clicked('dochangepassword')) {
-			require_once QA_INCLUDE_DIR . 'app/users-edit.php';
+			require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
 			$inoldpassword = qa_post_text('oldpassword');
 			$innewpassword1 = qa_post_text('newpassword1');

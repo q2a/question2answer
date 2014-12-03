@@ -633,7 +633,7 @@
 	Returns a $qa_content form for editing an answer and sets up other parts of $qa_content accordingly
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$answerid=$answer['postid'];
 		$prefix='a'.$answerid.'_';

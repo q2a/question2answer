@@ -26,7 +26,7 @@ class qa_event_notify
 	{
 		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'app/format.php';
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 
 		switch ($event) {

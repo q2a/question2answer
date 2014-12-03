@@ -271,7 +271,7 @@
 
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'app/updates.php';
-	require_once QA_INCLUDE_DIR.'qa-util-string.php';
+	require_once QA_INCLUDE_DIR.'util/string.php';
 
 	if ( ($feedtype!='search') && ($feedtype!='hot') ) // leave search results and hot questions sorted by relevance
 		$questions=qa_any_sort_and_dedupe($questions);

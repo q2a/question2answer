@@ -141,7 +141,7 @@
 
 			if (isset($loginuserid)) {
 				require_once QA_INCLUDE_DIR.'db/selects.php';
-				require_once QA_INCLUDE_DIR.'qa-util-string.php';
+				require_once QA_INCLUDE_DIR.'util/string.php';
 
 				$favoritenonqs=qa_db_get_pending_result('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));
 
@@ -255,7 +255,7 @@
 		require_once QA_INCLUDE_DIR.'app/updates.php';
 
 		if (isset($options['blockwordspreg']))
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$fields=array('raw' => $post);
 
@@ -900,7 +900,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 		foreach ($questions as $key => $question) // collect information about action referenced by each $question
 			$questions[$key]['sort']=-(isset($question['opostid']) ? $question['otime'] : $question['created']);
@@ -919,7 +919,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR . 'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 		foreach ($questions as $key => $question) { // collect information about action referenced by each $question
 			if (isset($question['opostid'])) {
@@ -1515,7 +1515,7 @@
 	Get a list of user-entered tags submitted from a field that was created with qa_set_up_tag_field(...)
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$text=qa_post_text($fieldname);
 
@@ -1954,7 +1954,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-image.php';
+		require_once QA_INCLUDE_DIR.'util/image.php';
 
 		if (strlen($blobid) && ($size>0)) {
 			qa_image_constrain($width, $height, $size);

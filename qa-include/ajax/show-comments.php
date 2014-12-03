@@ -25,7 +25,7 @@
 	require_once QA_INCLUDE_DIR.'app/cookies.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'pages/question-view.php';
-	require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+	require_once QA_INCLUDE_DIR.'util/sort.php';
 
 
 //	Load relevant information about this question and check it exists

@@ -51,7 +51,7 @@
 		require_once QA_INCLUDE_DIR.'app/cookies.php';
 		require_once QA_INCLUDE_DIR.'pages/question-view.php';
 		require_once QA_INCLUDE_DIR.'pages/question-submit.php';
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 
 	//	Try to create the new comment

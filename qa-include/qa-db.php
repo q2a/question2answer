@@ -586,7 +586,7 @@
 		// By contrast, MySQL's ORDER BY does seem to give the results in a reliable order.
 
 		if (isset($selectspec['sortasc'])) {
-			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+			require_once QA_INCLUDE_DIR.'util/sort.php';
 
 			$index=0;
 			foreach ($outresult as $key => $value)
@@ -595,7 +595,7 @@
 			qa_sort_by($outresult, $selectspec['sortasc'], '_order_');
 
 		} elseif (isset($selectspec['sortdesc'])) {
-			require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+			require_once QA_INCLUDE_DIR.'util/sort.php';
 
 			if (isset($selectspec['sortdesc_2']))
 				qa_sort_by($outresult, $selectspec['sortdesc'], $selectspec['sortdesc_2']);

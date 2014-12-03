@@ -78,7 +78,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 	private function get_post_voters_flaggers($post, $postid)
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-sort.php';
+		require_once QA_INCLUDE_DIR.'util/sort.php';
 
 		if (!isset($this->qa_voters_flaggers_cache[$postid])) {
 			$this->queue_post_voters_flaggers($post);

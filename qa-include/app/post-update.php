@@ -364,7 +364,7 @@
 
 		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
 			require_once QA_INCLUDE_DIR.'db/selects.php';
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			require_once QA_INCLUDE_DIR.'util/string.php';
 
 			qa_report_event('q_post', $oldquestion['userid'], $oldquestion['handle'], $oldquestion['cookieid'], $eventparams + array(
 				'notify' => isset($oldquestion['notify']),
@@ -473,7 +473,7 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		require_once QA_INCLUDE_DIR . 'db/votes.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
 
 		$postid = $oldquestion['postid'];
 
@@ -676,7 +676,7 @@
 			));
 
 		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			require_once QA_INCLUDE_DIR.'util/string.php';
 
 			qa_report_event('a_post', $oldanswer['userid'], $oldanswer['handle'], $oldanswer['cookieid'], $eventparams + array(
 				'notify' => isset($oldanswer['notify']),
@@ -736,7 +736,7 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		require_once QA_INCLUDE_DIR . 'db/votes.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
 
 		$postid = $oldanswer['postid'];
 
@@ -999,7 +999,7 @@
 
 		if ($wasqueued && ($status==QA_POST_STATUS_NORMAL) && !$wasrequeued) {
 			require_once QA_INCLUDE_DIR.'db/selects.php';
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			require_once QA_INCLUDE_DIR.'util/string.php';
 
 			$commentsfollows=qa_db_single_select(qa_db_full_child_posts_selectspec(null, $oldcomment['parentid']));
 			$thread=array();
@@ -1057,7 +1057,7 @@
 	of user. Updates points and reports events as appropriate.
 */
 	{
-		require_once QA_INCLUDE_DIR . 'db/votes.php';
+		require_once QA_INCLUDE_DIR.'db/votes.php';
 
 		$postid = $oldcomment['postid'];
 

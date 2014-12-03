@@ -653,7 +653,7 @@
 	of the returned array will match the $handles provided, not necessary those in the DB.
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		if (QA_FINAL_EXTERNAL_USERS)
 			$rawhandleuserids=qa_get_userids_from_public($handles);
@@ -1047,7 +1047,7 @@ in a category for which they have elevated privileges).
 			$qa_form_key_cookie_set=true;
 
 			if (strlen(@$_COOKIE['qa_key'])!=QA_FORM_KEY_LENGTH) {
-				require_once QA_INCLUDE_DIR.'qa-util-string.php';
+				require_once QA_INCLUDE_DIR.'util/string.php';
 				$_COOKIE['qa_key']=qa_random_alphanum(QA_FORM_KEY_LENGTH);
 			}
 

@@ -726,7 +726,7 @@
 				$qa_content['notices'][]=qa_notice_form($notice['noticeid'], qa_viewer_html($notice['content'], $notice['format']), $notice);
 
 		} else {
-			require_once QA_INCLUDE_DIR.'qa-util-string.php';
+			require_once QA_INCLUDE_DIR.'util/string.php';
 
 			if (!QA_FINAL_EXTERNAL_USERS) {
 				$loginmodules=qa_load_modules_with('login', 'login_html');

@@ -81,7 +81,7 @@
 	Make $handle valid and unique in the database - if $allowuserid is set, allow it to match that user only
 */
 	{
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 		require_once QA_INCLUDE_DIR.'db/maxima.php';
 		require_once QA_INCLUDE_DIR.'db/users.php';
 
@@ -361,7 +361,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-string.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 		require_once QA_INCLUDE_DIR.'app/options.php';
 		require_once QA_INCLUDE_DIR.'app/emails.php';
 		require_once QA_INCLUDE_DIR.'app/cookies.php';
@@ -404,7 +404,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'qa-util-image.php';
+		require_once QA_INCLUDE_DIR.'util/image.php';
 
 		$imagedata=qa_image_constrain_data($imagedata, $width, $height, qa_opt('avatar_store_size'));
 

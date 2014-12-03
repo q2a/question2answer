@@ -485,7 +485,7 @@
 					break;
 
 				case 'form_security_salt':
-					require_once QA_INCLUDE_DIR.'qa-util-string.php';
+					require_once QA_INCLUDE_DIR.'util/string.php';
 					$value=qa_random_alphanum(32);
 					break;
 
@@ -694,7 +694,7 @@
 			$blockwordstring=qa_opt('block_bad_words');
 
 			if (strlen($blockwordstring)) {
-				require_once QA_INCLUDE_DIR.'qa-util-string.php';
+				require_once QA_INCLUDE_DIR.'util/string.php';
 				$qa_blockwordspreg=qa_block_words_to_preg($blockwordstring);
 
 			} else
