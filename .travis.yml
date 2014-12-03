@@ -35,7 +35,7 @@ script:
   #- phpmd --exclude qa-include/vendor/ . text codesize
   #- phpmd --exclude qa-include/vendor/ . text unusedcode
   # PHP Copy/Paste Detector
-  - php phpcpd.phar .
+  - php phpcpd.phar --exclude vendor .
   # PHPLOC
   - php phploc.phar .
   # PHPUnit
