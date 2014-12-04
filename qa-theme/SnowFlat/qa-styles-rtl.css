@@ -108,6 +108,7 @@ h1 {
 
 @media (max-width: 979px) {
 	.qa-nav-main {
+		left: auto;
 		right: 0;
 	}
 }
@@ -228,12 +229,14 @@ h1 {
 	padding-right: 14px;
 }
 .qa-q-item-meta .qa-category-link.qa-cat-favorited:before {
+	left: auto;
 	right: 0;
 }
 .qa-q-item-meta .qa-user-link.qa-user-favorited {
 	padding-right: 14px;
 }
 .qa-q-item-meta .qa-user-link.qa-user-favorited:before {
+	left: auto;
 	right: 0;
 }
 
@@ -241,6 +244,7 @@ h1 {
 	padding-right: 25px;
 }
 .qa-tag-link.qa-tag-favorited:before, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before, .qa-widget-side > div > a.qa-tag-favorited:before {
+	left: auto;
 	right: 0;
 }
 
@@ -259,11 +263,13 @@ h1 {
 	}
 }
 .qa-top-users-label .qa-user-link:before {
+	left: auto;
 	right: -5px;
 	border-left: 5px solid #e74c3c;
 }
 @media (min-width: 980px) {
 	.qa-top-users-label .qa-user-link:after {
+		right: auto;
 		left: 0;
 		border-right: 7px solid #e74c3c;
 	}
@@ -277,19 +283,23 @@ h1 {
 	float: left;
 }
 .qam-user-score-icon:before {
+	left: auto;
 	right: 0;
 }
 
 .qa-browse-cat-link:before {
+	right: auto;
 	left: -5px;
 	border-right: 5px solid #c0392b;
 }
 
 .qa-browse-cat-note a {
+	right: auto;
 	left: 5px;
 	padding: 2px 2em 2px 10px;
 }
 .qa-browse-cat-note a:before {
+	left: auto;
 	right: 0;
 }
 
@@ -330,6 +340,7 @@ h1 {
 }
 
 .qa-q-view-avatar {
+	right: auto;
 	left: 20px;
 }
 
@@ -350,6 +361,7 @@ h1 {
 	padding: 10px 54px 10px 10px;
 }
 .qa-q-view-closed:before {
+	left: auto;
 	right: 0;
 }
 .qa-q-view-closed:hover {
@@ -375,6 +387,7 @@ h1 {
 }
 
 .qa-a-item-avatar {
+	right: auto;
 	left: 20px;
 }
 
@@ -383,16 +396,17 @@ h1 {
 }
 @media (max-width: 979px) {
 	.qa-a-selection {
+		left: auto;
 		right: 100px;
 	}
 }
 @media (min-width: 980px) {
 	.qa-a-selection {
+		left: auto;
 		right: 20px;
 	}
 }
 .qa-a-selection .qa-waiting {
-	right: 50%;
 	margin: -7px -7px 0 0;
 }
 
@@ -405,6 +419,7 @@ h1 {
 }
 
 .qa-c-item-avatar {
+	right: auto;
 	left: 10px;
 }
 
@@ -416,6 +431,7 @@ h1 {
 	padding-right: 20px;
 }
 .qa-nav-cat-link.qa-nav-cat-favorited:before {
+	left: auto;
 	right: 0;
 }
 
