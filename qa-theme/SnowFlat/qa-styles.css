@@ -302,41 +302,40 @@ blockquote p {
 	margin: 0 10px 10px;
 }
 
-.qa-error {
-	padding: 10px;
+.qa-error, .qa-warning, .qa-notice {
 	margin-bottom: 5px;
-	background: #e74c3c;
+	padding: 10px;
 	color: #fff;
-	position: relative;
-	z-index: 999;
 }
-.qa-error a {
+.qa-error a, .qa-warning a, .qa-notice a {
 	color: #fff;
 	border-bottom: 1px dotted #fff;
 }
-.qa-error a:hover {
+.qa-error a:hover, .qa-warning a:hover, .qa-notice a:hover {
 	color: #fff;
 	border-bottom: 0;
 }
 
+.qa-error {
+	background: #e74c3c;
+	position: relative;
+	z-index: 999;
+}
+
+.qa-warning {
+	background: #f1c40f;
+	position: relative;
+	z-index: 999;
+}
+
 .qa-notice {
-	padding: 20px;
-	margin-bottom: 5px;
+	margin-bottom: 0;
 	background: #d35400;
-	color: #fff;
-	margin-bottom: 0px;
 	text-align: center;
 	font-size: 1em;
 	line-height: 1.5em;
 }
-.qa-notice a {
-	color: #fff;
-	border-bottom: 1px dotted #fff;
-}
-.qa-notice a:hover {
-	color: #fff;
-	border-bottom: 0;
-}
+
 
 .qa-notice-close-button {
 	margin: 0;

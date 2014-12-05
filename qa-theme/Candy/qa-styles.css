@@ -53,9 +53,13 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 	.qa-unfavorite-button {background-position: 0 -98px;}
 	.qa-unfavorite-button:hover {background-position: 0 0px;}
 
-.qa-error {background:#fed8d8 url(error-bg.png) repeat-x left top; border:2px solid #cc0000; color:#cc0000; font-size:18px; padding:.5em; margin:1em 0; }
+.qa-error {background:#fed8d8 url(error-bg.png) repeat-x left top; border:2px solid #c00; color:#c00; font-size:18px; padding:.5em; margin:1em 0; }
 	.qa-error a {color:#900; text-decoration:underline;}
 	.qa-error a:hover {color:#f00;}
+
+.qa-warning {background:#fefed8 url(warning-bg.png) repeat-x left top; border:2px solid #bb0; color:#bb0; font-size:18px; padding:.5em; margin:1em 0; }
+	.qa-warning a {color:#990; text-decoration:underline;}
+	.qa-warning a:hover {color:#cc0;}
 
 /* Page sections */
 

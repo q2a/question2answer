@@ -57,6 +57,10 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 	.qa-error a {color:#900; text-decoration:underline;}
 	.qa-error a:hover {color:#f00;}
 
+.qa-warning {background:#ffe; border:1px solid #bb0; color:#bb0; font-size:16px; padding:.5em; margin-bottom:1em; font-weight:bold;}
+	.qa-warning a {color:#990; text-decoration:underline;}
+	.qa-warning a:hover {color:#cc0;}
+
 /* Page sections */
 
 .qa-header {padding:10px 20px 0 20px; border-bottom:2px solid #293d39;}

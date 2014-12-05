@@ -994,22 +994,28 @@ div.header-banner {
 	background-position: 0 0;
 }
 
-.qa-error {
-	background: #d00;
-	border: 1px solid #a00;
-	color: #ffd9d9;
+.qa-error, .qa-warning {
 	font-size: 18px;
 	margin-bottom: 1em;
 	padding: 5px 15px;
 	border-radius: 3px;
 }
+.qa-error {
+	background: #d00;
+	border: 1px solid #a00;
+	color: #ffd9d9;
+}
+.qa-warning {
+	background: #dd0;
+	border: 1px solid #aa0;
+	color: #ffffd9;
+}
 
-.qa-error a {
+.qa-error a, .qa-warning a {
 	color: #fff;
 	font-weight: bold;
 }
-
-.qa-error a:hover {
+.qa-error a:hover, .qa-warning a:hover {
 	text-decoration: underline;
 }
 
