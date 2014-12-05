@@ -1388,8 +1388,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 
 .qa-tag-link,
-.qa-widget-side .qa-q-view-tag-item,
-.qa-widget-side > div > a {
+.qa-widget-side .qa-q-view-tag-item {
 	background: #e67e22;
 	color: #fff !important;
 	display: inline-block;
@@ -1402,21 +1401,18 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	transition: all 0.75s ease-in-out 0s;
 }
 .qa-tag-link:hover,
-.qa-widget-side .qa-q-view-tag-item:hover,
-.qa-widget-side > div > a:hover {
+.qa-widget-side .qa-q-view-tag-item:hover {
 	background: #f39c12;
 	color: #fff !important;
 	transition: all 0.25s ease-in-out 0s;
 }
 .qa-tag-link.qa-tag-favorited,
-.qa-widget-side .qa-q-view-tag-item.qa-tag-favorited,
-.qa-widget-side > div > a.qa-tag-favorited {
+.qa-widget-side .qa-q-view-tag-item.qa-tag-favorited {
 	position: relative;
 	padding-left: 25px;
 }
 .qa-tag-link.qa-tag-favorited:before,
-.qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before,
-.qa-widget-side > div > a.qa-tag-favorited:before {
+.qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before {
 	position: absolute;
 	top: 0;
 	left: 0;

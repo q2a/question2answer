@@ -240,10 +240,10 @@ h1 {
 	right: 0;
 }
 
-.qa-tag-link.qa-tag-favorited, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited, .qa-widget-side > div > a.qa-tag-favorited {
+.qa-tag-link.qa-tag-favorited, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited {
 	padding-right: 25px;
 }
-.qa-tag-link.qa-tag-favorited:before, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before, .qa-widget-side > div > a.qa-tag-favorited:before {
+.qa-tag-link.qa-tag-favorited:before, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before {
 	left: auto;
 	right: 0;
 }
