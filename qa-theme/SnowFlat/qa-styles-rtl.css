@@ -304,7 +304,7 @@ h1 {
 }
 
 @media (min-width: 980px) {
-	.qa-template-user [class^="qa-part-form-"], .qa-template-user .qa-part-message-list {
+	.qa-template-user [class^="qa-part-form"], .qa-template-user .qa-part-message-list {
 		float: left;
 		clear: left;
 	}

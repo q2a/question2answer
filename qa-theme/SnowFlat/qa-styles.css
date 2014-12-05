@@ -53,7 +53,6 @@ html, body {
 
 body {
 	background: #ecf0f1 !important;
-	background-color: #ecf0f1;
 	position: relative;
 	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
 	color: #34495e;
@@ -1088,7 +1087,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 @media (min-width: 800px) {
 	.qa-a-count {
-		width: 60px;
+		width: 65px;
 		height: 60px;
 		line-height: 0.5;
 		float: left;
@@ -1271,17 +1270,17 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 @media (min-width: 800px) {
 	.qa-q-item-main {
-		width: 616px;
+		width: 611px;
 	}
 }
 @media (min-width: 980px) {
 	.qa-q-item-main {
-		width: 555px;
+		width: 550px;
 	}
 }
 @media (min-width: 1024px) {
 	.qa-q-item-main {
-		width: 611px;
+		width: 606px;
 	}
 }
 
@@ -1850,12 +1849,13 @@ input[type="submit"], button {
 	text-align: center;
 }
 
-.qa-part-form, [class^="qa-part-form-"] {
+[class^="qa-part-form"],
+[class^="qa-part-custom"] {
 	padding: 20px;
 	margin-bottom: 5px;
 	background: #fff;
 }
-.qa-part-form > h2:first-child, [class^="qa-part-form-"] > h2:first-child {
+[class^="qa-part-form"] > h2:first-child, [class^="qa-part-custom"] > h2:first-child {
 	margin-top: 0;
 }
 
@@ -1876,7 +1876,6 @@ input[type="submit"], button {
 
 .qa-form-tall-button, .qa-form-wide-button, .qa-form-basic-button {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
@@ -1917,7 +1916,6 @@ input[type="submit"], button {
 
 .qa-form-tall-button-save, .qa-form-wide-button-save, .qa-form-tall-button-ask, .qa-form-tall-button-answer {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
@@ -1951,7 +1949,6 @@ input[type="submit"], button {
 
 .qa-form-tall-button-cancel {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
@@ -2094,7 +2091,6 @@ input[type="submit"], button {
 }
 .qa-part-form-profile .qa-form-wide-button-approve {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
@@ -2127,7 +2123,6 @@ input[type="submit"], button {
 }
 .qa-part-form-profile .qa-form-wide-button-block {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
@@ -2160,12 +2155,12 @@ input[type="submit"], button {
 }
 
 @media (min-width: 980px) {
-	.qa-template-user [class^="qa-part-form-"], .qa-template-user .qa-part-message-list {
+	.qa-template-user [class^="qa-part-form"], .qa-template-user .qa-part-message-list {
 		width: 49.8%;
 	}
 }
 @media (min-width: 980px) {
-	.qa-template-user [class^="qa-part-form-"], .qa-template-user .qa-part-message-list {
+	.qa-template-user [class^="qa-part-form"], .qa-template-user .qa-part-message-list {
 		float: right;
 		clear: right;
 	}
@@ -2188,7 +2183,6 @@ input[type="submit"], button {
 	border: 1px solid #1e8449;
 	display: inline-block;
 	color: #fff;
-	text-transform: capitalize;
 }
 #level .qa-form-wide-static a:hover, #level .qa-form-wide-static a:focus {
 	background-color: #2ecc71;
@@ -2328,7 +2322,6 @@ input[type="submit"], button {
 /*------[ q-view ]------*/
 .qa-form-light-button {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
@@ -2603,7 +2596,6 @@ input[type="submit"], button {
 	font-size: 0.75em;
 	line-height: 2em;
 	font-weight: bold;
-	text-transform: capitalize;
 }
 .qa-q-view-closed:before {
 	position: absolute;
@@ -2822,7 +2814,6 @@ input[type="submit"], button {
 }
 .qa-c-list-item .qa-form-light-button {
 	padding: 10px 15px;
-	text-transform: capitalize;
 	border: none;
 	font-size: 14px;
 	-webkit-transition-duration: 0s;
