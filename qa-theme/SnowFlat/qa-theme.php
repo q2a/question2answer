@@ -207,7 +207,7 @@ class qa_html_theme extends qa_html_theme_base
 			}
 		}
 
-		qa_html_theme_base::nav('user');
+		$this->nav('user');
 		$this->output('</div> <!-- END qam-account-items -->');
 		$this->output('</div> <!-- END qam-account-items-wrapper -->');
 	}
