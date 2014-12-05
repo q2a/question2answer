@@ -342,6 +342,18 @@
 
 
 	/**
+	 * Return the number of rows in $result. (Simple wrapper for mysqli_result::num_rows.)
+	 */
+	function qa_db_num_rows($result)
+	{
+		if ($result instanceof mysqli_result)
+			return $result->num_rows;
+
+		return 0;
+	}
+
+
+	/**
 	 * Return the value of the auto-increment column for the last inserted row.
 	 */
 	function qa_db_last_insert_id()
@@ -352,7 +364,7 @@
 
 
 	/**
-	 * Does what it says on the tin.
+	 * Return the number of rows affected by the last query.
 	 */
 	function qa_db_affected_rows()
 	{
