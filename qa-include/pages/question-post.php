@@ -705,7 +705,7 @@
 
 				if ($otheranswer['created']>$lastbeforetime) {
 					$lastbeforeid=$otheranswer['postid'];
-					$lastebeforetime=$otheranswer['created'];
+					$lastbeforetime=$otheranswer['created'];
 				}
 			}
 

@@ -186,37 +186,37 @@
 	}
 
 
+	/**
+	 *	Run the appropriate qa-page-*.php file for this request and return back the $qa_content it passed
+	 */
 	function qa_get_request_content()
-/*
-	Run the appropriate qa-page-*.php file for this request and return back the $qa_content it passed
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$requestlower=strtolower(qa_request());
-		$requestparts=qa_request_parts();
-		$firstlower=strtolower($requestparts[0]);
-		$routing=qa_page_routing();
+		$requestlower = strtolower(qa_request());
+		$requestparts = qa_request_parts();
+		$firstlower = strtolower($requestparts[0]);
+		$routing = qa_page_routing();
 
 		if (isset($routing[$requestlower])) {
 			qa_set_template($firstlower);
-			$qa_content=require QA_INCLUDE_DIR.$routing[$requestlower];
+			$qa_content = require QA_INCLUDE_DIR.$routing[$requestlower];
 
 		} elseif (isset($routing[$firstlower.'/'])) {
 			qa_set_template($firstlower);
-			$qa_content=require QA_INCLUDE_DIR.$routing[$firstlower.'/'];
+			$qa_content = require QA_INCLUDE_DIR.$routing[$firstlower.'/'];
 
 		} elseif (is_numeric($requestparts[0])) {
 			qa_set_template('question');
-			$qa_content=require QA_INCLUDE_DIR.'pages/question.php';
+			$qa_content = require QA_INCLUDE_DIR.'pages/question.php';
 
 		} else {
 			qa_set_template(strlen($firstlower) ? $firstlower : 'qa'); // will be changed later
-			$qa_content=require QA_INCLUDE_DIR.'pages/default.php'; // handles many other pages, including custom pages and page modules
+			$qa_content = require QA_INCLUDE_DIR.'pages/default.php'; // handles many other pages, including custom pages and page modules
 		}
 
-		if ($firstlower=='admin') {
-			$_COOKIE['qa_admin_last']=$requestlower; // for navigation tab now...
+		if ($firstlower == 'admin') {
+			$_COOKIE['qa_admin_last'] = $requestlower; // for navigation tab now...
 			setcookie('qa_admin_last', $_COOKIE['qa_admin_last'], 0, '/', QA_COOKIE_DOMAIN); // ...and in future
 		}
 
@@ -227,10 +227,10 @@
 	}
 
 
+	/**
+	 *	Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
+	 */
 	function qa_output_content($qa_content)
-/*
-	Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -312,21 +312,21 @@
 
 	//	Combine various Javascript elements in $qa_content into single array for theme layer
 
-		$script=array('<script type="text/javascript">');
+		$script = array('<script>');
 
 		if (isset($qa_content['script_var']))
 			foreach ($qa_content['script_var'] as $var => $value)
-				$script[]='var '.$var.'='.qa_js($value).';';
+				$script[] = 'var '.$var.' = '.qa_js($value).';';
 
 		if (isset($qa_content['script_lines']))
 			foreach ($qa_content['script_lines'] as $scriptlines) {
-				$script[]='';
-				$script=array_merge($script, $scriptlines);
+				$script[] = '';
+				$script = array_merge($script, $scriptlines);
 			}
 
 		if (isset($qa_content['focusid']))
-			$qa_content['script_onloads'][]=array(
-				"var elem=document.getElementById(".qa_js($qa_content['focusid']).");",
+			$qa_content['script_onloads'][] = array(
+				"var elem = document.getElementById(".qa_js($qa_content['focusid']).");",
 				"if (elem) {",
 				"\telem.select();",
 				"\telem.focus();",
@@ -336,41 +336,42 @@
 		if (isset($qa_content['script_onloads'])) {
 			array_push($script,
 				'',
-				'var qa_oldonload=window.onload;',
-				'window.onload=function() {',
-				"\tif (typeof qa_oldonload=='function')",
+				'var qa_oldonload = window.onload;',
+				'window.onload = function() {',
+				"\tif (typeof qa_oldonload == 'function')",
 				"\t\tqa_oldonload();"
 			);
 
 			foreach ($qa_content['script_onloads'] as $scriptonload) {
-				$script[]="\t";
+				$script[] = "\t";
 
 				foreach ((array)$scriptonload as $scriptline)
-					$script[]="\t".$scriptline;
+					$script[] = "\t".$scriptline;
 			}
 
-			$script[]='};';
+			$script[] = '};';
 		}
 
-		$script[]='</script>';
+		$script[] = '</script>';
 
 		if (isset($qa_content['script_rel'])) {
-			$uniquerel=array_unique($qa_content['script_rel']); // remove any duplicates
+			$uniquerel = array_unique($qa_content['script_rel']); // remove any duplicates
 			foreach ($uniquerel as $script_rel)
-				$script[]='<script src="'.qa_html(qa_path_to_root().$script_rel).'" type="text/javascript"></script>';
+				$script[] = '<script src="'.qa_html(qa_path_to_root().$script_rel).'"></script>';
 		}
 
 		if (isset($qa_content['script_src'])) {
-			$uniquesrc=array_unique($qa_content['script_src']); // remove any duplicates
+			$uniquesrc = array_unique($qa_content['script_src']); // remove any duplicates
 			foreach ($uniquesrc as $script_src)
-				$script[]='<script src="'.qa_html($script_src).'" type="text/javascript"></script>';
+				$script[] = '<script src="'.qa_html($script_src).'"></script>';
 		}
 
-		$qa_content['script']=$script;
+		$qa_content['script'] = $script;
 
 	//	Load the appropriate theme class and output the page
 
-		$themeclass=qa_load_theme_class(qa_get_site_theme(), (substr($qa_template, 0, 7)=='custom-') ? 'custom' : $qa_template, $qa_content, qa_request());
+		$tmpl = substr($qa_template, 0, 7) == 'custom-' ? 'custom' : $qa_template;
+		$themeclass = qa_load_theme_class(qa_get_site_theme(), $tmpl, $qa_content, qa_request());
 		$themeclass->initialize();
 
 		header('Content-type: '.$qa_content['content_type']);

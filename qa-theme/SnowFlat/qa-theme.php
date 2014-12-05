@@ -163,7 +163,8 @@ class qa_html_theme extends qa_html_theme_base
 			$class .= ' qam-approve-users';
 		}
 
-		$class .= ' qam-body-' . $qam_snow->fixed_topbar;
+		if (isset($qam_snow->fixed_topbar))
+			$class .= ' qam-body-' . $qam_snow->fixed_topbar;
 
 		$this->output('class="' . $class . ' qa-body-js-off"');
 	}
@@ -286,7 +287,9 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		global $qam_snow;
 
-		$this->output('<div id="qam-topbar" class="clearfix ' . $qam_snow->fixed_topbar . '">');
+		$class = isset($qam_snow->fixed_topbar) ? ' ' . $qam_snow->fixed_topbar : '';
+		$this->output('<div id="qam-topbar" class="clearfix' . $class . '">');
+
 		$this->nav_main_sub();
 		$this->output('</div><!-- END qam-topbar -->');
 

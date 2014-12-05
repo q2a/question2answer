@@ -1138,14 +1138,14 @@
 
 //	Language phrase support
 
+	/**
+	 * Return the translated string for $identifier, unless we're using external translation logic.
+	 * This will retrieve the 'site_language' option so make sure you've already loaded/set that if
+	 * loading an option now will cause a problem (see issue in qa_default_option()). The part of
+	 * $identifier before the slash (/) replaces the * in the qa-lang-*.php file references, and the
+	 * part after the / is the key of the array element to be taken from that file's returned result.
+	 */
 	function qa_lang($identifier)
-/*
-	Return the translated string for $identifier, unless we're using external translation logic.
-	This will retrieve the 'site_language' option so make sure you've already loaded/set that if
-	loading an option now will cause a problem (see issue in qa_default_option()). The part of
-	$identifier before the slash (/) replaces the * in the qa-lang-*.php file references, and the
-	part after the / is the key of the array element to be taken from that file's returned result.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1153,7 +1153,7 @@
 
 		list($group, $label)=explode('/', $identifier, 2);
 
-	//	First look for a custom phrase
+	//	First look for a custom phrase in qa-lang/custom/
 
 		if (!isset($qa_phrases_custom[$group])) { // only load each language file once
 			$phrases=@include QA_LANG_DIR.'custom/qa-lang-'.$group.'.php'; // can tolerate missing file or directory
@@ -1163,7 +1163,7 @@
 		if (isset($qa_phrases_custom[$group][$label]))
 			return $qa_phrases_custom[$group][$label];
 
-	//	Second look for a localized file
+	//	Second look for a localized file in qa-lang/<lang>/
 
 		$languagecode=qa_opt('site_language');
 
@@ -1182,7 +1182,7 @@
 				return $qa_phrases_lang[$group][$label];
 		}
 
-	//	Finally load the default
+	//	Finally load the default language files
 
 		if (!isset($qa_phrases_default[$group])) { // only load each default language file once
 			if (isset($qa_lang_file_pattern[$group]))

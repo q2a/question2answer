@@ -774,7 +774,7 @@ class qa_html_theme_base
 			strpos($key, 'custom') === 0 ||
 			strpos($key, 'form') === 0 ||
 			strpos($key, 'q_list') === 0 ||
-			strpos($key, 'q_view') === 0 ||
+			(strpos($key, 'q_view') === 0 && !isset($this->content['form_q_edit'])) ||
 			strpos($key, 'a_form') === 0 ||
 			strpos($key, 'a_list') === 0 ||
 			strpos($key, 'ranking') === 0 ||

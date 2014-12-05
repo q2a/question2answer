@@ -690,13 +690,15 @@
 
 	function qa_string_matches_one($string, $matches)
 /*
-	Return true if one of the elements in $matches is contained within $string
+	Return true if at least one of the values in array $matches is a substring of $string. Otherwise, return false.
 */
 	{
-		if (strlen($string))
-			foreach ($matches as $match)
-				if (strpos($string, $match)!==false)
+		if (strlen($string)) {
+			foreach ($matches as $match) {
+				if (strpos($string, $match) !== false)
 					return true;
+			}
+		}
 
 		return false;
 	}

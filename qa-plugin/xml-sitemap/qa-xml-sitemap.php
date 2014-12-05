@@ -22,16 +22,6 @@
 
 class qa_xml_sitemap
 {
-	private $directory;
-	private $urltoroot;
-
-	public function load_module($directory, $urltoroot)
-	{
-		$this->directory=$directory;
-		$this->urltoroot=$urltoroot;
-	}
-
-
 	public function option_default($option)
 	{
 		switch ($option) {

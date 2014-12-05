@@ -3285,11 +3285,11 @@ input[type="submit"], button {
 }
 .qa-feed-link:before {
 	font-family: "fontello";
-	font-size: 32px;
+	font-size: 20px;
 	content: '\e81d';
 	display: inline-block;
 	float: left;
-	margin-right: 15px;
+	margin-right: 8px;
 }
 
 /*------[ footer ]------*/
