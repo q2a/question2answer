@@ -304,13 +304,12 @@ h1 {
 }
 
 @media (min-width: 980px) {
-	.qa-part-form-profile {
+	.qa-template-user .qa-main > div:first-of-type {
 		float: right;
 	}
 }
-
 @media (min-width: 980px) {
-	.qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+	.qa-template-user .qa-main > div:not(:first-of-type) {
 		float: left;
 		clear: left;
 	}

@@ -2077,14 +2077,13 @@ input[type="submit"], button {
 }
 
 /*------[ users ]------*/
-.qa-part-form-profile, .qa-part-form-activity, .qa-part-message-list, .qa-part-form-password {
+.qa-template-user .qa-main {
+	width: 100%;
+}
+.qa-template-user .qa-main > div, .qa-template-account .qa-main > div {
 	padding: 20px;
 	margin-bottom: 5px;
 	background: #fff;
-}
-
-.qa-template-user .qa-main {
-	width: 100%;
 }
 .qa-template-user .qa-form-wide-buttons,
 .qa-template-user .qa-form-tall-buttons {
@@ -2167,17 +2166,17 @@ input[type="submit"], button {
 }
 
 @media (min-width: 980px) {
-	.qa-template-user .qa-part-form-profile, .qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+	.qa-template-user .qa-main > div {
 		width: 49.8%;
 	}
 }
 @media (min-width: 980px) {
-	.qa-template-user .qa-part-form-profile {
+	.qa-template-user .qa-main > div:first-of-type {
 		float: left;
 	}
 }
 @media (min-width: 980px) {
-	.qa-template-user .qa-part-form-activity, .qa-template-user .qa-part-message-list {
+	.qa-template-user .qa-main > div:not(:first-of-type) {
 		float: right;
 		clear: right;
 	}
