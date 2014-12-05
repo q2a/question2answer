@@ -1087,7 +1087,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 
 @media (min-width: 800px) {
-	.qa-a-count, .qa-view-count {
+	.qa-a-count {
 		width: 60px;
 		height: 60px;
 		line-height: 0.5;
@@ -1123,19 +1123,9 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	background-color: #27ae60;
 }
 
-.qa-view-count {
-	text-align: center;
-	display: block;
-}
-@media (min-width: 800px) {
-	.qa-view-count {
-		background-color: #ecf0f1;
-		color: #445f7a;
-	}
-}
 
 @media (min-width: 800px) {
-	.qa-netvote-count-data, .qa-a-count-data, .qa-view-count-data {
+	.qa-netvote-count-data, .qa-a-count-data {
 		font-size: 24px;
 		line-height: 40px;
 		display: block;
@@ -1150,7 +1140,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	}
 }
 
-.qa-netvote-count-pad, .qa-a-count-pad, .qa-view-count-pad {
+.qa-netvote-count-pad, .qa-a-count-pad {
 	font-size: 12px;
 }
 
@@ -1281,17 +1271,17 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 @media (min-width: 800px) {
 	.qa-q-item-main {
-		width: 556px;
+		width: 616px;
 	}
 }
 @media (min-width: 980px) {
 	.qa-q-item-main {
-		width: 495px;
+		width: 555px;
 	}
 }
 @media (min-width: 1024px) {
 	.qa-q-item-main {
-		width: 551px;
+		width: 611px;
 	}
 }
 
@@ -2531,25 +2521,19 @@ input[type="submit"], button {
 }
 
 .qa-view-count {
-	background-color: transparent;
-	background: none;
 	font-size: 12px;
 	text-align: center;
 	clear: both;
+	float: left;
+	width: 100%;
 	height: auto;
-	margin-top: 10px;
+	margin: 6px 0 -4px;
 }
 
 .qa-view-count-data {
-	font-size: inherit;
-	display: inline;
-	line-height: 12px;
 }
 
 .qa-view-count-pad {
-	font-size: inherit;
-	display: inline;
-	line-height: 12px;
 }
 
 .qam-q-view-close-icon {
