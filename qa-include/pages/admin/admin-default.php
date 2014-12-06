@@ -199,6 +199,7 @@
 		'show_custom_sidebar' => 'checkbox',
 		'show_custom_sidepanel' => 'checkbox',
 		'show_custom_welcome' => 'checkbox',
+		'show_post_update_meta' => 'checkbox',
 		'show_home_description' => 'checkbox',
 		'show_message_history' => 'checkbox',
 		'show_notice_visitor' => 'checkbox',
@@ -374,7 +375,7 @@
 			if (count(qa_get_points_to_titles()))
 				$showoptions[] = 'show_user_titles';
 
-			array_push($showoptions, 'show_user_points', '', 'sort_answers_by', 'show_selected_first', 'page_size_q_as', 'show_a_form_immediate');
+			array_push($showoptions, 'show_user_points', 'show_post_update_meta', '', 'sort_answers_by', 'show_selected_first', 'page_size_q_as', 'show_a_form_immediate');
 
 			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
 				array_push($showoptions, 'show_fewer_cs_from', 'show_fewer_cs_count', 'show_c_reply_buttons');
