@@ -238,7 +238,7 @@
 		'show_custom_sidebar' => 'Custom HTML in sidebar box on every page:',
 		'show_custom_sidepanel' => 'Custom HTML in side panel on every page:',
 		'show_custom_welcome' => 'Custom message in email sent to new registered users:',
-		'show_edit_notices' => 'Show edited notices in post meta:',
+		'show_post_update_meta' => 'Show edits/updates in post meta:',
 		'show_fewer_cs_count' => 'If partially hidden, show most recent:',
 		'show_fewer_cs_from' => 'Partially hide comments if more than:',
 		'show_full_date_days' => 'Show full date after:',
