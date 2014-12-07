@@ -41,9 +41,9 @@ class qa_html_theme extends qa_html_theme_base
 	 * @param type $rooturl
 	 * @param type $request
 	 */
-	public function __construct($template, $content, $rooturl, $request, $textdir='ltr')
+	public function __construct($template, $content, $rooturl, $request)
 	{
-		parent::__construct($template, $content, $rooturl, $request, $textdir);
+		parent::__construct($template, $content, $rooturl, $request);
 
 		// theme subdirectories
 		$this->js_dir = 'js/';
@@ -187,9 +187,8 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<div class="qam-account-items clearfix">');
 
 		if (!qa_is_logged_in()) {
-			$login = @$this->content['navigation']['user']['login'];
-
-			if (isset($login) && !QA_FINAL_EXTERNAL_USERS) {
+			if (isset($this->content['navigation']['user']['login']) && !QA_FINAL_EXTERNAL_USERS) {
+				$login = $this->content['navigation']['user']['login'];
 				$this->output(
 						'<!--[Begin: login form]-->',
 						'<form id="qa-loginform" action="' . $login['url'] . '" method="post">',
@@ -237,7 +236,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function nav_link($navlink, $class)
 	{
-		if (strlen(@$navlink['note'])) {
+		if (isset($navlink['note']) && !empty($navlink['note'])) {
 			$search = array(' - <', '> - ');
 			$replace = array(' <', '> ');
 			$navlink['note'] = str_replace($search, $replace, $navlink['note']);
@@ -334,7 +333,8 @@ class qa_html_theme extends qa_html_theme_base
 			$this->widgets('side', 'high');
 			$this->nav('cat', 1);
 			$this->widgets('side', 'low');
-			$this->output_raw(@$this->content['sidepanel']);
+			if (isset($this->content['sidepanel']))
+				$this->output_raw($this->content['sidepanel']);
 			$this->feed();
 			$this->widgets('side', 'bottom');
 			$this->output('</div>', '');
@@ -351,12 +351,13 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		global $qam_snow;
 
-		$sidebar = @$this->content['sidebar'];
-
-		if (!empty($sidebar)) {
-			$this->output('<div class="qa-sidebar wet-asphalt ' . $qam_snow->welcome_widget_color . '">');
-			$this->output_raw($sidebar);
-			$this->output('</div>', '');
+		if (isset($this->content['sidebar'])) {
+			$sidebar = $this->content['sidebar'];
+			if (!empty($sidebar)) {
+				$this->output('<div class="qa-sidebar wet-asphalt ' . $qam_snow->welcome_widget_color . '">');
+				$this->output_raw($sidebar);
+				$this->output('</div>', '');
+			}
 		}
 	}
 
@@ -382,12 +383,13 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function title()
 	{
-		$q_view = @$this->content['q_view'];
+		$q_view = isset($this->content['q_view']) ? $this->content['q_view'] : null;
 
 		// RSS feed link in title
-		$feed = @$this->content['feed'];
-		if (!empty($feed)) {
-			$this->output('<a href="' . $feed['url'] . '" title="' . @$feed['label'] . '"><i class="icon-rss qam-title-rss"></i></a>');
+		if (isset($this->content['feed']['url'])) {
+			$feed = $this->content['feed'];
+			$label = isset($feed['label']) ? $feed['label'] : '';
+			$this->output('<a href="' . $feed['url'] . '" title="' . $label . '"><i class="icon-rss qam-title-rss"></i></a>');
 		}
 
 		// link title where appropriate
@@ -469,14 +471,15 @@ class qa_html_theme extends qa_html_theme_base
 		$this->post_tags($q_view, 'qa-q-view');
 
 		$this->q_view_buttons($q_view);
-		$this->c_list(@$q_view['c_list'], 'qa-q-view');
+		$this->c_list(isset($q_view['c_list']) ? $q_view['c_list'] : null, 'qa-q-view');
 
 		if (isset($q_view['main_form_tags'])) {
-			$this->form_hidden_elements(@$q_view['buttons_form_hidden']);
+			if (isset($q_view['buttons_form_hidden']))
+				$this->form_hidden_elements($q_view['buttons_form_hidden']);
 			$this->output('</form>');
 		}
 
-		$this->c_form(@$q_view['c_form']);
+		$this->c_form(isset($q_view['c_form']) ? $q_view['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-q-view-main -->');
 	}
@@ -502,7 +505,8 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output('<div class="qa-a-item-selected">');
 
 		$this->a_selection($a_item);
-		$this->error(@$a_item['error']);
+		if (isset($a_item['error']))
+			$this->error($a_item['error']);
 		$this->a_item_content($a_item);
 
 		if ($a_item['hidden'] || $a_item['selected'])
@@ -510,14 +514,16 @@ class qa_html_theme extends qa_html_theme_base
 
 		$this->a_item_buttons($a_item);
 
-		$this->c_list(@$a_item['c_list'], 'qa-a-item');
+		if (isset($a_item['c_list']))
+			$this->c_list($a_item['c_list'], 'qa-a-item');
 
 		if (isset($a_item['main_form_tags'])) {
-			$this->form_hidden_elements(@$a_item['buttons_form_hidden']);
+			if (isset($a_item['buttons_form_hidden']))
+				$this->form_hidden_elements($a_item['buttons_form_hidden']);
 			$this->output('</form>');
 		}
 
-		$this->c_form(@$a_item['c_form']);
+		$this->c_form(isset($a_item['c_form']) ? $a_item['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-a-item-main -->');
 	}
@@ -532,7 +538,8 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$this->post_avatar_meta($c_item, 'qa-c-item');
 
-		$this->error(@$c_item['error']);
+		if (isset($c_item['error']))
+			$this->error($c_item['error']);
 
 		if (isset($c_item['expand_tags']))
 			$this->c_item_expand($c_item);
