@@ -2081,11 +2081,11 @@ class qa_html_theme_base
 
 	public function q_view_content($q_view)
 	{
-		if (!empty($q_view['content'])) {
-			$this->output('<div class="qa-q-view-content">');
-			$this->output_raw($q_view['content']);
-			$this->output('</div>');
-		}
+		$content = isset($q_view['content']) ? $q_view['content'] : '';
+
+		$this->output('<div class="qa-q-view-content">');
+		$this->output_raw($content);
+		$this->output('</div>');
 	}
 
 	public function q_view_follows($q_view)
