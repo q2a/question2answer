@@ -1,13 +1,10 @@
 {
 	"name": "OpenSearch Support",
-	"uri": "",
 	"description": "Allows OpenSearch clients to search Q2A site directly",
 	"version": "1.0",
 	"date": "2012-08-21",
 	"author": "Question2Answer",
 	"author_uri": "http://www.question2answer.org",
 	"license": "GPLv2",
-	"update": "",
-	"min_q2a": "1.5",
-	"min_php": ""
+	"min_q2a": "1.5"
 }

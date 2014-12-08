@@ -1,13 +1,10 @@
 {
 	"name": "Facebook Login",
-	"uri": "",
 	"description": "Allows users to log in via Facebook",
 	"version": "1.1.5",
 	"date": "2012-09-13",
 	"author": "Question2Answer",
 	"author_uri": "http://www.question2answer.org",
 	"license": "GPLv2",
-	"update": "",
-	"min_q2a": "1.5",
-	"min_php": ""
+	"min_q2a": "1.5"
 }
