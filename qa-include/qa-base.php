@@ -311,7 +311,7 @@
 				'author' => 'Author',
 				'author_uri' => 'Author URI',
 				'license' => 'License',
-				'update' => 'Update Check URI',
+				'update_uri' => 'Update Check URI',
 			));
 		}
 
