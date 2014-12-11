@@ -609,12 +609,13 @@
 		return $length;
 	}
 
-
 	function qa_recalc_get_message($state)
 /*
 	Return a string which gives a user-viewable version of $state
 */
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		@list($operation, $length, $next, $done)=explode("\t", $state);
 
 		$done=(int)$done;
@@ -630,36 +631,36 @@
 
 			case 'doreindexcontent_pagereindex':
 				$message=strtr(qa_lang('admin/reindex_pages_reindexed'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'doreindexcontent_postreindex':
 				$message=strtr(qa_lang('admin/reindex_posts_reindexed'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'doreindexposts_wordcount':
 				$message=strtr(qa_lang('admin/reindex_posts_wordcounted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'dorecountposts_votecount':
 				$message=strtr(qa_lang('admin/recount_posts_votes_recounted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'dorecountposts_acount':
 				$message=strtr(qa_lang('admin/recount_posts_as_recounted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
@@ -677,8 +678,8 @@
 
 			case 'dorecalcpoints_recalc':
 				$message=strtr(qa_lang('admin/recalc_points_recalced'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
@@ -688,8 +689,8 @@
 
 			case 'dorefillevents_refill':
 				$message=strtr(qa_lang('admin/refill_events_refilled'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
@@ -699,22 +700,22 @@
 
 			case 'dorecalccategories_postupdate':
 				$message=strtr(qa_lang('admin/recalc_categories_updated'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'dorecalccategories_recount':
 				$message=strtr(qa_lang('admin/recalc_categories_recounting'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'dorecalccategories_backpaths':
 				$message=strtr(qa_lang('admin/recalc_categories_backpaths'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
@@ -724,22 +725,22 @@
 
 			case 'dodeletehidden_comments':
 				$message=strtr(qa_lang('admin/hidden_comments_deleted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'dodeletehidden_answers':
 				$message=strtr(qa_lang('admin/hidden_answers_deleted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
 			case 'dodeletehidden_questions':
 				$message=strtr(qa_lang('admin/hidden_questions_deleted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
@@ -750,8 +751,8 @@
 			case 'doblobstodisk_move':
 			case 'doblobstodb_move':
 				$message=strtr(qa_lang('admin/blobs_move_moved'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
+					'^1' => qa_format_number($done),
+					'^2' => qa_format_number($length)
 				));
 				break;
 
