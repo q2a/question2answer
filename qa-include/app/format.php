@@ -318,7 +318,7 @@
 				$fields['answers_raw']=$post['acount'];
 
 				$fields['answers']=($post['acount']==1) ? qa_lang_html_sub_split('main/1_answer', '1', '1')
-					: qa_lang_html_sub_split('main/x_answers', number_format($post['acount']));
+					: qa_lang_html_sub_split('main/x_answers', qa_format_number($post['acount']));
 
 				$fields['answer_selected']=isset($post['selchildid']);
 			}
@@ -327,7 +327,7 @@
 				$fields['views_raw']=$post['views'];
 
 				$fields['views']=($post['views']==1) ? qa_lang_html_sub_split('main/1_view', '1', '1') :
-					qa_lang_html_sub_split('main/x_views', number_format($post['views']));
+					qa_lang_html_sub_split('main/x_views', qa_format_number($post['views']));
 			}
 
 			if (@$options['categoryview'] && isset($post['categoryname']) && isset($post['categorybackpath'])) {
@@ -525,7 +525,7 @@
 			if (isset($post['points'])) {
 				if (@$options['pointsview'])
 					$fields['who']['points']=($post['points']==1) ? qa_lang_html_sub_split('main/1_point', '1', '1')
-						: qa_lang_html_sub_split('main/x_points', qa_html(number_format($post['points'])));
+						: qa_lang_html_sub_split('main/x_points', qa_format_number($post['points']));
 
 				if (isset($options['pointstitle']))
 					$fields['who']['title']=qa_get_points_title_html($post['points'], $options['pointstitle']);
@@ -848,11 +848,10 @@
 			$isbyuser=qa_post_is_by_user(array('userid' => $question['ouserid'], 'cookieid' => @$question['ocookieid']), $userid, $cookieid);
 
 			$fields['who']=qa_who_to_html($isbyuser, $question['ouserid'], $usershtml, @$options['ipview'] ? @$question['oip'] : null, false, @$question['oname']);
-
 			if (isset($question['opoints'])) {
 				if (@$options['pointsview'])
 					$fields['who']['points']=($question['opoints']==1) ? qa_lang_html_sub_split('main/1_point', '1', '1')
-						: qa_lang_html_sub_split('main/x_points', qa_html(number_format($question['opoints'])));
+						: qa_lang_html_sub_split('main/x_points', qa_format_number($question['opoints']));
 
 				if (isset($options['pointstitle']))
 					$fields['who']['title']=qa_get_points_title_html($question['opoints'], $options['pointstitle']);
@@ -1241,7 +1240,7 @@
 					'label' => qa_html($category['title']),
 					'popup' => qa_html(@$category['content']),
 					'selected' => isset($selecteds[$category['categoryid']]),
-					'note' => $showqcount ? ('('.qa_html(number_format($category['qcount'])).')') : null,
+					'note' => $showqcount ? ('('.qa_html(qa_format_number($category['qcount'])).')') : null,
 					'subnav' => qa_category_navigation_sub($parentcategories, $category['categoryid'], $selecteds,
 						$pathprefix.$category['tags'].'/', $showqcount, $pathparams, $favoritemap),
 					'categoryid' => $category['categoryid'],
