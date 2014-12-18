@@ -28,6 +28,7 @@
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'db/admin.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 
 
 //	Get relevant list of categories
@@ -395,7 +396,7 @@
 				'value' => '<a href="'.qa_path_html('questions/'.qa_category_path_request($categories, $editcategory['categoryid'])).'">'.
 								( ($editcategory['qcount']==1)
 									? qa_lang_html_sub('main/1_question', '1', '1')
-									: qa_lang_html_sub('main/x_questions', number_format($editcategory['qcount']))
+									: qa_lang_html_sub('main/x_questions', qa_format_number($editcategory['qcount']))
 								).'</a>',
 			);
 
@@ -405,7 +406,7 @@
 				if ($nosubcount)
 					$qa_content['form']['fields']['questions']['error']=
 						strtr(qa_lang_html('admin/category_no_sub_error'), array(
-							'^q' => number_format($nosubcount),
+							'^q' => qa_format_number($nosubcount),
 							'^1' => '<a href="'.qa_path_html(qa_request(), array('edit' => $editcategory['categoryid'], 'missing' => 1)).'">',
 							'^2' => '</a>',
 						));
@@ -559,8 +560,15 @@
 
 			foreach ($categories as $category)
 				if (!isset($category['parentid']))
-					$navcategoryhtml.='<a href="'.qa_path_html('admin/categories', array('edit' => $category['categoryid'])).'">'.
-						qa_html($category['title']).'</a> - '.qa_lang_html_sub('main/x_questions', $category['qcount']).'<br/>';
+					$navcategoryhtml .=
+						'<a href="' . qa_path_html('admin/categories', array('edit' => $category['categoryid'])) . '">' .
+							qa_html($category['title']) .
+						'</a> - ' .
+						($category['qcount'] == 1
+							? qa_lang_html_sub('main/1_question', '1', '1')
+							: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount']))
+						) . '<br/>'
+					;
 
 			$qa_content['form']['fields']['nav']=array(
 				'label' => qa_lang_html('admin/top_level_categories'),
@@ -581,7 +589,7 @@
 				if ($nocatcount)
 					$qa_content['form']['fields']['allow_no_category']['error']=
 						strtr(qa_lang_html('admin/category_none_error'), array(
-							'^q' => number_format($nocatcount),
+							'^q' => qa_format_number($nocatcount),
 							'^1' => '<a href="'.qa_path_html(qa_request(), array('missing' => 1)).'">',
 							'^2' => '</a>',
 						));
