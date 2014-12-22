@@ -24,12 +24,12 @@
 	Plugin Name: reCAPTCHA
 	Plugin URI:
 	Plugin Description: Provides support for reCAPTCHA captchas
-	Plugin Version: 1.0
-	Plugin Date: 2011-11-17
+	Plugin Version: 2.0
+	Plugin Date: 2014-12-20
 	Plugin Author: Question2Answer
 	Plugin Author URI: http://www.question2answer.org/
 	Plugin License: GPLv2
-	Plugin Minimum Question2Answer Version: 1.5
+	Plugin Minimum Question2Answer Version: 1.7
 	Plugin Update Check URI:
 */
 
