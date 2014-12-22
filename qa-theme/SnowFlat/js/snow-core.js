@@ -83,9 +83,11 @@ $(document).ready(function () {
 	$(window).resize(function () {
 		if (window.matchMedia('(min-width: 980px)').matches) {
 			$(".qam-search.the-top .qa-search").hide();
-			$(".qa-nav-main").show();
+			$(".qa-nav-main").show('fast', function() { $(this).css('display','inline-block'); });
 		} else {
 			$(".qam-search.the-top .qa-search").show();
+			$(".qa-nav-main").hide();
+			$('.qam-menu-toggle').removeClass('current');
 		}
 	});
 

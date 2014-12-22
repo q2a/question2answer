@@ -464,18 +464,10 @@ blockquote p {
 }
 
 .qa-logo {
+	display: inline-block;
+	vertical-align: top;
 	font-size: 24px;
 	margin: 0 1px 0 0;
-}
-@media (max-width: 979px) {
-	.qa-logo {
-		display: inline-block;
-	}
-}
-@media (min-width: 980px) {
-	.qa-logo {
-		float: left;
-	}
 }
 .qa-logo img {
 	max-height: 49px;
@@ -517,8 +509,8 @@ blockquote p {
 }
 @media (min-width: 980px) {
 	.qa-nav-main {
+		vertical-align: top;
 		display: inline-block;
-		float: left;
 	}
 }
 
@@ -705,34 +697,27 @@ blockquote p {
 	color: #fff;
 }
 
-@media (max-width: 979px) {
-	.qam-account-items-wrapper {
-		position: absolute;
-		top: 8px;
-		right: 8px;
-	}
-}
-@media (min-width: 980px) {
-	.qam-account-items-wrapper {
-		float: right;
-		position: relative;
-	}
+.qam-account-items-wrapper {
+	float: right;
+	position: relative;
 }
 
 #qam-account-toggle {
-	background-color: #34495e;
 	display: block;
-	text-align: center;
 	cursor: pointer;
 	min-width: 60px;
 	padding: 2px;
+	background-color: #34495e;
+	text-align: center;
+}
+#qam-account-toggle:hover {
+	background: #445f7a;
 }
 #qam-account-toggle .qam-auth-key {
-	font-size: 38px;
+	font-size: 28px;
 }
 #qam-account-toggle .qam-auth-key:before {
-	display: block;
-	line-height: 50px;
+	display: inline-block;
 }
 
 .qam-account-items {
@@ -751,6 +736,7 @@ blockquote p {
 
 .qam-account-handle {
 	font-size: 12px;
+	line-height: 1.8;
 }
 
 #qa-login {
@@ -2633,6 +2619,17 @@ input[type="submit"], button {
 	background: #fff;
 	position: relative;
 }
+
+.qa-main-hidden, .qa-a-list-item-hidden, .qa-c-item-hidden {
+	opacity: 0.6;
+}
+
+.qa-q-item-flags, .qa-q-view-flags, .qa-a-item-flags, .qa-c-item-flags {
+	color: #e74c3c;
+	font-weight: bold;
+	padding-left: 4px;
+}
+
 
 /*------[ a-list ]------*/
 .qa-part-a-form h2 {

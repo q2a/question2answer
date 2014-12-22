@@ -69,7 +69,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function head_metas()
 	{
-		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1">');
+		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1"/>');
 		qa_html_theme_base::head_metas();
 	}
 
@@ -182,7 +182,7 @@ class qa_html_theme extends qa_html_theme_base
 
 		$this->output('<div class="qam-account-items-wrapper">');
 
-		$this->output($qam_snow->headers['user_account']);
+		$this->qam_user_account();
 
 		$this->output('<div class="qam-account-items clearfix">');
 
@@ -221,9 +221,9 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$this->output('<div class="qam-main-nav-wrapper clearfix">');
 		$this->output('<div class="sb-toggle-left qam-menu-toggle"><i class="icon-th-list"></i></div>');
+		$this->nav_user_search();
 		$this->logo();
 		$this->nav('main');
-		$this->nav_user_search();
 		$this->output('</div> <!-- END qam-main-nav-wrapper -->');
 		$this->nav('sub');
 	}
@@ -563,6 +563,56 @@ class qa_html_theme extends qa_html_theme_base
 		);
 
 		qa_html_theme_base::attribution();
+	}
+
+	/**
+	 * User account navigation item. This will return based on login information.
+	 * If user is logged in, it will populate user avatar and account links.
+	 * If user is guest, it will populate login form and registration link.
+	 *
+	 * @since Snow 1.4
+	 */
+	private function qam_user_account()
+	{
+		$avatarsize = 32;
+
+		// get logged-in user avatar
+		if (qa_is_logged_in()) {
+			$handle = qa_get_logged_in_user_field('handle');
+			$toggleClass = 'qam-logged-in';
+
+			if (QA_FINAL_EXTERNAL_USERS) {
+				$tobar_avatar = qa_get_external_avatar_html( qa_get_logged_in_user_field('userid'), $avatarsize, true );
+			}
+			else {
+				$tobar_avatar = qa_get_user_avatar_html(
+					qa_get_logged_in_user_field('flags'),
+					qa_get_logged_in_user_field('email'),
+					$handle,
+					qa_get_logged_in_user_field('avatarblobid'),
+					qa_get_logged_in_user_field('avatarwidth'),
+					qa_get_logged_in_user_field('avatarheight'),
+					$avatarsize,
+					false
+				);
+			}
+
+			$auth_icon = strip_tags($tobar_avatar, '<img>');
+		}
+		// display login icon and label
+		else {
+			$handle = $this->content['navigation']['user']['login']['label'];
+			$toggleClass = 'qam-logged-out';
+			$auth_icon = '<i class="icon-key qam-auth-key"></i>';
+		}
+
+		// finally output avatar with div tag
+		$this->output(
+			'<div id="qam-account-toggle" class="' . $toggleClass . '">',
+			$auth_icon,
+			'<div class="qam-account-handle">' . qa_html($handle) . '</div>',
+			'</div>'
+		);
 	}
 
 	/**
