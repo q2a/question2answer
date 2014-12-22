@@ -244,9 +244,11 @@ class qam_snow_theme
 	 */
 	private function user_points()
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		if (qa_is_logged_in()) {
 			$userpoints = qa_get_logged_in_points();
-			$pointshtml = ($userpoints == 1) ? qa_lang_html_sub('main/1_point', '1', '1') : qa_html(number_format($userpoints));
+			$pointshtml = ($userpoints == 1) ? qa_lang_html_sub('main/1_point', '1', '1') : qa_html(qa_format_number($userpoints));
 			$points     = '<DIV CLASS="qam-logged-in-points">' . $pointshtml . '</DIV>';
 
 			return $points;
