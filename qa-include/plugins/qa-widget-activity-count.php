@@ -49,12 +49,14 @@ class qa_activity_count
 
 	public function output_count($themeobject, $value, $langsingular, $langplural)
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		$themeobject->output('<p class="qa-activity-count-item">');
 
 		if ($value==1)
 			$themeobject->output(qa_lang_html_sub($langsingular, '<span class="qa-activity-count-data">1</span>', '1'));
 		else
-			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.number_format((int)$value).'</span>'));
+			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.qa_format_number((int)$value).'</span>'));
 
 		$themeobject->output('</p>');
 	}
