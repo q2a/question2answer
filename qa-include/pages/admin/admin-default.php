@@ -1527,6 +1527,8 @@
 
 	switch ($adminsection) {
 		case 'users':
+			require_once QA_INCLUDE_DIR . 'app/format.php';
+
 			if (!QA_FINAL_EXTERNAL_USERS) {
 				$userfields = qa_db_single_select(qa_db_userfields_selectspec());
 
@@ -1564,7 +1566,7 @@
 
 			foreach ($pointstitle as $points => $title) {
 				$listhtml .= '<li><b>'.$title.'</b> - '.(($points == 1) ? qa_lang_html_sub('main/1_point', '1', '1')
-				: qa_lang_html_sub('main/x_points', qa_html(number_format($points))));
+				: qa_lang_html_sub('main/x_points', qa_html(qa_format_number($points))));
 
 				$listhtml .= strtr(qa_lang_html('admin/edit_title'), array(
 					'^1' => '<a href="'.qa_path_html('admin/usertitles', array('edit' => $points)).'">',
