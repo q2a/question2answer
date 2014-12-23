@@ -284,9 +284,10 @@
 				'url' => qa_path_html('admin/emails'),
 			);
 
-			$navigation['admin/user']=array(
+			$navigation['admin/users']=array(
 				'label' => qa_lang_html('admin/users_title'),
 				'url' => qa_path_html('admin/users'),
+				'selected_on' => array('admin/users$', 'admin/userfields$', 'admin/usertitles$'),
 			);
 
 			$navigation['admin/layout']=array(
