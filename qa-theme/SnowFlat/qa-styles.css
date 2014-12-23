@@ -1895,7 +1895,8 @@ input[type="submit"], button {
 	}
 }
 
-.qa-form-tall-button-save, .qa-form-wide-button-save, .qa-form-tall-button-ask, .qa-form-tall-button-answer {
+.qa-form-tall-button-save, .qa-form-wide-button-save, .qa-form-wide-button-saverecalc,
+.qa-form-tall-button-ask, .qa-form-tall-button-answer {
 	padding: 10px 15px;
 	border: none;
 	font-size: 14px;
@@ -1918,17 +1919,24 @@ input[type="submit"], button {
 	-webkit-transition-duration: 0s;
 	transition-duration: 0s;
 }
-.qa-form-tall-button-save:hover, .qa-form-tall-button-save:focus, .qa-form-wide-button-save:hover, .qa-form-wide-button-save:focus, .qa-form-tall-button-ask:hover, .qa-form-tall-button-ask:focus, .qa-form-tall-button-answer:hover, .qa-form-tall-button-answer:focus {
+.qa-form-tall-button-save:hover, .qa-form-tall-button-save:focus,
+.qa-form-wide-button-save:hover, .qa-form-wide-button-save:focus,
+.qa-form-wide-button-saverecalc:hover, .qa-form-wide-button-saverecalc:focus,
+.qa-form-tall-button-ask:hover, .qa-form-tall-button-ask:focus,
+.qa-form-tall-button-answer:hover, .qa-form-tall-button-answer:focus {
 	background-color: #2ecc71;
 }
-.qa-form-tall-button-save a, .qa-form-wide-button-save a, .qa-form-tall-button-ask a, .qa-form-tall-button-answer a {
+.qa-form-tall-button-save a, .qa-form-wide-button-save a, .qa-form-wide-button-saverecalc a,
+.qa-form-tall-button-ask a, .qa-form-tall-button-answer a {
 	color: #fff;
 }
-.qa-form-tall-button-save a:hover, .qa-form-wide-button-save a:hover, .qa-form-tall-button-ask a:hover, .qa-form-tall-button-answer a:hover {
+.qa-form-tall-button-save a:hover, .qa-form-wide-button-save a:hover, .qa-form-wide-button-saverecalc a:hover,
+.qa-form-tall-button-ask a:hover, .qa-form-tall-button-answer a:hover {
 	color: #fff;
 }
 
-.qa-form-tall-button-cancel {
+.qa-form-tall-button-cancel,
+.qa-form-wide-button-cancel {
 	padding: 10px 15px;
 	border: none;
 	font-size: 14px;
@@ -1937,27 +1945,29 @@ input[type="submit"], button {
 	background: #e74c3c;
 	color: #fff;
 }
-.qa-form-tall-button-cancel:hover, .qa-form-tall-button-cancel:focus {
+.qa-form-tall-button-cancel:hover, .qa-form-tall-button-cancel:focus,
+.qa-form-wide-button-cancel:hover, .qa-form-wide-button-cancel:focus {
 	border: none;
 	outline: none;
 	-webkit-transition-duration: 0s;
 	transition-duration: 0s;
 }
-.qa-form-tall-button-cancel a {
-	-webkit-transition-duration: 0s;
-	transition-duration: 0s;
+.qa-form-tall-button-cancel a,
+.qa-form-wide-button-cancel a {
 }
-.qa-form-tall-button-cancel a:hover {
-	-webkit-transition-duration: 0s;
-	transition-duration: 0s;
+.qa-form-tall-button-cancel a:hover,
+.qa-form-wide-button-cancel a:hover {
 }
-.qa-form-tall-button-cancel:hover, .qa-form-tall-button-cancel:focus {
+.qa-form-tall-button-cancel:hover, .qa-form-tall-button-cancel:focus,
+.qa-form-wide-button-cancel:hover, .qa-form-wide-button-cancel:focus {
 	background-color: #ea6153;
 }
-.qa-form-tall-button-cancel a {
+.qa-form-tall-button-cancel a,
+.qa-form-wide-button-cancel a {
 	color: #fff;
 }
-.qa-form-tall-button-cancel a:hover {
+.qa-form-tall-button-cancel a:hover,
+.qa-form-wide-button-cancel a:hover {
 	color: #fff;
 }
 
