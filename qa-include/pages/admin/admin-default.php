@@ -849,7 +849,7 @@
 			),
 
 			'reset' => array(
-				'tags' => 'name="doresetoptions"',
+				'tags' => 'name="doresetoptions" onclick="return confirm('.qa_js(qa_lang_html('admin/reset_options_confirm')).');"',
 				'label' => qa_lang_html('admin/reset_options_button'),
 			),
 		),

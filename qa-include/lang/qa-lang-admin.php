@@ -222,6 +222,7 @@
 		'requires_php_version' => 'Disabled - requires PHP ^ or later',
 		'requires_q2a_version' => 'Disabled - requires Question2Answer ^ or later',
 		'reset_options_button' => 'Reset to Defaults',
+		'reset_options_confirm' => 'Are you sure you want to reset all options on this page to their defaults?',
 		'resume_mailing_button' => 'Resume Mailing',
 		'save_options_button' => 'Save Options',
 		'save_recalc_button' => 'Save and Recalculate',
