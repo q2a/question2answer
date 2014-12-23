@@ -61,7 +61,7 @@
 		'custom_home_content' => 'Home page content - HTML allowed:',
 		'custom_home_heading' => 'Home page heading:',
 		'default_privacy' => 'Privacy: Your email address will not be shared or sold to third parties.',
-		'default_sidebar' => "Welcome to ^, where you can ask questions and receive answers from other members of the community.",
+		'default_sidebar' => 'Welcome to ^, where you can ask questions and receive answers from other members of the community.',
 		'default_subject' => 'A message from ^',
 		'default_suffix' => 'Q&A',
 		'default_terms' => 'I agree to the ^ Terms & Conditions and Privacy Policy',
