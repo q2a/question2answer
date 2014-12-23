@@ -13,10 +13,10 @@
  * (1) http://ckeditor.com/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) http://ckeditor.com/builder/86c417a5b5ab7b84ffb2cf783e8d4e45
+ * (2) http://ckeditor.com/builder/99dcde0c5f937782e62ca8e1286c31ed
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) http://ckeditor.com/builder/download/86c417a5b5ab7b84ffb2cf783e8d4e45
+ * (3) http://ckeditor.com/builder/download/99dcde0c5f937782e62ca8e1286c31ed
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
@@ -36,7 +36,7 @@ var CKBUILDER_CONFIG = {
 		'.DS_Store',
 		'.gitattributes',
 		'.gitignore',
-		'Gruntfile.js',
+		'gruntfile.js',
 		'.idea',
 		'.jscsrc',
 		'.jshintignore',
@@ -79,6 +79,52 @@ var CKBUILDER_CONFIG = {
 		'wysiwygarea' : 1
 	},
 	languages : {
-		'en' : 1
+		'ar' : 1,
+		'bn' : 1,
+		'ca' : 1,
+		'cs' : 1,
+		'cy' : 1,
+		'da' : 1,
+		'de' : 1,
+		'el' : 1,
+		'en' : 1,
+		'en-gb' : 1,
+		'es' : 1,
+		'et' : 1,
+		'fa' : 1,
+		'fi' : 1,
+		'fr' : 1,
+		'he' : 1,
+		'hr' : 1,
+		'hu' : 1,
+		'id' : 1,
+		'is' : 1,
+		'it' : 1,
+		'ja' : 1,
+		'ka' : 1,
+		'km' : 1,
+		'ko' : 1,
+		'ku' : 1,
+		'lt' : 1,
+		'lv' : 1,
+		'nl' : 1,
+		'no' : 1,
+		'pl' : 1,
+		'pt' : 1,
+		'pt-br' : 1,
+		'ro' : 1,
+		'ru' : 1,
+		'sk' : 1,
+		'sl' : 1,
+		'sq' : 1,
+		'sr' : 1,
+		'sr-latn' : 1,
+		'th' : 1,
+		'tr' : 1,
+		'ug' : 1,
+		'uk' : 1,
+		'vi' : 1,
+		'zh' : 1,
+		'zh-cn' : 1
 	}
 };
