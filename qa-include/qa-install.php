@@ -213,11 +213,11 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with your existing user database and management. Users will be referenced with database column type ".qa_html(qa_get_mysql_user_column_type()).". Please consult the online documentation for more information.";
 				}
 
-				$buttons = array('create' => 'Create Database');
+				$buttons = array('create' => 'Create the Database');
 			}
 			else {
 				$errorhtml .= "\n\nWhen you click below, your Question2Answer database will be set up to manage user identities and logins internally.\n\nIf you want to offer a single sign-on for an existing user base or website, please consult the online documentation before proceeding.";
-				$buttons = array('create' => 'Create Database including User Management');
+				$buttons = array('create' => 'Create the Database including User Management');
 			}
 			break;
 
@@ -228,22 +228,22 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 
 			// don't show error before this
 			$errorhtml .= 'Your Question2Answer database needs to be upgraded for this version of the software.';
-			$buttons = array('upgrade' => 'Upgrade Database');
+			$buttons = array('upgrade' => 'Upgrade the Database');
 			break;
 
 		case 'non-users-missing':
 			$errorhtml = 'This Question2Answer site is sharing its users with another Q2A site, but it needs some additional database tables for its own content. Please click below to create them.';
-			$buttons = array('nonuser' => 'Create Tables');
+			$buttons = array('nonuser' => 'Create the Tables');
 			break;
 
 		case 'table-missing':
 			$errorhtml .= 'One or more tables are missing from your Question2Answer database.';
-			$buttons = array('repair' => 'Repair Database');
+			$buttons = array('repair' => 'Repair the Database');
 			break;
 
 		case 'column-missing':
 			$errorhtml .= 'One or more Question2Answer database tables are missing a column.';
-			$buttons = array('repair' => 'Repair Database');
+			$buttons = array('repair' => 'Repair the Database');
 			break;
 
 		default:
@@ -256,7 +256,7 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 					'password' => array('label' => 'Password:', 'type' => 'password'),
 					'email' => array('label' => 'Email address:', 'type' => 'text'),
 				);
-				$buttons = array('super' => 'Create Super Administrator');
+				$buttons = array('super' => 'Create the Super Administrator');
 			}
 			else {
 				$tables = qa_db_list_tables();
@@ -277,7 +277,7 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 								'^4' => '',
 							));
 
-							$buttons = array('module' => 'Initialize Database');
+							$buttons = array('module' => 'Initialize the Database');
 
 							$hidden['moduletype'] = $moduletype;
 							$hidden['modulename'] = $modulename;
