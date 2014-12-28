@@ -70,11 +70,6 @@ $(document).ready(function () {
 	$('.qa-top-users-score').wrapInner('<div class="qam-user-score-icon"></div>');
 
 	/*
-	 * add option lable in plugin option section
-	 */
-	$('.qa-part-form-plugin-options').prepend('<h2>Plugin Option</h2>');
-
-	/*
 	 * add wrapper to the message sent note 'td'
 	 */
 	$('.qa-part-form-message .qa-form-tall-ok').wrapInner('<div class="qam-pm-message"></div>');
