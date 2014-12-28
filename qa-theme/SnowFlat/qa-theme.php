@@ -3,9 +3,9 @@
 	Snow Theme for Question2Answer Package
 	Copyright (C) 2014 Q2A Market <http://www.q2amarket.com>
 
-	File: qa-theme.php
-	Version: Snow 1.4
-	Description: Q2A theme class
+	File:           qa-theme.php
+	Version:        Snow 1.4
+	Description:    Q2A theme class
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 	GNU General Public License for more details.
- */
+*/
 
 /**
  * Snow theme extends
