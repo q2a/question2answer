@@ -143,12 +143,11 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 /* Standard form (tall version) */
 
-.qa-form-table-boxed {width:504px; border:1px solid black; margin-bottom:1em;}
 .qa-form-tall-table {width:500px; border-collapse:collapse;}
 .qa-form-tall-spacer {line-height:1px; padding:0; font-size:1px;}
 .qa-form-tall-ok {color:#090; font-size:18px; padding:6px; text-align:center;}
 .qa-form-tall-label {background:url(form-cell-bg.png) repeat-y scroll left top transparent; border-top:6px solid #fff; color:#253845; padding:8px; font-size:14px;}
-.qa-form-tall-data {background:url(form-cell-bg.png) repeat-y scroll left top transparent; padding:0px 8px 8px 8px; width:480px;}
+.qa-form-tall-data {background:url(form-cell-bg.png) repeat-y scroll left top transparent; padding:8px; width:480px;}
 .qa-form-tall-text,.qa-form-tall-number {padding:3px;}
 .qa-form-tall-text {width:480px; border:1px solid #999; font-size:16px;}
 .qa-form-tall-number {width:48px; border:1px solid #999;}
@@ -445,6 +444,11 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-q-favorited .qa-q-item-title a, .qa-nav-cat-favorited, .qa-browse-cat-favorited {background-position: left center; padding-left:20px;}
 .qa-nav-cat-favorited {margin-left:-20px;}
 .qa-tag-favorited, .qa-cat-favorited, .qa-cat-parent-favorited, .qa-user-favorited {background-position: left center; padding-left:19px;}
+
+/* Plugins */
+
+[class^="qa-part-form-plugin"] {margin-top: 10px;}
+.qa-part-form-plugin-0, .qa-part-form-plugin-options {margin-top: 0;}
 
 
 /* IE6 friendly versions of icons with binary alpha channel */

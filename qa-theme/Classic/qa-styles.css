@@ -417,3 +417,9 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-tag-favorited {background-position: 3px center; padding-left:20px;}
 .qa-cat-favorited, .qa-cat-parent-favorited, .qa-user-favorited {background-position: left center; padding-left:17px;}
 .qa-nav-cat-favorited {margin-left:-18px;}
+
+/* Plugins */
+
+[class^="qa-part-form-plugin"] {margin-top: 10px;}
+.qa-part-form-plugin-0 {margin-top: 0;}
+.qa-part-form-plugin-options {margin-top: -1px;}

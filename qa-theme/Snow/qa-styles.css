@@ -1295,11 +1295,6 @@ div.header-banner {
 	border-collapse: collapse;
 }
 
-.qa-form-table-boxed {
-	border: 1px solid black;
-	margin-bottom: 1em;
-}
-
 .qa-form-tall-spacer {
 	line-height: 1px;
 	font-size: 1px;
@@ -2603,4 +2598,16 @@ a.qa-browse-cat-link:visited {
 	font-size: 18px;
 	color: #069;
 	font-weight: 700;
+}
+
+/* Plugins */
+
+[class^="qa-part-form-plugin"] {
+	padding: 12px 0;
+	border-top: 1px solid #ddd;
+}
+.qa-part-form-plugin-0,
+.qa-part-form-plugin-options {
+	padding-top: 0;
+	border-top: 0;
 }
