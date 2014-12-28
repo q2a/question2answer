@@ -234,13 +234,21 @@ class qa_wysiwyg_editor
 	}
 
 
-	private function html_to_text($html)
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function html_to_text($html)
 	{
 		$viewer = qa_load_module('viewer', '');
 		return $viewer->get_text($html, 'html', array());
 	}
 
-	private function bytes_to_mega_html($bytes)
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function bytes_to_mega_html($bytes)
 	{
 		return qa_html(number_format($bytes/1048576, 1));
 	}

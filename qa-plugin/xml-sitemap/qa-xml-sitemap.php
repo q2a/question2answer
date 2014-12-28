@@ -271,7 +271,11 @@ class qa_xml_sitemap
 	}
 
 
-	private function sitemap_output($request, $priority)
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function sitemap_output($request, $priority)
 	{
 		echo "\t<url>\n".
 			"\t\t<loc>".qa_xml(qa_path($request, null, qa_opt('site_url')))."</loc>\n".

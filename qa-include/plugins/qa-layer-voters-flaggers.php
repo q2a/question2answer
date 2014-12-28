@@ -26,74 +26,6 @@ class qa_html_theme_layer extends qa_html_theme_base
 	private $qa_voters_flaggers_cache=array();
 
 
-//	Utility functions for this layer
-
-	private function queue_post_voters_flaggers($post)
-	{
-		if (!qa_user_post_permit_error('permit_view_voters_flaggers', $post)) {
-			$postids=array(@$post['postid'], @$post['opostid']); // opostid can be relevant for flags
-
-			foreach ($postids as $postid)
-				if (isset($postid) && !isset($this->qa_voters_flaggers_cache[$postid]))
-					$this->qa_voters_flaggers_queue[$postid]=true;
-		}
-	}
-
-	private function queue_raw_posts_voters_flaggers($posts)
-	{
-		if (is_array($posts))
-			foreach ($posts as $post)
-				if (isset($post['raw']))
-					$this->queue_post_voters_flaggers($post['raw']);
-	}
-
-	private function retrieve_queued_voters_flaggers()
-	{
-		if (count($this->qa_voters_flaggers_queue)) {
-			require_once QA_INCLUDE_DIR.'db/votes.php';
-
-			$postids=array_keys($this->qa_voters_flaggers_queue);
-
-			foreach ($postids as $postid)
-				$this->qa_voters_flaggers_cache[$postid]=array();
-
-			$newvotersflaggers=qa_db_uservoteflag_posts_get($postids);
-
-			if (QA_FINAL_EXTERNAL_USERS) {
-				$keyuserids=array();
-				foreach ($newvotersflaggers as $voterflagger)
-					$keyuserids[$voterflagger['userid']]=true;
-
-				$useridhandles=qa_get_public_from_userids(array_keys($keyuserids));
-				foreach ($newvotersflaggers as $index => $voterflagger)
-					$newvotersflaggers[$index]['handle']=@$useridhandles[$voterflagger['userid']];
-			}
-
-			foreach ($newvotersflaggers as $voterflagger)
-				$this->qa_voters_flaggers_cache[$voterflagger['postid']][]=$voterflagger;
-
-			$this->qa_voters_flaggers_queue=array();
-		}
-	}
-
-	private function get_post_voters_flaggers($post, $postid)
-	{
-		require_once QA_INCLUDE_DIR.'util/sort.php';
-
-		if (!isset($this->qa_voters_flaggers_cache[$postid])) {
-			$this->queue_post_voters_flaggers($post);
-			$this->retrieve_queued_voters_flaggers();
-		}
-
-		$votersflaggers=@$this->qa_voters_flaggers_cache[$postid];
-
-		if (isset($votersflaggers))
-			qa_sort_by($votersflaggers, 'handle');
-
-		return $votersflaggers;
-	}
-
-
 //	Collect up all required postids for the entire page to save DB queries - common case where whole page output
 
 	public function main()
@@ -183,10 +115,12 @@ class qa_html_theme_layer extends qa_html_theme_base
 		if (isset($postid)) {
 			$votersflaggers=$this->get_post_voters_flaggers($post, $postid);
 
-			if (isset($votersflaggers))
-				foreach ($votersflaggers as $voterflagger)
+			if (isset($votersflaggers)) {
+				foreach ($votersflaggers as $voterflagger) {
 					if ($voterflagger['flag']>0)
 						$tooltip.=(strlen($tooltip) ? ', ' : '').qa_html($voterflagger['handle']);
+				}
+			}
 		}
 
 		if (strlen($tooltip))
@@ -196,5 +130,92 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 		if (strlen($tooltip))
 			$this->output('</span>');
+	}
+
+
+//	Utility functions for this layer
+
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function queue_post_voters_flaggers($post)
+	{
+		if (!qa_user_post_permit_error('permit_view_voters_flaggers', $post)) {
+			$postids=array(@$post['postid'], @$post['opostid']); // opostid can be relevant for flags
+
+			foreach ($postids as $postid) {
+				if (isset($postid) && !isset($this->qa_voters_flaggers_cache[$postid]))
+					$this->qa_voters_flaggers_queue[$postid]=true;
+			}
+		}
+	}
+
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function queue_raw_posts_voters_flaggers($posts)
+	{
+		if (is_array($posts)) {
+			foreach ($posts as $post) {
+				if (isset($post['raw']))
+					$this->queue_post_voters_flaggers($post['raw']);
+			}
+		}
+	}
+
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function retrieve_queued_voters_flaggers()
+	{
+		if (count($this->qa_voters_flaggers_queue)) {
+			require_once QA_INCLUDE_DIR.'db/votes.php';
+
+			$postids=array_keys($this->qa_voters_flaggers_queue);
+
+			foreach ($postids as $postid)
+				$this->qa_voters_flaggers_cache[$postid]=array();
+
+			$newvotersflaggers=qa_db_uservoteflag_posts_get($postids);
+
+			if (QA_FINAL_EXTERNAL_USERS) {
+				$keyuserids=array();
+				foreach ($newvotersflaggers as $voterflagger)
+					$keyuserids[$voterflagger['userid']]=true;
+
+				$useridhandles=qa_get_public_from_userids(array_keys($keyuserids));
+				foreach ($newvotersflaggers as $index => $voterflagger)
+					$newvotersflaggers[$index]['handle']=@$useridhandles[$voterflagger['userid']];
+			}
+
+			foreach ($newvotersflaggers as $voterflagger)
+				$this->qa_voters_flaggers_cache[$voterflagger['postid']][]=$voterflagger;
+
+			$this->qa_voters_flaggers_queue=array();
+		}
+	}
+
+	/**
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function get_post_voters_flaggers($post, $postid)
+	{
+		require_once QA_INCLUDE_DIR.'util/sort.php';
+
+		if (!isset($this->qa_voters_flaggers_cache[$postid])) {
+			$this->queue_post_voters_flaggers($post);
+			$this->retrieve_queued_voters_flaggers();
+		}
+
+		$votersflaggers=@$this->qa_voters_flaggers_cache[$postid];
+
+		if (isset($votersflaggers))
+			qa_sort_by($votersflaggers, 'handle');
+
+		return $votersflaggers;
 	}
 }

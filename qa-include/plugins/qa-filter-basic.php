@@ -97,9 +97,12 @@ class qa_filter_basic
 //	The definitions below are not part of a standard filter module, but just used within this one
 
 	/**
-	 * Add textual element $field to $errors if length of $input is not between $minlength and $maxlength
+	 * Add textual element $field to $errors if length of $input is not between $minlength and $maxlength.
+	 *
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
 	 */
-	private function validate_length(&$errors, $field, $input, $minlength, $maxlength)
+	public function validate_length(&$errors, $field, $input, $minlength, $maxlength)
 	{
 		$length = isset($input) ? qa_strlen($input) : 0;
 
@@ -109,7 +112,13 @@ class qa_filter_basic
 			$errors[$field] = qa_lang_sub('main/max_length_x', $maxlength);
 	}
 
-	private function validate_post_email(&$errors, $post)
+	/**
+	 * Wrapper function for validating a post's email address.
+	 *
+	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
+	 * should not be used by outside code.
+	 */
+	public function validate_post_email(&$errors, $post)
 	{
 		if (@$post['notify'] && strlen(@$post['email'])) {
 			$error=$this->filter_email($post['email'], null);
