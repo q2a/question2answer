@@ -516,7 +516,7 @@
 			$fields['when']=qa_when_to_html($post['created'], @$options['fulldatedays']);
 
 			if ($microformats)
-				$fields['when']['data']='<span class="published"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['created']).'"></span>'.$fields['when']['data'].'</span>';
+				$fields['when']['data']='<span class="published"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['created']).'">'.$fields['when']['data'].'</span></span>';
 		}
 
 		if (@$options['whoview']) {
@@ -593,11 +593,14 @@
 				$fields['when_2']=qa_when_to_html($post['updated'], @$options['fulldatedays']);
 
 				if ($microformats)
-					$fields['when_2']['data']='<span class="updated"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['updated']).'"></span>'.$fields['when_2']['data'].'</span>';
+					$fields['when_2']['data']='<span class="updated"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['updated']).'">'.$fields['when_2']['data'].'</span></span>';
 			}
 
 			if (isset($post['lastuserid']) && @$options['whoview'])
 				$fields['who_2']=qa_who_to_html(isset($userid) && ($post['lastuserid']==$userid), $post['lastuserid'], $usershtml, @$options['ipview'] ? $post['lastip'] : null, false);
+		}
+		elseif ($microformats) { // quick fix for incorrect microformats (missing 'updated' class)
+			$fields['when']['data'] = str_replace('<span class="published">', '<span class="published updated">', $fields['when']['data']);
 		}
 
 	//	That's it!

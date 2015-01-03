@@ -460,7 +460,7 @@
 
 			$url = qa_path_html('user/'.$handle);
 			$favclass = $favorited ? ' qa-user-favorited' : '';
-			$mfclass = $microformats ? ' url nickname' : '';
+			$mfclass = $microformats ? ' url fn entry-title nickname' : '';
 
 			return '<a href="'.$url.'" class="qa-user-link'.$favclass.$mfclass.'">'.qa_html($handle).'</a>';
 		}
