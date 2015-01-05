@@ -649,36 +649,30 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	private function head_inline_css()
 	{
-		$css = '<style>';
+		$css = array('<style>');
 
-		$css .= ( (!qa_is_logged_in() ) ? '.qa-nav-user{margin:0 !important;}' : null );
+		if (!qa_is_logged_in()) {
+			$css[] = '.qa-nav-user { margin: 0 !important; }';
+		}
+
 		if (qa_request_part(1) !== qa_get_logged_in_handle()) {
-			$css .= '@media (max-width: 979px){';
-			$css .= ' body.qa-template-user.fixed, body[class^="qa-template-user-"].fixed, body[class*="qa-template-user-"].fixed {';
-			$css .= '  padding-top: 118px !important;';
-			$css .= ' }';
-			$css .= '}';
-			$css .= '@media (max-width: 979px){body.qa-template-users.fixed{
-				padding-top: 95px !important; }
-			}
-			@media (min-width: 980px){body.qa-template-users.fixed{
-				padding-top: 105px !important;}
-			}';
+			$css[] = '@media (max-width: 979px) {';
+			$css[] = ' body.qa-template-user.fixed, body[class*="qa-template-user-"].fixed { padding-top: 118px !important; }';
+			$css[] = ' body.qa-template-users.fixed { padding-top: 95px !important; }';
+			$css[] = '}';
+			$css[] = '@media (min-width: 980px) {';
+			$css[] = ' body.qa-template-users.fixed { padding-top: 105px !important;}';
+			$css[] = '}';
 		}
 
 		// sidebar styles for desktop (must use server-side UA detection, not media queries)
 		if (!qa_is_mobile_probably()) {
-			$css .= '.qa-sidepanel {';
-			$css .= ' width: 25%;';
-			$css .= ' padding: 0px;';
-			$css .= ' float: right;';
-			$css .= ' overflow: hidden;';
-			$css .= ' *zoom: 1;';
-			$css .= '}';
+			$css[] = '.qa-sidepanel { width: 25%; padding: 0px; float: right; overflow: hidden; *zoom: 1; }';
 		}
-		$css .= '</style>';
 
-		$this->output($css);
+		$css[] = '</style>';
+
+		$this->output_array($css);
 	}
 
 	/**
