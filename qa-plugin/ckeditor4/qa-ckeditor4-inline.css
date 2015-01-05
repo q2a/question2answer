@@ -1,0 +1,9 @@
+.cke_editable.cke_editable_inline {
+	cursor: pointer;
+	padding: 2px 4px;
+}
+.cke_editable.cke_editable_inline.cke_focus {
+	cursor: text;
+	outline: none;
+	background: #f5f5f5;
+}
