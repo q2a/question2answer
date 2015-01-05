@@ -90,7 +90,7 @@ class qa_html_theme extends qa_html_theme_base
 		qa_html_theme_base::head_css();
 
 		// output some dynamic CSS inline
-		$this->output($this->head_inline_css());
+		$this->head_inline_css();
 	}
 
 	/**
@@ -654,9 +654,9 @@ class qa_html_theme extends qa_html_theme_base
 		$css .= ( (!qa_is_logged_in() ) ? '.qa-nav-user{margin:0 !important;}' : null );
 		if (qa_request_part(1) !== qa_get_logged_in_handle()) {
 			$css .= '@media (max-width: 979px){';
-			$css .= 'body.qa-template-user.fixed, body[class^="qa-template-user-"].fixed, body[class*="qa-template-user-"].fixed{';
-			$css .= 'padding-top: 118px !important;';
-			$css .= '}';
+			$css .= ' body.qa-template-user.fixed, body[class^="qa-template-user-"].fixed, body[class*="qa-template-user-"].fixed {';
+			$css .= '  padding-top: 118px !important;';
+			$css .= ' }';
 			$css .= '}';
 			$css .= '@media (max-width: 979px){body.qa-template-users.fixed{
 				padding-top: 95px !important; }
@@ -665,9 +665,20 @@ class qa_html_theme extends qa_html_theme_base
 				padding-top: 105px !important;}
 			}';
 		}
+
+		// sidebar styles for desktop (must use server-side UA detection, not media queries)
+		if (!qa_is_mobile_probably()) {
+			$css .= '.qa-sidepanel {';
+			$css .= ' width: 25%;';
+			$css .= ' padding: 0px;';
+			$css .= ' float: right;';
+			$css .= ' overflow: hidden;';
+			$css .= ' *zoom: 1;';
+			$css .= '}';
+		}
 		$css .= '</style>';
 
-		return $css;
+		$this->output($css);
 	}
 
 	/**

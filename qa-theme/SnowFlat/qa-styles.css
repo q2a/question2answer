@@ -2727,73 +2727,59 @@ input[type="submit"], button {
 	display: none;
 }
 
-@media (max-width: 767px) {
-	#qam-sidepanel-toggle {
-		position: fixed;
-		bottom: 10px;
-		right: 0;
-		text-align: center;
-		font-size: 24px;
-		background: #9b59b6;
-		cursor: pointer;
-		transition: all 0.15s ease;
-		color: #95a5a6;
-		opacity: 0.5;
-		z-index: 999;
-	}
-	#qam-sidepanel-toggle.active {
-		opacity: 1;
-		color: #34495e;
-		right: 250px;
-		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
-	}
-	#qam-sidepanel-toggle [class^="icon-"]:before, #qam-sidepanel-toggle [class*=" icon-"]:before {
-		line-height: 40px;
-		width: 30px;
-		height: 40px;
-		text-align: center;
-		color: #fff;
-	}
+#qam-sidepanel-toggle {
+	position: fixed;
+	bottom: 10px;
+	right: 0;
+	text-align: center;
+	font-size: 24px;
+	background: #9b59b6;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	color: #95a5a6;
+	opacity: 0.5;
+	z-index: 999;
 }
-@media (min-width: 980px) {
-	#qam-sidepanel-toggle {
-		display: none;
-	}
+#qam-sidepanel-toggle.active {
+	opacity: 1;
+	color: #34495e;
+	right: 250px;
+	box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
 }
+#qam-sidepanel-toggle [class^="icon-"]:before, #qam-sidepanel-toggle [class*=" icon-"]:before {
+	line-height: 40px;
+	width: 30px;
+	height: 40px;
+	text-align: center;
+	color: #fff;
+}
+
+#qam-sidepanel-mobile {
+	background: #fff;
+	position: fixed;
+	right: -250px;
+	top: 0;
+	height: 100%;
+	width: 250px;
+	overflow-y: auto;
+	z-index: 99999;
+	transition: all 0.15s ease;
+	box-shadow: 0 0 0 0 transparent;
+}
+#qam-sidepanel-mobile.open {
+	right: 0 !important;
+	transition: all 0.15s ease;
+	box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
+}
+
 
 .stick {
 	top: 10px !important;
 	transition: all 0.15s ease;
 }
 
-@media (max-width: 767px) {
-	#qam-sidepanel-mobile {
-		background: #fff;
-		position: fixed;
-		right: -250px;
-		top: 0;
-		height: 100%;
-		width: 250px;
-		overflow-y: auto;
-		z-index: 99999;
-		transition: all 0.15s ease;
-		box-shadow: 0 0 0 0 transparent;
-	}
-	#qam-sidepanel-mobile.open {
-		right: 0 !important;
-		transition: all 0.15s ease;
-		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
-	}
-}
-
 .qa-sidepanel h1, .qa-sidepanel h2, .qa-sidepanel h3, .qa-sidepanel h4, .qa-sidepanel h5, .qa-sidepanel h6 {
 	margin-top: 0px;
-}
-@media (min-width: 980px) {
-	.qa-sidepanel {
-		overflow: hidden;
-		*zoom: 1;
-	}
 }
 .qa-sidepanel .qa-widget-side {
 	padding: 20px;
@@ -3624,13 +3610,5 @@ input[type="submit"], button {
 	.qa-main {
 		width: 74.5%;
 		float: left;
-	}
-}
-
-@media (min-width: 980px) {
-	.qa-sidepanel {
-		width: 25%;
-		padding: 0px;
-		float: right;
 	}
 }
