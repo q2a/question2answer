@@ -49,6 +49,25 @@
 	qa_initialize_php();
 	qa_initialize_constants_1();
 
+	/**
+	 * JSON compatibility layer for PHP 5.1
+	 */
+	if (!function_exists('json_encode') && !function_exists('json_decode')) {
+		require_once QA_INCLUDE_DIR.'vendor/JSON.php';
+
+		function json_encode($json)
+		{
+			$service = new Services_JSON();
+			return $service->encode($json);
+		}
+
+		function json_decode($json, $assoc = false)
+		{
+			$service = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
+			return $service->decode($json);
+		}
+	}
+
 	if (defined('QA_WORDPRESS_LOAD_FILE')) // if relevant, load WordPress integration in global scope
 		require_once QA_WORDPRESS_LOAD_FILE;
 
@@ -1616,26 +1635,6 @@
 			call_user_func_array(array($processmodule, $method), $args);
 
 		$qa_process_reports_suspended=null;
-	}
-
-
-	/**
-	 * JSON compatibility layer for PHP 5.1
-	 */
-	if (!function_exists('json_encode') && !function_exists('json_decode')) {
-		require_once QA_INCLUDE_DIR.'vendor/JSON.php';
-
-		function json_encode($json)
-		{
-			$service = new Services_JSON();
-			return $service->encode($json);
-		}
-
-		function json_decode($json, $assoc = false)
-		{
-			$service = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
-			return $service->decode($json);
-		}
 	}
 
 
