@@ -667,7 +667,9 @@ class qa_html_theme extends qa_html_theme_base
 
 		// sidebar styles for desktop (must use server-side UA detection, not media queries)
 		if (!qa_is_mobile_probably()) {
-			$css[] = '.qa-sidepanel { width: 25%; padding: 0px; float: right; overflow: hidden; *zoom: 1; }';
+			$css[] = '@media (min-width: 980px) {';
+			$css[] = '  .qa-sidepanel { width: 25%; padding: 0px; float: right; overflow: hidden; *zoom: 1; }';
+			$css[] = '}';
 		}
 
 		$css[] = '</style>';
