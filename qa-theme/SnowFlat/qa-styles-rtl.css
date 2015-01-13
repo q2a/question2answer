@@ -145,16 +145,8 @@ h1 {
 	}
 }
 
-@media (max-width: 979px) {
-	.qam-account-items-wrapper {
-		right: auto;
-		left: 8px;
-	}
-}
-@media (min-width: 980px) {
-	.qam-account-items-wrapper {
-		float: left;
-	}
+.qam-account-items-wrapper {
+	float: left;
 }
 
 .qam-account-items {

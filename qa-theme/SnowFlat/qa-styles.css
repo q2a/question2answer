@@ -1295,7 +1295,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 .qa-q-item-avatar {
 	margin: 0 2px 0 0;
 }
-@media (min-width: 320px) {
+@media (max-width: 479px) {
 	.qa-q-item-avatar {
 		display: none;
 	}
