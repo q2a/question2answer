@@ -23,6 +23,8 @@
 	return array(
 		'_decimal_point' => '.',
 		'_thousands_separator' => ',',
+		'_thousands_suffix' => 'k',
+		'_millions_suffix' => 'm',
 		'1_answer' => '1 answer',
 		'1_comment' => '1 comment',
 		'1_day' => '1 day',

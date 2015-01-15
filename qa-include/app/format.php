@@ -2046,21 +2046,45 @@
 	}
 
 	/**
-	 * Format a number using the decimal point and thousand separator specified in the language files
+	 * Format a number using the decimal point and thousand separator specified in the language files. If the number
+	 * is compacted it is turned into a string such as 1.3k or 2.5m
 	 * @param integer $number Number to be formatted
 	 * @param integer $decimals Amount of decimals to use
+	 * @param bool $compact Whether to show compact numbers or not
 	 * @return string The formatted number as a string
 	 */
-	function qa_format_number($number, $decimals = 0)
+	function qa_format_number($number, $decimals = 0, $compact = false)
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		$suffix = '';
+		if ($compact) {
+			if ($number != 0) {
+				$base = log($number) / log(1000);
+				$floorBase = floor($base);
+				$number = round(pow(1000, $base - $floorBase), 1);
+				// If $number is too long then remove the decimals, e.g., 123k instead of 123.4k
+				if ($number >= 100) {
+					$decimals = 0;
+				}
+				// If $number exceeds millions then don't add any suffix
+				$suffixes = array('', qa_lang_html('main/_thousands_suffix'), qa_lang_html('main/_millions_suffix'));
+				$suffix = isset($suffixes[$floorBase]) ? $suffixes[$floorBase] : '';
+			}
+			// If the decimal part is 0 then remove it
+			if ($number == (int) $number) {
+				$decimals = 0;
+			}
+		} else {
+			$decimals = 0;
+		}
 
 		return number_format(
 			$number,
 			$decimals,
 			qa_lang_html('main/_decimal_point'),
 			qa_lang_html('main/_thousands_separator')
-		);
+		) . $suffix;
 	}
 
 
