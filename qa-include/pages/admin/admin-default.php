@@ -188,6 +188,7 @@
 		'q_urls_remove_accents' => 'checkbox',
 		'register_notify_admin' => 'checkbox',
 		'show_c_reply_buttons' => 'checkbox',
+		'show_compact_numbers' => 'checkbox',
 		'show_custom_answer' => 'checkbox',
 		'show_custom_ask' => 'checkbox',
 		'show_custom_comment' => 'checkbox',
@@ -199,11 +200,11 @@
 		'show_custom_sidebar' => 'checkbox',
 		'show_custom_sidepanel' => 'checkbox',
 		'show_custom_welcome' => 'checkbox',
-		'show_post_update_meta' => 'checkbox',
 		'show_home_description' => 'checkbox',
 		'show_message_history' => 'checkbox',
 		'show_notice_visitor' => 'checkbox',
 		'show_notice_welcome' => 'checkbox',
+		'show_post_update_meta' => 'checkbox',
 		'show_register_terms' => 'checkbox',
 		'show_selected_first' => 'checkbox',
 		'show_url_links' => 'checkbox',
@@ -390,7 +391,7 @@
 					break;
 				}
 
-			$showoptions[] = 'pages_prev_next';
+			array_push($showoptions, 'pages_prev_next', '', 'show_compact_numbers');
 
 			$formstyle = 'wide';
 

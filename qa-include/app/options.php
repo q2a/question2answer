@@ -338,6 +338,7 @@
 			'show_a_c_links' => 1,
 			'show_a_form_immediate' => 'if_no_as',
 			'show_c_reply_buttons' => 1,
+			'show_compact_numbers' => 0,
 			'show_custom_welcome' => 0,
 			'show_post_update_meta' => 1,
 			'show_fewer_cs_count' => 5,

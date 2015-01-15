@@ -2058,7 +2058,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$suffix = '';
-		if ($compact) {
+		if ($compact && qa_opt('show_compact_numbers')) {
 			if ($number != 0) {
 				$base = log($number) / log(1000);
 				$floorBase = floor($base);
