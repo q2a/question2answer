@@ -318,7 +318,7 @@
 				$fields['answers_raw']=$post['acount'];
 
 				$fields['answers']=($post['acount']==1) ? qa_lang_html_sub_split('main/1_answer', '1', '1')
-					: qa_lang_html_sub_split('main/x_answers', qa_format_number($post['acount']));
+					: qa_lang_html_sub_split('main/x_answers', qa_format_number($post['acount'], 1, true));
 
 				$fields['answer_selected']=isset($post['selchildid']);
 			}
@@ -327,7 +327,7 @@
 				$fields['views_raw']=$post['views'];
 
 				$fields['views']=($post['views']==1) ? qa_lang_html_sub_split('main/1_view', '1', '1') :
-					qa_lang_html_sub_split('main/x_views', qa_format_number($post['views']));
+					qa_lang_html_sub_split('main/x_views', qa_format_number($post['views'], 1, true));
 			}
 
 			if (@$options['categoryview'] && isset($post['categoryname']) && isset($post['categorybackpath'])) {
@@ -401,8 +401,8 @@
 
 		//	Create HTML versions...
 
-			$upvoteshtml = qa_html(qa_format_number($upvotes));
-			$downvoteshtml = qa_html(qa_format_number($downvotes));
+			$upvoteshtml = qa_html(qa_format_number($upvotes, 1, true));
+			$downvoteshtml = qa_html(qa_format_number($downvotes, 1, true));
 
 			if ($netvotes >= 1)
 				$netvotesPrefix = '+';
@@ -412,7 +412,7 @@
 				$netvotesPrefix = '';
 
 			$netvotes = abs($netvotes);
-			$netvoteshtml = $netvotesPrefix . qa_html(qa_format_number($netvotes));
+			$netvoteshtml = $netvotesPrefix . qa_html(qa_format_number($netvotes, 1, true));
 
 		//	...with microformats if appropriate
 
@@ -528,7 +528,7 @@
 			if (isset($post['points'])) {
 				if (@$options['pointsview'])
 					$fields['who']['points']=($post['points']==1) ? qa_lang_html_sub_split('main/1_point', '1', '1')
-						: qa_lang_html_sub_split('main/x_points', qa_format_number($post['points']));
+						: qa_lang_html_sub_split('main/x_points', qa_format_number($post['points'], 1, true));
 
 				if (isset($options['pointstitle']))
 					$fields['who']['title']=qa_get_points_title_html($post['points'], $options['pointstitle']);
@@ -854,7 +854,7 @@
 			if (isset($question['opoints'])) {
 				if (@$options['pointsview'])
 					$fields['who']['points']=($question['opoints']==1) ? qa_lang_html_sub_split('main/1_point', '1', '1')
-						: qa_lang_html_sub_split('main/x_points', qa_format_number($question['opoints']));
+						: qa_lang_html_sub_split('main/x_points', qa_format_number($question['opoints'], 1, true));
 
 				if (isset($options['pointstitle']))
 					$fields['who']['title']=qa_get_points_title_html($question['opoints'], $options['pointstitle']);
@@ -1243,7 +1243,7 @@
 					'label' => qa_html($category['title']),
 					'popup' => qa_html(@$category['content']),
 					'selected' => isset($selecteds[$category['categoryid']]),
-					'note' => $showqcount ? ('('.qa_html(qa_format_number($category['qcount'])).')') : null,
+					'note' => $showqcount ? ('('.qa_html(qa_format_number($category['qcount'], 1, true)).')') : null,
 					'subnav' => qa_category_navigation_sub($parentcategories, $category['categoryid'], $selecteds,
 						$pathprefix.$category['tags'].'/', $showqcount, $pathparams, $favoritemap),
 					'categoryid' => $category['categoryid'],
