@@ -393,23 +393,26 @@
 				$downvotes=(int)@$post['downvotes'];
 			}
 
-			$netvotes=(int)($upvotes-$downvotes);
+			$netvotes = $upvotes - $downvotes;
 
-			$fields['upvotes_raw']=$upvotes;
-			$fields['downvotes_raw']=$downvotes;
-			$fields['netvotes_raw']=$netvotes;
+			$fields['upvotes_raw'] = $upvotes;
+			$fields['downvotes_raw'] = $downvotes;
+			$fields['netvotes_raw'] = $netvotes;
 
 		//	Create HTML versions...
 
-			$upvoteshtml=qa_html($upvotes);
-			$downvoteshtml=qa_html($downvotes);
+			$upvoteshtml = qa_html(qa_format_number($upvotes));
+			$downvoteshtml = qa_html(qa_format_number($downvotes));
 
-			if ($netvotes>=1)
-				$netvoteshtml='+'.qa_html($netvotes);
-			elseif ($netvotes<=-1)
-				$netvoteshtml='&ndash;'.qa_html(-$netvotes);
+			if ($netvotes >= 1)
+				$netvotesPrefix = '+';
+			elseif ($netvotes <= -1)
+				$netvotesPrefix = '&ndash;';
 			else
-				$netvoteshtml='0';
+				$netvotesPrefix = '';
+
+			$netvotes = abs($netvotes);
+			$netvoteshtml = $netvotesPrefix . qa_html(qa_format_number($netvotes));
 
 		//	...with microformats if appropriate
 
@@ -436,7 +439,7 @@
 			$fields['downvotes_view']=($downvotes==1) ? qa_lang_html_sub_split('main/1_disliked', $downvoteshtml, '1')
 				: qa_lang_html_sub_split('main/x_disliked', $downvoteshtml);
 
-			$fields['netvotes_view']=(abs($netvotes)==1) ? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
+			$fields['netvotes_view']=($netvotes==1) ? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
 				: qa_lang_html_sub_split('main/x_votes', $netvoteshtml);
 
 		//	Voting buttons
