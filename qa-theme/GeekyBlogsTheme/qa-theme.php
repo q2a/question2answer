@@ -71,8 +71,8 @@ class qa_html_theme extends qa_html_theme_base
         if ($this->isRTL)
             $this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
-        // add Ubuntu font CSS file
-        $this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
+        // add Lato font CSS file
+        $this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic';
 
         qa_html_theme_base::head_css();
 

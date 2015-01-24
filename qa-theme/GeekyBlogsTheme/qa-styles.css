@@ -54,7 +54,7 @@ html, body {
 body {
 	background: #F0F0F0 !important;
 	position: relative;
-	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
+	font-family: 'Lato', sans-serif;
 	color: #34495e;
 }
 body.body-overflow {
@@ -1366,7 +1366,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	background: #e67e22;
 	color: #fff !important;
 	display: inline-block;
-	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
+	font-family: 'Lato', sans-serif;
 	font-size: 11px;
 	line-height: 1.5em;
 	padding: 2px 8px;
@@ -1785,7 +1785,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 /*------[ forms ]------*/
 input, textarea, select {
 	background-color: #f5f7f7;
-	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
+	font-family: 'Lato', sans-serif;
 	padding: 5px;
 	margin: 2px 0 15px 0;
 	border: 1px solid #e6ebed;
