@@ -55,8 +55,19 @@ body {
 	background: #F0F0F0 !important;
 	position: relative;
 	font-family: 'Lato', sans-serif;
-	color: #34495e;
+	color: #656565;
 }
+
+::selection {
+	background: #fefac7; /* Safari */
+	color: #555555;
+}
+
+::-moz-selection {
+	background: #fefac7; /* Firefox */
+	color: #555555;
+}
+
 body.body-overflow {
 	overflow-y: hidden !important;
 	position: fixed;
@@ -879,10 +890,13 @@ blockquote p {
 
 h1 {
 	padding: 8px 52px 8px 20px;
-	margin-bottom: 5px;
-	background: #3498db;
-	color: #fff;
+	margin-bottom: 30px;
+	background: #fff;
+	color: #484848;
 	margin-top: 0px;
+	-webkit-box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+	-moz-box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+	box-shadow: 0 3px 0 rgba(0,0,0,0.05);
 	position: relative;
 	line-height: 1.5em;
 }
@@ -1032,7 +1046,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 /*------[ q-list ]------*/
 .qa-q-list-item {
-	padding: 10px;
+	padding: 25px 25px 15px 25px;
 	margin-bottom: 5px;
 	background: #fff;
 }
@@ -2319,10 +2333,14 @@ input[type="submit"], button {
 }
 
 .qa-part-q-view {
-	padding: 20px;
-	margin-bottom: 5px;
+	padding: 30px;
+	margin-bottom: 15px;
 	background: #fff;
 	position: relative;
+	-webkit-box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+	-moz-box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+	box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+
 }
 
 .qa-q-view-avatar-meta {
