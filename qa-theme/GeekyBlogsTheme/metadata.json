@@ -1,0 +1,10 @@
+{
+	"name": "GeekyBlogsTheme",
+	"description": "Geeky Blogs base theme",
+	"version": "0.1",
+	"date": "2015-01-11",
+	"author": "Miguel Catalan Bañuls",
+	"author_uri": "https://github.com/MiguelCatalan",
+	"license": "Apache 2.0",
+	"min_q2a": "1.7"
+}
