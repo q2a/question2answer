@@ -52,7 +52,7 @@ html, body {
 }
 
 body {
-	background: #ecf0f1 !important;
+	background: #F0F0F0 !important;
 	position: relative;
 	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
 	color: #34495e;
@@ -908,7 +908,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 .qam-title-rss {
 	float: right;
-	color: #ecf0f1;
+	color: #F0F0F0;
 }
 .qam-title-rss:hover {
 	color: #fff;
@@ -920,12 +920,12 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 .entry-content table, .qa-c-item-content table {
 	width: 100%;
 	border-collapse: collapse;
-	border: 1px solid #ecf0f1;
+	border: 1px solid #F0F0F0;
 	font-size: 14px;
 	margin-bottom: 20px;
 }
 .entry-content tr:hover, .qa-c-item-content tr:hover {
-	background-color: #ecf0f1;
+	background-color: #F0F0F0;
 }
 .entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
 	padding: 10px;
@@ -939,7 +939,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	font-weight: 700;
 }
 .entry-content td, .qa-c-item-content td {
-	border-color: #ecf0f1;
+	border-color: #F0F0F0;
 }
 .entry-content ul, .qa-c-item-content ul {
 	margin: 20px 0 20px 20px;
@@ -1021,7 +1021,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 
 .qa-favorite-button {
-	background-color: #ecf0f1;
+	background-color: #F0F0F0;
 	background-position: center top;
 }
 
@@ -1078,7 +1078,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 
 .qa-voting {
-	background-color: #ecf0f1;
+	background-color: #F0F0F0;
 	color: #445f7a;
 }
 
@@ -1457,7 +1457,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	float: none;
 }
 .qa-template-admin .qa-q-item-title {
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 	margin-bottom: 5px;
 }
 .qa-template-admin .qa-q-item-content {
@@ -1465,8 +1465,8 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	line-height: 2em;
 }
 .qa-template-admin .qa-q-item-avatar-meta {
-	border-top: 1px solid #ecf0f1;
-	border-bottom: 1px solid #ecf0f1;
+	border-top: 1px solid #F0F0F0;
+	border-bottom: 1px solid #F0F0F0;
 	padding: 5px;
 	margin: 10px 0;
 }
@@ -1483,7 +1483,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	padding: 5px 0;
 	margin: 10px 0;
 	display: block;
-	border-top: 1px solid #ecf0f1;
+	border-top: 1px solid #F0F0F0;
 }
 .qa-template-admin .qa-message-avatar-meta .qa-message-who-data a {
 	padding: 3px 10px;
@@ -1619,7 +1619,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 .qa-browse-cat-item {
 	font-size: 0.875em;
 	line-height: 1.71429em;
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 	padding: 5px 0;
 	position: relative;
 }
@@ -1704,13 +1704,13 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 .qa-part-form-plugin-options h2 {
 	margin: 0 0 10px 0;
 	font-weight: normal;
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 }
 
 .qam-approve-users .qa-message-item {
 	padding: 5px 0 0;
 	margin: 0;
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 }
 .qam-approve-users .qa-message-avatar-meta {
 	float: left;
@@ -1897,8 +1897,8 @@ input[type="submit"], button {
 
 .qa-form-wide-label, .qa-form-wide-data,
 .qa-form-tall-spacer {
-	border-top: 1px solid #ecf0f1;
-	border-bottom: 1px solid #ecf0f1;
+	border-top: 1px solid #F0F0F0;
+	border-bottom: 1px solid #F0F0F0;
 }
 
 .qa-form-tall-data input, .qa-form-tall-data select, .qa-form-tall-data button, .qa-form-wide-data input, .qa-form-wide-data select, .qa-form-wide-data button {
@@ -1940,7 +1940,7 @@ input[type="submit"], button {
 }
 
 .qa-ask-similar {
-	background-color: #ecf0f1;
+	background-color: #F0F0F0;
 	padding: 10px;
 	margin-bottom: 5px;
 	border: 1px solid #dde4e6;
@@ -2089,7 +2089,7 @@ input[type="submit"], button {
 }
 
 .qa-message-item {
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 	margin: 0;
 	padding: 10px;
 }
@@ -2158,7 +2158,7 @@ input[type="submit"], button {
 	width: 16px;
 	height: 16px;
 	display: inline-block;
-	background-color: #ecf0f1;
+	background-color: #F0F0F0;
 	background-image: url('images/favorite-icon-15x15.png');
 }
 
@@ -2378,7 +2378,7 @@ input[type="submit"], button {
 
 .qa-q-view-closed {
 	position: relative;
-	background-color: #ecf0f1;
+	background-color: #F0F0F0;
 	padding: 10px 10px 10px 54px;
 	margin: 10px 0;
 	font-size: 0.75em;
@@ -2596,7 +2596,7 @@ input[type="submit"], button {
 
 .qa-c-list-item {
 	padding: 10px;
-	border: 1px solid #ecf0f1;
+	border: 1px solid #F0F0F0;
 	margin-bottom: 5px;
 	background-color: #f4f4f4;
 	position: relative;
@@ -2923,7 +2923,7 @@ input[type="submit"], button {
 .qa-related-q-item a {
 	display: block;
 	padding: 5px 0;
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 }
 .qa-related-q-item:first-child a {
 	padding-top: 0;
@@ -2951,7 +2951,7 @@ input[type="submit"], button {
 .qa-nav-cat-item {
 	padding: 2px 0;
 	display: block;
-	border-bottom: 1px solid #ecf0f1;
+	border-bottom: 1px solid #F0F0F0;
 }
 .qa-nav-cat-item:last-child {
 	border-bottom: none;
@@ -3000,7 +3000,7 @@ input[type="submit"], button {
 .qam-footer-box {
 	padding: 0;
 	margin-bottom: 5px;
-	background: #34495e;
+	background: #5E5E5E;
 	color: #fff;
 	overflow: hidden;
 	margin: 0;
@@ -3064,7 +3064,7 @@ input[type="submit"], button {
 .qa-footer {
 	padding: 10px;
 	margin-bottom: 5px;
-	background: #2c3e50;
+	background: #5E5E5E;
 	color: #fff;
 	margin-bottom: 0;
 	font-size: 12px;
