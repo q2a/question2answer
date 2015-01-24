@@ -3622,7 +3622,8 @@ input[type="submit"], button {
 
 @media (min-width: 980px) {
 	.qa-main {
-		width: 74.5%;
+		/*width: 74.5%;*/
+		width: 100%;
 		float: left;
 	}
 }

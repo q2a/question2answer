@@ -252,7 +252,7 @@ class qa_html_theme extends qa_html_theme_base
 
         $this->output('<div class="qa-main-wrapper">', '');
         $this->main();
-        $this->sidepanel();
+        //$this->sidepanel();
         $this->output('</div> <!-- END main-wrapper -->');
 
         $this->widgets('full', 'low');
