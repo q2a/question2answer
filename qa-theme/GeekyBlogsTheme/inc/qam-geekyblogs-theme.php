@@ -269,8 +269,6 @@ if (!function_exists('qam_geekyblogs_theme')) {
      * Return <code>qam_geekyblogs_theme</code> class instance
      *
      * @access public
-     * @since Snow 1.4
-     * @version 1.0
      * @return array
      * @since Geeky Blogs
      * @version 0.1
