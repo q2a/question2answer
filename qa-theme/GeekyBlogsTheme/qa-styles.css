@@ -903,18 +903,19 @@ h1 {
 
 
 h1 a:hover {
-	color: #2980b9;
+	color: #1abb9c;
 	border-bottom: 0;
 }
 h1 a {
 	line-height: inherit;
+	color: #555555;
 	border: none;
 	text-decoration: none;
 	opacity: 0.85;
 }
-h1 a:hover, h1 a:focus, h1 a:visited {
+h1 a:hover, h1 a:focus {
 	line-height: inherit !important;
-	color: #2980b9;
+	color: #1abb9c;
 	opacity: 1;
 }
 
@@ -1095,21 +1096,21 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 .qa-voting {
 	background-color: #F0F0F0;
-	color: #445f7a;
+	/*color: #445f7a;*/
 }
 
 .qa-a-count {
-	background-color: #3498db;
+	background-color: #9d9d9d;
 	color: #fff;
 	text-align: center;
 }
 
 .qa-a-count-zero {
-	background-color: #e74c3c;
+	background-color: #9d9d9d;
 }
 
 .qa-a-count-selected {
-	background-color: #27ae60;
+	background-color: #1abb9c;
 }
 
 
@@ -2085,7 +2086,7 @@ input[type="submit"], button {
 .qa-part-form-activity .qa-uf-user-c-posts,
 .qa-part-form-activity .qa-uf-user-q-votes,
 .qa-part-form-activity .qa-uf-user-a-votes {
-	color: #3498db;
+	color: #1abb9c;
 }
 .qa-part-form-activity .qa-uf-user-upvotes,
 .qa-part-form-activity .qa-uf-user-upvoteds {
@@ -2466,7 +2467,7 @@ input[type="submit"], button {
 #a_list_title {
 	padding: 10px 20px;
 	margin-bottom: 5px;
-	background: #2ecc71;
+	background: #1abb9c;
 	color: #fff;
 	margin-top: 0;
 }
@@ -2575,18 +2576,18 @@ input[type="submit"], button {
 	background-color: #bdc3c7;
 }
 .qa-a-select-button:hover, .qa-a-select-button:focus {
-	background-color: #27ae60;
+	background-color: #1abb9c;
 }
 
 .qa-a-unselect-button {
-	background-color: #27ae60;
+	background-color: #1abb9c;
 }
 .qa-a-unselect-button:hover, .qa-a-unselect-button:focus {
 	background-color: #bdc3c7;
 }
 
 .qa-a-selected {
-	background-color: #27ae60;
+	background-color: #1abb9c;
 }
 
 @media (max-width: 979px) {
@@ -2597,7 +2598,7 @@ input[type="submit"], button {
 @media (min-width: 980px) {
 	.qa-a-selected-text {
 		font-size: 10px;
-		color: #27ae60;
+		color: #1abb9c;
 		display: block;
 		line-height: normal;
 		text-align: center;
@@ -2605,7 +2606,7 @@ input[type="submit"], button {
 }
 
 .answer-selected, .qa-a-list-item-selected {
-	border: 1px solid #27ae60;
+	border: 1px solid #1abb9c;
 }
 
 /*------[ c-list ]------*/
