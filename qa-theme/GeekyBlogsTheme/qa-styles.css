@@ -74,20 +74,20 @@ body.body-overflow {
 }
 
 a {
-	color: #2980b9;
+	color: #1abb9c;
 	text-decoration: none;
 }
 a:active, a:focus {
-	color: #3498db;
+	color: #555555;
 	text-decoration: none;
 	outline: 0;
 }
 a:visited {
-	color: #2980b9;
+	color: #1abb9c;
 	text-decoration: none;
 }
 a:hover {
-	color: #3498db;
+	color: #555555;
 	text-decoration: underline;
 }
 
@@ -900,12 +900,10 @@ h1 {
 	position: relative;
 	line-height: 1.5em;
 }
-h1 a {
-	color: #fff;
-	border-bottom: 1px dotted #fff;
-}
+
+
 h1 a:hover {
-	color: #fff;
+	color: #2980b9;
 	border-bottom: 0;
 }
 h1 a {
@@ -916,7 +914,7 @@ h1 a {
 }
 h1 a:hover, h1 a:focus, h1 a:visited {
 	line-height: inherit !important;
-	color: #fff;
+	color: #2980b9;
 	opacity: 1;
 }
 
@@ -1046,7 +1044,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 /*------[ q-list ]------*/
 .qa-q-list-item {
-	padding: 25px 25px 15px 25px;
+	padding: 20px 20px 20px 20px;
 	margin-bottom: 5px;
 	background: #fff;
 }
@@ -1066,8 +1064,10 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 @media (min-width: 800px) {
 	.qa-voting {
-		width: 68px;
-		height: 60px;
+		width: 85px;
+		height: 78px;
+		padding: 15px;
+		padding-top: 10px;
 		line-height: 0.5;
 		float: left;
 	}
@@ -1075,8 +1075,10 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 @media (min-width: 800px) {
 	.qa-a-count {
-		width: 65px;
-		height: 60px;
+		width: 85px;
+		height: 78px;
+		padding: 15px;
+		padding-top: 10px;
 		line-height: 0.5;
 		float: left;
 	}
@@ -1274,15 +1276,15 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 .qa-q-item-title {
 	font-weight: bold;
-	font-size: 1.125em;
-	line-height: 1.46667em;
+	font-size: 1.5em;
+	line-height: 1em;
 	display: block;
 }
 .qa-q-item-title a {
-	color: #1a6a9b;
+	color: #555555;
 }
-.qa-q-item-title a:hover, .qa-q-item-title a:active, .qa-q-item-title a:focus, .qa-q-item-title a:visited {
-	color: #3498db;
+.qa-q-item-title a:hover, .qa-q-item-title a:active, .qa-q-item-title a:focus, .qa-q-item-title {
+	color: #1abb9c;
 }
 .qa-q-item-title:hover .qam-q-list-close-icon {
 	background-color: #c0392b;
@@ -1377,7 +1379,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 
 .qa-tag-link,
 .qa-widget-side .qa-q-view-tag-item {
-	background: #e67e22;
+	background: #1abb9c;
 	color: #fff !important;
 	display: inline-block;
 	font-family: 'Lato', sans-serif;
@@ -1390,7 +1392,7 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 }
 .qa-tag-link:hover,
 .qa-widget-side .qa-q-view-tag-item:hover {
-	background: #f39c12;
+	background: #1abb9c;
 	color: #fff !important;
 	transition: all 0.25s ease-in-out 0s;
 }
