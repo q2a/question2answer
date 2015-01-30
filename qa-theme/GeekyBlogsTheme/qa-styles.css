@@ -436,9 +436,12 @@ blockquote p {
 }
 
 .qam-main-nav-wrapper {
-	background: #2c3e50;
-	color: #bdc3c7;
+	background: #F0F0F0;
+	color: #B0B0B0;
 	padding: 10px;
+	-webkit-box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+	-moz-box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+	box-shadow: 0 3px 0 rgba(0,0,0,0.05);
 }
 @media (max-width: 979px) {
 	.qam-main-nav-wrapper {
@@ -446,7 +449,11 @@ blockquote p {
 	}
 }
 .qam-main-nav-wrapper a {
-	color: #fff;
+	color: #B0B0B0;
+}
+
+.qam-main-nav-wrapper a:hover {
+	color: #1abb9c;
 }
 
 .qam-menu-toggle {
@@ -460,7 +467,7 @@ blockquote p {
 		margin: 0 10px 0 0;
 	}
 	.qam-menu-toggle.current {
-		color: #fff;
+		color: #484848;
 		text-shadow: 0 0 10px rgba(255, 255, 255, 0.75);
 	}
 	.qam-menu-toggle .icon-th-list {
@@ -481,16 +488,17 @@ blockquote p {
 }
 
 .qa-logo-link {
+	text-transform: uppercase;
 	line-height: 49px;
 	display: block;
 }
 @media (min-width: 980px) {
 	.qa-logo-link {
-		background: #34495e;
+		background: #F0F0F0;
 		padding: 5px 15px;
 	}
 	.qa-logo-link:hover {
-		background: #445f7a;
+		background: #F0F0F0;
 	}
 }
 .qa-logo-link:hover {
@@ -596,7 +604,8 @@ blockquote p {
 }
 
 .qa-nav-main-link {
-	background-color: #34495e;
+	text-transform: uppercase;
+	background: #F0F0F0;
 	display: block;
 	line-height: normal;
 	min-width: 60px;
@@ -616,7 +625,7 @@ blockquote p {
 }
 .qa-nav-main-link:hover {
 	text-decoration: none;
-	background: #445f7a;
+	background: #F0F0F0;
 }
 .qa-nav-main-link:before {
 	font-family: "fontello";
@@ -638,7 +647,8 @@ blockquote p {
 	}
 }
 .qa-nav-main-link.qa-nav-main-selected {
-	background: #3498db;
+	/*background: #3498db;*/
+	color: #1abb9c;
 }
 
 .qa-nav-sub {
@@ -713,11 +723,11 @@ blockquote p {
 	cursor: pointer;
 	min-width: 60px;
 	padding: 2px;
-	background-color: #34495e;
+	background-color: #F0F0F0;
 	text-align: center;
 }
 #qam-account-toggle:hover {
-	background: #445f7a;
+	background: #F0F0F0;
 }
 #qam-account-toggle .qam-auth-key {
 	font-size: 28px;
@@ -727,7 +737,7 @@ blockquote p {
 }
 
 .qam-account-items {
-	background-color: #34495e;
+	background-color: #3d3d3d;
 	display: none;
 	position: absolute;
 	right: 0;
@@ -836,6 +846,7 @@ blockquote p {
 }
 
 .qa-nav-user-item {
+	color: #d9d9d9;
 	padding: 0 20px;
 	border-bottom: 1px solid #2c3e50;
 }
@@ -875,7 +886,7 @@ blockquote p {
 }
 
 .qa-logged-in:hover, .qam-logged-in-points:hover, .qa-nav-user-item:hover {
-	background-color: #2c3e50;
+	background-color: #363636;
 }
 
 .qa-nav-user-facebook-login:hover, .qa-nav-user-register:hover {
