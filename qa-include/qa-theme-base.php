@@ -48,6 +48,7 @@ class qa_html_theme_base
 	protected $rooturl;
 	protected $request;
 	protected $isRTL; // (boolean) whether text direction is Right-To-Left
+	protected $theme = 'default';
 
 	// whether to use new block layout in rankings (true) or fall back to tables (false)
 	protected $ranking_block_layout = false;
@@ -404,11 +405,11 @@ class qa_html_theme_base
 
 	public function body_tags()
 	{
-		$class = 'qa-template-'.qa_html($this->template);
+		$class = sprintf('qa-theme-%s qa-template-%s', qa_html($this->theme), qa_html($this->template));
 
 		if (isset($this->content['categoryids'])) {
 			foreach ($this->content['categoryids'] as $categoryid)
-				$class .= ' qa-category-'.qa_html($categoryid);
+				$class .= ' qa-category-' . qa_html($categoryid);
 		}
 
 		$this->output('class="'.$class.' qa-body-js-off"');

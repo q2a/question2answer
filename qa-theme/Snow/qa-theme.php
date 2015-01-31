@@ -5,6 +5,13 @@ class qa_html_theme extends qa_html_theme_base
 	// use new ranking layout
 	protected $ranking_block_layout = true;
 
+	public function __construct($template, $content, $rooturl, $request)
+	{
+		parent::__construct($template, $content, $rooturl, $request);
+
+		$this->theme = 'snow';
+	}
+
 	// outputs login form if user not logged in
 	public function nav_user_search()
 	{

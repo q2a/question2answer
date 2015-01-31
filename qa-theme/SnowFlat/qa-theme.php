@@ -45,6 +45,8 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		parent::__construct($template, $content, $rooturl, $request);
 
+		$this->theme = 'snowflat';
+
 		// theme subdirectories
 		$this->js_dir = 'js/';
 		$this->img_url = 'images/';
@@ -149,13 +151,11 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		global $qam_snow;
 
-		$class = 'qa-template-' . qa_html($this->template);
+		$class = sprintf('qa-theme-%s qa-template-%s', qa_html($this->theme), qa_html($this->template));
 
 		if (isset($this->content['categoryids'])) {
 			foreach ($this->content['categoryids'] as $categoryid)
-			{
 				$class .= ' qa-category-' . qa_html($categoryid);
-			}
 		}
 
 		// add class if admin/appovoe-users page
