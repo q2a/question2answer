@@ -19,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'font', items: [ 'Font', 'FontSize', 'Format' ] },
 		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote' ] },
 		{ name: 'links', items: [ 'Link', 'Unlink' ] },
-		{ name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
+		{ name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Smiley' ] },
 		{ name: 'last', items: [ 'RemoveFormat', 'Maximize' ] }
 	];
 
