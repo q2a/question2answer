@@ -165,13 +165,10 @@ class qa_html_theme extends qa_html_theme_base
 	 * login form
 	 *
 	 * @since Snow 1.4
-	 * @global array $qam_snow
 	 */
 	public function nav_user_search()
 	{
 		// outputs login form if user not logged in
-		global $qam_snow;
-
 		$this->output('<div class="qam-account-items-wrapper">');
 
 		$this->qam_user_account();
@@ -669,38 +666,4 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output_array($css);
 	}
 
-	/**
-	 * Question2Answer system icons info bar
-	 *
-	 * @since Snow 1.4
-	 * @return string Info icons HTML
-	 */
-	private function icons_info()
-	{
-		$icons = array(
-			'answer',
-			'comment',
-			'hide',
-			'reshow',
-			'close',
-			'reopen',
-			'flag',
-			'unflag',
-			'edit',
-			'delete',
-			'approve',
-			'reject',
-			'reply',
-		);
-
-		$icons_info = '<div class="qam-icons-info">';
-
-		foreach ($icons as $icon) {
-			$label = ucwords(qa_lang_html('question/' . $icon . '_button'));
-			$icons_info .= '<div class="qam-icon-item"><span class="' . $icon . '"></span> ' . $label . '</div>';
-		}
-		$icons_info .= '</div> <!-- END qam-icons-info -->';
-
-		return $icons_info;
-	}
 }
