@@ -34,27 +34,13 @@
  */
 class qa_html_theme extends qa_html_theme_base
 {
+	// theme subdirectories
+	private $js_dir = 'js/';
+	private $icon_url = 'images/icons/';
 
 	private $fixed_topbar = false;
 	private $welcome_widget_class = 'turquoise';
 	private $ask_search_box_class = 'turquoise';
-
-	/**
-	 * @since Snow 1.4
-	 * @param type $template
-	 * @param type $content
-	 * @param type $rooturl
-	 * @param type $request
-	 */
-	public function __construct($template, $content, $rooturl, $request)
-	{
-		parent::__construct($template, $content, $rooturl, $request);
-
-		// theme subdirectories
-		$this->js_dir = 'js/';
-		$this->img_url = 'images/';
-		$this->icon_url = $this->img_url . 'icons/';
-	}
 
 	/**
 	 * Adding aditional meta for responsive design
