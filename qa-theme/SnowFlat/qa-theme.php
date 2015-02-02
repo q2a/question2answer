@@ -62,7 +62,7 @@ class qa_html_theme extends qa_html_theme_base
 	public function head_metas()
 	{
 		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1"/>');
-		qa_html_theme_base::head_metas();
+		parent::head_metas();
 	}
 
 	/**
@@ -79,7 +79,7 @@ class qa_html_theme extends qa_html_theme_base
 		// add Ubuntu font CSS file
 		$this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
 
-		qa_html_theme_base::head_css();
+		parent::head_css();
 
 		// output some dynamic CSS inline
 		$this->head_inline_css();
@@ -95,7 +95,7 @@ class qa_html_theme extends qa_html_theme_base
 		$jsUrl = $this->rooturl . $this->js_dir . 'snow-core.js?' . QA_VERSION;
 		$this->content['script'][] = '<script src="' . $jsUrl . '"></script>';
 
-		qa_html_theme_base::head_script();
+		parent::head_script();
 	}
 
 	/**
@@ -107,7 +107,7 @@ class qa_html_theme extends qa_html_theme_base
 	public function logged_in()
 	{
 		global $qam_snow;
-		qa_html_theme_base::logged_in();
+		parent::logged_in();
 
 		$this->output($qam_snow->headers['user_points']);
 	}
@@ -123,10 +123,10 @@ class qa_html_theme extends qa_html_theme_base
 
 			$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
 			$this->output('<div id="qam-sidepanel-mobile">');
-			qa_html_theme_base::sidepanel();
+			parent::sidepanel();
 			$this->output('</div>');
 		}
-		qa_html_theme_base::body();
+		parent::body();
 	}
 
 	/**
@@ -305,7 +305,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->widgets('full', 'bottom');
 		$this->output('</div> <!-- END qam-footer-row -->');
 
-		qa_html_theme_base::footer();
+		parent::footer();
 		$this->output('</div> <!-- END qam-footer-box -->', '');
 	}
 
@@ -410,7 +410,7 @@ class qa_html_theme extends qa_html_theme_base
 
 		$this->voting($q_item);
 		$this->a_count($q_item);
-		qa_html_theme_base::view_count($q_item);
+		parent::view_count($q_item);
 
 		$this->output('</div>');
 	}
@@ -437,7 +437,7 @@ class qa_html_theme extends qa_html_theme_base
 
 		$this->voting($q_view);
 		$this->a_count($q_view);
-		qa_html_theme_base::view_count($q_view);
+		parent::view_count($q_view);
 
 		$this->output('</div>');
 	}
@@ -561,7 +561,7 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>'
 		);
 
-		qa_html_theme_base::attribution();
+		parent::attribution();
 	}
 
 	/**
