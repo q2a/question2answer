@@ -50,15 +50,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->img_url = 'images/';
 		$this->icon_url = $this->img_url . 'icons/';
 
-		/**
-		 * Below condition only loads the require class if Q2A set
-		 * the Snow theme as site theme.
-		 * If you change the theme name from `Snow` to anything, make sure to
-		 * change in below condition
-		 */
-		if (qa_opt('site_theme') === 'SnowFlat') {
-			require_once('inc/qam-snow-theme.php');
-		}
+		require_once('inc/qam-snow-theme.php');
 	}
 
 	/**
