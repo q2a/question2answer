@@ -34,6 +34,11 @@
  */
 class qa_html_theme extends qa_html_theme_base
 {
+
+	private $fixed_topbar = false;
+	private $welcome_widget_class = 'turquoise';
+	private $ask_search_box_class = 'turquoise';
+
 	/**
 	 * @since Snow 1.4
 	 * @param type $template
@@ -49,15 +54,12 @@ class qa_html_theme extends qa_html_theme_base
 		$this->js_dir = 'js/';
 		$this->img_url = 'images/';
 		$this->icon_url = $this->img_url . 'icons/';
-
-		require_once('inc/qam-snow-theme.php');
 	}
 
 	/**
 	 * Adding aditional meta for responsive design
 	 *
 	 * @since Snow 1.4
-	 * @global type $qam_snow
 	 */
 	public function head_metas()
 	{
@@ -102,14 +104,11 @@ class qa_html_theme extends qa_html_theme_base
 	 * Adding point count for logged in user
 	 *
 	 * @since Snow 1.4
-	 * @global array $qam_snow
 	 */
 	public function logged_in()
 	{
-		global $qam_snow;
 		parent::logged_in();
-
-		$this->output($qam_snow->headers['user_points']);
+		$this->output($this->user_points());
 	}
 
 	/**
@@ -130,17 +129,12 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * Adding body class dynamically
-	 *
-	 * override to add class on admin/approve-users page
+	 * Adding body class dynamically. Override needed to add class on admin/approve-users page
 	 *
 	 * @since Snow 1.4
-	 * @return string body class
 	 */
 	public function body_tags()
 	{
-		global $qam_snow;
-
 		$class = 'qa-template-' . qa_html($this->template);
 
 		if (isset($this->content['categoryids'])) {
@@ -155,8 +149,8 @@ class qa_html_theme extends qa_html_theme_base
 			$class .= ' qam-approve-users';
 		}
 
-		if (isset($qam_snow->fixed_topbar))
-			$class .= ' qam-body-' . $qam_snow->fixed_topbar;
+		if ($this->fixed_topbar)
+			$class .= ' qam-body-fixed';
 
 		$this->output('class="' . $class . ' qa-body-js-off"');
 	}
@@ -273,15 +267,14 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function header()
 	{
-		global $qam_snow;
+		$class = $this->fixed_topbar ? ' fixed' : '';
 
-		$class = isset($qam_snow->fixed_topbar) ? ' ' . $qam_snow->fixed_topbar : '';
 		$this->output('<div id="qam-topbar" class="clearfix' . $class . '">');
 
 		$this->nav_main_sub();
 		$this->output('</div><!-- END qam-topbar -->');
 
-		$this->output($qam_snow->headers['ask_button']);
+		$this->output($this->ask_button());
 		$this->qam_search('the-top', 'the-top-search');
 	}
 
@@ -292,10 +285,6 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function footer()
 	{
-		// to replace standard Q2A footer
-		global $qam_snow;
-
-		$this->output($qam_snow->footer_custom_content);
 		$this->output('<div class="qam-footer-box">');
 
 		$this->output('<div class="qam-footer-row">');
@@ -303,7 +292,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('</div> <!-- END qam-footer-row -->');
 
 		parent::footer();
-		$this->output('</div> <!-- END qam-footer-box -->', '');
+		$this->output('</div> <!-- END qam-footer-box -->');
 	}
 
 	/**
@@ -334,16 +323,13 @@ class qa_html_theme extends qa_html_theme_base
 	 * To provide various color option
 	 *
 	 * @since Snow 1.4
-	 * @global array $qam_snow
 	 */
 	public function sidebar()
 	{
-		global $qam_snow;
-
 		if (isset($this->content['sidebar'])) {
 			$sidebar = $this->content['sidebar'];
 			if (!empty($sidebar)) {
-				$this->output('<div class="qa-sidebar wet-asphalt ' . $qam_snow->welcome_widget_color . '">');
+				$this->output('<div class="qa-sidebar wet-asphalt ' . $this->welcome_widget_class . '">');
 				$this->output_raw($sidebar);
 				$this->output('</div>', '');
 			}
@@ -547,7 +533,6 @@ class qa_html_theme extends qa_html_theme_base
 	 * I'd really appreciate you displaying this link on your Q2A site. Thank you - Jatin
 	 *
 	 * @since Snow 1.4
-	 * @global array $qam_snow
 	 */
 	public function attribution()
 	{
@@ -664,6 +649,42 @@ class qa_html_theme extends qa_html_theme_base
 		$css[] = '</style>';
 
 		$this->output_array($css);
+	}
+
+	/**
+	 * Get logged in user's points
+	 *
+	 * @access private
+	 * @since Snow 1.4
+	 * @version 1.0
+	 * @return string|null LoggedIn user's total points, null for guest
+	 */
+	private function user_points()
+	{
+		if (qa_is_logged_in()) {
+			$userpoints = qa_get_logged_in_points();
+			$pointshtml = ($userpoints == 1) ? qa_lang_html_sub('main/1_point', '1', '1') : qa_html(number_format($userpoints));
+			$points     = '<DIV CLASS="qam-logged-in-points">' . $pointshtml . '</DIV>';
+			return $points;
+		}
+		return null;
+	}
+
+	/**
+	 * Custom ask button for medium and small screen
+	 *
+	 * @access private
+	 * @since Snow 1.4
+	 * @version 1.0
+	 * @return string Ask button html markup
+	 */
+	private function ask_button()
+	{
+		$html = '<div class="qam-ask-search-box">';
+		$html .= '<div class="qam-ask-mobile"><a href="' . qa_path('ask', null, qa_path_to_root()) . '" class="' . $this->ask_search_box_class . '">' . qa_lang_html('main/nav_ask') . '</a></div>';
+		$html .= '<div class="qam-search-mobile ' . $this->ask_search_box_class . '" id="qam-search-mobile"></div>';
+		$html .= '</div>';
+		return $html;
 	}
 
 }
