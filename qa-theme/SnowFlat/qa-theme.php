@@ -35,8 +35,8 @@
 class qa_html_theme extends qa_html_theme_base
 {
 	// theme subdirectories
-	private $js_dir = 'js/';
-	private $icon_url = 'images/icons/';
+	private $js_dir = 'js';
+	private $icon_url = 'images/icons';
 
 	private $fixed_topbar = false;
 	private $welcome_widget_class = 'turquoise';
@@ -80,7 +80,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function head_script()
 	{
-		$jsUrl = $this->rooturl . $this->js_dir . 'snow-core.js?' . QA_VERSION;
+		$jsUrl = $this->rooturl . $this->js_dir . '/snow-core.js?' . QA_VERSION;
 		$this->content['script'][] = '<script src="' . $jsUrl . '"></script>';
 
 		parent::head_script();
@@ -105,7 +105,6 @@ class qa_html_theme extends qa_html_theme_base
 	public function body()
 	{
 		if (qa_is_mobile_probably()) {
-
 			$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
 			$this->output('<div id="qam-sidepanel-mobile">');
 			parent::sidepanel();
@@ -125,15 +124,12 @@ class qa_html_theme extends qa_html_theme_base
 
 		if (isset($this->content['categoryids'])) {
 			foreach ($this->content['categoryids'] as $categoryid)
-			{
 				$class .= ' qa-category-' . qa_html($categoryid);
-			}
 		}
 
 		// add class if admin/appovoe-users page
-		if (($this->template === 'admin') && (qa_request_part(1) === 'approve')) {
+		if ($this->template === 'admin' && qa_request_part(1) === 'approve')
 			$class .= ' qam-approve-users';
-		}
 
 		if ($this->fixed_topbar)
 			$class .= ' qam-body-fixed';
@@ -159,18 +155,17 @@ class qa_html_theme extends qa_html_theme_base
 			if (isset($this->content['navigation']['user']['login']) && !QA_FINAL_EXTERNAL_USERS) {
 				$login = $this->content['navigation']['user']['login'];
 				$this->output(
-						'<!--[Begin: login form]-->',
-						'<form id="qa-loginform" action="' . $login['url'] . '" method="post">',
-						'<input type="text" id="qa-userid" name="emailhandle" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '" />',
-						'<input type="password" id="qa-password" name="password" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '" />',
-						'<div id="qa-rememberbox"><input type="checkbox" name="remember" id="qa-rememberme" value="1" />',
-						'<label for="qa-rememberme" id="qa-remember">' . qa_lang_html('users/remember') . '</label></div>',
-						'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '" />',
-						'<input type="submit" value="' . $login['label'] . '" id="qa-login" name="dologin" />',
-						'</form>',
-						'<!--[End: login form]-->'
+					'<!--[Begin: login form]-->',
+					'<form id="qa-loginform" action="' . $login['url'] . '" method="post">',
+					'<input type="text" id="qa-userid" name="emailhandle" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '" />',
+					'<input type="password" id="qa-password" name="password" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '" />',
+					'<div id="qa-rememberbox"><input type="checkbox" name="remember" id="qa-rememberme" value="1" />',
+					'<label for="qa-rememberme" id="qa-remember">' . qa_lang_html('users/remember') . '</label></div>',
+					'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '" />',
+					'<input type="submit" value="' . $login['label'] . '" id="qa-login" name="dologin" />',
+					'</form>',
+					'<!--[End: login form]-->'
 				);
-
 				unset($this->content['navigation']['user']['login']); // removes regular navigation link to log in page
 			}
 		}
@@ -210,7 +205,6 @@ class qa_html_theme extends qa_html_theme_base
 			$replace = array(' <', '> ');
 			$navlink['note'] = str_replace($search, $replace, $navlink['note']);
 		}
-
 		parent::nav_link($navlink, $class);
 	}
 
@@ -330,10 +324,16 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function q_item_title($q_item)
 	{
+		$imgHtml = empty($q_item['closed'])
+			? ''
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="question-closed" title="' . qa_lang('main/closed') . '" />'
+		;
 		$this->output(
-				'<div class="qa-q-item-title">',
-				// add closed note in title
-				empty($q_item['closed']) ? '' : '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="question-closed" title="' . qa_lang('main/closed') . '" />', '<a href="' . $q_item['url'] . '">' . $q_item['title'] . '</a>', '</div>'
+			'<div class="qa-q-item-title">',
+			// add closed note in title
+			$imgHtml,
+			'<a href="' . $q_item['url'] . '">' . $q_item['title'] . '</a>',
+			'</div>'
 		);
 	}
 
@@ -357,12 +357,16 @@ class qa_html_theme extends qa_html_theme_base
 		$url = isset($q_view['url']) ? $q_view['url'] : false;
 
 		// add closed image
-		$closed = (!empty($q_view['closed']) ?
-						'<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="question-closed" width="24" height="24" title="' . qa_lang('main/closed') . '" />' : null );
-
+		$imgHtml = empty($q_view['closed'])
+			? ''
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="question-closed" width="24" height="24" title="' . qa_lang('main/closed') . '" />'
+		;
 		if (isset($this->content['title'])) {
 			$this->output(
-					$closed, $url ? '<a href="' . $url . '">' : '', $this->content['title'], $url ? '</a>' : ''
+				$imgHtml,
+				$url ? '<a href="' . $url . '">' : '',
+				$this->content['title'],
+				$url ? '</a>' : ''
 			);
 		}
 	}
@@ -528,7 +532,6 @@ class qa_html_theme extends qa_html_theme_base
 			'Snow Theme by <a href="http://www.q2amarket.com">Q2A Market</a>',
 			'</div>'
 		);
-
 		parent::attribution();
 	}
 
@@ -548,9 +551,8 @@ class qa_html_theme extends qa_html_theme_base
 			$handle = qa_get_logged_in_user_field('handle');
 			$toggleClass = 'qam-logged-in';
 
-			if (QA_FINAL_EXTERNAL_USERS) {
+			if (QA_FINAL_EXTERNAL_USERS)
 				$tobar_avatar = qa_get_external_avatar_html( qa_get_logged_in_user_field('userid'), $avatarsize, true );
-			}
 			else {
 				$tobar_avatar = qa_get_user_avatar_html(
 					qa_get_logged_in_user_field('flags'),
@@ -565,9 +567,7 @@ class qa_html_theme extends qa_html_theme_base
 			}
 
 			$auth_icon = strip_tags($tobar_avatar, '<img>');
-		}
-		// display login icon and label
-		else {
+		} else {  // display login icon and label
 			$handle = $this->content['navigation']['user']['login']['label'];
 			$toggleClass = 'qam-logged-out';
 			$auth_icon = '<i class="icon-key qam-auth-key"></i>';
@@ -590,11 +590,9 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	private function qam_search($addon_class = false, $ids = false)
 	{
-		$default_color = 'turquoise';
+		$id = $ids ? ' id="' . $ids . '"' : '';
 
-		$id = (($ids) ? ' id="' . $ids . '"' : null);
-
-		$this->output('<div class="qam-search ' . $default_color . ' ' . $addon_class . '" ' . $id . ' >');
+		$this->output('<div class="qam-search ' . $this->ask_search_box_class . ' ' . $addon_class . '" ' . $id . ' >');
 		$this->search();
 		$this->output('</div>');
 	}
@@ -611,9 +609,8 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$css = array('<style>');
 
-		if (!qa_is_logged_in()) {
+		if (!qa_is_logged_in())
 			$css[] = '.qa-nav-user { margin: 0 !important; }';
-		}
 
 		if (qa_request_part(1) !== qa_get_logged_in_handle()) {
 			$css[] = '@media (max-width: 979px) {';
@@ -650,10 +647,10 @@ class qa_html_theme extends qa_html_theme_base
 		if (qa_is_logged_in()) {
 			$userpoints = qa_get_logged_in_points();
 			$pointshtml = ($userpoints == 1) ? qa_lang_html_sub('main/1_point', '1', '1') : qa_html(number_format($userpoints));
-			$points     = '<DIV CLASS="qam-logged-in-points">' . $pointshtml . '</DIV>';
+			$points = '<div class="qam-logged-in-points">' . $pointshtml . '</div>';
 			return $points;
 		}
-		return null;
+		return '';
 	}
 
 	/**
@@ -666,11 +663,17 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	private function ask_button()
 	{
-		$html = '<div class="qam-ask-search-box">';
-		$html .= '<div class="qam-ask-mobile"><a href="' . qa_path('ask', null, qa_path_to_root()) . '" class="' . $this->ask_search_box_class . '">' . qa_lang_html('main/nav_ask') . '</a></div>';
-		$html .= '<div class="qam-search-mobile ' . $this->ask_search_box_class . '" id="qam-search-mobile"></div>';
-		$html .= '</div>';
-		return $html;
+		return
+			'<div class="qam-ask-search-box">' .
+			'<div class="qam-ask-mobile">' .
+			'<a href="' . qa_path('ask', null, qa_path_to_root()) . '" class="' . $this->ask_search_box_class . '">' .
+			qa_lang_html('main/nav_ask') .
+			'</a>' .
+			'</div>' .
+			'<div class="qam-search-mobile ' . $this->ask_search_box_class . '" id="qam-search-mobile">' .
+			'</div>' .
+			'</div>'
+		;
 	}
 
 }
