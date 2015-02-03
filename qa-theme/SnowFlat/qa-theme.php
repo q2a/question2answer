@@ -331,9 +331,10 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function q_item_title($q_item)
 	{
+		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_item['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="question-closed" title="' . qa_lang('main/closed') . '" />'
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '" />'
 		;
 		$this->output(
 			'<div class="qa-q-item-title">',
@@ -364,9 +365,10 @@ class qa_html_theme extends qa_html_theme_base
 		$url = isset($q_view['url']) ? $q_view['url'] : false;
 
 		// add closed image
+		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_view['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="question-closed" width="24" height="24" title="' . qa_lang('main/closed') . '" />'
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '" />'
 		;
 		if (isset($this->content['title'])) {
 			$this->output(
@@ -472,16 +474,21 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
 
 		if ($a_item['hidden'])
-			$this->output('<div class="qa-a-item-hidden">');
+			$answerState = 'hidden';
 		elseif ($a_item['selected'])
-			$this->output('<div class="qa-a-item-selected">');
+			$answerState = 'selected';
+		else
+			$answerState = null;
+
+		if (isset($answerState))
+			$this->output('<div class="qa-a-item-' . $answerState . '">');
 
 		$this->a_selection($a_item);
 		if (isset($a_item['error']))
 			$this->error($a_item['error']);
 		$this->a_item_content($a_item);
 
-		if ($a_item['hidden'] || $a_item['selected'])
+		if (isset($answerState))
 			$this->output('</div>');
 
 		$this->a_item_buttons($a_item);
@@ -551,15 +558,14 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	private function qam_user_account()
 	{
-		$avatarsize = 32;
-
 		// get logged-in user avatar
 		if (qa_is_logged_in()) {
 			$handle = qa_get_logged_in_user_field('handle');
 			$toggleClass = 'qam-logged-in';
 
+			$avatarsize = 32;
 			if (QA_FINAL_EXTERNAL_USERS)
-				$tobar_avatar = qa_get_external_avatar_html( qa_get_logged_in_user_field('userid'), $avatarsize, true );
+				$tobar_avatar = qa_get_external_avatar_html(qa_get_logged_in_user_field('userid'), $avatarsize, true);
 			else {
 				$tobar_avatar = qa_get_user_avatar_html(
 					qa_get_logged_in_user_field('flags'),
@@ -595,11 +601,11 @@ class qa_html_theme extends qa_html_theme_base
 	 * @since Snow 1.4
 	 * @version 1.0
 	 */
-	private function qam_search($addon_class = false, $ids = false)
+	private function qam_search($addon_class = null, $ids = null)
 	{
-		$id = $ids ? ' id="' . $ids . '"' : '';
+		$id = isset($ids) ? ' id="' . $ids . '"' : '';
 
-		$this->output('<div class="qam-search ' . $this->ask_search_box_class . ' ' . $addon_class . '" ' . $id . ' >');
+		$this->output('<div class="qam-search ' . $this->ask_search_box_class . ' ' . $addon_class . '"' . $id . '>');
 		$this->search();
 		$this->output('</div>');
 	}
