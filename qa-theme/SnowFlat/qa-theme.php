@@ -94,7 +94,14 @@ class qa_html_theme extends qa_html_theme_base
 	public function logged_in()
 	{
 		parent::logged_in();
-		$this->output($this->user_points());
+		if (qa_is_logged_in()) {
+			$userpoints = qa_get_logged_in_points();
+			$pointshtml = $userpoints == 1
+				? qa_lang_html_sub('main/1_point', '1', '1')
+				: qa_html(number_format($userpoints))
+			;
+			$this->output('<div class="qam-logged-in-points">' . $pointshtml . '</div>');
+		}
 	}
 
 	/**
@@ -632,25 +639,6 @@ class qa_html_theme extends qa_html_theme_base
 		$css[] = '</style>';
 
 		$this->output_array($css);
-	}
-
-	/**
-	 * Get logged in user's points
-	 *
-	 * @access private
-	 * @since Snow 1.4
-	 * @version 1.0
-	 * @return string|null LoggedIn user's total points, null for guest
-	 */
-	private function user_points()
-	{
-		if (qa_is_logged_in()) {
-			$userpoints = qa_get_logged_in_points();
-			$pointshtml = ($userpoints == 1) ? qa_lang_html_sub('main/1_point', '1', '1') : qa_html(number_format($userpoints));
-			$points = '<div class="qam-logged-in-points">' . $pointshtml . '</div>';
-			return $points;
-		}
-		return '';
 	}
 
 	/**
