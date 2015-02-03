@@ -41,6 +41,7 @@ class qa_html_theme extends qa_html_theme_base
 	private $fixed_topbar = false;
 	private $welcome_widget_class = 'turquoise';
 	private $ask_search_box_class = 'turquoise';
+	private $nav_bar_avatar_size = 32;  // Size of the user avatar in the navigation bar
 
 	/**
 	 * Adding aditional meta for responsive design
@@ -563,9 +564,8 @@ class qa_html_theme extends qa_html_theme_base
 			$handle = qa_get_logged_in_user_field('handle');
 			$toggleClass = 'qam-logged-in';
 
-			$avatarsize = 32;
 			if (QA_FINAL_EXTERNAL_USERS)
-				$tobar_avatar = qa_get_external_avatar_html(qa_get_logged_in_user_field('userid'), $avatarsize, true);
+				$tobar_avatar = qa_get_external_avatar_html(qa_get_logged_in_user_field('userid'), $this->nav_bar_avatar_size, true);
 			else {
 				$tobar_avatar = qa_get_user_avatar_html(
 					qa_get_logged_in_user_field('flags'),
@@ -574,13 +574,14 @@ class qa_html_theme extends qa_html_theme_base
 					qa_get_logged_in_user_field('avatarblobid'),
 					qa_get_logged_in_user_field('avatarwidth'),
 					qa_get_logged_in_user_field('avatarheight'),
-					$avatarsize,
+					$this->$nav_bar_avatar_size,
 					false
 				);
 			}
 
 			$auth_icon = strip_tags($tobar_avatar, '<img>');
-		} else {  // display login icon and label
+		}
+		else {  // display login icon and label
 			$handle = $this->content['navigation']['user']['login']['label'];
 			$toggleClass = 'qam-logged-out';
 			$auth_icon = '<i class="icon-key qam-auth-key"></i>';
