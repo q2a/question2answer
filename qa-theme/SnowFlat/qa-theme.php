@@ -151,7 +151,8 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		global $qam_snow;
 
-		$class = sprintf('qa-theme-%s qa-template-%s', qa_html($this->theme), qa_html($this->template));
+		$class = isset($this->theme) ? 'qa-theme-' . qa_html($this->theme) . ' ' : '';
+		$class .= 'qa-template-' . qa_html($this->template);
 
 		if (isset($this->content['categoryids'])) {
 			foreach ($this->content['categoryids'] as $categoryid)
