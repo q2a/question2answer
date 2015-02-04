@@ -808,14 +808,12 @@ blockquote p {
 .qa-logged-in {
 	display: block;
 	padding: 10px 20px;
-	border-bottom: 1px solid #2c3e50;
 }
 .qa-logged-in:before {
 	content: '\e80e';
 	font-family: "fontello";
 	display: inline-block;
 	width: 1em;
-	background-color: #2c3e50;
 	padding: 5px;
 	margin: 0 10px 0 0;
 	text-align: center;
@@ -825,14 +823,12 @@ blockquote p {
 
 .qam-logged-in-points {
 	padding: 10px 20px;
-	border-bottom: 1px solid #2c3e50;
 }
 .qam-logged-in-points:before {
 	content: '\e810';
 	font-family: "fontello";
 	display: inline-block;
 	width: 1em;
-	background-color: #2c3e50;
 	padding: 5px;
 	margin: 0 10px 0 0;
 	text-align: center;
@@ -849,7 +845,6 @@ blockquote p {
 .qa-nav-user-item {
 	color: #d9d9d9;
 	padding: 0 20px;
-	border-bottom: 1px solid #2c3e50;
 }
 .qa-nav-user-item:last-child {
 	border-bottom: none;
@@ -865,7 +860,6 @@ blockquote p {
 	font-family: "fontello";
 	display: inline-block;
 	width: 1em;
-	background-color: #2c3e50;
 	padding: 5px;
 	margin: 0 10px 0 0;
 	text-align: center;
@@ -878,7 +872,6 @@ blockquote p {
 	font-family: "fontello";
 	display: inline-block;
 	width: 1em;
-	background-color: #2c3e50;
 	padding: 5px;
 	margin: 0 10px 0 0;
 	text-align: center;
