@@ -652,7 +652,8 @@ blockquote p {
 }
 
 .qa-nav-sub {
-	background-color: #e0e4e5;
+	background-color: #1ABB9C;
+	color: #fff;
 	text-align: center;
 }
 @media (max-width: 979px) {
@@ -662,8 +663,8 @@ blockquote p {
 }
 @media (min-width: 980px) {
 	.qa-nav-sub {
-		font-size: 12px;
-		padding: 0 6px;
+		font-size: 18px;
+		padding: 20px 6px;
 	}
 }
 
@@ -705,11 +706,11 @@ blockquote p {
 
 .qa-nav-sub-link, .qa-nav-sub-link:visited, .qa-nav-sub-link:hover {
 	display: block;
+	color: #e0e0e0;
 	padding: 0 4px;
-	color: #000;
 }
 .qa-nav-sub-link.qa-nav-sub-selected, .qa-nav-sub-link:visited.qa-nav-sub-selected, .qa-nav-sub-link:hover.qa-nav-sub-selected {
-	background-color: #3498db;
+	font-weight: bold;
 	color: #fff;
 }
 
@@ -2319,6 +2320,7 @@ input[type="submit"], button {
 @media (max-width: 979px) {
 	.qa-voting {
 		margin-bottom: 5px;
+		margin-right: 10px;
 	}
 }
 
@@ -2364,9 +2366,10 @@ input[type="submit"], button {
 }
 
 .qa-q-view-avatar {
-	position: absolute;
+	/*position: absolute;
 	top: 20px;
 	right: 20px;
+	*/
 }
 
 .qa-q-view-meta {
@@ -2519,9 +2522,9 @@ input[type="submit"], button {
 }
 
 .qa-a-item-avatar {
-	position: absolute;
+	/*position: absolute;
 	top: 20px;
-	right: 20px;
+	right: 20px;*/
 }
 
 .qa-a-item-meta {
@@ -2698,9 +2701,10 @@ input[type="submit"], button {
 }
 
 .qa-c-item-avatar {
-	position: absolute;
+	/*position: absolute;
 	right: 10px;
 	top: 10px;
+	*/
 }
 
 .qa-c-item-meta {
