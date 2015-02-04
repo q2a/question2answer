@@ -688,13 +688,14 @@ blockquote p {
 
 @media (max-width: 979px) {
 	.qa-nav-sub-item {
-		width: 33.33%;
+		font-size: 18px;
+		padding: 20px;
+		/* width: 33.33%; */
 		float: left;
 		display: block;
-		box-shadow: -1px -1px 0 0 #cfd9db inset;
 	}
 	.qa-nav-sub-item:nth-child(3) {
-		box-shadow: 0 -1px 0 0 #cfd9db inset;
+		/*box-shadow: 0 -1px 0 0 #cfd9db inset;*/
 	}
 }
 @media (min-width: 980px) {
@@ -1055,7 +1056,7 @@ h1 a:hover, h1 a:focus {
 	background: #fff;
 }
 .qa-q-list-item.qa-q-favorited {
-	border-left: 1px solid #8e44ad;
+	border-left: 5px solid #f1c40f;
 }
 
 .qa-q-item-stats {
