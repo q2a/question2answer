@@ -134,7 +134,7 @@ class qa_wysiwyg_editor
 
 				// File uploads
 				($uploadimages ? "	filebrowserImageUploadUrl: $imageUploadUrl," : ""),
-				($uploadall ? "	filebrowserUploadUrl: $fileUploadUrl," : ""),
+				($uploadall ? "	filebrowserUploadUrl: $fileUploadUrl" : ""),
 
 				"};",
 			);
