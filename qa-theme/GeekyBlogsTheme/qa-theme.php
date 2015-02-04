@@ -567,7 +567,7 @@ class qa_html_theme extends qa_html_theme_base
      */
     private function qam_user_account()
     {
-        $avatarsize = 32;
+        $avatarsize = 50;
 
         // get logged-in user avatar
         if (qa_is_logged_in()) {
