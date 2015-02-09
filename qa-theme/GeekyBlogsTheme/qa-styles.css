@@ -927,10 +927,10 @@ h1 a:hover, h1 a:focus {
 
 .qam-title-rss {
 	float: right;
-	color: #F0F0F0;
+	color: #B0B0B0;
 }
 .qam-title-rss:hover {
-	color: #fff;
+	color: #555555;
 }
 .qam-title-rss:before {
 	width: auto !important;
