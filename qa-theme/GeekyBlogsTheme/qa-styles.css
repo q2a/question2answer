@@ -316,7 +316,7 @@ blockquote p {
 .qa-error, .qa-warning, .qa-notice {
 	margin-bottom: 5px;
 	padding: 10px;
-	color: #fff;
+	color: #c09853;
 }
 .qa-error a, .qa-warning a, .qa-notice a {
 	color: #fff;
@@ -341,7 +341,7 @@ blockquote p {
 
 .qa-notice {
 	margin-bottom: 0;
-	background: #d35400;
+	background: #fcf8e3;
 	text-align: center;
 	font-size: 1em;
 	line-height: 1.5em;
