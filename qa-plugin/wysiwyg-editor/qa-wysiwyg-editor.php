@@ -128,13 +128,13 @@ class qa_wysiwyg_editor
 				// Most CKeditor config occurs in ckeditor/config.js
 				"var qa_wysiwyg_editor_config = {",
 
-				// Set language to Q2A site language, falling back to English if not available.
-				"	defaultLanguage: 'en',",
-				"	language: " . qa_js(qa_opt('site_language')) . ",",
-
 				// File uploads
 				($uploadimages ? "	filebrowserImageUploadUrl: $imageUploadUrl," : ""),
 				($uploadall ? "	filebrowserUploadUrl: $fileUploadUrl," : ""),
+
+				// Set language to Q2A site language, falling back to English if not available.
+				"	defaultLanguage: 'en',",
+				"	language: " . qa_js(qa_opt('site_language')) . "",
 
 				"};",
 			);
