@@ -62,10 +62,11 @@
 	}
 
 
+	/**
+	 * Prepare $qa_content for showing a captcha, adding the element to $fields, given previous $errors, and a $note to display.
+	 * Returns JavaScript required to load CAPTCHA when field is shown by user (e.g. clicking comment button).
+	 */
 	function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note=null)
-/*
-	Prepare $qa_content for showing a captcha, adding the element to $fields, given previous $errors, and a $note to display
-*/
 	{
 		if (qa_captcha_available()) {
 			$captcha=qa_load_module('captcha', qa_opt('captcha_module'));
@@ -73,7 +74,7 @@
 			$count=@++$qa_content['qa_captcha_count']; // work around fact that reCAPTCHA can only display per page
 
 			if ($count>1)
-				$html='[captcha placeholder]'; // single captcha will be moved about the page, to replace this
+				$html=''; // single captcha will be moved about the page, to replace this
 			else {
 				$qa_content['script_var']['qa_captcha_in']='qa_captcha_div_1';
 				$html=$captcha->form_html($qa_content, @$errors['captcha']);
@@ -87,7 +88,7 @@
 				'note' => $note,
 			);
 
-			return "if (qa_captcha_in!='qa_captcha_div_".$count."') { document.getElementById('qa_captcha_div_".$count."').innerHTML=document.getElementById(qa_captcha_in).innerHTML; document.getElementById(qa_captcha_in).innerHTML=''; qa_captcha_in='qa_captcha_div_".$count."'; }";
+			return "if (!document.getElementById('qa_captcha_div_".$count."').hasChildNodes()) { recaptcha_load('qa_captcha_div_".$count."'); }";
 		}
 
 		return '';
