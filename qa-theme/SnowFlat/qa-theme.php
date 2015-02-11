@@ -39,9 +39,10 @@ class qa_html_theme extends qa_html_theme_base
 	private $icon_url = 'images/icons';
 
 	private $fixed_topbar = false;
-	private $welcome_widget_class = 'turquoise';
+	private $welcome_widget_class = 'wet-asphalt';
 	private $ask_search_box_class = 'turquoise';
-	private $nav_bar_avatar_size = 32;  // Size of the user avatar in the navigation bar
+	// Size of the user avatar in the navigation bar
+	private $nav_bar_avatar_size = 32;
 
 	/**
 	 * Adding aditional meta for responsive design
@@ -146,7 +147,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * login form
+	 * Login form for user dropdown menu.
 	 *
 	 * @since Snow 1.4
 	 */
@@ -163,7 +164,6 @@ class qa_html_theme extends qa_html_theme_base
 			if (isset($this->content['navigation']['user']['login']) && !QA_FINAL_EXTERNAL_USERS) {
 				$login = $this->content['navigation']['user']['login'];
 				$this->output(
-					'<!--[Begin: login form]-->',
 					'<form id="qa-loginform" action="' . $login['url'] . '" method="post">',
 					'<input type="text" id="qa-userid" name="emailhandle" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '" />',
 					'<input type="password" id="qa-password" name="password" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '" />',
@@ -171,10 +171,11 @@ class qa_html_theme extends qa_html_theme_base
 					'<label for="qa-rememberme" id="qa-remember">' . qa_lang_html('users/remember') . '</label></div>',
 					'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '" />',
 					'<input type="submit" value="' . $login['label'] . '" id="qa-login" name="dologin" />',
-					'</form>',
-					'<!--[End: login form]-->'
+					'</form>'
 				);
-				unset($this->content['navigation']['user']['login']); // removes regular navigation link to log in page
+
+				// remove regular navigation link to log in page
+				unset($this->content['navigation']['user']['login']);
 			}
 		}
 
@@ -184,7 +185,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * modifying markup for topbar
+	 * Modify markup for topbar.
 	 *
 	 * @since Snow 1.4
 	 */
@@ -200,7 +201,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * The method has been overridden to remove the '-' from the note for the category page (notes).
+	 * Remove the '-' from the note for the category page (notes).
 	 *
 	 * @since Snow 1.4
 	 * @param type $navlink
@@ -260,7 +261,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<div id="qam-topbar" class="clearfix' . $class . '">');
 
 		$this->nav_main_sub();
-		$this->output('</div><!-- END qam-topbar -->');
+		$this->output('</div> <!-- END qam-topbar -->');
 
 		$this->output($this->ask_button());
 		$this->qam_search('the-top', 'the-top-search');
@@ -291,7 +292,7 @@ class qa_html_theme extends qa_html_theme_base
 	public function sidepanel()
 	{
 		// removes sidebar for user profile pages
-		if (($this->template != 'user') && !qa_is_mobile_probably()) {
+		if ($this->template != 'user' && !qa_is_mobile_probably()) {
 			$this->output('<div class="qa-sidepanel">');
 			$this->qam_search();
 			$this->widgets('side', 'top');
@@ -308,7 +309,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To provide various color option
+	 * Allow alternate sidebar color.
 	 *
 	 * @since Snow 1.4
 	 */
@@ -317,7 +318,7 @@ class qa_html_theme extends qa_html_theme_base
 		if (isset($this->content['sidebar'])) {
 			$sidebar = $this->content['sidebar'];
 			if (!empty($sidebar)) {
-				$this->output('<div class="qa-sidebar wet-asphalt ' . $this->welcome_widget_class . '">');
+				$this->output('<div class="qa-sidebar ' . $this->welcome_widget_class . '">');
 				$this->output_raw($sidebar);
 				$this->output('</div>', '');
 			}
@@ -325,7 +326,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To add close icon
+	 * Add close icon
 	 *
 	 * @since Snow 1.4
 	 * @param array $q_item
@@ -335,8 +336,8 @@ class qa_html_theme extends qa_html_theme_base
 		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_item['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '" />'
-		;
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '" />';
+
 		$this->output(
 			'<div class="qa-q-item-title">',
 			// add closed note in title
@@ -347,7 +348,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To add RSS feeds icon and closed icon for closed questions
+	 * Add RSS feeds icon and closed icon for closed questions
 	 *
 	 * @since Snow 1.4
 	 */
@@ -369,8 +370,8 @@ class qa_html_theme extends qa_html_theme_base
 		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_view['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '" />'
-		;
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '" />';
+
 		if (isset($this->content['title'])) {
 			$this->output(
 				$imgHtml,
@@ -382,13 +383,13 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To add view counter
+	 * Add view counter to question list
 	 *
 	 * @since Snow 1.4
 	 * @param array $q_item
 	 */
 	public function q_item_stats($q_item)
-	{ // add view count to question list
+	{
 		$this->output('<div class="qa-q-item-stats">');
 
 		$this->voting($q_item);
@@ -404,12 +405,10 @@ class qa_html_theme extends qa_html_theme_base
 	 * @since Snow 1.4
 	 * @param type $q_item
 	 */
-	public function view_count($q_item)
-	{ // Prevent display view counter on usual place
-	}
+	public function view_count($q_item) {}
 
 	/**
-	 * To add view counter
+	 * Add view counter to question view
 	 *
 	 * @since Snow 1.4
 	 * @param type $q_view
@@ -426,7 +425,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To modify user whometa, move to top
+	 * Modify user whometa, move to top
 	 *
 	 * @since Snow 1.4
 	 * @param type $q_view
@@ -460,7 +459,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To move user whometa to top in answer
+	 * Move user whometa to top in answer
 	 *
 	 * @since Snow 1.4
 	 * @param type $a_item
@@ -509,7 +508,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To move user whometa to top in comment
+	 * Move user whometa to top in comment
 	 *
 	 * @since Snow 1.4
 	 * @param type $c_item
@@ -559,8 +558,8 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	private function qam_user_account()
 	{
-		// get logged-in user avatar
 		if (qa_is_logged_in()) {
+			// get logged-in user avatar
 			$handle = qa_get_logged_in_user_field('handle');
 			$toggleClass = 'qam-logged-in';
 
@@ -574,14 +573,15 @@ class qa_html_theme extends qa_html_theme_base
 					qa_get_logged_in_user_field('avatarblobid'),
 					qa_get_logged_in_user_field('avatarwidth'),
 					qa_get_logged_in_user_field('avatarheight'),
-					$this->$nav_bar_avatar_size,
+					$this->nav_bar_avatar_size,
 					false
 				);
 			}
 
 			$auth_icon = strip_tags($tobar_avatar, '<img>');
 		}
-		else {  // display login icon and label
+		else {
+			// display login icon and label
 			$handle = $this->content['navigation']['user']['login']['label'];
 			$toggleClass = 'qam-logged-out';
 			$auth_icon = '<i class="icon-key qam-auth-key"></i>';
@@ -597,7 +597,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * To add search-box wrapper with extra class for color scheme
+	 * Add search-box wrapper with extra class for color scheme
 	 *
 	 * @since Snow 1.4
 	 * @version 1.0
@@ -667,8 +667,7 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'<div class="qam-search-mobile ' . $this->ask_search_box_class . '" id="qam-search-mobile">' .
 			'</div>' .
-			'</div>'
-		;
+			'</div>';
 	}
 
 }
