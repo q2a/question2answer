@@ -20,99 +20,97 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
+
+
+/**
+ * Return whether a captcha module has been selected and it indicates that it is fully set up to go.
+ */
+function qa_captcha_available()
+{
+	$module = qa_load_module('captcha', qa_opt('captcha_module'));
+
+	return isset($module) && (!method_exists($module, 'allow_captcha') || $module->allow_captcha());
+}
+
+
+/**
+ * Return an HTML string explaining $captchareason (from qa_user_captcha_reason()) to the user about why they are seeing a captcha
+ */
+function qa_captcha_reason_note($captchareason)
+{
+	$notehtml = null;
+
+	switch ($captchareason) {
+		case 'login':
+			$notehtml = qa_insert_login_links(qa_lang_html('misc/captcha_login_fix'));
+			break;
+
+		case 'confirm':
+			$notehtml = qa_insert_login_links(qa_lang_html('misc/captcha_confirm_fix'));
+			break;
+
+		case 'approve':
+			$notehtml = qa_lang_html('misc/captcha_approve_fix');
+			break;
 	}
 
-
-	function qa_captcha_available()
-/*
-	Return whether a captcha module has been selected and it indicates that it is fully set up to go
-*/
-	{
-		$module=qa_load_module('captcha', qa_opt('captcha_module'));
-
-		return isset($module) && ( (!method_exists($module, 'allow_captcha')) || $module->allow_captcha());
-	}
+	return $notehtml;
+}
 
 
-	function qa_captcha_reason_note($captchareason)
-/*
-	Return an HTML string explaining $captchareason (from qa_user_captcha_reason()) to the user about why they are seeing a captcha
-*/
-	{
-		$notehtml=null;
-
-		switch ($captchareason) {
-			case 'login':
-				$notehtml=qa_insert_login_links(qa_lang_html('misc/captcha_login_fix'));
-				break;
-
-			case 'confirm':
-				$notehtml=qa_insert_login_links(qa_lang_html('misc/captcha_confirm_fix'));
-				break;
-
-			case 'approve':
-				$notehtml=qa_lang_html('misc/captcha_approve_fix');
-				break;
-		}
-
-		return $notehtml;
-	}
-
-
-	/**
-	 * Prepare $qa_content for showing a captcha, adding the element to $fields, given previous $errors, and a $note to display.
-	 * Returns JavaScript required to load CAPTCHA when field is shown by user (e.g. clicking comment button).
-	 */
-	function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note=null)
-	{
-		if (qa_captcha_available()) {
-			$captcha=qa_load_module('captcha', qa_opt('captcha_module'));
-
-			$count=@++$qa_content['qa_captcha_count']; // work around fact that reCAPTCHA can only display per page
-
-			if ($count>1)
-				$html=''; // single captcha will be moved about the page, to replace this
-			else {
-				$qa_content['script_var']['qa_captcha_in']='qa_captcha_div_1';
-				$html=$captcha->form_html($qa_content, @$errors['captcha']);
-			}
-
-			$fields['captcha']=array(
-				'type' => 'custom',
-				'label' => qa_lang_html('misc/captcha_label'),
-				'html' => '<div id="qa_captcha_div_'.$count.'">'.$html.'</div>',
-				'error' => @array_key_exists('captcha', $errors) ? qa_lang_html('misc/captcha_error') : null,
-				'note' => $note,
-			);
-
-			return "if (!document.getElementById('qa_captcha_div_".$count."').hasChildNodes()) { recaptcha_load('qa_captcha_div_".$count."'); }";
-		}
-
+/**
+ * Prepare $qa_content for showing a captcha, adding the element to $fields, given previous $errors, and a $note to display.
+ * Returns JavaScript required to load CAPTCHA when field is shown by user (e.g. clicking comment button).
+ */
+function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note=null)
+{
+	if (!qa_captcha_available())
 		return '';
+
+	$captcha = qa_load_module('captcha', qa_opt('captcha_module'));
+
+	// workaround for reCAPTCHA, to load multiple instances via JS
+	$count = @++$qa_content['qa_captcha_count'];
+
+	if ($count > 1) {
+		// use blank captcha in order to load via JS
+		$html = '';
+	}
+	else {
+		// first captcha is always loaded explicitly
+		$qa_content['script_var']['qa_captcha_in'] = 'qa_captcha_div_1';
+		$html = $captcha->form_html($qa_content, @$errors['captcha']);
 	}
 
+	$fields['captcha'] = array(
+		'type' => 'custom',
+		'label' => qa_lang_html('misc/captcha_label'),
+		'html' => '<div id="qa_captcha_div_'.$count.'">'.$html.'</div>',
+		'error' => @array_key_exists('captcha', $errors) ? qa_lang_html('misc/captcha_error') : null,
+		'note' => $note,
+	);
 
-	function qa_captcha_validate_post(&$errors)
-/*
-	Check if captcha is submitted correctly, and if not, set $errors['captcha'] to a descriptive string
-*/
-	{
-		if (qa_captcha_available()) {
-			$captcha=qa_load_module('captcha', qa_opt('captcha_module'));
+	return "if (!document.getElementById('qa_captcha_div_".$count."').hasChildNodes()) { recaptcha_load('qa_captcha_div_".$count."'); }";
+}
 
-			if (!$captcha->validate_post($error)) {
-				$errors['captcha']=$error;
-				return false;
-			}
+
+/**
+ * Check if captcha is submitted correctly, and if not, set $errors['captcha'] to a descriptive string.
+ */
+function qa_captcha_validate_post(&$errors)
+{
+	if (qa_captcha_available()) {
+		$captcha = qa_load_module('captcha', qa_opt('captcha_module'));
+
+		if (!$captcha->validate_post($error)) {
+			$errors['captcha'] = $error;
+			return false;
 		}
-
-		return true;
 	}
 
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+	return true;
+}
