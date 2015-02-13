@@ -711,16 +711,8 @@ blockquote p {
 	line-height: 1.8;
 }
 
-#qa-login {
-	background-color: #3498db;
+.qam-account-items .qa-form-tall-button-login {
 	width: 100%;
-	color: #fff;
-	border-color: #3498db;
-}
-#qa-login:hover {
-	background-color: #2980b9;
-	border-color: #2980b9;
-	cursor: pointer;
 }
 
 .qa-nav-user {

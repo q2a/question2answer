@@ -11,7 +11,7 @@
 
 /*---[ Start: global css ]---*/
 .clearfix:after,
-#qa-login-group:after,
+.qam-login-group:after,
 .qa-header:after,
 .qa-main-shadow:after,
 .qa-footer-bottom-group:after,
@@ -28,7 +28,7 @@
 }
 
 .clearfix,
-#qa-login-group,
+.qam-login-group,
 .qa-header,
 .qa-main-shadow,
 .qa-nav-footer,
@@ -46,7 +46,7 @@
 }
 
 .clearfix,
-#qa-login-group,
+.qam-login-group,
 .qa-header,
 .qa-main-shadow,
 .qa-nav-footer,
@@ -228,102 +228,45 @@ p {
 	margin-top: 0;
 }
 
-/*---[ other comomn used css ]---*/
-#qa-register, #qa-login {
-	background: #0099cc; /* Old browsers */
-	background: -webkit-linear-gradient(top, #0099cc 0%, #0179b5 100%); /* Chrome10+,Safari5.1+ */
-	background: linear-gradient(to bottom, #0099cc 0%, #0179b5 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0099cc', endColorstr='#0179b5',GradientType=0); /* IE6-8 */
-	border: 1px solid #004f76;
-	color: #fff;
-	font-weight: bold;
-	padding: 3px 10px;
-	border-radius: 3px;
-}
-
-#qa-register:hover, #qa-register:focus,
-#qa-login:hover, #qa-login:focus {
-	background: #1ca0cc; /* Old browsers */
-	background: -webkit-linear-gradient(top, #1ca0cc 0%, #0099cc 100%); /* Chrome10+,Safari5.1+ */
-	background: linear-gradient(to bottom, #1ca0cc 0%, #0099cc 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1ca0cc', endColorstr='#0099cc',GradientType=0); /* IE6-8 */
-}
 
 /*---[ Begin: login bar css ]---*/
-#qa-login-bar {
+.qam-login-bar {
 	background: #ddd;
 	margin: 0;
 	height: 30px;
 	border-bottom: 1px solid #aaa;
 	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 }
-
-#qa-login-group {
+.qam-login-group {
 	width: 980px;
 	margin: 0 auto;
 	padding: 2px 10px;
 	text-align: left;
 }
-
-#qa-loginform {
+.qam-login-form {
 	float: left;
 }
-
-#qa-userid, #qa-password, .qa-search-field {
+.qam-login-text, .qa-search-field {
 	width: 165px;
 	margin-right: 5px;
 	padding: 4px 5px;
 }
-
-#qa-userid, #qa-password {
+.qam-login-text {
 	float: left;
 }
-
-#qa-loginform #qa-rememberbox {
+.qam-rememberbox {
 	float: left;
 	padding: 7px 5px 1px;
 }
-
-#qa-loginform #qa-rememberme {
+#qam-rememberme {
+	float: left;
 	margin: 0 5px 0 0;
-	float: left;
 }
-
-#qa-loginform #qa-remember {
-	display: block;
+.qam-remember {
+	float: left;
 	line-height: 14px;
-	float: left;
 }
 
-#qa-login, #qa-register {
-	height: 25px;
-	margin: 0 0 0 5px;
-}
-
-#qa-forgot-password {
-	display: inline-block;
-}
-
-#qa-forgot-password a, #qa-forgot-password a:visited {
-	width: 24px;
-	height: 24px;
-	line-height: 25px;
-	font-size: 16px;
-	font-weight: bold;
-	text-align: center;
-	background: #ccc;
-	color: #777;
-	display: inline-block;
-	box-shadow: 1px 1px 0 0 #eee;
-	border-top: 1px solid #aaa;
-	border-left: 1px solid #aaa;
-}
-
-#qa-forgot-password a:hover, #qa-forgot-password a:active {
-	text-decoration: none;
-	background: #aa0000;
-	color: #fff;
-}
 
 /*-- search box --*/
 .qa-search {
