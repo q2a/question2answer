@@ -13,8 +13,8 @@ class qa_html_theme extends qa_html_theme_base
 				$login = $this->content['navigation']['user']['login'];
 				$this->output(
 					'<form class="qam-login-form" action="'.$login['url'].'" method="post">',
-						'<input type="text" class="qam-login-text" name="emailhandle" placeholder="'.trim(qa_lang_html(qa_opt('allow_login_email_only') ? 'users/email_label' : 'users/email_handle_label'), ':').'">',
-						'<input type="password" class="qam-login-text" name="password" placeholder="'.trim(qa_lang_html('users/password_label'), ':').'">',
+						'<input type="text" class="qam-login-text" name="emailhandle" dir="auto" placeholder="'.trim(qa_lang_html(qa_opt('allow_login_email_only') ? 'users/email_label' : 'users/email_handle_label'), ':').'">',
+						'<input type="password" class="qam-login-text" name="password" dir="auto" placeholder="'.trim(qa_lang_html('users/password_label'), ':').'">',
 						'<div class="qam-rememberbox"><input type="checkbox" name="remember" id="qam-rememberme" value="1">',
 						'<label for="qam-rememberme" class="qam-remember">'.qa_lang_html('users/remember').'</label></div>',
 						'<input type="hidden" name="code" value="'.qa_html(qa_get_form_security_code('login')).'">',

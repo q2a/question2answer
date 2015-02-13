@@ -150,7 +150,7 @@
 		'fields' => array(
 			'handle' => array(
 				'label' => qa_lang_html('users/handle_label'),
-				'tags' => 'name="handle" id="handle"',
+				'tags' => 'name="handle" id="handle" dir="auto"',
 				'value' => qa_html(@$inhandle),
 				'error' => qa_html(@$errors['handle']),
 			),
@@ -158,14 +158,14 @@
 			'password' => array(
 				'type' => 'password',
 				'label' => qa_lang_html('users/password_label'),
-				'tags' => 'name="password" id="password"',
+				'tags' => 'name="password" id="password" dir="auto"',
 				'value' => qa_html(@$inpassword),
 				'error' => qa_html(@$errors['password']),
 			),
 
 			'email' => array(
 				'label' => qa_lang_html('users/email_label'),
-				'tags' => 'name="email" id="email"',
+				'tags' => 'name="email" id="email" dir="auto"',
 				'value' => qa_html(@$inemail),
 				'note' => qa_opt('email_privacy'),
 				'error' => qa_html(@$errors['email']),
