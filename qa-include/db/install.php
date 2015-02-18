@@ -25,7 +25,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 58);
+	define('QA_DB_VERSION_CURRENT', 59);
 
 
 	function qa_db_user_column_type_verify()
@@ -1428,7 +1428,27 @@
 					$keyrecalc['dorecalcpoints'] = true;
 					break;
 
-			//	Up to here: Verison 1.7 beta
+			//	Up to here: Verison 1.7
+
+				case 59:
+					// Fix path to WYSIWYG editor smilies
+					require_once QA_INCLUDE_DIR.'app/posts.php';
+					qa_db_upgrade_query('UNLOCK TABLES');
+
+					$sql = 'SELECT postid, title, content FROM ^posts WHERE content LIKE "%/wysiwyg-editor/plugins/smiley/images/%"';
+					$result = qa_db_query_sub($sql);
+					while (($post=qa_db_read_one_assoc($result, true)) !== null) {
+						$search = '#<(img|a)([^>]+)(src|href)="([^"]+)/wysiwyg-editor/plugins/smiley/images/([^"]+)"#';
+						$replace = '<$1$2$3="$4/wysiwyg-editor/ckeditor/plugins/smiley/images/$5"';
+						$newcontent = preg_replace($search, $replace, $post['content']);
+
+						qa_post_set_content($post['postid'], $post['title'], $newcontent);
+					}
+
+					qa_db_upgrade_query($locktablesquery);
+					break;
+
+			//	Up to here: Verison 1.7.1
 
 			}
 
