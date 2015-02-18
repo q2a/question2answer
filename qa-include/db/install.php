@@ -1435,7 +1435,7 @@
 					require_once QA_INCLUDE_DIR.'app/posts.php';
 					qa_db_upgrade_query('UNLOCK TABLES');
 
-					$sql = 'SELECT postid, title, content FROM ^posts WHERE content LIKE "%/wysiwyg-editor/plugins/smiley/images/%"';
+					$sql = 'SELECT postid, title, content FROM ^posts WHERE format="html" AND content LIKE "%/wysiwyg-editor/plugins/smiley/images/%"';
 					$result = qa_db_query_sub($sql);
 					while (($post=qa_db_read_one_assoc($result, true)) !== null) {
 						$search = '#<(img|a)([^>]+)(src|href)="([^"]+)/wysiwyg-editor/plugins/smiley/images/([^"]+)"#';
