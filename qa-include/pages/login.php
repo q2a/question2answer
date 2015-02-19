@@ -58,7 +58,7 @@
 				qa_limits_increment(null, QA_LIMIT_LOGINS);
 
 				$errors=array();
-				$res = qa_check_login_credentials($inemailhandle, $inpassword);
+				$res = qa_check_login_credentials($inemailhandle, $inpassword, $inremember);
 
 				if ($res == 0) { // login and redirect
 					$topath=qa_get('to');

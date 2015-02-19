@@ -225,7 +225,7 @@
 			unset($_SESSION['qa_session_verify_'.$suffix]);
 		}
 
-		function qa_check_login_credentials($inemailhandle, $inpassword)
+		function qa_check_login_credentials($inemailhandle, $inpassword, $inremember)
 	/*
 		Call to check login credentials, override in plugin for custom credential checking whilst maintaining the normal cookie handling etc.
 		returns:
