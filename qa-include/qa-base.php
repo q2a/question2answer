@@ -21,8 +21,8 @@
 */
 
 
-	define('QA_VERSION', '1.7.0'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2014-12-28');
+	define('QA_VERSION', '1.7.1'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2015-02-19');
 
 
 	/**
