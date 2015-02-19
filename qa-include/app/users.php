@@ -51,6 +51,9 @@
 	@define('QA_FORM_EXPIRY_SECS', 86400); // how many seconds a form is valid for submission
 	@define('QA_FORM_KEY_LENGTH', 32);
 
+	const LOGIN_CREDENTIALS_OK = 0;
+	const LOGIN_USER_NOT_FOUND = 1;
+	const LOGIN_PASSWORD_INCORRECT = 2;
 
 	if (QA_FINAL_EXTERNAL_USERS) {
 
@@ -229,9 +232,9 @@
 	/*
 		Call to check login credentials, override in plugin for custom credential checking whilst maintaining the normal cookie handling etc.
 		returns:
-		0 == credentials OK
-		1 == user not found
-		2 == password incorrect
+		LOGIN_CREDENTIALS_OK (0) == credentials OK
+		LOGIN_USER_NOT_FOUND (1) == user not found
+		LOGIN_PASSWORD_INCORRECT (2) == password incorrect
 	*/
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -247,11 +250,11 @@
 
 				if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) {
 					qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
-					return 0;
+					return LOGIN_CREDENTIALS_OK;
 				} else 
-					return 2;
+					return LOGIN_PASSWORD_INCORRECT;
 			}
-			return 1;
+			return LOGIN_USER_NOT_FOUND;
 		}
 		
 		function qa_set_logged_in_user($userid, $handle='', $remember=false, $source=null)

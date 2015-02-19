@@ -60,7 +60,7 @@
 				$errors=array();
 				$res = qa_check_login_credentials($inemailhandle, $inpassword, $inremember);
 
-				if ($res == 0) { // login and redirect
+				if ($res == LOGIN_CREDENTIALS_OK) { // login and redirect
 					$topath=qa_get('to');
 
 					if (isset($topath))
@@ -70,7 +70,7 @@
 					else
 						qa_redirect('');
 
-				} elseif ($res == 2) {
+				} elseif ($res == LOGIN_PASSWORD_INCORRECT) {
 					$errors['password']=qa_lang('users/password_wrong');
 
 				} else
