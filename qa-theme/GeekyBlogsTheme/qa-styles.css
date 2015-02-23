@@ -2227,7 +2227,7 @@ input[type="submit"], button {
 	text-indent: -9999px;
 }
 .qa-form-light-button:hover, .qa-form-light-button:focus {
-	background-color: #476481;
+	/*background-color: #476481;*/
 	border: 0;
 	outline: 0;
 }
@@ -2236,61 +2236,77 @@ input[type="submit"], button {
 }
 
 .qa-form-light-button-edit, .qa-form-light-button-retagcat {
-	background-image: url('images/icons/edit-white.png');
+	background-image: url('images/icons/edit.png');
 }
+
 .qa-form-light-button-flag {
-	background-image: url('images/icons/flag-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/flag.png');
 }
 .qa-form-light-button-unflag, .qa-form-light-button-clearflags {
-	background-image: url('images/icons/un-flag-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/un-flag.png');
 }
 .qa-form-light-button-hide {
-	background-image: url('images/icons/hide-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/hide.png');
 }
 .qa-form-light-button-follow {
-	background-image: url('images/icons/link-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/link.png');
 }
 .qa-form-light-button-reshow {
-	background-image: url('images/icons/show-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/show.png');
 }
 .qa-form-light-button-claim {
-	background-image: url('images/icons/claim-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/claim.png');
 }
 .qa-form-light-button-delete {
-	background-image: url('images/icons/delete-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/delete.png');
 }
 .qa-form-light-button-approve {
-	background-image: url('images/icons/approve-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/approve.png');
 	padding-left: 18px;
 }
 .qa-form-light-button-reject {
-	background-image: url('images/icons/rejected-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/rejected.png');
 }
 .qa-form-light-button-close {
-	background-image: url('images/icons/close-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/close.png');
 }
 .qa-form-light-button-reopen {
-	background-image: url('images/icons/open-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/open.png');
 }
 .qa-form-light-button-block {
-	background-image: url('images/icons/rejected-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/rejected.png');
 }
 .qa-form-light-button-reply {
-	background-image: url('images/icons/reply-white.png');
+	background-color: transparent;
+	background-image: url('images/icons/reply.png');
 }
 
 .qa-form-light-button-answer {
-	background-image: url('images/icons/answer-white.png');
-	background-color: #27ae60;
+	/*background-image: url('images/icons/answer-white.png');*/
+	background-color: #F0F0F0;
 	float: left;
 	margin: 0 5px 0 0;
-}
+}/*
 .qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus {
-	background-color: #2ecc71;
-}
+	color: #656565;
+	background-color: #F0F0F0;
+}*/
 
 .qa-form-light-button-comment {
-	background-image: url('images/icons/comment-white.png');
+	/*background-image: url('images/icons/comment-white.png');*/
+	background-color: #F0F0F0;
 	float: left;
 	margin: 0;
 }
@@ -2299,7 +2315,8 @@ input[type="submit"], button {
 .qa-form-light-button-comment,
 .qa-form-light-button-claim {
 	width: auto;
-	padding: 0 10px 0 30px;
+	color: #B0B0B0;
+	padding: 0 10px 0 10px;
 	background-position: 8px center;
 	font-size: 13px;
 	line-height: 32px;
@@ -2309,6 +2326,8 @@ input[type="submit"], button {
 .qa-form-light-button-comment:hover, .qa-form-light-button-comment:focus,
 .qa-form-light-button-claim:hover, .qa-form-light-button-claim:focus {
 	background-position: 8px center;
+	color: #656565;
+	background-color: #F0F0F0;
 }
 
 .qa-q-view-stats {
@@ -2605,6 +2624,7 @@ input[type="submit"], button {
 
 .qa-a-selected {
 	background-color: #1abb9c;
+	margin-left: 10px;
 }
 
 @media (max-width: 979px) {
@@ -2641,7 +2661,7 @@ input[type="submit"], button {
 }
 .qa-c-list-item .qa-form-light-button {
 	padding: 10px 15px;
-	background: #bdc3c7 none center no-repeat;
+	background: none center no-repeat;
 	color: #34495e;
 	width: 24px;
 	height: 24px;
