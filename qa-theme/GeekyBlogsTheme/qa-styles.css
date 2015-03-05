@@ -2236,6 +2236,7 @@ input[type="submit"], button {
 }
 
 .qa-form-light-button-edit, .qa-form-light-button-retagcat {
+	background-color: transparent;
 	background-image: url('images/icons/edit.png');
 }
 
