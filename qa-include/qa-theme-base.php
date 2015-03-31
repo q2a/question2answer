@@ -39,15 +39,15 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 class qa_html_theme_base
 {
-	protected $indent = 0;
-	protected $lines = 0;
-	protected $context = array();
+	var $indent = 0;
+	var $lines = 0;
+	var $context = array();
 
-	protected $template;
-	protected $content;
-	protected $rooturl;
-	protected $request;
-	protected $isRTL; // (boolean) whether text direction is Right-To-Left
+	var $template;
+	var $content;
+	var $rooturl;
+	var $request;
+	var $isRTL; // (boolean) whether text direction is Right-To-Left
 
 	// whether to use new block layout in rankings (true) or fall back to tables (false)
 	protected $ranking_block_layout = false;
