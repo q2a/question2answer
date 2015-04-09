@@ -1115,6 +1115,32 @@ h1 a:hover, h1 a:focus, h1 a:visited {
 	text-align: center;
 }
 
+
+/* separate vote buttons counter */
+.qa-vote-count-updown {
+	line-height: 1.5;
+}
+
+.qa-upvote-count,
+.qa-downvote-count {
+	text-align: center;
+	display: block;
+}
+
+.qa-upvote-count-data,
+.qa-downvote-count-data {
+	display: block;
+	margin-top: 2px;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.qa-upvote-count-pad,
+.qa-downvote-count-pad {
+	display: none;
+}
+
+
 .qa-vote-buttons {
 	float: left;
 	height: 60px;

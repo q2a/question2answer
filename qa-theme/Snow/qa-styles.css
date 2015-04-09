@@ -801,17 +801,15 @@ div.header-banner {
 
 .qa-upvote-count-data,
 .qa-downvote-count-data {
+	display: block;
+	margin-top: 2px;
 	font-size: 18px;
 	font-weight: 700;
-	display: block;
-	line-height: 18px;
 }
 
 .qa-upvote-count-pad,
 .qa-downvote-count-pad {
-	font-size: 11px;
-	line-height: 11px;
-	color: #9DA8AD;
+	display: none;
 }
 
 /* Answers and views count */
