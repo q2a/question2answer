@@ -58,19 +58,14 @@ class qa_filter_basic
 
 		$this->validate_length($errors, 'content', @$question['text'], qa_opt('min_len_q_content'), null); // for display
 
-		if (isset($question['tags'])) {
-			$counttags=count($question['tags']);
-			$mintags=min(qa_opt('min_num_q_tags'), qa_opt('max_num_q_tags'));
-
-			if ($counttags<$mintags)
-				$errors['tags']=qa_lang_sub('question/min_tags_x', $mintags);
-			elseif ($counttags>qa_opt('max_num_q_tags'))
-				$errors['tags']=qa_lang_sub('question/max_tags_x', qa_opt('max_num_q_tags'));
-			else
-				$this->validate_length($errors, 'tags', qa_tags_to_tagstring($question['tags']), 0, QA_DB_MAX_TAGS_LENGTH); // for storage
-		}
+		$this->filter_question_tags($question, $errors);
 
 		$this->validate_post_email($errors, $question);
+	}
+
+	public function filter_recategorized_question(&$question, &$errors)
+	{
+		$this->filter_question_tags($question, $errors);
 	}
 
 	public function filter_answer(&$answer, &$errors, $question, $oldanswer)
@@ -124,6 +119,21 @@ class qa_filter_basic
 			$error=$this->filter_email($post['email'], null);
 			if (isset($error))
 				$errors['email']=$error;
+		}
+	}
+
+	private function filter_question_tags(&$question, &$errors)
+	{
+		if (isset($question['tags'])) {
+			$counttags=count($question['tags']);
+			$mintags=min(qa_opt('min_num_q_tags'), qa_opt('max_num_q_tags'));
+
+			if ($counttags<$mintags)
+				$errors['tags']=qa_lang_sub('question/min_tags_x', $mintags);
+			elseif ($counttags>qa_opt('max_num_q_tags'))
+				$errors['tags']=qa_lang_sub('question/max_tags_x', qa_opt('max_num_q_tags'));
+			else
+				$this->validate_length($errors, 'tags', qa_tags_to_tagstring($question['tags']), 0, QA_DB_MAX_TAGS_LENGTH); // for storage
 		}
 	}
 }
