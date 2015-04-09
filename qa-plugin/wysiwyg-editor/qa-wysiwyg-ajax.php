@@ -31,16 +31,33 @@ class qa_wysiwyg_ajax
 	// Fix path to WYSIWYG editor smilies
 	public function process_request($request)
 	{
-		// todo: lock tables?
+		// echo '<pre>', print_r(qa_db_list_tables(), true), '</pre>';
+		require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+		// smiley replacement regexes
+		$rxSearch = '#<(img|a)([^>]+)(src|href)="([^"]+)/wysiwyg-editor/plugins/smiley/images/([^"]+)"#';
+		$rxReplace = '<$1$2$3="$4/wysiwyg-editor/ckeditor/plugins/smiley/images/$5"';
+
+		qa_suspend_event_reports(true); // avoid infinite loop
 
 		$sql = 'SELECT postid, title, content FROM ^posts WHERE format="html" AND content LIKE "%/wysiwyg-editor/plugins/smiley/images/%" LIMIT 5';
 		$result = qa_db_query_sub($sql);
-		while (($post=qa_db_read_one_assoc($result, true)) !== null) {
-			$search = '#<(img|a)([^>]+)(src|href)="([^"]+)/wysiwyg-editor/plugins/smiley/images/([^"]+)"#';
-			$replace = '<$1$2$3="$4/wysiwyg-editor/ckeditor/plugins/smiley/images/$5"';
-			$newcontent = preg_replace($search, $replace, $post['content']);
 
+		// prevent race conditions
+		$locks = array('posts', 'categories', 'users', 'users AS lastusers', 'userpoints', 'words', 'titlewords', 'contentwords', 'tagwords', 'words AS x', 'posttags', 'options');
+		foreach ($locks as &$tbl)
+			$tbl = '^'.$tbl.' WRITE';
+		qa_db_query_sub('LOCK TABLES ' . implode(',', $locks));
+
+		$numPosts = 0;
+		while (($post=qa_db_read_one_assoc($result, true)) !== null) {
+			$newcontent = preg_replace($rxSearch, $rxReplace, $post['content']);
 			qa_post_set_content($post['postid'], $post['title'], $newcontent);
+			$numPosts++;
 		}
+
+		qa_db_query_raw('UNLOCK TABLES');
+		qa_suspend_event_reports(false);
+
+		echo $numPosts;
 	}
 }
