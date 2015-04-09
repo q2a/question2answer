@@ -64,7 +64,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 /* Page sections */
 
 .qa-header {position:relative;}
-.qa-sidepanel {float:right; width:176px;}
+.qa-sidepanel {float:right; width:176px; word-wrap:break-word;}
 .qa-sidebar {padding:12px; font-size:14px; background:#ebc5e2 url(sidebar-bg.png) repeat-y right top; border: 2px solid #6a1b56; border-right:none; margin:18px 0;}
 .qa-feed {background:url(feed-icon-14x14.png) no-repeat left 1px; padding-left:20px; margin:18px 12px 18px 0;}
 .qa-feed-link {font-size:12px; color:#666;}

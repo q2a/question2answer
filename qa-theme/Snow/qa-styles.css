@@ -968,6 +968,7 @@ div.header-banner {
 	width: 240px;
 	padding: 10px;
 	min-height: 80px;
+	word-wrap: break-word;
 }
 
 .qa-sidebar {
