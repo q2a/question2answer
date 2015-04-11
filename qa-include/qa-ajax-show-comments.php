@@ -3,4 +3,4 @@
  * @deprecated This file is deprecated from Q2A 1.7; use the below file instead.
  */
 
-require_once 'ajax/show-comments.php';
+require_once QA_INCLUDE_DIR.'ajax/show-comments.php';
