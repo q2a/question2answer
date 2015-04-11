@@ -23,7 +23,7 @@ before_script:
   - pear install --alldeps phpmd/PHP_PMD
   - phpenv rehash
   # PHPLOC
-  - curl -o phploc.phar https://phar.phpunit.de/phploc.phar
+  - curl -o phploc.phar https://phar.phpunit.de/phploc-2.0.6.phar
   # Basic config required for PHPUnit
   - cp qa-tests/phpunit-qa-config.php qa-config.php
 
