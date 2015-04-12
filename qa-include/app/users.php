@@ -866,60 +866,60 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ($permit>=QA_PERMIT_ALL)
-			$error=false;
+		if ($permit >= QA_PERMIT_ALL)
+			$error = false;
 
-		elseif ($permit>=QA_PERMIT_USERS)
-			$error=isset($userid) ? false : 'login';
+		elseif ($permit >= QA_PERMIT_USERS)
+			$error = isset($userid) ? false : 'login';
 
-		elseif ($permit>=QA_PERMIT_CONFIRMED) {
+		elseif ($permit >= QA_PERMIT_CONFIRMED) {
 			if (isset($userid)) {
 				if (
-					QA_FINAL_EXTERNAL_USERS || // not currently supported by single sign-on integration
-					($userlevel>=QA_PERMIT_APPROVED) || // if user approved or assigned to a higher level, no need
-					($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) || // actual confirmation
-					(!qa_opt('confirm_user_emails')) // if this option off, we can't ask it of the user
+						QA_FINAL_EXTERNAL_USERS || // not currently supported by single sign-on integration
+						($userlevel >= QA_PERMIT_APPROVED) || // if user approved or assigned to a higher level, no need
+						($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) || // actual confirmation
+						(!qa_opt('confirm_user_emails')) // if this option off, we can't ask it of the user
 				)
-					$error=false;
+					$error = false;
 				else
-					$error='confirm';
+					$error = 'confirm';
 			} else
-				$error='login';
+				$error = 'login';
 
-		} elseif ($permit>=QA_PERMIT_APPROVED) {
+		} elseif ($permit >= QA_PERMIT_APPROVED) {
 			if (isset($userid)) {
 				if (
-					($userlevel>=QA_USER_LEVEL_APPROVED) || // user has been approved
-					(!qa_opt('moderate_users')) // if this option off, we can't ask it of the user
+						($userlevel >= QA_USER_LEVEL_APPROVED) || // user has been approved
+						(!qa_opt('moderate_users')) // if this option off, we can't ask it of the user
 				)
-					$error=false;
+					$error = false;
 				else
-					$error='approve';
+					$error = 'approve';
 			} else
-				$error='login';
+				$error = 'login';
 
 		} else {
 			if (isset($userid)) {
-				if ($permit>=QA_PERMIT_EXPERTS)
-					$error=$userlevel>=QA_USER_LEVEL_EXPERT ? false : 'level';
+				if ($permit >= QA_PERMIT_EXPERTS)
+					$error = $userlevel >= QA_USER_LEVEL_EXPERT ? false : 'level';
 
-				elseif ($permit>=QA_PERMIT_EDITORS)
-					$error=$userlevel>=QA_USER_LEVEL_EDITOR ? false : 'level';
+				elseif ($permit >= QA_PERMIT_EDITORS)
+					$error = $userlevel >= QA_USER_LEVEL_EDITOR ? false : 'level';
 
-				elseif ($permit>=QA_PERMIT_MODERATORS)
-					$error=$userlevel>=QA_USER_LEVEL_MODERATOR ? false : 'level';
+				elseif ($permit >= QA_PERMIT_MODERATORS)
+					$error = $userlevel >= QA_USER_LEVEL_MODERATOR ? false : 'level';
 
-				elseif ($permit>=QA_PERMIT_ADMINS)
-					$error=$userlevel>=QA_USER_LEVEL_ADMIN ? false : 'level';
+				elseif ($permit >= QA_PERMIT_ADMINS)
+					$error = $userlevel >= QA_USER_LEVEL_ADMIN ? false : 'level';
 
 				else
-					$error=$userlevel>=QA_USER_LEVEL_SUPER ? false : 'level';
+					$error = $userlevel >= QA_USER_LEVEL_SUPER ? false : 'level';
 			} else
-				$error='level';
+				$error = 'level';
 		}
 
-		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED) && ($error!='level'))
-			$error='userblock';
+		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED) && ($error != 'level'))
+			$error = 'userblock';
 
 		return $error;
 	}
