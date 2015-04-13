@@ -332,6 +332,9 @@
 	Load all the qa-plugin.php files from plugins that are compatible with this version of Q2A
 */
 	{
+		if (Q2A_Application::getInstance()->getConfig('safe_mode'))
+			return;
+
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
 
 		$pluginfiles = glob(QA_PLUGIN_DIR.'*/qa-plugin.php');

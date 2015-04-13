@@ -224,6 +224,7 @@
 		'reset_options_button' => 'Reset to Defaults',
 		'reset_options_confirm' => 'Are you sure you want to reset all options on this page to their defaults?',
 		'resume_mailing_button' => 'Resume Mailing',
+		'safe_mode_all_plugins_disabled' => 'All plugins are disabled in safe mode',
 		'save_options_button' => 'Save Options',
 		'save_recalc_button' => 'Save and Recalculate',
 		'save_view_button' => 'Save and View',

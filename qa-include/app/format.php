@@ -1745,7 +1745,7 @@
 
 	//	Then load the selected theme if valid, otherwise load the Classic theme
 
-		if (!file_exists(QA_THEME_DIR.$theme.'/qa-styles.css'))
+		if (!file_exists(QA_THEME_DIR.$theme.'/qa-styles.css') || Q2A_Application::getInstance()->getConfig('safe_mode'))
 			$theme='Classic';
 
 		$themeroothtml=qa_html(qa_path_to_root().'qa-theme/'.$theme.'/');
