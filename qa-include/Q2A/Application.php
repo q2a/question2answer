@@ -46,6 +46,8 @@ class Q2A_Application {
 		$this->cache = new Q2A_Util_Set();
 
 		$this->config->set('safe_mode', false);
+
+		$this->cache->set('layers', array());
 	}
 
 	/**

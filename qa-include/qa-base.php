@@ -260,10 +260,9 @@
 	Gets everything ready to start using modules, layers and overrides
 */
 	{
-		global $qa_modules, $qa_layers, $qa_override_files, $qa_overrides, $qa_direct;
+		global $qa_modules, $qa_override_files, $qa_overrides, $qa_direct;
 
 		$qa_modules=array();
-		$qa_layers=array();
 		$qa_override_files=array();
 		$qa_overrides=array();
 		$qa_direct=array();
@@ -446,19 +445,21 @@
 	pass in the local plugin $directory and the $urltoroot relative url for that directory
 */
 	{
-		global $qa_layers;
+		$layers = Q2A_Application::getInstance()->getCache('layers');
 
-		$previous=@$qa_layers[$name];
-
-		if (isset($previous))
+		if (isset($layers[$name])) {
+			$previous = $layers[$name];
 			qa_fatal_error('A layer named '.$name.' already exists. Please check there are no duplicate plugins. '.
 				"\n\nLayer 1: ".$previous['directory'].$previous['include']."\nLayer 2: ".$directory.$include);
+		}
 
-		$qa_layers[$name]=array(
+		$layers[$name]=array(
 			'directory' => $directory,
 			'urltoroot' => $urltoroot,
 			'include' => $include,
 		);
+
+		Q2A_Application::getInstance()->setCache('layers', $layers);
 	}
 
 

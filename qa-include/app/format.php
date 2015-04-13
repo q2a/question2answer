@@ -1735,7 +1735,6 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		global $qa_layers;
 
 	//	First load the default class
 
@@ -1759,7 +1758,7 @@
 
 	//	Create the list of layers to load
 
-		$loadlayers=$qa_layers;
+		$loadlayers = Q2A_Application::getInstance()->getCache('layers');
 
 		if (!qa_user_maximum_permit_error('permit_view_voters_flaggers'))
 			$loadlayers[]=array(
