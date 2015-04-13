@@ -34,9 +34,9 @@
 	reinstate it. A counter is kept to allow multiple calls.
 */
 	{
-		global $qa_notifications_suspended;
-
-		$qa_notifications_suspended+=($suspend ? 1 : -1);
+		$notifications_suspended = Q2A_Application::getInstance()->getCache('notifications_suspended');
+		$notifications_suspended += $suspend ? 1 : -1;
+		Q2A_Application::getInstance()->setCache('notifications_suspended', $notifications_suspended);
 	}
 
 
@@ -49,9 +49,9 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		global $qa_notifications_suspended;
+		$notifications_suspended = Q2A_Application::getInstance()->getCache('notifications_suspended');
 
-		if ($qa_notifications_suspended>0)
+		if ($notifications_suspended > 0)
 			return false;
 
 		require_once QA_INCLUDE_DIR.'db/selects.php';

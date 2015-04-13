@@ -48,6 +48,7 @@ class Q2A_Application {
 		$this->config->set('safe_mode', false);
 
 		$this->cache->set('layers', array());
+		$this->cache->set('notifications_suspended', 0);
 	}
 
 	/**
