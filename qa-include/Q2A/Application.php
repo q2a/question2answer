@@ -5,7 +5,7 @@
   http://www.question2answer.org/
 
   File: qa-include/Q2A/Application.php
-  Description: Contains configuration data of Q2A
+  Description: Contains configuration and cache data of Q2A
 
 
   This program is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 class Q2A_Application {
 
 	private $config;
+	private $cache;
 	private static $instance;
 
 	/**
@@ -42,6 +43,7 @@ class Q2A_Application {
 	 */
 	private function __construct() {
 		$this->config = new Q2A_Util_Set();
+		$this->cache = new Q2A_Util_Set();
 
 		$this->config->set('safe_mode', false);
 	}
@@ -66,6 +68,28 @@ class Q2A_Application {
 	 */
 	public function setConfig($key, $value) {
 		$this->config->set($key, $value);
+	}
+
+	/**
+	 * Return a value from the ache set using a default value, if provided
+	 * @param mixed $key The key that will be used to search the cache set for
+	 * @param mixed $defaultValue A default value returned if the requested key does not exist in
+	 * the cache set
+	 * @return mixed The value corresponding to the requested key or $defaultValue if the key
+	 * does not exist. If the key does not exist and the default value is not set then a null
+	 * value is returned
+	 */
+	public function getCache($key, $defaultValue = null) {
+		return $this->cache->get($key, $defaultValue);
+	}
+
+	/**
+	 * Sets a key or value to the cache set. If the value already exists, it is replaced
+	 * @param mixed $key The key that will be used to search the cache set for
+	 * @param mixed $value The value for the key
+	 */
+	public function setCache($key, $value) {
+		$this->cache->set($key, $value);
 	}
 
 }
