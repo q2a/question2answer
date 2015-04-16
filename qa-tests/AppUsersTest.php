@@ -12,6 +12,11 @@ class AppUsersTest extends PHPUnit_Framework_TestCase
 	 */
 	public function test__qa_permit_value_error()
 	{
+		// set options cache to bypass database
+		global $qa_options_cache;
+		$qa_options_cache['confirm_user_emails'] = '1';
+		$qa_options_cache['moderate_users'] = '0';
+
 		$userFlags = QA_USER_FLAGS_EMAIL_CONFIRMED;
 		$blockedFlags = QA_USER_FLAGS_EMAIL_CONFIRMED | QA_USER_FLAGS_USER_BLOCKED;
 
