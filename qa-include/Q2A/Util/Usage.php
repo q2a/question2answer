@@ -104,25 +104,77 @@ class Q2A_Util_Usage
 		$totaldelta = $this->delta($this->startUsage, $this->getCurrent());
 ?>
 		<style>
-		.debug-table { border-collapse: collapse; box-sizing: border-box; width: 100%; margin: 20px auto; }
-		.debug-table tr { background-color: #ccc; }
-		.debug-table td { padding: 10px; }
+		.debug-table, .extra-info { border-collapse: collapse; box-sizing: border-box; width: 100%; margin: 20px auto 0 auto; }
+		.debug-table th, .debug-table td { border: 2px solid #777; background-color: #ddd; padding: 5px; }
+		.debug-table td { text-align: right; }
+		.debug-table th:empty { border: none; background-color: initial; }
+		.debug-table .row-heading { font-weight: bold; }
 
-		td.debug-cell-files { width: 30%; padding-right: 5px; }
-		td.debug-cell-queries { width: 70%; padding-left: 5px; }
+		.debug-table tr:last-child td { background-color: #ccc; border-top:4px double #777; }
 
 		textarea.debug-output { box-sizing: border-box; width: 100%; font: 12px monospace; color: #000; }
+
+		.extra-info td.debug-cell-files { width: 30%; padding-right: 5px; }
+		.extra-info td.debug-cell-queries { width: 70%; padding-left: 5px; }
 		</style>
 
 		<table class="debug-table">
+			<thead>
+				<tr>
+					<th></th>
+					<th colspan="2">Total</th>
+					<th colspan="3">PHP</th>
+					<th colspan="3">MySQL</th>
+					<th colspan="2">Other</th>
+					<th colspan="2">RAM</th>
+				</tr>
+				<tr>
+					<th></th>
+					<th>Time (ms)</th>
+					<th>%</th>
+					<th>Time (ms)</th>
+					<th>%</th>
+					<th>File count</th>
+					<th>Time (ms)</th>
+					<th>%</th>
+					<th>Query count</th>
+					<th>Time (ms)</th>
+					<th>%</th>
+					<th>Amount</th>
+					<th>%</th>
+				</tr>
+			</thead>
 		<tbody>
-			<tr>
-				<td colspan="2"><?php
-					echo $this->line('Total', $totaldelta, $totaldelta) . "<br>\n";
-					foreach ($this->stages as $stage => $stagedelta)
-						echo '<br>' . $this->line(ucfirst($stage), $stagedelta, $totaldelta) . "\n";
-				?></td>
-			</tr>
+
+			<?php
+				$stages = $this->stages;
+				$stages['total'] = $totaldelta;
+
+				foreach ($stages as $stage => $stagedelta):
+			?>
+					<tr>
+						<td class="row-heading"><?php echo ucfirst($stage); ?></td>
+						<td><?php echo sprintf('%.1f', $stagedelta['clock'] * 1000); ?></td>
+						<td><?php echo sprintf('%d%%', $stagedelta['clock'] * 100 / $totaldelta['clock']); ?></td>
+						<td><?php echo sprintf('%.1f', $stagedelta['cpu'] * 1000); ?></td>
+						<td><?php echo sprintf('%d%%', $stagedelta['cpu'] * 100 / $totaldelta['clock']); ?></td>
+						<td><?php echo $stagedelta['files']; ?></td>
+						<td><?php echo sprintf('%.1f', $stagedelta['mysql'] * 1000); ?></td>
+						<td><?php echo sprintf('%d%%', $stagedelta['mysql'] * 100 / $totaldelta['clock']); ?></td>
+						<td><?php echo $stagedelta['queries']; ?></td>
+						<td><?php echo sprintf('%.1f', $stagedelta['other'] * 1000); ?></td>
+						<td><?php echo sprintf('%d%%', $stagedelta['other'] * 100 / $totaldelta['clock']); ?></td>
+						<td><?php echo sprintf('%dk', $stagedelta['ram'] / 1024); ?></td>
+						<td><?php echo sprintf('%d%%', $stagedelta['ram'] ? ($stagedelta['ram'] * 100 / $totaldelta['ram']) : 0); ?></td>
+					</tr>
+			<?php
+				endforeach;
+			?>
+		</tbody>
+		</table>
+
+		<table class="extra-info">
+		<tbody>
 			<tr>
 				<td class="debug-cell-files">
 					<textarea class="debug-output" cols="40" rows="20"><?php
@@ -153,28 +205,4 @@ class Q2A_Util_Usage
 		return $delta;
 	}
 
-	/**
-	 * Return HTML to represent the resource $usage, showing appropriate proportions of $totalusage.
-	 */
-	private function line($stage, $usage, $totalusage)
-	{
-		return sprintf(
-			"%s &ndash; <b>%.1fms</b> (%d%%) &ndash; PHP %.1fms (%d%%), MySQL %.1fms (%d%%), Other %.1fms (%d%%) &ndash; %d PHP %s, %d DB %s, %dk RAM (%d%%)",
-			$stage,
-			$usage['clock'] * 1000,
-			$usage['clock'] * 100 / $totalusage['clock'],
-			$usage['cpu'] * 1000,
-			$usage['cpu'] * 100 / $totalusage['clock'],
-			$usage['mysql'] * 1000,
-			$usage['mysql'] * 100 / $totalusage['clock'],
-			$usage['other'] * 1000,
-			$usage['other'] * 100 / $totalusage['clock'],
-			$usage['files'],
-			$usage['files'] == 1 ? 'file' : 'files',
-			$usage['queries'],
-			$usage['queries'] == 1 ? 'query' : 'queries',
-			$usage['ram'] / 1024,
-			$usage['ram'] ? ($usage['ram'] * 100 / $totalusage['ram']) : 0
-		);
-	}
 }
