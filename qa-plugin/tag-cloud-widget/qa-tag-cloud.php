@@ -135,7 +135,7 @@ class qa_tag_cloud
 				} else
 					$size = $maxsize;
 
-				$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
+				$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;" class="qa-tag-link">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
 			}
 		}
 
