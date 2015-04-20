@@ -670,4 +670,17 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>';
 	}
 
+	/**
+	 * Used to remove the search button label
+	 *
+	 * @since Snow 1.4
+	 * @version 1.0
+	 * @return string Ask button html markup
+	 */
+	public function search_button($search)
+	{
+		$search['button_label'] = '';
+		parent::search_button($search);
+	}
+
 }
