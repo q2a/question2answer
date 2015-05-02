@@ -211,7 +211,7 @@ blockquote p {
 
 .qa-search-field {
 	margin: 0 -40px 0 0;
-	padding: 0 40px 0 0;
+	padding: 0 40px 0 5px;
 	vertical-align: bottom;
 	width: 100%;
 	height: 36px;
@@ -224,14 +224,11 @@ blockquote p {
 }
 
 .qa-search-button {
-	background-color: #bdc3c7;
-	background-image: url('images/search-icon-white.png');
-	background-position: center;
-	background-repeat: no-repeat;
-	height: 36px;
-	text-indent: 9999px;
 	width: 36px;
+	height: 36px;
 	margin: 0 !important;
+	text-indent: -9999px;
+	background: #bdc3c7 url('images/search-icon-white.png') center no-repeat;
 	border: none;
 	outline: none;
 }

@@ -297,17 +297,13 @@ input[type="submit"].qa-search-button {
 	margin: 0 0 0 -5px;
 	padding: 0;
 	text-indent: -9999px;
-	background: url(images/search.png);
-	background-repeat: no-repeat;
-	background-position: center 0;
+	background: url(images/search.png) no-repeat center 0;
 	border: 1px solid #ccc;
 	display: inline-block;
 	border-radius: 0 3px 3px 0 !important;
 }
 
 input[type="submit"].qa-search-button:hover {
-	background: url(images/search.png);
-	background-repeat: no-repeat;
 	background-position: center -26px;
 }
 
