@@ -104,18 +104,21 @@ class Q2A_Util_Usage
 		$totaldelta = $this->delta($this->startUsage, $this->getCurrent());
 ?>
 		<style>
-		.debug-table, .extra-info { border-collapse: collapse; box-sizing: border-box; width: 100%; margin: 20px auto 0 auto; }
-		.debug-table th, .debug-table td { border: 2px solid #777; background-color: #ddd; padding: 5px; }
+		.debug-table { border-collapse: collapse; width: auto; margin: 20px auto; }
+		.debug-table th, .debug-table td { border: 1px solid #aaa; background-color: #ddd; padding: 5px 10px; }
 		.debug-table td { text-align: right; }
 		.debug-table th:empty { border: none; background-color: initial; }
 		.debug-table .row-heading { font-weight: bold; }
 
-		.debug-table tr:last-child td { background-color: #ccc; border-top:4px double #777; }
+		.debug-table tr:last-child td { background-color: #ccc; border-top-width: 3px; }
 
 		textarea.debug-output { box-sizing: border-box; width: 100%; font: 12px monospace; color: #000; }
 
-		.extra-info td.debug-cell-files { width: 30%; padding-right: 5px; }
-		.extra-info td.debug-cell-queries { width: 70%; padding-left: 5px; }
+		.extra-info { border-collapse: collapse; box-sizing: border-box; width: 100%; }
+		.extra-info td.debug-cell-files { width: 30%; padding: 10px 5px 10px 10px; }
+		.extra-info td.debug-cell-queries { width: 70%; padding: 10px 10px 10px 5px; }
+		.extra-info tr { background-color: #ccc; }
+		.extra-info textarea { margin: 0; }
 		</style>
 
 		<table class="debug-table">
