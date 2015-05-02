@@ -1950,6 +1950,12 @@ input[type="submit"], button {
 	margin: 0 0 5px 0;
 }
 
+.qa-form-wide-label {
+	padding-right: 5px;
+}
+.qa-form-wide-data {
+	padding-left: 5px;
+}
 .qa-form-wide-text {
 	width: 100%;
 }
@@ -2025,7 +2031,7 @@ input[type="submit"], button {
 	padding-bottom: 0;
 }
 .qa-template-user .qa-form-wide-label {
-	min-width: 25%;
+	min-width: 110px;
 	width: auto;
 }
 
