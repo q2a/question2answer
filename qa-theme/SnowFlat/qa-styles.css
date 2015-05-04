@@ -98,33 +98,45 @@ a:hover {
 }
 
 h1 {
+	position: relative;
+	margin: 0 0 5px;
+	padding: 8px 52px 8px 20px;
+	background: #3498db;
+	color: #fff;
 	font-size: 1.5em;
-	line-height: 2em;
+	line-height: 1.5em;
+}
+h1 a {
+	color: #fff;
+	border-bottom: 1px dotted #fff;
+	line-height: inherit;
+	border: none;
+	text-decoration: none;
+	opacity: 0.85;
+}
+h1 a:hover {
+	border-bottom: 0;
+}
+h1 a:hover, h1 a:focus, h1 a:visited {
+	color: #fff;
+	line-height: inherit !important;
+	opacity: 1;
 }
 
 h2 {
 	font-size: 1.25em;
-	line-height: 1.2em;
 }
-
 h3 {
 	font-size: 1em;
-	line-height: 1.5em;
 }
-
 h4 {
 	font-size: 0.875em;
-	line-height: 1.71429em;
 }
-
 h5 {
 	font-size: 0.75em;
-	line-height: 2em;
 }
-
 h6 {
 	font-size: 0.625em;
-	line-height: 2.4em;
 }
 
 p {
@@ -891,34 +903,6 @@ blockquote p {
 
 
 
-h1 {
-	padding: 8px 52px 8px 20px;
-	margin-bottom: 5px;
-	background: #3498db;
-	color: #fff;
-	margin-top: 0px;
-	position: relative;
-	line-height: 1.5em;
-}
-h1 a {
-	color: #fff;
-	border-bottom: 1px dotted #fff;
-}
-h1 a:hover {
-	color: #fff;
-	border-bottom: 0;
-}
-h1 a {
-	line-height: inherit;
-	border: none;
-	text-decoration: none;
-	opacity: 0.85;
-}
-h1 a:hover, h1 a:focus, h1 a:visited {
-	line-height: inherit !important;
-	color: #fff;
-	opacity: 1;
-}
 
 .qam-title-rss {
 	float: right;
@@ -1865,11 +1849,12 @@ input[type="submit"], button {
 	width: 50px;
 }
 
-.qa-form-tall-note {
+.qa-form-tall-note, .qa-form-wide-note {
 	color: #7f8c8d;
-	font-size: 0.75em;
-	line-height: 2em;
-	padding: 5px;
+	font-size: 0.8em;
+}
+.qa-form-tall-note {
+	margin: 10px 0 5px;
 }
 
 .qa-form-tall-button, .qa-form-wide-button, .qa-form-basic-button {
@@ -1921,12 +1906,6 @@ input[type="submit"], button {
 .qa-form-tall-button-cancel:hover, .qa-form-tall-button-cancel:focus,
 .qa-form-wide-button-cancel:hover, .qa-form-wide-button-cancel:focus {
 	background-color: #ea6153;
-}
-
-.qa-form-wide-note {
-	color: #7f8c8d;
-	font-size: 0.75em;
-	line-height: 2em;
 }
 
 .qa-form-wide-label, .qa-form-wide-data,
@@ -2445,6 +2424,14 @@ input[type="submit"], button {
 
 .qa-q-view-closed-content {
 	font-weight: normal !important;
+}
+
+.qa-q-view-extra {
+	font-size: 14px;
+	margin: 10px 0;
+}
+.qa-q-view-extra-content {
+	font-weight: bold;
 }
 
 .qa-part-form-q-edit {
