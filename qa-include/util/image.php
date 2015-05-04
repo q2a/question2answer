@@ -45,16 +45,7 @@
 		if (function_exists('memory_get_usage')) {
 			$gotbytes=trim(@ini_get('memory_limit'));
 
-			switch (strtolower(substr($gotbytes, -1))) {
-				case 'g':
-					$gotbytes *= 1024;
-					// fall-through
-				case 'm':
-					$gotbytes *= 1024;
-					// fall-through
-				case 'k':
-					$gotbytes *= 1024;
-			}
+			$gotbytes = convert_to_bytes(substr($gotbytes, -1), $gotbytes);
 
 			if ($gotbytes>0) { // otherwise we clearly don't know our limit
 				$gotbytes=($gotbytes-memory_get_usage())*0.9; // safety margin of 10%
