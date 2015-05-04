@@ -610,158 +610,135 @@
 	}
 
 
+	/**
+	 * Return the translated language ID string replacing the progress and total in it
+	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
+	 * @param int $progress Amount of processed elements
+	 * @param int $total Total amount of elements
+	 * @return string Returns the language string ID with their placeholders replaced with
+	 * the formatted progress and total numbers
+	 */
+	function qa_private_translate_with_progress($langId, $progress, $total)
+	{
+		return strtr(qa_lang($langId), array(
+			'^1' => qa_format_number($progress),
+			'^2' => qa_format_number($total)
+		));
+	}
+
+
 	function qa_recalc_get_message($state)
 /*
 	Return a string which gives a user-viewable version of $state
 */
 	{
-		@list($operation, $length, $next, $done)=explode("\t", $state);
+		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		$done=(int)$done;
-		$length=(int)$length;
+		@list($operation, $length, $next, $done) = explode("\t", $state);
+
+		$done = (int) $done;
+		$length = (int) $length;
 
 		switch ($operation) {
 			case 'doreindexcontent_postcount':
 			case 'dorecountposts_postcount':
 			case 'dorecalccategories_postcount':
 			case 'dorefillevents_qcount':
-				$message=qa_lang('admin/recalc_posts_count');
+				$message = qa_lang('admin/recalc_posts_count');
 				break;
 
 			case 'doreindexcontent_pagereindex':
-				$message=strtr(qa_lang('admin/reindex_pages_reindexed'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/reindex_pages_reindexed', $done, $length);
 				break;
 
 			case 'doreindexcontent_postreindex':
-				$message=strtr(qa_lang('admin/reindex_posts_reindexed'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
-				break;
-
-			case 'doreindexposts_wordcount':
-				$message=strtr(qa_lang('admin/reindex_posts_wordcounted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
-				break;
-
-			case 'dorecountposts_votecount':
-				$message=strtr(qa_lang('admin/recount_posts_votes_recounted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
-				break;
-
-			case 'dorecountposts_acount':
-				$message=strtr(qa_lang('admin/recount_posts_as_recounted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/reindex_posts_reindexed', $done, $length);
 				break;
 
 			case 'doreindexposts_complete':
-				$message=qa_lang('admin/reindex_posts_complete');
+				$message = qa_lang('admin/reindex_posts_complete');
+				break;
+
+			case 'doreindexposts_wordcount':
+				$message = qa_private_translate_with_progress('admin/reindex_posts_wordcounted', $done, $length);
+				break;
+
+			case 'dorecountposts_votecount':
+				$message = qa_private_translate_with_progress('admin/recount_posts_votes_recounted', $done, $length);
+				break;
+
+			case 'dorecountposts_acount':
+				$message = qa_private_translate_with_progress('admin/recount_posts_as_recounted', $done, $length);
 				break;
 
 			case 'dorecountposts_complete':
-				$message=qa_lang('admin/recount_posts_complete');
+				$message = qa_lang('admin/recount_posts_complete');
 				break;
 
 			case 'dorecalcpoints_usercount':
-				$message=qa_lang('admin/recalc_points_usercount');
+				$message = qa_lang('admin/recalc_points_usercount');
 				break;
 
 			case 'dorecalcpoints_recalc':
-				$message=strtr(qa_lang('admin/recalc_points_recalced'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/recalc_points_recalced', $done, $length);
 				break;
 
 			case 'dorecalcpoints_complete':
-				$message=qa_lang('admin/recalc_points_complete');
+				$message = qa_lang('admin/recalc_points_complete');
 				break;
 
 			case 'dorefillevents_refill':
-				$message=strtr(qa_lang('admin/refill_events_refilled'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/refill_events_refilled', $done, $length);
 				break;
 
 			case 'dorefillevents_complete':
-				$message=qa_lang('admin/refill_events_complete');
+				$message = qa_lang('admin/refill_events_complete');
 				break;
 
 			case 'dorecalccategories_postupdate':
-				$message=strtr(qa_lang('admin/recalc_categories_updated'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/recalc_categories_updated', $done, $length);
 				break;
 
 			case 'dorecalccategories_recount':
-				$message=strtr(qa_lang('admin/recalc_categories_recounting'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/recalc_categories_recounting', $done, $length);
 				break;
 
 			case 'dorecalccategories_backpaths':
-				$message=strtr(qa_lang('admin/recalc_categories_backpaths'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/recalc_categories_backpaths', $done, $length);
 				break;
 
 			case 'dorecalccategories_complete':
-				$message=qa_lang('admin/recalc_categories_complete');
+				$message = qa_lang('admin/recalc_categories_complete');
 				break;
 
 			case 'dodeletehidden_comments':
-				$message=strtr(qa_lang('admin/hidden_comments_deleted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/hidden_comments_deleted', $done, $length);
 				break;
 
 			case 'dodeletehidden_answers':
-				$message=strtr(qa_lang('admin/hidden_answers_deleted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/hidden_answers_deleted', $done, $length);
 				break;
 
 			case 'dodeletehidden_questions':
-				$message=strtr(qa_lang('admin/hidden_questions_deleted'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/hidden_questions_deleted', $done, $length);
 				break;
 
 			case 'dodeletehidden_complete':
-				$message=qa_lang('admin/delete_hidden_complete');
+				$message = qa_lang('admin/delete_hidden_complete');
 				break;
 
 			case 'doblobstodisk_move':
 			case 'doblobstodb_move':
-				$message=strtr(qa_lang('admin/blobs_move_moved'), array(
-					'^1' => number_format($done),
-					'^2' => number_format($length)
-				));
+				$message = qa_private_translate_with_progress('admin/blobs_move_moved', $done, $length);
 				break;
 
 			case 'doblobstodisk_complete':
 			case 'doblobstodb_complete':
-				$message=qa_lang('admin/blobs_move_complete');
+				$message = qa_lang('admin/blobs_move_complete');
 				break;
 
 			default:
-				$message='';
+				$message = '';
 				break;
 		}
 

@@ -318,7 +318,7 @@
 				$fields['answers_raw']=$post['acount'];
 
 				$fields['answers']=($post['acount']==1) ? qa_lang_html_sub_split('main/1_answer', '1', '1')
-					: qa_lang_html_sub_split('main/x_answers', number_format($post['acount']));
+					: qa_lang_html_sub_split('main/x_answers', qa_format_number($post['acount'], 1, true));
 
 				$fields['answer_selected']=isset($post['selchildid']);
 			}
@@ -327,7 +327,7 @@
 				$fields['views_raw']=$post['views'];
 
 				$fields['views']=($post['views']==1) ? qa_lang_html_sub_split('main/1_view', '1', '1') :
-					qa_lang_html_sub_split('main/x_views', number_format($post['views']));
+					qa_lang_html_sub_split('main/x_views', qa_format_number($post['views'], 1, true));
 			}
 
 			if (@$options['categoryview'] && isset($post['categoryname']) && isset($post['categorybackpath'])) {
@@ -393,23 +393,26 @@
 				$downvotes=(int)@$post['downvotes'];
 			}
 
-			$netvotes=(int)($upvotes-$downvotes);
+			$netvotes = $upvotes - $downvotes;
 
-			$fields['upvotes_raw']=$upvotes;
-			$fields['downvotes_raw']=$downvotes;
-			$fields['netvotes_raw']=$netvotes;
+			$fields['upvotes_raw'] = $upvotes;
+			$fields['downvotes_raw'] = $downvotes;
+			$fields['netvotes_raw'] = $netvotes;
 
 		//	Create HTML versions...
 
-			$upvoteshtml=qa_html($upvotes);
-			$downvoteshtml=qa_html($downvotes);
+			$upvoteshtml = qa_html(qa_format_number($upvotes, 1, true));
+			$downvoteshtml = qa_html(qa_format_number($downvotes, 1, true));
 
-			if ($netvotes>=1)
-				$netvoteshtml='+'.qa_html($netvotes);
-			elseif ($netvotes<=-1)
-				$netvoteshtml='&ndash;'.qa_html(-$netvotes);
+			if ($netvotes >= 1)
+				$netvotesPrefix = '+';
+			elseif ($netvotes <= -1)
+				$netvotesPrefix = '&ndash;';
 			else
-				$netvoteshtml='0';
+				$netvotesPrefix = '';
+
+			$netvotes = abs($netvotes);
+			$netvoteshtml = $netvotesPrefix . qa_html(qa_format_number($netvotes, 1, true));
 
 		//	...with microformats if appropriate
 
@@ -436,7 +439,7 @@
 			$fields['downvotes_view']=($downvotes==1) ? qa_lang_html_sub_split('main/1_disliked', $downvoteshtml, '1')
 				: qa_lang_html_sub_split('main/x_disliked', $downvoteshtml);
 
-			$fields['netvotes_view']=(abs($netvotes)==1) ? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
+			$fields['netvotes_view']=($netvotes==1) ? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
 				: qa_lang_html_sub_split('main/x_votes', $netvoteshtml);
 
 		//	Voting buttons
@@ -525,7 +528,7 @@
 			if (isset($post['points'])) {
 				if (@$options['pointsview'])
 					$fields['who']['points']=($post['points']==1) ? qa_lang_html_sub_split('main/1_point', '1', '1')
-						: qa_lang_html_sub_split('main/x_points', qa_html(number_format($post['points'])));
+						: qa_lang_html_sub_split('main/x_points', qa_format_number($post['points'], 1, true));
 
 				if (isset($options['pointstitle']))
 					$fields['who']['title']=qa_get_points_title_html($post['points'], $options['pointstitle']);
@@ -848,11 +851,10 @@
 			$isbyuser=qa_post_is_by_user(array('userid' => $question['ouserid'], 'cookieid' => @$question['ocookieid']), $userid, $cookieid);
 
 			$fields['who']=qa_who_to_html($isbyuser, $question['ouserid'], $usershtml, @$options['ipview'] ? @$question['oip'] : null, false, @$question['oname']);
-
 			if (isset($question['opoints'])) {
 				if (@$options['pointsview'])
 					$fields['who']['points']=($question['opoints']==1) ? qa_lang_html_sub_split('main/1_point', '1', '1')
-						: qa_lang_html_sub_split('main/x_points', qa_html(number_format($question['opoints'])));
+						: qa_lang_html_sub_split('main/x_points', qa_format_number($question['opoints'], 1, true));
 
 				if (isset($options['pointstitle']))
 					$fields['who']['title']=qa_get_points_title_html($question['opoints'], $options['pointstitle']);
@@ -1241,7 +1243,7 @@
 					'label' => qa_html($category['title']),
 					'popup' => qa_html(@$category['content']),
 					'selected' => isset($selecteds[$category['categoryid']]),
-					'note' => $showqcount ? ('('.qa_html(number_format($category['qcount'])).')') : null,
+					'note' => $showqcount ? ('('.qa_html(qa_format_number($category['qcount'], 1, true)).')') : null,
 					'subnav' => qa_category_navigation_sub($parentcategories, $category['categoryid'], $selecteds,
 						$pathprefix.$category['tags'].'/', $showqcount, $pathparams, $favoritemap),
 					'categoryid' => $category['categoryid'],
@@ -2041,6 +2043,48 @@
 			($favorite ? 'favorite_remove_tags' : 'favorite_add_tags') =>
 				'title="'.qa_html($title).'" name="'.qa_html('favorite_'.$entitytype.'_'.$entityid.'_'.(int)!$favorite).'" onclick="return qa_favorite_click(this);"',
 		);
+	}
+
+	/**
+	 * Format a number using the decimal point and thousand separator specified in the language files. If the number
+	 * is compacted it is turned into a string such as 1.3k or 2.5m
+	 * @param integer $number Number to be formatted
+	 * @param integer $decimals Amount of decimals to use
+	 * @param bool $compact Whether to show compact numbers or not
+	 * @return string The formatted number as a string
+	 */
+	function qa_format_number($number, $decimals = 0, $compact = false)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		$suffix = '';
+		if ($compact && qa_opt('show_compact_numbers')) {
+			if ($number != 0) {
+				$base = log($number) / log(1000);
+				$floorBase = floor($base);
+				$number = round(pow(1000, $base - $floorBase), 1);
+				// If $number is too long then remove the decimals, e.g., 123k instead of 123.4k
+				if ($number >= 100) {
+					$decimals = 0;
+				}
+				// If $number exceeds millions then don't add any suffix
+				$suffixes = array('', qa_lang_html('main/_thousands_suffix'), qa_lang_html('main/_millions_suffix'));
+				$suffix = isset($suffixes[$floorBase]) ? $suffixes[$floorBase] : '';
+			}
+			// If the decimal part is 0 then remove it
+			if ($number == (int) $number) {
+				$decimals = 0;
+			}
+		} else {
+			$decimals = 0;
+		}
+
+		return number_format(
+			$number,
+			$decimals,
+			qa_lang_html('main/_decimal_point'),
+			qa_lang_html('main/_thousands_separator')
+		) . $suffix;
 	}
 
 

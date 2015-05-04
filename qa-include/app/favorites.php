@@ -123,6 +123,7 @@
 			return null;
 
 		require_once QA_INCLUDE_DIR.'app/users.php';
+		require_once QA_INCLUDE_DIR.'app/format.php';
 
 		$ranking = array(
 			'items' => array(),
@@ -137,7 +138,7 @@
 			$ranking['items'][] = array(
 				'avatar' => $avatarhtml,
 				'label' => $usershtml[$user['userid']],
-				'score' => qa_html(number_format($user['points'])),
+				'score' => qa_html(qa_format_number($user['points'], 1, true)),
 				'raw' => $user,
 			);
 		}
@@ -148,9 +149,11 @@
 
 	function qa_favorite_tags_view($tags)
 /*
-	Returns content to set in $qa_content['ranking_tagss'] for a user's favorite $tags.
+	Returns content to set in $qa_content['ranking_tags'] for a user's favorite $tags.
 */
 	{
+		require_once QA_INCLUDE_DIR.'app/format.php';
+
 		$ranking = array(
 			'items' => array(),
 			'rows' => ceil(count($tags)/qa_opt('columns_tags')),
@@ -160,7 +163,7 @@
 		foreach ($tags as $tag) {
 			$ranking['items'][] = array(
 				'label' => qa_tag_html($tag['word'], false, true),
-				'count' => number_format($tag['tagcount']),
+				'count' => qa_html(qa_format_number($tag['tagcount'], 1, true)),
 			);
 		}
 
@@ -173,6 +176,8 @@
 	Returns content to set in $qa_content['nav_list_categories'] for a user's favorite $categories.
 */
 	{
+		require_once QA_INCLUDE_DIR.'app/format.php';
+
 		$nav_list_categories = array(
 			'nav' => array(),
 			'type' => 'browse-cat',
@@ -182,7 +187,7 @@
 			$cat_url = qa_path_html( 'questions/' . implode( '/', array_reverse(explode('/', $category['backpath'])) ) );
 			$cat_anchor = $category['qcount'] == 1
 				? qa_lang_html_sub('main/1_question', '1', '1')
-				: qa_lang_html_sub('main/x_questions', number_format($category['qcount']));
+				: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount'], 1, true));
 			$cat_descr = strlen($category['content']) ? qa_html(' - '.$category['content']) : '';
 
 			$nav_list_categories['nav'][$category['categoryid']] = array(

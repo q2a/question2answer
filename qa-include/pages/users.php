@@ -66,7 +66,7 @@
 			$qa_content['ranking']['items'][] = array(
 				'avatar' => $avatarhtml,
 				'label' => $usershtml[$user['userid']],
-				'score' => qa_html(number_format($user['points'])),
+				'score' => qa_html(qa_format_number($user['points'], 1, true)),
 				'raw' => $user,
 			);
 		}

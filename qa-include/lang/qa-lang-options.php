@@ -227,6 +227,7 @@
 		'show_a_form_immediate' => 'Show answer form immediately:',
 		'show_always' => 'Always',
 		'show_c_reply_buttons' => 'Show reply button on comments:',
+		'show_compact_numbers' => 'Show compact numbers (e.g., 1.3k):',
 		'show_custom_answer' => 'Custom message on answer form - HTML allowed:',
 		'show_custom_ask' => 'Custom message on ask form - HTML allowed:',
 		'show_custom_comment' => 'Custom message on comment form - HTML allowed:',

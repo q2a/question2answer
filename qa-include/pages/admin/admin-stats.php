@@ -28,6 +28,7 @@
 	require_once QA_INCLUDE_DIR.'db/recalc.php';
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'db/admin.php';
+	require_once QA_INCLUDE_DIR.'app/format.php';
 
 
 //	Check admin privileges (do late to allow one DB query)
@@ -88,7 +89,7 @@
 
 			'db_size' => array(
 				'label' => qa_lang_html('admin/q2a_db_size'),
-				'value' => qa_html(number_format(qa_db_table_size()/1048576, 1).' MB'),
+				'value' => qa_html(qa_format_number(qa_db_table_size() / 1048576, 1) . ' MB'),
 			),
 
 			'break1' => array(
@@ -111,17 +112,17 @@
 
 			'qcount' => array(
 				'label' => qa_lang_html('admin/total_qs'),
-				'value' => qa_html(number_format($qcount)),
+				'value' => qa_html(qa_format_number($qcount)),
 			),
 
 			'qcount_users' => array(
 				'label' => qa_lang_html('admin/from_users'),
-				'value' => qa_html(number_format($qcount-$qcount_anon)),
+				'value' => qa_html(qa_format_number($qcount-$qcount_anon)),
 			),
 
 			'qcount_anon' => array(
 				'label' => qa_lang_html('admin/from_anon'),
-				'value' => qa_html(number_format($qcount_anon)),
+				'value' => qa_html(qa_format_number($qcount_anon)),
 			),
 
 			'break3' => array(
@@ -130,17 +131,17 @@
 
 			'acount' => array(
 				'label' => qa_lang_html('admin/total_as'),
-				'value' => qa_html(number_format($acount)),
+				'value' => qa_html(qa_format_number($acount)),
 			),
 
 			'acount_users' => array(
 				'label' => qa_lang_html('admin/from_users'),
-				'value' => qa_html(number_format($acount-$acount_anon)),
+				'value' => qa_html(qa_format_number($acount-$acount_anon)),
 			),
 
 			'acount_anon' => array(
 				'label' => qa_lang_html('admin/from_anon'),
-				'value' => qa_html(number_format($acount_anon)),
+				'value' => qa_html(qa_format_number($acount_anon)),
 			),
 
 			'break4' => array(
@@ -149,17 +150,17 @@
 
 			'ccount' => array(
 				'label' => qa_lang_html('admin/total_cs'),
-				'value' => qa_html(number_format($ccount)),
+				'value' => qa_html(qa_format_number($ccount)),
 			),
 
 			'ccount_users' => array(
 				'label' => qa_lang_html('admin/from_users'),
-				'value' => qa_html(number_format($ccount-$ccount_anon)),
+				'value' => qa_html(qa_format_number($ccount-$ccount_anon)),
 			),
 
 			'ccount_anon' => array(
 				'label' => qa_lang_html('admin/from_anon'),
-				'value' => qa_html(number_format($ccount_anon)),
+				'value' => qa_html(qa_format_number($ccount_anon)),
 			),
 
 			'break5' => array(
@@ -168,22 +169,22 @@
 
 			'users' => array(
 				'label' => qa_lang_html('admin/users_registered'),
-				'value' => QA_FINAL_EXTERNAL_USERS ? '' : qa_html(number_format(qa_db_count_users())),
+				'value' => QA_FINAL_EXTERNAL_USERS ? '' : qa_html(qa_format_number(qa_db_count_users())),
 			),
 
 			'users_active' => array(
 				'label' => qa_lang_html('admin/users_active'),
-				'value' => qa_html(number_format((int)qa_opt('cache_userpointscount'))),
+				'value' => qa_html(qa_format_number((int) qa_opt('cache_userpointscount'))),
 			),
 
 			'users_posted' => array(
 				'label' => qa_lang_html('admin/users_posted'),
-				'value' => qa_html(number_format(qa_db_count_active_users('posts'))),
+				'value' => qa_html(qa_format_number(qa_db_count_active_users('posts'))),
 			),
 
 			'users_voted' => array(
 				'label' => qa_lang_html('admin/users_voted'),
-				'value' => qa_html(number_format(qa_db_count_active_users('uservotes'))),
+				'value' => qa_html(qa_format_number(qa_db_count_active_users('uservotes'))),
 			),
 		),
 	);

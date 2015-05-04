@@ -32,6 +32,8 @@ class qa_html_theme extends qa_html_theme_base
 
 	public function logged_in()
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		if (qa_is_logged_in()) // output user avatar to login bar
 			$this->output(
 				'<div class="qa-logged-in-avatar">',
@@ -50,7 +52,7 @@ class qa_html_theme extends qa_html_theme_base
 
 			$pointshtml=($userpoints==1)
 				? qa_lang_html_sub('main/1_point', '1', '1')
-				: qa_lang_html_sub('main/x_points', qa_html(number_format($userpoints)));
+				: qa_lang_html_sub('main/x_points', qa_html(qa_format_number($userpoints)));
 
 			$this->output(
 				'<span class="qa-logged-in-points">',

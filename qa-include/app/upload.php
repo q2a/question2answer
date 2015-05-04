@@ -91,7 +91,7 @@
 			$maxfilesize=qa_get_max_upload_size();
 
 		if ( ($filesize<=0) || ($filesize>$maxfilesize) ) { // if file was too big for PHP, $filesize will be zero
-			$result['error']=qa_lang_sub('main/max_upload_size_x', number_format($maxfilesize/1048576, 1).'MB');
+			$result['error']=qa_lang_sub('main/max_upload_size_x', qa_format_number($maxfilesize/1048576, 1).'MB');
 			return $result;
 		}
 

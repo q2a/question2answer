@@ -100,7 +100,7 @@ class qa_html_theme extends qa_html_theme_base
 			$userpoints = qa_get_logged_in_points();
 			$pointshtml = $userpoints == 1
 				? qa_lang_html_sub('main/1_point', '1', '1')
-				: qa_html(number_format($userpoints))
+				: qa_html(qa_format_number($userpoints))
 			;
 			$this->output('<div class="qam-logged-in-points">' . $pointshtml . '</div>');
 		}

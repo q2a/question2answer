@@ -137,10 +137,12 @@
 	Return a message describing current progress in the mailing
 */
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		if (strlen(qa_opt('mailing_last_userid')))
 			return strtr(qa_lang('admin/mailing_progress'), array(
-				'^1' => number_format(qa_opt('mailing_done_users')),
-				'^2' => number_format(qa_opt('mailing_total_users')),
+				'^1' => qa_format_number(qa_opt('mailing_done_users')),
+				'^2' => qa_format_number(qa_opt('mailing_total_users')),
 			));
 		else
 			return null;

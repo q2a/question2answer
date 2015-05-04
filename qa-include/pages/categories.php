@@ -69,7 +69,7 @@
 			$navigation[$key]['note'].=
 				' - <a href="'.qa_path_html('questions/'.implode('/', array_reverse(explode('/', $category['backpath'])))).'">'.( ($category['qcount']==1)
 					? qa_lang_html_sub('main/1_question', '1', '1')
-					: qa_lang_html_sub('main/x_questions', number_format($category['qcount']))
+					: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount'], 1, true))
 				).'</a>';
 
 			if (strlen($category['content']))
