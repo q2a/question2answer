@@ -9,7 +9,8 @@
 */
 
 
-/*---[ Start: global css ]---*/
+/* Global CSS */
+
 .clearfix:after,
 .qam-login-group:after,
 .qa-header:after,
@@ -40,7 +41,7 @@
 	display: inline-table;
 }
 
-/* Hides from IE-mac \*/
+/* hides from IE-mac \*/
 * html .clearfix {
 	height: 1%;
 }
@@ -57,8 +58,8 @@
 .qa-nav-cat-item {
 	display: block;
 }
+/* end hide from IE-mac */
 
-/* End hide from IE-mac */
 :-moz-placeholder {
 	color: #aaa !important;
 	font-style: italic;
@@ -162,6 +163,7 @@ table {
 
 
 /* Headings */
+
 h1 {
 	color: #444;
 	font-size: 20px;
@@ -214,7 +216,6 @@ img {
 	border: none;
 }
 
-/*---[ End: global css ]---*/
 .qa-q-view-follows {
 	background: #eee;
 	padding: 2px 5px;
@@ -228,8 +229,8 @@ p {
 	margin-top: 0;
 }
 
+/* Login bar */
 
-/*---[ Begin: login bar css ]---*/
 .qam-login-bar {
 	background: #ddd;
 	margin: 0;
@@ -268,7 +269,7 @@ p {
 }
 
 
-/*-- search box --*/
+/* search box */
 .qa-search {
 	white-space: nowrap;
 	margin: 0;
@@ -307,7 +308,7 @@ input[type="submit"].qa-search-button:hover {
 	background-position: center -26px;
 }
 
-/*-- nav user class --*/
+/* navigation */
 .qa-nav-user {
 	float: left;
 	font-size: 12px;
@@ -371,9 +372,8 @@ input[type="submit"].qa-search-button:hover {
 	line-height: 26px;
 }
 
-/*---[ End: login bar css ]---*/
+/* Notice bar */
 
-/*---[ Begin: notice bar css ]---*/
 .qa-notice {
 	background: #FFC73A;
 	border-bottom: 3px solid #FFD77A;
@@ -407,21 +407,21 @@ input[type="submit"].qa-search-button:hover {
 	background: #EAD279;
 	color: #000;
 }
-/*---[ End: notice bar css ]---*/
 
-/*---[ Begin: body css ]---*/
+/* Body styles */
+
 .qa-body-wrapper {
 	width: 1000px;
 	text-align: left;
 	margin: 0 auto 50px auto;
 }
 
-/* Clearing classes */
+/* clearing classes */
 .qa-nav-main-clear, .qa-nav-sub-clear, .qa-q-item-clear, .qa-q-view-clear, .qa-a-item-clear, .qa-c-item-clear, .qa-footer-clear, .qa-page-links-clear {
 	clear: both;
 }
 
-/*-- header css --*/
+/* header */
 .qa-header {
 	padding: 15px 10px 5px;
 	height: auto;
@@ -438,7 +438,7 @@ div.header-banner {
 	margin: 0;
 }
 
-/*-- qa main wrapper css --*/
+/* main wrapper */
 .qa-main-shadow {
 	padding: 10px 10px 0;
 	background: url(images/shadow.png) no-repeat center -10px;
@@ -449,7 +449,7 @@ div.header-banner {
 	box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
 }
 
-/*-- main + sub navigation css --*/
+/* main + sub navigation */
 .qa-nav-main {
 	clear: both;
 	padding: 0;
@@ -579,10 +579,8 @@ div.header-banner {
 	-ms-transition: all ease-in-out 0.2s;
 	transition: all ease-in-out 0.2s;
 }
-/*-- end main + sub navigation css --*/
 
-
-/*-- content and widgets --*/
+/* content and widgets */
 .qa-main {
 	padding-left: 10px;
 	float: left;
@@ -626,7 +624,7 @@ div.header-banner {
 }
 
 
-/*--- VOTING + ANSWER + VIEW BLOCKS CSS ---*/
+/* Voting + Answer + view blocks */
 
 /* Votes */
 .qa-q-item-stats {
@@ -893,7 +891,6 @@ div.header-banner {
 	letter-spacing: 1px;
 }
 
-/*--- END VOTING + ANSWER + VIEW BLOCKS CSS ---*/
 
 .qa-favoriting {
 	position: absolute;
@@ -1001,8 +998,7 @@ div.header-banner {
 	text-decoration: underline;
 }
 
-/* IE6
- Widget wrappers */
+/* IE6 Widget wrappers */
 .qa-widget-full {
 	clear: both;
 	margin: 15px 0;
