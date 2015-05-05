@@ -83,6 +83,7 @@
 			'fa' => 'Persian - فارسی',
 			'fi' => 'Finnish - Suomi',
 			'fr' => 'French - Français',
+			'gl' => 'Galician - Galego',
 			'he' => 'Hebrew - עברית',
 			'hr' => 'Croatian - Hrvatski',
 			'hu' => 'Hungarian - Magyar',
