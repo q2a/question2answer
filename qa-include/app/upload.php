@@ -33,11 +33,12 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$minphp = trim(ini_get('upload_max_filesize'));
+		$mindb = 16777215; // from MEDIUMBLOB column type
 
+		$minphp = trim(ini_get('upload_max_filesize'));
 		$minphp = convert_to_bytes(substr($minphp, -1), $minphp);
 
-		return min(16777215, $minphp);  // 16777215 from MEDIUMBLOB column type
+		return min($mindb, $minphp);
 	}
 
 

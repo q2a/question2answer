@@ -611,14 +611,16 @@
 
 
 	/**
-	 * Return the translated language ID string replacing the progress and total in it
+	 * Return the translated language ID string replacing the progress and total in it.
+	 * @access private
 	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
 	 * @param int $progress Amount of processed elements
 	 * @param int $total Total amount of elements
+	 *
 	 * @return string Returns the language string ID with their placeholders replaced with
 	 * the formatted progress and total numbers
 	 */
-	function qa_private_translate_with_progress($langId, $progress, $total)
+	function qa_recalc_progress_lang($langId, $progress, $total)
 	{
 		return strtr(qa_lang($langId), array(
 			'^1' => qa_format_number($progress),
@@ -648,11 +650,11 @@
 				break;
 
 			case 'doreindexcontent_pagereindex':
-				$message = qa_private_translate_with_progress('admin/reindex_pages_reindexed', $done, $length);
+				$message = qa_recalc_progress_lang('admin/reindex_pages_reindexed', $done, $length);
 				break;
 
 			case 'doreindexcontent_postreindex':
-				$message = qa_private_translate_with_progress('admin/reindex_posts_reindexed', $done, $length);
+				$message = qa_recalc_progress_lang('admin/reindex_posts_reindexed', $done, $length);
 				break;
 
 			case 'doreindexposts_complete':
@@ -660,15 +662,15 @@
 				break;
 
 			case 'doreindexposts_wordcount':
-				$message = qa_private_translate_with_progress('admin/reindex_posts_wordcounted', $done, $length);
+				$message = qa_recalc_progress_lang('admin/reindex_posts_wordcounted', $done, $length);
 				break;
 
 			case 'dorecountposts_votecount':
-				$message = qa_private_translate_with_progress('admin/recount_posts_votes_recounted', $done, $length);
+				$message = qa_recalc_progress_lang('admin/recount_posts_votes_recounted', $done, $length);
 				break;
 
 			case 'dorecountposts_acount':
-				$message = qa_private_translate_with_progress('admin/recount_posts_as_recounted', $done, $length);
+				$message = qa_recalc_progress_lang('admin/recount_posts_as_recounted', $done, $length);
 				break;
 
 			case 'dorecountposts_complete':
@@ -680,7 +682,7 @@
 				break;
 
 			case 'dorecalcpoints_recalc':
-				$message = qa_private_translate_with_progress('admin/recalc_points_recalced', $done, $length);
+				$message = qa_recalc_progress_lang('admin/recalc_points_recalced', $done, $length);
 				break;
 
 			case 'dorecalcpoints_complete':
@@ -688,7 +690,7 @@
 				break;
 
 			case 'dorefillevents_refill':
-				$message = qa_private_translate_with_progress('admin/refill_events_refilled', $done, $length);
+				$message = qa_recalc_progress_lang('admin/refill_events_refilled', $done, $length);
 				break;
 
 			case 'dorefillevents_complete':
@@ -696,15 +698,15 @@
 				break;
 
 			case 'dorecalccategories_postupdate':
-				$message = qa_private_translate_with_progress('admin/recalc_categories_updated', $done, $length);
+				$message = qa_recalc_progress_lang('admin/recalc_categories_updated', $done, $length);
 				break;
 
 			case 'dorecalccategories_recount':
-				$message = qa_private_translate_with_progress('admin/recalc_categories_recounting', $done, $length);
+				$message = qa_recalc_progress_lang('admin/recalc_categories_recounting', $done, $length);
 				break;
 
 			case 'dorecalccategories_backpaths':
-				$message = qa_private_translate_with_progress('admin/recalc_categories_backpaths', $done, $length);
+				$message = qa_recalc_progress_lang('admin/recalc_categories_backpaths', $done, $length);
 				break;
 
 			case 'dorecalccategories_complete':
@@ -712,15 +714,15 @@
 				break;
 
 			case 'dodeletehidden_comments':
-				$message = qa_private_translate_with_progress('admin/hidden_comments_deleted', $done, $length);
+				$message = qa_recalc_progress_lang('admin/hidden_comments_deleted', $done, $length);
 				break;
 
 			case 'dodeletehidden_answers':
-				$message = qa_private_translate_with_progress('admin/hidden_answers_deleted', $done, $length);
+				$message = qa_recalc_progress_lang('admin/hidden_answers_deleted', $done, $length);
 				break;
 
 			case 'dodeletehidden_questions':
-				$message = qa_private_translate_with_progress('admin/hidden_questions_deleted', $done, $length);
+				$message = qa_recalc_progress_lang('admin/hidden_questions_deleted', $done, $length);
 				break;
 
 			case 'dodeletehidden_complete':
@@ -729,7 +731,7 @@
 
 			case 'doblobstodisk_move':
 			case 'doblobstodb_move':
-				$message = qa_private_translate_with_progress('admin/blobs_move_moved', $done, $length);
+				$message = qa_recalc_progress_lang('admin/blobs_move_moved', $done, $length);
 				break;
 
 			case 'doblobstodisk_complete':

@@ -371,27 +371,37 @@
 
 		case 'viewing':
 			$subtitle = 'admin/viewing_title';
-			$showoptions = array('q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', 'show_view_count_q_page', '', 'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'votes_separated', '', 'show_url_links', 'links_in_new_window', 'show_when_created', 'show_full_date_days');
+			$showoptions = array(
+				'q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', 'show_view_count_q_page', '',
+				'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'votes_separated', '',
+				'show_url_links', 'links_in_new_window', 'show_when_created', 'show_full_date_days'
+			);
 
-			if (count(qa_get_points_to_titles()))
+			if (count(qa_get_points_to_titles())) {
 				$showoptions[] = 'show_user_titles';
+			}
 
-			array_push($showoptions, 'show_user_points', 'show_post_update_meta', '', 'sort_answers_by', 'show_selected_first', 'page_size_q_as', 'show_a_form_immediate');
+			array_push($showoptions,
+				'show_user_points', 'show_post_update_meta', 'show_compact_numbers', '',
+				'sort_answers_by', 'show_selected_first', 'page_size_q_as', 'show_a_form_immediate'
+			);
 
-			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
+			if (qa_opt('comment_on_qs') || qa_opt('comment_on_as')) {
 				array_push($showoptions, 'show_fewer_cs_from', 'show_fewer_cs_count', 'show_c_reply_buttons');
+			}
 
 			$showoptions[] = '';
 
 			$widgets = qa_db_single_select(qa_db_widgets_selectspec());
 
-			foreach ($widgets as $widget)
+			foreach ($widgets as $widget) {
 				if ($widget['title'] == 'Related Questions') {
 					array_push($showoptions, 'match_related_qs', 'page_size_related_qs', '');
 					break;
 				}
+			}
 
-			array_push($showoptions, 'pages_prev_next', '', 'show_compact_numbers');
+			$showoptions[] = 'pages_prev_next';
 
 			$formstyle = 'wide';
 

@@ -2071,11 +2071,13 @@
 				$suffixes = array('', qa_lang_html('main/_thousands_suffix'), qa_lang_html('main/_millions_suffix'));
 				$suffix = isset($suffixes[$floorBase]) ? $suffixes[$floorBase] : '';
 			}
+
 			// If the decimal part is 0 then remove it
 			if ($number == (int) $number) {
 				$decimals = 0;
 			}
-		} else {
+		}
+		else {
 			$decimals = 0;
 		}
 
