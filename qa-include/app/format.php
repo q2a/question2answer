@@ -2046,11 +2046,12 @@
 	}
 
 	/**
-	 * Format a number using the decimal point and thousand separator specified in the language files. If the number
-	 * is compacted it is turned into a string such as 1.3k or 2.5m
+	 * Format a number using the decimal point and thousand separator specified in the language files.
+	 * If the number is compacted it is turned into a string such as 1.3k or 2.5m.
+	 *
 	 * @param integer $number Number to be formatted
-	 * @param integer $decimals Amount of decimals to use
-	 * @param bool $compact Whether to show compact numbers or not
+	 * @param integer $decimals Amount of decimals to use (ignored if number gets shortened)
+	 * @param bool $compact Whether the number can be shown as compact or not
 	 * @return string The formatted number as a string
 	 */
 	function qa_format_number($number, $decimals = 0, $compact = false)
@@ -2058,27 +2059,24 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$suffix = '';
+
 		if ($compact && qa_opt('show_compact_numbers')) {
-			if ($number != 0) {
-				$base = log($number) / log(1000);
-				$floorBase = floor($base);
-				$number = round(pow(1000, $base - $floorBase), 1);
-				// If $number is too long then remove the decimals, e.g., 123k instead of 123.4k
-				if ($number >= 100) {
-					$decimals = 0;
-				}
-				// If $number exceeds millions then don't add any suffix
-				$suffixes = array('', qa_lang_html('main/_thousands_suffix'), qa_lang_html('main/_millions_suffix'));
-				$suffix = isset($suffixes[$floorBase]) ? $suffixes[$floorBase] : '';
+			$decimals = 0;
+			// only the k/m cases are currently supported (i.e. no billions)
+			if ($number >= 1000000) {
+				$number /= 1000000;
+				$suffix = qa_lang_html('main/_millions_suffix');
+			}
+			elseif ($number >= 1000) {
+				$number /= 1000;
+				$suffix = qa_lang_html('main/_thousands_suffix');
 			}
 
-			// If the decimal part is 0 then remove it
-			if ($number == (int) $number) {
-				$decimals = 0;
+			// keep decimal part if not 0 and number is short (e.g. 9.1k)
+			$rounded = round($number, 1);
+			if ($number < 100 && ($rounded != (int)$rounded)) {
+				$decimals = 1;
 			}
-		}
-		else {
-			$decimals = 0;
 		}
 
 		return number_format(
