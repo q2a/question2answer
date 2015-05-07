@@ -138,7 +138,7 @@
 			$ranking['items'][] = array(
 				'avatar' => $avatarhtml,
 				'label' => $usershtml[$user['userid']],
-				'score' => qa_html(qa_format_number($user['points'], 1, true)),
+				'score' => qa_html(qa_format_number($user['points'], 0, true)),
 				'raw' => $user,
 			);
 		}
@@ -163,7 +163,7 @@
 		foreach ($tags as $tag) {
 			$ranking['items'][] = array(
 				'label' => qa_tag_html($tag['word'], false, true),
-				'count' => qa_html(qa_format_number($tag['tagcount'], 1, true)),
+				'count' => qa_html(qa_format_number($tag['tagcount'], 0, true)),
 			);
 		}
 
@@ -187,7 +187,7 @@
 			$cat_url = qa_path_html( 'questions/' . implode( '/', array_reverse(explode('/', $category['backpath'])) ) );
 			$cat_anchor = $category['qcount'] == 1
 				? qa_lang_html_sub('main/1_question', '1', '1')
-				: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount'], 1, true));
+				: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount'], 0, true));
 			$cat_descr = strlen($category['content']) ? qa_html(' - '.$category['content']) : '';
 
 			$nav_list_categories['nav'][$category['categoryid']] = array(

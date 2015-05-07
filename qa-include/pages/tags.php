@@ -60,7 +60,7 @@
 		foreach ($populartags as $word => $count) {
 			$qa_content['ranking']['items'][] = array(
 				'label' => qa_tag_html($word, false, @$favoritemap['tag'][qa_strtolower($word)]),
-				'count' => qa_format_number($count, 1, true),
+				'count' => qa_format_number($count, 0, true),
 			);
 
 			if ((++$output) >= $pagesize)

@@ -56,7 +56,7 @@ class qa_activity_count
 		if ($value==1)
 			$themeobject->output(qa_lang_html_sub($langsingular, '<span class="qa-activity-count-data">1</span>', '1'));
 		else
-			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.qa_format_number((int) $value, 1, true).'</span>'));
+			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.qa_format_number((int) $value, 0, true).'</span>'));
 
 		$themeobject->output('</p>');
 	}
