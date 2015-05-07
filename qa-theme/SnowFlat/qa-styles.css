@@ -1074,12 +1074,6 @@ blockquote p {
 		line-height: 0.5;
 		display: block;
 	}
-
-	.qa-netvote-count-data, .qa-a-count-data {
-		font-size: 24px;
-		line-height: 40px;
-		display: block;
-	}
 }
 
 @media (min-width: 800px) {
@@ -1096,12 +1090,13 @@ blockquote p {
 		line-height: 0.5;
 		float: left;
 	}
+}
 
-	.qa-netvote-count-data, .qa-a-count-data {
-		font-size: 24px;
-		line-height: 40px;
-		display: block;
-	}
+.qa-netvote-count-data, .qa-a-count-data {
+	font-size: 24px;
+	line-height: 40px;
+	display: block;
+	white-space: nowrap;
 }
 
 .qa-netvote-count-pad, .qa-a-count-pad {
