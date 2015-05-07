@@ -866,8 +866,12 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ($permit >= QA_PERMIT_ALL)
+		if ($permit >= QA_PERMIT_ALL) {
 			$error = false;
+		}
+		elseif (!isset($userid)) {
+			return 'login';
+		}
 
 		elseif ($permit >= QA_PERMIT_USERS)
 			$error = isset($userid) ? false : 'login';
