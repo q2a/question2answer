@@ -891,7 +891,7 @@
 		elseif ($permit >= QA_PERMIT_CONFIRMED) {
 			if (
 				QA_FINAL_EXTERNAL_USERS || // not currently supported by single sign-on integration
-				$userlevel >= QA_PERMIT_APPROVED || // if user approved or assigned to a higher level, no need
+				$userlevel >= QA_USER_LEVEL_APPROVED || // if user approved or assigned to a higher level, no need
 				($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) || // actual confirmation
 				!qa_opt('confirm_user_emails') // if this option off, we can't ask it of the user
 			)
@@ -918,10 +918,13 @@
 				($permit >= QA_PERMIT_ADMINS && $userlevel >= QA_USER_LEVEL_ADMIN) ||
 				$userlevel >= QA_USER_LEVEL_SUPER;
 
-			$error = $hasLevel ? false : 'level';
+			if (!$hasLevel)
+				return 'level';
+
+			$error = false;
 		}
 
-		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED) && $error != 'level')
+		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED))
 			$error = 'userblock';
 
 		return $error;
