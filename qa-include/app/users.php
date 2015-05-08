@@ -87,7 +87,7 @@
 		{
 			$user=qa_get_logged_in_user_cache();
 
-			return @$user[$field];
+			return isset($user[$field]) ? $user[$field] : null;
 		}
 
 
@@ -780,145 +780,142 @@
 	}
 
 
+	/**
+	 * Check whether the logged in user has permission to perform $permitoption. If $permitoption is null, this simply
+	 * checks whether the user is blocked. Optionally provide an $limitaction (see top of qa-app-limits.php) to also check
+	 * against user or IP rate limits. You can pass in a QA_USER_LEVEL_* constant in $userlevel to consider the user at a
+	 * different level to usual (e.g. if they are performing this action in a category for which they have elevated
+	 * privileges). To ignore the user's blocked status, set $checkblocks to false.
+	 *
+	 * Possible results, in order of priority (i.e. if more than one reason, the first will be given):
+	 * 'level' => a special privilege level (e.g. expert) or minimum number of points is required
+	 * 'login' => the user should login or register
+	 * 'userblock' => the user has been blocked
+	 * 'ipblock' => the ip address has been blocked
+	 * 'confirm' => the user should confirm their email address
+	 * 'approve' => the user needs to be approved by the site admins
+	 * 'limit' => the user or IP address has reached a rate limit (if $limitaction specified)
+	 * false => the operation can go ahead
+	 */
 	function qa_user_permit_error($permitoption=null, $limitaction=null, $userlevel=null, $checkblocks=true)
-/*
-	Check whether the logged in user has permission to perform $permitoption. If $permitoption is null, this simply
-	checks whether the user is blocked. Optionally provide an $limitaction (see top of qa-app-limits.php) to also check
-	against user or IP rate limits. You can pass in a QA_USER_LEVEL_* constant in $userlevel to consider the user at a
-	different level to usual (e.g. if they are performing this action in a category for which they have elevated
-	privileges). To ignore the user's blocked status, set $checkblocks to false.
-
-	Possible results, in order of priority (i.e. if more than one reason, the first will be given):
-	'level' => a special privilege level (e.g. expert) or minimum number of points is required
-	'login' => the user should login or register
-	'userblock' => the user has been blocked
-	'ipblock' => the ip address has been blocked
-	'confirm' => the user should confirm their email address
-	'approve' => the user needs to be approved by the site admins
-	'limit' => the user or IP address has reached a rate limit (if $limitaction specified)
-	false => the operation can go ahead
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'app/limits.php';
 
-		$userid=qa_get_logged_in_userid();
+		$userid = qa_get_logged_in_userid();
 		if (!isset($userlevel))
-			$userlevel=qa_get_logged_in_level();
+			$userlevel = qa_get_logged_in_level();
 
-		$flags=qa_get_logged_in_flags();
+		$flags = qa_get_logged_in_flags();
 		if (!$checkblocks)
-			$flags&=~QA_USER_FLAGS_USER_BLOCKED;
+			$flags &= ~QA_USER_FLAGS_USER_BLOCKED;
 
-		$error=qa_permit_error($permitoption, $userid, $userlevel, $flags);
+		$error = qa_permit_error($permitoption, $userid, $userlevel, $flags);
 
-		if ($checkblocks && (!$error) && qa_is_ip_blocked())
-			$error='ipblock';
+		if ($checkblocks && !$error && qa_is_ip_blocked())
+			$error = 'ipblock';
 
-		if ((!$error) && isset($userid) && ($flags & QA_USER_FLAGS_MUST_CONFIRM) && qa_opt('confirm_user_emails'))
-			$error='confirm';
+		if (!$error && isset($userid) && ($flags & QA_USER_FLAGS_MUST_CONFIRM) && qa_opt('confirm_user_emails'))
+			$error = 'confirm';
 
-		if ((!$error) && isset($userid) && ($flags & QA_USER_FLAGS_MUST_APPROVE) && qa_opt('moderate_users'))
-			$error='approve';
+		if (!$error && isset($userid) && ($flags & QA_USER_FLAGS_MUST_APPROVE) && qa_opt('moderate_users'))
+			$error = 'approve';
 
-		if (isset($limitaction) && !$error)
-			if (qa_user_limits_remaining($limitaction)<=0)
-				$error='limit';
+		if (isset($limitaction) && !$error) {
+			if (qa_user_limits_remaining($limitaction) <= 0)
+				$error = 'limit';
+		}
 
 		return $error;
 	}
 
 
+	/**
+	 * Check whether user can perform $permitoption. Result as for qa_user_permit_error(...).
+	 *
+	 * @param int $permitoption permission option name (from database) for action
+	 * @param int $userid ID of user (null for no user)
+	 * @param int $userlevel
+	 * @param int $userflags
+	 * @param int $userpoints user's points: if $userid is currently logged in, you can set $userpoints=null to retrieve them only if necessary.
+	 * @return string|bool reason the user is not permitted, or false if the operation can go ahead
+	 */
 	function qa_permit_error($permitoption, $userid, $userlevel, $userflags, $userpoints=null)
-/*
-	Check whether $userid (null for no user) can perform $permitoption. Result as for qa_user_permit_error(...).
-	If appropriate, pass the user's level in $userlevel, flags in $userflags and points in $userpoints.
-	If $userid is currently logged in, you can set $userpoints=null to retrieve them only if necessary.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$permit=isset($permitoption) ? qa_opt($permitoption) : QA_PERMIT_ALL;
+		$permit = isset($permitoption) ? qa_opt($permitoption) : QA_PERMIT_ALL;
 
-		if (isset($userid) && (($permit==QA_PERMIT_POINTS) || ($permit==QA_PERMIT_POINTS_CONFIRMED) || ($permit==QA_PERMIT_APPROVED_POINTS)) ) {
-				// deal with points threshold by converting as appropriate
+		if (isset($userid) && ($permit == QA_PERMIT_POINTS || $permit == QA_PERMIT_POINTS_CONFIRMED || $permit == QA_PERMIT_APPROVED_POINTS) ) {
+			// deal with points threshold by converting as appropriate
 
-			if ( (!isset($userpoints)) && ($userid==qa_get_logged_in_userid()) )
-				$userpoints=qa_get_logged_in_points(); // allow late retrieval of points (to avoid unnecessary DB query when using external users)
+			if (!isset($userpoints) && $userid == qa_get_logged_in_userid())
+				$userpoints = qa_get_logged_in_points(); // allow late retrieval of points (to avoid unnecessary DB query when using external users)
 
-			if ($userpoints>=qa_opt($permitoption.'_points'))
-				$permit=($permit==QA_PERMIT_APPROVED_POINTS) ? QA_PERMIT_APPROVED :
-					(($permit==QA_PERMIT_POINTS_CONFIRMED) ? QA_PERMIT_CONFIRMED : QA_PERMIT_USERS); // convert if user has enough points
+			if ($userpoints >= qa_opt($permitoption.'_points')) {
+				$permit = $permit == QA_PERMIT_APPROVED_POINTS
+					? QA_PERMIT_APPROVED
+					: ($permit == QA_PERMIT_POINTS_CONFIRMED ? QA_PERMIT_CONFIRMED : QA_PERMIT_USERS); // convert if user has enough points
+			}
 			else
-				$permit=QA_PERMIT_EXPERTS; // otherwise show a generic message so they're not tempted to collect points just for this
+				$permit = QA_PERMIT_EXPERTS; // otherwise show a generic message so they're not tempted to collect points just for this
 		}
 
 		return qa_permit_value_error($permit, $userid, $userlevel, $userflags);
 	}
 
 
+	/**
+	 * Check whether user can reach the permission level. Result as for qa_user_permit_error(...).
+	 * @param int $permit permission constant
+	 * @param int $userid ID of user (null for no user)
+	 * @param int $userlevel
+	 * @param int $userflags
+	 * @return string|bool reason the user is not permitted, or false if the operation can go ahead
+	 */
 	function qa_permit_value_error($permit, $userid, $userlevel, $userflags)
-/*
-	Check whether $userid of level $userlevel with $userflags can reach the permission level in $permit
-	(generally retrieved from an option, but not always). Result as for qa_user_permit_error(...).
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ($permit>=QA_PERMIT_ALL)
-			$error=false;
+		if (!isset($userid) && $permit < QA_PERMIT_ALL)
+			return 'login';
 
-		elseif ($permit>=QA_PERMIT_USERS)
-			$error=isset($userid) ? false : 'login';
+		$levelError =
+			($permit <= QA_PERMIT_SUPERS && $userlevel < QA_USER_LEVEL_SUPER) ||
+			($permit <= QA_PERMIT_ADMINS && $userlevel < QA_USER_LEVEL_ADMIN) ||
+			($permit <= QA_PERMIT_MODERATORS && $userlevel < QA_USER_LEVEL_MODERATOR) ||
+			($permit <= QA_PERMIT_EDITORS && $userlevel < QA_USER_LEVEL_EDITOR) ||
+			($permit <= QA_PERMIT_EXPERTS && $userlevel < QA_USER_LEVEL_EXPERT);
 
-		elseif ($permit>=QA_PERMIT_CONFIRMED) {
-			if (!isset($userid))
-				$error='login';
+		if ($levelError)
+			return 'level';
 
-			elseif (
-				QA_FINAL_EXTERNAL_USERS || // not currently supported by single sign-on integration
-				($userlevel>=QA_PERMIT_APPROVED) || // if user approved or assigned to a higher level, no need
-				($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) || // actual confirmation
-				(!qa_opt('confirm_user_emails')) // if this option off, we can't ask it of the user
+		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED))
+			return 'userblock';
+
+		if ($permit >= QA_PERMIT_USERS)
+			return false;
+
+		if ($permit >= QA_PERMIT_CONFIRMED) {
+			$confirmed = ($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED);
+			if (
+				!QA_FINAL_EXTERNAL_USERS && // not currently supported by single sign-on integration
+				qa_opt('confirm_user_emails') && // if this option off, we can't ask it of the user
+				$userlevel < QA_USER_LEVEL_APPROVED && // if user approved or assigned to a higher level, no need
+				!$confirmed // actual confirmation
 			)
-				$error=false;
-
-			else
-				$error='confirm';
-
-		} elseif ($permit>=QA_PERMIT_APPROVED) {
-			if (!isset($userid))
-				$error='login';
-
-			elseif (
-				($userlevel>=QA_USER_LEVEL_APPROVED) || // user has been approved
-				(!qa_opt('moderate_users')) // if this option off, we can't ask it of the user
+				return 'confirm';
+		}
+		elseif ($permit >= QA_PERMIT_APPROVED) {
+			if (
+				qa_opt('moderate_users') && // if this option off, we can't ask it of the user
+				$userlevel < QA_USER_LEVEL_APPROVED // user has not been approved
 			)
-				$error=false;
+				return 'approve';
+		}
 
-			else
-				$error='approve';
-
-		} elseif ($permit>=QA_PERMIT_EXPERTS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_EXPERT)) ? false : 'level';
-
-		elseif ($permit>=QA_PERMIT_EDITORS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_EDITOR)) ? false : 'level';
-
-		elseif ($permit>=QA_PERMIT_MODERATORS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_MODERATOR)) ? false : 'level';
-
-		elseif ($permit>=QA_PERMIT_ADMINS)
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_ADMIN)) ? false : 'level';
-
-		else
-			$error=(isset($userid) && ($userlevel>=QA_USER_LEVEL_SUPER)) ? false : 'level';
-
-		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED) && ($error!='level'))
-			$error='userblock';
-
-		return $error;
+		return false;
 	}
 
 
