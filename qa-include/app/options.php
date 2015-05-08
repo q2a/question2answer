@@ -356,6 +356,7 @@
 			'smtp_port' => 25,
 			'sort_answers_by' => 'created',
 			'tags_or_categories' => 'tc',
+			'use_microdata' => 1,
 			'voting_on_as' => 1,
 			'voting_on_qs' => 1,
 		);

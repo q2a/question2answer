@@ -280,6 +280,7 @@
 		'tags_or_categories' => 'Question classification:',
 		'time_approved' => 'Time approved',
 		'time_written' => 'Time written',
+		'use_microdata' => 'Use schema.org microdata:',
 		'votes_separated' => 'Show separate up and down votes:',
 		'voting_on_as' => 'Allow voting on answers:',
 		'voting_on_q_page_only' => 'Allow voting on question page only:',

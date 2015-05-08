@@ -51,6 +51,8 @@ class qa_html_theme_base
 
 	// whether to use new block layout in rankings (true) or fall back to tables (false)
 	protected $ranking_block_layout = false;
+	// whether schema.org microdata is being used
+	protected $microdata;
 
 
 	public function __construct($template, $content, $rooturl, $request)
@@ -64,6 +66,8 @@ class qa_html_theme_base
 		$this->request = $request;
 
 		$this->isRTL = isset($content['direction']) && $content['direction'] === 'rtl';
+
+		$this->microdata = isset($content['microdata']) && $content['microdata'] == 1;
 	}
 
 	/**

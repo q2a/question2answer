@@ -497,8 +497,8 @@
 		$qa_content=array(
 			'content_type' => 'text/html; charset='.$charset,
 			'charset' => $charset,
-
 			'direction' => qa_opt('site_text_direction'),
+			'microdata' => qa_opt('use_microdata'),
 
 			'site_title' => qa_html(qa_opt('site_title')),
 
@@ -519,9 +519,7 @@
 			),
 
 			'sidebar' => qa_opt('show_custom_sidebar') ? qa_opt('custom_sidebar') : null,
-
 			'sidepanel' => qa_opt('show_custom_sidepanel') ? qa_opt('custom_sidepanel') : null,
-
 			'widgets' => array(),
 		);
 
