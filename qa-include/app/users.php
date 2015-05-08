@@ -878,56 +878,44 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ($permit >= QA_PERMIT_ALL) {
-			$error = false;
-		}
-		elseif (!isset($userid)) {
+		if (!isset($userid) && $permit < QA_PERMIT_ALL)
 			return 'login';
-		}
 
-		elseif ($permit >= QA_PERMIT_USERS)
-			$error = false;
+		$levelError =
+			($permit <= QA_PERMIT_SUPERS && $userlevel < QA_USER_LEVEL_SUPER) ||
+			($permit <= QA_PERMIT_ADMINS && $userlevel < QA_USER_LEVEL_ADMIN) ||
+			($permit <= QA_PERMIT_MODERATORS && $userlevel < QA_USER_LEVEL_MODERATOR) ||
+			($permit <= QA_PERMIT_EDITORS && $userlevel < QA_USER_LEVEL_EDITOR) ||
+			($permit <= QA_PERMIT_EXPERTS && $userlevel < QA_USER_LEVEL_EXPERT);
 
-		elseif ($permit >= QA_PERMIT_CONFIRMED) {
-			if (
-				QA_FINAL_EXTERNAL_USERS || // not currently supported by single sign-on integration
-				$userlevel >= QA_USER_LEVEL_APPROVED || // if user approved or assigned to a higher level, no need
-				($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED) || // actual confirmation
-				!qa_opt('confirm_user_emails') // if this option off, we can't ask it of the user
-			)
-				$error = false;
-			else
-				$error = 'confirm';
-		}
-
-		elseif ($permit >= QA_PERMIT_APPROVED) {
-			if (
-				$userlevel >= QA_USER_LEVEL_APPROVED || // user has been approved
-				!qa_opt('moderate_users') // if this option off, we can't ask it of the user
-			)
-				$error = false;
-			else
-				$error = 'approve';
-		}
-
-		else {
-			$hasLevel =
-				($permit >= QA_PERMIT_EXPERTS && $userlevel >= QA_USER_LEVEL_EXPERT) ||
-				($permit >= QA_PERMIT_EDITORS && $userlevel >= QA_USER_LEVEL_EDITOR) ||
-				($permit >= QA_PERMIT_MODERATORS && $userlevel >= QA_USER_LEVEL_MODERATOR) ||
-				($permit >= QA_PERMIT_ADMINS && $userlevel >= QA_USER_LEVEL_ADMIN) ||
-				$userlevel >= QA_USER_LEVEL_SUPER;
-
-			if (!$hasLevel)
-				return 'level';
-
-			$error = false;
-		}
+		if ($levelError)
+			return 'level';
 
 		if (isset($userid) && ($userflags & QA_USER_FLAGS_USER_BLOCKED))
-			$error = 'userblock';
+			return 'userblock';
 
-		return $error;
+		if ($permit >= QA_PERMIT_USERS)
+			return false;
+
+		if ($permit >= QA_PERMIT_CONFIRMED) {
+			$confirmed = ($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED);
+			if (
+				!QA_FINAL_EXTERNAL_USERS && // not currently supported by single sign-on integration
+				qa_opt('confirm_user_emails') && // if this option off, we can't ask it of the user
+				$userlevel < QA_USER_LEVEL_APPROVED && // if user approved or assigned to a higher level, no need
+				!$confirmed // actual confirmation
+			)
+				return 'confirm';
+		}
+		elseif ($permit >= QA_PERMIT_APPROVED) {
+			if (
+				qa_opt('moderate_users') && // if this option off, we can't ask it of the user
+				$userlevel < QA_USER_LEVEL_APPROVED // user has not been approved
+			)
+				return 'approve';
+		}
+
+		return false;
 	}
 
 
