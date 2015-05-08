@@ -49,7 +49,6 @@ class AppUsersTest extends PHPUnit_Framework_TestCase
 
 		// Logged Out User trying to do Moderator stuff
 		$error = qa_permit_value_error(QA_PERMIT_MODERATORS, null, null, 0);
-		$this->assertSame('level', $error);
-
+		$this->assertSame('login', $error);
 	}
 }
