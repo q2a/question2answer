@@ -264,10 +264,11 @@
 		$postid=$post['postid'];
 		$isquestion=($post['basetype']=='Q');
 		$isanswer=($post['basetype']=='A');
+		$iscomment=($post['basetype']=='C');
 		$isbyuser=qa_post_is_by_user($post, $userid, $cookieid);
 		$anchor=urlencode(qa_anchor($post['basetype'], $postid));
 		$elementid=isset($options['elementid']) ? $options['elementid'] : $anchor;
-		$microformats=@$options['microformats'];
+		$microformats=qa_opt('use_microdata');
 		$isselected=@$options['isselected'];
 		$favoritedview=@$options['favoritedview'];
 		$favoritemap=$favoritedview ? qa_get_favorite_non_qs_map() : array();
@@ -282,7 +283,12 @@
 			$fields['classes']=ltrim($fields['classes'].' qa-q-closed');
 
 		if ($microformats) {
-			$fields['classes'].=' hentry '.($isquestion ? 'question' : ($isanswer ? ($isselected ? 'answer answer-selected' : 'answer') : 'comment'));
+			if ($isanswer) {
+				$fields['tags'] .= ' itemprop="suggestedAnswer' . ($isselected ? ' acceptedAnswer' : '') . '" itemscope itemtype="http://schema.org/Answer"';
+			}
+			if ($iscomment) {
+				$fields['tags'] .= ' itemscope itemtype="http://schema.org/Comment"';
+			}
 		}
 
 	//	Question-specific stuff (title, URL, tags, answer count, category)
@@ -295,8 +301,9 @@
 					$post['title']=qa_block_words_replace($post['title'], $options['blockwordspreg']);
 
 				$fields['title']=qa_html($post['title']);
-				if ($microformats)
-					$fields['title']='<span class="entry-title">'.$fields['title'].'</span>';
+				if ($microformats) {
+					$fields['title'] = '<span itemprop="name">' . $fields['title'] . '</span>';
+				}
 
 				/*if (isset($post['score'])) // useful for setting match thresholds
 					$fields['title'].=' <small>('.$post['score'].')</small>';*/
@@ -369,8 +376,9 @@
 				'linksnewwindow' => @$options['linksnewwindow'],
 			));
 
-			if ($microformats)
-				$fields['content']='<div class="entry-content">'.$fields['content'].'</div>';
+			if ($microformats) {
+				$fields['content'] = '<div itemprop="text">' . $fields['content'] . '</div>';
+			}
 
 			$fields['content']='<a name="'.qa_html($postid).'"></a>'.$fields['content'];
 				// this is for backwards compatibility with any existing links using the old style of anchor
@@ -417,10 +425,10 @@
 		//	...with microformats if appropriate
 
 			if ($microformats) {
-				$netvoteshtml.='<span class="votes-up"><span class="value-title" title="'.$upvoteshtml.'"></span></span>'.
-					'<span class="votes-down"><span class="value-title" title="'.$downvoteshtml.'"></span></span>';
-				$upvoteshtml='<span class="votes-up">'.$upvoteshtml.'</span>';
-				$downvoteshtml='<span class="votes-down">'.$downvoteshtml.'</span>';
+				// vote display might be compacted so use meta tag for true count
+				$netvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '">';
+				$upvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '">';
+				$downvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($downvotes) . '">';
 			}
 
 		//	Pass information on vote viewing
@@ -518,8 +526,10 @@
 		if (isset($post['created']) && @$options['whenview']) {
 			$fields['when']=qa_when_to_html($post['created'], @$options['fulldatedays']);
 
-			if ($microformats)
-				$fields['when']['data']='<span class="published"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['created']).'">'.$fields['when']['data'].'</span></span>';
+			if ($microformats) {
+				$gmdate = gmdate('Y-m-d\TH:i:sO', $post['created']);
+				$fields['when']['data'] = '<time itemprop="dateCreated" datetime="' . $gmdate . '" title="' . $gmdate . '">' . $fields['when']['data'] . '</time>';
+			}
 		}
 
 		if (@$options['whoview']) {
@@ -595,16 +605,16 @@
 			if (@$options['whenview']) {
 				$fields['when_2']=qa_when_to_html($post['updated'], @$options['fulldatedays']);
 
-				if ($microformats)
-					$fields['when_2']['data']='<span class="updated"><span class="value-title" title="'.gmdate('Y-m-d\TH:i:sO', $post['updated']).'">'.$fields['when_2']['data'].'</span></span>';
+				if ($microformats) {
+					$gmdate = gmdate('Y-m-d\TH:i:sO', $post['updated']);
+					$fields['when_2']['data'] = '<time itemprop="dateModified" datetime="' . $gmdate . '" title="' . $gmdate . '">' . $fields['when_2']['data'] . '</time>';
+				}
 			}
 
 			if (isset($post['lastuserid']) && @$options['whoview'])
 				$fields['who_2']=qa_who_to_html(isset($userid) && ($post['lastuserid']==$userid), $post['lastuserid'], $usershtml, @$options['ipview'] ? $post['lastip'] : null, false);
 		}
-		elseif ($microformats && @$options['whenview']) { // quick fix for incorrect microformats (missing 'updated' class)
-			$fields['when']['data'] = str_replace('<span class="published">', '<span class="published updated">', $fields['when']['data']);
-		}
+
 
 	//	That's it!
 

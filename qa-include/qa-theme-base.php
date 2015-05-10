@@ -225,8 +225,10 @@ class qa_html_theme_base
 	public function html()
 	{
 		$attribution = '<!-- Powered by Question2Answer - http://www.question2answer.org/ -->';
+		$md = $this->microdata ? ' itemscope itemtype="http://schema.org/QAPage"' : '';
+
 		$this->output(
-			'<html>',
+			'<html'.$md.'>',
 			$attribution
 		);
 
@@ -664,8 +666,10 @@ class qa_html_theme_base
 	public function main()
 	{
 		$content = $this->content;
+		$hidden = !empty($content['hidden']) ? ' qa-main-hidden' : '';
+		$md = $this->microdata ? ' itemscope itemtype="http://schema.org/Question"' : '';
 
-		$this->output('<div class="qa-main'.(@$this->content['hidden'] ? ' qa-main-hidden' : '').'">');
+		$this->output('<div class="qa-main'.$hidden.'"'.$md.'>');
 
 		$this->widgets('main', 'top');
 
@@ -1702,7 +1706,6 @@ class qa_html_theme_base
 		if ($post['vote_view'] == 'updown') {
 			$this->output_split($post['upvotes_view'], 'qa-upvote-count');
 			$this->output_split($post['downvotes_view'], 'qa-downvote-count');
-
 		}
 		else
 			$this->output_split($post['netvotes_view'], 'qa-netvote-count');
@@ -2165,6 +2168,10 @@ class qa_html_theme_base
 	{
 		if (!empty($a_list)) {
 			$this->part_title($a_list);
+
+			if ($this->microdata) {
+				$this->output('<meta itemprop="answerCount" content="' . count($a_list['as']) . '">');
+			}
 
 			$this->output('<div class="qa-a-list'.($this->list_vote_disabled($a_list['as']) ? ' qa-a-list-vote-disabled' : '').'" '.@$a_list['tags'].'>', '');
 			$this->a_list_items($a_list['as']);
