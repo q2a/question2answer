@@ -268,7 +268,7 @@
 		$isbyuser=qa_post_is_by_user($post, $userid, $cookieid);
 		$anchor=urlencode(qa_anchor($post['basetype'], $postid));
 		$elementid=isset($options['elementid']) ? $options['elementid'] : $anchor;
-		$microformats=qa_opt('use_microdata');
+		$microdata=qa_opt('use_microdata');
 		$isselected=@$options['isselected'];
 		$favoritedview=@$options['favoritedview'];
 		$favoritemap=$favoritedview ? qa_get_favorite_non_qs_map() : array();
@@ -282,7 +282,7 @@
 		if ($isquestion && isset($post['closedbyid']))
 			$fields['classes']=ltrim($fields['classes'].' qa-q-closed');
 
-		if ($microformats) {
+		if ($microdata) {
 			if ($isanswer) {
 				$fields['tags'] .= ' itemprop="suggestedAnswer' . ($isselected ? ' acceptedAnswer' : '') . '" itemscope itemtype="http://schema.org/Answer"';
 			}
@@ -301,7 +301,7 @@
 					$post['title']=qa_block_words_replace($post['title'], $options['blockwordspreg']);
 
 				$fields['title']=qa_html($post['title']);
-				if ($microformats) {
+				if ($microdata) {
 					$fields['title'] = '<span itemprop="name">' . $fields['title'] . '</span>';
 				}
 
@@ -317,7 +317,7 @@
 					if (isset($options['blockwordspreg']) && count(qa_block_words_match_all($tag, $options['blockwordspreg']))) // skip censored tags
 						continue;
 
-					$fields['q_tags'][]=qa_tag_html($tag, $microformats, @$favoritemap['tag'][qa_strtolower($tag)]);
+					$fields['q_tags'][]=qa_tag_html($tag, $microdata, @$favoritemap['tag'][qa_strtolower($tag)]);
 				}
 			}
 
@@ -376,7 +376,7 @@
 				'linksnewwindow' => @$options['linksnewwindow'],
 			));
 
-			if ($microformats) {
+			if ($microdata) {
 				$fields['content'] = '<div itemprop="text">' . $fields['content'] . '</div>';
 			}
 
@@ -424,7 +424,7 @@
 
 		//	...with microformats if appropriate
 
-			if ($microformats) {
+			if ($microdata) {
 				// vote display might be compacted so use meta tag for true count
 				$netvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '">';
 				$upvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '">';
@@ -526,14 +526,14 @@
 		if (isset($post['created']) && @$options['whenview']) {
 			$fields['when']=qa_when_to_html($post['created'], @$options['fulldatedays']);
 
-			if ($microformats) {
+			if ($microdata) {
 				$gmdate = gmdate('Y-m-d\TH:i:sO', $post['created']);
 				$fields['when']['data'] = '<time itemprop="dateCreated" datetime="' . $gmdate . '" title="' . $gmdate . '">' . $fields['when']['data'] . '</time>';
 			}
 		}
 
 		if (@$options['whoview']) {
-			$fields['who']=qa_who_to_html($isbyuser, @$post['userid'], $usershtml, @$options['ipview'] ? @$post['createip'] : null, $microformats, $post['name']);
+			$fields['who']=qa_who_to_html($isbyuser, @$post['userid'], $usershtml, @$options['ipview'] ? @$post['createip'] : null, $microdata, $post['name']);
 
 			if (isset($post['points'])) {
 				if (@$options['pointsview'])
@@ -605,7 +605,7 @@
 			if (@$options['whenview']) {
 				$fields['when_2']=qa_when_to_html($post['updated'], @$options['fulldatedays']);
 
-				if ($microformats) {
+				if ($microdata) {
 					$gmdate = gmdate('Y-m-d\TH:i:sO', $post['updated']);
 					$fields['when_2']['data'] = '<time itemprop="dateModified" datetime="' . $gmdate . '" title="' . $gmdate . '">' . $fields['when_2']['data'] . '</time>';
 				}

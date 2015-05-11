@@ -51,8 +51,6 @@ class qa_html_theme_base
 
 	// whether to use new block layout in rankings (true) or fall back to tables (false)
 	protected $ranking_block_layout = false;
-	// whether schema.org microdata is being used
-	protected $microdata;
 
 
 	public function __construct($template, $content, $rooturl, $request)
@@ -64,10 +62,7 @@ class qa_html_theme_base
 		$this->content = $content;
 		$this->rooturl = $rooturl;
 		$this->request = $request;
-
 		$this->isRTL = isset($content['direction']) && $content['direction'] === 'rtl';
-
-		$this->microdata = isset($content['microdata']) && $content['microdata'] == 1;
 	}
 
 	/**
@@ -225,10 +220,10 @@ class qa_html_theme_base
 	public function html()
 	{
 		$attribution = '<!-- Powered by Question2Answer - http://www.question2answer.org/ -->';
-		$md = $this->microdata ? ' itemscope itemtype="http://schema.org/QAPage"' : '';
+		$extratags = isset($this->content['html_tags']) ? $this->content['html_tags'] : '';
 
 		$this->output(
-			'<html'.$md.'>',
+			'<html'.$extratags.'>',
 			$attribution
 		);
 
@@ -667,9 +662,9 @@ class qa_html_theme_base
 	{
 		$content = $this->content;
 		$hidden = !empty($content['hidden']) ? ' qa-main-hidden' : '';
-		$md = $this->microdata ? ' itemscope itemtype="http://schema.org/Question"' : '';
+		$extratags = isset($this->content['main_tags']) ? $this->content['main_tags'] : '';
 
-		$this->output('<div class="qa-main'.$hidden.'"'.$md.'>');
+		$this->output('<div class="qa-main'.$hidden.'"'.$extratags.'>');
 
 		$this->widgets('main', 'top');
 
@@ -2168,10 +2163,6 @@ class qa_html_theme_base
 	{
 		if (!empty($a_list)) {
 			$this->part_title($a_list);
-
-			if ($this->microdata) {
-				$this->output('<meta itemprop="answerCount" content="' . count($a_list['as']) . '">');
-			}
 
 			$this->output('<div class="qa-a-list'.($this->list_vote_disabled($a_list['as']) ? ' qa-a-list-vote-disabled' : '').'" '.@$a_list['tags'].'>', '');
 			$this->a_list_items($a_list['as']);

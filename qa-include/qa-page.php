@@ -498,7 +498,6 @@
 			'content_type' => 'text/html; charset='.$charset,
 			'charset' => $charset,
 			'direction' => qa_opt('site_text_direction'),
-			'microdata' => qa_opt('use_microdata'),
 
 			'site_title' => qa_html(qa_opt('site_title')),
 

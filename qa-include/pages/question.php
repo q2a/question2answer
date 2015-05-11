@@ -220,6 +220,13 @@
 		))); // as far as I know, META keywords have zero effect on search rankings or listings, but many people have asked for this
 	}
 
+	$microdata = qa_opt('use_microdata');
+	if ($microdata) {
+		$qa_content['head_lines'][] = '<meta itemprop="name" content="' . qa_html($qa_content['q_view']['raw']['title']) . '">';
+		$qa_content['html_tags'] = ' itemscope itemtype="http://schema.org/QAPage"';
+		$qa_content['main_tags'] = ' itemscope itemtype="http://schema.org/Question"';
+	}
+
 
 //	Prepare content for an answer being edited (if any) or to be added
 
@@ -378,10 +385,16 @@
 	if ($question['basetype']=='Q') {
 		$qa_content['a_list']['title_tags']='id="a_list_title"';
 
-		if ($countfortitle==1)
-			$qa_content['a_list']['title']=qa_lang_html('question/1_answer_title');
-		elseif ($countfortitle>0)
-			$qa_content['a_list']['title']=qa_lang_html_sub('question/x_answers_title', $countfortitle);
+		if ($countfortitle > 0) {
+			$split = $countfortitle == 1
+				? qa_lang_html_sub_split('question/1_answer_title', '1', '1')
+				: qa_lang_html_sub_split('question/x_answers_title', $countfortitle);
+
+			if ($microdata)
+				$split['data'] = '<span itemprop="answerCount">' . $split['data'] . '</span>';
+
+			$qa_content['a_list']['title'] = $split['prefix'] . $split['data'] . $split['suffix'];
+		}
 		else
 			$qa_content['a_list']['title_tags'].=' style="display:none;" ';
 	}
