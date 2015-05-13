@@ -14,7 +14,7 @@
 .qa-page-links, .qa-page-links-list,
 .qa-template-admin .qa-message-buttons,
 .qa-q-item-avatar-meta, .qa-message-item,
-.qa-part-q-view, .qa-q-view-content, .qa-q-view-buttons, .qa-part-form-q-edit,
+.qa-q-view, .qa-part-q-view, .qa-q-view-content, .qa-q-view-buttons, .qa-part-form-q-edit,
 .qa-a-list-item, .qa-a-item-buttons,
 .qa-c-item-buttons, .qa-c-item-clear,
 .qam-footer-row, .qam-qa-list-meta-box,
@@ -27,7 +27,7 @@
 .qa-page-links:after, .qa-page-links-list:after,
 .qa-template-admin .qa-message-buttons:after,
 .qa-q-item-avatar-meta:after, .qa-message-item:after,
-.qa-part-q-view:after, .qa-q-view-content:after, .qa-q-view-buttons:after, .qa-part-form-q-edit:after,
+.qa-q-view:after, .qa-part-q-view:after, .qa-q-view-content:after, .qa-q-view-buttons:after, .qa-part-form-q-edit:after,
 .qa-a-list-item:after, .qa-a-item-buttons:after,
 .qa-c-item-buttons:after, .qa-c-item-clear:after,
 .qam-footer-row:after, .qam-qa-list-meta-box:after,
@@ -2322,6 +2322,11 @@ input[type="submit"], button {
 	margin: 8px 10px 0 0;
 }
 
+.qa-q-view {
+	background: #fff;
+	padding-bottom: 20px;
+}
+
 .qa-part-q-view {
 	padding: 20px;
 	margin-bottom: 5px;
@@ -2434,6 +2439,16 @@ input[type="submit"], button {
 	margin-bottom: 5px;
 	background: #fff;
 	position: relative;
+}
+
+.qa-part-form-q-edit + .qa-q-view .qa-q-view-avatar-meta {
+	margin: 0;
+}
+.qa-part-form-q-edit + .qa-q-view .qa-q-view-meta {
+	border: 0;
+}
+.qa-part-form-q-edit + .qa-q-view .qa-q-view-c-list {
+	margin-left: 10px;
 }
 
 .qa-main-hidden, .qa-a-list-item-hidden, .qa-c-item-hidden {
