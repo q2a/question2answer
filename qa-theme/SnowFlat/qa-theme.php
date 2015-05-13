@@ -51,7 +51,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function head_metas()
 	{
-		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1">');
+		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1"/>');
 		parent::head_metas();
 	}
 
@@ -165,12 +165,12 @@ class qa_html_theme extends qa_html_theme_base
 				$login = $this->content['navigation']['user']['login'];
 				$this->output(
 					'<form action="' . $login['url'] . '" method="post">',
-						'<input type="text" name="emailhandle" dir="auto" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '">',
-						'<input type="password" name="password" dir="auto" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '">',
-						'<div><input type="checkbox" name="remember" id="qam-rememberme" value="1">',
+						'<input type="text" name="emailhandle" dir="auto" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '"/>',
+						'<input type="password" name="password" dir="auto" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '"/>',
+						'<div><input type="checkbox" name="remember" id="qam-rememberme" value="1"/>',
 						'<label for="qam-rememberme">' . qa_lang_html('users/remember') . '</label></div>',
-						'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '">',
-						'<input type="submit" value="' . $login['label'] . '" class="qa-form-tall-button qa-form-tall-button-login" name="dologin">',
+						'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '"/>',
+						'<input type="submit" value="' . $login['label'] . '" class="qa-form-tall-button qa-form-tall-button-login" name="dologin"/>',
 					'</form>'
 				);
 
@@ -336,7 +336,7 @@ class qa_html_theme extends qa_html_theme_base
 		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_item['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '">';
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '"/>';
 
 		$this->output(
 			'<div class="qa-q-item-title">',
@@ -370,7 +370,7 @@ class qa_html_theme extends qa_html_theme_base
 		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_view['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '">';
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '"/>';
 
 		if (isset($this->content['title'])) {
 			$this->output(
