@@ -8,10 +8,10 @@ Question2Answer
 Q2A is highly customisable with many awesome features:
 
 - Asking and answering questions (duh!)
-- Voting, comments, follow-on and closed questions.
+- Voting, comments, best answer selection, follow-on and closed questions.
 - Complete user management including points-based reputation management.
 - Create experts, editors, moderators and admins.
-- Fast integrated search engine.
+- Fast integrated search engine, plus checking for similar questions when asking.
 - Categories (up to 4 levels deep) and/or tagging.
 - Easy styling with CSS themes.
 - Supports translation into any language.
