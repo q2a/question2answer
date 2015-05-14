@@ -107,22 +107,6 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * Adding sidebar for mobile device
-	 *
-	 * @since Snow 1.4
-	 */
-	public function body()
-	{
-		if (qa_is_mobile_probably()) {
-			$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
-			$this->output('<div id="qam-sidepanel-mobile">');
-			parent::sidepanel();
-			$this->output('</div>');
-		}
-		parent::body();
-	}
-
-	/**
 	 * Adding body class dynamically. Override needed to add class on admin/approve-users page
 	 *
 	 * @since Snow 1.4
@@ -291,21 +275,23 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function sidepanel()
 	{
-		// removes sidebar for user profile pages
-		if ($this->template != 'user' && !qa_is_mobile_probably()) {
-			$this->output('<div class="qa-sidepanel">');
-			$this->qam_search();
-			$this->widgets('side', 'top');
-			$this->sidebar();
-			$this->widgets('side', 'high');
-			$this->nav('cat', 1);
-			$this->widgets('side', 'low');
-			if (isset($this->content['sidepanel']))
-				$this->output_raw($this->content['sidepanel']);
-			$this->feed();
-			$this->widgets('side', 'bottom');
-			$this->output('</div>', '');
-		}
+		// remove sidebar for user profile pages
+		if ($this->template == 'user')
+			return;
+
+		$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
+		$this->output('<div class="qa-sidepanel" id="qam-sidepanel-mobile">');
+		$this->qam_search();
+		$this->widgets('side', 'top');
+		$this->sidebar();
+		$this->widgets('side', 'high');
+		$this->nav('cat', 1);
+		$this->widgets('side', 'low');
+		if (isset($this->content['sidepanel']))
+			$this->output_raw($this->content['sidepanel']);
+		$this->feed();
+		$this->widgets('side', 'bottom');
+		$this->output('</div>', '');
 	}
 
 	/**
@@ -633,13 +619,6 @@ class qa_html_theme extends qa_html_theme_base
 			$css[] = '}';
 			$css[] = '@media (min-width: 980px) {';
 			$css[] = ' body.qa-template-users.fixed { padding-top: 105px !important;}';
-			$css[] = '}';
-		}
-
-		// sidebar styles for desktop (must use server-side UA detection, not media queries)
-		if (!qa_is_mobile_probably()) {
-			$css[] = '@media (min-width: 980px) {';
-			$css[] = '  .qa-sidepanel { width: 25%; padding: 0px; float: right; overflow: hidden; *zoom: 1; }';
 			$css[] = '}';
 		}
 
