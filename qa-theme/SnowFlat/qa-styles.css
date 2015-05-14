@@ -2219,7 +2219,11 @@ input[type="submit"], button {
 .qa-form-light-button-flag {
 	background-image: url('images/icons/flag-white.png');
 }
-.qa-form-light-button-unflag, .qa-form-light-button-clearflags {
+.qa-form-light-button-unflag {
+	background-color: #812b2b;
+	background-image: url('images/icons/flag-white.png');
+}
+.qa-form-light-button-clearflags {
 	background-image: url('images/icons/un-flag-white.png');
 }
 .qa-form-light-button-hide {
@@ -2648,7 +2652,11 @@ input[type="submit"], button {
 .qa-c-list-item .qa-form-light-button-flag {
 	background-image: url('images/icons/flag.png');
 }
-.qa-c-list-item .qa-form-light-button-unflag, .qa-c-list-item .qa-form-light-button-clearflags {
+.qa-c-list-item .qa-form-light-button-unflag {
+	background-color: #e4afaf;
+	background-image: url('images/icons/flag.png');
+}
+.qa-c-list-item .qa-form-light-button-clearflags {
 	background-image: url('images/icons/un-flag.png');
 }
 .qa-c-list-item .qa-form-light-button-hide {
