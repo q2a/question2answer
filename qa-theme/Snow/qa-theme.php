@@ -13,12 +13,12 @@ class qa_html_theme extends qa_html_theme_base
 				$login = $this->content['navigation']['user']['login'];
 				$this->output(
 					'<form class="qam-login-form" action="'.$login['url'].'" method="post">',
-						'<input type="text" class="qam-login-text" name="emailhandle" dir="auto" placeholder="'.trim(qa_lang_html(qa_opt('allow_login_email_only') ? 'users/email_label' : 'users/email_handle_label'), ':').'">',
-						'<input type="password" class="qam-login-text" name="password" dir="auto" placeholder="'.trim(qa_lang_html('users/password_label'), ':').'">',
-						'<div class="qam-rememberbox"><input type="checkbox" name="remember" id="qam-rememberme" value="1">',
+						'<input type="text" class="qam-login-text" name="emailhandle" dir="auto" placeholder="'.trim(qa_lang_html(qa_opt('allow_login_email_only') ? 'users/email_label' : 'users/email_handle_label'), ':').'"/>',
+						'<input type="password" class="qam-login-text" name="password" dir="auto" placeholder="'.trim(qa_lang_html('users/password_label'), ':').'"/>',
+						'<div class="qam-rememberbox"><input type="checkbox" name="remember" id="qam-rememberme" value="1"/>',
 						'<label for="qam-rememberme" class="qam-remember">'.qa_lang_html('users/remember').'</label></div>',
-						'<input type="hidden" name="code" value="'.qa_html(qa_get_form_security_code('login')).'">',
-						'<input type="submit" value="' . qa_lang_html('users/login_button') . '" class="qa-form-tall-button qa-form-tall-button-login" name="dologin">',
+						'<input type="hidden" name="code" value="'.qa_html(qa_get_form_security_code('login')).'"/>',
+						'<input type="submit" value="' . qa_lang_html('users/login_button') . '" class="qa-form-tall-button qa-form-tall-button-login" name="dologin"/>',
 					'</form>'
 				);
 
@@ -117,7 +117,7 @@ class qa_html_theme extends qa_html_theme_base
 		$feed=@$this->content['feed'];
 
 		if (!empty($feed))
-			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" border="0" class="qa-rss-icon"></a>');
+			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" border="0" class="qa-rss-icon"/></a>');
 	}
 
 	// add view count to question list
