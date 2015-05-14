@@ -1197,9 +1197,18 @@ class qa_html_theme_base
 
 	public function form_hidden_elements($hidden)
 	{
-		if (!empty($hidden)) {
-			foreach ($hidden as $name => $value)
-				$this->output('<input type="hidden" name="'.$name.'" value="'.$value.'"/>');
+		if (empty($hidden))
+			return;
+
+		foreach ($hidden as $name => $value) {
+			if (is_array($value)) {
+				// new method of outputting tags
+				$this->output('<input '.@$value['tags'].' type="hidden" value="'.@$value['value'].'"/>');
+			}
+			else {
+				// old method
+				$this->output('<input name="'.$name.'" type="hidden" value="'.$value.'"/>');
+			}
 		}
 	}
 

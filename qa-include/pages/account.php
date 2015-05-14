@@ -280,8 +280,14 @@
 		),
 
 		'hidden' => array(
-			'dosaveprofile' => '1',
-			'code' => qa_get_form_security_code('account'),
+			'dosaveprofile' => array(
+				'tags' => 'name="dosaveprofile"',
+				'value' => '1',
+			),
+			'code' => array(
+				'tags' => 'name="code"',
+				'value' => qa_get_form_security_code('account'),
+			),
 		),
 	);
 
@@ -421,8 +427,14 @@
 		),
 
 		'hidden' => array(
-			'dochangepassword' => '1',
-			'code' => qa_get_form_security_code('password'),
+			'dochangepassword' => array(
+				'tags' => 'name="dochangepassword"',
+				'value' => '1',
+			),
+			'code' => array(
+				'tags' => 'name="code"',
+				'value' => qa_get_form_security_code('password'),
+			),
 		),
 	);
 
