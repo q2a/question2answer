@@ -1800,7 +1800,8 @@ input, textarea, select {
 	background-color: #f5f7f7;
 	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
 	padding: 5px;
-	margin: 2px 0 15px 0;
+	margin-top: 5px;
+	margin-bottom: 5px;
 	border: 1px solid #e6ebed;
 	-webkit-transition: all 0.3s;
 	transition: all 0.3s;
@@ -1909,19 +1910,12 @@ input[type="submit"], button {
 	border-bottom: 1px solid #ecf0f1;
 }
 
-.qa-form-tall-data input, .qa-form-tall-data select, .qa-form-tall-data button, .qa-form-wide-data input, .qa-form-wide-data select, .qa-form-wide-data button {
-	margin: 0;
-}
-
 .qa-form-tall-label {
 	padding: 5px 0 0;
 }
 
 .qa-form-tall-data {
 	padding: 5px 0;
-}
-.qa-form-tall-data textarea, .qa-form-tall-data input[type="text"] {
-	margin: 0 0 5px 0;
 }
 
 .qa-form-wide-label {
@@ -2440,7 +2434,6 @@ input[type="submit"], button {
 
 .qa-part-form-q-edit {
 	padding: 20px;
-	margin-bottom: 5px;
 	background: #fff;
 	position: relative;
 }
@@ -2467,6 +2460,12 @@ input[type="submit"], button {
 
 
 /*------[ a-list ]------*/
+.qa-part-a-form {
+	padding: 20px;
+	background: #fff;
+	margin-bottom: 5px;
+}
+.qa-part-a-form:empty
 .qa-part-a-form h2 {
 	margin-top: 0;
 }
@@ -2725,6 +2724,10 @@ input[type="submit"], button {
 .qa-c-item-buttons .qa-waiting {
 	float: right;
 	margin: 9px 0 0 5px;
+}
+
+.qa-c-form h2 {
+	margin-bottom: 0;
 }
 
 .qa-widget-main h2:first-of-type {
