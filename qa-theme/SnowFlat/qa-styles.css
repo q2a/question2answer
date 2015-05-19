@@ -897,7 +897,7 @@ blockquote p {
 }
 @media (min-width: 1024px) {
 	.qa-body-wrapper {
-		width: 1024px;
+		max-width: 1024px;
 	}
 }
 
