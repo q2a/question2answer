@@ -1039,6 +1039,21 @@
 	}
 
 
+    function getIp(){
+
+        if  ($_SERVER['HTTP_CF_CONNECTING_IP']!=""){
+            return $_SERVER['HTTP_CF_CONNECTING_IP'];
+        }
+
+        else if ($_SERVER['HTTP_X_FORWARDED_FOR']!=""){
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+
+        else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
+
 	function qa_remote_ip_address()
 /*
 	Return the remote IP address of the user accessing the site, if it's available, or null otherwise
@@ -1046,7 +1061,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		return @$_SERVER['REMOTE_ADDR'];
+
+		return getIp();
 	}
 
 
