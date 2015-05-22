@@ -1039,19 +1039,67 @@
 	}
 
 
+
+/*
+ *  check if ip address is ipv6
+ */
+    function isIpv6($ip = "") {
+        if (substr_count($ip,":") > 0 && substr_count($ip,".") == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+/*
+ *  convert ipv4 to ipv6
+ */
+    function getIpv6($ipv4) {
+
+        $strIP = '0000:0000:0000:0000:0000:0000:'.$ipv4;
+        $arrIP = explode(':', $strIP);
+
+        if( preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $arrIP[count($arrIP)-1]) ) {
+            $ip4parts = explode('.', $arrIP[count($arrIP)-1]);
+            $ip6trans = sprintf("%02x%02x:%02x%02x", $ip4parts[0], $ip4parts[1], $ip4parts[2], $ip4parts[3]);
+            $arrIP[count($arrIP)-1] = $ip6trans;
+
+            $strIP = implode(':', $arrIP);
+        }
+        return $strIP; //output: 0000:0000:0000:0000:0000:0000:c0a8:0001
+
+    }
+
+
+/*
+ *  check if ip address if cloudflare environment (add more cdns here if you need them) or if behind proxy otherwise get ip address and convert to ipv6 if necessary
+ */
+
     function getIp(){
 
         if  ($_SERVER['HTTP_CF_CONNECTING_IP']!=""){
-            return $_SERVER['HTTP_CF_CONNECTING_IP'];
+            $ip=$_SERVER['HTTP_CF_CONNECTING_IP'];
         }
 
         else if ($_SERVER['HTTP_X_FORWARDED_FOR']!=""){
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
         }
 
         else {
-            return $_SERVER['REMOTE_ADDR'];
+            $ip=$_SERVER['REMOTE_ADDR'];
         }
+
+        if (isIpv6($ip)===false){
+            $ip=getIpv6($ip);
+        }
+
+
+        return getIpNumber($ip);
+
+    }
+
+    function getIpNumber($ipv6){
+        return @inet_pton($ipv6);
     }
 
 	function qa_remote_ip_address()
@@ -1647,6 +1695,7 @@
 		$args=array_slice($args, 1);
 
 		$processmodules=qa_load_modules_with('process', $method);
+		foreach ($processmodules as $processmodule)
 		foreach ($processmodules as $processmodule)
 			call_user_func_array(array($processmodule, $method), $args);
 
