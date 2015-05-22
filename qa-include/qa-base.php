@@ -1077,11 +1077,11 @@
 
     function getIp(){
 
-        if  ($_SERVER['HTTP_CF_CONNECTING_IP']!=""){
+        if  ( isset ($_SERVER['HTTP_CF_CONNECTING_IP']) && $_SERVER['HTTP_CF_CONNECTING_IP']!=""){
             $ip=$_SERVER['HTTP_CF_CONNECTING_IP'];
         }
 
-        else if ($_SERVER['HTTP_X_FORWARDED_FOR']!=""){
+        else if (isset ($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!=""){
             $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
         }
 
