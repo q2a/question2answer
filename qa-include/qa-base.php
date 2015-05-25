@@ -1077,7 +1077,12 @@
 
     function getIp(){
 
-        if  ( isset ($_SERVER['HTTP_CF_CONNECTING_IP']) && $_SERVER['HTTP_CF_CONNECTING_IP']!=""){
+
+         if  ( isset ($_SERVER['Incap-Client-IP']) && $_SERVER['Incap-Client-IP']!=""){
+            $ip=$_SERVER['Incap-Client-IP'];
+        }
+
+        else if  ( isset ($_SERVER['HTTP_CF_CONNECTING_IP']) && $_SERVER['HTTP_CF_CONNECTING_IP']!=""){
             $ip=$_SERVER['HTTP_CF_CONNECTING_IP'];
         }
 
