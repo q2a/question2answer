@@ -20,6 +20,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+require_once QA_INCLUDE_DIR.'db/users.php';
 
 /*
 	=========================================================================
@@ -51,7 +52,7 @@
 
 	//	Set this before anything else
 
-		return null;
+		return "INT";
 
 	/*
 		Example 1 - suitable if:
@@ -106,9 +107,9 @@
 	//	Until you edit this function, don't show login, register or logout links
 
 		return array(
-			'login' => null,
-			'register' => null,
-			'logout' => null
+			'login' => "/login.php",
+			'register' => "/registerNew.php",
+			'logout' => "/logout.php"
 		);
 
 	/*
@@ -194,7 +195,32 @@
 
 	//	Until you edit this function, nobody is ever logged in
 
-		return null;
+        if ($_COOKIE!="" && isset($_COOKIE['user'])){
+
+
+        $user = $_COOKIE['user'];
+
+        if (is_array($user)) {
+            $uid = $user[0];
+            $pwd = $user[2];
+        } else {
+
+            $user = base64_decode($user);
+            $user = explode(":", $user);
+            $uid = "$user[0]";
+            $pwd = "$user[2]";
+
+            $uname = get_uname($uid);
+            $email = get_email($uid);
+        }
+
+
+        return array(
+                    'userid' => $uid,
+                    'publicusername' => $uname,
+                    'email' => $email,
+                    'level' => ($uname=='tobias') ? QA_USER_LEVEL_ADMIN : QA_USER_LEVEL_BASIC
+                );
 
 	/*
 		Example 1 - suitable if:
@@ -263,10 +289,17 @@
 		return null;
 	*/
 
-	}
+        }
+   	}
 
 
 	function qa_get_user_email($userid)
+    {
+
+        $email = get_email($userid);
+
+        return $email;
+    }
 /*
 	===========================================================================
 	YOU MUST MODIFY THIS FUNCTION, BUT CAN DO SO AFTER Q2A CREATES ITS DATABASE
@@ -279,11 +312,6 @@
 	Call qa_db_connection() to get the connection to the Q2A database. If your database is shared with
 	Q2A, you can use this with PHP's MySQL functions such as mysql_query() to run queries.
 */
-	{
-
-	//	Until you edit this function, always return null
-
-		return null;
 
 	/*
 		Example 1 - suitable if:
@@ -306,7 +334,6 @@
 		return null;
 	*/
 
-	}
 
 
 	function qa_get_userids_from_public($publicusernames)
@@ -330,7 +357,6 @@
 
 	//	Until you edit this function, always return null
 
-		return null;
 
 	/*
 		Example 1 - suitable if:
@@ -351,27 +377,25 @@
 		* You use numerical user identifiers
 		* Your database is shared with the Q2A site
 		* Your database has a users table that contains usernames
-
+*/
 		$publictouserid=array();
 
 		if (count($publicusernames)) {
 			$qa_db_connection=qa_db_connection();
 
 			$escapedusernames=array();
+
 			foreach ($publicusernames as $publicusername)
-				$escapedusernames[]="'".mysql_real_escape_string($publicusername, $qa_db_connection)."'";
+				$escapedusernames[]="'".mysqli_real_escape_string($qa_db_connection,$publicusername)."'";
 
-			$results=mysql_query(
-				'SELECT username, userid FROM users WHERE username IN ('.implode(',', $escapedusernames).')',
-				$qa_db_connection
-			);
+            $results = get_external_user_ids_for_array ($escapedusernames);
 
-			while ($result=mysql_fetch_assoc($results))
-				$publictouserid[$result['username']]=$result['userid'];
+
+			while ($result=mysqli_fetch_assoc($results))
+				$publictouserid[$result['uname']]=$result['uid'];
 		}
 
 		return $publictouserid;
-	*/
 
 	}
 
@@ -382,6 +406,9 @@
 	YOU MUST MODIFY THIS FUNCTION, BUT CAN DO SO AFTER Q2A CREATES ITS DATABASE
 	===========================================================================
 
+echo "userids: $userids";
+
+echo "array: "; print_r($userids); die();
 	qa_get_public_from_userids($userids)
 
 	This is exactly like qa_get_userids_from_public(), but works in the other direction.
@@ -398,7 +425,7 @@
 
 	//	Until you edit this function, always return null
 
-		return null;
+
 
 	/*
 		Example 1 - suitable if:
@@ -419,7 +446,7 @@
 		* You use numerical user identifiers
 		* Your database is shared with the Q2A site
 		* Your database has a users table that contains usernames
-
+*/
 		$useridtopublic=array();
 
 		if (count($userids)) {
@@ -427,19 +454,15 @@
 
 			$escapeduserids=array();
 			foreach ($userids as $userid)
-				$escapeduserids[]="'".mysql_real_escape_string($userid, $qa_db_connection)."'";
+				$escapeduserids[]="'".mysqli_real_escape_string($qa_db_connection,$userid)."'";
 
-			$results=mysql_query(
-				'SELECT username, userid FROM users WHERE userid IN ('.implode(',', $escapeduserids).')',
-				$qa_db_connection
-			);
+			$results=get_external_usernames_for_array ($escapeduserids);
 
-			while ($result=mysql_fetch_assoc($results))
-				$useridtopublic[$result['userid']]=$result['username'];
+			while ($result=mysqli_fetch_assoc($results))
+				$useridtopublic[$result['uid']]=$result['uname'];
 		}
 
 		return $useridtopublic;
-	*/
 
 	}
 
@@ -536,8 +559,10 @@
 
 		$usershtml=array();
 
+
 		foreach ($userids as $userid) {
-			$publicusername=$useridtopublic[$userid];
+
+         	$publicusername=$useridtopublic[$userid];
 
 			$usershtml[$userid]=htmlspecialchars($publicusername);
 
@@ -619,7 +644,7 @@
 	you need in qa_get_users_html(...) and cache it in a global variable, for use in this function.
 */
 	{
-		return null; // show no avatars by default
+		//return null; // show no avatars by default
 
 	/*
 		Example 1 - suitable if:
@@ -634,6 +659,9 @@
 			'width="'.$htmlsize.'" height="'.$htmlsize.'" class="qa-avatar-image" alt=""/>';
 	*/
 
+        $avatar=get_avatar($userid);
+
+        return '<img src="'.$avatar.'" class="qa-avatar-image" alt=""/>';
 	}
 
 
