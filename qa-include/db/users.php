@@ -377,7 +377,7 @@
         $result=qa_db_query_execute("select pass from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_USER_TABLE." where uid='".$uid."' limit 1" );
 
      
-        $passDB=qa_db_read_one_value($result);
+        $passDB=qa_db_read_one_value($result,true);
 
         if ($pass == $passDB && $pass != "") {
 
@@ -424,11 +424,13 @@
 
         $result=qa_db_query_execute("select cryptedname from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_PICTURE_TABLE." where uid='".$uid."' and mainpic=1 and level=1 limit 1" );
 
-        $cryptedname=qa_db_read_one_value($result);
+     
+            $cryptedname=qa_db_read_one_value($result,true);
 
-        if ($cryptedname!=""){
+     if ($cryptedname!=""){
             return "/images/userpics/avatar/".$cryptedname;
         }
+
         else {
 
             return "/images/no-photo-43x43.jpg";
