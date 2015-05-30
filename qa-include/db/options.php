@@ -32,7 +32,8 @@
 */
 	{
 		qa_db_query_sub(
-			'REPLACE ^options (title, content) VALUES ($, $)',
+			'INSERT INTO ^options (title, content) VALUES ($, $) ' .
+			'ON DUPLICATE KEY UPDATE content = VALUES(content)',
 			$name, $value
 		);
 	}
