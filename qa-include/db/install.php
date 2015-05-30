@@ -595,11 +595,9 @@
 	Set the current version in the database
 */
 	{
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) VALUES ('db_version', #) " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)",
-			$version
-		);
+		require_once QA_INCLUDE_DIR . 'db/options.php';
+
+		qa_db_set_option('db_version', $version);
 	}
 
 
