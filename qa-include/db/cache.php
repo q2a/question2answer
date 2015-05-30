@@ -41,7 +41,8 @@
 		);
 
 		qa_db_query_sub(
-			'REPLACE ^cache (type, cacheid, content, created, lastread) VALUES ($, #, $, NOW(), NOW())',
+			'INSERT INTO ^cache (type, cacheid, content, created, lastread) VALUES ($, #, $, NOW(), NOW()) ' .
+			'ON DUPLICATE KEY UPDATE content = VALUES(content), created = VALUES(created), lastread = VALUES(lastread)',
 			$type, $cacheid, $content
 		);
 	}
