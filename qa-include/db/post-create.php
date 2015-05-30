@@ -286,8 +286,14 @@
 	Update the cached count in the database of the number of questions (excluding hidden/queued)
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_qcount', COUNT(*) FROM ^posts WHERE type='Q'");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_qcount', COUNT(*) FROM ^posts " .
+				"WHERE type = 'Q' " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -296,8 +302,14 @@
 	Update the cached count in the database of the number of answers (excluding hidden/queued)
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_acount', COUNT(*) FROM ^posts WHERE type='A'");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_acount', COUNT(*) FROM ^posts " .
+				"WHERE type = 'A' " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -306,8 +318,14 @@
 	Update the cached count in the database of the number of comments (excluding hidden/queued)
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_ccount', COUNT(*) FROM ^posts WHERE type='C'");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_ccount', COUNT(*) FROM ^posts " .
+				"WHERE type = 'C' " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -316,8 +334,14 @@
 	Update the cached count in the database of the number of different tags used
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_tagcount', COUNT(*) FROM ^words WHERE tagcount>0");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_tagcount', COUNT(*) FROM ^words " .
+				"WHERE tagcount > 0 " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -326,8 +350,14 @@
 	Update the cached count in the database of the number of unanswered questions (excluding hidden/queued)
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND acount=0 AND closedbyid IS NULL");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_unaqcount', COUNT(*) FROM ^posts " .
+				"WHERE type = 'Q' AND acount = 0 AND closedbyid IS NULL " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -336,8 +366,14 @@
 	Update the cached count in the database of the number of questions with no answer selected (excluding hidden/queued)
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unselqcount', COUNT(*) FROM ^posts WHERE type='Q' AND selchildid IS NULL AND closedbyid IS NULL");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_unselqcount', COUNT(*) FROM ^posts " .
+				"WHERE type = 'Q' AND selchildid IS NULL AND closedbyid IS NULL " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -346,8 +382,14 @@
 	Update the cached count in the database of the number of questions with no upvoted answers (excluding hidden/queued)
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts WHERE type='Q' AND amaxvote=0 AND closedbyid IS NULL");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts " .
+				"WHERE type = 'Q' AND amaxvote = 0 AND closedbyid IS NULL " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
@@ -356,8 +398,14 @@
 	Update the cached count in the database of the number of posts which are queued for moderation
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_queuedcount', COUNT(*) FROM ^posts WHERE type IN ('Q_QUEUED', 'A_QUEUED', 'C_QUEUED')");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_queuedcount', COUNT(*) FROM ^posts " .
+				"WHERE type IN ('Q_QUEUED', 'A_QUEUED', 'C_QUEUED') " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 /*
