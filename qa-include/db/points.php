@@ -208,8 +208,13 @@
 	Update the cached count in the database of the number of rows in the userpoints table
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_userpointscount', COUNT(*) FROM ^userpoints");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_userpointscount', COUNT(*) FROM ^userpoints " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 
