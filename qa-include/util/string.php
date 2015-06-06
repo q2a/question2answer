@@ -512,7 +512,9 @@
 				else
 					$word=array_shift($words);
 
-				if (qa_strlen($word)>$remaining)
+				$wordLength = qa_strlen($word);
+
+				if ($wordLength>$remaining)
 					break;
 
 				if ($tosuffix)
@@ -520,7 +522,7 @@
 				else
 					$prefix.=$word;
 
-				$remaining-=qa_strlen($word);
+				$remaining-=$wordLength;
 			}
 
 			$string=$prefix.' ... '.$suffix;
