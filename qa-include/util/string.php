@@ -493,39 +493,36 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$string=strtr($string, "\r\n\t", '   ');
+		$string = strtr($string, "\r\n\t", '   ');
 
-		if (qa_strlen($string)>$length) {
-			$remaining=$length-5;
+		if (qa_strlen($string) > $length) {
+			$remaining = $length - 5;
 
-			$words=qa_string_to_words($string, false, true);
-			$countwords=count($words);
+			$words = qa_string_to_words($string, false, true);
+			$countwords = count($words);
 
-			$prefix='';
-			$suffix='';
+			$prefix = '';
+			$suffix = '';
 
-			for ($addword=0; $addword<$countwords; $addword++) {
-				$tosuffix=(($addword%3)==1); // order: prefix, suffix, prefix, prefix, suffix, prefix, ...
+			for ($addword = 0; $addword < $countwords; $addword++) {
+				$tosuffix = $addword % 3 == 1; // order: prefix, suffix, prefix, prefix, suffix, prefix, ...
 
-				if ($tosuffix)
-					$word=array_pop($words);
-				else
-					$word=array_shift($words);
+				$word = $tosuffix ? array_pop($words) : array_shift($words);
 
 				$wordLength = qa_strlen($word);
 
-				if ($wordLength>$remaining)
+				if ($wordLength > $remaining)
 					break;
 
 				if ($tosuffix)
-					$suffix=$word.$suffix;
+					$suffix = $word . $suffix;
 				else
-					$prefix.=$word;
+					$prefix .= $word;
 
-				$remaining-=$wordLength;
+				$remaining -= $wordLength;
 			}
 
-			$string=$prefix.' ... '.$suffix;
+			$string = $prefix . ' ... ' . $suffix;
 		}
 
 		return $string;
