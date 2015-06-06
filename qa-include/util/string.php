@@ -495,14 +495,14 @@
 	 * @param string $ellipsis Text used to replace the removed words from the original text
 	 * @return string The string turned into a single line and cut to fit the given length
 	 */
-	function qa_shorten_string_line($string, $length)
+	function qa_shorten_string_line($string, $length, $ellipsis = ' ... ')
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$string = strtr($string, "\r\n\t", '   ');
 
 		if (qa_strlen($string) > $length) {
-			$remaining = $length - 5;
+			$remaining = $length - qa_strlen($ellipsis);
 
 			$words = qa_string_to_words($string, false, true);
 			$countwords = count($words);
@@ -528,7 +528,7 @@
 				$remaining -= $wordLength;
 			}
 
-			$string = $prefix . ' ... ' . $suffix;
+			$string = $prefix . $ellipsis . $suffix;
 		}
 
 		return $string;
