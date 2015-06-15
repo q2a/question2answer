@@ -53,14 +53,15 @@
 
 		$c_list=qa_page_q_comment_follow_list($question, $parent, $children, true, $usershtml, false, null);
 
-		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-comments', null, null);
+		$theme = qa_get_theme_instance(null, 'ajax-comments');
+		$theme->initialize();
 
 		echo "QA_AJAX_RESPONSE\n1\n";
 
 
 	//	Send back the HTML
 
-		$themeclass->c_list_items($c_list['cs']);
+		$theme->c_list_items($c_list['cs']);
 
 		return;
 	}

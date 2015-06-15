@@ -94,8 +94,10 @@
 			$limitedquestions[] = $question;
 		}
 
-		$themeclass = qa_load_theme_class(qa_get_site_theme(), 'ajax-asktitle', null, null);
-		$themeclass->q_ask_similar($limitedquestions, qa_lang_html('question/ask_same_q'));
+		$theme = qa_get_theme_instance(null, 'ajax-asktitle');
+		$theme->initialize();
+
+		$theme->q_ask_similar($limitedquestions, qa_lang_html('question/ask_same_q'));
 	}
 
 

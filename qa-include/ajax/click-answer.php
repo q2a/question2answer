@@ -92,14 +92,15 @@
 
 				$a_view['c_list']=qa_page_q_comment_follow_list($question, $answer, $achildposts, false, $usershtml, false, null);
 
-				$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-answer', null, null);
+				$theme = qa_get_theme_instance(null, 'ajax-answer');
+				$theme->initialize();
 
 
 			//	... send back the HTML for it
 
 				echo "\n";
 
-				$themeclass->a_list_item($a_view);
+				$theme->a_list_item($a_view);
 			}
 
 			return;

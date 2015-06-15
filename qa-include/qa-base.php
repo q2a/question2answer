@@ -603,6 +603,28 @@
 		@ini_set('track_errors', $oldtrackerrors);
 	}
 
+	/**
+	 * Call $function with the arguments in the $args array
+	 */
+	function qa_call_method($object, $method, $args)
+	{
+		switch (count($args)) {
+			case 0:
+				return $object->$method();
+			case 1:
+				return $object->$method($args[0]);
+			case 2:
+				return $object->$method($args[0], $args[1]);
+			case 3:
+				return $object->$method($args[0], $args[1], $args[2]);
+			case 4:
+				return $object->$method($args[0], $args[1], $args[2], $args[3]);
+			case 5:
+				return $object->$method($args[0], $args[1], $args[2], $args[3], $args[4]);
+		}
+		return call_user_func_array(array($object, $method), $args);
+	}
+
 
 	/**
 	 * Call $function with the arguments in the $args array (doesn't work with call-by-reference functions)

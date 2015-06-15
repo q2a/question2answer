@@ -32,32 +32,33 @@ class qa_activity_count
 		return ($region=='side');
 	}
 
-	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+	public function output_widget($region, $place, $themeobject)
 	{
-		$themeobject->output('<div class="qa-activity-count">');
+		$htmlPrinter = $themeobject->getHtmlPrinter();
+		$htmlPrinter->output('<div class="qa-activity-count">');
 
-		$this->output_count($themeobject, qa_opt('cache_qcount'), 'main/1_question', 'main/x_questions');
-		$this->output_count($themeobject, qa_opt('cache_acount'), 'main/1_answer', 'main/x_answers');
+		$this->output_count($htmlPrinter, qa_opt('cache_qcount'), 'main/1_question', 'main/x_questions');
+		$this->output_count($htmlPrinter, qa_opt('cache_acount'), 'main/1_answer', 'main/x_answers');
 
 		if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
-			$this->output_count($themeobject, qa_opt('cache_ccount'), 'main/1_comment', 'main/x_comments');
+			$this->output_count($htmlPrinter, qa_opt('cache_ccount'), 'main/1_comment', 'main/x_comments');
 
-		$this->output_count($themeobject, qa_opt('cache_userpointscount'), 'main/1_user', 'main/x_users');
+		$this->output_count($htmlPrinter, qa_opt('cache_userpointscount'), 'main/1_user', 'main/x_users');
 
-		$themeobject->output('</div>');
+		$htmlPrinter->output('</div>');
 	}
 
-	public function output_count($themeobject, $value, $langsingular, $langplural)
+	public function output_count($htmlPrinter, $value, $langsingular, $langplural)
 	{
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		$themeobject->output('<p class="qa-activity-count-item">');
+		$htmlPrinter->output('<p class="qa-activity-count-item">');
 
 		if ($value==1)
-			$themeobject->output(qa_lang_html_sub($langsingular, '<span class="qa-activity-count-data">1</span>', '1'));
+			$htmlPrinter->output(qa_lang_html_sub($langsingular, '<span class="qa-activity-count-data">1</span>', '1'));
 		else
-			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.qa_format_number((int) $value, 0, true).'</span>'));
+			$htmlPrinter->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.qa_format_number((int) $value, 0, true).'</span>'));
 
-		$themeobject->output('</p>');
+		$htmlPrinter->output('</p>');
 	}
 }

@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-plugin/facebook-login/qa-facebook-layer.php
-	Description: Theme layer class for mouseover layer plugin
+	File: qa-include/Q2A/Module/Layer.php
+	Description: Some useful metadata handling stuff
 
 
 	This program is free software; you can redistribute it and/or
@@ -20,16 +20,20 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class qa_facebook_layer extends Q2A_Module_Layer
+class Q2A_Module_Layer
 {
-	public function head_css()
+
+	protected $htmlPrinter;
+	protected $content;
+	protected $directory;
+	protected $urlToRoot;
+
+	public function __construct($htmlPrinter, &$content, $directory, $urlToRoot)
 	{
-		if (strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret'))) {
-			$this->htmlPrinter->output(
-				'<style>',
-				'.fb-login-button.fb_iframe_widget.fb_hide_iframes span {display:none;}',
-				'</style>'
-			);
-		}
+		$this->htmlPrinter = $htmlPrinter;
+		$this->content = &$content;
+		$this->directory = $directory;
+		$this->urlToRoot = $urlToRoot;
 	}
+
 }

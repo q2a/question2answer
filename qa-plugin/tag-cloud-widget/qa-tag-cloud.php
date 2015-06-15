@@ -108,17 +108,19 @@ class qa_tag_cloud
 	}
 
 
-	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+	public function output_widget($region, $place, $themeobject)
 	{
 		require_once QA_INCLUDE_DIR.'db/selects.php';
+
+		$htmlPrinter = $themeobject->getHtmlPrinter();
 
 		$populartags = qa_db_single_select(qa_db_popular_tags_selectspec(0, (int) qa_opt('tag_cloud_count_tags')));
 
 		$maxcount = reset($populartags);
 
-		$themeobject->output(sprintf('<h2 style="margin-top: 0; padding-top: 0;">%s</h2>', qa_lang_html('main/popular_tags')));
+		$htmlPrinter->output(sprintf('<h2 style="margin-top: 0; padding-top: 0;">%s</h2>', qa_lang_html('main/popular_tags')));
 
-		$themeobject->output('<div style="font-size: 10px;">');
+		$htmlPrinter->output('<div style="font-size: 10px;">');
 
 		$maxsize = qa_opt('tag_cloud_font_size');
 		$minsize = qa_opt('tag_cloud_minimal_font_size');
@@ -135,10 +137,10 @@ class qa_tag_cloud
 				} else
 					$size = $maxsize;
 
-				$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
+				$htmlPrinter->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
 			}
 		}
 
-		$themeobject->output('</div>');
+		$htmlPrinter->output('</div>');
 	}
 }

@@ -73,14 +73,15 @@
 
 				$c_view=qa_page_q_comment_view($question, $parent, $comment, $usershtml, false);
 
-				$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-comment', null, null);
+				$theme = qa_get_theme_instance(null, 'ajax-comment');
+				$theme->initialize();
 
 
 			//	... send back the HTML for it
 
 				echo "\n";
 
-				$themeclass->c_list_item($c_view);
+				$theme->c_list_item($c_view);
 			}
 
 			return;

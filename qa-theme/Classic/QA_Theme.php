@@ -20,7 +20,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class qa_html_theme extends qa_html_theme_base
+class QA_Theme extends Q2A_Theme_BaseTheme
 {
 	// use new ranking layout
 	protected $ranking_block_layout = true;

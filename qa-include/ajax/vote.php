@@ -52,10 +52,11 @@
 			'voteview' => qa_get_vote_view($post, true), // behave as if on question page since the vote succeeded
 		));
 
-		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'voting', null, null);
+		$theme = qa_get_theme_instance(null, 'voting');
+		$theme->initialize();
 
 		echo "QA_AJAX_RESPONSE\n1\n";
-		$themeclass->voting_inner_html($fields);
+		$theme->voting_inner_html($fields);
 
 	} else
 		echo "QA_AJAX_RESPONSE\n0\n".$voteerror;

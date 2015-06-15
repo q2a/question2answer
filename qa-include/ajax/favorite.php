@@ -42,11 +42,12 @@
 
 		$favoriteform=qa_favorite_form($entitytype, $entityid, $setfavorite, qa_lang($setfavorite ? 'main/remove_favorites' : 'main/add_favorites'));
 
-		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-favorite', null, null);
+		$theme = qa_get_theme_instance(null, 'ajax-favorite');
+		$theme->initialize();
 
 		echo "QA_AJAX_RESPONSE\n1\n";
 
-		$themeclass->favorite_inner_html($favoriteform);
+		$theme->favorite_inner_html($favoriteform);
 	}
 
 

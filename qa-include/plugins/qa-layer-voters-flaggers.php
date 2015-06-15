@@ -20,10 +20,11 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class qa_html_theme_layer extends qa_html_theme_base
+class qa_layer_voters_flaggers extends Q2A_Module_Layer
 {
 	private $qa_voters_flaggers_queue=array();
 	private $qa_voters_flaggers_cache=array();
+	private $tooltip='';
 
 
 //	Collect up all required postids for the entire page to save DB queries - common case where whole page output
@@ -47,44 +48,35 @@ class qa_html_theme_layer extends qa_html_theme_base
 				}
 			}
 		}
-
-		qa_html_theme_base::main();
 	}
 
 
 //	Other functions which also collect up required postids for lists to save DB queries - helps with widget output and Ajax calls
 
-	public function q_list_items($q_items)
+	public function q_list_items(&$q_items)
 	{
 		$this->queue_raw_posts_voters_flaggers($q_items);
-
-		qa_html_theme_base::q_list_items($q_items);
 	}
 
-	public function a_list_items($a_items)
+	public function a_list_items(&$a_items)
 	{
 		$this->queue_raw_posts_voters_flaggers($a_items);
-
-		qa_html_theme_base::a_list_items($a_items);
 	}
 
-	public function c_list_items($c_items)
+	public function c_list_items(&$c_items)
 	{
 		$this->queue_raw_posts_voters_flaggers($c_items);
-
-		qa_html_theme_base::c_list_items($c_items);
 	}
 
 
 //	Actual output of the voters and flaggers
 
-	public function vote_count($post)
+	public function before_vote_count(&$post)
 	{
 		$votersflaggers=$this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
 
-		$tooltip='';
-
 		if (isset($votersflaggers)) {
+			$tooltip='';
 			$uphandles='';
 			$downhandles='';
 
@@ -94,23 +86,18 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 				if ($voterflagger['vote']<0)
 					$downhandles.=(strlen($downhandles) ? ', ' : '').qa_html($voterflagger['handle']);
-
-				$tooltip=trim((strlen($uphandles) ? ('&uarr; '.$uphandles) : '')."\n\n".(strlen($downhandles) ? ('&darr; '.$downhandles) : ''));
 			}
+			$tooltip=trim((strlen($uphandles) ? ('&uarr; '.$uphandles) : '')."\n\n".(strlen($downhandles) ? ('&darr; '.$downhandles) : ''));
+			$post['vote_count_tags']=@$post['vote_count_tags'].' title="'.$tooltip.'"';
 		}
 
-		$post['vote_count_tags']=@$post['vote_count_tags'].' title="'.$tooltip.'"';
-
-		qa_html_theme_base::vote_count($post);
 	}
 
-	public function post_meta_flags($post, $class)
+	public function before_post_meta_flags(&$post, $class)
 	{
 		$postid=@$post['raw']['opostid'];
 		if (!isset($postid))
 			$postid=@$post['raw']['postid'];
-
-		$tooltip='';
 
 		if (isset($postid)) {
 			$votersflaggers=$this->get_post_voters_flaggers($post, $postid);
@@ -118,20 +105,20 @@ class qa_html_theme_layer extends qa_html_theme_base
 			if (isset($votersflaggers)) {
 				foreach ($votersflaggers as $voterflagger) {
 					if ($voterflagger['flag']>0)
-						$tooltip.=(strlen($tooltip) ? ', ' : '').qa_html($voterflagger['handle']);
+						$this->tooltip.=(strlen($this->tooltip) ? ', ' : '').qa_html($voterflagger['handle']);
 				}
 			}
 		}
 
-		if (strlen($tooltip))
-			$this->output('<span title="&#9873; '.$tooltip.'">');
-
-		qa_html_theme_base::post_meta_flags($post, $class);
-
-		if (strlen($tooltip))
-			$this->output('</span>');
+		if (strlen($this->tooltip))
+			$this->htmlPrinter->output('<span title="&#9873; '.$this->tooltip.'">');
 	}
 
+	public function after_post_meta_flags(&$post, $class)
+	{
+		if (strlen($this->tooltip))
+			$this->htmlPrinter->output('</span>');
+	}
 
 //	Utility functions for this layer
 
