@@ -2042,22 +2042,24 @@
 	function qa_load_layer_modules($htmlPrinter, &$qa_content)
 	{
 		$layerModules = array();
-		global $qa_layers;
-		$loadlayers = $qa_layers;
+
+		$loadlayers = qa_list_modules_info('layer');
+
 		if (!qa_user_maximum_permit_error('permit_view_voters_flaggers')) {
 			$loadlayers[]=array(
 				'directory' => QA_INCLUDE_DIR . 'plugins/',
 				'include' => 'qa-layer-voters-flaggers.php',
 				'urltoroot' => null,
+				'class' => 'QA_Layer_Voters_Flaggers',
 			);
 		}
 		foreach ($loadlayers as $layer) {
 			require_once $layer['directory'] . $layer['include'];
-			$className = $layer['include'];
-			$className = str_replace('-', '_', $className);
-			$className = str_replace('.php', '', $className);
+			$className = $layer['class'];
 			$layerModules[] = new $className($htmlPrinter, $qa_content, $layer['directory'], qa_path_to_root() . $layer['urltoroot']);
 		}
+
+
 		return $layerModules;
 	}
 

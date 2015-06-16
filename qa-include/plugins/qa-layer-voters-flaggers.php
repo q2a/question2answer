@@ -20,7 +20,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class qa_layer_voters_flaggers extends Q2A_Module_Layer
+class QA_Layer_Voters_Flaggers extends Q2A_Module_Layer
 {
 	private $qa_voters_flaggers_queue=array();
 	private $qa_voters_flaggers_cache=array();
@@ -160,7 +160,6 @@ class qa_layer_voters_flaggers extends Q2A_Module_Layer
 	{
 		if (count($this->qa_voters_flaggers_queue)) {
 			require_once QA_INCLUDE_DIR.'db/votes.php';
-
 			$postids=array_keys($this->qa_voters_flaggers_queue);
 
 			foreach ($postids as $postid)

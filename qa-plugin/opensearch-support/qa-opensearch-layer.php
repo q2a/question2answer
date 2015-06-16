@@ -20,7 +20,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class qa_opensearch_layer extends Q2A_Module_Layer
+class QA_Opensearch_Layer extends Q2A_Module_Layer
 {
 	public function head_links()
 	{
