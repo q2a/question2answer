@@ -89,12 +89,12 @@ class qa_event_limits
 			is_numeric(array_search($event, $writeactions))
 		) {
 			if (isset($userid)) {
-				require_once QA_INCLUDE_DIR.'app/users.php';
+				require_once QA_INCLUDE_DIR . 'app/users.php';
 
 				qa_user_report_action($userid, $event);
 
 			} elseif (isset($cookieid)) {
-				require_once QA_INCLUDE_DIR.'app/cookies.php';
+				require_once QA_INCLUDE_DIR . 'app/cookies.php';
 
 				qa_cookie_report_action($cookieid, $event);
 			}

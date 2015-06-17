@@ -28,10 +28,10 @@ class qa_editor_basic
 
 	public function calc_quality($content, $format)
 	{
-		if ($format=='')
+		if ($format == '')
 			return 1.0;
 
-		if ($format=='html')
+		if ($format == 'html')
 			return 0.2;
 
 		return 0;
@@ -41,7 +41,7 @@ class qa_editor_basic
 	{
 		return array(
 			'type' => 'textarea',
-			'tags' => 'name="'.$fieldname.'" id="'.$fieldname.'"',
+			'tags' => 'name="' . $fieldname . '" id="' . $fieldname . '"',
 			'value' => qa_html($content),
 			'rows' => $rows,
 		);
@@ -49,7 +49,7 @@ class qa_editor_basic
 
 	public function focus_script($fieldname)
 	{
-		return "document.getElementById('".$fieldname."').focus();";
+		return "document.getElementById('" . $fieldname . "').focus();";
 	}
 
 	public function read_post($fieldname)
