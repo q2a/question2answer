@@ -22,8 +22,8 @@
 
 class qa_html_theme_layer extends qa_html_theme_base
 {
-	private $qa_voters_flaggers_queue=array();
-	private $qa_voters_flaggers_cache=array();
+	private $qa_voters_flaggers_queue = array();
+	private $qa_voters_flaggers_cache = array();
 
 
 //	Collect up all required postids for the entire page to save DB queries - common case where whole page output
@@ -31,14 +31,14 @@ class qa_html_theme_layer extends qa_html_theme_base
 	public function main()
 	{
 		foreach ($this->content as $key => $part) {
-			if (strpos($key, 'q_list')===0)
+			if (strpos($key, 'q_list') === 0)
 				$this->queue_raw_posts_voters_flaggers(@$part['qs']);
 
-			elseif (strpos($key, 'q_view')===0) {
+			elseif (strpos($key, 'q_view') === 0) {
 				$this->queue_post_voters_flaggers($part['raw']);
 				$this->queue_raw_posts_voters_flaggers($part['c_list']['cs']);
 
-			} elseif (strpos($key, 'a_list')===0) {
+			} elseif (strpos($key, 'a_list') === 0) {
 				if (!empty($part)) {
 					$this->queue_raw_posts_voters_flaggers($part['as']);
 
@@ -80,51 +80,51 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 	public function vote_count($post)
 	{
-		$votersflaggers=$this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
+		$votersflaggers = $this->get_post_voters_flaggers($post['raw'], @$post['vote_opostid'] ? $post['raw']['opostid'] : $post['raw']['postid']);
 
-		$tooltip='';
+		$tooltip = '';
 
 		if (isset($votersflaggers)) {
-			$uphandles='';
-			$downhandles='';
+			$uphandles = '';
+			$downhandles = '';
 
 			foreach ($votersflaggers as $voterflagger) {
-				if ($voterflagger['vote']>0)
-					$uphandles.=(strlen($uphandles) ? ', ' : '').qa_html($voterflagger['handle']);
+				if ($voterflagger['vote'] > 0)
+					$uphandles.=(strlen($uphandles) ? ', ' : '') . qa_html($voterflagger['handle']);
 
-				if ($voterflagger['vote']<0)
-					$downhandles.=(strlen($downhandles) ? ', ' : '').qa_html($voterflagger['handle']);
+				if ($voterflagger['vote'] < 0)
+					$downhandles.=(strlen($downhandles) ? ', ' : '') . qa_html($voterflagger['handle']);
 
-				$tooltip=trim((strlen($uphandles) ? ('&uarr; '.$uphandles) : '')."\n\n".(strlen($downhandles) ? ('&darr; '.$downhandles) : ''));
+				$tooltip = trim((strlen($uphandles) ? ('&uarr; ' . $uphandles) : '') . "\n\n" . (strlen($downhandles) ? ('&darr; ' . $downhandles) : ''));
 			}
 		}
 
-		$post['vote_count_tags']=@$post['vote_count_tags'].' title="'.$tooltip.'"';
+		$post['vote_count_tags'] = @$post['vote_count_tags'] . ' title="' . $tooltip . '"';
 
 		qa_html_theme_base::vote_count($post);
 	}
 
 	public function post_meta_flags($post, $class)
 	{
-		$postid=@$post['raw']['opostid'];
+		$postid = @$post['raw']['opostid'];
 		if (!isset($postid))
-			$postid=@$post['raw']['postid'];
+			$postid = @$post['raw']['postid'];
 
-		$tooltip='';
+		$tooltip = '';
 
 		if (isset($postid)) {
-			$votersflaggers=$this->get_post_voters_flaggers($post, $postid);
+			$votersflaggers = $this->get_post_voters_flaggers($post, $postid);
 
 			if (isset($votersflaggers)) {
 				foreach ($votersflaggers as $voterflagger) {
-					if ($voterflagger['flag']>0)
-						$tooltip.=(strlen($tooltip) ? ', ' : '').qa_html($voterflagger['handle']);
+					if ($voterflagger['flag'] > 0)
+						$tooltip.=(strlen($tooltip) ? ', ' : '') . qa_html($voterflagger['handle']);
 				}
 			}
 		}
 
 		if (strlen($tooltip))
-			$this->output('<span title="&#9873; '.$tooltip.'">');
+			$this->output('<span title="&#9873; ' . $tooltip . '">');
 
 		qa_html_theme_base::post_meta_flags($post, $class);
 
@@ -142,11 +142,11 @@ class qa_html_theme_layer extends qa_html_theme_base
 	public function queue_post_voters_flaggers($post)
 	{
 		if (!qa_user_post_permit_error('permit_view_voters_flaggers', $post)) {
-			$postids=array(@$post['postid'], @$post['opostid']); // opostid can be relevant for flags
+			$postids = array(@$post['postid'], @$post['opostid']); // opostid can be relevant for flags
 
 			foreach ($postids as $postid) {
 				if (isset($postid) && !isset($this->qa_voters_flaggers_cache[$postid]))
-					$this->qa_voters_flaggers_queue[$postid]=true;
+					$this->qa_voters_flaggers_queue[$postid] = true;
 			}
 		}
 	}
@@ -172,29 +172,29 @@ class qa_html_theme_layer extends qa_html_theme_base
 	public function retrieve_queued_voters_flaggers()
 	{
 		if (count($this->qa_voters_flaggers_queue)) {
-			require_once QA_INCLUDE_DIR.'db/votes.php';
+			require_once QA_INCLUDE_DIR . 'db/votes.php';
 
-			$postids=array_keys($this->qa_voters_flaggers_queue);
+			$postids = array_keys($this->qa_voters_flaggers_queue);
 
 			foreach ($postids as $postid)
-				$this->qa_voters_flaggers_cache[$postid]=array();
+				$this->qa_voters_flaggers_cache[$postid] = array();
 
-			$newvotersflaggers=qa_db_uservoteflag_posts_get($postids);
+			$newvotersflaggers = qa_db_uservoteflag_posts_get($postids);
 
 			if (QA_FINAL_EXTERNAL_USERS) {
-				$keyuserids=array();
+				$keyuserids = array();
 				foreach ($newvotersflaggers as $voterflagger)
-					$keyuserids[$voterflagger['userid']]=true;
+					$keyuserids[$voterflagger['userid']] = true;
 
-				$useridhandles=qa_get_public_from_userids(array_keys($keyuserids));
+				$useridhandles = qa_get_public_from_userids(array_keys($keyuserids));
 				foreach ($newvotersflaggers as $index => $voterflagger)
-					$newvotersflaggers[$index]['handle']=@$useridhandles[$voterflagger['userid']];
+					$newvotersflaggers[$index]['handle'] = @$useridhandles[$voterflagger['userid']];
 			}
 
 			foreach ($newvotersflaggers as $voterflagger)
-				$this->qa_voters_flaggers_cache[$voterflagger['postid']][]=$voterflagger;
+				$this->qa_voters_flaggers_cache[$voterflagger['postid']][] = $voterflagger;
 
-			$this->qa_voters_flaggers_queue=array();
+			$this->qa_voters_flaggers_queue = array();
 		}
 	}
 
@@ -204,14 +204,14 @@ class qa_html_theme_layer extends qa_html_theme_base
 	 */
 	public function get_post_voters_flaggers($post, $postid)
 	{
-		require_once QA_INCLUDE_DIR.'util/sort.php';
+		require_once QA_INCLUDE_DIR . 'util/sort.php';
 
 		if (!isset($this->qa_voters_flaggers_cache[$postid])) {
 			$this->queue_post_voters_flaggers($post);
 			$this->retrieve_queued_voters_flaggers();
 		}
 
-		$votersflaggers=@$this->qa_voters_flaggers_cache[$postid];
+		$votersflaggers = @$this->qa_voters_flaggers_cache[$postid];
 
 		if (isset($votersflaggers))
 			qa_sort_by($votersflaggers, 'handle');
