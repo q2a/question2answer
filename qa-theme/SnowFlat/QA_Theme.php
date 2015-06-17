@@ -32,7 +32,7 @@
  * @copyright (c) 2014, Q2A Market
  * @license http://www.gnu.org/copyleft/gpl.html
  */
-class qa_html_theme extends qa_html_theme_base
+class QA_Theme extends Q2A_Theme_BaseTheme
 {
 	// theme subdirectories
 	private $js_dir = 'js';
@@ -51,7 +51,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function head_metas()
 	{
-		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1">');
+		$this->htmlPrinter->output('<meta name="viewport" content="width=device-width, initial-scale=1">');
 		parent::head_metas();
 	}
 
@@ -102,7 +102,7 @@ class qa_html_theme extends qa_html_theme_base
 				? qa_lang_html_sub('main/1_point', '1', '1')
 				: qa_html(qa_format_number($userpoints))
 			;
-			$this->output('<div class="qam-logged-in-points">' . $pointshtml . '</div>');
+			$this->htmlPrinter->output('<div class="qam-logged-in-points">' . $pointshtml . '</div>');
 		}
 	}
 
@@ -114,10 +114,10 @@ class qa_html_theme extends qa_html_theme_base
 	public function body()
 	{
 		if (qa_is_mobile_probably()) {
-			$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
-			$this->output('<div id="qam-sidepanel-mobile">');
+			$this->htmlPrinter->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
+			$this->htmlPrinter->output('<div id="qam-sidepanel-mobile">');
 			parent::sidepanel();
-			$this->output('</div>');
+			$this->htmlPrinter->output('</div>');
 		}
 		parent::body();
 	}
@@ -143,7 +143,7 @@ class qa_html_theme extends qa_html_theme_base
 		if ($this->fixed_topbar)
 			$class .= ' qam-body-fixed';
 
-		$this->output('class="' . $class . ' qa-body-js-off"');
+		$this->htmlPrinter->output('class="' . $class . ' qa-body-js-off"');
 	}
 
 	/**
@@ -154,16 +154,16 @@ class qa_html_theme extends qa_html_theme_base
 	public function nav_user_search()
 	{
 		// outputs login form if user not logged in
-		$this->output('<div class="qam-account-items-wrapper">');
+		$this->htmlPrinter->output('<div class="qam-account-items-wrapper">');
 
 		$this->qam_user_account();
 
-		$this->output('<div class="qam-account-items clearfix">');
+		$this->htmlPrinter->output('<div class="qam-account-items clearfix">');
 
 		if (!qa_is_logged_in()) {
 			if (isset($this->content['navigation']['user']['login']) && !QA_FINAL_EXTERNAL_USERS) {
 				$login = $this->content['navigation']['user']['login'];
-				$this->output(
+				$this->htmlPrinter->output(
 					'<form action="' . $login['url'] . '" method="post">',
 						'<input type="text" name="emailhandle" dir="auto" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '">',
 						'<input type="password" name="password" dir="auto" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '">',
@@ -180,8 +180,8 @@ class qa_html_theme extends qa_html_theme_base
 		}
 
 		$this->nav('user');
-		$this->output('</div> <!-- END qam-account-items -->');
-		$this->output('</div> <!-- END qam-account-items-wrapper -->');
+		$this->htmlPrinter->output('</div> <!-- END qam-account-items -->');
+		$this->htmlPrinter->output('</div> <!-- END qam-account-items-wrapper -->');
 	}
 
 	/**
@@ -191,12 +191,12 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function nav_main_sub()
 	{
-		$this->output('<div class="qam-main-nav-wrapper clearfix">');
-		$this->output('<div class="sb-toggle-left qam-menu-toggle"><i class="icon-th-list"></i></div>');
+		$this->htmlPrinter->output('<div class="qam-main-nav-wrapper clearfix">');
+		$this->htmlPrinter->output('<div class="sb-toggle-left qam-menu-toggle"><i class="icon-th-list"></i></div>');
 		$this->nav_user_search();
 		$this->logo();
 		$this->nav('main');
-		$this->output('</div> <!-- END qam-main-nav-wrapper -->');
+		$this->htmlPrinter->output('</div> <!-- END qam-main-nav-wrapper -->');
 		$this->nav('sub');
 	}
 
@@ -233,16 +233,16 @@ class qa_html_theme extends qa_html_theme_base
 		$this->widgets('full', 'top');
 		$this->header();
 
-		$this->output('<div class="qa-body-wrapper">', '');
+		$this->htmlPrinter->output('<div class="qa-body-wrapper">', '');
 		$this->widgets('full', 'high');
 
-		$this->output('<div class="qa-main-wrapper">', '');
+		$this->htmlPrinter->output('<div class="qa-main-wrapper">', '');
 		$this->main();
 		$this->sidepanel();
-		$this->output('</div> <!-- END main-wrapper -->');
+		$this->htmlPrinter->output('</div> <!-- END main-wrapper -->');
 
 		$this->widgets('full', 'low');
-		$this->output('</div> <!-- END body-wrapper -->');
+		$this->htmlPrinter->output('</div> <!-- END body-wrapper -->');
 
 		$this->footer();
 
@@ -258,12 +258,12 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$class = $this->fixed_topbar ? ' fixed' : '';
 
-		$this->output('<div id="qam-topbar" class="clearfix' . $class . '">');
+		$this->htmlPrinter->output('<div id="qam-topbar" class="clearfix' . $class . '">');
 
 		$this->nav_main_sub();
-		$this->output('</div> <!-- END qam-topbar -->');
+		$this->htmlPrinter->output('</div> <!-- END qam-topbar -->');
 
-		$this->output($this->ask_button());
+		$this->htmlPrinter->output($this->ask_button());
 		$this->qam_search('the-top', 'the-top-search');
 	}
 
@@ -274,14 +274,14 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function footer()
 	{
-		$this->output('<div class="qam-footer-box">');
+		$this->htmlPrinter->output('<div class="qam-footer-box">');
 
-		$this->output('<div class="qam-footer-row">');
+		$this->htmlPrinter->output('<div class="qam-footer-row">');
 		$this->widgets('full', 'bottom');
-		$this->output('</div> <!-- END qam-footer-row -->');
+		$this->htmlPrinter->output('</div> <!-- END qam-footer-row -->');
 
 		parent::footer();
-		$this->output('</div> <!-- END qam-footer-box -->');
+		$this->htmlPrinter->output('</div> <!-- END qam-footer-box -->');
 	}
 
 	/**
@@ -293,7 +293,7 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		// removes sidebar for user profile pages
 		if ($this->template != 'user' && !qa_is_mobile_probably()) {
-			$this->output('<div class="qa-sidepanel">');
+			$this->htmlPrinter->output('<div class="qa-sidepanel">');
 			$this->qam_search();
 			$this->widgets('side', 'top');
 			$this->sidebar();
@@ -301,10 +301,10 @@ class qa_html_theme extends qa_html_theme_base
 			$this->nav('cat', 1);
 			$this->widgets('side', 'low');
 			if (isset($this->content['sidepanel']))
-				$this->output_raw($this->content['sidepanel']);
+				$this->htmlPrinter->outputRaw($this->content['sidepanel']);
 			$this->feed();
 			$this->widgets('side', 'bottom');
-			$this->output('</div>', '');
+			$this->htmlPrinter->output('</div>', '');
 		}
 	}
 
@@ -318,9 +318,9 @@ class qa_html_theme extends qa_html_theme_base
 		if (isset($this->content['sidebar'])) {
 			$sidebar = $this->content['sidebar'];
 			if (!empty($sidebar)) {
-				$this->output('<div class="qa-sidebar ' . $this->welcome_widget_class . '">');
-				$this->output_raw($sidebar);
-				$this->output('</div>', '');
+				$this->htmlPrinter->output('<div class="qa-sidebar ' . $this->welcome_widget_class . '">');
+				$this->htmlPrinter->outputRaw($sidebar);
+				$this->htmlPrinter->output('</div>', '');
 			}
 		}
 	}
@@ -338,7 +338,7 @@ class qa_html_theme extends qa_html_theme_base
 			? ''
 			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '">';
 
-		$this->output(
+		$this->htmlPrinter->output(
 			'<div class="qa-q-item-title">',
 			// add closed note in title
 			$imgHtml,
@@ -360,7 +360,7 @@ class qa_html_theme extends qa_html_theme_base
 		if (isset($this->content['feed']['url'])) {
 			$feed = $this->content['feed'];
 			$label = isset($feed['label']) ? $feed['label'] : '';
-			$this->output('<a href="' . $feed['url'] . '" title="' . $label . '"><i class="icon-rss qam-title-rss"></i></a>');
+			$this->htmlPrinter->output('<a href="' . $feed['url'] . '" title="' . $label . '"><i class="icon-rss qam-title-rss"></i></a>');
 		}
 
 		// link title where appropriate
@@ -373,7 +373,7 @@ class qa_html_theme extends qa_html_theme_base
 			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '">';
 
 		if (isset($this->content['title'])) {
-			$this->output(
+			$this->htmlPrinter->output(
 				$imgHtml,
 				$url ? '<a href="' . $url . '">' : '',
 				$this->content['title'],
@@ -390,13 +390,13 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function q_item_stats($q_item)
 	{
-		$this->output('<div class="qa-q-item-stats">');
+		$this->htmlPrinter->output('<div class="qa-q-item-stats">');
 
 		$this->voting($q_item);
 		$this->a_count($q_item);
 		parent::view_count($q_item);
 
-		$this->output('</div>');
+		$this->htmlPrinter->output('</div>');
 	}
 
 	/**
@@ -415,13 +415,13 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function q_view_stats($q_view)
 	{
-		$this->output('<div class="qa-q-view-stats">');
+		$this->htmlPrinter->output('<div class="qa-q-view-stats">');
 
 		$this->voting($q_view);
 		$this->a_count($q_view);
 		parent::view_count($q_view);
 
-		$this->output('</div>');
+		$this->htmlPrinter->output('</div>');
 	}
 
 	/**
@@ -432,10 +432,10 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function q_view_main($q_view)
 	{
-		$this->output('<div class="qa-q-view-main">');
+		$this->htmlPrinter->output('<div class="qa-q-view-main">');
 
 		if (isset($q_view['main_form_tags']))
-			$this->output('<form ' . $q_view['main_form_tags'] . '>'); // form for buttons on question
+			$this->htmlPrinter->output('<form ' . $q_view['main_form_tags'] . '>'); // form for buttons on question
 
 		$this->post_avatar_meta($q_view, 'qa-q-view');
 		$this->q_view_content($q_view);
@@ -450,12 +450,12 @@ class qa_html_theme extends qa_html_theme_base
 		if (isset($q_view['main_form_tags'])) {
 			if (isset($q_view['buttons_form_hidden']))
 				$this->form_hidden_elements($q_view['buttons_form_hidden']);
-			$this->output('</form>');
+			$this->htmlPrinter->output('</form>');
 		}
 
 		$this->c_form(isset($q_view['c_form']) ? $q_view['c_form'] : null);
 
-		$this->output('</div> <!-- END qa-q-view-main -->');
+		$this->htmlPrinter->output('</div> <!-- END qa-q-view-main -->');
 	}
 
 	/**
@@ -466,12 +466,12 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function a_item_main($a_item)
 	{
-		$this->output('<div class="qa-a-item-main">');
+		$this->htmlPrinter->output('<div class="qa-a-item-main">');
 
 		$this->post_avatar_meta($a_item, 'qa-a-item');
 
 		if (isset($a_item['main_form_tags']))
-			$this->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
+			$this->htmlPrinter->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
 
 		if ($a_item['hidden'])
 			$answerState = 'hidden';
@@ -481,7 +481,7 @@ class qa_html_theme extends qa_html_theme_base
 			$answerState = null;
 
 		if (isset($answerState))
-			$this->output('<div class="qa-a-item-' . $answerState . '">');
+			$this->htmlPrinter->output('<div class="qa-a-item-' . $answerState . '">');
 
 		$this->a_selection($a_item);
 		if (isset($a_item['error']))
@@ -489,7 +489,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->a_item_content($a_item);
 
 		if (isset($answerState))
-			$this->output('</div>');
+			$this->htmlPrinter->output('</div>');
 
 		$this->a_item_buttons($a_item);
 
@@ -499,12 +499,12 @@ class qa_html_theme extends qa_html_theme_base
 		if (isset($a_item['main_form_tags'])) {
 			if (isset($a_item['buttons_form_hidden']))
 				$this->form_hidden_elements($a_item['buttons_form_hidden']);
-			$this->output('</form>');
+			$this->htmlPrinter->output('</form>');
 		}
 
 		$this->c_form(isset($a_item['c_form']) ? $a_item['c_form'] : null);
 
-		$this->output('</div> <!-- END qa-a-item-main -->');
+		$this->htmlPrinter->output('</div> <!-- END qa-a-item-main -->');
 	}
 
 	/**
@@ -527,9 +527,9 @@ class qa_html_theme extends qa_html_theme_base
 		else
 			$this->c_item_content($c_item);
 
-		$this->output('<div class="qa-c-item-footer">');
+		$this->htmlPrinter->output('<div class="qa-c-item-footer">');
 		$this->c_item_buttons($c_item);
-		$this->output('</div>');
+		$this->htmlPrinter->output('</div>');
 	}
 
 	/**
@@ -541,7 +541,7 @@ class qa_html_theme extends qa_html_theme_base
 	public function attribution()
 	{
 		// floated right
-		$this->output(
+		$this->htmlPrinter->output(
 			'<div class="qa-attribution">',
 			'Snow Theme by <a href="http://www.q2amarket.com">Q2A Market</a>',
 			'</div>'
@@ -588,7 +588,7 @@ class qa_html_theme extends qa_html_theme_base
 		}
 
 		// finally output avatar with div tag
-		$this->output(
+		$this->htmlPrinter->output(
 			'<div id="qam-account-toggle" class="' . $toggleClass . '">',
 			$auth_icon,
 			'<div class="qam-account-handle">' . qa_html($handle) . '</div>',
@@ -606,9 +606,9 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$id = isset($ids) ? ' id="' . $ids . '"' : '';
 
-		$this->output('<div class="qam-search ' . $this->ask_search_box_class . ' ' . $addon_class . '"' . $id . '>');
+		$this->htmlPrinter->output('<div class="qam-search ' . $this->ask_search_box_class . ' ' . $addon_class . '"' . $id . '>');
 		$this->search();
-		$this->output('</div>');
+		$this->htmlPrinter->output('</div>');
 	}
 
 
@@ -645,7 +645,7 @@ class qa_html_theme extends qa_html_theme_base
 
 		$css[] = '</style>';
 
-		$this->output_array($css);
+		$this->htmlPrinter->outputArray($css);
 	}
 
 	/**

@@ -20,9 +20,10 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class qa_html_theme_layer extends qa_html_theme_base
+class QA_Mouse_Over_Layer extends Q2A_Module_Layer
 {
-	public function q_list($q_list)
+
+	public function q_list(&$q_list)
 	{
 		if (!empty($q_list['qs']) && qa_opt('mouseover_content_on')) { // first check it is not an empty list and the feature is turned on
 
@@ -60,7 +61,5 @@ class qa_html_theme_layer extends qa_html_theme_base
 				}
 			}
 		}
-
-		qa_html_theme_base::q_list($q_list); // call back through to the default function
 	}
 }

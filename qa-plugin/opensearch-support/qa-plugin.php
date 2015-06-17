@@ -40,5 +40,5 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 
-qa_register_plugin_layer('qa-opensearch-layer.php', 'OpenSearch Layer');
+qa_register_plugin_module('layer', 'qa-opensearch-layer.php', 'QA_Opensearch_Layer', 'OpenSearch Layer');
 qa_register_plugin_module('page', 'qa-opensearch-page.php', 'qa_opensearch_xml', 'OpenSearch XML');

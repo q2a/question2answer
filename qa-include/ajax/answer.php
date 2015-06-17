@@ -65,7 +65,8 @@
 
 			$a_view=qa_page_q_answer_view($question, $answer, false, $usershtml, false);
 
-			$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-answer', null, null);
+			$theme = qa_get_theme_instance(null, 'ajax-answer');
+			$theme->initialize();
 
 			echo "QA_AJAX_RESPONSE\n1\n";
 
@@ -87,7 +88,7 @@
 
 		//	Send back the HTML
 
-			$themeclass->a_list_item($a_view);
+			$theme->a_list_item($a_view);
 
 			return;
 		}

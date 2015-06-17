@@ -45,5 +45,5 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 if (!QA_FINAL_EXTERNAL_USERS) {
 	qa_register_plugin_module('login', 'qa-facebook-login.php', 'qa_facebook_login', 'Facebook Login');
 	qa_register_plugin_module('page', 'qa-facebook-login-page.php', 'qa_facebook_login_page', 'Facebook Login Page');
-	qa_register_plugin_layer('qa-facebook-layer.php', 'Facebook Login Layer');
+	qa_register_plugin_module('layer', 'qa-facebook-layer.php', 'QA_Facebook_Layer', 'Facebook Login Layer');
 }

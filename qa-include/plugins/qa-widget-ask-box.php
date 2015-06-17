@@ -36,10 +36,11 @@ class qa_ask_box
 		return in_array($region, array('main', 'side', 'full'));
 	}
 
-	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+	public function output_widget($region, $place, $themeobject)
 	{
-		if (isset($qa_content['categoryids']))
-			$params=array('cat' => end($qa_content['categoryids']));
+		$content = $themeobject->getContent();
+		if (isset($content['categoryids']))
+			$params=array('cat' => end($content['categoryids']));
 		else
 			$params=null;
 ?>

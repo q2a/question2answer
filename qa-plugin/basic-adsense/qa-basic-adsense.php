@@ -66,7 +66,7 @@ class qa_basic_adsense
 	}
 
 
-	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
+	public function output_widget($region, $place, $themeobject)
 	{
 		$divstyle='';
 

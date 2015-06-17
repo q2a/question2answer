@@ -234,6 +234,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		global $qa_template;
 
 		$requestlower = strtolower(qa_request());
@@ -370,15 +372,15 @@
 
 	//	Load the appropriate theme class and output the page
 
-		$tmpl = substr($qa_template, 0, 7) == 'custom-' ? 'custom' : $qa_template;
-		$themeclass = qa_load_theme_class(qa_get_site_theme(), $tmpl, $qa_content, qa_request());
-		$themeclass->initialize();
+		$theme = qa_get_theme_instance($qa_content, $qa_template);
 
-		header('Content-type: '.$qa_content['content_type']);
+		$theme->initialize();
 
-		$themeclass->doctype();
-		$themeclass->html();
-		$themeclass->finish();
+		header('Content-type: ' . $qa_content['content_type']);
+
+		$theme->doctype();
+		$theme->html();
+		$theme->finish();
 	}
 
 

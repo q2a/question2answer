@@ -1739,95 +1739,6 @@
 	}
 
 
-	function qa_load_theme_class($theme, $template, $content, $request)
-/*
-	Return the initialized class for $theme (or the default if it's gone), passing $template, $content and $request.
-	Also applies any registered plugin layers.
-*/
-	{
-		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		global $qa_layers;
-
-	//	First load the default class
-
-		require_once QA_INCLUDE_DIR.'qa-theme-base.php';
-
-		$classname='qa_html_theme_base';
-
-	//	Then load the selected theme if valid, otherwise load the Classic theme
-
-		if (!file_exists(QA_THEME_DIR.$theme.'/qa-styles.css'))
-			$theme='Classic';
-
-		$themeroothtml=qa_html(qa_path_to_root().'qa-theme/'.$theme.'/');
-
-		if (file_exists(QA_THEME_DIR.$theme.'/qa-theme.php')) {
-			require_once QA_THEME_DIR.$theme.'/qa-theme.php';
-
-			if (class_exists('qa_html_theme'))
-				$classname='qa_html_theme';
-		}
-
-	//	Create the list of layers to load
-
-		$loadlayers=$qa_layers;
-
-		if (!qa_user_maximum_permit_error('permit_view_voters_flaggers'))
-			$loadlayers[]=array(
-				'directory' => QA_INCLUDE_DIR.'plugins/',
-				'include' => 'qa-layer-voters-flaggers.php',
-				'urltoroot' => null,
-			);
-
-	//	Then load any theme layers using some class-munging magic (substitute class names)
-
-		$layerindex=0;
-
-		foreach ($loadlayers as $layer) {
-			$filename=$layer['directory'].$layer['include'];
-			$layerphp=file_get_contents($filename);
-
-			if (strlen($layerphp)) {
-				$newclassname='qa_layer_'.(++$layerindex).'_from_'.preg_replace('/[^A-Za-z0-9_]+/', '_', basename($layer['include']));
-					// include file name in layer class name to make debugging easier if there is an error
-
-				if (preg_match('/\s+class\s+qa_html_theme_layer\s+extends\s+qa_html_theme_base\s+/im', $layerphp)!=1)
-					qa_fatal_error('Class for layer must be declared as "class qa_html_theme_layer extends qa_html_theme_base" in '.$layer['directory'].$layer['include']);
-
-				$searchwordreplace=array(
-					'qa_html_theme_base::qa_html_theme_base' => $classname.'::__construct', // PHP5 constructor fix
-					'parent::qa_html_theme_base' => 'parent::__construct', // PHP5 constructor fix
-					'qa_html_theme_layer' => $newclassname,
-					'qa_html_theme_base' => $classname,
-					'QA_HTML_THEME_LAYER_DIRECTORY' => "'".$layer['directory']."'",
-					'QA_HTML_THEME_LAYER_URLTOROOT' => "'".qa_path_to_root().$layer['urltoroot']."'",
-				);
-
-				foreach ($searchwordreplace as $searchword => $replace)
-					if (preg_match_all('/\W('.preg_quote($searchword, '/').')\W/im', $layerphp, $matches, PREG_PATTERN_ORDER|PREG_OFFSET_CAPTURE)) {
-						$searchmatches=array_reverse($matches[1]); // don't use preg_replace due to complication of escaping replacement phrase
-
-						foreach ($searchmatches as $searchmatch)
-							$layerphp=substr_replace($layerphp, $replace, $searchmatch[1], strlen($searchmatch[0]));
-					}
-
-			//	echo '<pre style="text-align:left;">'.htmlspecialchars($layerphp).'</pre>'; // to debug munged code
-
-				qa_eval_from_file($layerphp, $filename);
-
-				$classname=$newclassname;
-			}
-		}
-
-	//	Finally, instantiate the object
-
-		$themeclass=new $classname($template, $content, $themeroothtml, $request);
-
-		return $themeclass;
-	}
-
-
 	function qa_load_editor($content, $format, &$editorname)
 /*
 	Return an instantiation of the appropriate editor module class, given $content in $format
@@ -2095,6 +2006,61 @@
 			qa_lang_html('main/_decimal_point'),
 			qa_lang_html('main/_thousands_separator')
 		) . $suffix;
+	}
+
+	function qa_get_theme_instance($qa_content, $template)
+	{
+		$template = substr($template, 0, 7) == 'custom-' ? 'custom' : $template;
+
+		$selectedTheme = qa_load_theme_file();
+
+		$themeUrlToRoot = qa_html(qa_path_to_root() . 'qa-theme/' . $selectedTheme . '/');
+
+		$htmlPrinter = new Q2A_Theme_HtmlPrinter();
+
+		$layerModules = qa_load_layer_modules($htmlPrinter, $qa_content);
+
+		return new QA_Theme($template, $qa_content, $themeUrlToRoot, $htmlPrinter, $layerModules);
+	}
+
+	function qa_load_theme_file()
+	{
+		$selectedTheme = qa_get_site_theme();
+
+		$genericThemeFilePath = QA_THEME_DIR . '%s/QA_Theme.php';
+		$themeFilePath = sprintf($genericThemeFilePath, $selectedTheme);
+		if (!file_exists($themeFilePath)) {
+			$selectedTheme = 'Classic';
+			$themeFilePath = sprintf($genericThemeFilePath, $selectedTheme);
+		}
+
+		require_once $themeFilePath;
+
+		return $selectedTheme;
+	}
+
+	function qa_load_layer_modules($htmlPrinter, &$qa_content)
+	{
+		$layerModules = array();
+
+		$loadlayers = qa_list_modules_info('layer');
+
+		if (!qa_user_maximum_permit_error('permit_view_voters_flaggers')) {
+			$loadlayers[]=array(
+				'directory' => QA_INCLUDE_DIR . 'plugins/',
+				'include' => 'qa-layer-voters-flaggers.php',
+				'urltoroot' => null,
+				'class' => 'QA_Layer_Voters_Flaggers',
+			);
+		}
+		foreach ($loadlayers as $layer) {
+			require_once $layer['directory'] . $layer['include'];
+			$className = $layer['class'];
+			$layerModules[] = new $className($htmlPrinter, $qa_content, $layer['directory'], qa_path_to_root() . $layer['urltoroot']);
+		}
+
+
+		return $layerModules;
 	}
 
 

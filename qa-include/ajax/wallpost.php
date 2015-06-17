@@ -46,17 +46,18 @@
 		$usermessages=qa_db_select_with_pending(qa_db_recent_messages_selectspec(null, null, $touseraccount['userid'], true, qa_opt('page_size_wall')));
 		$usermessages=qa_wall_posts_add_rules($usermessages, 0);
 
-		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'wall', null, null);
+		$theme = qa_get_theme_instance(null, 'wall');
+		$theme->initialize();
 
 		echo "QA_AJAX_RESPONSE\n1\n";
 
 		echo 'm'.$messageid."\n"; // element in list to be revealed
 
 		foreach ($usermessages as $message)
-			$themeclass->message_item(qa_wall_post_view($message));
+			$theme->message_item(qa_wall_post_view($message));
 
 		if ($morelink && ($touseraccount['wallposts']>count($usermessages)))
-			$themeclass->message_item(qa_wall_view_more_link($tohandle, count($usermessages)));
+			$theme->message_item(qa_wall_view_more_link($tohandle, count($usermessages)));
 	}
 
 

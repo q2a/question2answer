@@ -279,10 +279,9 @@
 	Gets everything ready to start using modules, layers and overrides
 */
 	{
-		global $qa_modules, $qa_layers, $qa_override_files, $qa_overrides, $qa_direct;
+		global $qa_modules, $qa_override_files, $qa_overrides, $qa_direct;
 
 		$qa_modules=array();
-		$qa_layers=array();
 		$qa_override_files=array();
 		$qa_overrides=array();
 		$qa_direct=array();
@@ -456,28 +455,6 @@
 	}
 
 
-	function qa_register_layer($include, $name, $directory=QA_INCLUDE_DIR, $urltoroot=null)
-/*
-	Register a layer named $name, defined in file $include. If this layer comes from a plugin (as all currently do),
-	pass in the local plugin $directory and the $urltoroot relative url for that directory
-*/
-	{
-		global $qa_layers;
-
-		$previous=@$qa_layers[$name];
-
-		if (isset($previous))
-			qa_fatal_error('A layer named '.$name.' already exists. Please check there are no duplicate plugins. '.
-				"\n\nLayer 1: ".$previous['directory'].$previous['include']."\nLayer 2: ".$directory.$include);
-
-		$qa_layers[$name]=array(
-			'directory' => $directory,
-			'urltoroot' => $urltoroot,
-			'include' => $include,
-		);
-	}
-
-
 	function qa_register_overrides($include, $directory=QA_INCLUDE_DIR, $urltoroot=null)
 /*
 	Register a file $include containing override functions. If this file comes from a plugin (as all currently do),
@@ -528,20 +505,6 @@
 			qa_fatal_error('qa_register_plugin_module() can only be called from a plugin qa-plugin.php file');
 
 		qa_register_module($type, $include, $class, $name, $qa_plugin_directory, $qa_plugin_urltoroot);
-	}
-
-
-	function qa_register_plugin_layer($include, $name)
-/*
-	Register a plugin layer named $name, defined in file $include. Can only be called from a plugin's qa-plugin.php file
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		if (empty($qa_plugin_directory) || empty($qa_plugin_urltoroot))
-			qa_fatal_error('qa_register_plugin_layer() can only be called from a plugin qa-plugin.php file');
-
-		qa_register_layer($include, $name, $qa_plugin_directory, $qa_plugin_urltoroot);
 	}
 
 
@@ -601,6 +564,28 @@
 		}
 
 		@ini_set('track_errors', $oldtrackerrors);
+	}
+
+	/**
+	 * Call $function with the arguments in the $args array
+	 */
+	function qa_call_method($object, $method, $args)
+	{
+		switch (count($args)) {
+			case 0:
+				return $object->$method();
+			case 1:
+				return $object->$method($args[0]);
+			case 2:
+				return $object->$method($args[0], $args[1]);
+			case 3:
+				return $object->$method($args[0], $args[1], $args[2]);
+			case 4:
+				return $object->$method($args[0], $args[1], $args[2], $args[3]);
+			case 5:
+				return $object->$method($args[0], $args[1], $args[2], $args[3], $args[4]);
+		}
+		return call_user_func_array(array($object, $method), $args);
 	}
 
 
@@ -700,12 +685,16 @@
 
 //	Functions for listing, loading and getting info on modules
 
-	function qa_list_modules_info()
+	function qa_list_modules_info($filterType = null)
 /*
 	Return an array with all registered modules' information
 */
 	{
 		global $qa_modules;
+
+		if (isset($filterType))
+			return is_array(@$qa_modules[$filterType]) ? $qa_modules[$filterType] : array();
+
 		return $qa_modules;
 	}
 
