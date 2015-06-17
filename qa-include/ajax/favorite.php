@@ -43,6 +43,7 @@
 		$favoriteform=qa_favorite_form($entitytype, $entityid, $setfavorite, qa_lang($setfavorite ? 'main/remove_favorites' : 'main/add_favorites'));
 
 		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-favorite', null, null);
+		$themeclass->initialize();
 
 		echo "QA_AJAX_RESPONSE\n1\n";
 

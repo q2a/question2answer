@@ -66,6 +66,7 @@
 			$a_view=qa_page_q_answer_view($question, $answer, false, $usershtml, false);
 
 			$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-answer', null, null);
+			$themeclass->initialize();
 
 			echo "QA_AJAX_RESPONSE\n1\n";
 
