@@ -48,7 +48,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 			}
 		}
 
-		qa_html_theme_base::main();
+		parent::main();
 	}
 
 
@@ -58,21 +58,21 @@ class qa_html_theme_layer extends qa_html_theme_base
 	{
 		$this->queue_raw_posts_voters_flaggers($q_items);
 
-		qa_html_theme_base::q_list_items($q_items);
+		parent::q_list_items($q_items);
 	}
 
 	public function a_list_items($a_items)
 	{
 		$this->queue_raw_posts_voters_flaggers($a_items);
 
-		qa_html_theme_base::a_list_items($a_items);
+		parent::a_list_items($a_items);
 	}
 
 	public function c_list_items($c_items)
 	{
 		$this->queue_raw_posts_voters_flaggers($c_items);
 
-		qa_html_theme_base::c_list_items($c_items);
+		parent::c_list_items($c_items);
 	}
 
 
@@ -90,10 +90,10 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 			foreach ($votersflaggers as $voterflagger) {
 				if ($voterflagger['vote'] > 0)
-					$uphandles.=(strlen($uphandles) ? ', ' : '') . qa_html($voterflagger['handle']);
+					$uphandles .= (strlen($uphandles) ? ', ' : '') . qa_html($voterflagger['handle']);
 
 				if ($voterflagger['vote'] < 0)
-					$downhandles.=(strlen($downhandles) ? ', ' : '') . qa_html($voterflagger['handle']);
+					$downhandles .= (strlen($downhandles) ? ', ' : '') . qa_html($voterflagger['handle']);
 
 				$tooltip = trim((strlen($uphandles) ? ('&uarr; ' . $uphandles) : '') . "\n\n" . (strlen($downhandles) ? ('&darr; ' . $downhandles) : ''));
 			}
@@ -101,7 +101,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 		$post['vote_count_tags'] = @$post['vote_count_tags'] . ' title="' . $tooltip . '"';
 
-		qa_html_theme_base::vote_count($post);
+		parent::vote_count($post);
 	}
 
 	public function post_meta_flags($post, $class)
@@ -118,7 +118,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 			if (isset($votersflaggers)) {
 				foreach ($votersflaggers as $voterflagger) {
 					if ($voterflagger['flag'] > 0)
-						$tooltip.=(strlen($tooltip) ? ', ' : '') . qa_html($voterflagger['handle']);
+						$tooltip .= (strlen($tooltip) ? ', ' : '') . qa_html($voterflagger['handle']);
 				}
 			}
 		}
@@ -126,7 +126,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 		if (strlen($tooltip))
 			$this->output('<span title="&#9873; ' . $tooltip . '">');
 
-		qa_html_theme_base::post_meta_flags($post, $class);
+		parent::post_meta_flags($post, $class);
 
 		if (strlen($tooltip))
 			$this->output('</span>');
