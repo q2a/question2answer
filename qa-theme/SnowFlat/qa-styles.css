@@ -874,7 +874,8 @@ blockquote p {
 }
 
 .qa-body-wrapper {
-	margin: 20px auto;
+	margin: 10px auto;
+	padding: 0 10px;
 	overflow: hidden;
 	*zoom: 1;
 }
@@ -888,14 +889,7 @@ blockquote p {
 		width: 100%;
 	}
 }
-@media (max-width: 1023px) {
-	.qa-body-wrapper {
-		width: 100%;
-		margin-top: 10px;
-		padding: 0 10px;
-	}
-}
-@media (min-width: 1024px) {
+@media (min-width: 1044px) {
 	.qa-body-wrapper {
 		width: 1024px;
 	}
@@ -1264,9 +1258,9 @@ blockquote p {
 		width: 550px;
 	}
 }
-@media (min-width: 1024px) {
+@media (min-width: 1044px) {
 	.qa-q-item-main {
-		width: 606px;
+		width: 592px;
 	}
 }
 
