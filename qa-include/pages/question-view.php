@@ -120,6 +120,10 @@
 
 		$rules['answerbutton']=($post['type']=='Q') && ($permiterror_post_a!='level') && (!$rules['closed']) &&
 			(qa_opt('allow_self_answer') || !$rules['isbyuser']);
+		// do not show answer button if spam-limit exceeded
+		if(!qa_limits_remaining($userid, QA_LIMIT_ANSWERS)) {
+			$rules['answerbutton']=false;
+		}
 
 		$rules['commentbutton']=(($post['type']=='Q') || ($post['type']=='A')) &&
 			($permiterror_post_c!='level') && qa_opt(($post['type']=='Q') ? 'comment_on_qs' : 'comment_on_as');
