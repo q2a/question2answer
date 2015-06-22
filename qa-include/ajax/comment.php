@@ -78,6 +78,7 @@
 			$c_list=qa_page_q_comment_follow_list($question, $parent, $children, true, $usershtml, false, null);
 
 			$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-comments', null, null);
+			$themeclass->initialize();
 
 			echo "QA_AJAX_RESPONSE\n1\n";
 

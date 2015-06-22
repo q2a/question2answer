@@ -74,6 +74,7 @@
 				$c_view=qa_page_q_comment_view($question, $parent, $comment, $usershtml, false);
 
 				$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-comment', null, null);
+				$themeclass->initialize();
 
 
 			//	... send back the HTML for it
