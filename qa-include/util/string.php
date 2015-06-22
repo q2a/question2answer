@@ -485,45 +485,50 @@
 	}
 
 
-	function qa_shorten_string_line($string, $length)
-/*
-	Return no more than $length characters from $string after converting it to a single line, by
-	removing words from the middle (and especially towards the end)
-*/
+	/**
+	 * Converts a string to a single line and removes words from it until it fits in the given length. Words are removed
+	 * from a position around two thirds of the string and are replaced by the given ellipsis string
+	 *
+	 * @param string $string Text that will be turned into a single line and cut, if necessary
+	 * @param int $length Maximum allowed length of the returned string. This value can be overriden by the length of the
+	 * ellipsis if it is higher than the maximum allowed length
+	 * @param string $ellipsis Text used to replace the removed words from the original text
+	 * @return string The string turned into a single line and cut to fit the given length
+	 */
+	function qa_shorten_string_line($string, $length, $ellipsis = ' ... ')
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$string=strtr($string, "\r\n\t", '   ');
+		$string = strtr($string, "\r\n\t", '   ');
 
-		if (qa_strlen($string)>$length) {
-			$remaining=$length-5;
+		if (qa_strlen($string) > $length) {
+			$remaining = $length - qa_strlen($ellipsis);
 
-			$words=qa_string_to_words($string, false, true);
-			$countwords=count($words);
+			$words = qa_string_to_words($string, false, true);
+			$countwords = count($words);
 
-			$prefix='';
-			$suffix='';
+			$prefix = '';
+			$suffix = '';
 
-			for ($addword=0; $addword<$countwords; $addword++) {
-				$tosuffix=(($addword%3)==1); // order: prefix, suffix, prefix, prefix, suffix, prefix, ...
+			for ($addword = 0; $addword < $countwords; $addword++) {
+				$tosuffix = $addword % 3 == 1; // order: prefix, suffix, prefix, prefix, suffix, prefix, ...
 
-				if ($tosuffix)
-					$word=array_pop($words);
-				else
-					$word=array_shift($words);
+				$word = $tosuffix ? array_pop($words) : array_shift($words);
 
-				if (qa_strlen($word)>$remaining)
+				$wordLength = qa_strlen($word);
+
+				if ($wordLength > $remaining)
 					break;
 
 				if ($tosuffix)
-					$suffix=$word.$suffix;
+					$suffix = $word . $suffix;
 				else
-					$prefix.=$word;
+					$prefix .= $word;
 
-				$remaining-=qa_strlen($word);
+				$remaining -= $wordLength;
 			}
 
-			$string=$prefix.' ... '.$suffix;
+			$string = $prefix . $ellipsis . $suffix;
 		}
 
 		return $string;

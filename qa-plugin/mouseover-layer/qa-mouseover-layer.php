@@ -31,16 +31,15 @@ class qa_html_theme_layer extends qa_html_theme_base
 			$postids = array();
 			foreach ($q_list['qs'] as $question) {
 				if (isset($question['raw']['postid']))
-						$postids[] = $question['raw']['postid'];
+					$postids[] = $question['raw']['postid'];
 			}
 
 			if (!empty($postids)) {
 
-				// Retrieve the content for these questions from the database and put into an array fetching
-				// the minimal amount of characters needed to determine the string should be shortened or not
+				// Retrieve the content for these questions from the database
 
 				$maxlength = qa_opt('mouseover_content_max_len');
-				$result = qa_db_query_sub('SELECT postid, LEFT(content, #) content, format FROM ^posts WHERE postid IN (#)', $maxlength + 1, $postids);
+				$result = qa_db_query_sub('SELECT postid, content, format FROM ^posts WHERE postid IN (#)', $postids);
 				$postinfo = qa_db_read_all_assoc($result, 'postid');
 
 				// Get the regular expression fragment to use for blocked words and the maximum length of content to show
@@ -53,14 +52,29 @@ class qa_html_theme_layer extends qa_html_theme_base
 					if (isset($postinfo[$question['raw']['postid']])) {
 						$thispost = $postinfo[$question['raw']['postid']];
 						$text = qa_viewer_text($thispost['content'], $thispost['format'], array('blockwordspreg' => $blockwordspreg));
+						$text = preg_replace('/\s+/', ' ', $text);  // Remove duplicated blanks, new line characters, tabs, etc
 						$text = qa_shorten_string_line($text, $maxlength);
 						$title = isset($question['title']) ? $question['title'] : '';
-						$q_list['qs'][$index]['title'] = sprintf('<span title="%s">%s</span>', qa_html($text), $title);
+						$q_list['qs'][$index]['title'] = $this->getHtmlTitle(qa_html($text), $title);
 					}
 				}
 			}
 		}
 
-		qa_html_theme_base::q_list($q_list); // call back through to the default function
+		parent::q_list($q_list); // call back through to the default function
+	}
+
+	/**
+	 * Returns the needed HTML to display the tip. Depending on the theme in use, this might need to be
+	 * tuned in order for the tip to be displayed properly
+	 *
+	 * @access private
+	 * @param string $mouseOverText Text of the tip
+	 * @param string $questionTitle Question title
+	 * @return string HTML needed to display the tip and the question title
+	 */
+	private function getHtmlTitle($mouseOverText, $questionTitle)
+	{
+		return sprintf('<span title="%s">%s</span>', $mouseOverText, $questionTitle);
 	}
 }
