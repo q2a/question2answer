@@ -87,7 +87,7 @@ class qa_wysiwyg_editor
 			'	return false;',
 			'});',
 		);
-		$ajaxHtml = 'Update broken images from old CKeditor Smilie plugin: ' .
+		$ajaxHtml = 'Update broken images from old CKeditor Smiley plugin: ' .
 			'<button id="wysiwyg_editor_ajax">click here</button> ' .
 			'<script>' . implode("\n", $js) . '</script>';
 
