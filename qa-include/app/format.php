@@ -1646,11 +1646,13 @@
 	$inname is from previous submission/validation. Pass $fieldprefix to add a prefix to the form field name used.
 */
 	{
-		$fields['name']=array(
-			'label' => qa_lang_html('question/anon_name_label'),
-			'tags' => 'name="'.$fieldprefix.'name"',
-			'value' => qa_html($inname),
-		);
+		if(qa_opt('allow_anonymous_naming')) {
+			$fields['name']=array(
+				'label' => qa_lang_html('question/anon_name_label'),
+				'tags' => 'name="'.$fieldprefix.'name"',
+				'value' => qa_html($inname),
+			);
+		}
 	}
 
 
