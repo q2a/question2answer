@@ -528,19 +528,10 @@
 			'title' => qa_lang_html('question/close_form_title'),
 
 			'fields' => array(
-				'duplicate' => array(
-					'type' => 'checkbox',
-					'tags' => 'name="q_close_duplicate" id="q_close_duplicate" onchange="document.getElementById(\'q_close_details\').focus();"',
-					'label' => qa_lang_html('question/close_duplicate'),
-					'value' => @$in['duplicate'],
-				),
-
 				'details' => array(
 					'tags' => 'name="q_close_details" id="q_close_details"',
 					'label' =>
-						'<span id="close_label_duplicate">'.qa_lang_html('question/close_original_title').' </span>'.
-						'<span id="close_label_other">'.qa_lang_html('question/close_reason_title').'</span>',
-					'note' => '<span id="close_note_duplicate" style="display:none;">'.qa_lang_html('question/close_original_note').'</span>',
+						'<span id="close_label_other">'.qa_lang_html('question/close_reason_title').':</span>',
 					'value' => @$in['details'],
 					'error' => qa_html(@$errors['details']),
 				),
@@ -564,12 +555,6 @@
 			),
 		);
 
-		qa_set_display_rules($qa_content, array(
-			'close_label_duplicate' => 'q_close_duplicate',
-			'close_label_other' => '!q_close_duplicate',
-			'close_note_duplicate' => 'q_close_duplicate',
-		));
-
 		$qa_content['focusid']='q_close_details';
 
 		return $form;
@@ -582,18 +567,19 @@
 */
 	{
 		$in=array(
-			'duplicate' => qa_post_text('q_close_duplicate'),
-			'details' => qa_post_text('q_close_details'),
+			'details' => trim(qa_post_text('q_close_details')),
 		);
 
 		$userid=qa_get_logged_in_userid();
 		$handle=qa_get_logged_in_handle();
 		$cookieid=qa_cookie_get();
 
-		if (!qa_check_form_security_code('close-'.$question['postid'], qa_post_text('code')))
-			$errors['details']=qa_lang_html('misc/form_security_again');
-
-		elseif ($in['duplicate']) {
+		$isduplicateurl = filter_var($in['details'], FILTER_VALIDATE_URL);
+		
+		if (!qa_check_form_security_code('close-'.$question['postid'], qa_post_text('code'))) {
+			$errors['details']=qa_lang_html('misc/form_security_again');			
+		}
+		elseif ($isduplicateurl) {
 			// be liberal in what we accept, but there are two potential unlikely pitfalls here:
 			// a) URLs could have a fixed numerical path, e.g. http://qa.mysite.com/1/478/...
 			// b) There could be a question title which is just a number, e.g. http://qa.mysite.com/478/12345/...
