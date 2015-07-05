@@ -36,28 +36,9 @@
 
 //	Map modules with options to their containing plugins
 
-	$pluginoptionmodules = array();
+	global $pluginManager;
 
-	$tables = qa_db_list_tables();
-	$moduletypes = qa_list_module_types();
-
-	foreach ($moduletypes as $type) {
-		$modules = qa_list_modules($type);
-
-		foreach ($modules as $name) {
-			$module = qa_load_module($type, $name);
-
-			if (method_exists($module, 'admin_form')) {
-				$info = qa_get_module_info($type, $name);
-				$dir = rtrim($info['directory'], '/');
-				$pluginoptionmodules[$dir][] = array(
-					'type' => $type,
-					'name' => $name,
-				);
-			}
-		}
-	}
-
+	$plugins = $pluginManager->getPluginsWithModulesByType('settings');
 
 //	Prepare content for theme
 
@@ -69,27 +50,18 @@
 
 	$qa_content['script_rel'][] = 'qa-content/qa-admin.js?'.QA_VERSION;
 
-	$pluginfiles = glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
-
-	foreach ($moduletypes as $type) {
-		$modules = qa_load_modules_with($type, 'init_queries');
-
-		foreach ($modules as $name => $module) {
-			$queries = $module->init_queries($tables);
-
-			if (!empty($queries)) {
-				if (qa_is_http_post())
-					qa_redirect('install');
-
-				else {
-					$qa_content['error'] = strtr(qa_lang_html('admin/module_x_database_init'), array(
-						'^1' => qa_html($name),
-						'^2' => qa_html($type),
-						'^3' => '<a href="'.qa_path_html('install').'">',
-						'^4' => '</a>',
-					));
-				}
-			}
+	$pluginsPendingDbInitialization = $pluginManager->getPluginsPendingDatabaseInitialization();
+	if (!empty($pluginsPendingDbInitialization)) {
+		$plugin = reset($pluginsPendingDbInitialization);
+		$pluginId = qa_html($plugin->getId());
+		if (qa_is_http_post())
+			qa_redirect('install');
+		else {
+			$qa_content['error'] = strtr(qa_lang_html('admin/plugin_x_database_init'), array(
+				'^1' => $pluginId,
+				'^2' => '<a href="'.qa_path_html('install').'">',
+				'^3' => '</a>',
+			));
 		}
 	}
 
@@ -100,32 +72,28 @@
 	else
 		$showpluginforms = true;
 
-	if (!empty($pluginfiles)) {
+	if (!empty($plugins)) {
 		$metadataUtil = new Q2A_Util_Metadata();
-		$sortedPluginFiles = array();
 
-		foreach ($pluginfiles as $pluginFile) {
-			$metadata = $metadataUtil->fetchFromAddonPath(dirname($pluginFile));
-			if (empty($metadata)) {
-				// limit plugin parsing to first 8kB
-				$contents = file_get_contents($pluginFile, false, null, -1, 8192);
-				$metadata = qa_addon_metadata($contents, 'Plugin');
-			}
+		$sortedPlugins = array();
+		foreach ($plugins as $plugin) {
+			$directory = $plugin->getPluginDirectory();
+			$metadata = $metadataUtil->fetchFromAddonPath($directory);
 			$metadata['name'] = isset($metadata['name']) && !empty($metadata['name'])
 				? qa_html($metadata['name'])
 				: qa_lang_html('admin/unnamed_plugin')
 			;
-			$sortedPluginFiles[$pluginFile] = $metadata;
+			$sortedPlugins[$plugin->getId()] = $metadata;
 		}
-
-		qa_sort_by($sortedPluginFiles, 'name');
+		qa_sort_by($sortedPlugins, 'name');
 
 		$pluginIndex = -1;
-		foreach ($sortedPluginFiles as $pluginFile => $metadata) {
+		foreach ($sortedPlugins as $pluginId => $metadata) {
 			$pluginIndex++;
-			$plugindirectory = dirname($pluginFile);
-			$hash = qa_admin_plugin_directory_hash($plugindirectory);
-			$showthisform = $showpluginforms && (qa_get('show') == $hash);
+			$plugin = $pluginManager->getPlugin($pluginId);
+			$pluginDirectory = $plugin->getPluginDirectory();
+			$pluginIdHtml = qa_html($pluginId);
+			$showthisform = $showpluginforms && qa_get('show') === $pluginIdHtml;
 
 			$namehtml = $metadata['name'];
 
@@ -151,7 +119,7 @@
 				$authorhtml = '';
 
 			if ($metaver && isset($metadata['update_uri']) && strlen($metadata['update_uri'])) {
-				$elementid = 'version_check_'.md5($plugindirectory);
+				$elementid = 'version_check_' . $pluginIdHtml;
 
 				$updatehtml = '(<span id="'.$elementid.'">...</span>)';
 
@@ -168,12 +136,12 @@
 			else
 				$deschtml = '';
 
-			if (isset($pluginoptionmodules[$plugindirectory]) && !$showthisform)
+			if (!$showthisform)
 				$deschtml .= (strlen($deschtml) ? ' - ' : '').'<a href="'.
-					qa_admin_plugin_options_path($plugindirectory).'">'.qa_lang_html('admin/options').'</a>';
+					qa_admin_plugin_options_path($pluginId).'">'.qa_lang_html('admin/options').'</a>';
 
 			$pluginhtml = $namehtml.' '.$authorhtml.' '.$updatehtml.'<br>'.$deschtml.(strlen($deschtml) ? '<br>' : '').
-				'<small style="color:#666">'.qa_html($plugindirectory).'/</small>';
+				'<small style="color:#666">'.qa_html($pluginDirectory).'</small>';
 
 			if (qa_qa_version_below(@$metadata['min_q2a']))
 				$pluginhtml = '<strike style="color:#999">'.$pluginhtml.'</strike><br><span style="color:#f00">'.
@@ -184,7 +152,7 @@
 					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
 
 			$qa_content['form_plugin_'.$pluginIndex] = array(
-				'tags' => 'id="'.qa_html($hash).'"',
+				'tags' => sprintf('id="%s"', $pluginIdHtml),
 				'style' => 'tall',
 				'fields' => array(
 					array(
@@ -193,18 +161,12 @@
 					)
 				),
 			);
+			if ($showthisform) {
+				$form = $plugin->getSettingsForm($qa_content);
 
-			if ($showthisform && isset($pluginoptionmodules[$plugindirectory]))
-				foreach ($pluginoptionmodules[$plugindirectory] as $pluginoptionmodule) {
-					$type = $pluginoptionmodule['type'];
-					$name = $pluginoptionmodule['name'];
-
-					$module = qa_load_module($type, $name);
-
-					$form = $module->admin_form($qa_content);
-
+				if (isset($form)) {
 					if (!isset($form['tags']))
-						$form['tags'] = 'method="post" action="'.qa_admin_plugin_options_path($plugindirectory).'"';
+						$form['tags'] = 'method="post" action="'.qa_admin_plugin_options_path($pluginId).'"';
 
 					if (!isset($form['style']))
 						$form['style'] = 'tall';
@@ -215,6 +177,7 @@
 
 					$qa_content['form_plugin_options'] = $form;
 				}
+			}
 
 		}
 	}

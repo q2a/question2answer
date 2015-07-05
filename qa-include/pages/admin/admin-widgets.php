@@ -25,14 +25,15 @@
 		exit;
 	}
 
+	global $pluginManager;
+
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'db/selects.php';
 
 
 //	Get current list of widgets and determine the state of this admin page
-
 	$widgetid=qa_post_text('edit');
-	if (!strlen($widgetid))
+	if (!isset($widgetid))
 		$widgetid=qa_get('edit');
 
 	list($widgets, $pages)=qa_db_select_with_pending(
@@ -40,22 +41,26 @@
 		qa_db_pages_selectspec()
 	);
 
-	if (isset($widgetid)) {
+	if (isset($widgetid) && !empty($widgetid)) {
 		$editwidget=null;
 		foreach ($widgets as $widget)
 			if ($widget['widgetid']==$widgetid)
 				$editwidget=$widget;
-
 	} else {
 		$editwidget=array('title' => qa_post_text('title'));
 		if (!isset($editwidget['title']))
 			$editwidget['title']=qa_get('title');
 	}
 
-	$module=qa_load_module('widget', @$editwidget['title']);
+	$widgetModule = null;
 
-	$widgetfound=isset($module);
-
+	if (isset($editwidget['title'])) {
+		try {
+			$widgetModule = $pluginManager->getModuleById($editwidget['title']);
+		} catch (ModuleNotFoundException $e) {
+		} catch (PluginNotFoundException $e) {
+		}
+	}
 
 //	Check admin privileges (do late to allow one DB query)
 
@@ -98,15 +103,18 @@
 
 	$templateoptions=array();
 
-	if (isset($module) && method_exists($module, 'allow_template')) {
-		foreach ($templatelangkeys as $template => $langkey)
-			if ($module->allow_template($template))
-				$templateoptions[$template]=qa_lang_html($langkey);
+	if (isset($widgetModule)) {
+		foreach ($templatelangkeys as $template => $langkey) {
+			if ($widgetModule->isAllowedInTemplate($template))
+				$templateoptions[$template] = qa_lang_html($langkey);
+		}
 
-		if ($module->allow_template('custom'))
-			foreach ($pages as $page)
-				if (!($page['flags']&QA_PAGE_FLAGS_EXTERNAL))
-					$templateoptions['custom-'.$page['pageid']]=qa_html($page['title']);
+		if ($widgetModule->isAllowedInTemplate('custom')) {
+			foreach ($pages as $page) {
+				if (!($page['flags'] & QA_PAGE_FLAGS_EXTERNAL))
+					$templateoptions['custom-' . $page['pageid']] = qa_html($page['title']);
+			}
+		}
 	}
 
 
@@ -129,7 +137,7 @@
 				qa_redirect('admin/layout');
 
 			} else {
-				if ($widgetfound) {
+				if (isset($widgetModule)) {
 					$intitle=qa_post_text('title');
 					$inposition=qa_post_text('position');
 					$intemplates=array();
@@ -181,7 +189,7 @@
 	foreach ($placeoptionhtml as $place => $optionhtml) {
 		$region=$regioncodes[substr($place, 0, 1)];
 
-		$widgetallowed=method_exists($module, 'allow_region') && $module->allow_region($region);
+		$widgetallowed = isset($widgetModule) && $widgetModule->isAllowedInRegion($region);
 
 		if ($widgetallowed)
 			foreach ($widgets as $widget)
@@ -304,7 +312,7 @@
 		));
 	}
 
-	if (!$widgetfound) {
+	if (!isset($widgetModule)) {
 		unset($qa_content['form']['fields']['title']['tight']);
 		$qa_content['form']['fields']['title']['error']=qa_lang_html('admin/widget_not_available');
 		unset($qa_content['form']['fields']['position']);

@@ -201,6 +201,8 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+		global $pluginManager;
+
 		$fixed_defaults=array(
 			'allow_change_usernames' => 1,
 			'allow_close_questions' => 1,
@@ -419,8 +421,8 @@
 				case 'editor_for_as':
 					require_once QA_INCLUDE_DIR.'app/format.php';
 
-					$value='-'; // to match none by default, i.e. choose based on who is best at editing HTML
-					qa_load_editor('', 'html', $value);
+					$editorModule = qa_load_editor('', 'html');  // choose based on who is best at editing HTML
+					$value = $editorModule->getId();
 					break;
 
 				case 'permit_post_q': // convert from deprecated option if available
@@ -464,11 +466,8 @@
 					break;
 
 				case 'captcha_module':
-					$captchamodules=qa_list_modules('captcha');
-					if (count($captchamodules))
-						$value=reset($captchamodules);
-					else
-						$value='';
+					$captchaModules = $pluginManager->getModulesByType('captcha');
+					$value = empty($captchaModules) ? '' : reset($captchaModules);
 					break;
 
 				case 'mailing_from_name':
@@ -493,14 +492,12 @@
 					break;
 
 				default: // call option_default method in any registered modules
-					$modules = qa_load_all_modules_with('option_default');  // Loads all modules with the 'option_default' method
-
-					foreach ($modules as $module) {
-						$value = $module->option_default($name);
-						if (strlen($value))
+					$settingsModules = $pluginManager->getModulesByType('settings');
+					foreach ($settingsModules as $settingsModule) {
+						$value = $settingsModule->getDefaultValue($name);
+						if (isset($value) && !empty($value))
 							return $value;
 					}
-
 					$value='';
 					break;
 			}

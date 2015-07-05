@@ -27,7 +27,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 require_once QA_INCLUDE_DIR.'db/install.php';
 
-qa_report_process_stage('init_install');
+qa_report_process_stage('initInstall');
 
 
 // Define database failure handler for install process, if not defined already (file could be included more than once)
@@ -175,27 +175,29 @@ else {
 	}
 
 	if (qa_clicked('module')) {
-		$moduletype = qa_post_text('moduletype');
-		$modulename = qa_post_text('modulename');
+		global $pluginManager;
 
-		$module = qa_load_module($moduletype, $modulename);
-
-		$queries = $module->init_queries(qa_db_list_tables());
-
-		if (!empty($queries)) {
-			if (!is_array($queries))
-				$queries = array($queries);
-
-			foreach ($queries as $query)
-				qa_db_upgrade_query($query);
+		$showRefresh = true;
+		$pluginId = qa_post_text('pluginid');
+		try {
+			$plugin = $pluginManager->getPlugin($pluginId);
+			if ($plugin->requiresDatabaseInitialization(qa_db_list_tables())) {
+				$progressUpdater = new Q2A_Install_ProgressUpdater();
+				$plugin->initializeDatabase($progressUpdater);
+				$success .= sprintf('The %s plugin has completed database initialization.', $pluginId);
+				$showRefresh = false;
+			} else
+				$errorhtml .= sprintf('The %s plugin is already initialized.', $pluginId);
+		} catch (PluginNotFoundException $e) {
+			$errorhtml .= sprintf('The %s plugin was not found.', $pluginId);
 		}
-
-		$success .= 'The '.$modulename.' '.$moduletype.' module has completed database initialization.';
+		if ($showRefresh)
+			$suggest .= sprintf('<a href="%s">Refresh</a>', qa_path_html(qa_request(), null, null, QA_URL_FORMAT_SAFEST));
 	}
 
 }
 
-if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
+if (qa_db_connection(false) !== null && !@$pass_failure_from_install && empty($errorhtml)) {
 	$check = qa_db_check_tables(); // see where the database is at
 
 	switch ($check) {
@@ -259,32 +261,24 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 				$buttons = array('super' => 'Set up the Super Administrator');
 			}
 			else {
-				$tables = qa_db_list_tables();
+				global $pluginManager;
 
-				$moduletypes = qa_list_module_types();
+				$plugins = $pluginManager->getPluginsPendingDatabaseInitialization();
 
-				foreach ($moduletypes as $moduletype) {
-					$modules = qa_load_modules_with($moduletype, 'init_queries');
+				if (!empty($plugins)) {
+					$plugin = reset($plugins);
+					$pluginId = qa_html($plugin->getId());
+					$errorhtml = strtr(qa_lang_html('admin/plugin_x_database_init'), array(
+						'^1' => $pluginId,
+						'^2' => '',
+						'^3' => '',
+					));
 
-					foreach ($modules as $modulename => $module) {
-						$queries = $module->init_queries($tables);
-						if (!empty($queries)) {
-							// also allows single query to be returned
-							$errorhtml = strtr(qa_lang_html('admin/module_x_database_init'), array(
-								'^1' => qa_html($modulename),
-								'^2' => qa_html($moduletype),
-								'^3' => '',
-								'^4' => '',
-							));
+					$buttons = array('module' => 'Initialize the Database');
 
-							$buttons = array('module' => 'Initialize the Database');
-
-							$hidden['moduletype'] = $moduletype;
-							$hidden['modulename'] = $modulename;
-							break;
-						}
-					}
+					$hidden['pluginid'] = $pluginId;
 				}
+
 			}
 			break;
 	}

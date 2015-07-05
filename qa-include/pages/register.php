@@ -25,6 +25,8 @@
 		exit;
 	}
 
+	global $pluginManager;
+
 	require_once QA_INCLUDE_DIR.'app/captcha.php';
 	require_once QA_INCLUDE_DIR.'db/users.php';
 
@@ -99,10 +101,12 @@
 					$errors['terms'] = qa_lang_html('users/terms_not_accepted');
 
 				// filter module validation
-				if (count($inprofile)) {
-					$filtermodules = qa_load_modules_with('filter', 'filter_profile');
-					foreach ($filtermodules as $filtermodule)
-						$filtermodule->filter_profile($inprofile, $errors, null, null);
+				if (!empty($inprofile)) {
+					global $pluginManager;
+
+					$filterModules = $pluginManager->getModulesByType('filter');
+					foreach ($filterModules as $filterModule)
+						$filterModule->filterProfile($inprofile, $errors, null, null);
 				}
 
 				if (qa_opt('captcha_on_register'))
@@ -224,16 +228,15 @@
 	if (qa_opt('captcha_on_register'))
 		qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
 
-	$loginmodules = qa_load_modules_with('login', 'login_html');
-
-	foreach ($loginmodules as $module) {
+	$loginModules = $pluginManager->getModulesByType('login');
+	foreach ($loginModules as $loginModule) {
 		ob_start();
-		$module->login_html(qa_opt('site_url').qa_get('to'), 'register');
+		$loginModule->loginHtml(qa_opt('site_url') . qa_get('to'), 'register');
 		$html = ob_get_clean();
-
-		if (strlen($html))
-			@$qa_content['custom'] .= '<br>'.$html.'<br>';
+		if (!empty($html))
+			@$qa_content['custom'] .= '<br>' . $html . '<br>';
 	}
+
 
 	// prioritize 'handle' for keyboard focus
 	$qa_content['focusid'] = isset($errors['handle']) ? 'handle'

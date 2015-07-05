@@ -27,7 +27,7 @@
 
 	@ini_set('display_errors', 0); // we don't want to show PHP errors to RSS readers
 
-	qa_report_process_stage('init_feed');
+	qa_report_process_stage('initFeed');
 
 	require_once QA_INCLUDE_DIR.'app/options.php';
 

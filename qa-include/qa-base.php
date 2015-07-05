@@ -41,8 +41,6 @@
 		if (strpos($class, 'Q2A_') === 0)
 			require QA_INCLUDE_DIR.strtr($class, '_', '/') . '.php';
 	}
-	spl_autoload_register('qa_autoload');
-
 
 //	Execution section of this file - remainder contains function definitions
 
@@ -72,14 +70,28 @@
 		require_once QA_WORDPRESS_LOAD_FILE;
 
 	qa_initialize_constants_2();
-	qa_initialize_modularity();
-	qa_register_core_modules();
-	qa_load_plugin_files();
-	qa_load_override_files();
 
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 
 	qa_db_allow_connect();
+
+	function initialize_core($request = null, $relativeRoot = null, $usedFormat = null)
+	{
+		if (isset($request, $relativeRoot))
+			qa_set_request($request, $relativeRoot, $usedFormat);
+		else
+			qa_index_set_request();
+
+		qa_initialize_modularity();
+		spl_autoload_register('qa_autoload');
+
+		if (QA_DEBUG_PERFORMANCE) {
+			global $qa_usage;
+			$qa_usage = new Q2A_Util_Usage();
+		}
+		qa_register_plugins();
+		qa_load_override_files();
+	}
 
 
 //	Version comparison functions
@@ -217,13 +229,6 @@
 		@define('QA_PERSISTENT_CONN_DB', false);
 		@define('QA_DEBUG_PERFORMANCE', false);
 
-	//	Start performance monitoring
-
-		if (QA_DEBUG_PERFORMANCE) {
-			global $qa_usage;
-			$qa_usage = new Q2A_Util_Usage;
-		}
-
 	//	More for WordPress integration
 
 		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
@@ -279,9 +284,8 @@
 	Gets everything ready to start using modules, layers and overrides
 */
 	{
-		global $qa_modules, $qa_layers, $qa_override_files, $qa_overrides, $qa_direct;
+		global $qa_layers, $qa_override_files, $qa_overrides, $qa_direct;
 
-		$qa_modules=array();
 		$qa_layers=array();
 		$qa_override_files=array();
 		$qa_overrides=array();
@@ -289,21 +293,15 @@
 	}
 
 
-	function qa_register_core_modules()
+	function qa_register_plugins()
 /*
-	Register all modules that come as part of the Q2A core (as opposed to plugins)
+	Register all plugins and modules
 */
 	{
-		qa_register_module('filter', 'plugins/qa-filter-basic.php', 'qa_filter_basic', '');
-		qa_register_module('editor', 'plugins/qa-editor-basic.php', 'qa_editor_basic', '');
-		qa_register_module('viewer', 'plugins/qa-viewer-basic.php', 'qa_viewer_basic', '');
-		qa_register_module('event', 'plugins/qa-event-limits.php', 'qa_event_limits', 'Q2A Event Limits');
-		qa_register_module('event', 'plugins/qa-event-notify.php', 'qa_event_notify', 'Q2A Event Notify');
-		qa_register_module('event', 'plugins/qa-event-updates.php', 'qa_event_updates', 'Q2A Event Updates');
-		qa_register_module('search', 'plugins/qa-search-basic.php', 'qa_search_basic', '');
-		qa_register_module('widget', 'plugins/qa-widget-activity-count.php', 'qa_activity_count', 'Activity Count');
-		qa_register_module('widget', 'plugins/qa-widget-ask-box.php', 'qa_ask_box', 'Ask Box');
-		qa_register_module('widget', 'plugins/qa-widget-related-qs.php', 'qa_related_qs', 'Related Questions');
+		global $pluginManager;
+
+		$pluginManager = new Q2A_Plugin_Manager();
+		$pluginManager->registerAllPlugins();
 	}
 
 
@@ -343,45 +341,6 @@
 		}
 
 		return $metadata;
-	}
-
-
-	function qa_load_plugin_files()
-/*
-	Load all the qa-plugin.php files from plugins that are compatible with this version of Q2A
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		$pluginfiles = glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
-
-		$metadataUtil = new Q2A_Util_Metadata();
-		foreach ($pluginfiles as $pluginfile) {
-			$pluginDirectory = dirname($pluginfile);
-
-			$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
-			if (empty($metadata)) {
-				// limit plugin parsing to first 8kB
-				$contents = file_get_contents($pluginfile, false, null, -1, 8192);
-				$metadata = qa_addon_metadata($contents, 'Plugin', true);
-			}
-
-			// skip plugin which requires a later version of Q2A
-			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a']))
-				continue;
-			// skip plugin which requires a later version of PHP
-			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php']))
-				continue;
-
-			// these variables are utilized in the qa_register_plugin_* functions
-			$qa_plugin_directory = $pluginDirectory . '/';
-			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
-
-			require_once $pluginfile;
-		}
-
-		$qa_plugin_directory = null;
-		$qa_plugin_urltoroot = null;
 	}
 
 
@@ -432,29 +391,6 @@
 
 
 //	Functions for registering different varieties of Q2A modularity
-
-	function qa_register_module($type, $include, $class, $name, $directory=QA_INCLUDE_DIR, $urltoroot=null)
-/*
-	Register a module of $type named $name, whose class named $class is defined in file $include (or null if no include necessary)
-	If this module comes from a plugin, pass in the local plugin $directory and the $urltoroot relative url for that directory
-*/
-	{
-		global $qa_modules;
-
-		$previous=@$qa_modules[$type][$name];
-
-		if (isset($previous))
-			qa_fatal_error('A '.$type.' module named '.$name.' already exists. Please check there are no duplicate plugins. '.
-				"\n\nModule 1: ".$previous['directory'].$previous['include']."\nModule 2: ".$directory.$include);
-
-		$qa_modules[$type][$name]=array(
-			'directory' => $directory,
-			'urltoroot' => $urltoroot,
-			'include' => $include,
-			'class' => $class,
-		);
-	}
-
 
 	function qa_register_layer($include, $name, $directory=QA_INCLUDE_DIR, $urltoroot=null)
 /*
@@ -511,65 +447,6 @@
 				"\n\nPhrases 1: ".$qa_lang_file_pattern[$name]."\nPhrases 2: ".$pattern);
 
 		$qa_lang_file_pattern[$name]=$pattern;
-	}
-
-
-//	Function for registering varieties of Q2A modularity, which are (only) called from qa-plugin.php files
-
-	function qa_register_plugin_module($type, $include, $class, $name)
-/*
-	Register a plugin module of $type named $name, whose class named $class is defined in file $include (or null if no include necessary)
-	This function relies on some global variable values and can only be called from a plugin's qa-plugin.php file
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		if (empty($qa_plugin_directory) || empty($qa_plugin_urltoroot))
-			qa_fatal_error('qa_register_plugin_module() can only be called from a plugin qa-plugin.php file');
-
-		qa_register_module($type, $include, $class, $name, $qa_plugin_directory, $qa_plugin_urltoroot);
-	}
-
-
-	function qa_register_plugin_layer($include, $name)
-/*
-	Register a plugin layer named $name, defined in file $include. Can only be called from a plugin's qa-plugin.php file
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		if (empty($qa_plugin_directory) || empty($qa_plugin_urltoroot))
-			qa_fatal_error('qa_register_plugin_layer() can only be called from a plugin qa-plugin.php file');
-
-		qa_register_layer($include, $name, $qa_plugin_directory, $qa_plugin_urltoroot);
-	}
-
-
-	function qa_register_plugin_overrides($include)
-/*
-	Register a plugin file $include containing override functions. Can only be called from a plugin's qa-plugin.php file
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		if (empty($qa_plugin_directory) || empty($qa_plugin_urltoroot))
-			qa_fatal_error('qa_register_plugin_overrides() can only be called from a plugin qa-plugin.php file');
-
-		qa_register_overrides($include, $qa_plugin_directory, $qa_plugin_urltoroot);
-	}
-
-
-	function qa_register_plugin_phrases($pattern, $name)
-/*
-	Register a file name $pattern within a plugin directory containing language phrases accessed by the prefix $name
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		if (empty($qa_plugin_directory) || empty($qa_plugin_urltoroot))
-			qa_fatal_error('qa_register_plugin_phrases() can only be called from a plugin qa-plugin.php file');
-
-		qa_register_phrases($qa_plugin_directory.$pattern, $name);
 	}
 
 
@@ -673,7 +550,7 @@
 	Exit PHP immediately after reporting a shutdown with $reason to any installed process modules
 */
 	{
-		qa_report_process_stage('shutdown', $reason);
+		qa_report_process_stage('shutdown', array($reason));
 		exit;
 	}
 
@@ -695,116 +572,6 @@
 				qa_html(@$trace['function'].'() in '.basename(@$trace['file']).':'.@$trace['line']).'</font><br>';
 
 		qa_exit('error');
-	}
-
-
-//	Functions for listing, loading and getting info on modules
-
-	function qa_list_modules_info()
-/*
-	Return an array with all registered modules' information
-*/
-	{
-		global $qa_modules;
-		return $qa_modules;
-	}
-
-	function qa_list_module_types()
-/*
-	Return an array of all the module types for which at least one module has been registered
-*/
-	{
-		return array_keys(qa_list_modules_info());
-	}
-
-	function qa_list_modules($type)
-/*
-	Return a list of names of registered modules of $type
-*/
-	{
-		$modules = qa_list_modules_info();
-		return is_array(@$modules[$type]) ? array_keys($modules[$type]) : array();
-	}
-
-	function qa_get_module_info($type, $name)
-/*
-	Return an array containing information about the module of $type named $name
-*/
-	{
-		$modules = qa_list_modules_info();
-		return @$modules[$type][$name];
-	}
-
-	function qa_load_module($type, $name)
-/*
-	Return an instantiated class for module of $type named $name, whose functions can be called, or null if it doesn't exist
-*/
-	{
-		global $qa_modules;
-
-		$module = @$qa_modules[$type][$name];
-
-		if (is_array($module)) {
-			if (isset($module['object']))
-				return $module['object'];
-
-			if (strlen(@$module['include']))
-				require_once $module['directory'].$module['include'];
-
-			if (strlen(@$module['class'])) {
-				$object = new $module['class'];
-
-				if (method_exists($object, 'load_module'))
-					$object->load_module($module['directory'], qa_path_to_root().$module['urltoroot'], $type, $name);
-
-				$qa_modules[$type][$name]['object'] = $object;
-				return $object;
-			}
-		}
-
-		return null;
-	}
-
-	function qa_load_all_modules_with($method)
-/*
-	Return an array of instantiated clases for modules which have defined $method
-	(all modules are loaded but not included in the returned array)
-*/
-	{
-		$modules = array();
-
-		$regmodules = qa_list_modules_info();
-
-		foreach ($regmodules as $moduletype => $modulesinfo) {
-			foreach ($modulesinfo as $modulename => $moduleinfo) {
-				$module = qa_load_module($moduletype, $modulename);
-
-				if (method_exists($module, $method))
-					$modules[$modulename] = $module;
-			}
-		}
-
-		return $modules;
-	}
-
-	function qa_load_modules_with($type, $method)
-/*
-	Return an array of instantiated clases for modules of $type which have defined $method
-	(other modules of that type are also loaded but not included in the returned array)
-*/
-	{
-		$modules = array();
-
-		$trynames = qa_list_modules($type);
-
-		foreach ($trynames as $tryname) {
-			$module = qa_load_module($type, $tryname);
-
-			if (method_exists($module, $method))
-				$modules[$tryname] = $module;
-		}
-
-		return $modules;
 	}
 
 
@@ -915,6 +682,122 @@
 
 
 //	Finding out more about the current request
+
+	/**
+	* Determine the request and root of the installation, and the requested start position used by many pages.
+	*
+	* Apache and Nginx behave slightly differently:
+	* Apache qa-rewrite unescapes characters, converts `+` to ` `, cuts off at `#` or `&`
+	* Nginx qa-rewrite unescapes characters, retains `+`, contains true path
+	*/
+	function qa_index_set_request()
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		$relativedepth = 0;
+
+		if (isset($_GET['qa-rewrite'])) { // URLs rewritten by .htaccess or Nginx
+			$urlformat = QA_URL_FORMAT_NEAT;
+			$qa_rewrite = strtr(qa_gpc_to_string($_GET['qa-rewrite']), '+', ' '); // strtr required by Nginx
+			$requestparts = explode('/', $qa_rewrite);
+			unset($_GET['qa-rewrite']);
+
+			if (!empty($_SERVER['REQUEST_URI'])) { // workaround for the fact that Apache unescapes characters while rewriting
+				$origpath = $_SERVER['REQUEST_URI'];
+				$_GET = array();
+
+				$questionpos = strpos($origpath, '?');
+				if (is_numeric($questionpos)) {
+					$params = explode('&', substr($origpath, $questionpos+1));
+
+					foreach ($params as $param) {
+						if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches)) {
+							$argument = strtr(urldecode($matches[1]), '.', '_'); // simulate PHP's $_GET behavior
+							$_GET[$argument] = qa_string_to_gpc(urldecode(@$matches[3]));
+						}
+					}
+
+					$origpath = substr($origpath, 0, $questionpos);
+				}
+
+				// Generally we assume that $_GET['qa-rewrite'] has the right path depth, but this won't be the case if there's
+				// a & or # somewhere in the middle of the path, due to Apache unescaping. So we make a special case for that.
+				// If 'REQUEST_URI' and 'qa-rewrite' already match (as on Nginx), we can skip this.
+				$normalizedpath = urldecode($origpath);
+				if (substr($normalizedpath, -strlen($qa_rewrite)) !== $qa_rewrite) {
+					$keepparts = count($requestparts);
+					$requestparts = explode('/', urldecode($origpath)); // new request calculated from $_SERVER['REQUEST_URI']
+
+					// loop forwards so we capture all parts
+					for ($part = 0, $max = count($requestparts); $part < $max; $part++) {
+						if (is_numeric(strpos($requestparts[$part], '&')) || is_numeric(strpos($requestparts[$part], '#'))) {
+							$keepparts += count($requestparts) - $part - 1; // this is how many parts remain
+							break;
+						}
+					}
+
+					$requestparts = array_slice($requestparts, -$keepparts); // remove any irrelevant parts from the beginning
+				}
+			}
+
+			$relativedepth = count($requestparts);
+		}
+		elseif (isset($_GET['qa'])) {
+			if (strpos($_GET['qa'], '/') === false) {
+				$urlformat = ( empty($_SERVER['REQUEST_URI']) || strpos($_SERVER['REQUEST_URI'], '/index.php') !== false )
+					? QA_URL_FORMAT_SAFEST : QA_URL_FORMAT_PARAMS;
+				$requestparts = array(qa_gpc_to_string($_GET['qa']));
+
+				for ($part = 1; $part < 10; $part++) {
+					if (isset($_GET['qa_'.$part])) {
+						$requestparts[] = qa_gpc_to_string($_GET['qa_'.$part]);
+						unset($_GET['qa_'.$part]);
+					}
+				}
+			}
+			else {
+				$urlformat = QA_URL_FORMAT_PARAM;
+				$requestparts = explode('/', qa_gpc_to_string($_GET['qa']));
+			}
+
+			unset($_GET['qa']);
+		}
+		else {
+			$phpselfunescaped = strtr($_SERVER['PHP_SELF'], '+', ' '); // seems necessary, and plus does not work with this scheme
+			$indexpath = '/index.php/';
+			$indexpos = strpos($phpselfunescaped, $indexpath);
+
+			if (is_numeric($indexpos)) {
+				$urlformat = QA_URL_FORMAT_INDEX;
+				$requestparts = explode('/', substr($phpselfunescaped, $indexpos + strlen($indexpath)));
+				$relativedepth = 1 + count($requestparts);
+			}
+			else {
+				$urlformat = null; // at home page so can't identify path type
+				$requestparts = array();
+			}
+		}
+
+		foreach ($requestparts as $part => $requestpart) { // remove any blank parts
+			if (!strlen($requestpart))
+				unset($requestparts[$part]);
+		}
+
+		reset($requestparts);
+		$key = key($requestparts);
+
+		$requestkey = isset($requestparts[$key]) ? $requestparts[$key] : '';
+		$replacement = array_search($requestkey, qa_get_request_map());
+		if ($replacement !== false)
+			$requestparts[$key] = $replacement;
+
+		qa_set_request(
+			implode('/', $requestparts),
+			($relativedepth > 1 ? str_repeat('../', $relativedepth - 1) : './'),
+			$urlformat
+		);
+	}
+
 
 	function qa_set_request($request, $relativeroot, $usedformat=null)
 /*
@@ -1622,33 +1505,32 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		global $qa_event_reports_suspended;
+		global $pluginManager;
 
 		if ($qa_event_reports_suspended>0)
 			return;
 
-		$eventmodules=qa_load_modules_with('event', 'process_event');
-		foreach ($eventmodules as $eventmodule)
-			$eventmodule->process_event($event, $userid, $handle, $cookieid, $params);
+		$eventModules = $pluginManager->getModulesByType('event');
+		foreach ($eventModules as $eventModule)
+			$eventModule->processEvent($event, $userid, $handle, $cookieid, $params);
 	}
 
 
-	function qa_report_process_stage($method) // can have extra params
+	function qa_report_process_stage($method, $args = array()) // can have extra params
 	{
 		global $qa_process_reports_suspended;
+		global $pluginManager;
 
-		if (@$qa_process_reports_suspended)
+		if (isset($qa_process_reports_suspended))
 			return;
 
-		$qa_process_reports_suspended=true; // prevent loop, e.g. because of an error
+		$qa_process_reports_suspended = true; // prevent loop, e.g. because of an error
 
-		$args=func_get_args();
-		$args=array_slice($args, 1);
+		$processModules = $pluginManager->getModulesByType('process');
+		foreach ($processModules as $processModule)
+			call_user_func_array(array($processModule, $method), $args);
 
-		$processmodules=qa_load_modules_with('process', $method);
-		foreach ($processmodules as $processmodule)
-			call_user_func_array(array($processmodule, $method), $args);
-
-		$qa_process_reports_suspended=null;
+		$qa_process_reports_suspended = null;
 	}
 
 

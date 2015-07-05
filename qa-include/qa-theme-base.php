@@ -173,12 +173,12 @@ class qa_html_theme_base
 	Output the widgets (as provided in $this->content['widgets']) for $region and $place
 */
 	{
-		if (count(@$this->content['widgets'][$region][$place])) {
+		if (isset($this->content['widgets'][$region][$place]) && !empty($this->content['widgets'][$region][$place])) {
 			$this->output('<div class="qa-widgets-'.$region.' qa-widgets-'.$region.'-'.$place.'">');
 
-			foreach ($this->content['widgets'][$region][$place] as $module) {
+			foreach ($this->content['widgets'][$region][$place] as $widgetModule) {
 				$this->output('<div class="qa-widget-'.$region.' qa-widget-'.$region.'-'.$place.'">');
-				$module->output_widget($region, $place, $this, $this->template, $this->request, $this->content);
+				$widgetModule->output($region, $place, $this, $this->template, $this->content);
 				$this->output('</div>');
 			}
 

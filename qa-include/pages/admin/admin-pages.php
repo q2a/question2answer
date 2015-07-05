@@ -25,6 +25,8 @@
 		exit;
 	}
 
+	global $pluginManager;
+
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 	require_once QA_INCLUDE_DIR.'app/format.php';
 	require_once QA_INCLUDE_DIR.'db/selects.php';
@@ -121,9 +123,9 @@
 			if (qa_post_text('dodelete')) {
 				qa_db_page_delete($editpage['pageid']);
 
-				$searchmodules=qa_load_modules_with('search', 'unindex_page');
-				foreach ($searchmodules as $searchmodule)
-					$searchmodule->unindex_page($editpage['pageid']);
+				$searchModules = $pluginManager->getModulesByType('search');
+				foreach ($searchModules as $searchModule)
+					$searchModule->unindexPage($editpage['pageid']);
 
 				$editpage=null;
 				$reloadpages=true;
@@ -226,15 +228,15 @@
 							0,
 							$setslug, $setheading, $setcontent, $inpermit);
 
-						$searchmodules=qa_load_modules_with('search', 'unindex_page');
-						foreach ($searchmodules as $searchmodule)
-							$searchmodule->unindex_page($editpage['pageid']);
+						$searchModules = $pluginManager->getModulesByType('search');
+						foreach ($searchModules as $searchModule)
+							$searchModule->unindexPage($editpage['pageid']);
 
 						$indextext=qa_viewer_text($setcontent, 'html');
 
-						$searchmodules=qa_load_modules_with('search', 'index_page');
-						foreach ($searchmodules as $searchmodule)
-							$searchmodule->index_page($editpage['pageid'], $setslug, $setheading, $setcontent, 'html', $indextext);
+						$searchModules = $pluginManager->getModulesByType('search');
+						foreach ($searchModules as $searchModule)
+							$searchModule->indexPage($editpage['pageid'], $setslug, $setheading, $setcontent, 'html', $indextext);
 					}
 
 					qa_db_page_move($editpage['pageid'], substr($inposition, 0, 1), substr($inposition, 1));
@@ -255,9 +257,9 @@
 
 							$indextext=qa_viewer_text($incontent, 'html');
 
-							$searchmodules=qa_load_modules_with('search', 'index_page');
-							foreach ($searchmodules as $searchmodule)
-								$searchmodule->index_page($pageid, $inslug, $inheading, $incontent, 'html', $indextext);
+							$searchModules = $pluginManager->getModulesByType('search');
+							foreach ($searchModules as $searchModule)
+								$searchModule->indexPage($pageid, $inslug, $inheading, $incontent, 'html', $indextext);
 						}
 
 						qa_db_page_move($pageid, substr($inposition, 0, 1), substr($inposition, 1));
@@ -518,27 +520,37 @@
 
 	//	List of suggested plugin pages
 
+		global $pluginManager;
+
 		$listhtml='';
 
-		$pagemodules=qa_load_modules_with('page', 'suggest_requests');
+		$pageModules = $pluginManager->getModulesByType('page');
 
-		foreach ($pagemodules as $tryname => $trypage) {
-			$suggestrequests=$trypage->suggest_requests();
+		foreach ($pageModules as $pageModule) {
+			$suggestedRequests = $pageModule->getSuggestedRequests();
 
-			foreach ($suggestrequests as $suggestrequest) {
-				$listhtml.='<li><b><a href="'.qa_path_html($suggestrequest['request']).'">'.qa_html($suggestrequest['title']).'</a></b>';
+			foreach ($suggestedRequests as $suggestedRequest) {
+				$listhtml .= sprintf('<li><stront><a href="%s">%s</a></strong>', qa_path_html($suggestedRequest['request']), qa_html($suggestedRequest['title']));
+				$listhtml .= qa_lang_html_sub('admin/plugin_module', qa_html($pageModule->getId()));
 
-				$listhtml.=qa_lang_html_sub('admin/plugin_module', qa_html($tryname));
+				$link = qa_path_html(qa_request(), array(
+					'doaddlink' => 1,
+					'text' => $suggestedRequest['title'],
+					'url' => $suggestedRequest['request'],
+					'nav' => isset($suggestedRequest['nav']) ? $suggestedRequest['nav'] : null,
+				));
 
-				$listhtml.=strtr(qa_lang_html('admin/add_link_link'), array(
-					'^1' => '<a href="'.qa_path_html(qa_request(), array('doaddlink' => 1, 'text' => $suggestrequest['title'], 'url' => $suggestrequest['request'], 'nav' => @$suggestrequest['nav'])).'">',
+				$listhtml .= strtr(qa_lang_html('admin/add_link_link'), array(
+					'^1' => '<a href="' . $link . '">',
 					'^2' => '</a>',
 				));
 
-				if (method_exists($trypage, 'admin_form'))
-					$listhtml.=' - <a href="'.qa_admin_module_options_path('page', $tryname).'">'.qa_lang_html('admin/options').'</a>';
+				$plugin = $pageModule->getPlugin();
+				$form = $plugin->getSettingsForm($qa_content);
+				if (isset($form))
+					$listhtml .= sprintf(' - <a href="%s">%s</a>', qa_admin_plugin_options_path($plugin->getId()), qa_lang_html('admin/options'));
 
-				$listhtml.='</li>';
+				$listhtml .= '</li>';
 			}
 		}
 

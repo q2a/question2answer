@@ -78,6 +78,8 @@
 	$state can also be the name of a recalculation operation on its own.
 */
 	{
+		global $pluginManager;
+
 		$continue=false;
 
 		@list($operation, $length, $next, $done)=explode("\t", $state);
@@ -97,16 +99,15 @@
 
 					foreach ($pages as $pageid => $page)
 						if (!($page['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
-							$searchmodules=qa_load_modules_with('search', 'unindex_page');
-							foreach ($searchmodules as $searchmodule)
-								$searchmodule->unindex_page($pageid);
+							$searchModules = $pluginManager->getModulesByType('search');
+							if (!empty($searchModules)) {
+								foreach ($searchModules as $searchModule)
+									$searchModule->unindexPage($pageid);
 
-							$searchmodules=qa_load_modules_with('search', 'index_page');
-							if (count($searchmodules)) {
-								$indextext=qa_viewer_text($page['content'], 'html');
+								$indexText = qa_viewer_text($page['content'], 'html');
 
-								foreach ($searchmodules as $searchmodule)
-									$searchmodule->index_page($pageid, $page['tags'], $page['heading'], $page['content'], 'html', $indextext);
+								foreach ($searchModules as $searchModule)
+									$searchModule->indexPage($pageid, $page['tags'], $page['heading'], $page['content'], 'html', $indexText);
 							}
 						}
 

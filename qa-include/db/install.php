@@ -725,6 +725,8 @@
 	{
 		require_once QA_INCLUDE_DIR.'app/recalc.php';
 
+		$progressUpdater = new Q2A_Install_ProgressUpdater();
+
 		$definitions=qa_db_table_definitions();
 		$keyrecalc=array();
 
@@ -738,7 +740,7 @@
 
 		$locktablesquery='LOCK TABLES '.implode(', ', $locks);
 
-		qa_db_upgrade_query($locktablesquery);
+		qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 	//	Upgrade it step-by-step until it's up to date (do LOCK TABLES after ALTER TABLE because the lock can sometimes be lost)
 
@@ -750,56 +752,56 @@
 
 			$newversion=$version+1;
 
-			qa_db_upgrade_progress(QA_DB_VERSION_CURRENT-$version.' upgrade step/s remaining...');
+			$progressUpdater->update(QA_DB_VERSION_CURRENT-$version.' upgrade step/s remaining...');
 
 			switch ($newversion) {
 
 			//	Up to here: Version 1.0 beta 1
 
 				case 2:
-					qa_db_upgrade_query('ALTER TABLE ^posts DROP COLUMN votes, ADD COLUMN upvotes '.$definitions['posts']['upvotes'].
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts DROP COLUMN votes, ADD COLUMN upvotes '.$definitions['posts']['upvotes'].
 						' AFTER cookieid, ADD COLUMN downvotes '.$definitions['posts']['downvotes'].' AFTER upvotes');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['dorecountposts']=true;
 					break;
 
 				case 3:
-					qa_db_upgrade_query('ALTER TABLE ^userpoints ADD COLUMN upvoteds '.$definitions['userpoints']['upvoteds'].
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^userpoints ADD COLUMN upvoteds '.$definitions['userpoints']['upvoteds'].
 						' AFTER avoteds, ADD COLUMN downvoteds '.$definitions['userpoints']['downvoteds'].' AFTER upvoteds');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['dorecalcpoints']=true;
 					break;
 
 				case 4:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN lastuserid '.$definitions['posts']['lastuserid'].' AFTER cookieid, CHANGE COLUMN updated updated '.$definitions['posts']['updated']);
-					qa_db_upgrade_query($locktablesquery);
-					qa_db_upgrade_query('UPDATE ^posts SET updated=NULL WHERE updated=0 OR updated=created');
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN lastuserid '.$definitions['posts']['lastuserid'].' AFTER cookieid, CHANGE COLUMN updated updated '.$definitions['posts']['updated']);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'UPDATE ^posts SET updated=NULL WHERE updated=0 OR updated=created');
 					break;
 
 				case 5:
-					qa_db_upgrade_query('ALTER TABLE ^contentwords ADD COLUMN type '.$definitions['contentwords']['type'].' AFTER count, ADD COLUMN questionid '.$definitions['contentwords']['questionid'].' AFTER type');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^contentwords ADD COLUMN type '.$definitions['contentwords']['type'].' AFTER count, ADD COLUMN questionid '.$definitions['contentwords']['questionid'].' AFTER type');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['doreindexcontent']=true;
 					break;
 
 			//	Up to here: Version 1.0 beta 2
 
 				case 6:
-					qa_db_upgrade_query('ALTER TABLE ^userpoints ADD COLUMN cposts '.$definitions['userpoints']['cposts'].' AFTER aposts');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^userpoints ADD COLUMN cposts '.$definitions['userpoints']['cposts'].' AFTER aposts');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['dorecalcpoints']=true;
 					break;
 
 				case 7:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN sessioncode '.$definitions['users']['sessioncode'].' AFTER writeip');
-						qa_db_upgrade_query($locktablesquery);
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users ADD COLUMN sessioncode '.$definitions['users']['sessioncode'].' AFTER writeip');
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					}
 					break;
 
 				case 8:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD KEY (type, acount, created)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD KEY (type, acount, created)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['dorecountposts']=true; // for unanswered question count
 					break;
 
@@ -807,15 +809,15 @@
 
 				case 9:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('ALTER TABLE ^users CHANGE COLUMN resetcode emailcode '.$definitions['users']['emailcode'].', ADD COLUMN flags '.$definitions['users']['flags'].' AFTER sessioncode');
-						qa_db_upgrade_query($locktablesquery);
-						qa_db_upgrade_query('UPDATE ^users SET flags=1');
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users CHANGE COLUMN resetcode emailcode '.$definitions['users']['emailcode'].', ADD COLUMN flags '.$definitions['users']['flags'].' AFTER sessioncode');
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
+						qa_db_upgrade_query($progressUpdater, 'UPDATE ^users SET flags=1');
 					}
 					break;
 
 				case 10:
-					qa_db_upgrade_query('UNLOCK TABLES');
-					qa_db_upgrade_query(qa_db_create_table_sql('categories', array(
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('categories', array(
 						'categoryid' => $definitions['categories']['categoryid'],
 						'title' => $definitions['categories']['title'],
 						'tags' => $definitions['categories']['tags'],
@@ -827,18 +829,18 @@
 					))); // hard-code list of columns and indexes to ensure we ignore any added at a later stage
 
 					$locktablesquery.=', ^categories WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 11:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD CONSTRAINT ^posts_ibfk_2 FOREIGN KEY (parentid) REFERENCES ^posts(postid), ADD COLUMN categoryid '.$definitions['posts']['categoryid'].' AFTER parentid, ADD KEY categoryid (categoryid, type, created), ADD CONSTRAINT ^posts_ibfk_3 FOREIGN KEY (categoryid) REFERENCES ^categories(categoryid) ON DELETE SET NULL');
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD CONSTRAINT ^posts_ibfk_2 FOREIGN KEY (parentid) REFERENCES ^posts(postid), ADD COLUMN categoryid '.$definitions['posts']['categoryid'].' AFTER parentid, ADD KEY categoryid (categoryid, type, created), ADD CONSTRAINT ^posts_ibfk_3 FOREIGN KEY (categoryid) REFERENCES ^categories(categoryid) ON DELETE SET NULL');
 						// foreign key on parentid important now that deletion is possible
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 12:
-					qa_db_upgrade_query('UNLOCK TABLES');
-					qa_db_upgrade_query(qa_db_create_table_sql('pages', array(
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('pages', array(
 						'pageid' => $definitions['pages']['pageid'],
 						'title' => $definitions['pages']['title'],
 						'nav' => $definitions['pages']['nav'],
@@ -852,17 +854,17 @@
 						'UNIQUE position (position)',
 					))); // hard-code list of columns and indexes to ensure we ignore any added at a later stage
 					$locktablesquery.=', ^pages WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 13:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN createip '.$definitions['posts']['createip'].' AFTER cookieid, ADD KEY createip (createip, created)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN createip '.$definitions['posts']['createip'].' AFTER cookieid, ADD KEY createip (createip, created)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 14:
-					qa_db_upgrade_query('ALTER TABLE ^userpoints DROP COLUMN qvotes, DROP COLUMN avotes, ADD COLUMN qupvotes '.$definitions['userpoints']['qupvotes'].' AFTER aselecteds, ADD COLUMN qdownvotes '.$definitions['userpoints']['qdownvotes'].' AFTER qupvotes, ADD COLUMN aupvotes '.$definitions['userpoints']['aupvotes'].' AFTER qdownvotes, ADD COLUMN adownvotes '.$definitions['userpoints']['adownvotes'].' AFTER aupvotes');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^userpoints DROP COLUMN qvotes, DROP COLUMN avotes, ADD COLUMN qupvotes '.$definitions['userpoints']['qupvotes'].' AFTER aselecteds, ADD COLUMN qdownvotes '.$definitions['userpoints']['qdownvotes'].' AFTER qupvotes, ADD COLUMN aupvotes '.$definitions['userpoints']['aupvotes'].' AFTER qdownvotes, ADD COLUMN adownvotes '.$definitions['userpoints']['adownvotes'].' AFTER aupvotes');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['dorecalcpoints']=true;
 					break;
 
@@ -870,50 +872,50 @@
 
 				case 15:
 					if (!QA_FINAL_EXTERNAL_USERS)
-						qa_db_upgrade_table_columns($definitions, 'users', array('emailcode', 'sessioncode', 'flags'));
+						qa_db_upgrade_table_columns($progressUpdater, $definitions, 'users', array('emailcode', 'sessioncode', 'flags'));
 
-					qa_db_upgrade_table_columns($definitions, 'posts', array('acount', 'upvotes', 'downvotes', 'format'));
-					qa_db_upgrade_table_columns($definitions, 'categories', array('qcount'));
-					qa_db_upgrade_table_columns($definitions, 'words', array('titlecount', 'contentcount', 'tagcount'));
-					qa_db_upgrade_table_columns($definitions, 'userpoints', array('points', 'qposts', 'aposts', 'cposts',
+					qa_db_upgrade_table_columns($progressUpdater, $definitions, 'posts', array('acount', 'upvotes', 'downvotes', 'format'));
+					qa_db_upgrade_table_columns($progressUpdater, $definitions, 'categories', array('qcount'));
+					qa_db_upgrade_table_columns($progressUpdater, $definitions, 'words', array('titlecount', 'contentcount', 'tagcount'));
+					qa_db_upgrade_table_columns($progressUpdater, $definitions, 'userpoints', array('points', 'qposts', 'aposts', 'cposts',
 						'aselects', 'aselecteds', 'qupvotes', 'qdownvotes', 'aupvotes', 'adownvotes', 'qvoteds', 'avoteds', 'upvoteds', 'downvoteds'));
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 			//	Up to here: Version 1.2 (release)
 
 				case 16:
-					qa_db_upgrade_table_columns($definitions, 'posts', array('format'));
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_table_columns($progressUpdater, $definitions, 'posts', array('format'));
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					$keyrecalc['doreindexcontent']=true; // because of new treatment of apostrophes in words
 					break;
 
 				case 17:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD KEY updated (updated, type), ADD KEY categoryid_2 (categoryid, updated, type)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD KEY updated (updated, type), ADD KEY categoryid_2 (categoryid, updated, type)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 18:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN lastip '.$definitions['posts']['lastip'].' AFTER lastuserid, ADD KEY lastip (lastip, updated, type)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN lastip '.$definitions['posts']['lastip'].' AFTER lastuserid, ADD KEY lastip (lastip, updated, type)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 19:
 					if (!QA_FINAL_EXTERNAL_USERS)
-						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN avatarblobid '.$definitions['users']['avatarblobid'].' AFTER handle, ADD COLUMN avatarwidth '.$definitions['users']['avatarwidth'].' AFTER avatarblobid, ADD COLUMN avatarheight '.$definitions['users']['avatarheight'].' AFTER avatarwidth');
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users ADD COLUMN avatarblobid '.$definitions['users']['avatarblobid'].' AFTER handle, ADD COLUMN avatarwidth '.$definitions['users']['avatarwidth'].' AFTER avatarblobid, ADD COLUMN avatarheight '.$definitions['users']['avatarheight'].' AFTER avatarwidth');
 
 					// hard-code list of columns and indexes to ensure we ignore any added at a later stage
 
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('blobs', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('blobs', array(
 						'blobid' => $definitions['blobs']['blobid'],
 						'format' => $definitions['blobs']['format'],
 						'content' => $definitions['blobs']['content'],
 						'PRIMARY KEY (blobid)'
 					)));
 
-					qa_db_upgrade_query(qa_db_create_table_sql('cache', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('cache', array(
 						'type' => $definitions['cache']['type'],
 						'cacheid' => $definitions['cache']['cacheid'],
 						'content' => $definitions['cache']['content'],
@@ -924,14 +926,14 @@
 					))); // hard-code list of columns and indexes to ensure we ignore any added at a later stage
 
 					$locktablesquery.=', ^blobs WRITE, ^cache WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 20:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('UNLOCK TABLES');
+						qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-						qa_db_upgrade_query(qa_db_create_table_sql('userlogins', array(
+						qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('userlogins', array(
 							'userid' => $definitions['userlogins']['userid'],
 							'source' => $definitions['userlogins']['source'],
 							'identifier' => $definitions['userlogins']['identifier'],
@@ -941,18 +943,18 @@
 							'CONSTRAINT ^userlogins_ibfk_1 FOREIGN KEY (userid) REFERENCES ^users(userid) ON DELETE CASCADE',
 						)));
 
-						qa_db_upgrade_query('ALTER TABLE ^users CHANGE COLUMN passsalt passsalt '.$definitions['users']['passsalt'].', CHANGE COLUMN passcheck passcheck '.$definitions['users']['passcheck']);
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users CHANGE COLUMN passsalt passsalt '.$definitions['users']['passsalt'].', CHANGE COLUMN passcheck passcheck '.$definitions['users']['passcheck']);
 
 						$locktablesquery.=', ^userlogins WRITE';
-						qa_db_upgrade_query($locktablesquery);
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					}
 					break;
 
 				case 21:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('UNLOCK TABLES');
+						qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-						qa_db_upgrade_query(qa_db_create_table_sql('userfields', array(
+						qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('userfields', array(
 							'fieldid' => $definitions['userfields']['fieldid'],
 							'title' => $definitions['userfields']['title'],
 							'content' => $definitions['userfields']['content'],
@@ -962,9 +964,9 @@
 						)));
 
 						$locktablesquery.=', ^userfields WRITE';
-						qa_db_upgrade_query($locktablesquery);
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-						qa_db_upgrade_query(qa_db_default_userfields_sql());
+						qa_db_upgrade_query($progressUpdater, qa_db_default_userfields_sql());
 					}
 					break;
 
@@ -972,17 +974,17 @@
 
 				case 22:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN sessionsource '.$definitions['users']['sessionsource'].' AFTER sessioncode');
-						qa_db_upgrade_query($locktablesquery);
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users ADD COLUMN sessionsource '.$definitions['users']['sessionsource'].' AFTER sessioncode');
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					}
 					break;
 
 			//	Up to here: Version 1.3 beta 2 and release
 
 				case 23:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('widgets', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('widgets', array(
 						'widgetid' => $definitions['widgets']['widgetid'],
 						'place' => $definitions['widgets']['place'],
 						'position' => $definitions['widgets']['position'],
@@ -993,13 +995,13 @@
 					)));
 
 					$locktablesquery.=', ^widgets WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 24:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('tagwords', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('tagwords', array(
 						'postid' => $definitions['tagwords']['postid'],
 						'wordid' => $definitions['tagwords']['wordid'],
 						'KEY postid (postid)',
@@ -1010,8 +1012,8 @@
 
 					$locktablesquery.=', ^tagwords WRITE';
 
-					qa_db_upgrade_query('ALTER TABLE ^words ADD COLUMN tagwordcount '.$definitions['words']['tagwordcount'].' AFTER contentcount');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^words ADD COLUMN tagwordcount '.$definitions['words']['tagwordcount'].' AFTER contentcount');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['doreindexcontent']=true;
 					break;
@@ -1023,61 +1025,61 @@
 						// might be using blobs table shared with another installation, so check if we need to upgrade
 
 					if (isset($keycolumns['filename']))
-						qa_db_upgrade_progress('Skipping upgrading blobs table since it was already upgraded by another Q2A site sharing it.');
+						$progressUpdater->update('Skipping upgrading blobs table since it was already upgraded by another Q2A site sharing it.');
 
 					else {
-						qa_db_upgrade_query('ALTER TABLE ^blobs ADD COLUMN filename '.$definitions['blobs']['filename'].' AFTER content, ADD COLUMN userid '.$definitions['blobs']['userid'].' AFTER filename, ADD COLUMN cookieid '.$definitions['blobs']['cookieid'].' AFTER userid, ADD COLUMN createip '.$definitions['blobs']['createip'].' AFTER cookieid, ADD COLUMN created '.$definitions['blobs']['created'].' AFTER createip');
-						qa_db_upgrade_query($locktablesquery);
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^blobs ADD COLUMN filename '.$definitions['blobs']['filename'].' AFTER content, ADD COLUMN userid '.$definitions['blobs']['userid'].' AFTER filename, ADD COLUMN cookieid '.$definitions['blobs']['cookieid'].' AFTER userid, ADD COLUMN createip '.$definitions['blobs']['createip'].' AFTER cookieid, ADD COLUMN created '.$definitions['blobs']['created'].' AFTER createip');
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					}
 					break;
 
 				case 26:
-					qa_db_upgrade_query('ALTER TABLE ^uservotes ADD COLUMN flag '.$definitions['uservotes']['flag'].' AFTER vote');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^uservotes ADD COLUMN flag '.$definitions['uservotes']['flag'].' AFTER vote');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN flagcount '.$definitions['posts']['flagcount'].' AFTER downvotes, ADD KEY type_3 (type, flagcount, created)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN flagcount '.$definitions['posts']['flagcount'].' AFTER downvotes, ADD KEY type_3 (type, flagcount, created)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorecountposts']=true;
 					break;
 
 				case 27:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN netvotes '.$definitions['posts']['netvotes'].' AFTER downvotes, ADD KEY type_4 (type, netvotes, created)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN netvotes '.$definitions['posts']['netvotes'].' AFTER downvotes, ADD KEY type_4 (type, netvotes, created)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorecountposts']=true;
 					break;
 
 				case 28:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN views '.$definitions['posts']['views'].' AFTER netvotes, ADD COLUMN hotness '.$definitions['posts']['hotness'].' AFTER views, ADD KEY type_5 (type, views, created), ADD KEY type_6 (type, hotness)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN views '.$definitions['posts']['views'].' AFTER netvotes, ADD COLUMN hotness '.$definitions['posts']['hotness'].' AFTER views, ADD KEY type_5 (type, views, created), ADD KEY type_6 (type, hotness)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorecountposts']=true;
 					break;
 
 				case 29:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN lastviewip '.$definitions['posts']['lastviewip'].' AFTER netvotes');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN lastviewip '.$definitions['posts']['lastviewip'].' AFTER netvotes');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 30:
-					qa_db_upgrade_query('ALTER TABLE ^posts DROP FOREIGN KEY ^posts_ibfk_3'); // to allow category column types to be changed
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts DROP FOREIGN KEY ^posts_ibfk_3'); // to allow category column types to be changed
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-					qa_db_upgrade_query('ALTER TABLE ^posts DROP KEY categoryid, DROP KEY categoryid_2');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts DROP KEY categoryid, DROP KEY categoryid_2');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-					qa_db_upgrade_query('ALTER TABLE ^categories CHANGE COLUMN categoryid categoryid '.$definitions['categories']['categoryid'].', ADD COLUMN parentid '.$definitions['categories']['parentid'].' AFTER categoryid, ADD COLUMN backpath '.$definitions['categories']['backpath'].' AFTER position, ADD COLUMN content '.$definitions['categories']['content'].' AFTER tags, DROP INDEX tags, DROP INDEX position, ADD UNIQUE parentid (parentid, tags), ADD UNIQUE parentid_2 (parentid, position), ADD KEY backpath (backpath('.QA_DB_MAX_CAT_PAGE_TAGS_LENGTH.'))');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^categories CHANGE COLUMN categoryid categoryid '.$definitions['categories']['categoryid'].', ADD COLUMN parentid '.$definitions['categories']['parentid'].' AFTER categoryid, ADD COLUMN backpath '.$definitions['categories']['backpath'].' AFTER position, ADD COLUMN content '.$definitions['categories']['content'].' AFTER tags, DROP INDEX tags, DROP INDEX position, ADD UNIQUE parentid (parentid, tags), ADD UNIQUE parentid_2 (parentid, position), ADD KEY backpath (backpath('.QA_DB_MAX_CAT_PAGE_TAGS_LENGTH.'))');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-					qa_db_upgrade_query('ALTER TABLE ^posts CHANGE COLUMN categoryid categoryid '.$definitions['posts']['categoryid'].', ADD COLUMN catidpath1 '.$definitions['posts']['catidpath1'].' AFTER categoryid, ADD COLUMN catidpath2 '.$definitions['posts']['catidpath2'].' AFTER catidpath1, ADD COLUMN catidpath3 '.$definitions['posts']['catidpath3'].' AFTER catidpath2'); // QA_CATEGORY_DEPTH=4
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts CHANGE COLUMN categoryid categoryid '.$definitions['posts']['categoryid'].', ADD COLUMN catidpath1 '.$definitions['posts']['catidpath1'].' AFTER categoryid, ADD COLUMN catidpath2 '.$definitions['posts']['catidpath2'].' AFTER catidpath1, ADD COLUMN catidpath3 '.$definitions['posts']['catidpath3'].' AFTER catidpath2'); // QA_CATEGORY_DEPTH=4
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD KEY catidpath1 (catidpath1, type, created), ADD KEY catidpath2 (catidpath2, type, created), ADD KEY catidpath3 (catidpath3, type, created), ADD KEY categoryid (categoryid, type, created), ADD KEY catidpath1_2 (catidpath1, updated, type), ADD KEY catidpath2_2 (catidpath2, updated, type), ADD KEY catidpath3_2 (catidpath3, updated, type), ADD KEY categoryid_2 (categoryid, updated, type)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD KEY catidpath1 (catidpath1, type, created), ADD KEY catidpath2 (catidpath2, type, created), ADD KEY catidpath3 (catidpath3, type, created), ADD KEY categoryid (categoryid, type, created), ADD KEY catidpath1_2 (catidpath1, updated, type), ADD KEY catidpath2_2 (catidpath2, updated, type), ADD KEY catidpath3_2 (catidpath3, updated, type), ADD KEY categoryid_2 (categoryid, updated, type)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD CONSTRAINT ^posts_ibfk_3 FOREIGN KEY (categoryid) REFERENCES ^categories(categoryid) ON DELETE SET NULL');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD CONSTRAINT ^posts_ibfk_3 FOREIGN KEY (categoryid) REFERENCES ^categories(categoryid) ON DELETE SET NULL');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorecalccategories']=true;
 					break;
@@ -1085,17 +1087,17 @@
 			//	Up to here: Version 1.4 betas and release
 
 				case 31:
-					qa_db_upgrade_query('ALTER TABLE ^posts CHANGE COLUMN type type '.$definitions['posts']['type'].', ADD COLUMN updatetype '.$definitions['posts']['updatetype'].' AFTER updated, ADD COLUMN closedbyid '.$definitions['posts']['closedbyid'].' AFTER selchildid, ADD KEY closedbyid (closedbyid), ADD CONSTRAINT ^posts_ibfk_4 FOREIGN KEY (closedbyid) REFERENCES ^posts(postid)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts CHANGE COLUMN type type '.$definitions['posts']['type'].', ADD COLUMN updatetype '.$definitions['posts']['updatetype'].' AFTER updated, ADD COLUMN closedbyid '.$definitions['posts']['closedbyid'].' AFTER selchildid, ADD KEY closedbyid (closedbyid), ADD CONSTRAINT ^posts_ibfk_4 FOREIGN KEY (closedbyid) REFERENCES ^posts(postid)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 32:
-					qa_db_upgrade_query("UPDATE ^posts SET updatetype=IF(INSTR(type, '_HIDDEN')>0, 'H', 'E') WHERE updated IS NOT NULL");
+					qa_db_upgrade_query($progressUpdater, "UPDATE ^posts SET updatetype=IF(INSTR(type, '_HIDDEN')>0, 'H', 'E') WHERE updated IS NOT NULL");
 					break;
 
 				case 33:
-					qa_db_upgrade_query('ALTER TABLE ^contentwords CHANGE COLUMN type type '.$definitions['contentwords']['type']);
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^contentwords CHANGE COLUMN type type '.$definitions['contentwords']['type']);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 34:
@@ -1104,12 +1106,12 @@
 							// might be using messages table shared with another installation, so check if we need to upgrade
 
 						if (isset($keytables[qa_db_add_table_prefix('messages')]))
-							qa_db_upgrade_progress('Skipping messages table since it was already added by another Q2A site sharing these users.');
+							$progressUpdater->update('Skipping messages table since it was already added by another Q2A site sharing these users.');
 
 						else {
-							qa_db_upgrade_query('UNLOCK TABLES');
+							qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-							qa_db_upgrade_query(qa_db_create_table_sql('messages', array(
+							qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('messages', array(
 								'messageid' => $definitions['messages']['messageid'],
 								'fromuserid' => $definitions['messages']['fromuserid'],
 								'touserid' => $definitions['messages']['touserid'],
@@ -1121,15 +1123,15 @@
 							)));
 
 							$locktablesquery.=', ^messages WRITE';
-							qa_db_upgrade_query($locktablesquery);
+							qa_db_upgrade_query($progressUpdater, $locktablesquery);
 						}
 					}
 					break;
 
 				case 35:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('userfavorites', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('userfavorites', array(
 						'userid' => $definitions['userfavorites']['userid'],
 						'entitytype' => $definitions['userfavorites']['entitytype'],
 						'entityid' => $definitions['userfavorites']['entityid'],
@@ -1141,13 +1143,13 @@
 					)));
 
 					$locktablesquery.=', ^userfavorites WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 36:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('userevents', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('userevents', array(
 						'userid' => $definitions['userevents']['userid'],
 						'entitytype' => $definitions['userevents']['entitytype'],
 						'entityid' => $definitions['userevents']['entityid'],
@@ -1162,15 +1164,15 @@
 					)));
 
 					$locktablesquery.=', ^userevents WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorefillevents']=true;
 					break;
 
 				case 37:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('sharedevents', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('sharedevents', array(
 						'entitytype' => $definitions['sharedevents']['entitytype'],
 						'entityid' => $definitions['sharedevents']['entityid'],
 						'questionid' => $definitions['sharedevents']['questionid'],
@@ -1183,35 +1185,35 @@
 					)));
 
 					$locktablesquery.=', ^sharedevents WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorefillevents']=true;
 					break;
 
 				case 38:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD KEY lastuserid (lastuserid, updated, type)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD KEY lastuserid (lastuserid, updated, type)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 39:
-					qa_db_upgrade_query('ALTER TABLE ^posts DROP KEY type_3, ADD KEY flagcount (flagcount, created, type)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts DROP KEY type_3, ADD KEY flagcount (flagcount, created, type)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 40:
-					qa_db_upgrade_query('ALTER TABLE ^userpoints ADD COLUMN bonus '.$definitions['userpoints']['bonus'].' AFTER downvoteds');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^userpoints ADD COLUMN bonus '.$definitions['userpoints']['bonus'].' AFTER downvoteds');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 41:
-					qa_db_upgrade_query('ALTER TABLE ^pages ADD COLUMN permit '.$definitions['pages']['permit'].' AFTER flags');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^pages ADD COLUMN permit '.$definitions['pages']['permit'].' AFTER flags');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 42:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('usermetas', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('usermetas', array(
 						'userid' => $definitions['usermetas']['userid'],
 						'title' => $definitions['usermetas']['title'],
 						'content' => $definitions['usermetas']['content'],
@@ -1220,13 +1222,13 @@
 					)));
 
 					$locktablesquery.=', ^usermetas WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 43:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('postmetas', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('postmetas', array(
 						'postid' => $definitions['postmetas']['postid'],
 						'title' => $definitions['postmetas']['title'],
 						'content' => $definitions['postmetas']['content'],
@@ -1235,13 +1237,13 @@
 					)));
 
 					$locktablesquery.=', ^postmetas WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 44:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('categorymetas', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('categorymetas', array(
 						'categoryid' => $definitions['categorymetas']['categoryid'],
 						'title' => $definitions['categorymetas']['title'],
 						'content' => $definitions['categorymetas']['content'],
@@ -1250,13 +1252,13 @@
 					)));
 
 					$locktablesquery.=', ^categorymetas WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 45:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('tagmetas', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('tagmetas', array(
 						'tag' => $definitions['tagmetas']['tag'],
 						'title' => $definitions['tagmetas']['title'],
 						'content' => $definitions['tagmetas']['content'],
@@ -1264,20 +1266,20 @@
 					)));
 
 					$locktablesquery.=', ^tagmetas WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 46:
-					qa_db_upgrade_query('ALTER TABLE ^posts DROP KEY selchildid, ADD KEY selchildid (selchildid, type, created), ADD COLUMN amaxvote SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER acount, ADD KEY type_7 (type, amaxvote, created)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts DROP KEY selchildid, ADD KEY selchildid (selchildid, type, created), ADD COLUMN amaxvote SMALLINT UNSIGNED NOT NULL DEFAULT 0 AFTER acount, ADD KEY type_7 (type, amaxvote, created)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorecountposts']=true;
 					break;
 
 				 case 47:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query(qa_db_create_table_sql('usernotices', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('usernotices', array(
 						'noticeid' => $definitions['usernotices']['noticeid'],
 						'userid' => $definitions['usernotices']['userid'],
 						'content' => $definitions['usernotices']['content'],
@@ -1290,7 +1292,7 @@
 					)));
 
 					$locktablesquery.=', ^usernotices WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 			//	Up to here: Version 1.5.x
@@ -1301,25 +1303,25 @@
 							// might be using messages table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['type']))
-							qa_db_upgrade_progress('Skipping upgrading messages table since it was already upgraded by another Q2A site sharing it.');
+							$progressUpdater->update('Skipping upgrading messages table since it was already upgraded by another Q2A site sharing it.');
 
 						else {
-							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN type '.$definitions['messages']['type'].' AFTER messageid, DROP KEY fromuserid, ADD key type (type, fromuserid, touserid, created), ADD KEY touserid (touserid, type, created)');
-							qa_db_upgrade_query($locktablesquery);
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^messages ADD COLUMN type '.$definitions['messages']['type'].' AFTER messageid, DROP KEY fromuserid, ADD key type (type, fromuserid, touserid, created), ADD KEY touserid (touserid, type, created)');
+							qa_db_upgrade_query($progressUpdater, $locktablesquery);
 						}
 					}
 					break;
 
 				case 49:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('ALTER TABLE ^users CHANGE COLUMN flags flags '.$definitions['users']['flags']);
-						qa_db_upgrade_query($locktablesquery);
+						qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users CHANGE COLUMN flags flags '.$definitions['users']['flags']);
+						qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					}
 					break;
 
 				case 50:
-					qa_db_upgrade_query('ALTER TABLE ^posts ADD COLUMN name '.$definitions['posts']['name'].' AFTER tags');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^posts ADD COLUMN name '.$definitions['posts']['name'].' AFTER tags');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 51:
@@ -1328,11 +1330,11 @@
 							// might be using userfields table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['permit']))
-							qa_db_upgrade_progress('Skipping upgrading userfields table since it was already upgraded by another Q2A site sharing it.');
+							$progressUpdater->update('Skipping upgrading userfields table since it was already upgraded by another Q2A site sharing it.');
 
 						else {
-							qa_db_upgrade_query('ALTER TABLE ^userfields ADD COLUMN permit '.$definitions['userfields']['permit'].' AFTER flags');
-							qa_db_upgrade_query($locktablesquery);
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^userfields ADD COLUMN permit '.$definitions['userfields']['permit'].' AFTER flags');
+							qa_db_upgrade_query($progressUpdater, $locktablesquery);
 						}
 					}
 					break;
@@ -1342,26 +1344,26 @@
 						$keyindexes=qa_array_to_keys(qa_db_read_all_assoc(qa_db_query_sub('SHOW INDEX FROM ^users'), null, 'Key_name'));
 
 						if (isset($keyindexes['created']))
-							qa_db_upgrade_progress('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
+							$progressUpdater->update('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
 
 						else {
-							qa_db_upgrade_query('ALTER TABLE ^users ADD KEY created (created, level, flags)');
-							qa_db_upgrade_query($locktablesquery);
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users ADD KEY created (created, level, flags)');
+							qa_db_upgrade_query($progressUpdater, $locktablesquery);
 						}
 					}
 					break;
 
 				case 53:
-					qa_db_upgrade_query('ALTER TABLE ^blobs CHANGE COLUMN content content '.$definitions['blobs']['content']);
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^blobs CHANGE COLUMN content content '.$definitions['blobs']['content']);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 				case 54:
-					qa_db_upgrade_query('UNLOCK TABLES');
+					qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
-					qa_db_upgrade_query('SET FOREIGN_KEY_CHECKS=0'); // in case InnoDB not available
+					qa_db_upgrade_query($progressUpdater, 'SET FOREIGN_KEY_CHECKS=0'); // in case InnoDB not available
 
-					qa_db_upgrade_query(qa_db_create_table_sql('userlevels', array(
+					qa_db_upgrade_query($progressUpdater, qa_db_create_table_sql('userlevels', array(
 						'userid' => $definitions['userlevels']['userid'],
 						'entitytype' => $definitions['userlevels']['entitytype'],
 						'entityid' => $definitions['userlevels']['entityid'],
@@ -1372,7 +1374,7 @@
 					)));
 
 					$locktablesquery.=', ^userlevels WRITE';
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 			//	Up to here: Version 1.6 beta 1
@@ -1383,11 +1385,11 @@
 							// might be using messages table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['wallposts']))
-							qa_db_upgrade_progress('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
+							$progressUpdater->update('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
 
 						else {
-							qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN wallposts '.$definitions['users']['wallposts'].' AFTER flags');
-							qa_db_upgrade_query($locktablesquery);
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^users ADD COLUMN wallposts '.$definitions['users']['wallposts'].' AFTER flags');
+							qa_db_upgrade_query($progressUpdater, $locktablesquery);
 						}
 					}
 					break;
@@ -1395,8 +1397,8 @@
 			//	Up to here: Version 1.6 beta 2
 
 				case 56:
-					qa_db_upgrade_query('ALTER TABLE ^pages DROP INDEX tags, ADD KEY tags (tags)');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^pages DROP INDEX tags, ADD KEY tags (tags)');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 					break;
 
 			//	Up to here: Version 1.6 (release)
@@ -1407,22 +1409,22 @@
 						$keycolumns = qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^messages')));
 
 						if (isset($keycolumns['fromhidden']))
-							qa_db_upgrade_progress('Skipping upgrading messages table since it was already upgraded by another Q2A site sharing it.');
+							$progressUpdater->update('Skipping upgrading messages table since it was already upgraded by another Q2A site sharing it.');
 						else {
-							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN fromhidden '.$definitions['messages']['fromhidden'].' AFTER touserid');
-							qa_db_upgrade_query('ALTER TABLE ^messages ADD COLUMN tohidden '.$definitions['messages']['tohidden'].' AFTER fromhidden');
-							qa_db_upgrade_query('ALTER TABLE ^messages ADD KEY fromhidden (fromhidden), ADD KEY tohidden (tohidden)');
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^messages ADD COLUMN fromhidden '.$definitions['messages']['fromhidden'].' AFTER touserid');
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^messages ADD COLUMN tohidden '.$definitions['messages']['tohidden'].' AFTER fromhidden');
+							qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^messages ADD KEY fromhidden (fromhidden), ADD KEY tohidden (tohidden)');
 
-							qa_db_upgrade_query($locktablesquery);
+							qa_db_upgrade_query($progressUpdater, $locktablesquery);
 						}
 					}
 					break;
 
 				case 58:
 					// Note: need to use full table names here as aliases trigger error "Table 'x' was not locked with LOCK TABLES"
-					qa_db_upgrade_query('DELETE FROM ^userfavorites WHERE entitytype="U" AND userid=entityid');
-					qa_db_upgrade_query('DELETE ^uservotes FROM ^uservotes JOIN ^posts ON ^uservotes.postid=^posts.postid AND ^uservotes.userid=^posts.userid');
-					qa_db_upgrade_query($locktablesquery);
+					qa_db_upgrade_query($progressUpdater, 'DELETE FROM ^userfavorites WHERE entitytype="U" AND userid=entityid');
+					qa_db_upgrade_query($progressUpdater, 'DELETE ^uservotes FROM ^uservotes JOIN ^posts ON ^uservotes.postid=^posts.postid AND ^uservotes.userid=^posts.userid');
+					qa_db_upgrade_query($progressUpdater, $locktablesquery);
 
 					$keyrecalc['dorecountposts'] = true;
 					$keyrecalc['dorecalcpoints'] = true;
@@ -1444,7 +1446,7 @@
 				qa_fatal_error('Could not increment database version');
 		}
 
-		qa_db_upgrade_query('UNLOCK TABLES');
+		qa_db_upgrade_query($progressUpdater, 'UNLOCK TABLES');
 
 	//	Perform any necessary recalculations, as determined by upgrade steps
 
@@ -1457,12 +1459,12 @@
 				while ( qa_recalc_perform_step($state) && (time()<$stoptime) )
 					;
 
-				qa_db_upgrade_progress(qa_recalc_get_message($state));
+				$progressUpdater->update(qa_recalc_get_message($state));
 			}
 	}
 
 
-	function qa_db_upgrade_table_columns($definitions, $table, $columns)
+	function qa_db_upgrade_table_columns($progressUpdater, $definitions, $table, $columns)
 /*
 	Reset the definitions of $columns in $table according to the $definitions array
 */
@@ -1472,27 +1474,17 @@
 		foreach ($columns as $column)
 			$sqlchanges[]='CHANGE COLUMN '.$column.' '.$column.' '.$definitions[$table][$column];
 
-		qa_db_upgrade_query('ALTER TABLE ^'.$table.' '.implode(', ', $sqlchanges));
+		qa_db_upgrade_query($progressUpdater, 'ALTER TABLE ^'.$table.' '.implode(', ', $sqlchanges));
 	}
 
 
-	function qa_db_upgrade_query($query)
+	function qa_db_upgrade_query($progressUpdater, $query)
 /*
 	Perform upgrade $query and output progress to the browser
 */
 	{
-		qa_db_upgrade_progress('Running query: '.qa_db_apply_sub($query, array()).' ...');
+		$progressUpdater->update('Running query: '.qa_db_apply_sub($query, array()).' ...');
 		qa_db_query_sub($query);
-	}
-
-
-	function qa_db_upgrade_progress($text)
-/*
-	Output $text to the browser (after converting to HTML) and do all we can to get it displayed
-*/
-	{
-		echo qa_html($text).str_repeat('    ', 1024)."<br><br>\n";
-		flush();
 	}
 
 

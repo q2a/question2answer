@@ -25,6 +25,8 @@
 		exit;
 	}
 
+	global $pluginManager;
+
 
 //	Check we're not using Q2A's single-sign on integration and that we're not logged in
 
@@ -155,15 +157,14 @@
 		),
 	);
 
-	$loginmodules=qa_load_modules_with('login', 'login_html');
-
-	foreach ($loginmodules as $module) {
+	$loginModules = $pluginManager->getModulesByType('login');
+	foreach ($loginModules as $loginModule) {
 		ob_start();
-		$module->login_html(qa_opt('site_url').qa_get('to'), 'login');
-		$html=ob_get_clean();
+		$loginModule->loginHtml(qa_opt('site_url') . qa_get('to'), 'login');
+		$html = ob_get_clean();
 
-		if (strlen($html))
-			@$qa_content['custom'].='<br>'.$html.'<br>';
+		if (!empty($html))
+			@$qa_content['custom'] .= '<br>' . $html . '<br>';
 	}
 
 	$qa_content['focusid']=(isset($inemailhandle) && !isset($errors['emailhandle'])) ? 'password' : 'emailhandle';

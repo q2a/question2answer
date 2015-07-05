@@ -359,16 +359,15 @@
 			$content=isset($in['content']) ? $in['content'] : $question['content'];
 			$format=isset($in['format']) ? $in['format'] : $question['format'];
 
-			$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_qs');
-			$editor=qa_load_editor($content, $format, $editorname);
+			$editorModuleId = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_qs');
+			$editorModule = qa_load_editor($content, $format, $editorModuleId);
 
 			$form['fields']['content']=array_merge($form['fields']['content'],
-				qa_editor_load_field($editor, $qa_content, $content, $format, 'q_content', 12, true));
+				qa_editor_load_field($editorModule, $qa_content, $content, $format, 'q_content', 12, true));
 
-			if (method_exists($editor, 'update_script'))
-				$form['buttons']['save']['tags']='onclick="qa_show_waiting_after(this, false); '.$editor->update_script('q_content').'"';
+			$form['buttons']['save']['tags'] = sprintf('onclick="qa_show_waiting_after(this, false); %s"', $editorModule->getUpdateScript('q_content'));
 
-			$form['hidden']['q_editor']=qa_html($editorname);
+			$form['hidden']['q_editor'] = qa_html($editorModuleId);
 
 		} else
 			unset($form['fields']['content']);
@@ -458,10 +457,12 @@
 		else {
 			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason($userlevel);
 
-			$filtermodules=qa_load_modules_with('filter', 'filter_question');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_question($in, $errors, $question);
+			global $pluginManager;
+
+			$filterModules = $pluginManager->getModulesByType('filter');
+			foreach ($filterModules as $filterModule) {
+				$oldin = $in;
+				$filterModule->filterQuestion($in, $errors, $question);
 
 				if ($question['editable'])
 					qa_update_post_text($in, $oldin);
@@ -641,8 +642,8 @@
 		$content=isset($in['content']) ? $in['content'] : $answer['content'];
 		$format=isset($in['format']) ? $in['format'] : $answer['format'];
 
-		$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_as');
-		$editor=qa_load_editor($content, $format, $editorname);
+		$editorModuleId = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_as');
+		$editorModule = qa_load_editor($content, $format, $editorModuleId);
 
 		$hascomments=false;
 		foreach ($commentsfollows as $commentfollow)
@@ -660,7 +661,7 @@
 
 			'fields' => array(
 				'content' => array_merge(
-					qa_editor_load_field($editor, $qa_content, $content, $format, $prefix.'content', 12),
+					qa_editor_load_field($editorModule, $qa_content, $content, $format, $prefix.'content', 12),
 					array(
 						'error' => qa_html(@$errors['content']),
 					)
@@ -669,8 +670,7 @@
 
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'onclick="qa_show_waiting_after(this, false); '.
-						(method_exists($editor, 'update_script') ? $editor->update_script($prefix.'content') : '').'"',
+					'tags' => sprintf('onclick="qa_show_waiting_after(this, false); %s"', $editorModule->getUpdateScript($prefix . 'content')),
 					'label' => qa_lang_html('main/save_button'),
 				),
 
@@ -681,7 +681,7 @@
 			),
 
 			'hidden' => array(
-				$prefix.'editor' => qa_html($editorname),
+				$prefix.'editor' => qa_html($editorModuleId),
 				$prefix.'dosave' => '1',
 				$prefix.'code' => qa_get_form_security_code('edit-'.$answerid),
 			),
@@ -791,10 +791,12 @@
 		else {
 			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason(qa_user_level_for_post($answer));
 
-			$filtermodules=qa_load_modules_with('filter', 'filter_answer');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_answer($in, $errors, $question, $answer);
+			global $pluginManager;
+
+			$filterModules = $pluginManager->getModulesByType('filter');
+			foreach ($filterModules as $filterModule) {
+				$oldin = $in;
+				$filterModule->filterAnswer($in, $errors, $question, $answer);
 				qa_update_post_text($in, $oldin);
 			}
 
@@ -899,8 +901,8 @@
 		$content=isset($in['content']) ? $in['content'] : $comment['content'];
 		$format=isset($in['format']) ? $in['format'] : $comment['format'];
 
-		$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_cs');
-		$editor=qa_load_editor($content, $format, $editorname);
+		$editorModuleId = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_cs');
+		$editorModule = qa_load_editor($content, $format, $editorModuleId);
 
 		$form=array(
 			'tags' => 'method="post" action="'.qa_self_html().'"',
@@ -913,7 +915,7 @@
 
 			'fields' => array(
 				'content' => array_merge(
-					qa_editor_load_field($editor, $qa_content, $content, $format, $prefix.'content', 4, true),
+					qa_editor_load_field($editorModule, $qa_content, $content, $format, $prefix . 'content', 4, true),
 					array(
 						'error' => qa_html(@$errors['content']),
 					)
@@ -922,8 +924,7 @@
 
 			'buttons' => array(
 				'save' => array(
-					'tags' => 'onclick="qa_show_waiting_after(this, false); '.
-						(method_exists($editor, 'update_script') ? $editor->update_script($prefix.'content') : '').'"',
+					'tags' => sprintf('onclick="qa_show_waiting_after(this, false); %s"', $editorModule->getUpdateScript($prefix . 'content')),
 					'label' => qa_lang_html('main/save_button'),
 				),
 
@@ -934,7 +935,7 @@
 			),
 
 			'hidden' => array(
-				$prefix.'editor' => qa_html($editorname),
+				$prefix.'editor' => qa_html($editorModuleId),
 				$prefix.'dosave' => '1',
 				$prefix.'code' => qa_get_form_security_code('edit-'.$commentid),
 			),
@@ -992,10 +993,12 @@
 		else {
 			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason(qa_user_level_for_post($comment));
 
-			$filtermodules=qa_load_modules_with('filter', 'filter_comment');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_comment($in, $errors, $question, $parent, $comment);
+			global $pluginManager;
+
+			$filterModules = $pluginManager->getModulesByType('filter');
+			foreach ($filterModules as $filterModule) {
+				$oldin = $in;
+				$filterModule->filterComment($in, $errors, $question, $parent, $comment);
 				qa_update_post_text($in, $oldin);
 			}
 

@@ -385,6 +385,8 @@
 	IDs and paths for all answers and comments. See qa-app-posts.php for a higher-level function which is easier to use.
 */
 	{
+		global $pluginManager;
+
 		$oldpath=qa_db_post_get_category_path($oldquestion['postid']);
 
 		qa_db_post_set_category($oldquestion['postid'], $categoryid, $silent ? null : $userid, $silent ? null : qa_remote_ip_address());
@@ -408,11 +410,12 @@
 
 		qa_db_posts_set_category_path($otherpostids, $newpath);
 
-		$searchmodules=qa_load_modules_with('search', 'move_post');
-		foreach ($searchmodules as $searchmodule) {
-			$searchmodule->move_post($oldquestion['postid'], $categoryid);
+		$searchModules = $pluginManager->getModulesByType('search');
+
+		foreach ($searchModules as $searchModule) {
+			$searchModule->movePost($oldquestion['postid'], $categoryid);
 			foreach ($otherpostids as $otherpostid)
-				$searchmodule->move_post($otherpostid, $categoryid);
+				$searchModule->move_post($otherpostid, $categoryid);
 		}
 
 		qa_report_event('q_move', $userid, $handle, $cookieid, array(
@@ -497,15 +500,17 @@
 */
 	{
 		global $qa_post_indexing_suspended;
+		global $pluginManager;
 
 		if ($qa_post_indexing_suspended>0)
 			return;
 
 	//	Send through to any search modules for unindexing
 
-		$searchmodules=qa_load_modules_with('search', 'unindex_post');
-		foreach ($searchmodules as $searchmodule)
-			$searchmodule->unindex_post($postid);
+		$searchModules = $pluginManager->getModulesByType('search');
+
+		foreach ($searchModules as $searchModule)
+			$searchModule->unindexPost($postid);
 	}
 
 

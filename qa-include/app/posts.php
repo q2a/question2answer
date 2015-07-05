@@ -340,12 +340,12 @@
 	Return the textual rendition of $content in $format (used for indexing).
 */
 	{
-		$viewer=qa_load_viewer($content, $format);
+		$viewer = qa_load_viewer($content, $format);
 
 		if (!isset($viewer))
 			qa_fatal_error('Content could not be parsed in format: '.$format);
 
-		return $viewer->get_text($content, $format, array());
+		return $viewer->getText($content, $format, array());
 	}
 
 

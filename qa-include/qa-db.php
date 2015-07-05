@@ -76,8 +76,6 @@
 		if (!$db->set_charset('utf8'))
 			qa_db_fail_error('set_charset', $db->errno, $db->error);
 
-		qa_report_process_stage('db_connected');
-
 		$qa_db_connection=$db;
 	}
 
@@ -133,7 +131,7 @@
 		global $qa_db_connection;
 
 		if ($qa_db_connection instanceof mysqli) {
-			qa_report_process_stage('db_disconnect');
+			qa_report_process_stage('dbDisconnect');
 
 			if (!QA_PERSISTENT_CONN_DB) {
 				if (!$qa_db_connection->close())

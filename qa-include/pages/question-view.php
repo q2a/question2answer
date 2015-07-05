@@ -377,12 +377,12 @@
 				);
 
 			} elseif ($closepost['type']=='NOTE') {
-				$viewer=qa_load_viewer($closepost['content'], $closepost['format']);
+				$viewer = qa_load_viewer($closepost['content'], $closepost['format']);
 
 				$q_view['closed']=array(
 					'state' => qa_lang_html('main/closed'),
 					'label' => qa_lang_html('question/closed_with_note'),
-					'content' => $viewer->get_html($closepost['content'], $closepost['format'], array(
+					'content' => $viewer->getHtml($closepost['content'], $closepost['format'], array(
 						'blockwordspreg' => qa_get_block_words_preg(),
 					)),
 				);
@@ -776,13 +776,8 @@
 				break;
 
 			case false:
-				$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_as');
-				$editor=qa_load_editor(@$in['content'], @$in['format'], $editorname);
-
-				if (method_exists($editor, 'update_script'))
-					$updatescript=$editor->update_script('a_content');
-				else
-					$updatescript='';
+				$editorModuleId = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_as');
+				$editorModule = qa_load_editor(@$in['content'], @$in['format'], $editorModuleId);
 
 				$custom=qa_opt('show_custom_answer') ? trim(qa_opt('custom_answer')) : '';
 
@@ -798,7 +793,7 @@
 						),
 
 						'content' => array_merge(
-							qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'a_content', 12, $formrequested, $loadnow),
+							qa_editor_load_field($editorModule, $qa_content, @$in['content'], @$in['format'], 'a_content', 12, $formrequested, $loadnow),
 							array(
 								'error' => qa_html(@$errors['content']),
 							)
@@ -807,13 +802,13 @@
 
 					'buttons' => array(
 						'answer' => array(
-							'tags' => 'onclick="'.$updatescript.' return qa_submit_answer('.qa_js($question['postid']).', this);"',
+							'tags' => sprintf('onclick="%s return qa_submit_answer(%s, this);"', $editorModule->getUpdateScript('a_content'), qa_js($question['postid'])),
 							'label' => qa_lang_html('question/add_answer_button'),
 						),
 					),
 
 					'hidden' => array(
-						'a_editor' => qa_html($editorname),
+						'a_editor' => qa_html($editorModuleId),
 						'a_doadd' => '1',
 						'code' => qa_get_form_security_code('answer-'.$question['postid']),
 					),
@@ -844,15 +839,17 @@
 				}
 
 				if (!$loadnow) {
-					if (method_exists($editor, 'load_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script('a_content').' };';
+					$loadScript = $editorModule->getLoadScript('a_content');
+					if (!empty($loadScript))
+						$onloads[] = sprintf('document.getElementById(%s).qa_load=function() { %s };', qa_js($formid), $loadScript);
 
 					$form['buttons']['cancel']['tags'].=' onclick="return qa_toggle_element();"';
 				}
 
 				if (!$formrequested) {
-					if (method_exists($editor, 'focus_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script('a_content').' };';
+					$focusScript = $editorModule->getFocusScript('a_content');
+					if (!empty($focusScript))
+						$onloads[] = sprintf('document.getElementById(%s).qa_focus=function() { %s };', qa_js($formid), $focusScript);
 				}
 
 				if (count($onloads))
@@ -913,13 +910,8 @@
 			case false:
 				$prefix='c'.$parent['postid'].'_';
 
-				$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_cs');
-				$editor=qa_load_editor(@$in['content'], @$in['format'], $editorname);
-
-				if (method_exists($editor, 'update_script'))
-					$updatescript=$editor->update_script($prefix.'content');
-				else
-					$updatescript='';
+				$editorModuleId = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_cs');
+				$editorModule = qa_load_editor(@$in['content'], @$in['format'], $editorModuleId);
 
 				$custom=qa_opt('show_custom_comment') ? trim(qa_opt('custom_comment')) : '';
 
@@ -935,7 +927,7 @@
 						),
 
 						'content' => array_merge(
-							qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], $prefix.'content', 4, $loadfocusnow, $loadfocusnow),
+							qa_editor_load_field($editorModule, $qa_content, @$in['content'], @$in['format'], $prefix.'content', 4, $loadfocusnow, $loadfocusnow),
 							array(
 								'error' => qa_html(@$errors['content']),
 							)
@@ -944,7 +936,7 @@
 
 					'buttons' => array(
 						'comment' => array(
-							'tags' => 'onclick="'.$updatescript.' return qa_submit_comment('.qa_js($question['postid']).', '.qa_js($parent['postid']).', this);"',
+							'tags' => sprintf('onclick="%s return qa_submit_comment(%s, %s, this);"', $editorModule->getUpdateScript($prefix.'content'), qa_js($question['postid']), qa_js($parent['postid'])),
 							'label' => qa_lang_html('question/add_comment_button'),
 						),
 
@@ -955,7 +947,7 @@
 					),
 
 					'hidden' => array(
-						$prefix.'editor' => qa_html($editorname),
+						$prefix.'editor' => qa_html($editorModuleId),
 						$prefix.'doadd' => '1',
 						$prefix.'code' => qa_get_form_security_code('comment-'.$parent['postid']),
 					),
@@ -980,10 +972,14 @@
 				}
 
 				if (!$loadfocusnow) {
-					if (method_exists($editor, 'load_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_load=function() { '.$editor->load_script($prefix.'content').' };';
-					if (method_exists($editor, 'focus_script'))
-						$onloads[]='document.getElementById('.qa_js($formid).').qa_focus=function() { '.$editor->focus_script($prefix.'content').' };';
+					$jsTemplate = 'document.getElementById(%s).qa_%s=function() { %s };';
+					$loadScript = $editorModule->getLoadScript($prefix . 'content');
+					if (!empty($loadScript))
+						$onloads[] = sprintf($jsTemplate, qa_js($formid), 'load', $loadScript);
+
+					$focusScript = $editorModule->getFocusScript($prefix . 'content');
+					if (!empty($focusScript))
+						$onloads[] = sprintf($jsTemplate, qa_js($formid), 'focus', $focusScript);
 
 					$form['buttons']['cancel']['tags'].=' onclick="return qa_toggle_element()"';
 				}

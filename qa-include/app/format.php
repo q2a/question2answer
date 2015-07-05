@@ -368,9 +368,9 @@
 	//	Post content
 
 		if (@$options['contentview'] && !empty($post['content'])) {
-			$viewer=qa_load_viewer($post['content'], $post['format']);
+			$viewer = qa_load_viewer($post['content'], $post['format']);
 
-			$fields['content']=$viewer->get_html($post['content'], $post['format'], array(
+			$fields['content'] = $viewer->getHtml($post['content'], $post['format'], array(
 				'blockwordspreg' => @$options['blockwordspreg'],
 				'showurllinks' => @$options['showurllinks'],
 				'linksnewwindow' => @$options['linksnewwindow'],
@@ -639,7 +639,7 @@
 
 		$viewer = qa_load_viewer($message['content'], $message['format']);
 
-		$fields['content'] = $viewer->get_html($message['content'], $message['format'], array(
+		$fields['content'] = $viewer->getHtml($message['content'], $message['format'], array(
 			'blockwordspreg' => @$options['blockwordspreg'],
 			'showurllinks' => @$options['showurllinks'],
 			'linksnewwindow' => @$options['linksnewwindow'],
@@ -845,9 +845,9 @@
 			$fields['what_url']=qa_q_path_html($question['postid'], $question['title'], false, $question['obasetype'], $question['opostid']);
 
 		if (@$options['contentview'] && !empty($question['ocontent'])) {
-			$viewer=qa_load_viewer($question['ocontent'], $question['oformat']);
+			$viewer = qa_load_viewer($question['ocontent'], $question['oformat']);
 
-			$fields['content']=$viewer->get_html($question['ocontent'], $question['oformat'], array(
+			$fields['content'] = $viewer->getHtml($question['ocontent'], $question['oformat'], array(
 				'blockwordspreg' => @$options['blockwordspreg'],
 				'showurllinks' => @$options['showurllinks'],
 				'linksnewwindow' => @$options['linksnewwindow'],
@@ -1828,38 +1828,48 @@
 	}
 
 
-	function qa_load_editor($content, $format, &$editorname)
+	function qa_load_editor($content, $format, $suggestedEditorModuleId = null)
 /*
 	Return an instantiation of the appropriate editor module class, given $content in $format
 	Pass the preferred module name in $editorname, on return it will contain the name of the module used.
 */
 	{
-		$maxeditor=qa_load_module('editor', $editorname); // take preferred one first
 
-		if (isset($maxeditor) && method_exists($maxeditor, 'calc_quality')) {
-			$maxquality=$maxeditor->calc_quality($content, $format);
-			if ($maxquality>=0.5)
-				return $maxeditor;
+		global $pluginManager;
 
-		} else
-			$maxquality=0;
+		$bestQuality = 0;
+		$bestEditorModule = null;
 
-		$editormodules=qa_load_modules_with('editor', 'calc_quality');
-		foreach ($editormodules as $tryname => $tryeditor) {
-			$tryquality=$tryeditor->calc_quality($content, $format);
+		try {
+			$bestEditorModule = $pluginManager->getModuleById($suggestedEditorModuleId);
+			$bestQuality = $bestEditorModule->calculateQuality($content, $format);
+			if ($bestQuality >= 0.5)
+				return $bestEditorModule;
+		} catch (ModuleNotFoundException $e) {
+		} catch (PluginNotFoundException $e) {
+		}
 
-			if ($tryquality>$maxquality) {
-				$maxeditor=$tryeditor;
-				$maxquality=$tryquality;
-				$editorname=$tryname;
+		$editorModules = $pluginManager->getModulesByType('editor');
+
+		if (empty($editorModules))
+			return null;
+
+		foreach ($editorModules as $editorModule) {
+			if ($editorModule === $bestEditorModule)
+				break;
+
+			$quality = $editorModule->calculateQuality($content, $format);
+			if ($quality > $bestQuality || !isset($bestEditorModule)) {
+				$bestEditorModule = $editorModule;
+				$bestQuality = $quality;
 			}
 		}
 
-		return $maxeditor;
+		return $bestEditorModule;
 	}
 
 
-	function qa_editor_load_field($editor, &$qa_content, $content, $format, $fieldname, $rows, $focusnow=false, $loadnow=true)
+	function qa_editor_load_field($editorModule, &$qa_content, $content, $format, $fieldname, $rows, $focusnow=false, $loadnow=true)
 /*
 	Return a form field from the $editor module while making necessary modifications to $qa_content. The parameters
 	$content, $format, $fieldname, $rows and $focusnow are passed through to the module's get_field() method. ($focusnow
@@ -1867,21 +1877,21 @@
 	$focusnow and $loadnow, also add the editor's load and/or focus scripts to $qa_content's onload handlers.
 */
 	{
-		if (!isset($editor))
-			qa_fatal_error('No editor found for format: '.$format);
+		if (!isset($editorModule))
+			qa_fatal_error('No editor found for format: ' . $format);
 
-		$field=$editor->get_field($qa_content, $content, $format, $fieldname, $rows, $focusnow);
+		$field = $editorModule->getField($qa_content, $content, $format, $fieldname, $rows, $focusnow);
 
-		$onloads=array();
+		$onloads = array();
 
-		if ($loadnow && method_exists($editor, 'load_script'))
-			$onloads[]=$editor->load_script($fieldname);
+		if ($loadnow)
+			$onloads[] = $editorModule->getLoadScript($fieldname);
 
-		if ($focusnow && method_exists($editor, 'focus_script'))
-			$onloads[]=$editor->focus_script($fieldname);
+		if ($focusnow)
+			$onloads[] = $editorModule->getFocusScript($fieldname);
 
 		if (count($onloads))
-			$qa_content['script_onloads'][]=$onloads;
+			$qa_content['script_onloads'][] = $onloads;
 
 		return $field;
 	}
@@ -1892,21 +1902,22 @@
 	Return an instantiation of the appropriate viewer module class, given $content in $format
 */
 	{
-		$maxviewer=null;
-		$maxquality=0;
+		global $pluginManager;
 
-		$viewermodules=qa_load_modules_with('viewer', 'calc_quality');
+		$bestViewerModule = null;
+		$bestQuality = 0;
 
-		foreach ($viewermodules as $tryviewer) {
-			$tryquality=$tryviewer->calc_quality($content, $format);
+		$viewerModules = $pluginManager->getModulesByType('viewer');
 
-			if ($tryquality>$maxquality) {
-				$maxviewer=$tryviewer;
-				$maxquality=$tryquality;
+		foreach ($viewerModules as $viewerModule) {
+			$quality = $viewerModule->calculateQuality($content, $format);
+			if ($quality > $bestQuality || !isset($bestViewerModule)) {
+				$bestViewerModule = $viewerModule;
+				$bestQuality = $quality;
 			}
 		}
 
-		return $maxviewer;
+		return $bestViewerModule;
 	}
 
 
@@ -1915,8 +1926,8 @@
 	Return the plain text rendering of $content in $format, passing $options to the appropriate module
 */
 	{
-		$viewer=qa_load_viewer($content, $format);
-		return $viewer->get_text($content, $format, $options);
+		$viewer = qa_load_viewer($content, $format);
+		return $viewer->getText($content, $format, $options);
 	}
 
 
@@ -1925,24 +1936,30 @@
 	Return the HTML rendering of $content in $format, passing $options to the appropriate module
 */
 	{
-		$viewer=qa_load_viewer($content, $format);
-		return $viewer->get_html($content, $format, $options);
+		$viewer = qa_load_viewer($content, $format);
+		return $viewer->getHtml($content, $format, $options);
 	}
 
 
-	function qa_get_post_content($editorfield, $contentfield, &$ineditor, &$incontent, &$informat, &$intext)
+	function qa_get_post_content($editorField, $contentField, &$inEditor, &$inContent, &$inFormat, &$inText)
 /*
 	Retrieve the POST from an editor module's HTML field named $contentfield, where the editor's name was in HTML field $editorfield
 	Assigns the module's output to $incontent and $informat, editor's name in $ineditor, text rendering of content in $intext
 */
 	{
-		$ineditor=qa_post_text($editorfield);
+		global $pluginManager;
 
-		$editor=qa_load_module('editor', $ineditor);
-		$readdata=$editor->read_post($contentfield);
-		$incontent=$readdata['content'];
-		$informat=$readdata['format'];
-		$intext=qa_viewer_text($incontent, $informat);
+		$inEditor = qa_post_text($editorField);
+
+		try {
+			$editorModule = $pluginManager->getModuleById($inEditor);
+			$readData = $editorModule->readPost($contentField);
+			$inContent = $readData['content'];
+			$inFormat = $readData['format'];
+			$inText = qa_viewer_text($inContent, $inFormat);
+		} catch (ModuleNotFoundException $e) {
+		} catch (PluginNotFoundException $e) {
+		}
 	}
 
 

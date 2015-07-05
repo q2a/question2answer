@@ -652,7 +652,7 @@
 	Q2A, you can use this with PHP's MySQL functions such as mysql_query() to run queries.
 
 	$action will be a string (such as 'q_edit') describing the action. These strings will match the
-	first $event parameter passed to the process_event(...) function in event modules. In fact, you might
+	first $event parameter passed to the processEvent(...) function in event modules. In fact, you might
 	be better off just using a plugin with an event module instead, since you'll get more information.
 
 	FYI, you can get the IP address of the user from qa_remote_ip_address().
