@@ -34,12 +34,12 @@
 
 	require 'qa-base.php';
 
-	qa_report_process_stage('init_ajax');
+	initialize_core(qa_post_text('qa_request'), qa_post_text('qa_root'));
+
+	qa_report_process_stage('initAjax');
 
 
 //	Get general Ajax parameters from the POST payload, and clear $_GET
-
-	qa_set_request(qa_post_text('qa_request'), qa_post_text('qa_root'));
 
 	$_GET=array(); // for qa_self_html()
 

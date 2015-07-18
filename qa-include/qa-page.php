@@ -95,11 +95,12 @@
 	If no user is logged in, call through to the login modules to see if they want to log someone in
 */
 	{
-		if ((!QA_FINAL_EXTERNAL_USERS) && !qa_is_logged_in()) {
-			$loginmodules=qa_load_modules_with('login', 'check_login');
+		global $pluginManager;
 
-			foreach ($loginmodules as $loginmodule) {
-				$loginmodule->check_login();
+		if (!QA_FINAL_EXTERNAL_USERS && !qa_is_logged_in()) {
+			$loginModules = $pluginManager->getModulesByType('login');
+			foreach ($loginModules as $loginModule) {
+				$loginModule->checkLogin();
 				if (qa_is_logged_in()) // stop and reload page if it worked
 					qa_redirect(qa_request(), $_GET);
 			}
@@ -477,6 +478,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		global $qa_template, $qa_page_error_html;
+		global $pluginManager;
 
 		if (QA_DEBUG_PERFORMANCE) {
 			global $qa_usage;
@@ -647,25 +649,26 @@
 			'B' => 'bottom',
 		);
 
-		foreach ($widgets as $widget)
-			if (is_numeric(strpos(','.$widget['tags'].',', ','.$qa_template.',')) || is_numeric(strpos(','.$widget['tags'].',', ',all,'))) { // see if it has been selected for display on this template
-				$region=@$regioncodes[substr($widget['place'], 0, 1)];
-				$place=@$placecodes[substr($widget['place'], 1, 2)];
+		foreach ($widgets as $widget) {
+			if (is_numeric(strpos(',' . $widget['tags'] . ',', ',' . $qa_template . ',')) || is_numeric(strpos(',' . $widget['tags'] . ',', ',all,'))) { // see if it has been selected for display on this template
+				$region = @$regioncodes[substr($widget['place'], 0, 1)];
+				$place = @$placecodes[substr($widget['place'], 1, 2)];
 
 				if (isset($region) && isset($place)) { // check region/place codes recognized
-					$module=qa_load_module('widget', $widget['title']);
-
-					if (
-						isset($module) &&
-						method_exists($module, 'allow_template') &&
-						$module->allow_template((substr($qa_template, 0, 7)=='custom-') ? 'custom' : $qa_template) &&
-						method_exists($module, 'allow_region') &&
-						$module->allow_region($region) &&
-						method_exists($module, 'output_widget')
-					)
-						$qa_content['widgets'][$region][$place][]=$module; // if module loaded and happy to be displayed here, tell theme about it
+					$widgetModuleId = $widget['title'];
+					try {
+						$widgetModule = $pluginManager->getModuleById($widgetModuleId);
+						if (
+							$widgetModule->isAllowedInTemplate((substr($qa_template, 0, 7) === 'custom-') ? 'custom' : $qa_template) &&
+							$widgetModule->isAllowedInRegion($region)
+						)
+							$qa_content['widgets'][$region][$place][] = $widgetModule; // if module loaded and happy to be displayed here, tell theme about it
+					} catch (ModuleNotFoundException $e) {
+					} catch (PluginNotFoundException $e) {
+					}
 				}
 			}
+		}
 
 		$logoshow=qa_opt('logo_show');
 		$logourl=qa_opt('logo_url');
@@ -704,17 +707,16 @@
 				);
 
 			if (!QA_FINAL_EXTERNAL_USERS) {
-				$source=qa_get_logged_in_source();
-
-				if (strlen($source)) {
-					$loginmodules=qa_load_modules_with('login', 'match_source');
-
-					foreach ($loginmodules as $module)
-						if ($module->match_source($source) && method_exists($module, 'logout_html')) {
+				$source = qa_get_logged_in_source();
+				if (isset($source) && !empty($source)) {
+					$loginModules = $pluginManager->getModulesByType('login');
+					foreach ($loginModules as $loginModule) {
+						if ($loginModule->matchSource($source)) {
 							ob_start();
-							$module->logout_html(qa_path('logout', array(), qa_opt('site_url')));
-							$qa_content['navigation']['user']['logout']=array('label' => ob_get_clean());
+							$loginModule->logoutHtml(qa_path('logout', array(), qa_opt('site_url')));
+							$qa_content['navigation']['user']['logout'] = array('label' => ob_get_clean());
 						}
+					}
 				}
 			}
 
@@ -726,15 +728,13 @@
 			require_once QA_INCLUDE_DIR.'util/string.php';
 
 			if (!QA_FINAL_EXTERNAL_USERS) {
-				$loginmodules=qa_load_modules_with('login', 'login_html');
-
-				foreach ($loginmodules as $tryname => $module) {
+				$loginModules = $pluginManager->getModulesByType('login');
+				foreach ($loginModules as $loginModule) {
 					ob_start();
-					$module->login_html(isset($topath) ? (qa_opt('site_url').$topath) : qa_path($request, $_GET, qa_opt('site_url')), 'menu');
-					$label=ob_get_clean();
-
-					if (strlen($label))
-						$qa_content['navigation']['user'][implode('-', qa_string_to_words($tryname))]=array('label' => $label);
+					$loginModule->loginHtml(isset($topath) ? (qa_opt('site_url') . $topath) : qa_path($request, $_GET, qa_opt('site_url')), 'menu');
+					$label = ob_get_clean();
+					if (!empty($label))
+						$qa_content['navigation']['user'][implode('-', qa_string_to_words($loginModule->getId()))] = array('label' => $label);
 				}
 			}
 
@@ -801,7 +801,7 @@
 
 	global $qa_usage;
 
-	qa_report_process_stage('init_page');
+	qa_report_process_stage('initPage');
 	qa_db_connect('qa_page_db_fail_handler');
 
 	qa_page_queue_pending();

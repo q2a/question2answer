@@ -23,6 +23,9 @@
 	define('QA_BASE_DIR', dirname(dirname(empty($_SERVER['SCRIPT_FILENAME']) ? __FILE__ : $_SERVER['SCRIPT_FILENAME'])).'/');
 
 	require 'qa-base.php';
+
+	initialize_core();
+
 	require_once QA_INCLUDE_DIR.'app/users.php';
 
 	if (qa_get_logged_in_level() < QA_USER_LEVEL_ADMIN)

@@ -36,7 +36,9 @@
 
 	require 'qa-base.php';
 
-	qa_report_process_stage('init_blob');
+	initialize_core();
+
+	qa_report_process_stage('initBlob');
 
 
 //	Output the blob in question

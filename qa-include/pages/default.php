@@ -95,14 +95,16 @@
 //	Then, if there's a slug that matches no category, check page modules provided by plugins
 
 	if ( (!$explicitqa) && $countslugs && !isset($categoryid) ) {
-		$pagemodules=qa_load_modules_with('page', 'match_request');
-		$request=qa_request();
+		global $pluginManager;
 
-		foreach ($pagemodules as $pagemodule)
-			if ($pagemodule->match_request($request)) {
+		$pageModules = $pluginManager->getModulesByType('page');
+		$request = qa_request();
+		foreach ($pageModules as $pageModule) {
+			if ($pageModule->matchRequest($request)) {
 				qa_set_template('plugin');
-				return $pagemodule->process_request($request);
+				return $pageModule->processRequest($request);
 			}
+		}
 	}
 
 

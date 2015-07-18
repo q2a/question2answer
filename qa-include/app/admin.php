@@ -458,10 +458,14 @@
 				return true;
 		}
 
-		$pagemodules=qa_load_modules_with('page', 'match_request');
-		foreach ($pagemodules as $pagemodule)
-			if ($pagemodule->match_request($requestpart))
+		global $pluginManager;
+
+		$pageModules = $pluginManager->getModulesByType('page');
+		$request = qa_request();
+		foreach ($pageModules as $pageModule) {
+			if ($pageModule->matchRequest($request))
 				return true;
+		}
 
 		return false;
 	}
@@ -597,33 +601,11 @@
 
 
 	/**
-	 * Return the hash code for the plugin in $directory (without trailing slash), used for in-page navigation on admin/plugins page
-	 */
-	function qa_admin_plugin_directory_hash($directory)
-	{
-		return md5($directory);
-	}
-
-
-	/**
 	 * Return the URL (relative to the current page) to navigate to the options panel for the plugin in $directory (without trailing slash)
 	 */
-	function qa_admin_plugin_options_path($directory)
+	function qa_admin_plugin_options_path($pluginId)
 	{
-		$hash = qa_admin_plugin_directory_hash($directory);
-		return qa_path_html('admin/plugins', array('show' => $hash), null, null, $hash);
-	}
-
-
-	/**
-	 * Return the URL (relative to the current page) to navigate to the options panel for plugin module $name of $type
-	 */
-	function qa_admin_module_options_path($type, $name)
-	{
-		$info = qa_get_module_info($type, $name);
-		$dir = rtrim($info['directory'], '/');
-
-		return qa_admin_plugin_options_path($dir);
+		return qa_path_html('admin/plugins', array('show' => $pluginId), null, null, $pluginId);
 	}
 
 

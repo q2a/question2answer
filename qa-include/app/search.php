@@ -34,26 +34,28 @@
 	display online or in an RSS feed.
 */
 	{
+		global $pluginManager;
 
 	//	Identify which search module should be used
 
-		$searchmodules=qa_load_modules_with('search', 'process_search');
+		$searchModules = $pluginManager->getModulesByType('search');
 
-		if (!count($searchmodules))
+		if (empty($searchModules))
 			qa_fatal_error('No search engine is available');
 
-		$module=reset($searchmodules); // use first one by default
-
-		if (count($searchmodules)>1) {
-			$tryname=qa_opt('search_module'); // use chosen one if it's available
-
-			if (isset($searchmodules[$tryname]))
-				$module=$searchmodules[$tryname];
-		}
+		if (count($searchModules) > 1) {
+			$searchModuleId = qa_opt('search_module'); // use chosen one if it's available
+			try {
+				$searchModule = $pluginManager->getModuleById($searchModuleId);
+			} catch (ModuleNotFoundException $e) {
+			} catch (PluginNotFoundException $e) {
+			}
+		} else
+			$searchModule = reset($searchModules); // use first one by default
 
 	//	Get the results
 
-		$results=$module->process_search($query, $start, $count, $userid, $absoluteurls, $fullcontent);
+		$results = $searchModule->processSearch($query, $start, $count, $userid, $absoluteurls, $fullcontent);
 
 	//	Work out what additional information (if any) we need to retrieve for the results
 

@@ -36,7 +36,9 @@
 
 	require 'qa-base.php';
 
-	qa_report_process_stage('init_image');
+	initialize_core();
+
+	qa_report_process_stage('initImage');
 
 
 //	Retrieve the scaled image from the cache if available

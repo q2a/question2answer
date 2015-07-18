@@ -25,11 +25,37 @@
 		exit;
 	}
 
+	global $pluginManager;
+
 	require_once QA_INCLUDE_DIR.'db/admin.php';
 	require_once QA_INCLUDE_DIR.'db/maxima.php';
 	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'app/options.php';
 	require_once QA_INCLUDE_DIR.'app/admin.php';
+
+
+	function qa_get_options_for_module_type($type, $value, &$optionfield)
+	{
+		global $pluginManager;
+
+		$captchaModules = $pluginManager->getModulesByType($type);
+
+		$selectOptions = array();
+
+		foreach ($captchaModules as $module) {
+			$moduleId = $module->getId();
+			$selectOptions[qa_html($moduleId)] = $module->getDisplayName();
+			try {
+				$plugin = $module->getPlugin();
+				$form = $plugin->getSettingsForm($qa_content);
+				if (isset($form))
+					$optionfield['note'] = sprintf('<a href="%s">%s</a>', qa_admin_plugin_options_path($plugin->getId()), qa_lang_html('admin/options'));
+			} catch (PluginNotFoundException $e) {
+			}
+		}
+
+		qa_optionfield_make_select($optionfield, $selectOptions, $value, '');
+	}
 
 
 	$adminsection = strtolower(qa_request_part(1));
@@ -396,7 +422,8 @@
 			$widgets = qa_db_single_select(qa_db_widgets_selectspec());
 
 			foreach ($widgets as $widget) {
-				if ($widget['title'] == 'Related Questions') {
+				$moduleId = Q2A_Plugin_BasePlugin::getModuleId('Q2A_System_Plugin', 'Q2A_Widget_Related_QS');
+				if ($widget['title'] === $moduleId) {
 					array_push($showoptions, 'match_related_qs', 'page_size_related_qs', '');
 					break;
 				}
@@ -430,9 +457,9 @@
 
 			array_push($showoptions, 'page_size_users', 'columns_users', '');
 
-			$searchmodules = qa_load_modules_with('search', 'process_search');
+			$searchModules = $pluginManager->getModulesByType('search');
 
-			if (count($searchmodules))
+			if (!empty($searchModules))
 				$showoptions[] = 'search_module';
 
 			$showoptions[] = 'page_size_search';
@@ -453,7 +480,8 @@
 
 			$showoptions = array('do_close_on_select', 'allow_close_questions', 'allow_self_answer', 'allow_multi_answers', 'follow_on_as', 'comment_on_qs', 'comment_on_as', '');
 
-			if (count(qa_list_modules('editor'))>1)
+			$editorModules = $pluginManager->getModulesByType('editor');
+			if (count($editorModules) > 1)
 				array_push($showoptions, 'editor_for_qs', 'editor_for_as', 'editor_for_cs', '');
 
 			array_push($showoptions, 'show_custom_ask', 'custom_ask', 'extra_field_active', 'extra_field_prompt', 'extra_field_display', 'extra_field_label', 'show_custom_answer', 'custom_answer', 'show_custom_comment', 'custom_comment', '');
@@ -549,9 +577,9 @@
 			if (!QA_FINAL_EXTERNAL_USERS)
 				array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'moderate_users', 'approve_user_required', 'register_notify_admin', 'suspend_register_users', '');
 
-			$captchamodules = qa_list_modules('captcha');
+			$captchaModules = $pluginManager->getModulesByType('captcha');
 
-			if (count($captchamodules)) {
+			if (!empty($captchaModules)) {
 				if (!QA_FINAL_EXTERNAL_USERS)
 					array_push($showoptions, 'captcha_on_register', 'captcha_on_reset_password');
 
@@ -640,12 +668,14 @@
 			break;
 
 		default:
-			$pagemodules = qa_load_modules_with('page', 'match_request');
+			$pageModules = $pluginManager->getModulesByType('page');
 			$request = qa_request();
-
-			foreach ($pagemodules as $pagemodule)
-				if ($pagemodule->match_request($request))
-					return $pagemodule->process_request($request);
+			foreach ($pageModules as $pageModule) {
+				if ($pageModule->matchRequest($request)) {
+					qa_set_template('plugin');
+					return $pagemodule->processRequest($request);
+				}
+			}
 
 			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 			break;
@@ -1232,23 +1262,7 @@
 				case 'editor_for_qs':
 				case 'editor_for_as':
 				case 'editor_for_cs':
-					$editors = qa_list_modules('editor');
-
-					$selectoptions = array();
-					$optionslinks = false;
-
-					foreach ($editors as $editor) {
-						$selectoptions[qa_html($editor)] = strlen($editor) ? qa_html($editor) : qa_lang_html('admin/basic_editor');
-
-						if ($editor == $value) {
-							$module = qa_load_module('editor', $editor);
-
-							if (method_exists($module, 'admin_form'))
-								$optionfield['note'] = '<a href="'.qa_admin_module_options_path('editor', $editor).'">'.qa_lang_html('admin/options').'</a>';
-						}
-					}
-
-					qa_optionfield_make_select($optionfield, $selectoptions, $value, '');
+					qa_get_options_for_module_type('editor', $value, $optionfield);
 					break;
 
 				case 'show_custom_ask':
@@ -1278,14 +1292,7 @@
 					break;
 
 				case 'search_module':
-					foreach ($searchmodules as $modulename => $module) {
-						$selectoptions[qa_html($modulename)] = strlen($modulename) ? qa_html($modulename) : qa_lang_html('options/option_default');
-
-						if (($modulename == $value) && method_exists($module, 'admin_form'))
-							$optionfield['note'] = '<a href="'.qa_admin_module_options_path('search', $modulename).'">'.qa_lang_html('admin/options').'</a>';
-					}
-
-					qa_optionfield_make_select($optionfield, $selectoptions, $value, '');
+					qa_get_options_for_module_type('search', $value, $optionfield);
 					break;
 
 				case 'hot_weight_q_age':
@@ -1477,20 +1484,7 @@
 					break;
 
 				case 'captcha_module':
-					$captchaoptions = array();
-
-					foreach ($captchamodules as $modulename) {
-						$captchaoptions[qa_html($modulename)] = qa_html($modulename);
-
-						if ($modulename == $value) {
-							$module = qa_load_module('captcha', $modulename);
-
-							if (method_exists($module, 'admin_form'))
-								$optionfield['note'] = '<a href="'.qa_admin_module_options_path('captcha', $modulename).'">'.qa_lang_html('admin/options').'</a>';
-						}
-					}
-
-					qa_optionfield_make_select($optionfield, $captchaoptions, $value, '');
+					qa_get_options_for_module_type('captcha', $value, $optionfield);
 					break;
 
 				case 'moderate_update_time':
@@ -1599,56 +1593,68 @@
 			break;
 
 		case 'layout':
-			$listhtml = '';
+			$widgetModules = $pluginManager->getModulesByType('widget');
 
-			$widgetmodules = qa_load_modules_with('widget', 'allow_template');
+			if (!empty($widgetModules)) {
+				$listHtml = '';
 
-			foreach ($widgetmodules as $tryname => $trywidget)
-				if (method_exists($trywidget, 'allow_region')) {
-					$listhtml .= '<li><b>'.qa_html($tryname).'</b>';
+				foreach ($widgetModules as $widgetModule) {
+					$listHtml .= '<li><strong>' . qa_html($widgetModule->getDisplayName()) . '</strong>';
 
-					$listhtml .= strtr(qa_lang_html('admin/add_widget_link'), array(
-						'^1' => '<a href="'.qa_path_html('admin/layoutwidgets', array('title' => $tryname)).'">',
+					$listHtml .= strtr(qa_lang_html('admin/add_widget_link'), array(
+						'^1' => '<a href="' . qa_path_html('admin/layoutwidgets', array('title' => $widgetModule->getId())) . '">',
 						'^2' => '</a>',
 					));
 
-					if (method_exists($trywidget, 'admin_form'))
-						$listhtml .= strtr(qa_lang_html('admin/widget_global_options'), array(
-							'^1' => '<a href="'.qa_admin_module_options_path('widget', $tryname).'">',
+					$plugin = $widgetModule->getPlugin();
+
+					$form = $plugin->getSettingsForm($qa_content);
+					if (isset($form)) {
+						$listHtml .= strtr(qa_lang_html('admin/widget_global_options'), array(
+							'^1' => '<a href="' . qa_admin_plugin_options_path($plugin->getId()) . '">',
 							'^2' => '</a>',
 						));
+					}
 
-					$listhtml .= '</li>';
+					$listHtml .= '</li>';
 				}
 
-			if (strlen($listhtml))
 				$qa_content['form']['fields']['plugins'] = array(
 					'label' => qa_lang_html('admin/widgets_explanation'),
 					'style' => 'tall',
 					'type' => 'custom',
-					'html' => '<ul style="margin-bottom:0;">'.$listhtml.'</ul>',
+					'html' => '<ul style="margin-bottom:0;">' . $listHtml . '</ul>',
 				);
+			}
 
 			$widgets = qa_db_single_select(qa_db_widgets_selectspec());
 
-			$listhtml = '';
+			if (!empty($widgets)) {
+				$listHtml = '';
 
-			$placeoptions = qa_admin_place_options();
+				$placeoptions = qa_admin_place_options();
 
-			foreach ($widgets as $widget) {
-				$listhtml .= '<li><b>'.qa_html($widget['title']).'</b> - '.
-					'<a href="'.qa_path_html('admin/layoutwidgets', array('edit' => $widget['widgetid'])).'">'.
-					@$placeoptions[$widget['place']].'</a>';
+				foreach ($widgets as $widget) {
+					try {
+						$widgetModule = $pluginManager->getModuleById($widget['title']);
+						$listHtml .= sprintf(
+							'<li><strong>%s</strong> - <a href="%s">%s</a></li>',
+							qa_html($widgetModule->getDisplayName()),
+							qa_path_html('admin/layoutwidgets', array('edit' => $widget['widgetid'])),
+							isset($placeoptions[$widget['place']]) ? $placeoptions[$widget['place']] : ''
+						);
+					} catch (ModuleNotFoundException $e) {
+					} catch (PluginNotFoundException $e) {
+					}
+				}
 
-				$listhtml .= '</li>';
-			}
-
-			if (strlen($listhtml))
 				$qa_content['form']['fields']['widgets'] = array(
 					'label' => qa_lang_html('admin/active_widgets_explanation'),
 					'type' => 'custom',
-					'html' => '<ul style="margin-bottom:0;">'.$listhtml.'</ul>',
+					'html' => '<ul style="margin-bottom:0;">' . $listHtml . '</ul>',
 				);
+			}
+
 
 			break;
 

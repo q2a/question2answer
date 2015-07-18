@@ -118,10 +118,12 @@
 			$errors['page']=qa_lang_html('misc/form_security_again');
 
 		else {
-			$filtermodules=qa_load_modules_with('filter', 'filter_question');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_question($in, $errors, null);
+			global $pluginManager;
+
+			$filterModules = $pluginManager->getModulesByType('filter');
+			foreach ($filterModules as $filterModule) {
+				$oldin = $in;
+				$filterModule->filterQuestion($in, $errors, null);
 				qa_update_post_text($in, $oldin);
 			}
 
@@ -155,10 +157,10 @@
 	$qa_content['title']=qa_lang_html(isset($followanswer) ? 'question/ask_follow_title' : 'question/ask_title');
 	$qa_content['error']=@$errors['page'];
 
-	$editorname=isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_qs');
-	$editor=qa_load_editor(@$in['content'], @$in['format'], $editorname);
+	$editorModuleId = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_qs');
+	$editorModule = qa_load_editor(@$in['content'], @$in['format'], $editorModuleId);
 
-	$field=qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'content', 12, false);
+	$field = qa_editor_load_field($editorModule, $qa_content, @$in['content'], @$in['format'], 'content', 12, false);
 	$field['label']=qa_lang_html('question/q_content_label');
 	$field['error']=qa_html(@$errors['content']);
 
@@ -192,14 +194,13 @@
 
 		'buttons' => array(
 			'ask' => array(
-				'tags' => 'onclick="qa_show_waiting_after(this, false); '.
-					(method_exists($editor, 'update_script') ? $editor->update_script('content') : '').'"',
+				'tags' => sprintf('onclick="qa_show_waiting_after(this, false); %s"', $editorModule->getUpdateScript('content')),
 				'label' => qa_lang_html('question/ask_button'),
 			),
 		),
 
 		'hidden' => array(
-			'editor' => qa_html($editorname),
+			'editor' => qa_html($editorModuleId),
 			'code' => qa_get_form_security_code('ask'),
 			'doask' => '1',
 		),
@@ -217,12 +218,12 @@
 	}
 
 	if (isset($followanswer)) {
-		$viewer=qa_load_viewer($followanswer['content'], $followanswer['format']);
+		$viewer = qa_load_viewer($followanswer['content'], $followanswer['format']);
 
 		$field=array(
 			'type' => 'static',
 			'label' => qa_lang_html('question/ask_follow_from_a'),
-			'value' => $viewer->get_html($followanswer['content'], $followanswer['format'], array('blockwordspreg' => qa_get_block_words_preg())),
+			'value' => $viewer->getHtml($followanswer['content'], $followanswer['format'], array('blockwordspreg' => qa_get_block_words_preg())),
 		);
 
 		qa_array_insert($qa_content['form']['fields'], 'title', array('follows' => $field));

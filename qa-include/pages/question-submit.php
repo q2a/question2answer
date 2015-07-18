@@ -57,20 +57,21 @@
 
 		if ( (qa_clicked('q_doreshow') && $question['reshowable']) || (qa_clicked('q_doapprove') && $question['moderatable']) )
 			if (qa_page_q_click_check_form_code($question, $error)) {
-				if ($question['moderatable'] || $question['reshowimmed']) {
-					$status=QA_POST_STATUS_NORMAL;
+				if ($question['moderatable'] || $question['reshowimmed'])
+					$status = QA_POST_STATUS_NORMAL;
+				else {
+					$in = qa_page_q_prepare_post_for_filters($question);
 
-				} else {
-					$in=qa_page_q_prepare_post_for_filters($question);
-					$filtermodules=qa_load_modules_with('filter', 'filter_question'); // run through filters but only for queued status
+					global $pluginManager;
 
-					foreach ($filtermodules as $filtermodule) {
-						$tempin=$in; // always pass original question in because we aren't modifying anything else
-						$filtermodule->filter_question($tempin, $temperrors, $question);
-						$in['queued']=$tempin['queued']; // only preserve queued status in loop
+					$filterModules = $pluginManager->getModulesByType('filter'); // run through filters but only for queued status
+					foreach ($filterModules as $filterModule) {
+						$tempin = $in; // always pass original question in because we aren't modifying anything else
+						$filterModule->filterQuestion($tempin, $temperrors, $question);
+						$in['queued'] = $tempin['queued']; // only preserve queued status in loop
 					}
 
-					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
+					$status = $in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
 				}
 
 				qa_question_set_status($question, $status, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
@@ -147,20 +148,21 @@
 
 		if ( (qa_clicked($prefix.'doreshow') && $answer['reshowable']) || (qa_clicked($prefix.'doapprove') && $answer['moderatable']) )
 			if (qa_page_q_click_check_form_code($answer, $error)) {
-				if ($answer['moderatable'] || $answer['reshowimmed']) {
-					$status=QA_POST_STATUS_NORMAL;
+				if ($answer['moderatable'] || $answer['reshowimmed'])
+					$status = QA_POST_STATUS_NORMAL;
+				else {
+					$in = qa_page_q_prepare_post_for_filters($answer);
 
-				} else {
-					$in=qa_page_q_prepare_post_for_filters($answer);
-					$filtermodules=qa_load_modules_with('filter', 'filter_answer'); // run through filters but only for queued status
+					global $pluginManager;
 
-					foreach ($filtermodules as $filtermodule) {
-						$tempin=$in; // always pass original answer in because we aren't modifying anything else
-						$filtermodule->filter_answer($tempin, $temperrors, $question, $answer);
-						$in['queued']=$tempin['queued']; // only preserve queued status in loop
+					$filterModules = $pluginManager->getModulesByType('filter'); // run through filters but only for queued status
+					foreach ($filterModules as $filterModule) {
+						$tempin = $in; // always pass original answer in because we aren't modifying anything else
+						$filterModule->filterAnswer($tempin, $temperrors, $question, $answer);
+						$in['queued'] = $tempin['queued']; // only preserve queued status in loop
 					}
 
-					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
+					$status = $in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
 				}
 
 				qa_answer_set_status($answer, $status, $userid, $handle, $cookieid, $question, $commentsfollows);
@@ -232,20 +234,21 @@
 
 		if ( (qa_clicked($prefix.'doreshow') && $comment['reshowable']) || (qa_clicked($prefix.'doapprove') && $comment['moderatable']) )
 			if (qa_page_q_click_check_form_code($parent, $error)) {
-				if ($comment['moderatable'] || $comment['reshowimmed']) {
-					$status=QA_POST_STATUS_NORMAL;
+				if ($comment['moderatable'] || $comment['reshowimmed'])
+					$status = QA_POST_STATUS_NORMAL;
+				else {
+					$in = qa_page_q_prepare_post_for_filters($comment);
 
-				} else {
-					$in=qa_page_q_prepare_post_for_filters($comment);
-					$filtermodules=qa_load_modules_with('filter', 'filter_comment'); // run through filters but only for queued status
+					global $pluginManager;
 
-					foreach ($filtermodules as $filtermodule) {
-						$tempin=$in; // always pass original comment in because we aren't modifying anything else
-						$filtermodule->filter_comment($tempin, $temperrors, $question, $parent, $comment);
-						$in['queued']=$tempin['queued']; // only preserve queued status in loop
+					$filterModules = $pluginManager->getModulesByType('filter'); // run through filters but only for queued status
+					foreach ($filterModules as $filterModule) {
+						$tempin = $in; // always pass original comment in because we aren't modifying anything else
+						$filterModule->filterComment($tempin, $temperrors, $question, $parent, $comment);
+						$in['queued'] = $tempin['queued']; // only preserve queued status in loop
 					}
 
-					$status=$in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
+					$status = $in['queued'] ? QA_POST_STATUS_QUEUED : QA_POST_STATUS_NORMAL;
 				}
 
 				qa_comment_set_status($comment, $status, $userid, $handle, $cookieid, $question, $parent);
@@ -333,10 +336,12 @@
 			$errors['content']=qa_lang_html('misc/form_security_again');
 
 		else {
-			$filtermodules=qa_load_modules_with('filter', 'filter_answer');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_answer($in, $errors, $question, null);
+			global $pluginManager;
+
+			$filterModules = $pluginManager->getModulesByType('filter');
+			foreach ($filterModules as $filterModule) {
+				$oldin = $in;
+				$filterModule->filterAnswer($in, $errors, $question, null);
 				qa_update_post_text($in, $oldin);
 			}
 
@@ -395,10 +400,12 @@
 			$errors['content']=qa_lang_html('misc/form_security_again');
 
 		else {
-			$filtermodules=qa_load_modules_with('filter', 'filter_comment');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_comment($in, $errors, $question, $parent, null);
+			global $pluginManager;
+
+			$filterModules = $pluginManager->getModulesByType('filter');
+			foreach ($filterModules as $filterModule) {
+				$oldin = $in;
+				$filterModule->filterComment($in, $errors, $question, $parent, null);
 				qa_update_post_text($in, $oldin);
 			}
 

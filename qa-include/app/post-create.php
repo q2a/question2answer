@@ -141,15 +141,17 @@
 */
 	{
 		global $qa_post_indexing_suspended;
+		global $pluginManager;
 
 		if ($qa_post_indexing_suspended>0)
 			return;
 
 	//	Send through to any search modules for indexing
 
-		$searches=qa_load_modules_with('search', 'index_post');
-		foreach ($searches as $search)
-			$search->index_post($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid);
+		$searchModules = $pluginManager->getModulesByType('search');
+
+		foreach ($searchModules as $searchModule)
+			$searchModule->indexPost($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid);
 	}
 
 

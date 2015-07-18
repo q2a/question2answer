@@ -188,10 +188,12 @@
 								qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, false);
 							}
 
-						if (count($inprofile)) {
-							$filtermodules = qa_load_modules_with('filter', 'filter_profile');
-							foreach ($filtermodules as $filtermodule)
-								$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
+						if (!empty($inprofile)) {
+							global $pluginManager;
+
+							$filterModules = $pluginManager->getModulesByType('filter');
+							foreach ($filterModules as $filterModule)
+								$filterModule->filterProfile($inprofile, $errors, $useraccount, $userprofile);
 						}
 
 						foreach ($userfields as $userfield)

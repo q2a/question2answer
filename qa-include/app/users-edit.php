@@ -35,41 +35,38 @@
 	to all filter modules and also rejects existing values in database unless they belongs to $olduser (if set).
 */
 	{
-		require_once QA_INCLUDE_DIR.'db/users.php';
+		global $pluginManager;
 
-		$errors=array();
+		require_once QA_INCLUDE_DIR . 'db/users.php';
 
-		$filtermodules=qa_load_modules_with('filter', 'filter_handle');
+		$errors = array();
 
-		foreach ($filtermodules as $filtermodule) {
-			$error=$filtermodule->filter_handle($handle, $olduser);
+		$filterModules = $pluginManager->getModulesByType('filter');
+
+		foreach ($filterModules as $filterModule) {
+			$error = $filterModule->filterHandle($handle, $olduser);
 			if (isset($error)) {
-				$errors['handle']=$error;
+				$errors['handle'] = $error;
 				break;
 			}
 		}
-
 		if (!isset($errors['handle'])) { // first test through filters, then check for duplicates here
-			$handleusers=qa_db_user_find_by_handle($handle);
-			if (count($handleusers) && ( (!isset($olduser['userid'])) || (array_search($olduser['userid'], $handleusers)===false) ) )
-				$errors['handle']=qa_lang('users/handle_exists');
+			$handleUsers = qa_db_user_find_by_handle($handle);
+			if (!empty($handleUsers) && (!isset($olduser['userid']) || array_search($olduser['userid'], $handleUsers) === false))
+				$errors['handle'] = qa_lang('users/handle_exists');
 		}
 
-		$filtermodules=qa_load_modules_with('filter', 'filter_email');
-
-		$error=null;
-		foreach ($filtermodules as $filtermodule) {
-			$error=$filtermodule->filter_email($email, $olduser);
+		foreach ($filterModules as $filterModule) {
+			$error = $filterModule->filterEmail($email, $olduser);
 			if (isset($error)) {
-				$errors['email']=$error;
+				$errors['email'] = $error;
 				break;
 			}
 		}
-
 		if (!isset($errors['email'])) {
-			$emailusers=qa_db_user_find_by_email($email);
-			if (count($emailusers) && ( (!isset($olduser['userid'])) || (array_search($olduser['userid'], $emailusers)===false) ) )
-				$errors['email']=qa_lang('users/email_exists');
+			$emailUsers = qa_db_user_find_by_email($email);
+			if (!empty($emailUsers) && (!isset($olduser['userid']) || array_search($olduser['userid'], $emailUsers) === false))
+				$errors['email'] = qa_lang('users/email_exists');
 		}
 
 		return $errors;
@@ -81,39 +78,42 @@
 	Make $handle valid and unique in the database - if $allowuserid is set, allow it to match that user only
 */
 	{
-		require_once QA_INCLUDE_DIR.'util/string.php';
-		require_once QA_INCLUDE_DIR.'db/maxima.php';
-		require_once QA_INCLUDE_DIR.'db/users.php';
+		global $pluginManager;
+
+		require_once QA_INCLUDE_DIR . 'util/string.php';
+		require_once QA_INCLUDE_DIR . 'db/maxima.php';
+		require_once QA_INCLUDE_DIR . 'db/users.php';
 
 		if (!strlen($handle))
-			$handle=qa_lang('users/registered_user');
+			$handle = qa_lang('users/registered_user');
 
-		$handle=preg_replace('/[\\@\\+\\/]/', ' ', $handle);
+		$handle = preg_replace('/[\\@\\+\\/]/', ' ', $handle);
 
-		for ($attempt=0; $attempt<=99; $attempt++) {
-			$suffix=$attempt ? (' '.$attempt) : '';
-			$tryhandle=qa_substr($handle, 0, QA_DB_MAX_HANDLE_LENGTH-strlen($suffix)).$suffix;
+		for ($attempt = 0; $attempt <= 99; $attempt++) {
+			$suffix = $attempt ? (' ' . $attempt) : '';
+			$tryHandle = qa_substr($handle, 0, QA_DB_MAX_HANDLE_LENGTH - strlen($suffix)) . $suffix;
 
-			$filtermodules=qa_load_modules_with('filter', 'filter_handle');
-			foreach ($filtermodules as $filtermodule)
-				$filtermodule->filter_handle($tryhandle, null); // filter first without worrying about errors, since our goal is to get a valid one
+			$filterModules = $pluginManager->getModulesByType('filter');
 
-			$haderror=false;
+			foreach ($filterModules as $filterModule)
+				$filterModule->filterHandle($tryHandle, null); // filter first without worrying about errors, since our goal is to get a valid one
 
-			foreach ($filtermodules as $filtermodule) {
-				$error=$filtermodule->filter_handle($tryhandle, null); // now check for errors after we've filtered
+			$hadError = false;
+
+			foreach ($filterModules as $filterModule) {
+				$error = $filterModule->filterHandle($tryHandle, null); // now check for errors after we've filtered
 				if (isset($error))
-					$haderror=true;
+					$hadError = true;
 			}
 
-			if (!$haderror) {
-				$handleusers=qa_db_user_find_by_handle($tryhandle);
-				if (!count($handleusers))
-					return $tryhandle;
+			if (!$hadError) {
+				$handleUsers = qa_db_user_find_by_handle($tryHandle);
+				if (empty($handleUsers))
+					return $tryHandle;
 			}
 		}
 
-		qa_fatal_error('Could not create a valid and unique handle from: '.$handle);
+		qa_fatal_error('Could not create a valid and unique handle from: ' . $handle);
 	}
 
 
@@ -123,26 +123,29 @@
 	Works by calling through to all filter modules.
 */
 	{
-		$error=null;
-		$filtermodules=qa_load_modules_with('filter', 'validate_password');
+		global $pluginManager;
 
-		foreach ($filtermodules as $filtermodule) {
-			$error=$filtermodule->validate_password($password, $olduser);
+		$error = null;
+
+		$filterModules = $pluginManager->getModulesByType('filter');
+
+		foreach ($filterModules as $filterModule) {
+			$error = $filterModule->validatePassword($password, $olduser);
 			if (isset($error))
 				break;
 		}
 
 		if (!isset($error)) {
-			$minpasslen=max(QA_MIN_PASSWORD_LEN, 1);
-			if (qa_strlen($password)<$minpasslen)
-				$error=qa_lang_sub('users/password_min', $minpasslen);
+			$minpasslen = max(QA_MIN_PASSWORD_LEN, 1);
+			if (qa_strlen($password) < $minpasslen)
+				$error = qa_lang_sub('users/password_min', $minpasslen);
 		}
 
 		if (isset($error))
 			return array('password' => $error);
 
 		return array();
-	}
+}
 
 
 	function qa_create_new_user($email, $password, $handle, $level=QA_USER_LEVEL_BASIC, $confirmed=false)
