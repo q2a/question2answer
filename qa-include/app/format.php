@@ -1439,42 +1439,18 @@
 	also combine multiple DOM IDs using JavaScript(=PHP) operators. This is twisted but rather convenient.
 */
 	{
-		$function='qa_display_rule_'.count(@$qa_content['script_lines']);
+		if (empty($effects))
+			return;
 
-		$keysourceids=array();
-
-		foreach ($effects as $target => $sources)
-			if (preg_match_all('/[A-Za-z_][A-Za-z0-9_]*/', $sources, $matches)) // element names must be legal JS variable names
-				foreach ($matches[0] as $element)
-					$keysourceids[$element]=true;
-
-		$funcscript=array("function ".$function."(first) {"); // build the Javascripts
-		$loadscript=array();
-
-		foreach ($keysourceids as $key => $dummy) {
-			$funcscript[]="\tvar e=document.getElementById(".qa_js($key).");";
-			$funcscript[]="\tvar ".$key."=e && (e.checked || (e.options && e.options[e.selectedIndex].value));";
-			$loadscript[]="var e=document.getElementById(".qa_js($key).");";
-			$loadscript[]="if (e) {";
-			$loadscript[]="\t".$key."_oldonclick=e.onclick;";
-			$loadscript[]="\te.onclick=function() {";
-			$loadscript[]="\t\t".$function."(false);";
-			$loadscript[]="\t\tif (typeof ".$key."_oldonclick=='function')";
-			$loadscript[]="\t\t\t".$key."_oldonclick();";
-			$loadscript[]="\t};";
-			$loadscript[]="}";
+		$rules = array();
+		foreach ($effects as $target => $source) {
+			$rules[] = array(
+				'source' => $source,
+				'target' => $target,
+			);
 		}
 
-		foreach ($effects as $target => $sources) {
-			$funcscript[]="\tvar e=document.getElementById(".qa_js($target).");";
-			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='SPAN')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
-		}
-
-		$funcscript[]="}";
-		$loadscript[]=$function."(true);";
-
-		$qa_content['script_lines'][]=$funcscript;
-		$qa_content['script_onloads'][]=$loadscript;
+		$qa_content['script_onloads'][] = sprintf("qa_display_rules(true, %s);", json_encode($rules));
 	}
 
 
