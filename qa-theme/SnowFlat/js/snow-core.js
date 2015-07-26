@@ -70,7 +70,7 @@ $(document).ready(function () {
 	/*
 	 * add wrapper to the message sent note 'td'
 	 */
-	$('.qa-part-form-message .qa-form-tall-ok').wrapInner('<div class="qam-pm-message"></div>');
+	$('.qa-part-form-message .qa-form-tall-result-ok').wrapInner('<div class="qam-pm-message"></div>');
 
 	// fix the visible issue for main nav, top search-box
 	$(window).resize(function () {

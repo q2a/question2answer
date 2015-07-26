@@ -146,7 +146,9 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 
 .qa-form-tall-table {border:1px solid #658296; background-color:#d9e3ea; width:500px;}
 .qa-form-tall-spacer {background:#E3F4FF; line-height:1px; padding:0; font-size:1px;}
-.qa-form-tall-ok {background:#efe; border:1px solid #090; color:#090; font-size:18px; padding:6px; text-align:center;}
+.qa-form-tall-result-ok, .qa-form-tall-result-error {font-size:18px; padding:6px; text-align:center;}
+.qa-form-tall-result-ok {background:#efe; border:1px solid #090; color:#090;}
+.qa-form-tall-result-error {background:#fee; border:1px solid #c00; color:#c00;}
 .qa-form-tall-label {color:#253845; padding:12px 8px 2px 8px; font-size:13px; font-weight:bold;}
 .qa-form-tall-data {padding:0 8px 6px 8px; width:480px;}
 .qa-form-tall-text,.qa-form-tall-number {padding:3px;}
@@ -166,7 +168,9 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 
 .qa-form-wide-table {border:1px solid #658296; background-color:#d9e3ea;}
 .qa-form-wide-spacer {background:#E3F4FF; line-height:1px; padding:0; font-size:1px;}
-.qa-form-wide-ok {background:#efe; border:1px solid #090; color:#090; font-size:16px; padding:6px; text-align:center;}
+.qa-form-wide-result-ok, .qa-form-wide-result-error {font-size:16px; padding:6px; text-align:center;}
+.qa-form-wide-result-ok {background:#efe; border:1px solid #090; color:#090;}
+.qa-form-wide-result-error {background:#fee; border:1px solid #c00; color:#c00;}
 .qa-form-wide-label {color:#253845; padding:6px 10px; font-size:13px; font-weight:bold; white-space: nowrap;}
 .qa-form-wide-data {padding:6px 10px;}
 .qa-form-wide-text,.qa-form-wide-number {padding:3px;}
