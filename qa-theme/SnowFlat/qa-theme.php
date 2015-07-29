@@ -51,7 +51,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function head_metas()
 	{
-		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1">');
+		$this->output('<meta name="viewport" content="width=device-width, initial-scale=1"/>');
 		parent::head_metas();
 	}
 
@@ -107,22 +107,6 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * Adding sidebar for mobile device
-	 *
-	 * @since Snow 1.4
-	 */
-	public function body()
-	{
-		if (qa_is_mobile_probably()) {
-			$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
-			$this->output('<div id="qam-sidepanel-mobile">');
-			parent::sidepanel();
-			$this->output('</div>');
-		}
-		parent::body();
-	}
-
-	/**
 	 * Adding body class dynamically. Override needed to add class on admin/approve-users page
 	 *
 	 * @since Snow 1.4
@@ -165,12 +149,12 @@ class qa_html_theme extends qa_html_theme_base
 				$login = $this->content['navigation']['user']['login'];
 				$this->output(
 					'<form action="' . $login['url'] . '" method="post">',
-						'<input type="text" name="emailhandle" dir="auto" placeholder="' . trim(qa_lang_html('users/email_handle_label'), ':') . '">',
-						'<input type="password" name="password" dir="auto" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '">',
-						'<div><input type="checkbox" name="remember" id="qam-rememberme" value="1">',
+						'<input type="text" name="emailhandle" dir="auto" placeholder="' . trim(qa_lang_html(qa_opt('allow_login_email_only') ? 'users/email_label' : 'users/email_handle_label'), ':') . '"/>',
+						'<input type="password" name="password" dir="auto" placeholder="' . trim(qa_lang_html('users/password_label'), ':') . '"/>',
+						'<div><input type="checkbox" name="remember" id="qam-rememberme" value="1"/>',
 						'<label for="qam-rememberme">' . qa_lang_html('users/remember') . '</label></div>',
-						'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '">',
-						'<input type="submit" value="' . $login['label'] . '" class="qa-form-tall-button qa-form-tall-button-login" name="dologin">',
+						'<input type="hidden" name="code" value="' . qa_html(qa_get_form_security_code('login')) . '"/>',
+						'<input type="submit" value="' . $login['label'] . '" class="qa-form-tall-button qa-form-tall-button-login" name="dologin"/>',
 					'</form>'
 				);
 
@@ -291,21 +275,23 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function sidepanel()
 	{
-		// removes sidebar for user profile pages
-		if ($this->template != 'user' && !qa_is_mobile_probably()) {
-			$this->output('<div class="qa-sidepanel">');
-			$this->qam_search();
-			$this->widgets('side', 'top');
-			$this->sidebar();
-			$this->widgets('side', 'high');
-			$this->nav('cat', 1);
-			$this->widgets('side', 'low');
-			if (isset($this->content['sidepanel']))
-				$this->output_raw($this->content['sidepanel']);
-			$this->feed();
-			$this->widgets('side', 'bottom');
-			$this->output('</div>', '');
-		}
+		// remove sidebar for user profile pages
+		if ($this->template == 'user')
+			return;
+
+		$this->output('<div id="qam-sidepanel-toggle"><i class="icon-left-open-big"></i></div>');
+		$this->output('<div class="qa-sidepanel" id="qam-sidepanel-mobile">');
+		$this->qam_search();
+		$this->widgets('side', 'top');
+		$this->sidebar();
+		$this->widgets('side', 'high');
+		$this->nav('cat', 1);
+		$this->widgets('side', 'low');
+		if (isset($this->content['sidepanel']))
+			$this->output_raw($this->content['sidepanel']);
+		$this->feed();
+		$this->widgets('side', 'bottom');
+		$this->output('</div>', '');
 	}
 
 	/**
@@ -336,7 +322,7 @@ class qa_html_theme extends qa_html_theme_base
 		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_item['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '">';
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '"/>';
 
 		$this->output(
 			'<div class="qa-q-item-title">',
@@ -370,7 +356,7 @@ class qa_html_theme extends qa_html_theme_base
 		$closedText = qa_lang('main/closed');
 		$imgHtml = empty($q_view['closed'])
 			? ''
-			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '">';
+			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-view.png" class="qam-q-view-close-icon" alt="' . $closedText . '" width="24" height="24" title="' . $closedText . '"/>';
 
 		if (isset($this->content['title'])) {
 			$this->output(
@@ -633,13 +619,6 @@ class qa_html_theme extends qa_html_theme_base
 			$css[] = '}';
 			$css[] = '@media (min-width: 980px) {';
 			$css[] = ' body.qa-template-users.fixed { padding-top: 105px !important;}';
-			$css[] = '}';
-		}
-
-		// sidebar styles for desktop (must use server-side UA detection, not media queries)
-		if (!qa_is_mobile_probably()) {
-			$css[] = '@media (min-width: 980px) {';
-			$css[] = '  .qa-sidepanel { width: 25%; padding: 0px; float: right; overflow: hidden; *zoom: 1; }';
 			$css[] = '}';
 		}
 

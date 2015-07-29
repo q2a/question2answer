@@ -763,7 +763,7 @@
 					$qa_content['notices'][]=qa_notice_form('welcome', qa_opt('notice_welcome'));
 		}
 
-		$qa_content['script_rel']=array('qa-content/jquery-1.11.2.min.js');
+		$qa_content['script_rel']=array('qa-content/jquery-1.11.3.min.js');
 		$qa_content['script_rel'][]='qa-content/qa-page.js?'.QA_VERSION;
 
 		if ($voting)
