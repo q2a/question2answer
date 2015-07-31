@@ -731,7 +731,7 @@ class qa_html_theme_base
 		}
 
 		// add closed note in title
-		if (!empty($q_view['closed']))
+		if (!empty($q_view['closed']['state']))
 			$this->output(' ['.$q_view['closed']['state'].']');
 	}
 
@@ -1608,7 +1608,7 @@ class qa_html_theme_base
 			'<div class="qa-q-item-title">',
 			'<a href="'.$q_item['url'].'">'.$q_item['title'].'</a>',
 			// add closed note in title
-			empty($q_item['closed']) ? '' : ' ['.$q_item['closed']['state'].']',
+			empty($q_item['closed']['state']) ? '' : ' ['.$q_item['closed']['state'].']',
 			'</div>'
 		);
 	}
