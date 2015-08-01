@@ -25,6 +25,10 @@
 		exit;
 	}
 
+    const _MAIN_WEBSITE_DB = "usr_web2_2";
+    const _MAIN_WEBSITE_USER_TABLE = "fb_users";
+    const _MAIN_WEBSITE_EMAIL_TABLE = "fb_emails";
+    const _MAIN_WEBSITE_PICTURE_TABLE = "fb_pictures";
 
 	function qa_db_calc_passcheck($password, $salt)
 /*
@@ -55,6 +59,23 @@
 		return qa_db_last_insert_id();
 	}
 
+    function qa_db_user_create_with_id($uid,$email, $password, $handle, $level, $ip)
+        /*
+            Create a new user in the database with $email, $password, $handle, privilege $level, and $ip address
+        */
+    {
+        require_once QA_INCLUDE_DIR.'util/string.php';
+
+        $salt=isset($password) ? qa_random_alphanum(16) : null;
+
+           qa_db_query_sub(
+            'INSERT INTO ^users (userid,created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) '.
+            'VALUES ($, NOW(), $, $, $, UNHEX($), #, $, NOW(), $)',
+            $uid, $ip, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ip
+        );
+
+
+     }
 
 	function qa_db_user_delete($userid)
 /*
@@ -255,6 +276,8 @@
 	Return some information about the user with external login $source and $identifier in the database, if a match is found
 */
 	{
+
+
 		return qa_db_read_all_assoc(qa_db_query_sub(
 			'SELECT ^userlogins.userid, handle, email FROM ^userlogins LEFT JOIN ^users ON ^userlogins.userid=^users.userid '.
 			'WHERE source=$ AND identifiermd5=UNHEX($) AND identifier=$',
@@ -324,6 +347,117 @@
 				QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED
 			);
 	}
+
+
+    function get_external_user_ids_for_array ($escapedusernames) {
+
+        $escapedusernames=implode(",",$escapedusernames);
+
+        $result=qa_db_query_execute("SELECT uname, uid FROM "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_USER_TABLE." WHERE uname IN (".$escapedusernames.")" );
+
+        return $result;
+    }
+
+    function get_external_usernames_for_array ($escapeduserids) {
+
+        $escapeduserids=implode(",",$escapeduserids);
+   $result=qa_db_query_execute("SELECT uname, uid FROM "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_USER_TABLE." WHERE uid IN (".$escapeduserids.")" );
+
+        return $result;
+    }
+
+
+    function authenticate_on_main_site($uid,$pass){
+
+        $db = qa_db_connection();
+
+        $uid=$db->real_escape_string($uid);
+        $pass=$db->real_escape_string($pass);
+
+        $result=qa_db_query_execute("select pass from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_USER_TABLE." where uid='".$uid."' limit 1" );
+
+     
+        $passDB=qa_db_read_one_value($result,true);
+
+        if ($pass == $passDB && $pass != "") {
+
+           return true;
+        }
+
+        return false;
+
+    }
+
+    function get_uname($uid){
+
+        $db = qa_db_connection();
+
+        $uid=$db->real_escape_string($uid);
+
+        $result=qa_db_query_execute("select uname from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_USER_TABLE." where uid='".$uid."' limit 1" );
+
+        $uname=qa_db_read_one_value($result);
+
+        return $uname;
+
+    }
+
+    function get_email($uid){
+
+        $db = qa_db_connection();
+
+        $uid=$db->real_escape_string($uid);
+
+        $result=qa_db_query_execute("select email from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_EMAIL_TABLE." where uid='".$uid."' limit 1" );
+
+        $email=qa_db_read_one_value($result);
+
+        return $email;
+
+    }
+
+    function get_avatar($uid){
+
+        $db = qa_db_connection();
+
+        $uid=$db->real_escape_string($uid);
+
+        $result=qa_db_query_execute("select cryptedname from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_PICTURE_TABLE." where uid='".$uid."' and mainpic=1 and level=1 limit 1" );
+
+     
+            $cryptedname=qa_db_read_one_value($result,true);
+
+     if ($cryptedname!=""){
+            return "/images/userpics/avatar/".$cryptedname;
+        }
+
+        else {
+
+            return "/images/no-photo-43x43.jpg";
+        }
+
+    }
+
+
+        function qa_user_exists($username)
+            /*
+                Return the ids of all users in the database which match $handle (=username), should be one or none
+            */
+        {
+            $db = qa_db_connection();
+
+            $uid=$db->real_escape_string($username);
+
+            $result=qa_db_query_execute("select uid from "._MAIN_WEBSITE_DB."."._MAIN_WEBSITE_USER_TABLE." where uname='".$username."' limit 1" );
+
+            $uid=qa_db_read_one_value($result);
+
+            if ($uid!=""){
+                return true;
+            }
+
+            return false;
+        }
 
 
 /*
