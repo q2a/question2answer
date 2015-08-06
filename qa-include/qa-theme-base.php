@@ -51,6 +51,8 @@ class qa_html_theme_base
 
 	// whether to use new block layout in rankings (true) or fall back to tables (false)
 	protected $ranking_block_layout = false;
+	// theme 'slug' to use as CSS class
+	protected $theme;
 
 
 	public function __construct($template, $content, $rooturl, $request)
@@ -406,6 +408,7 @@ class qa_html_theme_base
 	public function body_tags()
 	{
 		$class = 'qa-template-'.qa_html($this->template);
+		$class .= empty($this->theme) ? '' : ' qa-theme-' . qa_html($this->theme);
 
 		if (isset($this->content['categoryids'])) {
 			foreach ($this->content['categoryids'] as $categoryid)

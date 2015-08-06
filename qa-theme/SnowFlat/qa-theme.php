@@ -34,6 +34,8 @@
  */
 class qa_html_theme extends qa_html_theme_base
 {
+	protected $theme = 'snowflat';
+
 	// theme subdirectories
 	private $js_dir = 'js';
 	private $icon_url = 'images/icons';
@@ -114,6 +116,7 @@ class qa_html_theme extends qa_html_theme_base
 	public function body_tags()
 	{
 		$class = 'qa-template-' . qa_html($this->template);
+		$class .= empty($this->theme) ? '' : ' qa-theme-' . qa_html($this->theme);
 
 		if (isset($this->content['categoryids'])) {
 			foreach ($this->content['categoryids'] as $categoryid)

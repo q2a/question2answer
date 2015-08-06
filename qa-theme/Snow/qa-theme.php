@@ -4,6 +4,7 @@ class qa_html_theme extends qa_html_theme_base
 {
 	// use new ranking layout
 	protected $ranking_block_layout = true;
+	protected $theme = 'snow';
 
 	// outputs login form if user not logged in
 	public function nav_user_search()
