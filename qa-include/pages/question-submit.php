@@ -333,6 +333,7 @@
 			$errors['content']=qa_lang_html('misc/form_security_again');
 
 		else {
+			// call any filter plugins
 			$filtermodules=qa_load_modules_with('filter', 'filter_answer');
 			foreach ($filtermodules as $filtermodule) {
 				$oldin=$in;
@@ -340,9 +341,11 @@
 				qa_update_post_text($in, $oldin);
 			}
 
+			// check CAPTCHA
 			if ($usecaptcha)
 				qa_captcha_validate_post($errors);
 
+			// check for duplicate posts
 			if (empty($errors)) {
 				$testwords=implode(' ', qa_string_to_words($in['content']));
 
@@ -352,12 +355,24 @@
 							$errors['content']=qa_lang_html('question/duplicate_content');
 			}
 
-			if (empty($errors)) {
-				$userid=qa_get_logged_in_userid();
-				$handle=qa_get_logged_in_handle();
-				$cookieid=isset($userid) ? qa_cookie_get() : qa_cookie_get_create(); // create a new cookie if necessary
+			$userid = qa_get_logged_in_userid();
 
-				$answerid=qa_answer_create($userid, $handle, $cookieid, $in['content'], $in['format'], $in['text'], $in['notify'], $in['email'],
+			// if this is an additional answer, check we can add it
+			if (empty($errors) && !qa_opt('allow_multi_answers')) {
+				foreach ($answers as $answer) {
+					if (qa_post_is_by_user($answer, $userid, qa_cookie_get())) {
+						$errors[] = '';
+						break;
+					}
+				}
+			}
+
+			// create the answer
+			if (empty($errors)) {
+				$handle = qa_get_logged_in_handle();
+				$cookieid = isset($userid) ? qa_cookie_get() : qa_cookie_get_create(); // create a new cookie if necessary
+
+				$answerid = qa_answer_create($userid, $handle, $cookieid, $in['content'], $in['format'], $in['text'], $in['notify'], $in['email'],
 					$question, $in['queued'], $in['name']);
 
 				return $answerid;
