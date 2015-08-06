@@ -123,13 +123,24 @@
 				unset($_GET['qa']);
 			}
 			else {
-				$phpselfunescaped = strtr($_SERVER['PHP_SELF'], '+', ' '); // seems necessary, and plus does not work with this scheme
+				$normalizedpath = strtr($_SERVER['PHP_SELF'], '+', ' '); // seems necessary, and plus does not work with this scheme
 				$indexpath = '/index.php/';
-				$indexpos = strpos($phpselfunescaped, $indexpath);
+				$indexpos = strpos($normalizedpath, $indexpath);
+
+				if (!empty($_SERVER['REQUEST_URI'])) { // workaround for the fact that Apache unescapes characters
+					$origpath = $_SERVER['REQUEST_URI'];
+					$questionpos = strpos($origpath, '?');
+					if ($questionpos !== false) {
+						$origpath = substr($origpath, 0, $questionpos);
+					}
+
+					$normalizedpath = urldecode($origpath);
+					$indexpos = strpos($normalizedpath, $indexpath);
+				}
 
 				if (is_numeric($indexpos)) {
 					$urlformat = QA_URL_FORMAT_INDEX;
-					$requestparts = explode('/', substr($phpselfunescaped, $indexpos + strlen($indexpath)));
+					$requestparts = explode('/', substr($normalizedpath, $indexpos + strlen($indexpath)));
 					$relativedepth = 1 + count($requestparts);
 				}
 				else {
