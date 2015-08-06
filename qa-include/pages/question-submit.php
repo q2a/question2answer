@@ -353,6 +353,16 @@
 			}
 
 			if (empty($errors)) {
+				// Makes sure users don't add more than one answer when allow_multi_answers is off
+				require_once QA_INCLUDE_DIR . 'pages/question-view.php';
+
+				$rules = qa_page_q_post_rules($question, null, null, $answers);
+
+				if (!$rules['answerbutton'])
+					$errors[] = '';  // Error is not displayed because the component won't be displayed
+			}
+
+			if (empty($errors)) {
 				$userid=qa_get_logged_in_userid();
 				$handle=qa_get_logged_in_handle();
 				$cookieid=isset($userid) ? qa_cookie_get() : qa_cookie_get_create(); // create a new cookie if necessary
