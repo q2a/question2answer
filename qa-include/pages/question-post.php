@@ -458,13 +458,19 @@
 		else {
 			$in['queued']=qa_opt('moderate_edited_again') && qa_user_moderation_reason($userlevel);
 
-			$filtermodules=qa_load_modules_with('filter', 'filter_question');
-			foreach ($filtermodules as $filtermodule) {
-				$oldin=$in;
-				$filtermodule->filter_question($in, $errors, $question);
-
-				if ($question['editable'])
-					qa_update_post_text($in, $oldin);
+			if ($question['closed']) {
+				$filtermodules = qa_load_modules_with('filter', 'filter_recategorized_question');
+				foreach ($filtermodules as $filtermodule) {
+					$filtermodule->filter_recategorized_question($in, $errors);
+				}
+			} else {
+				$filtermodules=qa_load_modules_with('filter', 'filter_question');
+				foreach ($filtermodules as $filtermodule) {
+					$oldin=$in;
+					$filtermodule->filter_question($in, $errors, $question);
+					if ($question['editable'])
+						qa_update_post_text($in, $oldin);
+				}
 			}
 
 			if (array_key_exists('categoryid', $in) && strcmp($in['categoryid'], $question['categoryid']))
