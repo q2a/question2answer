@@ -55,10 +55,10 @@ class qa_html_theme_base
 	protected $theme;
 
 
+	/**
+	 * Initialize the object and assign local variables.
+	 */
 	public function __construct($template, $content, $rooturl, $request)
-/*
-	Initialize the object and assign local variables
-*/
 	{
 		$this->template = $template;
 		$this->content = $content;
@@ -77,55 +77,57 @@ class qa_html_theme_base
 	}
 
 
+	/**
+	 * Output each element in $elements on a separate line, with automatic HTML indenting.
+	 * This should be passed markup which uses the <tag/> form for unpaired tags, to help keep
+	 * track of indenting, although its actual output converts these to <tag> for W3C validation.
+	 */
 	public function output_array($elements)
-/*
-	Output each element in $elements on a separate line, with automatic HTML indenting.
-	This should be passed markup which uses the <tag/> form for unpaired tags, to help keep
-	track of indenting, although its actual output converts these to <tag> for W3C validation
-*/
 	{
 		foreach ($elements as $element) {
 			$delta = substr_count($element, '<') - substr_count($element, '<!') - 2*substr_count($element, '</') - substr_count($element, '/>');
 
-			if ($delta < 0)
+			if ($delta < 0) {
 				$this->indent += $delta;
+			}
 
 			echo str_repeat("\t", max(0, $this->indent)).str_replace('/>', '>', $element)."\n";
 
-			if ($delta > 0)
+			if ($delta > 0) {
 				$this->indent += $delta;
+			}
 
 			$this->lines++;
 		}
 	}
 
 
+	/**
+	 * Output each passed parameter on a separate line - see output_array() comments.
+	 */
 	public function output() // other parameters picked up via func_get_args()
-/*
-	Output each passed parameter on a separate line - see output_array() comments
-*/
 	{
 		$args = func_get_args();
 		$this->output_array($args);
 	}
 
 
+	/**
+	 * Output $html at the current indent level, but don't change indent level based on the markup within.
+	 * Useful for user-entered HTML which is unlikely to follow the rules we need to track indenting.
+	 */
 	public function output_raw($html)
-/*
-	Output $html at the current indent level, but don't change indent level based on the markup within.
-	Useful for user-entered HTML which is unlikely to follow the rules we need to track indenting
-*/
 	{
 		if (strlen($html))
 			echo str_repeat("\t", max(0, $this->indent)).$html."\n";
 	}
 
 
+	/**
+	 * Output the three elements ['prefix'], ['data'] and ['suffix'] of $parts (if they're defined),
+	 * with appropriate CSS classes based on $class, using $outertag and $innertag in the markup.
+	 */
 	public function output_split($parts, $class, $outertag='span', $innertag='span', $extraclass=null)
-/*
-	Output the three elements ['prefix'], ['data'] and ['suffix'] of $parts (if they're defined),
-	with appropriate CSS classes based on $class, using $outertag and $innertag in the markup.
-*/
 	{
 		if (empty($parts) && strtolower($outertag) != 'td')
 			return;
@@ -140,29 +142,29 @@ class qa_html_theme_base
 	}
 
 
+	/**
+	 * Set some context, which be accessed via $this->context for a function to know where it's being used on the page.
+	 */
 	public function set_context($key, $value)
-/*
-	Set some context, which be accessed via $this->context for a function to know where it's being used on the page
-*/
 	{
 		$this->context[$key] = $value;
 	}
 
 
+	/**
+	 * Clear some context (used at the end of the appropriate loop).
+	 */
 	public function clear_context($key)
-/*
-	Clear some context (used at the end of the appropriate loop)
-*/
 	{
 		unset($this->context[$key]);
 	}
 
 
+	/**
+	 * Reorder the parts of the page according to the $parts array which contains part keys in their new order. Call this
+	 * before main_parts(). See the docs for qa_array_reorder() in util/sort.php for the other parameters.
+	 */
 	public function reorder_parts($parts, $beforekey=null, $reorderrelative=true)
-/*
-	Reorder the parts of the page according to the $parts array which contains part keys in their new order. Call this
-	before main_parts(). See the docs for qa_array_reorder() in util/sort.php for the other parameters.
-*/
 	{
 		require_once QA_INCLUDE_DIR.'util/sort.php';
 
@@ -170,10 +172,10 @@ class qa_html_theme_base
 	}
 
 
+	/**
+	 * Output the widgets (as provided in $this->content['widgets']) for $region and $place.
+	 */
 	public function widgets($region, $place)
-/*
-	Output the widgets (as provided in $this->content['widgets']) for $region and $place
-*/
 	{
 		if (count(@$this->content['widgets'][$region][$place])) {
 			$this->output('<div class="qa-widgets-'.$region.' qa-widgets-'.$region.'-'.$place.'">');
@@ -190,14 +192,14 @@ class qa_html_theme_base
 
 	/**
 	 * Pre-output initialization. Immediately called after loading of the module. Content and template variables are
-	 * already setup at this point. Useful to perform layer initialization in the earliest and safest stage possible
+	 * already setup at this point. Useful to perform layer initialization in the earliest and safest stage possible.
 	 */
 	public function initialize() { }
 
+	/**
+	 * Post-output cleanup. For now, check that the indenting ended right, and if not, output a warning in an HTML comment.
+	 */
 	public function finish()
-/*
-	Post-output cleanup. For now, check that the indenting ended right, and if not, output a warning in an HTML comment
-*/
 	{
 		if ($this->indent) {
 			echo "<!--\nIt's no big deal, but your HTML could not be indented properly. To fix, please:\n".
@@ -225,7 +227,7 @@ class qa_html_theme_base
 		$extratags = isset($this->content['html_tags']) ? $this->content['html_tags'] : '';
 
 		$this->output(
-			'<html'.$extratags.'>',
+			'<html' . $extratags . '>',
 			$attribution
 		);
 
@@ -242,7 +244,7 @@ class qa_html_theme_base
 	{
 		$this->output(
 			'<head>',
-			'<meta charset="'.$this->content['charset'].'"/>'
+			'<meta charset="' . $this->content['charset'] . '"/>'
 		);
 
 		$this->head_title();
@@ -259,27 +261,32 @@ class qa_html_theme_base
 	public function head_title()
 	{
 		$pagetitle = strlen($this->request) ? strip_tags(@$this->content['title']) : '';
-		$headtitle = (strlen($pagetitle) ? ($pagetitle.' - ') : '').$this->content['site_title'];
+		$headtitle = (strlen($pagetitle) ? "$pagetitle - " : '') . $this->content['site_title'];
 
-		$this->output('<title>'.$headtitle.'</title>');
+		$this->output('<title>' . $headtitle . '</title>');
 	}
 
 	public function head_metas()
 	{
-		if (strlen(@$this->content['description']))
-			$this->output('<meta name="description" content="'.$this->content['description'].'"/>');
+		if (strlen(@$this->content['description'])) {
+			$this->output('<meta name="description" content="' . $this->content['description'] . '"/>');
+		}
 
-		if (strlen(@$this->content['keywords'])) // as far as I know, meta keywords have zero effect on search rankings or listings
-			$this->output('<meta name="keywords" content="'.$this->content['keywords'].'"/>');
+		if (strlen(@$this->content['keywords'])) {
+			// as far as I know, meta keywords have zero effect on search rankings or listings
+			$this->output('<meta name="keywords" content="' . $this->content['keywords'] . '"/>');
+		}
 	}
 
 	public function head_links()
 	{
-		if (isset($this->content['canonical']))
-			$this->output('<link rel="canonical" href="'.$this->content['canonical'].'"/>');
+		if (isset($this->content['canonical'])) {
+			$this->output('<link rel="canonical" href="' . $this->content['canonical'] . '"/>');
+		}
 
-		if (isset($this->content['feed']['url']))
-			$this->output('<link rel="alternate" type="application/rss+xml" href="'.$this->content['feed']['url'].'" title="'.@$this->content['feed']['label'].'"/>');
+		if (isset($this->content['feed']['url'])) {
+			$this->output('<link rel="alternate" type="application/rss+xml" href="' . $this->content['feed']['url'] . '" title="'.@$this->content['feed']['label'].'"/>');
+		}
 
 		// convert page links to rel=prev and rel=next tags
 		if (isset($this->content['page_links']['items'])) {
@@ -293,8 +300,9 @@ class qa_html_theme_base
 	public function head_script()
 	{
 		if (isset($this->content['script'])) {
-			foreach ($this->content['script'] as $scriptline)
+			foreach ($this->content['script'] as $scriptline) {
 				$this->output_raw($scriptline);
+			}
 		}
 	}
 
@@ -303,8 +311,9 @@ class qa_html_theme_base
 		$this->output('<link rel="stylesheet" href="'.$this->rooturl.$this->css_name().'"/>');
 
 		if (isset($this->content['css_src'])) {
-			foreach ($this->content['css_src'] as $css_src)
+			foreach ($this->content['css_src'] as $css_src) {
 				$this->output('<link rel="stylesheet" href="'.$css_src.'"/>');
+			}
 		}
 
 		if (!empty($this->content['notices'])) {
@@ -324,8 +333,9 @@ class qa_html_theme_base
 	public function head_lines()
 	{
 		if (isset($this->content['head_lines'])) {
-			foreach ($this->content['head_lines'] as $line)
+			foreach ($this->content['head_lines'] as $line) {
 				$this->output_raw($line);
+			}
 		}
 	}
 
@@ -374,14 +384,16 @@ class qa_html_theme_base
 
 	public function body_header()
 	{
-		if (isset($this->content['body_header']))
+		if (isset($this->content['body_header'])) {
 			$this->output_raw($this->content['body_header']);
+		}
 	}
 
 	public function body_footer()
 	{
-		if (isset($this->content['body_footer']))
+		if (isset($this->content['body_footer'])) {
 			$this->output_raw($this->content['body_footer']);
+		}
 	}
 
 	public function body_content()
@@ -407,15 +419,16 @@ class qa_html_theme_base
 
 	public function body_tags()
 	{
-		$class = 'qa-template-'.qa_html($this->template);
+		$class = 'qa-template-' . qa_html($this->template);
 		$class .= empty($this->theme) ? '' : ' qa-theme-' . qa_html($this->theme);
 
 		if (isset($this->content['categoryids'])) {
-			foreach ($this->content['categoryids'] as $categoryid)
-				$class .= ' qa-category-'.qa_html($categoryid);
+			foreach ($this->content['categoryids'] as $categoryid) {
+				$class .= ' qa-category-' . qa_html($categoryid);
+			}
 		}
 
-		$this->output('class="'.$class.' qa-body-js-off"');
+		$this->output('class="' . $class . ' qa-body-js-off"');
 	}
 
 	public function body_prefix()
@@ -431,8 +444,9 @@ class qa_html_theme_base
 	public function notices()
 	{
 		if (!empty($this->content['notices'])) {
-			foreach ($this->content['notices'] as $notice)
+			foreach ($this->content['notices'] as $notice) {
 				$this->notice($notice);
+			}
 		}
 	}
 
@@ -943,11 +957,11 @@ class qa_html_theme_base
 		}
 	}
 
+	/**
+	 * Reorder the fields of $form according to the $keys array which contains the field keys in their new order. Call
+	 * before any fields are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
+	 */
 	public function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
-/*
-	Reorder the fields of $form according to the $keys array which contains the field keys in their new order. Call
-	before any fields are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
-*/
 	{
 		require_once QA_INCLUDE_DIR.'util/sort.php';
 
@@ -1122,11 +1136,11 @@ class qa_html_theme_base
 		$this->form_suffix($field, $style);
 	}
 
+	/**
+	 * Reorder the buttons of $form according to the $keys array which contains the button keys in their new order. Call
+	 * before any buttons are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
+	 */
 	public function form_reorder_buttons(&$form, $keys, $beforekey=null, $reorderrelative=true)
-/*
-	Reorder the buttons of $form according to the $keys array which contains the button keys in their new order. Call
-	before any buttons are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
-*/
 	{
 		require_once QA_INCLUDE_DIR.'util/sort.php';
 
@@ -2361,10 +2375,10 @@ class qa_html_theme_base
 	}
 
 
+	/**
+	 * Generic method to output a basic list of question links.
+	 */
 	public function q_title_list($q_list, $attrs=null)
-/*
-	Generic method to output a basic list of question links.
-*/
 	{
 		$this->output('<ul class="qa-q-title-list">');
 		foreach ($q_list as $q) {
@@ -2377,10 +2391,10 @@ class qa_html_theme_base
 		$this->output('</ul>');
 	}
 
+	/**
+	 * Output block of similar questions when asking.
+	 */
 	public function q_ask_similar($q_list, $pretext='')
-/*
-	Output block of similar questions when asking.
-*/
 	{
 		if (!count($q_list))
 			return;

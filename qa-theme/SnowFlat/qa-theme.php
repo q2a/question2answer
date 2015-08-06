@@ -119,11 +119,12 @@ class qa_html_theme extends qa_html_theme_base
 		$class .= empty($this->theme) ? '' : ' qa-theme-' . qa_html($this->theme);
 
 		if (isset($this->content['categoryids'])) {
-			foreach ($this->content['categoryids'] as $categoryid)
+			foreach ($this->content['categoryids'] as $categoryid) {
 				$class .= ' qa-category-' . qa_html($categoryid);
+			}
 		}
 
-		// add class if admin/appovoe-users page
+		// add class if admin/approve-users page
 		if ($this->template === 'admin' && qa_request_part(1) === 'approve')
 			$class .= ' qam-approve-users';
 
