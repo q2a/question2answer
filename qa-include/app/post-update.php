@@ -619,6 +619,10 @@
 					$setupdated=true;
 			}
 
+			if ($question['selchildid'] == $oldanswer['postid']) { // remove selected answer
+				qa_question_set_selchildid(null, null, null, $question, null, $answers);
+			}
+
 		} elseif ($status==QA_POST_STATUS_NORMAL) {
 			$newtype='A';
 			if ($wasqueued)
