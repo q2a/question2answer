@@ -137,8 +137,6 @@ class qa_xml_sitemap
 	{
 		@ini_set('display_errors', 0); // we don't want to show PHP errors inside XML
 
-		$siteurl=qa_opt('site_url');
-
 		header('Content-type: text/xml; charset=utf-8');
 
 		echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
@@ -261,9 +259,6 @@ class qa_xml_sitemap
 				}
 			}
 		}
-
-
-	//	Finish up...
 
 		echo "</urlset>\n";
 

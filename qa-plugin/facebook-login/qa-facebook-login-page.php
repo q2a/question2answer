@@ -22,14 +22,11 @@
 
 class qa_facebook_login_page
 {
-
 	private $directory;
-	private $urltoroot;
 
 	public function load_module($directory, $urltoroot)
 	{
 		$this->directory=$directory;
-		$this->urltoroot=$urltoroot;
 	}
 
 	public function match_request($request)

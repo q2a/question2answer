@@ -1223,7 +1223,6 @@
 					$editors = qa_list_modules('editor');
 
 					$selectoptions = array();
-					$optionslinks = false;
 
 					foreach ($editors as $editor) {
 						$selectoptions[qa_html($editor)] = strlen($editor) ? qa_html($editor) : qa_lang_html('admin/basic_editor');
