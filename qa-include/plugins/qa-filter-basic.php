@@ -27,26 +27,28 @@ class qa_filter_basic
 {
 	public function filter_email(&$email, $olduser)
 	{
-		if (!strlen($email))
+		if (!strlen($email)) {
 			return qa_lang('users/email_required');
-
-		if (!qa_email_validate($email))
+		}
+		if (!qa_email_validate($email)) {
 			return qa_lang('users/email_invalid');
-
-		if (qa_strlen($email)>QA_DB_MAX_EMAIL_LENGTH)
+		}
+		if (qa_strlen($email) > QA_DB_MAX_EMAIL_LENGTH) {
 			return qa_lang_sub('main/max_length_x', QA_DB_MAX_EMAIL_LENGTH);
+		}
 	}
 
 	public function filter_handle(&$handle, $olduser)
 	{
-		if (!strlen($handle))
+		if (!strlen($handle)) {
 			return qa_lang('users/handle_empty');
-
-		if (preg_match('/[\\@\\+\\/]/', $handle))
+		}
+		if (preg_match('/[\\@\\+\\/]/', $handle)) {
 			return qa_lang_sub('users/handle_has_bad', '@ + /');
-
-		if (qa_strlen($handle)>QA_DB_MAX_HANDLE_LENGTH)
+		}
+		if (qa_strlen($handle) > QA_DB_MAX_HANDLE_LENGTH) {
 			return qa_lang_sub('main/max_length_x', QA_DB_MAX_HANDLE_LENGTH);
+		}
 	}
 
 	public function filter_question(&$question, &$errors, $oldquestion)
@@ -112,13 +114,12 @@ class qa_filter_basic
 	}
 
 
-//	The definitions below are not part of a standard filter module, but just used within this one
+	// The definitions below are not part of a standard filter module, but just used within this one
 
 	/**
 	 * Add textual element $field to $errors if length of $input is not between $minlength and $maxlength.
 	 *
-	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
-	 * should not be used by outside code.
+	 * @deprecated This function is no longer used and will removed in the future.
 	 */
 	public function validate_length(&$errors, $field, $input, $minlength, $maxlength)
 	{
@@ -167,9 +168,10 @@ class qa_filter_basic
 	public function validate_post_email(&$errors, $post)
 	{
 		if (@$post['notify'] && strlen(@$post['email'])) {
-			$error=$this->filter_email($post['email'], null);
-			if (isset($error))
-				$errors['email']=$error;
+			$error = $this->filter_email($post['email'], null);
+			if (isset($error)) {
+				$errors['email'] = $error;
+			}
 		}
 	}
 }
