@@ -90,22 +90,23 @@ class qa_filter_basic
 
 	public function filter_answer(&$answer, &$errors, $question, $oldanswer)
 	{
-		$this->validate_length($errors, 'content', @$answer['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-		$this->validate_length($errors, 'content', @$answer['text'], qa_opt('min_len_a_content'), null); // for display
+		$this->validate_field_length($errors, $answer, 'content', 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
+		$this->validate_field_length($errors, $answer, 'text', qa_opt('min_len_a_content'), null, 'content'); // for display
 		$this->validate_post_email($errors, $answer);
 	}
 
 	public function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
 	{
-		$this->validate_length($errors, 'content', @$comment['content'], 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-		$this->validate_length($errors, 'content', @$comment['text'], qa_opt('min_len_c_content'), null); // for display
+		$this->validate_field_length($errors, $comment, 'content', 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
+		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_a_content'), null, 'content'); // for display
 		$this->validate_post_email($errors, $comment);
 	}
 
 	public function filter_profile(&$profile, &$errors, $user, $oldprofile)
 	{
-		foreach ($profile as $field => $value)
-			$this->validate_length($errors, $field, $value, 0, QA_DB_MAX_PROFILE_CONTENT_LENGTH);
+		foreach ($profile as $field => $value) {
+			$this->validate_field_length($errors, $profile, $field, 0, QA_DB_MAX_CONTENT_LENGTH);
+		}
 	}
 
 
@@ -136,17 +137,21 @@ class qa_filter_basic
 	 * @param int $minlength
 	 * @param int $maxlength
 	 */
-	private function validate_field_length(&$errors, &$post, $key, $minlength, $maxlength)
+	private function validate_field_length(&$errors, &$post, $key, $minlength, $maxlength, $errorKey=null)
 	{
+		if (!$errorKey) {
+			$errorKey = $key;
+		}
+
 		// skip the field is key not set (for example, 'title' when recategorizing questions)
 		if (array_key_exists($key, $post)) {
 			$length = qa_strlen($post[$key]);
 
 			if ($length < $minlength) {
-				$errors[$key] = $minlength == 1 ? qa_lang('main/field_required') : qa_lang_sub('main/min_length_x', $minlength);
+				$errors[$errorKey] = $minlength == 1 ? qa_lang('main/field_required') : qa_lang_sub('main/min_length_x', $minlength);
 			}
 			else if (isset($maxlength) && ($length > $maxlength)) {
-				$errors[$key] = qa_lang_sub('main/max_length_x', $maxlength);
+				$errors[$errorKey] = qa_lang_sub('main/max_length_x', $maxlength);
 			}
 		}
 	}

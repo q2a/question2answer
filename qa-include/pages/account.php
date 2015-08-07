@@ -77,7 +77,7 @@
 
 			$inprofile=array();
 			foreach ($userfields as $userfield)
-			$inprofile[$userfield['fieldid']] = qa_post_text('field_' . $userfield['fieldid']);
+				$inprofile[$userfield['fieldid']] = qa_post_text('field_' . $userfield['fieldid']);
 
 			if (!qa_check_form_security_code('account', qa_post_text('code')))
 				$errors['page'] = qa_lang_html('misc/form_security_again');
