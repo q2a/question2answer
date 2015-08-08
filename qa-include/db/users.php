@@ -207,8 +207,9 @@
 */
 	{
 		qa_db_query_sub(
-			'REPLACE ^userprofile (title, content, userid) VALUES ($, $, $)',
-			$field, $value, $userid
+			'INSERT INTO ^userprofile (userid, title, content) VALUES ($, $, $) ' .
+			'ON DUPLICATE KEY UPDATE content = VALUES(content)',
+			$userid, $field, $value
 		);
 	}
 
@@ -293,11 +294,13 @@
 			$userid
 		);
 
-		foreach ($userlevels as $userlevel)
+		foreach ($userlevels as $userlevel) {
 			qa_db_query_sub(
-				'REPLACE ^userlevels (userid, entitytype, entityid, level) VALUES ($, $, #, #)',
+				'INSERT INTO ^userlevels (userid, entitytype, entityid, level) VALUES ($, $, #, #) ' .
+				'ON DUPLICATE KEY UPDATE level = VALUES(level)',
 				$userid, $userlevel['entitytype'], $userlevel['entityid'], $userlevel['level']
 			);
+		}
 	}
 
 
@@ -318,11 +321,15 @@
 	Update the cached count of the number of users who are awaiting approval after registration
 */
 	{
-		if ( qa_should_update_counts() && !QA_FINAL_EXTERNAL_USERS )
+		if ( qa_should_update_counts() && !QA_FINAL_EXTERNAL_USERS ) {
 			qa_db_query_sub(
-				"REPLACE ^options (title, content) SELECT 'cache_uapprovecount', COUNT(*) FROM ^users WHERE level<# AND NOT (flags&#)",
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_uapprovecount', COUNT(*) FROM ^users " .
+				"WHERE level < # AND NOT (flags & #) " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)",
 				QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED
 			);
+		}
 	}
 
 

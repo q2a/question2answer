@@ -144,7 +144,8 @@
 */
 	{
 		qa_db_query_sub(
-			'REPLACE ^'.$metatable.' ('.$idcolumn.', title, content) VALUES ($, $, $)',
+			'INSERT INTO ^' . $metatable . ' (' . $idcolumn . ', title, content) VALUES ($, $, $) ' .
+			'ON DUPLICATE KEY UPDATE content = VALUES(content)',
 			$idvalue, $title, $content
 		);
 	}

@@ -351,8 +351,14 @@
 	Update the cached count of the number of flagged posts in the database
 */
 	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts WHERE flagcount>0 AND type IN ('Q', 'A', 'C')");
+		if (qa_should_update_counts()) {
+			qa_db_query_sub(
+				"INSERT INTO ^options (title, content) " .
+				"SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts " .
+				"WHERE flagcount > 0 AND type IN ('Q', 'A', 'C') " .
+				"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			);
+		}
 	}
 
 /*
