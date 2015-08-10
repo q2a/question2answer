@@ -75,7 +75,7 @@
 
 	if ($toaccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) {
 		$qa_content['error'] = qa_lang_html_sub(
-			'profile/user_x_disabled_private_messages',
+			'profile/user_x_disabled_pms',
 			sprintf('<a href="%s">%s</a>', qa_path_html('user/' . $handle), qa_html($handle))
 		);
 		return $qa_content;

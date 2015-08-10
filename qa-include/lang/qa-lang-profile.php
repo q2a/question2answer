@@ -77,7 +77,7 @@
 		'set_bonus_button' => 'Update bonus',
 		'title' => 'Title:',
 		'user_x' => 'User ^',
-		'user_x_disabled_private_messages' => 'User ^ has disabled private messages.',
+		'user_x_disabled_pms' => 'User ^ has disabled private messages.',
 		'voted_on' => 'Voted on:',
 		'wall_for_x' => 'Wall for ^',
 		'wall_view_more' => 'View more wall posts...',
