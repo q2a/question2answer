@@ -1431,50 +1431,44 @@
 		return 10-2*$match;
 	}
 
-
-	function qa_set_display_rules(&$qa_content, $effects)
-/*
-	For each [target] => [source] in $effects, set up $qa_content so that the visibility of the DOM element ID
-	target is equal to the checked state or boolean-casted value of the DOM element ID source. Each source can
-	also combine multiple DOM IDs using JavaScript(=PHP) operators. This is twisted but rather convenient.
-*/
+	/**
+	 * For each rule in $rules, set up $qa_content so that the visibility of the DOM element ID
+	 * target is equal to the checked state or boolean-casted value of the DOM element ID source. Each source can
+	 * also combine multiple DOM IDs using JavaScript(=PHP) operators. This is twisted but rather convenient.
+	 *
+	 * @param array $qa_content The core's content array
+	 * @param array $rules This parameter must have the following structure:
+	 *
+	 * <code>
+	 * array(
+	 *     array(
+	 *         'source' => 'source_dom_id1',
+	 *         'target' => 'target_dom_id2',
+	 *     ),
+	 *     array(
+	 *         'source' => 'source_dom_id3',
+	 *         'target' => 'target_dom_id4',
+	 *     ),
+	 * );
+	 * </code>
+	 */
+	function qa_set_display_rules(&$qa_content, $rules)
 	{
-		$function='qa_display_rule_'.count(@$qa_content['script_lines']);
+		if (empty($rules))
+			return;
 
-		$keysourceids=array();
-
-		foreach ($effects as $target => $sources)
-			if (preg_match_all('/[A-Za-z_][A-Za-z0-9_]*/', $sources, $matches)) // element names must be legal JS variable names
-				foreach ($matches[0] as $element)
-					$keysourceids[$element]=true;
-
-		$funcscript=array("function ".$function."(first) {"); // build the Javascripts
-		$loadscript=array();
-
-		foreach ($keysourceids as $key => $dummy) {
-			$funcscript[]="\tvar e=document.getElementById(".qa_js($key).");";
-			$funcscript[]="\tvar ".$key."=e && (e.checked || (e.options && e.options[e.selectedIndex].value));";
-			$loadscript[]="var e=document.getElementById(".qa_js($key).");";
-			$loadscript[]="if (e) {";
-			$loadscript[]="\t".$key."_oldonclick=e.onclick;";
-			$loadscript[]="\te.onclick=function() {";
-			$loadscript[]="\t\t".$function."(false);";
-			$loadscript[]="\t\tif (typeof ".$key."_oldonclick=='function')";
-			$loadscript[]="\t\t\t".$key."_oldonclick();";
-			$loadscript[]="\t};";
-			$loadscript[]="}";
+		if (!isset($rules[0])) { // Backwards compatibility fix
+			$newRules = array();
+			foreach ($rules as $target => $source) {
+				$newRules[] = array(
+					'source' => $source,
+					'target' => $target,
+				);
+			}
+			$rules = $newRules;
 		}
 
-		foreach ($effects as $target => $sources) {
-			$funcscript[]="\tvar e=document.getElementById(".qa_js($target).");";
-			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='SPAN')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
-		}
-
-		$funcscript[]="}";
-		$loadscript[]=$function."(true);";
-
-		$qa_content['script_lines'][]=$funcscript;
-		$qa_content['script_onloads'][]=$loadscript;
+		$qa_content['script_onloads'][] = sprintf("qa_display_rules(true, %s);", json_encode($rules));
 	}
 
 

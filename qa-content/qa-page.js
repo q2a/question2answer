@@ -175,3 +175,29 @@ function qa_ajax_error()
 {
 	alert('Unexpected response from server - please try again or switch off Javascript.');
 }
+
+function qa_display_run(source, target, first) {
+	var sourceEnabled = source && (source.checked || (source.options && source.options[source.selectedIndex].value));
+	if (first || target.nodeName === 'SPAN')
+		target.style.display = sourceEnabled ? '' : 'none';
+	else {
+		if (sourceEnabled)
+			$(target).fadeIn();
+		else
+			$(target).fadeOut();
+	}
+}
+
+function qa_display_rules(first, rules) {
+	for (var i = 0; i < rules.length; i++) {
+		var rule = rules[i];
+		var source = document.getElementById(rule.source);
+		var target = document.getElementById(rule.target);
+		if (source && target) {
+			qa_display_run(source, target, first);
+			$(source).click({source: source, target: target}, function (e) {
+				qa_display_run(e.data.source, e.data.target, false);
+			});
+		}
+	}
+}
