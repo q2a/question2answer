@@ -194,17 +194,6 @@
 		));
 	}
 
-	// show T&Cs checkbox
-	if ($show_terms) {
-		$qa_content['form']['fields']['terms'] = array(
-			'type' => 'checkbox',
-			'label' => trim(qa_opt('register_terms')),
-			'tags' => 'name="terms" id="terms"',
-			'value' => qa_html(@$interms),
-			'error' => qa_html(@$errors['terms']),
-		);
-	}
-
 	foreach ($userfields as $userfield) {
 		$value = @$inprofile[$userfield['fieldid']];
 
@@ -223,6 +212,17 @@
 
 	if (qa_opt('captcha_on_register'))
 		qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
+
+	// show T&Cs checkbox
+	if ($show_terms) {
+		$qa_content['form']['fields']['terms'] = array(
+			'type' => 'checkbox',
+			'label' => trim(qa_opt('register_terms')),
+			'tags' => 'name="terms" id="terms"',
+			'value' => qa_html(@$interms),
+			'error' => qa_html(@$errors['terms']),
+		);
+	}
 
 	$loginmodules = qa_load_modules_with('login', 'login_html');
 

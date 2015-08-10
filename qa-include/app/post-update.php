@@ -437,6 +437,8 @@
 		if ($oldquestion['type']!='Q_HIDDEN')
 			qa_fatal_error('Tried to delete a non-hidden question');
 
+		qa_report_event('q_delete_before', $userid, $handle, $cookieid, $params);
+
 		if (isset($oldclosepost) && ($oldclosepost['parentid']==$oldquestion['postid'])) {
 			qa_db_post_set_closed($oldquestion['postid'], null); // for foreign key constraint
 			qa_post_unindex($oldclosepost['postid']);
@@ -450,8 +452,6 @@
 			'postid' => $oldquestion['postid'],
 			'oldquestion' => $oldquestion,
 		);
-
-		qa_report_event('q_delete_before', $userid, $handle, $cookieid, $params);
 
 		qa_post_unindex($oldquestion['postid']);
 		qa_db_post_delete($oldquestion['postid']); // also deletes any related voteds due to foreign key cascading

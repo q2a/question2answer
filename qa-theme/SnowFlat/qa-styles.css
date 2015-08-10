@@ -2030,7 +2030,7 @@ input[type="submit"], button {
 	margin-top: 0;
 }
 
-#level .qa-form-wide-static a {
+#level .qa-form-wide-static a:first-child {
 	background-color: #27ae60;
 	background-image: url('images/icons/mail-white.png');
 	background-repeat: no-repeat;
@@ -2040,7 +2040,7 @@ input[type="submit"], button {
 	display: inline-block;
 	color: #fff;
 }
-#level .qa-form-wide-static a:hover, #level .qa-form-wide-static a:focus {
+#level .qa-form-wide-static a:hover:first-child, #level .qa-form-wide-static a:focus:first-child {
 	background-color: #2ecc71;
 	background-image: url('images/icons/mail-white.png');
 	border: 1px solid #25a25a;

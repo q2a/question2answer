@@ -522,6 +522,11 @@
 			'widgets' => array(),
 		);
 
+		// add meta description if we're on the home page
+		if ($request === '' || $request === array_search('', qa_get_request_map())) {
+			$qa_content['description'] = qa_html(qa_opt('home_description'));
+		}
+
 		if (qa_opt('show_custom_in_head'))
 			$qa_content['head_lines'][]=qa_opt('custom_in_head');
 

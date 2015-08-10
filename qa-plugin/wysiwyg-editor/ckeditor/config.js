@@ -33,4 +33,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// Use native spell checking (note: Ctrl+right-click is required for native context menu)
 	config.disableNativeSpellChecker = false;
 
+	// Prevent blank paragraphs
+	config.fillEmptyBlocks = false;
+
 };

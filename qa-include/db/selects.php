@@ -1026,8 +1026,8 @@
 	{
 		return array(
 			'columns' => array('wordid', 'word', 'tagcount'),
-			'source' => '^words WHERE word=$',
-			'arguments' => array($tag),
+			'source' => '^words WHERE word=$ AND word=$ COLLATE utf8_bin',
+			'arguments' => array($tag, qa_strtolower($tag)),
 			'single' => true,
 		);
 	}

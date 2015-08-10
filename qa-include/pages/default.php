@@ -112,8 +112,6 @@
 		qa_set_template('custom');
 		$qa_content=qa_content_prepare();
 		$qa_content['title']=qa_html(qa_opt('custom_home_heading'));
-		if (qa_opt('show_home_description'))
-			$qa_content['description']=qa_html(qa_opt('home_description'));
 		$qa_content['custom']=qa_opt('custom_home_content');
 		return $qa_content;
 	}
@@ -161,9 +159,6 @@
 		null, // page link params
 		null // category nav params
 	);
-
-	if ( (!$explicitqa) && (!$countslugs) && qa_opt('show_home_description') )
-		$qa_content['description']=qa_html(qa_opt('home_description'));
 
 
 	return $qa_content;
