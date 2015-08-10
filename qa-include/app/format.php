@@ -1454,15 +1454,10 @@
 		foreach ($keysourceids as $key => $dummy) {
 			$funcscript[]="\tvar e=document.getElementById(".qa_js($key).");";
 			$funcscript[]="\tvar ".$key."=e && (e.checked || (e.options && e.options[e.selectedIndex].value));";
-			$loadscript[]="var e=document.getElementById(".qa_js($key).");";
-			$loadscript[]="if (e) {";
-			$loadscript[]="\t".$key."_oldonclick=e.onclick;";
-			$loadscript[]="\te.onclick=function() {";
-			$loadscript[]="\t\t".$function."(false);";
-			$loadscript[]="\t\tif (typeof ".$key."_oldonclick=='function')";
-			$loadscript[]="\t\t\t".$key."_oldonclick();";
-			$loadscript[]="\t};";
-			$loadscript[]="}";
+
+			$loadscript[]="jQuery(".qa_js('#'.$key).").click(function() {";
+			$loadscript[]="\t".$function."(false);";
+			$loadscript[]="});";
 		}
 
 		foreach ($effects as $target => $sources) {
