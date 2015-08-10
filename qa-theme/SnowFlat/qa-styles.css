@@ -701,12 +701,13 @@ blockquote p {
 }
 
 #qam-account-toggle {
-	display: block;
-	cursor: pointer;
-	min-width: 60px;
-	padding: 2px;
-	background-color: #34495e;
-	text-align: center;
+    display: block;
+    cursor: pointer;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 6px;
+    background-color: #34495e;
+    text-align: center;
 }
 #qam-account-toggle:hover {
 	background: #445f7a;
@@ -717,7 +718,9 @@ blockquote p {
 #qam-account-toggle .qam-auth-key:before {
 	display: inline-block;
 }
-
+#qam-account-toggle img.qa-avatar-image{
+    max-width: 32px;
+}
 .qam-account-items {
 	background-color: #34495e;
 	display: none;
@@ -733,8 +736,9 @@ blockquote p {
 }
 
 .qam-account-handle {
-	font-size: 12px;
-	line-height: 1.8;
+    font-size: 12px;
+    line-height: 1;
+    margin-top: 4px;
 }
 
 .qam-account-items .qa-form-tall-button-login {
