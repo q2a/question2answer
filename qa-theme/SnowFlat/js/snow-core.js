@@ -84,4 +84,14 @@ $(document).ready(function () {
 		}
 	});
 
+
+    /**
+     * Toggle nav-sub (for admin and above)
+     */
+    $('.qam-nav-sub-toggle').click(function(){
+        $('.qa-nav-sub').slideToggle('fast');
+        $(this).toggleClass('active');
+    });
+
+
 });
