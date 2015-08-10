@@ -68,9 +68,18 @@
 
 //	Check the user exists and work out what can and can't be set (if not using single sign-on)
 
-	if ( !qa_opt('allow_private_messages') || !is_array($toaccount) || ($toaccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) )
+	if (!qa_opt('allow_private_messages') || !is_array($toaccount))
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
+//  Check the target user has enabled private messages and inform the current user in case they haven't
+
+	if ($toaccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) {
+		$qa_content['error'] = qa_lang_html_sub(
+			'profile/user_x_disabled_pms',
+			sprintf('<a href="%s">%s</a>', qa_path_html('user/' . $handle), qa_html($handle))
+		);
+		return $qa_content;
+	}
 
 //	Check that we have permission and haven't reached the limit, but don't quit just yet
 
