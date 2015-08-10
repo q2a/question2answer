@@ -111,6 +111,13 @@ h1 {
 	.qa-nav-sub-item {
 		float: right;
 	}
+
+    /* nav-sub toggle */
+    .qam-nav-sub-toggle{
+        left: 0;
+        right: auto;
+    }
+
 }
 
 @media (min-width: 980px) {

@@ -584,7 +584,7 @@ blockquote p {
 	content: '\e801';
 }
 .qa-nav-main-ask .qa-nav-main-link.qa-nav-main-selected {
-	color: #54d98c;
+	color: #FFF;
 }
 
 .qa-nav-main-admin .qa-nav-main-link:before {
@@ -701,12 +701,13 @@ blockquote p {
 }
 
 #qam-account-toggle {
-	display: block;
-	cursor: pointer;
-	min-width: 60px;
-	padding: 2px;
-	background-color: #34495e;
-	text-align: center;
+    display: block;
+    cursor: pointer;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 6px;
+    background-color: #34495e;
+    text-align: center;
 }
 #qam-account-toggle:hover {
 	background: #445f7a;
@@ -717,10 +718,12 @@ blockquote p {
 #qam-account-toggle .qam-auth-key:before {
 	display: inline-block;
 }
-
+#qam-account-toggle img.qa-avatar-image{
+    max-width: 32px;
+}
 .qam-account-items {
 	background-color: #34495e;
-	display: none;
+	display: none;;
 	position: absolute;
 	right: 0;
 	top: 60px;
@@ -733,8 +736,9 @@ blockquote p {
 }
 
 .qam-account-handle {
-	font-size: 12px;
-	line-height: 1.8;
+    font-size: 12px;
+    line-height: 1;
+    margin-top: 4px;
 }
 
 .qam-account-items .qa-form-tall-button-login {
@@ -3313,6 +3317,34 @@ input[type="submit"], button {
 		background-repeat: no-repeat;
 		background-position: center;
 	}
+
+    /* nav-sub toggle */
+    .qam-nav-sub-wrapper{
+        position: relative;
+    }
+    .qam-nav-sub-toggle{
+        background-color: rgba(128,128,128,0.25);
+        background-image: url('images/icons/search-mobile-collaps.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        width: 18px;
+        height:18px;
+        display: block;
+        position: absolute;
+        bottom: -18px;
+        right: 0;
+        z-index: 5;
+        cursor: pointer;
+    }
+
+    .qam-nav-sub-toggle.active{
+        background-image: url('images/icons/search-mobile-collaps.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        transform: rotate(180deg);
+    }
 }
 
 @media (min-width: 980px) {
