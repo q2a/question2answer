@@ -304,6 +304,7 @@
 		qa_register_module('widget', 'plugins/qa-widget-activity-count.php', 'qa_activity_count', 'Activity Count');
 		qa_register_module('widget', 'plugins/qa-widget-ask-box.php', 'qa_ask_box', 'Ask Box');
 		qa_register_module('widget', 'plugins/qa-widget-related-qs.php', 'qa_related_qs', 'Related Questions');
+		qa_register_module('widget', 'plugins/qa-widget-category-list.php', 'qa_category_list', 'Categories');
 	}
 
 

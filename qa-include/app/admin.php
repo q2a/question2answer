@@ -176,7 +176,7 @@
 			'MB' => qa_lang_html('options/place_main_bottom'),
 			'ST' => qa_lang_html('options/place_side_top'),
 			'SH' => qa_lang_html('options/place_side_below_sidebar'),
-			'SL' => qa_lang_html('options/place_side_below_categories'),
+			'SL' => qa_lang_html('options/place_side_low'),
 			'SB' => qa_lang_html('options/place_side_last'),
 		);
 	}

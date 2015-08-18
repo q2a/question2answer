@@ -198,8 +198,9 @@
 		'place_main_below_title' => 'Main area - Below title',
 		'place_main_bottom' => 'Main area - Bottom',
 		'place_main_top' => 'Main area - Top',
-		'place_side_below_categories' => 'Side panel - Below categories',
+		'place_side_below_categories' => 'Side panel - Below categories', // @deprecated
 		'place_side_below_sidebar' => 'Side panel - Below sidebar box',
+		'place_side_low' => 'Side panel - Low',
 		'place_side_last' => 'Side panel - Last',
 		'place_side_top' => 'Side panel - Top',
 		'points_a_selected' => 'Having your answer selected as the best:',
