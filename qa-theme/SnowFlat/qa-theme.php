@@ -289,7 +289,6 @@ class qa_html_theme extends qa_html_theme_base
 		$this->widgets('side', 'top');
 		$this->sidebar();
 		$this->widgets('side', 'high');
-		$this->nav('cat', 1);
 		$this->widgets('side', 'low');
 		if (isset($this->content['sidepanel']))
 			$this->output_raw($this->content['sidepanel']);
