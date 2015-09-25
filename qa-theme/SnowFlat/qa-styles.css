@@ -1997,6 +1997,9 @@ input[type="submit"], button {
 	width: auto;
 }
 
+.qa-part-form-profile .qa-form-wide-data {
+	word-break: break-word;
+}
 .qa-part-form-profile .qa-form-tall-image {
 	text-align: center;
 }
