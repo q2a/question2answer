@@ -25,7 +25,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 60);
+	define('QA_DB_VERSION_CURRENT', 61);
 
 
 	function qa_db_user_column_type_verify()
@@ -1444,6 +1444,19 @@
 						$widgetid = qa_db_widget_create('Categories', 'all');
 						qa_db_widget_move($widgetid, 'SL', 1);
 					}
+					break;
+
+				case 61:
+					// upgrade length of qa_posts.content field to 12000
+					$newlength = QA_DB_MAX_CONTENT_LENGTH;
+					$query = 'SELECT CHARACTER_MAXIMUM_LENGTH FROM information_schema.COLUMNS WHERE table_schema=$ AND table_name=$ AND column_name="content"';
+					$tablename = qa_db_add_table_prefix('posts');
+					$oldlength = qa_db_read_one_value(qa_db_query_sub($query, QA_FINAL_MYSQL_DATABASE, $tablename));
+
+					if ($oldlength < $newlength) {
+						qa_db_upgrade_query('ALTER TABLE ^posts MODIFY content '.$definitions['posts']['content']);
+					}
+
 					break;
 
 			//	Up to here: Verison 1.8 alpha

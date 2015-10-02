@@ -32,7 +32,7 @@
 	@define('QA_DB_MAX_EMAIL_LENGTH', 80);
 	@define('QA_DB_MAX_HANDLE_LENGTH', 20);
 	@define('QA_DB_MAX_TITLE_LENGTH', 800);
-	@define('QA_DB_MAX_CONTENT_LENGTH', 8000);
+	@define('QA_DB_MAX_CONTENT_LENGTH', 12000);
 	@define('QA_DB_MAX_FORMAT_LENGTH', 20);
 	@define('QA_DB_MAX_TAGS_LENGTH', 800);
 	@define('QA_DB_MAX_NAME_LENGTH', 40);
