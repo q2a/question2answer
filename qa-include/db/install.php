@@ -25,7 +25,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 59);
+	define('QA_DB_VERSION_CURRENT', 60);
 
 
 	function qa_db_user_column_type_verify()
@@ -1421,7 +1421,7 @@
 					break;
 
 				case 58:
-					// Note: need to use full table names here as aliases trigger error "Table 'x' was not locked with LOCK TABLES"
+					// note: need to use full table names here as aliases trigger error "Table 'x' was not locked with LOCK TABLES"
 					qa_db_upgrade_query('DELETE FROM ^userfavorites WHERE entitytype="U" AND userid=entityid');
 					qa_db_upgrade_query('DELETE ^uservotes FROM ^uservotes JOIN ^posts ON ^uservotes.postid=^posts.postid AND ^uservotes.userid=^posts.userid');
 					qa_db_upgrade_query($locktablesquery);
@@ -1433,10 +1433,20 @@
 			//	Up to here: Verison 1.7
 
 				case 59:
-					// Upgrade from alpha version removed
+					// upgrade from alpha version removed
 					break;
 
 			//	Up to here: Verison 1.7.1
+
+				case 60:
+					// add new category widget - note title must match that from qa_register_core_modules()
+					if (qa_using_categories()) {
+						$widgetid = qa_db_widget_create('Categories', 'all');
+						qa_db_widget_move($widgetid, 'SL', 1);
+					}
+					break;
+
+			//	Up to here: Verison 1.8 alpha
 
 			}
 
