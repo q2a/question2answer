@@ -67,7 +67,7 @@ class qa_html_theme extends qa_html_theme_base
 			$this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
 		// add Ubuntu font CSS file
-		$this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
+		$this->content['css_src'][] = 'font/ubuntu.css';
 
 		parent::head_css();
 
