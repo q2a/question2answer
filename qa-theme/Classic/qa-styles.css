@@ -24,7 +24,7 @@ p {margin-top:0;}
 
 /* Ajax loading spinner */
 
-.qa-waiting {background:url(spinner-icon-14x14.gif) no-repeat center; width:14px; height:14px; display:inline-block; font-size:0; margin:0px 8px 0px 4px; vertical-align:middle;}
+.qa-waiting {background:url(spinner-icon-14x14.gif) no-repeat center; width:14px; height:14px; display:inline-block; font-size:0; margin:0 8px 0 4px; vertical-align:middle;}
 .qa-favoriting .qa-waiting {position:absolute; padding:6px 4px;}
 .qa-a-selection .qa-waiting {position:absolute; padding:7px 0;}
 
@@ -49,9 +49,9 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 
 .qa-favorite-button,.qa-unfavorite-button {background:url(favorite-plus.gif) no-repeat; border:0; height:26px; width:26px;}
 	.qa-favorite-button {background-position: 0 -26px;}
-	.qa-favorite-button:hover {background-position: 0 0px;}
+	.qa-favorite-button:hover {background-position: 0 0;}
 	.qa-unfavorite-button {background-position: 0 -52px;}
-	.qa-unfavorite-button:hover {background-position: 0 0px;}
+	.qa-unfavorite-button:hover {background-position: 0 0;}
 
 .qa-error {background:#fee; border:1px solid #c00; color:#c00; font-size:16px; padding:.5em; margin-bottom:1em; font-weight:bold;}
 	.qa-error a {color:#900; text-decoration:underline;}
@@ -148,7 +148,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-form-tall-spacer {background:#E3F4FF; line-height:1px; padding:0; font-size:1px;}
 .qa-form-tall-ok {background:#efe; border:1px solid #090; color:#090; font-size:18px; padding:6px; text-align:center;}
 .qa-form-tall-label {color:#253845; padding:12px 8px 2px 8px; font-size:13px; font-weight:bold;}
-.qa-form-tall-data {padding:0px 8px 6px 8px; width:480px;}
+.qa-form-tall-data {padding:0 8px 6px 8px; width:480px;}
 .qa-form-tall-text,.qa-form-tall-number {padding:3px;}
 .qa-form-tall-text {width:480px; border:1px solid #658296;}
 .qa-form-tall-number {width:48px; border:1px solid #658296;}
@@ -371,7 +371,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-c-item-who-title {font-size:80%; font-weight:bold; color:#900707;}
 .qa-c-item-who-points {display:none;}
 .qa-c-item-flags {background:#f00; color:#fff; font-weight:bold; padding:2px 5px; display:inline-block;}
-.qa-c-item-buttons {display:block; position:absolute; bottom:0px; right:0px;}
+.qa-c-item-buttons {display:block; position:absolute; bottom:0; right:0;}
 
 /* Message list */
 

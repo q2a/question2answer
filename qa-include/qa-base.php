@@ -187,7 +187,7 @@
 
 		require_once QA_BASE_DIR.'qa-config.php';
 
-		$qa_request_map=is_array(@$QA_CONST_PATH_MAP) ? $QA_CONST_PATH_MAP : array();
+		$qa_request_map = isset($QA_CONST_PATH_MAP) && is_array($QA_CONST_PATH_MAP) ? $QA_CONST_PATH_MAP : array();
 
 		if (defined('QA_WORDPRESS_INTEGRATE_PATH') && strlen(QA_WORDPRESS_INTEGRATE_PATH)) {
 			define('QA_FINAL_WORDPRESS_INTEGRATE_PATH', QA_WORDPRESS_INTEGRATE_PATH.((substr(QA_WORDPRESS_INTEGRATE_PATH, -1)=='/') ? '' : '/'));

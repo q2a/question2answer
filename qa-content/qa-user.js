@@ -82,7 +82,7 @@ function qa_wall_post_click(messageid, target)
 				var h=lines.slice(1).join("\n");
 
 				if (h.length)
-					qa_set_outer_html(l, 'wallpost', h)
+					qa_set_outer_html(l, 'wallpost', h);
 				else
 					qa_conceal(l, 'wallpost');
 
@@ -118,7 +118,7 @@ function qa_pm_click(messageid, target, box)
 				var h = lines.slice(1).join("\n");
 
 				if (h.length)
-					qa_set_outer_html(l, 'pmessage', h)
+					qa_set_outer_html(l, 'pmessage', h);
 				else
 					qa_conceal(l, 'pmessage');
 

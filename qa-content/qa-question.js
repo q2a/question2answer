@@ -212,7 +212,7 @@ function qa_comment_click(commentid, questionid, parentid, target)
 				var h=lines.slice(1).join("\n");
 
 				if (h.length)
-					qa_set_outer_html(l, 'comment', h)
+					qa_set_outer_html(l, 'comment', h);
 				else
 					qa_conceal(l, 'comment');
 

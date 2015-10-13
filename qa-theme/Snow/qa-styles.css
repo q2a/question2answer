@@ -114,7 +114,7 @@ input[type="text"].qa-search-field {
 	padding: 4px 5px;
 }
 
-input[type="text"], input[type="password"], textarea, select, checkbox, radio {
+input[type="text"], input[type="password"], textarea, select {
 	border: 1px solid #ddd;
 	padding: 5px;
 	color: #777;
@@ -1891,7 +1891,7 @@ a.qa-browse-cat-link:visited {
 
 .qa-q-view-hidden .qa-tag-link {
 	color: #ccc;
-	opacity: 0.5px;
+	opacity: 0.5;
 }
 
 /* Answer view */
@@ -2360,7 +2360,7 @@ a.qa-browse-cat-link:visited {
 	height: 14px;
 	display: inline-block;
 	font-size: 0;
-	margin: 0px 8px 0px 4px;
+	margin: 0 8px 0 4px;
 	vertical-align: middle;
 }
 
