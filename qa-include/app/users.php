@@ -154,9 +154,14 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			$prefix=defined('QA_MYSQL_USERS_PREFIX') ? QA_MYSQL_USERS_PREFIX : QA_MYSQL_TABLE_PREFIX;
+			global $qa_session_suffix;
 
-			return md5(QA_FINAL_MYSQL_HOSTNAME.'/'.QA_FINAL_MYSQL_USERNAME.'/'.QA_FINAL_MYSQL_PASSWORD.'/'.QA_FINAL_MYSQL_DATABASE.'/'.$prefix);
+			if (!$qa_session_suffix) {
+				$prefix=defined('QA_MYSQL_USERS_PREFIX') ? QA_MYSQL_USERS_PREFIX : QA_MYSQL_TABLE_PREFIX;
+				$qa_session_suffix = md5(QA_FINAL_MYSQL_HOSTNAME.'/'.QA_FINAL_MYSQL_USERNAME.'/'.QA_FINAL_MYSQL_PASSWORD.'/'.QA_FINAL_MYSQL_DATABASE.'/'.$prefix);
+			}
+
+			return $qa_session_suffix;
 		}
 
 
