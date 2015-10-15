@@ -634,25 +634,29 @@
 	}
 
 
+	/**
+	 * If $function has been overridden by a plugin override, return the name of the overriding function, otherwise return
+	 * null. But if the function is being called with the _base suffix, any override will be bypassed due to $qa_direct
+	 * @param string $function  The function to override
+	 */
 	function qa_to_override($function)
-/*
-	If $function has been overridden by a plugin override, return the name of the overriding function, otherwise return
-	null. But if the function is being called with the _base suffix, any override will be bypassed due to $qa_direct
-*/
 	{
 		global $qa_overrides, $qa_direct;
 
-		if (strpos($function, '_override_')!==false)
-			qa_fatal_error('Override functions should not be calling qa_to_override()!');
-
-		if (isset($qa_overrides[$function])) {
-			if (@$qa_direct[$function])
-				unset($qa_direct[$function]); // bypass the override just this once
-			else
-				return $qa_overrides[$function];
+		// handle most common case first
+		if (!isset($qa_overrides[$function])) {
+			return null;
 		}
 
-		return null;
+		if (strpos($function, '_override_')!==false) {
+			qa_fatal_error('Override functions should not be calling qa_to_override()!');
+		}
+
+		if (@$qa_direct[$function]) {
+			unset($qa_direct[$function]); // bypass the override just this once
+		}
+
+		return $qa_overrides[$function];
 	}
 
 
