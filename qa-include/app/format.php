@@ -426,9 +426,9 @@
 
 			if ($microdata) {
 				// vote display might be compacted so use meta tag for true count
-				$netvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '">';
-				$upvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '">';
-				$downvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($downvotes) . '">';
+				$netvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '"/>';
+				$upvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '"/>';
+				$downvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($downvotes) . '"/>';
 			}
 
 		//	Pass information on vote viewing
