@@ -460,9 +460,11 @@
 
 			$url = qa_path_html('user/'.$handle);
 			$favclass = $favorited ? ' qa-user-favorited' : '';
-			$mfclass = $microformats ? ' url fn entry-title nickname' : '';
+			$mfAttr = $microformats ? ' itemprop="name"' : '';
+			$mfPrefix = $microformats ? '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' : '';
+			$mfSuffix = $microformats ? '</span>' : '';
 
-			return '<a href="'.$url.'" class="qa-user-link'.$favclass.$mfclass.'">'.qa_html($handle).'</a>';
+			return $mfPrefix . '<a href="'.$url.'" class="qa-user-link'.$favclass.'"'.$mfAttr.'>'.qa_html($handle).'</a>' . $mfSuffix;
 		}
 
 

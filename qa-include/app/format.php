@@ -689,8 +689,6 @@
 
 		if (isset($postuserid) && isset($usershtml[$postuserid])) {
 			$whohtml=$usershtml[$postuserid];
-			if ($microformats)
-				$whohtml='<span class="vcard author">'.$whohtml.'</span>';
 
 		} else {
 			if (strlen($name))
