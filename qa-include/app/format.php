@@ -83,41 +83,45 @@
 	}
 
 
-	function qa_userids_handles_html($useridhandles, $microformats=false)
-/*
-	Return array which maps the ['userid'] and/or ['lastuserid'] in each element of
-	$useridhandles to its HTML representation. For internal user management, corresponding
-	['handle'] and/or ['lasthandle'] are required in each element.
-*/
+	/**
+	 * Return array which maps the 'userid' and/or 'lastuserid' of each user to its HTML representation.
+	 * For internal user management, corresponding 'handle' and/or 'lasthandle' are required in each element.
+	 *
+	 * @param array $useridhandles  User IDs or usernames.
+	 * @param bool $microdata  Whether to include microdata.
+	 * @return array  The HTML.
+	 */
+	function qa_userids_handles_html($useridhandles, $microdata=false)
 	{
 		require_once QA_INCLUDE_DIR.'app/users.php';
 
 		if (QA_FINAL_EXTERNAL_USERS) {
-			$keyuserids=array();
+			$keyuserids = array();
 
 			foreach ($useridhandles as $useridhandle) {
 				if (isset($useridhandle['userid']))
-					$keyuserids[$useridhandle['userid']]=true;
+					$keyuserids[$useridhandle['userid']] = true;
 
 				if (isset($useridhandle['lastuserid']))
-					$keyuserids[$useridhandle['lastuserid']]=true;
+					$keyuserids[$useridhandle['lastuserid']] = true;
 			}
 
 			if (count($keyuserids))
-				return qa_get_users_html(array_keys($keyuserids), true, qa_path_to_root(), $microformats);
-			else
-				return array();
+				return qa_get_users_html(array_keys($keyuserids), true, qa_path_to_root(), $microdata);
 
-		} else {
-			$usershtml=array();
-			$favoritemap=qa_get_favorite_non_qs_map();
+			return array();
+		}
+		else {
+			$usershtml = array();
+			$favoritemap = qa_get_favorite_non_qs_map();
 
 			foreach ($useridhandles as $useridhandle) {
-				if (isset($useridhandle['userid']) && $useridhandle['handle'])
-					$usershtml[$useridhandle['userid']]=qa_get_one_user_html($useridhandle['handle'], $microformats, @$favoritemap['user'][$useridhandle['userid']]);
-
-				if (isset($useridhandle['lastuserid']) && $useridhandle['lasthandle'])
-					$usershtml[$useridhandle['lastuserid']]=qa_get_one_user_html($useridhandle['lasthandle'], $microformats, @$favoritemap['user'][$useridhandle['lastuserid']]);
+				if (isset($useridhandle['userid']) && $useridhandle['handle']) {
+					$usershtml[$useridhandle['userid']] = qa_get_one_user_html($useridhandle['handle'], $microdata, @$favoritemap['user'][$useridhandle['userid']]);
+				}
+				if (isset($useridhandle['lastuserid']) && $useridhandle['lasthandle']) {
+					$usershtml[$useridhandle['lastuserid']] = qa_get_one_user_html($useridhandle['lasthandle'], $microdata, @$favoritemap['user'][$useridhandle['lastuserid']]);
+				}
 			}
 
 			return $usershtml;
@@ -167,15 +171,23 @@
 	}
 
 
-	function qa_tag_html($tag, $microformats=false, $favorited=false)
-/*
-	Convert textual $tag to HTML representation, with microformats if $microformats is true. Set $favorited to true to show the tag as favorited.
-*/
+	/**
+	 * Convert textual tag to HTML representation, linked to its tag page.
+	 *
+	 * @param string $tag  The tag.
+	 * @param bool $microdata  Whether to include microdata.
+	 * @param bool $favorited  Show the tag as favorited.
+	 * @return string  The tag HTML.
+	 */
+	function qa_tag_html($tag, $microdata=false, $favorited=false)
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		return '<a href="'.qa_path_html('tag/'.$tag).'"'.($microformats ? ' rel="tag"' : '').' class="qa-tag-link'.
-			($favorited ? ' qa-tag-favorited' : '').'">'.qa_html($tag).'</a>';
+		$url = qa_path_html('tag/'.$tag);
+		$attrs = $microdata ? ' rel="tag"' : '';
+		$class = $favorited ? ' qa-tag-favorited' : '';
+
+		return '<a href="'.$url.'"'.$attrs.' class="qa-tag-link'.$class.'">'.qa_html($tag).'</a>';
 	}
 
 
@@ -622,11 +634,14 @@
 	}
 
 
+	/**
+	 * Generate array of mostly HTML representing a message, to be passed to theme layer.
+	 *
+	 * @param array $message  The message object (as retrieved from database).
+	 * @param array $options  Viewing options (see qa_message_html_defaults() in app/options.php).
+	 * @return array  The HTML.
+	 */
 	function qa_message_html_fields($message, $options=array())
-/*
-	Given $message retrieved from database, return an array of mostly HTML to be passed to theme layer.
-	Pass viewing options in $options (see qa_message_html_defaults() in qa-app-options.php)
-*/
 	{
 		require_once QA_INCLUDE_DIR.'app/users.php';
 
@@ -635,8 +650,7 @@
 		$fields = array('raw' => $message);
 		$fields['tags'] = 'id="m'.qa_html($message['messageid']).'"';
 
-	//	Message content
-
+		// message content
 		$viewer = qa_load_viewer($message['content'], $message['format']);
 
 		$fields['content'] = $viewer->get_html($message['content'], $message['format'], array(
@@ -645,19 +659,16 @@
 			'linksnewwindow' => @$options['linksnewwindow'],
 		));
 
-	//	Set ordering of meta elements which can be language-specific
-
+		// set ordering of meta elements which can be language-specific
 		$fields['meta_order'] = qa_lang_html('main/meta_order');
 
 		$fields['what'] = qa_lang_html('main/written');
 
-	//	When it was written
-
+		// when it was written
 		if (@$options['whenview'])
 			$fields['when'] = qa_when_to_html($message['created'], @$options['fulldatedays']);
 
-	//	Who wrote it, and their avatar
-
+		// who wrote it, and their avatar
 		if (@$options['towhomview']) {
 			// for sent private messages page (i.e. show who message was sent to)
 			$fields['who'] = qa_lang_html_sub_split('main/to_x', qa_get_one_user_html($message['tohandle'], false));
@@ -666,70 +677,87 @@
 		}
 		else {
 			// for everything else (received private messages, wall messages)
-			if (@$options['whoview'])
+			if (@$options['whoview']) {
 				$fields['who'] = qa_lang_html_sub_split('main/by_x', qa_get_one_user_html($message['fromhandle'], false));
+			}
 			if (@$options['avatarsize'] > 0) {
 				$fields['avatar'] = qa_get_user_avatar_html(@$message['fromflags'], @$message['fromemail'], @$message['fromhandle'],
 					@$message['fromavatarblobid'], @$message['fromavatarwidth'], @$message['fromavatarheight'], $options['avatarsize']);
 			}
 		}
 
-	//	That's it!
-
 		return $fields;
 	}
 
 
-	function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip=null, $microformats=false, $name=null)
-/*
-	Return array of split HTML (prefix, data, suffix) to represent author of post
-*/
+	/**
+	 * Generate array of split HTML (prefix, data, suffix) to represent author of post.
+	 *
+	 * @param bool $isbyuser  True if the current user made the post.
+	 * @param int $postuserid  The post user's ID.
+	 * @param array $usershtml  Array of HTML representing usernames.
+	 * @param string $ip  The post user's IP.
+	 * @param string $microdata  Whether to include microdata (no longer used).
+	 * @param string $name  The author's username.
+	 * @return array  The HTML.
+	 */
+	function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip=null, $microdata=false, $name=null)
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		if (isset($postuserid) && isset($usershtml[$postuserid])) {
-			$whohtml=$usershtml[$postuserid];
-
-		} else {
+			$whohtml = $usershtml[$postuserid];
+		}
+		else {
 			if (strlen($name))
-				$whohtml=qa_html($name);
+				$whohtml = qa_html($name);
 			elseif ($isbyuser)
-				$whohtml=qa_lang_html('main/me');
+				$whohtml = qa_lang_html('main/me');
 			else
-				$whohtml=qa_lang_html('main/anonymous');
+				$whohtml = qa_lang_html('main/anonymous');
 
 			if (isset($ip))
-				$whohtml=qa_ip_anchor_html($ip, $whohtml);
+				$whohtml = qa_ip_anchor_html($ip, $whohtml);
 		}
 
 		return qa_lang_html_sub_split('main/by_x', $whohtml);
 	}
 
 
+	/**
+	 * Generate array of split HTML (prefix, data, suffix) to represent a timestamp, optionally with the full date.
+	 *
+	 * @param int $timestamp  Unix timestamp.
+	 * @param bool $fulldatedays  Number of days after which to show the full date.
+	 * @return array  The HTML.
+	 */
 	function qa_when_to_html($timestamp, $fulldatedays)
-/*
-	Return array of split HTML (prefix, data, suffix) to represent unix $timestamp, with the full date shown if it's
-	more than $fulldatedays ago
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$interval=qa_opt('db_time')-$timestamp;
+		$interval = qa_opt('db_time') - $timestamp;
 
-		if ( ($interval<0) || (isset($fulldatedays) && ($interval>(86400*$fulldatedays))) ) { // full style date
-			$stampyear=date('Y', $timestamp);
-			$thisyear=date('Y', qa_opt('db_time'));
+		if ($interval < 0 || (isset($fulldatedays) && $interval > 86400*$fulldatedays)) {
+			// full style date
+			$stampyear = date('Y', $timestamp);
+			$thisyear = date('Y', qa_opt('db_time'));
 
-			return array(
-				'data' => qa_html(strtr(qa_lang(($stampyear==$thisyear) ? 'main/date_format_this_year' : 'main/date_format_other_years'), array(
-					'^day' => date((qa_lang('main/date_day_min_digits')==2) ? 'd' : 'j', $timestamp),
-					'^month' => qa_lang('main/date_month_'.date('n', $timestamp)),
-					'^year' => date((qa_lang('main/date_year_digits')==2) ? 'y' : 'Y', $timestamp),
-				))),
+			$dateFormat = qa_lang($stampyear == $thisyear ? 'main/date_format_this_year' : 'main/date_format_other_years');
+			$replaceData = array(
+				'^day' => date(qa_lang('main/date_day_min_digits')==2 ? 'd' : 'j', $timestamp),
+				'^month' => qa_lang('main/date_month_'.date('n', $timestamp)),
+				'^year' => date(qa_lang('main/date_year_digits')==2 ? 'y' : 'Y', $timestamp),
 			);
 
-		} else // ago-style date
+			return array(
+				'data' => qa_html(strtr($dateFormat, $replaceData)),
+			);
+
+		}
+		else {
+			// ago-style date
 			return qa_lang_html_sub_split('main/x_ago', qa_html(qa_time_to_string($interval)));
+		}
 	}
 
 

@@ -448,10 +448,15 @@
 		}
 
 
-		function qa_get_one_user_html($handle, $microformats=false, $favorited=false)
-	/*
-		Return HTML to display for user with username $handle, with microformats if $microformats is true. Set $favorited to true to show the user as favorited.
-	*/
+		/**
+		 * Get HTML to display a username, linked to their user page.
+		 *
+		 * @param string $handle  The username.
+		 * @param bool $microdata  Whether to include microdata.
+		 * @param bool $favorited  Show the user as favorited.
+		 * @return string  The user HTML.
+		 */
+		function qa_get_one_user_html($handle, $microdata=false, $favorited=false)
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -460,9 +465,9 @@
 
 			$url = qa_path_html('user/'.$handle);
 			$favclass = $favorited ? ' qa-user-favorited' : '';
-			$mfAttr = $microformats ? ' itemprop="name"' : '';
-			$mfPrefix = $microformats ? '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' : '';
-			$mfSuffix = $microformats ? '</span>' : '';
+			$mfAttr = $microdata ? ' itemprop="name"' : '';
+			$mfPrefix = $microdata ? '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' : '';
+			$mfSuffix = $microdata ? '</span>' : '';
 
 			return $mfPrefix . '<a href="'.$url.'" class="qa-user-link'.$favclass.'"'.$mfAttr.'>'.qa_html($handle).'</a>' . $mfSuffix;
 		}
