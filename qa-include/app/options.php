@@ -280,6 +280,7 @@
 			'min_len_q_content' => 0,
 			'min_len_q_title' => 12,
 			'min_num_q_tags' => 0,
+			'minify_html' => 1,
 			'moderate_notify_admin' => 1,
 			'moderate_points_limit' => 150,
 			'moderate_update_time' => 1,

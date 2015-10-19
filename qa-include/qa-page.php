@@ -490,6 +490,10 @@
 			'charset' => $charset,
 			'direction' => qa_opt('site_text_direction'),
 
+			'options' => array(
+				'minify_html' => qa_opt('minify_html'),
+			),
+
 			'site_title' => qa_html(qa_opt('site_title')),
 
 			'head_lines' => array(),

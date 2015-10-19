@@ -45,6 +45,7 @@ class qa_html_theme_base
 	public $request;
 	public $isRTL; // (boolean) whether text direction is Right-To-Left
 
+	protected $minifyHtml; // (boolean) whether to indent the HTML
 	protected $indent = 0;
 	protected $lines = 0;
 	protected $context = array();
@@ -65,6 +66,7 @@ class qa_html_theme_base
 		$this->rooturl = $rooturl;
 		$this->request = $request;
 		$this->isRTL = isset($content['direction']) && $content['direction'] === 'rtl';
+		$this->minifyHtml = !empty($content['options']['minify_html']);
 	}
 
 	/**
@@ -85,16 +87,24 @@ class qa_html_theme_base
 	public function output_array($elements)
 	{
 		foreach ($elements as $element) {
-			$delta = substr_count($element, '<') - substr_count($element, '<!') - 2*substr_count($element, '</') - substr_count($element, '/>');
+			$line = str_replace('/>', '>', $element);
 
-			if ($delta < 0) {
-				$this->indent += $delta;
+			if ($this->minifyHtml) {
+				if (strlen($line))
+					echo $line."\n";
 			}
+			else {
+				$delta = substr_count($element, '<') - substr_count($element, '<!') - 2*substr_count($element, '</') - substr_count($element, '/>');
 
-			echo str_repeat("\t", max(0, $this->indent)).str_replace('/>', '>', $element)."\n";
+				if ($delta < 0) {
+					$this->indent += $delta;
+				}
 
-			if ($delta > 0) {
-				$this->indent += $delta;
+				echo str_repeat("\t", max(0, $this->indent)).$line."\n";
+
+				if ($delta > 0) {
+					$this->indent += $delta;
+				}
 			}
 
 			$this->lines++;
@@ -201,7 +211,7 @@ class qa_html_theme_base
 	 */
 	public function finish()
 	{
-		if ($this->indent) {
+		if ($this->indent !== 0 && !$this->minifyHtml) {
 			echo "<!--\nIt's no big deal, but your HTML could not be indented properly. To fix, please:\n".
 				"1. Use this->output() to output all HTML.\n".
 				"2. Balance all paired tags like <td>...</td> or <div>...</div>.\n".

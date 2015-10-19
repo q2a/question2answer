@@ -219,6 +219,7 @@
 		'suspend_register_users' => 'checkbox',
 		'tag_separator_comma' => 'checkbox',
 		'use_microdata' => 'checkbox',
+		'minify_html' => 'checkbox',
 		'votes_separated' => 'checkbox',
 		'voting_on_as' => 'checkbox',
 		'voting_on_q_page_only' => 'checkbox',
@@ -384,7 +385,7 @@
 			}
 
 			array_push($showoptions,
-				'show_user_points', 'show_post_update_meta', 'show_compact_numbers', 'use_microdata', '',
+				'show_user_points', 'show_post_update_meta', 'show_compact_numbers', 'use_microdata', 'minify_html', '',
 				'sort_answers_by', 'show_selected_first', 'page_size_q_as', 'show_a_form_immediate'
 			);
 

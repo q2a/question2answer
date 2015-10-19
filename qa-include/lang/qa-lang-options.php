@@ -142,6 +142,7 @@
 		'min_len_q_content' => 'Minimum length of question body:',
 		'min_len_q_title' => 'Minimum length of question title:',
 		'min_num_q_tags' => 'Minimum number of tags:',
+		'minify_html' => 'Minify HTML:',
 		'moderate_anon_post' => 'Use moderation for anonymous posts:',
 		'moderate_by_points' => 'Use moderation for users with few points:',
 		'moderate_edited_again' => 'Re-moderate posts after editing:',
