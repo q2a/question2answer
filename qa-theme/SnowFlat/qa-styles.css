@@ -909,6 +909,13 @@ blockquote p {
 	width: auto !important;
 }
 
+
+.qa-q-view-content,
+.qa-a-item-content,
+.qa-c-item-content {
+	word-break: break-word;
+}
+
 .entry-content table, .qa-c-item-content table {
 	width: 100%;
 	border-collapse: collapse;

@@ -284,6 +284,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 
 /* Question view */
 
+.qa-q-view-content, .qa-a-item-content, .qa-c-item-content {word-break: break-word;}
 .qa-q-view-stats {float:left;}
 .qa-q-view-main {float:left; width:600px;}
 .qa-q-view-content {font-size:14px; margin-bottom:16px;}
