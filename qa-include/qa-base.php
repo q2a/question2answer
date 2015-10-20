@@ -270,7 +270,7 @@
 		define('QA_URL_FORMAT_PARAMS', 4); // http://...../?qa=123&qa_1=why-is-the-sky-blue
 		define('QA_URL_FORMAT_SAFEST', 5); // http://...../index.php?qa=123&qa_1=why-is-the-sky-blue
 
-		define('QA_URL_TEST_STRING', '$&-_~#%\\@^*()=!()][`\';:|".{},<>?# π§½Жש'); // tests escaping, spaces, quote slashing and unicode - but not + and /
+		define('QA_URL_TEST_STRING', '$&-_~#%\\@^*()][`\';=:|".{},!<>?# π§½Жש'); // tests escaping, spaces, quote slashing and unicode - but not + and /
 	}
 
 
