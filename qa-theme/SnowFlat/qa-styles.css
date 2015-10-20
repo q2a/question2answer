@@ -895,9 +895,6 @@ blockquote p {
 	}
 }
 
-
-
-
 .qam-title-rss {
 	float: right;
 	color: #ecf0f1;
@@ -916,70 +913,37 @@ blockquote p {
 	word-break: break-word;
 }
 
-.entry-content table, .qa-c-item-content table {
+.qa-q-view-content table, .qa-a-item-content table, .qa-c-item-content table {
 	width: 100%;
 	border-collapse: collapse;
 	border: 1px solid #ecf0f1;
 	font-size: 14px;
 	margin-bottom: 20px;
 }
-.entry-content tr:hover, .qa-c-item-content tr:hover {
+.qa-q-view-content tr:hover, .qa-a-item-content tr:hover, .qa-c-item-content tr:hover {
 	background-color: #ecf0f1;
 }
-.entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
+.qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th,
+.qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
 	padding: 10px;
 	border-width: 1px;
 	border-style: solid;
 	text-align: left;
 }
-.entry-content th, .qa-c-item-content th {
+.qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th {
 	background-color: #bdc3c7;
 	border-color: #95a5a6;
 	font-weight: 700;
 }
-.entry-content td, .qa-c-item-content td {
+.qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
 	border-color: #ecf0f1;
 }
-.entry-content ul, .qa-c-item-content ul {
-	margin: 20px 0 20px 20px;
+.qa-q-view-content ul, .qa-a-item-content ul, .qa-c-item-content ul,
+.qa-q-view-content ol, .qa-a-item-content ol, .qa-c-item-content ol {
+	margin-left: 20px;
 	padding: 0;
 }
-.entry-content ul > li, .qa-c-item-content ul > li {
-	list-style: none;
-	margin: .4em 0;
-	position: relative;
-}
-.entry-content ul > li:before, .qa-c-item-content ul > li:before {
-	font-family: "fontello";
-	font-style: normal;
-	font-weight: normal;
-	speak: none;
-	content: '\e82c';
-	position: absolute;
-	left: -1.6em;
-	top: 4px;
-	display: inline-block;
-	text-decoration: inherit;
-	width: 1em;
-	margin: 0 .2em;
-	text-align: center;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1em;
-}
-.entry-content ul > li > ul, .qa-c-item-content ul > li > ul {
-	margin: 0 0 0 20px;
-}
-.entry-content ol, .qa-c-item-content ol {
-	margin: 20px 0 20px 20px;
-	padding: 0;
-}
-.entry-content ol > li, .qa-c-item-content ol > li {
-	margin: .4em 0;
-}
-.entry-content ol > li > ol, .qa-c-item-content ol > li > ol {
-	margin: 0 0 0 20px;
-}
+
 
 .qa-waiting {
 	background: url('images/spinner-icon-14x14.gif?1410117644') no-repeat center;
