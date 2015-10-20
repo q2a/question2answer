@@ -134,20 +134,32 @@
 	}
 
 
+	/**
+	 * Determine whether the requesting IP address has been blocked from write operations.
+	 * @return bool
+	 */
 	function qa_is_ip_blocked()
-/*
-	Return whether the requesting IP address has been blocked from write operations
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		$blockipclauses=qa_block_ips_explode(qa_opt('block_ips_write'));
+		global $qa_curr_ip_blocked;
 
-		foreach ($blockipclauses as $blockipclause)
-			if (qa_block_ip_match(qa_remote_ip_address(), $blockipclause))
-				return true;
+		// return cached value early
+		if (isset($qa_curr_ip_blocked))
+			return $qa_curr_ip_blocked;
 
-		return false;
+		$qa_curr_ip_blocked = false;
+		$blockipclauses = qa_block_ips_explode(qa_opt('block_ips_write'));
+		$ip = qa_remote_ip_address();
+
+		foreach ($blockipclauses as $blockipclause) {
+			if (qa_block_ip_match($ip, $blockipclause)) {
+				$qa_curr_ip_blocked = true;
+				break;
+			}
+		}
+
+		return $qa_curr_ip_blocked;
 	}
 
 
