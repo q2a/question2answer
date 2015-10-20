@@ -15,7 +15,7 @@
 .qa-template-admin .qa-message-buttons,
 .qa-q-item-avatar-meta, .qa-message-item,
 .qa-q-view, .qa-part-q-view, .qa-q-view-content, .qa-q-view-buttons, .qa-part-form-q-edit,
-.qa-a-list-item, .qa-a-item-buttons,
+.qa-a-list-item, .qa-a-item-buttons, .qa-a-item-content,
 .qa-c-item-buttons, .qa-c-item-clear,
 .qam-footer-row, .qam-qa-list-meta-box,
 .qa-nav-footer-list, .qa-footer-clear {
@@ -28,7 +28,7 @@
 .qa-template-admin .qa-message-buttons:after,
 .qa-q-item-avatar-meta:after, .qa-message-item:after,
 .qa-q-view:after, .qa-part-q-view:after, .qa-q-view-content:after, .qa-q-view-buttons:after, .qa-part-form-q-edit:after,
-.qa-a-list-item:after, .qa-a-item-buttons:after,
+.qa-a-list-item:after, .qa-a-item-buttons:after, .qa-a-item-content:after,
 .qa-c-item-buttons:after, .qa-c-item-clear:after,
 .qam-footer-row:after, .qam-qa-list-meta-box:after,
 .qa-nav-footer-list:after, .qa-footer-clear:after {
