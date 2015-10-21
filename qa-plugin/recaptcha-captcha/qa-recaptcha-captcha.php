@@ -25,6 +25,12 @@ class qa_recaptcha_captcha
 	private $directory;
 	private $errorCodeMessages;
 
+	/**
+	 * String constant used to show the signup URL to the admin
+	 * @var string
+	 */
+	private static $_signupUrl = 'https://www.google.com/recaptcha/admin';
+
 	public function load_module($directory, $urltoroot)
 	{
 		$this->directory = $directory;
@@ -54,8 +60,8 @@ class qa_recaptcha_captcha
 
 		$error = null;
 		if (!strlen($pub) || !strlen($pri)) {
-			require_once $this->directory.'recaptchalib.php';
-			$error = 'To use reCAPTCHA, you must <a href="'.qa_html(ReCaptcha::getSignupUrl()).'" target="_blank">sign up</a> to get these keys.';
+			require_once $this->directory.'lib/autoload.php';
+			$error = 'To use reCAPTCHA, you must <a href="'.qa_html(self::getSignupUrl()).'" target="_blank">sign up</a> to get these keys.';
 		}
 
 		$form = array(
@@ -131,19 +137,28 @@ class qa_recaptcha_captcha
 	 */
 	public function validate_post(&$error)
 	{
-		require_once $this->directory.'recaptchalib.php';
+		require_once $this->directory.'lib/autoload.php';
 
-		$recaptcha = new ReCaptcha(qa_opt('recaptcha_private_key'));
+		$recaptcha = new \ReCaptcha\ReCaptcha(qa_opt('recaptcha_private_key'));
 		$remoteIp = qa_remote_ip_address();
 		$userResponse = qa_post_text('g-recaptcha-response');
 
-		$recResponse = $recaptcha->verifyResponse($remoteIp, $userResponse);
+		$recResponse = $recaptcha->verify($userResponse , $remoteIp);
 
-		foreach ($recResponse->errorCodes as $code) {
+		foreach ($recResponse->getErrorCodes() as $code) {
 			if (isset($this->errorCodeMessages[$code]))
 				$error .= $this->errorCodeMessages[$code] . "\n";
 		}
 
-		return $recResponse->success;
+		return $recResponse->isSuccess();
+	}
+
+	/**
+	 * Returns the signup URL
+	 * @return string
+	 */
+	public static function getSignupUrl()
+	{
+		return self::$_signupUrl;
 	}
 }
