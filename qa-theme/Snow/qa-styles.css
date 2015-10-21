@@ -2518,6 +2518,9 @@ a.qa-browse-cat-link:visited {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+.qa-template-user .qa-part-form-profile .qa-form-wide-data {
+	word-break: break-word;
+}
 
 .qa-template-user .qa-part-form-activity td .qa-uf-user-points,
 .qa-template-user .qa-part-form-activity td .qa-uf-user-q-posts,
