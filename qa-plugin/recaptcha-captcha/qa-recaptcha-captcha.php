@@ -60,7 +60,6 @@ class qa_recaptcha_captcha
 
 		$error = null;
 		if (!strlen($pub) || !strlen($pri)) {
-			require_once $this->directory.'lib/autoload.php';
 			$error = 'To use reCAPTCHA, you must <a href="'.qa_html(self::getSignupUrl()).'" target="_blank">sign up</a> to get these keys.';
 		}
 
