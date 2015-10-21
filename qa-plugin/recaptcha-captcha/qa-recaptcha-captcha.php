@@ -138,7 +138,14 @@ class qa_recaptcha_captcha
 	{
 		require_once $this->directory.'lib/autoload.php';
 
-		$recaptcha = new \ReCaptcha\ReCaptcha(qa_opt('recaptcha_private_key'));
+		if (ini_get('allow_url_fopen')) {
+			// allow_url_fopen = On
+			$recaptcha = new \ReCaptcha\ReCaptcha(qa_opt('recaptcha_private_key'));
+		} else {
+			// allow_url_fopen = Off
+			$recaptcha = new \ReCaptcha\ReCaptcha(qa_opt('recaptcha_private_key'), new \ReCaptcha\RequestMethod\SocketPost());
+		}
+
 		$remoteIp = qa_remote_ip_address();
 		$userResponse = qa_post_text('g-recaptcha-response');
 
