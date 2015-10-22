@@ -34,6 +34,9 @@
  */
 class qa_html_theme extends qa_html_theme_base
 {
+	// use local font files instead of Google Fonts
+	private $localfonts = true;
+
 	// theme subdirectories
 	private $js_dir = 'js';
 	private $icon_url = 'images/icons';
@@ -66,8 +69,11 @@ class qa_html_theme extends qa_html_theme_base
 		if ($this->isRTL)
 			$this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
-		// add Ubuntu font CSS file
-		$this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
+		// add Ubuntu font CSS file from Google Fonts
+		if ($this->localfonts)
+			$this->content['css_src'][] = $this->rooturl . 'fonts/ubuntu.css?' . QA_VERSION;
+		else
+			$this->content['css_src'][] = '//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
 
 		parent::head_css();
 

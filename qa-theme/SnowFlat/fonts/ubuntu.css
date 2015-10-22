@@ -1,0 +1,20 @@
+@font-face {
+	font-family: 'Ubuntu'; font-weight: 400; font-style: normal;
+	src: local('Ubuntu'), local('Ubuntu-regular'),
+		url('Ubuntu-regular.woff') format('woff');
+}
+@font-face {
+	font-family: 'Ubuntu'; font-weight: 700; font-style: normal;
+	src: local('Ubuntu Bold'), local('Ubuntu-700'),
+		url('Ubuntu-700.woff') format('woff');
+}
+@font-face {
+	font-family: 'Ubuntu'; font-weight: 400; font-style: italic;
+	src: local('Ubuntu Italic'), local('Ubuntu-italic'),
+		url('Ubuntu-italic.woff') format('woff');
+}
+@font-face {
+	font-family: 'Ubuntu'; font-weight: 700; font-style: italic;
+	src: local('Ubuntu Bold Italic'), local('Ubuntu-700italic'),
+		url('Ubuntu-700italic.woff') format('woff');
+}
