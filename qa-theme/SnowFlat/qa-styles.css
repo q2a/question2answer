@@ -37,10 +37,17 @@
 	clear: both;
 }
 
+/*------[ web fonts ]------*/
+
 @font-face {
 	font-family: "fontello";
-	src: url("font/fontello.eot?2559038") format("embedded-opentype"), url("font/fontello.eot?2559038#iefix") format("embedded-opentype"), url("font/fontello.woff?2559038") format("woff"), url("font/fontello.ttf?2559038") format("truetype"), url("font/fontello.svg?2559038#fontello") format("svg");
+	src: url("fonts/fontello.eot?2559038") format("embedded-opentype"),
+		url("fonts/fontello.eot?2559038#iefix") format("embedded-opentype"),
+		url("fonts/fontello.woff?2559038") format("woff"),
+		url("fonts/fontello.ttf?2559038") format("truetype"),
+		url("fonts/fontello.svg?2559038#fontello") format("svg");
 }
+
 /*------[ base css ]------*/
 html {
 	font-size: 16px;
