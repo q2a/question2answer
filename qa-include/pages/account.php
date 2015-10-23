@@ -184,10 +184,6 @@
 						qa_send_new_confirm($userid);
 				}
 
-				list($useraccount, $userprofile) = qa_db_select_with_pending(
-					qa_db_user_account_selectspec($userid, true), qa_db_user_profile_selectspec($userid, true)
-				);
-
 				qa_report_event('u_save', $userid, $useraccount['handle'], qa_cookie_get());
 
 				if (empty($errors))
