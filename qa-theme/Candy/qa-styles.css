@@ -479,3 +479,6 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 * html .qa-tag-link {background:url(tag-icon-ie6.png) no-repeat left center;}
 * html .qa-a-count {background:url(a-count-icon-ie6.png) no-repeat 32px 13px;}
 * html .qa-favorite-image {background:url(favorite-heart-ie6.png) no-repeat 0 0px;}
+.qa-c-list-item:target {animation: highlight 3s ease-in-out;}
+.qa-a-list-item:target{animation: highlight 3s ease-in-out;}
+@keyframes highlight {0% { background: #FFFFAA none; }25% { background: #FFFFD0 none; }50% { background: #FFFFDD none; }75% { background-color: #FFFFEA; }100% { background-color: #FFF; }}

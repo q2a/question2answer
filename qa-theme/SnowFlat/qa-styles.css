@@ -3591,3 +3591,23 @@ input[type="submit"], button {
 .icon-reply:before {
 	content: '\e82e';
 }
+.qa-c-list-item:target {
+    animation: comment-highlight 3s ease-in-out;
+}
+@keyframes comment-highlight {
+    0% { background-color: #FFFFAA; }
+    25% { background-color: #FFFFD0; }
+    50% { background-color: #FFFFDD; }
+    75% { background-color: #FFFFEA; }
+    100% { background-color: #F4F4F4; }
+}
+.qa-a-list-item:target{
+    animation: answer-highlight 3s ease-in-out;
+}
+@keyframes answer-highlight {
+    0% { background-color: #FFFFAA; }
+    25% { background-color: #FFFFD0; }
+    50% { background-color: #FFFFDD; }
+    75% { background-color: #FFFFEA; }
+    100% { background-color: #FFF; }
+}

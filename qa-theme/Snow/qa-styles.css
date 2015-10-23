@@ -2548,3 +2548,12 @@ a.qa-browse-cat-link:visited {
 	padding-top: 0;
 	border-top: 0;
 }
+.qa-c-list-item:target {animation: highlight 3s ease-in-out;}
+.qa-a-list-item:target{animation: highlight 3s ease-in-out;}
+@keyframes highlight {
+    0% { background-color: #FFFFAA ; }
+    25% { background-color: #FFFFD0 ; }
+    50% { background-color: #FFFFDD; }
+    75% { background-color: #FFFFEA; }
+    100% { background-color: #FFF; }
+}
