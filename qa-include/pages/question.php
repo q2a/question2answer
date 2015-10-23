@@ -56,6 +56,11 @@
 		$question=null;
 
 	if (isset($question)) {
+		$q_request = qa_q_request($questionid, $question['title']);
+
+		if ($q_request != qa_request())
+			qa_redirect($q_request); //redirect to appropriate URL if the current request URL is incorrect
+
 		$question['extra']=$extravalue;
 
 		$answers=qa_page_q_load_as($question, $childposts);
