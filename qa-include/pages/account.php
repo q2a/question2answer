@@ -56,8 +56,9 @@
 	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
 	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 	$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
-	$isblocked = qa_user_permit_error() !== false;
-
+	$permit_error = qa_user_permit_error() ;
+	$isblocked = $permit_error !== false;
+	$pending_confirmation = $doconfirms && $permit_error == 'confirm';
 
 //	Process profile if saved
 
@@ -162,6 +163,38 @@
 
 				qa_logged_in_user_flush();
 			}
+		}else if (qa_clicked('dosaveprofile') && $pending_confirmation ) {
+			//only allow to update the email if the user is not confirmed yet
+			require_once QA_INCLUDE_DIR.'app/users-edit.php';
+
+			$inemail = qa_post_text('email');
+
+			if (!qa_check_form_security_code('account', qa_post_text('code')))
+				$errors['page'] = qa_lang_html('misc/form_security_again');
+
+			else {
+				$errors = qa_handle_email_filter($useraccount['handle'], $inemail, $useraccount);
+
+				if (!isset($errors['email']) && $inemail !== $useraccount['email']) {
+					qa_db_user_set($userid, 'email', $inemail);
+					qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, false);
+					$isconfirmed = false;
+
+					if ($doconfirms)
+						qa_send_new_confirm($userid);
+				}
+
+				list($useraccount, $userprofile) = qa_db_select_with_pending(
+					qa_db_user_account_selectspec($userid, true), qa_db_user_profile_selectspec($userid, true)
+				);
+
+				qa_report_event('u_save', $userid, $useraccount['handle'], qa_cookie_get());
+
+				if (empty($errors))
+					qa_redirect('account', array('state' => 'profile-saved'));
+
+				qa_logged_in_user_flush();
+			}
 		}
 
 
@@ -241,13 +274,13 @@
 				'tags' => 'name="email"',
 				'value' => qa_html(isset($inemail) ? $inemail : $useraccount['email']),
 				'error' => isset($errors['email']) ? qa_html($errors['email']) :
-					(($doconfirms && !$isconfirmed) ? qa_insert_login_links(qa_lang_html('users/email_please_confirm')) : null),
-				'type' => $isblocked ? 'static' : 'text',
+					($pending_confirmation ? qa_insert_login_links(qa_lang_html('users/email_please_confirm')) : null),
+				'type' => $pending_confirmation ? 'text' : ($isblocked ? 'static' : 'text'),
 			),
 
 			'messages' => array(
 				'label' => qa_lang_html('users/private_messages'),
-				'tags' => 'name="messages"',
+				'tags' => 'name="messages"' . ($pending_confirmation ? ' disabled' : ''),
 				'type' => 'checkbox',
 				'value' => !($useraccount['flags'] & QA_USER_FLAGS_NO_MESSAGES),
 				'note' => qa_lang_html('users/private_messages_explanation'),
@@ -255,7 +288,7 @@
 
 			'wall' => array(
 				'label' => qa_lang_html('users/wall_posts'),
-				'tags' => 'name="wall"',
+				'tags' => 'name="wall"' . ($pending_confirmation ? ' disabled' : ''),
 				'type' => 'checkbox',
 				'value' => !($useraccount['flags'] & QA_USER_FLAGS_NO_WALL_POSTS),
 				'note' => qa_lang_html('users/wall_posts_explanation'),
@@ -297,7 +330,7 @@
 	if (!qa_opt('mailing_enabled'))
 		unset($qa_content['form_profile']['fields']['mailings']);
 
-	if ($isblocked) {
+	if ($isblocked && !$pending_confirmation) {
 		unset($qa_content['form_profile']['buttons']['save']);
 		$qa_content['error']=qa_lang_html('users/no_permission');
 	}
@@ -316,7 +349,7 @@
 
 		$avatarvalue=$avataroptions[''];
 
-		if (qa_opt('avatar_allow_gravatar')) {
+		if (qa_opt('avatar_allow_gravatar') && !$pending_confirmation) {
 			$avataroptions['gravatar']='<span style="margin:2px 0; display:inline-block;">'.
 				qa_get_gravatar_html($useraccount['email'], 32).' '.strtr(qa_lang_html('users/avatar_gravatar'), array(
 					'^1' => '<a href="http://www.gravatar.com/" target="_blank">',
@@ -327,7 +360,7 @@
 				$avatarvalue=$avataroptions['gravatar'];
 		}
 
-		if (qa_has_gd_image() && qa_opt('avatar_allow_upload')) {
+		if (qa_has_gd_image() && qa_opt('avatar_allow_upload') && !$pending_confirmation) {
 			$avataroptions['uploaded']='<input name="file" type="file">';
 
 			if (isset($useraccount['avatarblobid']))
