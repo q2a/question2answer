@@ -308,9 +308,10 @@
 			if (!QA_FINAL_EXTERNAL_USERS) {
 				require_once QA_INCLUDE_DIR.'util/image.php';
 
-				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_register_terms', 'register_terms', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome');
-
-				array_push($showoptions, '', 'allow_login_email_only', 'allow_change_usernames', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall', '', 'avatar_allow_gravatar');
+				array_push($showoptions, 'show_custom_register', 'custom_register', 'show_register_terms', 'register_terms', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome',
+					'', 'allow_login_email_only', 'allow_change_usernames', 'register_notify_admin', 'suspend_register_users',
+					'', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall',
+					'', 'avatar_allow_gravatar');
 
 				if (qa_has_gd_image())
 					array_push($showoptions, 'avatar_allow_upload', 'avatar_store_size', 'avatar_default_show');
@@ -547,7 +548,7 @@
 			$getoptions = qa_get_options(array('feedback_enabled', 'permit_post_q', 'permit_post_a', 'permit_post_c'));
 
 			if (!QA_FINAL_EXTERNAL_USERS)
-				array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'moderate_users', 'approve_user_required', 'register_notify_admin', 'suspend_register_users', '');
+				array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'moderate_users', 'approve_user_required', '');
 
 			$captchamodules = qa_list_modules('captcha');
 
