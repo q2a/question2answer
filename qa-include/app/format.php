@@ -1484,8 +1484,8 @@
 		$keysourceids = array();
 		$jsVarRegex = '/[A-Za-z_][A-Za-z0-9_]*/';
 
+		// extract all JS variable names in all sources
 		foreach ($effects as $target => $sources) {
-			// element names must be legal JS variable names
 			if (preg_match_all($jsVarRegex, $sources, $matches)) {
 				foreach ($matches[0] as $element) {
 					if (!in_array($element, $keysourceids))
@@ -1494,40 +1494,30 @@
 			}
 		}
 
-		$function = 'qa_display_rule_'.count(@$qa_content['script_lines']);
+		$funcOrd = isset($qa_content['script_lines']) ? count($qa_content['script_lines']) : 0;
+		$function = "qa_display_rule_$funcOrd";
+		$optVar = "qa_optids_$funcOrd";
 
-		$funcscript = array(
-			// set up variables
-			"var qa_checkboxids = " . json_encode($keysourceids) . ";",
-
-			// show/hide an element
-			"function {$function}_show(target, show, first) {",
-			"\tvar e = document.getElementById(target);",
-			"\tif (e) {",
-			"\t\tif (first || e.nodeName == 'SPAN') { e.style.display = (show ? '' : 'none'); }",
-			"\t\telse if (show) { $(e).fadeIn(); }",
-			"\t\telse { $(e).fadeOut(); }",
-			"\t}",
-			"}",
-		);
+		// set up variables
+		$funcscript = array("var $optVar = " . json_encode($keysourceids) . ";");
 
 		// check and set all display rules
 		$funcscript[] = "function {$function}(first) {";
-		$funcscript[] = "\tvar qa_options = {};";
-		$funcscript[] = "\tfor (var i = 0; i < qa_checkboxids.length; i++) {";
-		$funcscript[] = "\t\tvar e = document.getElementById(qa_checkboxids[i]);";
-		$funcscript[] = "\t\tqa_options[qa_checkboxids[i]] = e && (e.checked || (e.options && e.options[e.selectedIndex].value));";
+		$funcscript[] = "\tvar opts = {};";
+		$funcscript[] = "\tfor (var i = 0; i < {$optVar}.length; i++) {";
+		$funcscript[] = "\t\tvar e = document.getElementById({$optVar}[i]);";
+		$funcscript[] = "\t\topts[{$optVar}[i]] = e && (e.checked || (e.options && e.options[e.selectedIndex].value));";
 		$funcscript[] = "\t}";
 		foreach ($effects as $target => $sources) {
-			$sourcesobj = preg_replace($jsVarRegex, 'qa_options.$0', $sources);
-			$funcscript[] = "\t".$function."_show(".qa_js($target).", (".$sourcesobj."), first);";
+			$sourcesobj = preg_replace($jsVarRegex, 'opts.$0', $sources);
+			$funcscript[] = "\tqa_display_rule_show(".qa_js($target).", (".$sourcesobj."), first);";
 		}
 		$funcscript[] = "}";
 
 		// set default state of options
 		$loadscript = array(
-			"for (var i = 0; i < qa_checkboxids.length; i++) {",
-			"\tjQuery('#'+qa_checkboxids[i]).click(function() { ".$function."(false); });",
+			"for (var i = 0; i < {$optVar}.length; i++) {",
+			"\tjQuery('#'+{$optVar}[i]).click(function() { ".$function."(false); });",
 			"}",
 			"{$function}(true);",
 		);

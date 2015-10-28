@@ -175,3 +175,16 @@ function qa_ajax_error()
 {
 	alert('Unexpected response from server - please try again or switch off Javascript.');
 }
+
+function qa_display_rule_show(target, show, first)
+{
+	var e = document.getElementById(target);
+	if (e) {
+		if (first || e.nodeName == 'SPAN')
+			e.style.display = (show ? '' : 'none');
+		else if (show)
+			$(e).fadeIn();
+		else
+			$(e).fadeOut();
+	}
+}
