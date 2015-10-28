@@ -531,7 +531,7 @@
 				'details' => array(
 					'tags' => 'name="q_close_details" id="q_close_details"',
 					'label' =>
-						'<span id="close_label_other">'.qa_lang_html('question/close_reason_title').':</span>',
+						'<span id="close_label_other">'.qa_lang_html('question/close_reason_title').'</span>',
 					'value' => @$in['details'],
 					'error' => qa_html(@$errors['details']),
 				),
@@ -575,9 +575,9 @@
 		$cookieid=qa_cookie_get();
 
 		$isduplicateurl = filter_var($in['details'], FILTER_VALIDATE_URL);
-		
+
 		if (!qa_check_form_security_code('close-'.$question['postid'], qa_post_text('code'))) {
-			$errors['details']=qa_lang_html('misc/form_security_again');			
+			$errors['details']=qa_lang_html('misc/form_security_again');
 		}
 		elseif ($isduplicateurl) {
 			// be liberal in what we accept, but there are two potential unlikely pitfalls here:
