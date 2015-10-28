@@ -324,34 +324,6 @@
 				$script = array_merge($script, $scriptlines);
 			}
 
-		if (isset($qa_content['focusid']))
-			$qa_content['script_onloads'][] = array(
-				"var elem = document.getElementById(".qa_js($qa_content['focusid']).");",
-				"if (elem) {",
-				"\telem.select();",
-				"\telem.focus();",
-				"}",
-			);
-
-		if (isset($qa_content['script_onloads'])) {
-			array_push($script,
-				'',
-				'var qa_oldonload = window.onload;',
-				'window.onload = function() {',
-				"\tif (typeof qa_oldonload == 'function')",
-				"\t\tqa_oldonload();"
-			);
-
-			foreach ($qa_content['script_onloads'] as $scriptonload) {
-				$script[] = "\t";
-
-				foreach ((array)$scriptonload as $scriptline)
-					$script[] = "\t".$scriptline;
-			}
-
-			$script[] = '};';
-		}
-
 		$script[] = '</script>';
 
 		if (isset($qa_content['script_rel'])) {
@@ -365,6 +337,25 @@
 			foreach ($uniquesrc as $script_src)
 				$script[] = '<script src="'.qa_html($script_src).'"></script>';
 		}
+
+		if (isset($qa_content['focusid']))
+			$qa_content['script_onloads'][] = array(
+				'jQuery(' . qa_js('#'.$qa_content['focusid']) . ').focus();',
+			);
+
+		// JS onloads must come after jQuery is loaded
+		$script[] = '<script>';
+		if (isset($qa_content['script_onloads'])) {
+			$script[] =  'jQuery(window).load(function() {';
+
+			foreach ($qa_content['script_onloads'] as $scriptonload) {
+				foreach ((array)$scriptonload as $scriptline)
+					$script[] = "\t".$scriptline;
+			}
+
+			$script[] = '});';
+		}
+		$script[] = '</script>';
 
 		$qa_content['script'] = $script;
 
