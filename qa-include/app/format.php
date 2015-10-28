@@ -1517,7 +1517,7 @@
 		// set default state of options
 		$loadscript = array(
 			"for (var i = 0; i < {$optVar}.length; i++) {",
-			"\tjQuery('#'+{$optVar}[i]).click(function() { ".$function."(false); });",
+			"\t$('#'+{$optVar}[i]).click(function() { ".$function."(false); });",
 			"}",
 			"{$function}(true);",
 		);

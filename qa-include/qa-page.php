@@ -340,13 +340,13 @@
 
 		if (isset($qa_content['focusid']))
 			$qa_content['script_onloads'][] = array(
-				'jQuery(' . qa_js('#'.$qa_content['focusid']) . ').focus();',
+				'$(' . qa_js('#'.$qa_content['focusid']) . ').focus();',
 			);
 
 		// JS onloads must come after jQuery is loaded
 		$script[] = '<script>';
 		if (isset($qa_content['script_onloads'])) {
-			$script[] =  'jQuery(window).load(function() {';
+			$script[] =  '$(window).load(function() {';
 
 			foreach ($qa_content['script_onloads'] as $scriptonload) {
 				foreach ((array)$scriptonload as $scriptline)
