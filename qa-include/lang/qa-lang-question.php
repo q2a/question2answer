@@ -76,7 +76,7 @@
 		'close_original_note' => 'You can also enter the question number from the URL, e.g. 123.',
 		'close_original_title' => 'URL of the original question:',
 		'close_q_popup' => 'Close this question to any new answers',
-		'close_reason_title' => 'Reason for closing this question or insert the URL of the duplicate question:',
+		'close_reason_title' => 'Reason for closing this question, or URL of duplicate question:',
 		'closed_as_duplicate' => 'closed as a duplicate of:',
 		'closed_with_note' => 'closed with the note:',
 		'comment_a_popup' => 'Add a comment on this answer',
