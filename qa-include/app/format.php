@@ -1470,21 +1470,23 @@
 	}
 
 
+	/**
+	 * Adds JavaScript to the page to handle toggling of form fields based on other fields.
+	 *
+	 * @param array $qa_content  Page content array.
+	 * @param array $effects  List of rules for element toggling, with the structure:
+	 *   array('target1' => 'source1', 'target2' => 'source2', ...)
+	 *   When the source expression is true, the DOM element ID represented by target is shown. The
+	 *   source can be a combination of ID as a JS expression.
+	 */
 	function qa_set_display_rules(&$qa_content, $effects)
-/*
-	For each [target] => [source] in $effects, set up $qa_content so that the visibility of the DOM element ID
-	target is equal to the checked state or boolean-casted value of the DOM element ID source. Each source can
-	also combine multiple DOM IDs using JavaScript(=PHP) operators. This is twisted but rather convenient.
-*/
 	{
-		$function='qa_display_rule_'.count(@$qa_content['script_lines']);
-
 		$keysourceids = array();
-		$keysourceobjs = array();
-		$jsVar = '/[A-Za-z_][A-Za-z0-9_]*/';
+		$jsVarRegex = '/[A-Za-z_][A-Za-z0-9_]*/';
 
 		foreach ($effects as $target => $sources) {
-			if (preg_match_all($jsVar, $sources, $matches)) { // element names must be legal JS variable names
+			// element names must be legal JS variable names
+			if (preg_match_all($jsVarRegex, $sources, $matches)) {
 				foreach ($matches[0] as $element) {
 					if (!in_array($element, $keysourceids))
 						$keysourceids[] = $element;
@@ -1492,39 +1494,43 @@
 			}
 		}
 
-		$funcscript = array();
-		$loadscript = array();
+		$function = 'qa_display_rule_'.count(@$qa_content['script_lines']);
 
-		$funcscript[] = "var qa_checkboxids = " . json_encode($keysourceids) . ";";
-		$funcscript[] = "var qa_options = {};";
+		$funcscript = array(
+			// set up variables
+			"var qa_checkboxids = " . json_encode($keysourceids) . ";",
 
-		// set default state of options
-		$loadscript[] = "for (var i = 0; i < qa_checkboxids.length; i++) {";
-		$loadscript[] = "\tjQuery('#'+qa_checkboxids[i]).click(function() { ".$function."(false); });";
-		$loadscript[] = "}";
+			// show/hide an element
+			"function {$function}_show(target, show, first) {",
+			"\tvar e = document.getElementById(target);",
+			"\tif (e) {",
+			"\t\tif (first || e.nodeName == 'SPAN') { e.style.display = (show ? '' : 'none'); }",
+			"\t\telse if (show) { $(e).fadeIn(); }",
+			"\t\telse { $(e).fadeOut(); }",
+			"\t}",
+			"}",
+		);
 
-		$funcscript[] = "function {$function}_show(target, show, first) {";
-		$funcscript[] = "\tvar e = document.getElementById(target);";
-		$funcscript[] = "\tif (e) {";
-		$funcscript[] = "\t\tif (first || e.nodeName == 'SPAN') { e.style.display = (show ? '' : 'none'); }";
-		$funcscript[] = "\t\telse if (show) { $(e).fadeIn(); }";
-		$funcscript[] = "\t\telse { $(e).fadeOut(); }";
-		$funcscript[] = "\t}";
-		$funcscript[] = "}";
-
+		// check and set all display rules
 		$funcscript[] = "function {$function}(first) {";
+		$funcscript[] = "\tvar qa_options = {};";
 		$funcscript[] = "\tfor (var i = 0; i < qa_checkboxids.length; i++) {";
 		$funcscript[] = "\t\tvar e = document.getElementById(qa_checkboxids[i]);";
 		$funcscript[] = "\t\tqa_options[qa_checkboxids[i]] = e && (e.checked || (e.options && e.options[e.selectedIndex].value));";
 		$funcscript[] = "\t}";
-
 		foreach ($effects as $target => $sources) {
-			$sourcesobj = preg_replace($jsVar, 'qa_options.$0', $sources);
+			$sourcesobj = preg_replace($jsVarRegex, 'qa_options.$0', $sources);
 			$funcscript[] = "\t".$function."_show(".qa_js($target).", (".$sourcesobj."), first);";
 		}
-
 		$funcscript[] = "}";
-		$loadscript[] = "{$function}(true);";
+
+		// set default state of options
+		$loadscript = array(
+			"for (var i = 0; i < qa_checkboxids.length; i++) {",
+			"\tjQuery('#'+qa_checkboxids[i]).click(function() { ".$function."(false); });",
+			"}",
+			"{$function}(true);",
+		);
 
 		$qa_content['script_lines'][] = $funcscript;
 		$qa_content['script_onloads'][] = $loadscript;
