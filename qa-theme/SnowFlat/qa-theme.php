@@ -45,7 +45,7 @@ class qa_html_theme extends qa_html_theme_base
 	private $welcome_widget_class = 'wet-asphalt';
 	private $ask_search_box_class = 'turquoise';
 	// Size of the user avatar in the navigation bar
-	private $nav_bar_avatar_size = 32;
+	private $nav_bar_avatar_size = 52;
 
 	/**
 	 * Adding aditional meta for responsive design
@@ -570,20 +570,23 @@ class qa_html_theme extends qa_html_theme_base
 				);
 			}
 
-			$auth_icon = strip_tags($tobar_avatar, '<img>');
+			$avatar = strip_tags($tobar_avatar, '<img>');
+			if (!empty($avatar))
+				$handle = '';
 		}
 		else {
 			// display login icon and label
 			$handle = $this->content['navigation']['user']['login']['label'];
 			$toggleClass = 'qam-logged-out';
-			$auth_icon = '<i class="icon-key qam-auth-key"></i>';
+			$avatar = '<i class="icon-key qam-auth-key"></i>';
 		}
 
 		// finally output avatar with div tag
+		$handleBlock = empty($handle) ? '' : '<div class="qam-account-handle">' . qa_html($handle) . '</div>';
 		$this->output(
 			'<div id="qam-account-toggle" class="' . $toggleClass . '">',
-			$auth_icon,
-			'<div class="qam-account-handle">' . qa_html($handle) . '</div>',
+			$avatar,
+			$handleBlock,
 			'</div>'
 		);
 	}

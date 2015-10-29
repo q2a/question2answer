@@ -711,6 +711,8 @@ blockquote p {
 	display: block;
 	cursor: pointer;
 	min-width: 60px;
+	min-height: 55px;
+	max-width: 80px;
 	padding: 2px;
 	background-color: #34495e;
 	text-align: center;
@@ -742,6 +744,8 @@ blockquote p {
 .qam-account-handle {
 	font-size: 12px;
 	line-height: 1.8;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .qam-account-items .qa-form-tall-button-login {
