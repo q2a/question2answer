@@ -872,7 +872,7 @@
 					$commentid=qa_page_q_add_c_submit($question, $parent, $commentsfollows, $usecaptcha, $cnewin[$parentid], $cnewerrors[$parentid]);
 
 					if (isset($commentid))
-						qa_page_q_refresh($pagestart, null, $parent['basetype'], $parentid);
+						qa_page_q_refresh($pagestart, null, 'C', $commentid);
 
 					else {
 						$formtype='c_add';
