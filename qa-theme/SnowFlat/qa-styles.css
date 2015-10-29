@@ -2472,6 +2472,11 @@ input[type="submit"], button {
 	position: relative;
 	min-height: 190px;
 }
+/* highlight selected answer */
+.qa-a-list-item:target{
+    -webkit-animation: answer-highlight 2s ease-in-out;
+    animation: answer-highlight 2s ease-in-out;
+}
 
 .qa-a-item-avatar-meta {
 	font-size: 12px;
@@ -2604,6 +2609,12 @@ input[type="submit"], button {
 	background-color: #f4f4f4;
 	position: relative;
 }
+/* highlight selected comment */
+.qa-c-list-item:target {
+    -webkit-animation: comment-highlight 2s ease-in-out;
+    animation: comment-highlight 2s ease-in-out;
+}
+
 .qa-c-list-item .qa-form-light-button {
 	padding: 10px 15px;
 	background: #bdc3c7 none center no-repeat;
@@ -3601,4 +3612,22 @@ input[type="submit"], button {
 
 .icon-reply:before {
 	content: '\e82e';
+}
+
+@-webkit-keyframes answer-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #fff; }
+}
+@keyframes answer-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #fff; }
+}
+
+@-webkit-keyframes comment-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #f4f4f4; }
+}
+@keyframes comment-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #f4f4f4; }
 }

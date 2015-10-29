@@ -1911,6 +1911,10 @@ a.qa-browse-cat-link:visited {
 	border-bottom: 1px solid #ccc;
 	min-height: 108px; /* prevent tick icon being hidden */
 }
+.qa-a-list-item:target {
+	-webkit-animation: highlight 2s ease-in-out;
+	animation: highlight 2s ease-in-out;
+}
 
 /* zoom for IE, padding for early FF */
 .qa-a-list-item-selected {
@@ -2056,6 +2060,10 @@ a.qa-browse-cat-link:visited {
 	background: #fff;
 	border-bottom: 1px solid #ccc;
 	padding: 8px 0 8px 8px;
+}
+.qa-c-list-item:target {
+	-webkit-animation: highlight 2s ease-in-out;
+	animation: highlight 2s ease-in-out;
 }
 
 .qa-c-list-item:nth-child(odd) {
@@ -2547,4 +2555,13 @@ a.qa-browse-cat-link:visited {
 .qa-part-form-plugin-options {
 	padding-top: 0;
 	border-top: 0;
+}
+
+@-webkit-keyframes highlight {
+	0% { background-color: #ffffaa; }
+	100% { background-color: #fff; }
+}
+@keyframes highlight {
+	0% { background-color: #ffffaa; }
+	100% { background-color: #fff; }
 }
