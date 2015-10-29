@@ -51,8 +51,7 @@ if (isset($blob)) {
 	// allows browsers and proxies to cache the blob (30 days)
 	header('Cache-Control: max-age=2592000, public');
 
-	// for compatibility with HTTP headers and all browsers
-	$filename = preg_replace('/[^A-Za-z0-9 \\._-]/', '-', $blob['filename']);
+	$disposition = 'inline';
 
 	switch ($blob['format']) {
 		case 'jpeg':
@@ -70,7 +69,6 @@ if (isset($blob)) {
 
 		case 'pdf':
 			header('Content-Type: application/pdf');
-			header('Content-Disposition: inline; filename="'.$filename.'"');
 			break;
 
 		case 'swf':
@@ -79,9 +77,13 @@ if (isset($blob)) {
 
 		default:
 			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename="'.$filename.'"');
+			$disposition = 'attachment';
 			break;
 	}
+
+	// for compatibility with HTTP headers and all browsers
+	$filename = preg_replace('/[^A-Za-z0-9 \\._-]+/', '', $blob['filename']);
+	header('Content-Disposition: '.$disposition.'; filename="'.$filename.'"');
 
 	echo $blob['content'];
 
