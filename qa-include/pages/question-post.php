@@ -144,7 +144,7 @@
 
 	if ($question['commentbutton']) {
 		if (qa_clicked('q_docomment'))
-			qa_page_q_refresh($pagestart, 'comment-'.$questionid);
+			qa_page_q_refresh($pagestart, 'comment-'.$questionid, 'C', $questionid);
 
 		if (qa_clicked('c'.$questionid.'_doadd') || ($pagestate==('comment-'.$questionid)))
 			qa_page_q_do_comment($question, $question, $commentsfollows, $pagestart, $usecaptcha, $cnewin, $cnewerrors, $formtype, $formpostid, $pageerror);
@@ -182,7 +182,7 @@
 
 		if ($answer['commentbutton']) {
 			if (qa_clicked($prefix.'docomment'))
-				qa_page_q_refresh($pagestart, 'comment-'.$answerid, 'A', $answerid);
+				qa_page_q_refresh($pagestart, 'comment-'.$answerid, 'C', $answerid);
 
 			if (qa_clicked('c'.$answerid.'_doadd') || ($pagestate==('comment-'.$answerid)))
 				qa_page_q_do_comment($question, $answer, $commentsfollows, $pagestart, $usecaptcha, $cnewin, $cnewerrors, $formtype, $formpostid, $pageerror);
