@@ -48,6 +48,7 @@
 	$blob=qa_read_blob(qa_get('qa_blobid'));
 
 	if (isset($blob)) {
+		$filename=preg_replace('/[^A-Za-z0-9 \\._-]/', '-', $blob['filename']); // for compatibility with HTTP headers and all browsers
 		header('Cache-Control: max-age=2592000, public'); // allows browsers and proxies to cache the blob
 
 		switch ($blob['format']) {
@@ -64,13 +65,16 @@
 				header('Content-Type: image/png');
 				break;
 
+			case 'pdf':
+				header('Content-Type: application/pdf');
+				header('Content-Disposition: inline; filename="'.$filename.'"');
+				break;
+
 			case 'swf':
 				header('Content-Type: application/x-shockwave-flash');
 				break;
 
 			default:
-				$filename=preg_replace('/[^A-Za-z0-9 \\._-]/', '-', $blob['filename']); // for compatibility with HTTP headers and all browsers
-
 				header('Content-Type: application/octet-stream');
 				header('Content-Disposition: attachment; filename="'.$filename.'"');
 				break;
