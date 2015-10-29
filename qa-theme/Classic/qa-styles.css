@@ -317,6 +317,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 /* Answer view  */
 
 .qa-a-list-item {margin-bottom:40px; zoom:1; padding-bottom:1px;} /* zoom for IE, padding for early FF */
+.qa-a-list-item:target{-webkit-animation: highlight 2s ease-in-out; animation: highlight 2s ease-in-out;}
 .qa-a-list-item-hidden {}
 	.qa-a-list-item-hidden .qa-voting {background:#FFF; border:1px solid #ccc; color:#ccc;}
 	.qa-a-list-item-hidden .qa-a-item-content {color:#999;}
@@ -355,6 +356,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 /* Comments */
 
 .qa-c-list-item {border-bottom:1px dotted #666; padding:6px; padding-right:0;}
+.qa-c-list-item:target {-webkit-animation: highlight 2s ease-in-out; animation: highlight 2s ease-in-out;}
 .qa-c-item-hidden {}
 	.qa-c-item-hidden .qa-c-item-content {color:#bbb;}
 	.qa-c-item-hidden .qa-c-item-link {color:#aaf;}
@@ -425,6 +427,12 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-part-form-plugin-0 {margin-top: 0;}
 .qa-part-form-plugin-options {margin-top: -1px;}
 .qa-part-form-profile .qa-form-wide-data {word-break: break-word;}
-.qa-c-list-item:target {animation: highlight 3s ease-in-out;}
-.qa-a-list-item:target{animation: highlight 3s ease-in-out;}
-@keyframes highlight {0% { background-color: #FFFFAA ; }25% { background-color: #FFFFD0 ; }50% { background-color: #FFFFDD; }75% { background-color: #FFFFEA; }100% { background-color: #FFF; }}
+
+@-webkit-keyframes highlight {
+	0% { background-color: #ffffaa; }
+	100% { background-color: #fff; }
+}
+@keyframes highlight {
+	0% { background-color: #ffffaa; }
+	100% { background-color: #fff; }
+}
