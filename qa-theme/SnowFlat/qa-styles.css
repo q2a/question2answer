@@ -1450,7 +1450,8 @@ blockquote p {
 }
 .qa-template-admin .qa-q-item-content {
 	font-size: 0.75em;
-	line-height: 2em;
+	max-height: 150px;
+	overflow-y: auto;
 }
 .qa-template-admin .qa-q-item-avatar-meta {
 	border-top: 1px solid #ecf0f1;
