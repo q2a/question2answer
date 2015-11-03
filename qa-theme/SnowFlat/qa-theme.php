@@ -46,6 +46,9 @@ class qa_html_theme extends qa_html_theme_base
 	// Size of the user avatar in the navigation bar
 	private $nav_bar_avatar_size = 32;
 
+	//to use new block layout in rankings
+	protected $ranking_block_layout = true;
+
 	/**
 	 * Adding aditional meta for responsive design
 	 *
@@ -652,4 +655,22 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>';
 	}
 
+	public function ranking($ranking)
+	{
+		$this->part_title($ranking);
+
+		if (!isset($ranking['type']))
+			$ranking['type'] = 'items';
+
+		$class = 'qa-top-'.$ranking['type'];
+
+		// new block layout
+		foreach ($ranking['items'] as $item) {
+			$this->output('<div class="qa-ranking-item '.$class.'-item">');
+			$this->ranking_item($item, $class);
+			$this->output('</div>');
+		}
+
+		$this->part_footer($ranking);
+	}
 }

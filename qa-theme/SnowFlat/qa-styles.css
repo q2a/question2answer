@@ -31,7 +31,8 @@
 .qa-a-list-item:after, .qa-a-item-buttons:after,
 .qa-c-item-buttons:after, .qa-c-item-clear:after,
 .qam-footer-row:after, .qam-qa-list-meta-box:after,
-.qa-nav-footer-list:after, .qa-footer-clear:after {
+.qa-nav-footer-list:after, .qa-footer-clear:after ,
+.qa-part-ranking:after , .qa-ranking-item:after {
 	content: " ";
 	display: table;
 	clear: both;
@@ -1520,13 +1521,23 @@ blockquote p {
 		overflow-y: hidden;
 	}
 }
-
-.qa-top-users-label .qa-avatar-link {
+.qa-ranking-item {
+    margin: 5px 0;
+    position: relative;
+    padding: 5px;
+}
+@media only screen and (min-width: 992px) { /*Two column layout for Desktops and above*/
+    .qa-ranking-item {
+        width: 50%;
+        float: left;
+    }
+}
+.qa-top-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
 	margin-right: 1em;
 }
-.qa-top-users-label .qa-avatar-link img {
+.qa-top-users-avatar .qa-avatar-link img {
 	border: 1px solid #cbd7e3;
 }
 .qa-top-users-label .qa-user-link {
@@ -1546,7 +1557,7 @@ blockquote p {
 	content: "";
 	position: absolute;
 	left: -5px;
-	top: 5px;
+	top: 30%;
 	display: block;
 	width: 0;
 	height: 0;
