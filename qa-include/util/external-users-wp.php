@@ -41,33 +41,49 @@
 		);
 	}
 
+	function qa_get_logged_in_user() {
+		$wordpressuser = wp_get_current_user();
 
-	function qa_get_logged_in_user()
-	{
-		$wordpressuser=wp_get_current_user();
-
-		if ($wordpressuser->ID==0)
+		if ( $wordpressuser->ID == 0 ) {
 			return null;
+		} else {
+			if ( current_user_can( 'administrator' ) ) {
+				$level = QA_USER_LEVEL_ADMIN;
+			} elseif ( current_user_can( 'editor' ) ) {
+				$level = QA_USER_LEVEL_EDITOR;
+			} elseif ( current_user_can( 'contributor' ) ) {
+				$level = QA_USER_LEVEL_EXPERT;
+			} elseif ( in_array( 'iam_moderator', (array) $wordpressuser->roles ) ) {
+				$level = QA_USER_LEVEL_MODERATOR;
+			} else {
+				$level = QA_USER_LEVEL_BASIC;
+			}
 
-		else {
-			if (current_user_can('administrator'))
-				$level=QA_USER_LEVEL_ADMIN;
-			elseif (current_user_can('editor'))
-				$level=QA_USER_LEVEL_EDITOR;
-			elseif (current_user_can('contributor'))
-				$level=QA_USER_LEVEL_EXPERT;
-			else
-				$level=QA_USER_LEVEL_BASIC;
+			$user_levels_query = array();
+			$user_levels_query['columns'] = array(
+				'ID' => '^userlevels.userid',
+				'entityType' => '^userlevels.entitytype',
+				'entityID' => '^userlevels.entityid',
+				'level' => '^userlevels.level'
+			);
+			$user_levels_query['source'] = '^userlevels';
+			$user_levels = qa_db_single_select($user_levels_query);
+
+			if(array_search($wordpressuser->ID,array_column($user_levels,'ID')) === false){
+				qa_db_query_sub(
+					'REPLACE ^userlevels (userid, entitytype, entityid, level) VALUES ($, $, #, #)',
+					$wordpressuser->ID, '', 0, $level
+				);
+			};
 
 			return array(
-				'userid' => $wordpressuser->ID,
+				'userid'         => $wordpressuser->ID,
 				'publicusername' => $wordpressuser->user_nicename,
-				'email' => $wordpressuser->user_email,
-				'level' => $level,
+				'email'          => $wordpressuser->user_email,
+				'level'          => $level,
 			);
 		}
 	}
-
 
 	function qa_get_user_email($userid)
 	{
