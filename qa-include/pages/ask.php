@@ -142,7 +142,7 @@
 
 				foreach ($recent_questions as $recent_question)
 					if (!$recent_question['hidden'])
-						if (implode(' ', qa_string_to_words($recent_question['content'])) == $testwords){
+						if (implode(' ', qa_string_to_words($recent_question['content'])) == $testwords) {
 							$errors['page']=qa_lang_html('question/duplicate_content');
 							break;
 						}
