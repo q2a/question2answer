@@ -24,8 +24,8 @@
 	Plugin Name: Basic AdSense
 	Plugin URI:
 	Plugin Description: Provides a basic widget for displaying Google AdSense ads
-	Plugin Version: 1.0
-	Plugin Date: 2011-03-27
+	Plugin Version: 1.1
+	Plugin Date: 2015-10-11
 	Plugin Author: Question2Answer
 	Plugin Author URI: http://www.question2answer.org/
 	Plugin License: GPLv2
