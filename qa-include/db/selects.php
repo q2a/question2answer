@@ -1692,7 +1692,29 @@
 		return $selectspec;
 	}
 
+	/**
+	 *  Return the selectspec to retrieve recent questions by the user identified by $identifier, where $identifier is a
+	 *	handle if we're using internal user management, or a userid if we're using external users. Also include the
+	 *  corresponding vote on those questions made by $voteuserid (if not null). Return $count (if null, a default is used)
+	 *  questions.
+	 *
+	 * @param null $count
+	 * @param int  $start
+	 *
+	 * @return array
+	 */
+	function qa_db_user_recent_qs_full_selectspec($count=null, $start=0)
+	{
+		$count=isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
+		$selectspec=qa_db_posts_basic_selectspec(null, true, false);
+
+		$selectspec['source'].=" WHERE type='Q' ORDER BY ^posts.created DESC LIMIT #,#";
+		array_push($selectspec['arguments'], $start, $count);
+		$selectspec['sortdesc']='created';
+
+		return $selectspec;
+	}
 /*
 	Omit PHP closing tag to help avoid accidental output
 */
