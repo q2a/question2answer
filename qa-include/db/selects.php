@@ -1693,10 +1693,8 @@
 	}
 
 	/**
-	 *  Return the selectspec to retrieve recent questions by the user identified by $identifier, where $identifier is a
-	 *	handle if we're using internal user management, or a userid if we're using external users. Also include the
-	 *  corresponding vote on those questions made by $voteuserid (if not null). Return $count (if null, a default is used)
-	 *  questions.
+	 *  Return the selectspec to retrieve recent questions from the database. Basically this is used to check for the duplicate posts
+	 *  while posting a new question. Returns $count no of posts , if not provided a default value is used 
 	 *
 	 * @param null $count
 	 * @param int  $start
