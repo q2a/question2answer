@@ -36,6 +36,9 @@ class qa_html_theme extends qa_html_theme_base
 {
 	protected $theme = 'snowflat';
 
+	// use local font files instead of Google Fonts
+	private $localfonts = true;
+
 	// theme subdirectories
 	private $js_dir = 'js';
 	private $icon_url = 'images/icons';
@@ -44,7 +47,7 @@ class qa_html_theme extends qa_html_theme_base
 	private $welcome_widget_class = 'wet-asphalt';
 	private $ask_search_box_class = 'turquoise';
 	// Size of the user avatar in the navigation bar
-	private $nav_bar_avatar_size = 32;
+	private $nav_bar_avatar_size = 52;
 
 	/**
 	 * Adding aditional meta for responsive design
@@ -68,8 +71,11 @@ class qa_html_theme extends qa_html_theme_base
 		if ($this->isRTL)
 			$this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
-		// add Ubuntu font CSS file
-		$this->content['css_src'][] = 'http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
+		// add Ubuntu font CSS file from Google Fonts
+		if ($this->localfonts)
+			$this->content['css_src'][] = $this->rooturl . 'fonts/ubuntu.css?' . QA_VERSION;
+		else
+			$this->content['css_src'][] = '//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
 
 		parent::head_css();
 
@@ -567,20 +573,23 @@ class qa_html_theme extends qa_html_theme_base
 				);
 			}
 
-			$auth_icon = strip_tags($tobar_avatar, '<img>');
+			$avatar = strip_tags($tobar_avatar, '<img>');
+			if (!empty($avatar))
+				$handle = '';
 		}
 		else {
 			// display login icon and label
 			$handle = $this->content['navigation']['user']['login']['label'];
 			$toggleClass = 'qam-logged-out';
-			$auth_icon = '<i class="icon-key qam-auth-key"></i>';
+			$avatar = '<i class="icon-key qam-auth-key"></i>';
 		}
 
 		// finally output avatar with div tag
+		$handleBlock = empty($handle) ? '' : '<div class="qam-account-handle">' . qa_html($handle) . '</div>';
 		$this->output(
 			'<div id="qam-account-toggle" class="' . $toggleClass . '">',
-			$auth_icon,
-			'<div class="qam-account-handle">' . qa_html($handle) . '</div>',
+			$avatar,
+			$handleBlock,
 			'</div>'
 		);
 	}

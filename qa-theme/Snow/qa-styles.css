@@ -1770,6 +1770,13 @@ a.qa-browse-cat-link:visited {
 }
 
 /* Question view */
+
+.qa-q-view-content,
+.qa-a-item-content,
+.qa-c-item-content {
+	word-break: break-word;
+}
+
 .qa-q-view {
 	padding-left: 10px;
 	padding-top: 10px;
@@ -1903,6 +1910,10 @@ a.qa-browse-cat-link:visited {
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #ccc;
 	min-height: 108px; /* prevent tick icon being hidden */
+}
+.qa-a-list-item:target {
+	-webkit-animation: highlight 2s ease-in-out;
+	animation: highlight 2s ease-in-out;
 }
 
 /* zoom for IE, padding for early FF */
@@ -2049,6 +2060,10 @@ a.qa-browse-cat-link:visited {
 	background: #fff;
 	border-bottom: 1px solid #ccc;
 	padding: 8px 0 8px 8px;
+}
+.qa-c-list-item:target {
+	-webkit-animation: highlight 2s ease-in-out;
+	animation: highlight 2s ease-in-out;
 }
 
 .qa-c-list-item:nth-child(odd) {
@@ -2511,6 +2526,9 @@ a.qa-browse-cat-link:visited {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+.qa-template-user .qa-part-form-profile .qa-form-wide-data {
+	word-break: break-word;
+}
 
 .qa-template-user .qa-part-form-activity td .qa-uf-user-points,
 .qa-template-user .qa-part-form-activity td .qa-uf-user-q-posts,
@@ -2537,4 +2555,13 @@ a.qa-browse-cat-link:visited {
 .qa-part-form-plugin-options {
 	padding-top: 0;
 	border-top: 0;
+}
+
+@-webkit-keyframes highlight {
+	0% { background-color: #ffffaa; }
+	100% { background-color: #fff; }
+}
+@keyframes highlight {
+	0% { background-color: #ffffaa; }
+	100% { background-color: #fff; }
 }

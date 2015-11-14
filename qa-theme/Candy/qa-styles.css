@@ -308,6 +308,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 /* Question view */
 
+.qa-q-view-content, .qa-a-item-content, .qa-c-item-content {word-break: break-word;}
 .qa-q-view {padding-left:10px; padding-top:10px;}
 .qa-q-view-main {float:left; width:550px; padding-left:10px;}
 .qa-q-view-content {font-size:16px; margin-bottom:16px;}
@@ -445,10 +446,11 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-nav-cat-favorited {margin-left:-20px;}
 .qa-tag-favorited, .qa-cat-favorited, .qa-cat-parent-favorited, .qa-user-favorited {background-position: left center; padding-left:19px;}
 
-/* Plugins */
+/* Miscellaneous */
 
 [class^="qa-part-form-plugin"] {margin-top: 10px;}
 .qa-part-form-plugin-0, .qa-part-form-plugin-options {margin-top: 0;}
+.qa-part-form-profile .qa-form-wide-data {word-break: break-word;}
 
 
 /* IE6 friendly versions of icons with binary alpha channel */

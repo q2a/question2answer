@@ -15,7 +15,7 @@
 .qa-template-admin .qa-message-buttons,
 .qa-q-item-avatar-meta, .qa-message-item,
 .qa-q-view, .qa-part-q-view, .qa-q-view-content, .qa-q-view-buttons, .qa-part-form-q-edit,
-.qa-a-list-item, .qa-a-item-buttons,
+.qa-a-list-item, .qa-a-item-buttons, .qa-a-item-content,
 .qa-c-item-buttons, .qa-c-item-clear,
 .qam-footer-row, .qam-qa-list-meta-box,
 .qa-nav-footer-list, .qa-footer-clear {
@@ -28,7 +28,7 @@
 .qa-template-admin .qa-message-buttons:after,
 .qa-q-item-avatar-meta:after, .qa-message-item:after,
 .qa-q-view:after, .qa-part-q-view:after, .qa-q-view-content:after, .qa-q-view-buttons:after, .qa-part-form-q-edit:after,
-.qa-a-list-item:after, .qa-a-item-buttons:after,
+.qa-a-list-item:after, .qa-a-item-buttons:after, .qa-a-item-content:after,
 .qa-c-item-buttons:after, .qa-c-item-clear:after,
 .qam-footer-row:after, .qam-qa-list-meta-box:after,
 .qa-nav-footer-list:after, .qa-footer-clear:after {
@@ -37,10 +37,17 @@
 	clear: both;
 }
 
+/*------[ web fonts ]------*/
+
 @font-face {
 	font-family: "fontello";
-	src: url("font/fontello.eot?2559038") format("embedded-opentype"), url("font/fontello.eot?2559038#iefix") format("embedded-opentype"), url("font/fontello.woff?2559038") format("woff"), url("font/fontello.ttf?2559038") format("truetype"), url("font/fontello.svg?2559038#fontello") format("svg");
+	src: url("fonts/fontello.eot?2559038") format("embedded-opentype"),
+		url("fonts/fontello.eot?2559038#iefix") format("embedded-opentype"),
+		url("fonts/fontello.woff?2559038") format("woff"),
+		url("fonts/fontello.ttf?2559038") format("truetype"),
+		url("fonts/fontello.svg?2559038#fontello") format("svg");
 }
+
 /*------[ base css ]------*/
 html {
 	font-size: 16px;
@@ -704,6 +711,8 @@ blockquote p {
 	display: block;
 	cursor: pointer;
 	min-width: 60px;
+	min-height: 55px;
+	max-width: 80px;
 	padding: 2px;
 	background-color: #34495e;
 	text-align: center;
@@ -735,6 +744,8 @@ blockquote p {
 .qam-account-handle {
 	font-size: 12px;
 	line-height: 1.8;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .qam-account-items .qa-form-tall-button-login {
@@ -895,9 +906,6 @@ blockquote p {
 	}
 }
 
-
-
-
 .qam-title-rss {
 	float: right;
 	color: #ecf0f1;
@@ -909,69 +917,44 @@ blockquote p {
 	width: auto !important;
 }
 
-.entry-content table, .qa-c-item-content table {
+
+.qa-q-view-content,
+.qa-a-item-content,
+.qa-c-item-content {
+	word-break: break-word;
+}
+
+.qa-q-view-content table, .qa-a-item-content table, .qa-c-item-content table {
 	width: 100%;
 	border-collapse: collapse;
 	border: 1px solid #ecf0f1;
 	font-size: 14px;
 	margin-bottom: 20px;
 }
-.entry-content tr:hover, .qa-c-item-content tr:hover {
+.qa-q-view-content tr:hover, .qa-a-item-content tr:hover, .qa-c-item-content tr:hover {
 	background-color: #ecf0f1;
 }
-.entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
+.qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th,
+.qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
 	padding: 10px;
 	border-width: 1px;
 	border-style: solid;
 	text-align: left;
 }
-.entry-content th, .qa-c-item-content th {
+.qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th {
 	background-color: #bdc3c7;
 	border-color: #95a5a6;
 	font-weight: 700;
 }
-.entry-content td, .qa-c-item-content td {
+.qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
 	border-color: #ecf0f1;
 }
-.entry-content ul, .qa-c-item-content ul {
-	margin: 20px 0 20px 20px;
+.qa-q-view-content ul, .qa-a-item-content ul, .qa-c-item-content ul,
+.qa-q-view-content ol, .qa-a-item-content ol, .qa-c-item-content ol {
+	margin-left: 20px;
 	padding: 0;
 }
-.entry-content ul > li, .qa-c-item-content ul > li {
-	list-style: none;
-	margin: .4em 0;
-	position: relative;
-}
-.entry-content ul > li:before, .qa-c-item-content ul > li:before {
-	font-family: "fontello";
-	font-style: normal;
-	font-weight: normal;
-	content: '\e82c';
-	position: absolute;
-	left: -1.6em;
-	top: 4px;
-	display: inline-block;
-	text-decoration: inherit;
-	width: 1em;
-	margin: 0 .2em;
-	text-align: center;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1em;
-}
-.entry-content ul > li > ul, .qa-c-item-content ul > li > ul {
-	margin: 0 0 0 20px;
-}
-.entry-content ol, .qa-c-item-content ol {
-	margin: 20px 0 20px 20px;
-	padding: 0;
-}
-.entry-content ol > li, .qa-c-item-content ol > li {
-	margin: .4em 0;
-}
-.entry-content ol > li > ol, .qa-c-item-content ol > li > ol {
-	margin: 0 0 0 20px;
-}
+
 
 .qa-waiting {
 	background: url('images/spinner-icon-14x14.gif?1410117644') no-repeat center;
@@ -1467,7 +1450,8 @@ blockquote p {
 }
 .qa-template-admin .qa-q-item-content {
 	font-size: 0.75em;
-	line-height: 2em;
+	max-height: 150px;
+	overflow-y: auto;
 }
 .qa-template-admin .qa-q-item-avatar-meta {
 	border-top: 1px solid #ecf0f1;
@@ -1995,6 +1979,9 @@ input[type="submit"], button {
 	width: auto;
 }
 
+.qa-part-form-profile .qa-form-wide-data {
+	word-break: break-word;
+}
 .qa-part-form-profile .qa-form-tall-image {
 	text-align: center;
 }
@@ -2485,6 +2472,11 @@ input[type="submit"], button {
 	position: relative;
 	min-height: 190px;
 }
+/* highlight selected answer */
+.qa-a-list-item:target{
+    -webkit-animation: answer-highlight 2s ease-in-out;
+    animation: answer-highlight 2s ease-in-out;
+}
 
 .qa-a-item-avatar-meta {
 	font-size: 12px;
@@ -2617,6 +2609,12 @@ input[type="submit"], button {
 	background-color: #f4f4f4;
 	position: relative;
 }
+/* highlight selected comment */
+.qa-c-list-item:target {
+    -webkit-animation: comment-highlight 2s ease-in-out;
+    animation: comment-highlight 2s ease-in-out;
+}
+
 .qa-c-list-item .qa-form-light-button {
 	padding: 10px 15px;
 	background: #bdc3c7 none center no-repeat;
@@ -3613,4 +3611,22 @@ input[type="submit"], button {
 
 .icon-reply:before {
 	content: '\e82e';
+}
+
+@-webkit-keyframes answer-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #fff; }
+}
+@keyframes answer-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #fff; }
+}
+
+@-webkit-keyframes comment-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #f4f4f4; }
+}
+@keyframes comment-highlight {
+    0% { background-color: #ffffaa; }
+    100% { background-color: #f4f4f4; }
 }

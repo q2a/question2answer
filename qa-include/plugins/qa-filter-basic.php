@@ -43,6 +43,9 @@ class qa_filter_basic
 		if (!strlen($handle)) {
 			return qa_lang('users/handle_empty');
 		}
+		if (in_array($handle, array('.', '..'))) {
+			return qa_lang_sub('users/handle_has_bad', '. ..');
+		}
 		if (preg_match('/[\\@\\+\\/]/', $handle)) {
 			return qa_lang_sub('users/handle_has_bad', '@ + /');
 		}

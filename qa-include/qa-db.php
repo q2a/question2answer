@@ -60,10 +60,11 @@
 			return;
 
 		// in mysqli we connect and select database in constructor
-		if (QA_PERSISTENT_CONN_DB)
-			$db = new mysqli('p:'.QA_FINAL_MYSQL_HOSTNAME, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE);
+		$host = QA_PERSISTENT_CONN_DB ? 'p:'.QA_FINAL_MYSQL_HOSTNAME : QA_FINAL_MYSQL_HOSTNAME;
+		if (defined('QA_FINAL_MYSQL_PORT'))
+			$db = new mysqli($host, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE, QA_FINAL_MYSQL_PORT);
 		else
-			$db = new mysqli(QA_FINAL_MYSQL_HOSTNAME, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE);
+			$db = new mysqli($host, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE);
 
 		// must use procedural `mysqli_connect_error` here prior to 5.2.9
 		$conn_error = mysqli_connect_error();

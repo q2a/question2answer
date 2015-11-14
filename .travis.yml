@@ -1,3 +1,4 @@
+sudo: false
 language: php
 php:
   - 5.3
@@ -17,7 +18,7 @@ before_script:
   - curl -o phpcpd.phar https://phar.phpunit.de/phpcpd.phar
   # PHP Mess Detector
   - pear config-set preferred_state beta
-  - printf "\n" | pecl install imagick
+  - printf "\n\n" | pecl install imagick
   - pear channel-discover pear.phpmd.org
   - pear channel-discover pear.pdepend.org
   - pear install --alldeps phpmd/PHP_PMD
