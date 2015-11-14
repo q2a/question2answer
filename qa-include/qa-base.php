@@ -262,6 +262,10 @@
 			define('QA_FINAL_EXTERNAL_USERS', QA_EXTERNAL_USERS);
 		}
 
+		if (defined('QA_MYSQL_PORT')) {
+			define('QA_FINAL_MYSQL_PORT', QA_MYSQL_PORT);
+		}
+
 	//	Possible URL schemes for Q2A and the string used for url scheme testing
 
 		define('QA_URL_FORMAT_INDEX', 0);  // http://...../index.php/123/why-is-the-sky-blue

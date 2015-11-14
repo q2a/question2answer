@@ -29,6 +29,9 @@
 
 	For persistent connections, set the QA_PERSISTENT_CONN_DB at the bottom of this file; do NOT
 	prepend the hostname with 'p:'.
+
+	To use a non-default port, add the following line to the list of defines, with the appropriate port number:
+	define('QA_MYSQL_PORT', '3306');
 */
 
 	define('QA_MYSQL_HOSTNAME', '127.0.0.1');
