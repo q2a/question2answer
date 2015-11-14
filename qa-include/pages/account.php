@@ -56,7 +56,7 @@
 	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
 	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 	$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
-	$permit_error = qa_user_permit_error() ;
+	$permit_error = qa_user_permit_error();
 	$isblocked = $permit_error !== false;
 	$pending_confirmation = $doconfirms && $permit_error == 'confirm';
 
@@ -66,9 +66,9 @@
 	if (qa_post_limit_exceeded())
 		$errors['avatar'] = qa_lang('main/file_upload_limit_exceeded');
 	else {
-		if (qa_clicked('dosaveprofile') && !$isblocked) {
-			require_once QA_INCLUDE_DIR.'app/users-edit.php';
+		require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
+		if (qa_clicked('dosaveprofile') && !$isblocked) {
 			$inhandle = $changehandle ? qa_post_text('handle') : $useraccount['handle'];
 			$inemail = qa_post_text('email');
 			$inmessages = qa_post_text('messages');
@@ -82,7 +82,6 @@
 
 			if (!qa_check_form_security_code('account', qa_post_text('code')))
 				$errors['page'] = qa_lang_html('misc/form_security_again');
-
 			else {
 				$errors = qa_handle_email_filter($inhandle, $inemail, $useraccount);
 
@@ -148,12 +147,13 @@
 						$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
 				}
 
-				foreach ($userfields as $userfield)
+				foreach ($userfields as $userfield) {
 					if (!isset($errors[$userfield['fieldid']]))
 						qa_db_user_profile_set($userid, $userfield['title'], $inprofile[$userfield['fieldid']]);
+				}
 
 				list($useraccount, $userprofile) = qa_db_select_with_pending(
-						qa_db_user_account_selectspec($userid, true), qa_db_user_profile_selectspec($userid, true)
+					qa_db_user_account_selectspec($userid, true), qa_db_user_profile_selectspec($userid, true)
 				);
 
 				qa_report_event('u_save', $userid, $useraccount['handle'], qa_cookie_get());
@@ -163,10 +163,8 @@
 
 				qa_logged_in_user_flush();
 			}
-		}else if (qa_clicked('dosaveprofile') && $pending_confirmation ) {
-			//only allow to update the email if the user is not confirmed yet
-			require_once QA_INCLUDE_DIR.'app/users-edit.php';
-
+		} else if (qa_clicked('dosaveprofile') && $pending_confirmation) {
+			// only allow user to update email if they are not confirmed yet
 			$inemail = qa_post_text('email');
 
 			if (!qa_check_form_security_code('account', qa_post_text('code')))
@@ -197,8 +195,6 @@
 	//	Process change password if clicked
 
 		if (qa_clicked('dochangepassword')) {
-			require_once QA_INCLUDE_DIR.'app/users-edit.php';
-
 			$inoldpassword = qa_post_text('oldpassword');
 			$innewpassword1 = qa_post_text('newpassword1');
 			$innewpassword2 = qa_post_text('newpassword2');
