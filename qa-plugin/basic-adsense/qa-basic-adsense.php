@@ -54,6 +54,12 @@ class qa_basic_adsense
 					'tags' => 'name="adsense_publisher_id_field"',
 					'note' => 'Example: <i>pub-1234567890123456</i>',
 				),
+                array(
+                        'label' => 'AdSense Ad Unit ID:',
+                        'value' => qa_html(qa_opt('adsense_adunit_id')),
+                        'tags' => 'name="adsense_adunit_id_field"',
+                        'note' => 'Example: <i>8XXXXX1</i>',
+                ),
 			),
 
 			'buttons' => array(
@@ -68,37 +74,35 @@ class qa_basic_adsense
 
 	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 	{
-		$divstyle='';
+        $format = 'auto' ;
 
-		switch ($region) {
-			case 'full': // Leaderboard
-				$divstyle='width:728px; margin:0 auto;';
-				// fall-through
+        switch ($region) {
+            case 'full':
+            case 'main':
+                $format='horizontal';
+                break;
 
-			case 'main': // Leaderboard
-				$width=728;
-				$height=90;
-				$format='728x90_as';
-				break;
+            case 'side':
+                $format='vertical';
+                break;
+        }
 
-			case 'side': // Wide skyscraper
-				$width=160;
-				$height=600;
-				$format='160x600_as';
-				break;
-		}
+        ?>
+<style>
+    .basic-adsense {display: block; padding: 5px 0; margin: 5px 0}
+</style>
+<div class="basic-adsense">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle <?php echo $region ?>"
+         style="display:block"
+         data-ad-client="<?php echo qa_opt('adsense_publisher_id') ?>"
+         data-ad-slot="<?php echo qa_opt('adsense_adunit_id') ?>"
+         data-ad-format="<?php echo $format ?>">
 
-?>
-<div style="<?php echo $divstyle?>">
-	<script type="text/javascript">
-	google_ad_client = <?php echo qa_js(qa_opt('adsense_publisher_id'))?>;
-	google_ad_width = <?php echo qa_js($width)?>;
-	google_ad_height = <?php echo qa_js($height)?>;
-	google_ad_format = <?php echo qa_js($format)?>;
-	google_ad_type = "text_image";
-	google_ad_channel = "";
-	</script>
-	<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+    </ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 </div>
 <?php
 	}
