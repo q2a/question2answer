@@ -136,6 +136,18 @@
 			}
 
 			if (empty($errors)) {
+				//check if the question is already posted
+				$testwords=implode(' ', qa_string_to_words($in['content']));
+				$recent_questions = qa_db_select_with_pending(qa_db_qs_selectspec(null, 'created', 0, null, null, false, true, 5));
+				foreach ($recent_questions as $recent_question)
+					if (!$recent_question['hidden'])
+						if (implode(' ', qa_string_to_words($recent_question['content'])) == $testwords){
+							$errors['page']=qa_lang_html('question/duplicate_content');
+							break;
+						}
+			}
+
+			if (empty($errors)) {
 				$cookieid=isset($userid) ? qa_cookie_get() : qa_cookie_get_create(); // create a new cookie if necessary
 
 				$questionid=qa_question_create($followanswer, $userid, qa_get_logged_in_handle(), $cookieid,
