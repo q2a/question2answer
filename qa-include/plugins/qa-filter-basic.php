@@ -70,6 +70,10 @@ class qa_filter_basic
 
 		$this->validate_field_length($errors, $question, 'content', 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
 		$this->validate_field_length($errors, $question, 'text', qa_opt('min_len_q_content'), null); // for display
+		// ensure content error is shown
+		if (isset($errors['text'])) {
+			$errors['content'] = $errors['text'];
+		}
 
 		if (isset($question['tags'])) {
 			$counttags = count($question['tags']);
@@ -149,7 +153,7 @@ class qa_filter_basic
 			$errorKey = $key;
 		}
 
-		// skip the field is key not set (for example, 'title' when recategorizing questions)
+		// skip the field if key not set (for example, 'title' when recategorizing questions)
 		if (array_key_exists($key, $post)) {
 			$length = qa_strlen($post[$key]);
 
