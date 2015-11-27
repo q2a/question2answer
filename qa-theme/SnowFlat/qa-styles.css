@@ -1773,12 +1773,12 @@ blockquote p {
 
 /*------[ forms ]------*/
 input, textarea, select {
-	background-color: #f5f7f7;
-	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
-	padding: 5px;
 	margin-top: 5px;
 	margin-bottom: 5px;
-	border: 1px solid #e6ebed;
+	padding: 5px;
+	border: 1px solid #bdc3c7;
+	background-color: #fff;
+	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
 	-webkit-transition: all 0.3s;
 	transition: all 0.3s;
 }
@@ -1931,11 +1931,10 @@ input[type="submit"], button {
 }
 
 .qa-ask-similar-title {
+	margin: -10px -10px 10px;
 	padding: 10px;
-	margin-bottom: 5px;
-	background: #e74c3c;
+	background: #7f8c8d;
 	color: #fff;
-	margin: -10px -10px 10px -10px;
 }
 .qa-ask-similar-title a {
 	color: #fff;
