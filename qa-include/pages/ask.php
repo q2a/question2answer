@@ -144,12 +144,16 @@ if (qa_clicked('doask')) {
 
 		if (empty($errors)) {
 			// check if the question is already posted
-			$testwords = implode(' ', qa_string_to_words($in['content']));
-			$recent_questions = qa_db_select_with_pending(qa_db_qs_selectspec(null, 'created', 0, null, null, false, true, 5));
+			$testTitleWords = implode(' ', qa_string_to_words($in['title']));
+			$testContentWords = implode(' ', qa_string_to_words($in['content']));
+			$recentQuestions = qa_db_select_with_pending(qa_db_qs_selectspec(null, 'created', 0, null, null, false, true, 5));
 
-			foreach ($recent_questions as $question) {
+			foreach ($recentQuestions as $question) {
 				if (!$question['hidden']) {
-					if (implode(' ', qa_string_to_words($question['content'])) == $testwords) {
+					$qTitleWords = implode(' ', qa_string_to_words($question['title']));
+					$qContentWords = implode(' ', qa_string_to_words($question['content']));
+
+					if ($qTitleWords == $testTitleWords && $qContentWords == $testContentWords) {
 						$errors['page'] = qa_lang_html('question/duplicate_content');
 						break;
 					}
