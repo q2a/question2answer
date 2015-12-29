@@ -24,7 +24,7 @@ class qa_basic_adsense
 {
 	public function allow_template($template)
 	{
-		return ($template!='admin');
+		return $template != 'admin';
 	}
 
 
@@ -36,13 +36,15 @@ class qa_basic_adsense
 
 	public function admin_form(&$qa_content)
 	{
-		$saved=false;
+		$saved = false;
 
 		if (qa_clicked('adsense_save_button')) {
-			$trimchars="=;\"\' \t\r\n"; // prevent common errors by copying and pasting from Javascript
+			// prevent common errors by copying and pasting from Javascript
+			$trimchars = "=;\"\' \t\r\n";
 			qa_opt('adsense_publisher_id', trim(qa_post_text('adsense_publisher_id_field'), $trimchars));
 			qa_opt('adsense_adunit_id', trim(qa_post_text('adsense_adunit_id_field'), $trimchars));
-			$saved=true;
+
+			$saved = true;
 		}
 
 		return array(
@@ -80,11 +82,11 @@ class qa_basic_adsense
 		switch ($region) {
 			case 'full':
 			case 'main':
-				$format='horizontal';
+				$format = 'horizontal';
 				break;
 
 			case 'side':
-				$format='vertical';
+				$format = 'vertical';
 				break;
 		}
 
