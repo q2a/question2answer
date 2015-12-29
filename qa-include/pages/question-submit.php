@@ -351,8 +351,10 @@
 
 				foreach ($answers as $answer)
 					if (!$answer['hidden'])
-						if (implode(' ', qa_string_to_words($answer['content'])) == $testwords)
+						if (implode(' ', qa_string_to_words($answer['content'])) == $testwords) {
 							$errors['content']=qa_lang_html('question/duplicate_content');
+							break;
+						}
 			}
 
 			$userid = qa_get_logged_in_userid();
@@ -425,8 +427,10 @@
 
 				foreach ($commentsfollows as $comment)
 					if (($comment['basetype']=='C') && ($comment['parentid']==$parentid) && !$comment['hidden'])
-						if (implode(' ', qa_string_to_words($comment['content'])) == $testwords)
+						if (implode(' ', qa_string_to_words($comment['content'])) == $testwords) {
 							$errors['content']=qa_lang_html('question/duplicate_content');
+							break;
+						}
 			}
 
 			if (empty($errors)) {
