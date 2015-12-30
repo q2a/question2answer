@@ -1023,6 +1023,16 @@ blockquote p {
 		display: none;
 	}
 }
+@media (min-width: 241px) and (max-width: 799px) {
+	.qa-q-item-stats {
+		width: 60px;
+	}
+}
+@media (min-width: 800px) {
+	.qa-q-item-stats {
+		width: 133px;
+	}
+}
 
 .qa-voting {
 	background-color: #ecf0f1;
@@ -2284,6 +2294,7 @@ input[type="submit"], button {
 	width: 100%;
 	height: auto;
 	margin: 6px 0 -4px;
+	word-break: break-word;
 }
 
 .qa-view-count-data {
