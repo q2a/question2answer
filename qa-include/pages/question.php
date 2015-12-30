@@ -58,8 +58,10 @@
 	if (isset($question)) {
 		$q_request = qa_q_request($questionid, $question['title']);
 
-		if ($q_request != qa_request())
-			qa_redirect($q_request); //redirect to appropriate URL if the current request URL is incorrect
+		if (trim($q_request, '/') !== trim(qa_request(), '/')) {
+			// redirect if the current URL is incorrect
+			qa_redirect($q_request);
+		}
 
 		$question['extra']=$extravalue;
 
