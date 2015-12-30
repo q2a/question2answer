@@ -360,7 +360,7 @@
 
 	//	Post content
 
-		if (@$options['contentview'] && !empty($post['content'])) {
+		if (@$options['contentview'] && isset($post['content'])) {
 			$viewer=qa_load_viewer($post['content'], $post['format']);
 
 			$fields['content']=$viewer->get_html($post['content'], $post['format'], array(
