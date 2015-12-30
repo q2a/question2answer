@@ -93,7 +93,7 @@
 
 	$captchareason=qa_user_captcha_reason();
 
-	$in['title']=qa_post_text('title'); // allow title and tags to be posted by an external form
+	$in['title']=qa_get_post_title('title'); // allow title and tags to be posted by an external form
 	$in['extra']=qa_opt('extra_field_active') ? qa_post_text('extra') : null;
 	if (qa_using_tags())
 		$in['tags']=qa_get_tags_field_value('tags');
