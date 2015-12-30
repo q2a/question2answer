@@ -113,10 +113,10 @@
 			$favoritemap=qa_get_favorite_non_qs_map();
 
 			foreach ($useridhandles as $useridhandle) {
-				if (isset($useridhandle['userid']) && $useridhandle['handle'])
+				if (isset($useridhandle['userid']))
 					$usershtml[$useridhandle['userid']]=qa_get_one_user_html($useridhandle['handle'], $microformats, @$favoritemap['user'][$useridhandle['userid']]);
 
-				if (isset($useridhandle['lastuserid']) && $useridhandle['lasthandle'])
+				if (isset($useridhandle['lastuserid']))
 					$usershtml[$useridhandle['lastuserid']]=qa_get_one_user_html($useridhandle['lasthandle'], $microformats, @$favoritemap['user'][$useridhandle['lastuserid']]);
 			}
 
