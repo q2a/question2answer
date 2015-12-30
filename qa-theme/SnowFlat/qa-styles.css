@@ -2319,9 +2319,7 @@ input[type="submit"], button {
 }
 
 .qa-q-view-avatar {
-	position: absolute;
-	top: 20px;
-	right: 20px;
+	float: right;
 }
 
 .qa-q-view-meta {
@@ -2342,7 +2340,7 @@ input[type="submit"], button {
 	.qa-q-view-main {
 		float: left;
 		margin: 0 0 0 20px;
-		width: 81%;
+		width: 86%;
 	}
 }
 
@@ -2486,9 +2484,7 @@ input[type="submit"], button {
 }
 
 .qa-a-item-avatar {
-	position: absolute;
-	top: 20px;
-	right: 20px;
+	float: right;
 }
 
 .qa-a-item-meta {
@@ -2530,7 +2526,7 @@ input[type="submit"], button {
 	.qa-a-item-main {
 		float: left;
 		margin: 0 0 0 20px;
-		width: 81%;
+		width: 86%;
 	}
 
 	.qa-a-selection {
