@@ -24,7 +24,8 @@
 		header('Location: ../');
 		exit;
 	}
-	
+
+
 	function qa_db_calc_passcheck($password, $salt)
 /*
 	Return the expected value for the passcheck column given the $password and password $salt
