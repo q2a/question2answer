@@ -47,9 +47,9 @@
 		$salt=isset($password) ? qa_random_alphanum(16) : null;
 
 		qa_db_query_sub(
-			'INSERT INTO ^users (created, createip, email, passsalt, passhash, level, handle, loggedin, loginip) '.
+			'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) '.
 			'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, $, #, $, NOW(), COALESCE(INET_ATON($), 0))',
-			$ip, $email, $salt, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ip
+			$ip, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ip
 		);
 
 		return qa_db_last_insert_id();
