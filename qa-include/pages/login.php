@@ -68,9 +68,16 @@
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
-					if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
-						require_once QA_INCLUDE_DIR.'app/users.php';
+					$haspassword=isset($userinfo['passhash']);
+					$haspasswordold=isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
+					
+					if (
+					($haspasswordold && strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) ||
+					($haspassword && password_verify($inpassword,$userinfo['passhash']))
+					){ // login and redirect
 
+						require_once QA_INCLUDE_DIR.'app/users.php';
+						if($haspasswordold) qa_db_user_set_password($inuserid, $inpassword);
 						qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
 
 						$topath=qa_get('to');

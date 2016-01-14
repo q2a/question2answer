@@ -25,7 +25,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 61);
+	define('QA_DB_VERSION_CURRENT', 62);
 
 
 	function qa_db_user_column_type_verify()
@@ -107,7 +107,8 @@
 				'avatarwidth' => 'SMALLINT UNSIGNED', // pixel width of stored avatar
 				'avatarheight' => 'SMALLINT UNSIGNED', // pixel height of stored avatar
 				'passsalt' => 'BINARY(16)', // salt used to calculate passcheck - null if no password set for direct login
-				'passcheck' => 'BINARY(20)', // checksum from password and passsalt - null if no passowrd set for direct login
+				'passcheck' => 'BINARY(20)', // checksum from password and passsalt - null if no password set for direct login
+				'passhash' => 'CHAR(60) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL', // password_hash
 				'level' => 'TINYINT UNSIGNED NOT NULL', // basic, editor, admin, etc...
 				'loggedin' => 'DATETIME NOT NULL', // time of last login
 				'loginip' => 'INT UNSIGNED NOT NULL', // INET_ATON of IP address of last login
@@ -1460,6 +1461,11 @@
 					break;
 
 			//	Up to here: Verison 1.8 alpha
+
+				case 62:
+						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash '.$definitions['users']['passhash'].' AFTER passcheck');
+						qa_db_upgrade_query($locktablesquery);
+						break;
 
 			}
 
