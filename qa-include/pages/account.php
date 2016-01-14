@@ -55,7 +55,8 @@
 	$changehandle=qa_opt('allow_change_usernames') || ((!$userpoints['qposts']) && (!$userpoints['aposts']) && (!$userpoints['cposts']));
 	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
 	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
-	$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+	$haspasswordold=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+	$haspassword=isset($useraccount['passhash']);
 	$isblocked = qa_user_permit_error() !== false;
 
 
@@ -179,8 +180,10 @@
 
 			else {
 				$errors = array();
-
-				if ($haspassword && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck'])))
+				if (
+				($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
+				(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
+				)
 					$errors['oldpassword'] = qa_lang('users/password_wrong');
 
 				$useraccount['password'] = $inoldpassword;

@@ -1181,7 +1181,7 @@
 	{
 		return array(
 			'columns' => array(
-				'^users.userid', 'passsalt', 'passcheck' => 'HEX(passcheck)', 'email', 'level', 'emailcode', 'handle',
+				'^users.userid', 'passsalt', 'passcheck' => 'HEX(passcheck)', 'passhash', 'email', 'level', 'emailcode', 'handle',
 				'created' => 'UNIX_TIMESTAMP(created)', 'sessioncode', 'sessionsource', 'flags', 'loggedin' => 'UNIX_TIMESTAMP(loggedin)',
 				'loginip' => 'INET_NTOA(loginip)', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip' => 'INET_NTOA(writeip)',
 				'avatarblobid' => 'BINARY avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union

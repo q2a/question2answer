@@ -20,12 +20,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
-
-
 	function qa_db_calc_passcheck($password, $salt)
 /*
 	Return the expected value for the passcheck column given the $password and password $salt
@@ -36,6 +30,10 @@
 		return sha1(substr($salt, 0, 8).$password.substr($salt, 8));
 	}
 
+	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+		header('Location: ../');
+		exit;
+	}
 
 	function qa_db_user_create($email, $password, $handle, $level, $ip)
 /*
@@ -47,9 +45,9 @@
 		$salt=isset($password) ? qa_random_alphanum(16) : null;
 
 		qa_db_query_sub(
-			'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) '.
-			'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, UNHEX($), #, $, NOW(), COALESCE(INET_ATON($), 0))',
-			$ip, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ip
+			'INSERT INTO ^users (created, createip, email, passsalt, passhash, level, handle, loggedin, loginip) '.
+			'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, $, #, $, NOW(), COALESCE(INET_ATON($), 0))',
+			$ip, $email, $salt, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ip
 		);
 
 		return qa_db_last_insert_id();
@@ -154,11 +152,9 @@
 
 		require_once QA_INCLUDE_DIR.'util/string.php';
 
-		$salt=qa_random_alphanum(16);
-
 		qa_db_query_sub(
-			'UPDATE ^users SET passsalt=$, passcheck=UNHEX($) WHERE userid=$',
-			$salt, qa_db_calc_passcheck($password, $salt), $userid
+			'UPDATE ^users SET passhash=$, passsalt=NULL, passcheck=NULL WHERE userid=$',
+			password_hash($password, PASSWORD_BCRYPT), $userid
 		);
 	}
 
