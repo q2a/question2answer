@@ -67,10 +67,10 @@
 				if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
-					
+
 					$haspassword=isset($userinfo['passhash']);
 					$haspasswordold=isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
-					
+
 					if (
 					($haspasswordold && strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) ||
 					($haspassword && password_verify($inpassword,$userinfo['passhash']))
