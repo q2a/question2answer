@@ -76,6 +76,7 @@
 					($haspassword && password_verify($inpassword,$userinfo['passhash']))
 					){ // login and redirect
 						require_once QA_INCLUDE_DIR.'app/users.php';
+						
 						if($haspasswordold) qa_db_user_set_password($inuserid, $inpassword);
 						qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
 
