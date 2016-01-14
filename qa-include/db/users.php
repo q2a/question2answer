@@ -36,11 +36,6 @@
 		return sha1(substr($salt, 0, 8).$password.substr($salt, 8));
 	}
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
-
 	function qa_db_user_create($email, $password, $handle, $level, $ip)
 /*
 	Create a new user in the database with $email, $password, $handle, privilege $level, and $ip address
