@@ -180,6 +180,7 @@
 
 			else {
 				$errors = array();
+
 				if (
 				($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
 				(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
