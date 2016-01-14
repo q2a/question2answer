@@ -1429,13 +1429,13 @@
 					$keyrecalc['dorecalcpoints'] = true;
 					break;
 
-			//	Up to here: Verison 1.7
+			//	Up to here: Version 1.7
 
 				case 59:
 					// Upgrade from alpha version removed
 					break;
 
-			//	Up to here: Verison 1.7.1
+			//	Up to here: Version 1.7.1
 				case 60:
 						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash '.$definitions['users']['passhash'].' AFTER passcheck');
 						qa_db_upgrade_query($locktablesquery);
