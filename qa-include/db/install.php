@@ -1431,13 +1431,13 @@
 					$keyrecalc['dorecalcpoints'] = true;
 					break;
 
-			//	Up to here: Verison 1.7
+			//	Up to here: Version 1.7
 
 				case 59:
 					// upgrade from alpha version removed
 					break;
 
-			//	Up to here: Verison 1.7.1
+			//	Up to here: Version 1.7.1
 
 				case 60:
 					// add new category widget - note title must match that from qa_register_core_modules()
@@ -1460,7 +1460,7 @@
 
 					break;
 
-			//	Up to here: Verison 1.8 alpha
+			//	Up to here: Version 1.8 alpha
 
 				case 62:
 						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash '.$definitions['users']['passhash'].' AFTER passcheck');
