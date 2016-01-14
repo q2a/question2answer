@@ -19,7 +19,11 @@
 
 	More about this license: http://www.question2answer.org/license.php
 */
-
+	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+		header('Location: ../');
+		exit;
+	}
+	
 	function qa_db_calc_passcheck($password, $salt)
 /*
 	Return the expected value for the passcheck column given the $password and password $salt
@@ -28,11 +32,6 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		return sha1(substr($salt, 0, 8).$password.substr($salt, 8));
-	}
-
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
 	}
 
 	function qa_db_user_create($email, $password, $handle, $level, $ip)
