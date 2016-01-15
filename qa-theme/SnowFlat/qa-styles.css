@@ -1841,6 +1841,7 @@ input[type="submit"], button {
 }
 
 .qa-form-tall-button, .qa-form-wide-button, .qa-form-basic-button {
+	-webkit-appearance: none;
 	padding: 10px 15px;
 	border: 0;
 	font-size: 14px;
@@ -2173,6 +2174,7 @@ input[type="submit"], button {
 
 /*------[ q-view ]------*/
 .qa-form-light-button {
+	-webkit-appearance: none;
 	display: block;
 	float: right;
 	margin: 0 0 0 5px;
