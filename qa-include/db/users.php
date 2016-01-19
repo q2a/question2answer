@@ -36,6 +36,7 @@
 		return sha1(substr($salt, 0, 8).$password.substr($salt, 8));
 	}
 
+
 	function qa_db_user_create($email, $password, $handle, $level, $ip)
 /*
 	Create a new user in the database with $email, $password, $handle, privilege $level, and $ip address
@@ -45,11 +46,20 @@
 
 		$salt=isset($password) ? qa_random_alphanum(16) : null;
 
-		qa_db_query_sub(
-			'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) '.
-			'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, $, #, $, NOW(), COALESCE(INET_ATON($), 0))',
-			$ip, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ip
-		);
+		if(!qa_php_version_below('5.3.7')){
+			qa_db_query_sub(
+				'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) '.
+				'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, $, #, $, NOW(), COALESCE(INET_ATON($), 0))',
+				$ip, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ip
+			);
+		} else {
+			qa_db_query_sub(
+				'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) '.
+				'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, UNHEX($), #, $, NOW(), COALESCE(INET_ATON($), 0))',
+				$ip, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ip
+			);
+		}
+		
 
 		return qa_db_last_insert_id();
 	}
@@ -152,11 +162,20 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'util/string.php';
+		
+		if(qa_php_version_below('5.3.7'))$salt=qa_random_alphanum(16);
 
-		qa_db_query_sub(
-			'UPDATE ^users SET passhash=$, passsalt=NULL, passcheck=NULL WHERE userid=$',
-			password_hash($password, PASSWORD_BCRYPT), $userid
-		);
+		if(!qa_php_version_below('5.3.7')){
+			qa_db_query_sub(
+				'UPDATE ^users SET passhash=$, passsalt=NULL, passcheck=NULL WHERE userid=$',
+				password_hash($password, PASSWORD_BCRYPT), $userid
+			);
+		} else {
+			qa_db_query_sub(
+				'UPDATE ^users SET passsalt=$, passcheck=UNHEX($) WHERE userid=$',
+				$salt, qa_db_calc_passcheck($password, $salt), $userid
+			);
+		}
 	}
 
 
