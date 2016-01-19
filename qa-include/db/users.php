@@ -170,6 +170,7 @@
 			);
 		} else {
 			$salt=qa_random_alphanum(16);
+
 			qa_db_query_sub(
 				'UPDATE ^users SET passsalt=$, passcheck=UNHEX($) WHERE userid=$',
 				$salt, qa_db_calc_passcheck($password, $salt), $userid
