@@ -67,30 +67,50 @@
 				if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
-
-					$haspassword=isset($userinfo['passhash']);
-					$haspasswordold=isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
 					
-					if (
-					($haspasswordold && strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) ||
-					($haspassword && password_verify($inpassword,$userinfo['passhash']))
-					){ // login and redirect
-
-						require_once QA_INCLUDE_DIR.'app/users.php';
-						if($haspasswordold) qa_db_user_set_password($inuserid, $inpassword);
-						qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
-
-						$topath=qa_get('to');
-
-						if (isset($topath))
-							qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
-						elseif ($passwordsent)
-							qa_redirect('account');
-						else
-							qa_redirect('');
-
-					} else
-						$errors['password']=qa_lang('users/password_wrong');
+					if(!qa_php_version_below('5.3.7')){
+						$haspassword=isset($userinfo['passhash']);
+						$haspasswordold=isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
+						
+						if (
+						($haspasswordold && strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) ||
+						($haspassword && password_verify($inpassword,$userinfo['passhash']))
+						){ // login and redirect
+	
+							require_once QA_INCLUDE_DIR.'app/users.php';
+							if($haspasswordold) qa_db_user_set_password($inuserid, $inpassword);
+							qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
+	
+							$topath=qa_get('to');
+	
+							if (isset($topath))
+								qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
+							elseif ($passwordsent)
+								qa_redirect('account');
+							else
+								qa_redirect('');
+	
+						} else
+							$errors['password']=qa_lang('users/password_wrong');
+					} else {
+						if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
+	
+							require_once QA_INCLUDE_DIR.'app/users.php';
+							if($haspasswordold) qa_db_user_set_password($inuserid, $inpassword);
+							qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
+	
+							$topath=qa_get('to');
+	
+							if (isset($topath))
+								qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
+							elseif ($passwordsent)
+								qa_redirect('account');
+							else
+								qa_redirect('');
+	
+						} else
+							$errors['password']=qa_lang('users/password_wrong');
+					}
 
 				} else
 					$errors['emailhandle']=qa_lang('users/user_not_found');
