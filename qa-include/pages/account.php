@@ -55,8 +55,12 @@
 	$changehandle=qa_opt('allow_change_usernames') || ((!$userpoints['qposts']) && (!$userpoints['aposts']) && (!$userpoints['cposts']));
 	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
 	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
-	$haspasswordold=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
-	$haspassword=isset($useraccount['passhash']);
+	if(!qa_php_version_below('5.3.7')){
+		$haspasswordold=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+		$haspassword=isset($useraccount['passhash']);
+	} else {
+		$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+	}
 	$permit_error = qa_user_permit_error();
 	$isblocked = $permit_error !== false;
 	$pending_confirmation = $doconfirms && $permit_error == 'confirm';
@@ -205,12 +209,17 @@
 
 			else {
 				$errors = array();
-
-				if (
-				($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
-				(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
-				)
-					$errors['oldpassword'] = qa_lang('users/password_wrong');
+				
+				if(!qa_php_version_below('5.3.7')){
+					if (
+					($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
+					(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
+					)
+						$errors['oldpassword'] = qa_lang('users/password_wrong');
+				} else {
+					if ($haspassword && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck'])))
+						$errors['oldpassword'] = qa_lang('users/password_wrong');
+				}
 
 				$useraccount['password'] = $inoldpassword;
 				$errors = $errors + qa_password_validate($innewpassword1, $useraccount); // array union
