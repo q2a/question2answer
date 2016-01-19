@@ -44,8 +44,6 @@
 	{
 		require_once QA_INCLUDE_DIR.'util/string.php';
 
-		$salt=isset($password) ? qa_random_alphanum(16) : null;
-
 		if(!qa_php_version_below('5.3.7')){
 			qa_db_query_sub(
 				'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) '.
@@ -53,6 +51,8 @@
 				$ip, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ip
 			);
 		} else {
+			$salt=isset($password) ? qa_random_alphanum(16) : null;
+		
 			qa_db_query_sub(
 				'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) '.
 				'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, UNHEX($), #, $, NOW(), COALESCE(INET_ATON($), 0))',
