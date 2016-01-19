@@ -162,8 +162,6 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'util/string.php';
-		
-		if(qa_php_version_below('5.3.7'))$salt=qa_random_alphanum(16);
 
 		if(!qa_php_version_below('5.3.7')){
 			qa_db_query_sub(
@@ -171,6 +169,7 @@
 				password_hash($password, PASSWORD_BCRYPT), $userid
 			);
 		} else {
+			$salt=qa_random_alphanum(16);
 			qa_db_query_sub(
 				'UPDATE ^users SET passsalt=$, passcheck=UNHEX($) WHERE userid=$',
 				$salt, qa_db_calc_passcheck($password, $salt), $userid
