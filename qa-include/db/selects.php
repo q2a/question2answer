@@ -639,7 +639,7 @@
 	{
 		$selectspec=qa_db_posts_basic_selectspec();
 
-		$selectspec['source'].=" WHERE ^posts.postid=(SELECT IF(LEFT(parent.type, 1)='A', parent.parentid, parent.postid) FROM ^posts AS child LEFT JOIN ^posts AS parent ON parent.postid=child.parentid WHERE child.postid=#)";
+		$selectspec['source'].=" WHERE ^posts.postid=(SELECT IF(LEFT(parent.type, 1)='A', parent.parentid, parent.postid) FROM ^posts AS child LEFT JOIN ^posts AS parent ON parent.postid=child.parentid WHERE child.postid=# AND parent.type IN('Q','A'))";
 		$selectspec['arguments']=array($postid);
 		$selectspec['single']=true;
 
