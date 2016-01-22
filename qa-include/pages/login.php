@@ -78,7 +78,8 @@
 						){ // login and redirect
 	
 							require_once QA_INCLUDE_DIR.'app/users.php';
-							if($haspasswordold) qa_db_user_set_password($inuserid, $inpassword);
+							// upgrade password or rehash, when options like the cost parameter changed
+							if($haspasswordold || password_needs_rehash($userinfo['passhash'], PASSWORD_BCRYPT)) qa_db_user_set_password($inuserid, $inpassword);
 							qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
 	
 							$topath=qa_get('to');
