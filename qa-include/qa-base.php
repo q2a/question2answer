@@ -77,6 +77,7 @@
 	qa_load_plugin_files();
 	qa_load_override_files();
 
+	if(!qa_php_version_below('5.3.7')) require_once QA_INCLUDE_DIR.'vendor/password_compat.php';
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 
 	qa_db_allow_connect();
