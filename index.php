@@ -21,11 +21,11 @@
 */
 
 //	Set base path here so this works with symbolic links for multiple installations
-
+        error_reporting(0); //For Security
 	define('QA_BASE_DIR', dirname(empty($_SERVER['SCRIPT_FILENAME']) ? __FILE__ : $_SERVER['SCRIPT_FILENAME']).'/');
 
 	require 'qa-include/qa-index.php';
-
+        die(); //Browser does not not have follow the require
 
 /*
 	Omit PHP closing tag to help avoid accidental output
