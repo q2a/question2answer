@@ -37,7 +37,7 @@
 	if (QA_FINAL_EXTERNAL_USERS)
 		qa_fatal_error('User accounts are handled by external code');
 
-	$userid=qa_get_logged_in_userid();
+	$userid = qa_get_logged_in_userid();
 
 	if (!isset($userid))
 		qa_redirect('login');
@@ -52,14 +52,15 @@
 		qa_db_userfields_selectspec()
 	);
 
-	$changehandle=qa_opt('allow_change_usernames') || ((!$userpoints['qposts']) && (!$userpoints['aposts']) && (!$userpoints['cposts']));
-	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
-	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
-	if(!qa_php_version_below('5.3.7')){
-		$haspasswordold=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
-		$haspassword=isset($useraccount['passhash']);
+	$changehandle = qa_opt('allow_change_usernames') || (!$userpoints['qposts'] && !$userpoints['aposts'] && !$userpoints['cposts']);
+	$doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
+	$isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
+
+	if (!qa_php_version_below('5.3.7')) {
+		$haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+		$haspassword = isset($useraccount['passhash']);
 	} else {
-		$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+		$haspassword = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
 	}
 	$permit_error = qa_user_permit_error();
 	$isblocked = $permit_error !== false;
@@ -209,16 +210,18 @@
 
 			else {
 				$errors = array();
-				
-				if(!qa_php_version_below('5.3.7')){
+
+				if (!qa_php_version_below('5.3.7')) {
 					if (
-					($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
-					(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
-					)
+						($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
+						(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
+					) {
 						$errors['oldpassword'] = qa_lang('users/password_wrong');
+					}
 				} else {
-					if ($haspassword && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck'])))
+					if ($haspassword && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) {
 						$errors['oldpassword'] = qa_lang('users/password_wrong');
+					}
 				}
 
 				$useraccount['password'] = $inoldpassword;

@@ -1460,13 +1460,13 @@
 
 					break;
 
-			//	Up to here: Version 1.8 alpha
-
 				case 62:
-						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash '.$definitions['users']['passhash'].' AFTER passcheck');
-						qa_db_upgrade_query($locktablesquery);
-						break;
+					// add column to qa_users to handle new bcrypt passwords
+					qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash '.$definitions['users']['passhash'].' AFTER passcheck');
+					qa_db_upgrade_query($locktablesquery);
+					break;
 
+			//	Up to here: Version 1.8 alpha
 			}
 
 			qa_db_set_db_version($newversion);
