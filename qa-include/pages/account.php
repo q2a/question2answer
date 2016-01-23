@@ -476,7 +476,7 @@
 		),
 	);
 
-	if (!$haspassword) {
+	if (!$haspassword && !$haspasswordold) {
 		$qa_content['form_password']['fields']['old']['type']='static';
 		$qa_content['form_password']['fields']['old']['value']=qa_lang_html('users/password_none');
 	}
