@@ -108,7 +108,7 @@
 				'avatarheight' => 'SMALLINT UNSIGNED', // pixel height of stored avatar
 				'passsalt' => 'BINARY(16)', // salt used to calculate passcheck - null if no password set for direct login
 				'passcheck' => 'BINARY(20)', // checksum from password and passsalt - null if no password set for direct login
-				'passhash' => 'CHAR(60) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL', // password_hash
+				'passhash' => 'VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL', // password_hash
 				'level' => 'TINYINT UNSIGNED NOT NULL', // basic, editor, admin, etc...
 				'loggedin' => 'DATETIME NOT NULL', // time of last login
 				'loginip' => 'INT UNSIGNED NOT NULL', // INET_ATON of IP address of last login
