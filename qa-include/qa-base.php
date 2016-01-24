@@ -49,25 +49,6 @@
 	qa_initialize_php();
 	qa_initialize_constants_1();
 
-	/**
-	 * JSON compatibility layer for PHP 5.1
-	 */
-	if (!function_exists('json_encode') && !function_exists('json_decode')) {
-		require_once QA_INCLUDE_DIR.'vendor/JSON.php';
-
-		function json_encode($json)
-		{
-			$service = new Services_JSON();
-			return $service->encode($json);
-		}
-
-		function json_decode($json, $assoc = false)
-		{
-			$service = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
-			return $service->decode($json);
-		}
-	}
-
 	if (defined('QA_WORDPRESS_LOAD_FILE')) // if relevant, load WordPress integration in global scope
 		require_once QA_WORDPRESS_LOAD_FILE;
 
@@ -195,6 +176,31 @@
 
 			if (!is_readable(QA_WORDPRESS_LOAD_FILE))
 				qa_fatal_error('Could not find wp-load.php file for WordPress integration - please check QA_WORDPRESS_INTEGRATE_PATH in qa-config.php');
+		}
+
+		// Polyfills
+
+		// JSON compatibility layer for PHP 5.1
+		if (!function_exists('json_encode') && !function_exists('json_decode')) {
+			require_once QA_INCLUDE_DIR.'vendor/JSON.php';
+
+			function json_encode($json)
+			{
+				$service = new Services_JSON();
+				return $service->encode($json);
+			}
+
+			function json_decode($json, $assoc = false)
+			{
+				$service = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
+				return $service->decode($json);
+			}
+		}
+
+		// password_hash compatibility for 5.3-5.4
+		define('QA_PASSWORD_HASH', !qa_php_version_below('5.3.7'));
+		if (QA_PASSWORD_HASH) {
+			require_once QA_INCLUDE_DIR.'vendor/password_compat.php';
 		}
 	}
 

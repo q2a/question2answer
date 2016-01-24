@@ -37,7 +37,7 @@
 	if (QA_FINAL_EXTERNAL_USERS)
 		qa_fatal_error('User accounts are handled by external code');
 
-	$userid=qa_get_logged_in_userid();
+	$userid = qa_get_logged_in_userid();
 
 	if (!isset($userid))
 		qa_redirect('login');
@@ -52,10 +52,16 @@
 		qa_db_userfields_selectspec()
 	);
 
-	$changehandle=qa_opt('allow_change_usernames') || ((!$userpoints['qposts']) && (!$userpoints['aposts']) && (!$userpoints['cposts']));
-	$doconfirms=qa_opt('confirm_user_emails') && ($useraccount['level']<QA_USER_LEVEL_EXPERT);
-	$isconfirmed=($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
-	$haspassword=isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+	$changehandle = qa_opt('allow_change_usernames') || (!$userpoints['qposts'] && !$userpoints['aposts'] && !$userpoints['cposts']);
+	$doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
+	$isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
+
+	$haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+	if (QA_PASSWORD_HASH) {
+		$haspassword = isset($useraccount['passhash']);
+	} else {
+		$haspassword = $haspasswordold;
+	}
 	$permit_error = qa_user_permit_error();
 	$isblocked = $permit_error !== false;
 	$pending_confirmation = $doconfirms && $permit_error == 'confirm';
@@ -204,9 +210,18 @@
 
 			else {
 				$errors = array();
+				$legacyPassError = strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']);
 
-				if ($haspassword && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck'])))
-					$errors['oldpassword'] = qa_lang('users/password_wrong');
+				if (QA_PASSWORD_HASH) {
+					$passError = !password_verify($inoldpassword,$useraccount['passhash']);
+					if (($haspasswordold && $legacyPassError) || (!$haspasswordold && $haspassword && $passError)) {
+						$errors['oldpassword'] = qa_lang('users/password_wrong');
+					}
+				} else {
+					if ($haspassword && $legacyPassError) {
+						$errors['oldpassword'] = qa_lang('users/password_wrong');
+					}
+				}
 
 				$useraccount['password'] = $inoldpassword;
 				$errors = $errors + qa_password_validate($innewpassword1, $useraccount); // array union
@@ -463,7 +478,7 @@
 		),
 	);
 
-	if (!$haspassword) {
+	if (!$haspassword && !$haspasswordold) {
 		$qa_content['form_password']['fields']['old']['type']='static';
 		$qa_content['form_password']['fields']['old']['value']=qa_lang_html('users/password_none');
 	}
