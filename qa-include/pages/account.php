@@ -56,11 +56,11 @@
 	$doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
 	$isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 
+	$haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
 	if (QA_PASSWORD_HASH) {
-		$haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
 		$haspassword = isset($useraccount['passhash']);
 	} else {
-		$haspassword = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
+		$haspassword = $haspasswordold;
 	}
 	$permit_error = qa_user_permit_error();
 	$isblocked = $permit_error !== false;
