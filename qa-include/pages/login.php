@@ -68,7 +68,7 @@
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
-					if (!qa_php_version_below('5.3.7')) {
+					if (QA_PASSWORD_HASH) {
 						$haspassword=isset($userinfo['passhash']);
 						$haspasswordold=isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
 

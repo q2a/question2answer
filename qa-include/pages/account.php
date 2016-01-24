@@ -56,7 +56,7 @@
 	$doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
 	$isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 
-	if (!qa_php_version_below('5.3.7')) {
+	if (QA_PASSWORD_HASH) {
 		$haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
 		$haspassword = isset($useraccount['passhash']);
 	} else {
@@ -211,7 +211,7 @@
 			else {
 				$errors = array();
 
-				if (!qa_php_version_below('5.3.7')) {
+				if (QA_PASSWORD_HASH) {
 					if (
 						($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
 						(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))

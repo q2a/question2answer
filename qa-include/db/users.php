@@ -44,7 +44,7 @@
 	{
 		require_once QA_INCLUDE_DIR.'util/string.php';
 
-		if (!qa_php_version_below('5.3.7')) {
+		if (QA_PASSWORD_HASH) {
 			qa_db_query_sub(
 				'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) '.
 				'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, #, $, NOW(), COALESCE(INET_ATON($), 0))',
@@ -163,7 +163,7 @@
 
 		require_once QA_INCLUDE_DIR.'util/string.php';
 
-		if (!qa_php_version_below('5.3.7')) {
+		if (QA_PASSWORD_HASH) {
 			qa_db_query_sub(
 				'UPDATE ^users SET passhash=$, passsalt=NULL, passcheck=NULL WHERE userid=$',
 				password_hash($password, PASSWORD_BCRYPT), $userid
