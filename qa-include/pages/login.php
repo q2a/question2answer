@@ -68,51 +68,40 @@
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
+					$legacyPassOk = strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck']);
+
 					if (QA_PASSWORD_HASH) {
-						$haspassword=isset($userinfo['passhash']);
-						$haspasswordold=isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
+						$haspassword = isset($userinfo['passhash']);
+						$haspasswordold = isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
+						$passOk = password_verify($inpassword,$userinfo['passhash']);
 
-						if (
-							($haspasswordold && strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) ||
-							($haspassword && password_verify($inpassword,$userinfo['passhash']))
-						) {
-							// login and redirect
-							require_once QA_INCLUDE_DIR.'app/users.php';
-
+						if (($haspasswordold && $legacyPassOk) || ($haspassword && $passOk)) {
 							// upgrade password or rehash, when options like the cost parameter changed
 							if ($haspasswordold || password_needs_rehash($userinfo['passhash'], PASSWORD_BCRYPT)) {
 								qa_db_user_set_password($inuserid, $inpassword);
 							}
-							qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
-
-							$topath=qa_get('to');
-
-							if (isset($topath))
-								qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
-							elseif ($passwordsent)
-								qa_redirect('account');
-							else
-								qa_redirect('');
-
-						} else
+						} else {
 							$errors['password']=qa_lang('users/password_wrong');
+						}
 					} else {
-						if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
-
-							require_once QA_INCLUDE_DIR.'app/users.php';
-							qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
-
-							$topath=qa_get('to');
-
-							if (isset($topath))
-								qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
-							elseif ($passwordsent)
-								qa_redirect('account');
-							else
-								qa_redirect('');
-
-						} else
+						if (!$legacyPassOk) {
 							$errors['password']=qa_lang('users/password_wrong');
+						}
+					}
+
+					if (!isset($errors['password'])) {
+						// login and redirect
+						require_once QA_INCLUDE_DIR.'app/users.php';
+						qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
+
+						$topath=qa_get('to');
+
+						if (isset($topath))
+							qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
+						elseif ($passwordsent)
+							qa_redirect('account');
+						else
+							qa_redirect('');
 					}
 
 				} else

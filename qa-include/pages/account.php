@@ -210,16 +210,15 @@
 
 			else {
 				$errors = array();
+				$legacyPassError = strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']);
 
 				if (QA_PASSWORD_HASH) {
-					if (
-						($haspasswordold && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) ||
-						(!$haspasswordold && $haspassword && !password_verify($inoldpassword,$useraccount['passhash']))
-					) {
+					$passError = !password_verify($inoldpassword,$useraccount['passhash']);
+					if (($haspasswordold && $legacyPassError) || (!$haspasswordold && $haspassword && $passError)) {
 						$errors['oldpassword'] = qa_lang('users/password_wrong');
 					}
 				} else {
-					if ($haspassword && (strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']))) {
+					if ($haspassword && $legacyPassError) {
 						$errors['oldpassword'] = qa_lang('users/password_wrong');
 					}
 				}
