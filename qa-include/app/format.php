@@ -1339,7 +1339,7 @@
 		if (!$ismyuser)
 			unset($navigation['favorites']);
 
-		if (!$ismyuser || !qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
+		if (QA_FINAL_EXTERNAL_USERS || !$ismyuser || !qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
 			unset($navigation['messages']);
 
 		return $navigation;
