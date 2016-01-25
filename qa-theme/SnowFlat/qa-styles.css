@@ -189,15 +189,15 @@ th, td {
 
 pre {
 	background-color: #e0e4e5;
-	border-left: 11px solid #3498db;
-	margin: 1.7em 0 1.7em 0.3em;
+	border-left: 8px solid #3498db;
+	margin: 1em 0;
 	overflow: auto;
-	padding: 0.1em 0.5em 0.3em 0.7em;
+	padding: 0.4em 0.8em;
 	width: 98%;
+	font-size: 0.82em;
 }
 pre code {
 	background-color: #d6dadb;
-	font-size: 0.875em;
 	line-height: 1.71429em;
 }
 
@@ -648,6 +648,7 @@ blockquote p {
 .qa-nav-sub {
 	background-color: #e0e4e5;
 	text-align: center;
+	font-size: 12px;
 }
 .qa-nav-sub-list {
 	margin: 0;
@@ -656,10 +657,6 @@ blockquote p {
 }
 
 @media (max-width: 979px) {
-	.qa-nav-sub {
-		font-size: 10px;
-	}
-
 	.qa-nav-sub-list {
 		*zoom: 1;
 	}
@@ -674,7 +671,6 @@ blockquote p {
 	.qa-nav-sub-item {
 		width: 33.33%;
 		float: left;
-		display: block;
 		box-shadow: -1px -1px 0 0 #cfd9db inset;
 	}
 	.qa-nav-sub-item:nth-child(3) {
@@ -683,18 +679,17 @@ blockquote p {
 }
 @media (min-width: 980px) {
 	.qa-nav-sub {
-		font-size: 12px;
+		font-size: 13px;
 		padding: 0 6px;
 	}
 	.qa-nav-sub-item {
 		display: inline-block;
-		margin: 0 5px 0 0;
 	}
 }
 
 .qa-nav-sub-link, .qa-nav-sub-link:visited, .qa-nav-sub-link:hover {
 	display: block;
-	padding: 0 4px;
+	padding: 2px 10px 4px;
 	color: #000;
 }
 .qa-nav-sub-link.qa-nav-sub-selected, .qa-nav-sub-link:visited.qa-nav-sub-selected, .qa-nav-sub-link:hover.qa-nav-sub-selected {
