@@ -167,7 +167,7 @@
 
 						else {
 							if ($noticeid=='visitor')
-								setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN);
+								setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true);
 
 							elseif ($noticeid=='welcome') {
 								require_once QA_INCLUDE_DIR.'db/users.php';
@@ -217,7 +217,7 @@
 
 		if ($firstlower == 'admin') {
 			$_COOKIE['qa_admin_last'] = $requestlower; // for navigation tab now...
-			setcookie('qa_admin_last', $_COOKIE['qa_admin_last'], 0, '/', QA_COOKIE_DOMAIN); // ...and in future
+			setcookie('qa_admin_last', $_COOKIE['qa_admin_last'], 0, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true); // ...and in future
 		}
 
 		if (isset($qa_content))
@@ -756,7 +756,7 @@
 				$qa_content['notices'][]=qa_notice_form('visitor', qa_opt('notice_visitor'));
 
 		} else {
-			setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN); // don't show first-time notice if a user has logged in
+			setcookie('qa_noticed', 1, time()+86400*3650, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true); // don't show first-time notice if a user has logged in
 
 			if (qa_opt('show_notice_welcome') && (qa_get_logged_in_flags() & QA_USER_FLAGS_WELCOME_NOTICE) )
 				if ( ($requestlower!='confirm') && ($requestlower!='account') ) // let people finish registering in peace
