@@ -46,7 +46,7 @@
 	}
 
 
-	function qa_page_q_load_c_follows($question, $childposts, $achildposts)
+	function qa_page_q_load_c_follows($question, $childposts, $achildposts, $duplicateposts=array())
 /*
 	Given a $question, its $childposts and its answers $achildposts from the database,
 	return a list of comments or follow-on questions for that question or its answers
@@ -73,6 +73,10 @@
 					$commentsfollows[$postid]=$post;
 					break;
 			}
+
+		foreach ($duplicateposts as $postid => $post) {
+			$commentsfollows[$postid] = $post;
+		}
 
 		return $commentsfollows;
 	}
@@ -185,9 +189,10 @@
 
 	//	Now make any changes based on the child posts
 
-		if (isset($childposts))
-			foreach ($childposts as $childpost)
+		if (isset($childposts)) {
+			foreach ($childposts as $childpost) {
 				if ($childpost['parentid']==$post['postid']) {
+					// this post has comments
 					$rules['deleteable']=false;
 
 					if (($childpost['basetype']=='A') && qa_post_is_by_user($childpost, $userid, $cookieid)) {
@@ -198,6 +203,13 @@
 							$rules['claimable']=false;
 					}
 				}
+
+				if ($childpost['closedbyid'] == $post['postid']) {
+					// other questions are closed as duplicates of this one
+					$rules['deleteable'] = false;
+				}
+			}
+		}
 
 	//	Return the resulting rules
 
@@ -679,9 +691,13 @@
 
 		$showcomments=array();
 
-		foreach ($commentsfollows as $commentfollowid => $commentfollow)
-			if (($commentfollow['parentid']==$parentid) && $commentfollow['viewable'] && ($commentfollowid!=$formpostid) )
-				$showcomments[$commentfollowid]=$commentfollow;
+		foreach ($commentsfollows as $commentfollowid => $commentfollow) {
+			$showcomment = $commentfollow['parentid'] == $parentid && $commentfollow['viewable'] && $commentfollowid != $formpostid;
+			$showduplicate = $question['hidden'] && $commentfollow['closedbyid'] == $question['postid'];
+			if ($showcomment || $showduplicate) {
+				$showcomments[$commentfollowid] = $commentfollow;
+			}
+		}
 
 		$countshowcomments=count($showcomments);
 
