@@ -369,7 +369,7 @@
 		$limitsql=isset($limit) ? (' ORDER BY ^posts.postid LIMIT '.(int)$limit) : '';
 
 		return qa_db_read_all_values(qa_db_query_sub(
-			"SELECT ^posts.postid FROM ^posts LEFT JOIN ^posts AS child ON child.parentid=^posts.postid WHERE ^posts.type=$ AND ^posts.postid>=# AND child.postid IS NULL".$limitsql,
+			"SELECT ^posts.postid FROM ^posts LEFT JOIN ^posts AS child ON child.parentid=^posts.postid LEFT JOIN ^posts AS dupe ON dupe.closedbyid=^posts.postid WHERE ^posts.type=$ AND ^posts.postid>=# AND child.postid IS NULL AND dupe.postid IS NULL".$limitsql,
 			$type.'_HIDDEN', $startpostid
 		));
 	}

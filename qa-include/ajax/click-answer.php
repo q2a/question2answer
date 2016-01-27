@@ -26,6 +26,7 @@
 	require_once QA_INCLUDE_DIR.'db/selects.php';
 	require_once QA_INCLUDE_DIR.'pages/question-view.php';
 	require_once QA_INCLUDE_DIR.'pages/question-submit.php';
+	require_once QA_INCLUDE_DIR.'util/sort.php';
 
 
 //	Load relevant information about this answer
@@ -85,7 +86,10 @@
 				foreach ($achildposts as $key => $achildpost)
 					$achildposts[$key]=$achildpost+qa_page_q_post_rules($achildpost, $answer, $achildposts, null);
 
+				$achildposts = qa_page_q_load_c_follows($question, array(), $achildposts);
+
 				$usershtml=qa_userids_handles_html(array_merge(array($answer), $achildposts), true);
+				qa_sort_by($achildposts, 'created');
 
 				$a_view=qa_page_q_answer_view($question, $answer, ($answer['postid']==$question['selchildid']) && ($answer['type']=='A'),
 					$usershtml, false);

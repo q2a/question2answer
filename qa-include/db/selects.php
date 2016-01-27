@@ -662,6 +662,22 @@
 	}
 
 
+	/**
+	 * Return the selectspec to retrieve the posts that have been closed as a duplicate of this question, if any
+	 * @param $questionid int The canonical question.
+	 * @return array
+	 */
+	function qa_db_post_duplicates_selectspec($questionid)
+	{
+		$selectspec = qa_db_posts_basic_selectspec(null, true);
+
+		$selectspec['source'] .= " WHERE ^posts.closedbyid=#";
+		$selectspec['arguments'] = array($questionid);
+
+		return $selectspec;
+	}
+
+
 	function qa_db_post_meta_selectspec($postid, $title)
 /*
 	Return the selectspec to retrieve the metadata value for $postid with key $title
