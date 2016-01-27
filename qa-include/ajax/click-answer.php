@@ -85,6 +85,8 @@
 				foreach ($achildposts as $key => $achildpost)
 					$achildposts[$key]=$achildpost+qa_page_q_post_rules($achildpost, $answer, $achildposts, null);
 
+				$achildposts = qa_page_q_load_c_follows($question, array(), $achildposts);
+
 				$usershtml=qa_userids_handles_html(array_merge(array($answer), $achildposts), true);
 
 				$a_view=qa_page_q_answer_view($question, $answer, ($answer['postid']==$question['selchildid']) && ($answer['type']=='A'),
