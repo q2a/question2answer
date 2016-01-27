@@ -48,7 +48,9 @@
 		foreach ($children as $key => $child)
 			$children[$key]=$child+qa_page_q_post_rules($child, $parent, $children, null);
 
-		$commentsfollows = qa_page_q_load_c_follows($question, $children, array(), $duplicateposts);
+		$commentsfollows = $questionid == $parentid
+			? qa_page_q_load_c_follows($question, $children, array(), $duplicateposts)
+			: qa_page_q_load_c_follows($question, array(), $children);
 
 		$usershtml=qa_userids_handles_html($commentsfollows, true);
 

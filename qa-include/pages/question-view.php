@@ -49,27 +49,24 @@
 	function qa_page_q_load_c_follows($question, $childposts, $achildposts, $duplicateposts=array())
 /*
 	Given a $question, its $childposts and its answers $achildposts from the database,
-	return a list of comments or follow-on questions for that question or its answers
+	return a list of comments or follow-on questions for that question or its answers.
+	Follow-on and duplicate questions are now returned, with their visibility determined in qa_page_q_comment_follow_list()
 */
 	{
 		$commentsfollows=array();
 
 		foreach ($childposts as $postid => $post)
-			switch ($post['type']) {
-				case 'Q': // never show follow-on Qs which have been hidden, even to admins
+			switch ($post['basetype']) {
+				case 'Q':
 				case 'C':
-				case 'C_HIDDEN':
-				case 'C_QUEUED':
 					$commentsfollows[$postid]=$post;
 					break;
 			}
 
 		foreach ($achildposts as $postid => $post)
-			switch ($post['type']) {
-				case 'Q': // never show follow-on Qs which have been hidden, even to admins
+			switch ($post['basetype']) {
+				case 'Q':
 				case 'C':
-				case 'C_HIDDEN':
-				case 'C_QUEUED':
 					$commentsfollows[$postid]=$post;
 					break;
 			}
@@ -691,9 +688,16 @@
 
 		$showcomments=array();
 
+		// $commentsfollows contains ALL comments on the question and all answers, so here we filter the comments viewable for this context
 		foreach ($commentsfollows as $commentfollowid => $commentfollow) {
 			$showcomment = $commentfollow['parentid'] == $parentid && $commentfollow['viewable'] && $commentfollowid != $formpostid;
-			$showduplicate = $question['hidden'] && $commentfollow['closedbyid'] == $question['postid'];
+			// show hidden follow-on questions only if the parent is hidden
+			if ($showcomment && $commentfollow['basetype'] == 'Q' && $commentfollow['hidden']) {
+				$showcomment = $parent['hidden'];
+			}
+			// show questions closed as duplicate of this one, only if this question is hidden
+			$showduplicate = $question['hidden'] && $commentfollow['closedbyid'] == $parentid;
+
 			if ($showcomment || $showduplicate) {
 				$showcomments[$commentfollowid] = $commentfollow;
 			}
