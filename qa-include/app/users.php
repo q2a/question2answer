@@ -185,7 +185,7 @@
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 			// if $remember is true, store in browser for a month, otherwise store only until browser is closed
-			setcookie('qa_session', $handle.'/'.$sessioncode.'/'.($remember ? 1 : 0), $remember ? (time()+2592000) : 0, '/', QA_COOKIE_DOMAIN);
+			setcookie('qa_session', $handle.'/'.$sessioncode.'/'.($remember ? 1 : 0), $remember ? (time()+2592000) : 0, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true);
 		}
 
 
@@ -196,7 +196,7 @@
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			setcookie('qa_session', false, 0, '/', QA_COOKIE_DOMAIN);
+			setcookie('qa_session', false, 0, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true);
 		}
 
 
@@ -1060,7 +1060,7 @@ in a category for which they have elevated privileges).
 				$_COOKIE['qa_key']=qa_random_alphanum(QA_FORM_KEY_LENGTH);
 			}
 
-			setcookie('qa_key', $_COOKIE['qa_key'], time()+2*QA_FORM_EXPIRY_SECS, '/', QA_COOKIE_DOMAIN); // extend on every page request
+			setcookie('qa_key', $_COOKIE['qa_key'], time()+2*QA_FORM_EXPIRY_SECS, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true); // extend on every page request
 		}
 	}
 
