@@ -36,7 +36,7 @@
 	{
 		return array(
 			'login' => wp_login_url(qa_opt('site_url').$redirect_back_to_url),
-			'register' => site_url('wp-login.php?action=register'),
+			'register' => function_exists('wp_registration_url') ? wp_registration_url() : site_url('wp-login.php?action=register'),
 			'logout' => strtr(wp_logout_url(), array('&amp;' => '&')),
 		);
 	}
