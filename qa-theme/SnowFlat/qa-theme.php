@@ -49,6 +49,9 @@ class qa_html_theme extends qa_html_theme_base
 	// Size of the user avatar in the navigation bar
 	private $nav_bar_avatar_size = 52;
 
+	// use new block layout in rankings
+	protected $ranking_block_layout = true;
+
 	/**
 	 * Adding aditional meta for responsive design
 	 *
@@ -660,5 +663,4 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
-
 }

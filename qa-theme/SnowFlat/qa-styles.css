@@ -31,7 +31,8 @@
 .qa-a-list-item:after, .qa-a-item-buttons:after, .qa-a-item-content:after,
 .qa-c-item-buttons:after, .qa-c-item-clear:after,
 .qam-footer-row:after, .qam-qa-list-meta-box:after,
-.qa-nav-footer-list:after, .qa-footer-clear:after {
+.qa-nav-footer-list:after, .qa-footer-clear:after,
+.qa-part-ranking:after, .qa-ranking-item:after {
 	content: " ";
 	display: table;
 	clear: both;
@@ -1503,13 +1504,39 @@ blockquote p {
 		overflow-y: hidden;
 	}
 }
+.qa-ranking-item {
+	display: inline-block;
+	position: relative;
+	margin: 5px;
+	padding: 5px;
+}
 
-.qa-top-users-label .qa-avatar-link {
+.qa-top-users-item {
+	width: 100%;
+	max-width: 320px;
+}
+.qa-top-tags-item {
+	width: 100%;
+	max-width: 150px;
+}
+@media only screen and (min-width: 992px) {
+	/* two column layout for Desktops and above*/
+	.qa-top-users-item {
+		width: 48%;
+		max-width: none;
+	}
+	.qa-top-tags-item {
+		width: 23%;
+		max-width: none;
+	}
+}
+
+.qa-top-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
 	margin-right: 1em;
 }
-.qa-top-users-label .qa-avatar-link img {
+.qa-top-users-avatar .qa-avatar-link img {
 	border: 1px solid #cbd7e3;
 }
 .qa-top-users-label .qa-user-link {
@@ -1529,7 +1556,7 @@ blockquote p {
 	content: "";
 	position: absolute;
 	left: -5px;
-	top: 5px;
+	top: 30%;
 	display: block;
 	width: 0;
 	height: 0;
