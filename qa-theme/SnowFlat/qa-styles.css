@@ -112,8 +112,8 @@ h1 {
 	padding: 8px 52px 8px 20px;
 	background: #3498db;
 	color: #fff;
-	font-size: 1.5em;
-	line-height: 1.5em;
+	font-size: 1.4em;
+	line-height: 1.35em;
 }
 h1 a {
 	color: #fff;
@@ -176,7 +176,6 @@ b, strong {
 
 small {
 	font-size: 0.75em;
-	line-height: 2em;
 }
 
 table {
@@ -200,7 +199,6 @@ pre {
 }
 pre code {
 	background-color: #d6dadb;
-	line-height: 1.71429em;
 }
 
 code, samp, kbd {
@@ -219,7 +217,6 @@ blockquote {
 blockquote p {
 	margin: 0;
 	font-size: 1em;
-	line-height: 1.5em;
 	font-style: italic;
 	color: #7f8c8d;
 }
@@ -437,7 +434,6 @@ blockquote p {
 
 #qam-topbar {
 	font-size: 0.875em;
-	line-height: 1.71429em;
 }
 #qam-topbar.fixed {
 	position: fixed;
@@ -1254,7 +1250,7 @@ blockquote p {
 .qa-q-item-title {
 	font-weight: bold;
 	font-size: 1.125em;
-	line-height: 1.46667em;
+	line-height: 1.35em;
 	display: block;
 }
 .qa-q-item-title a {
@@ -1305,7 +1301,6 @@ blockquote p {
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 12px;
-	line-height: 20px;
 }
 .qa-q-item-meta .qa-category-link.qa-cat-favorited {
 	position: relative;
@@ -2337,8 +2332,6 @@ input[type="submit"], button {
 @media (max-width: 979px) {
 	.qa-q-view-meta {
 		clear: left;
-		font-size: 0.875em;
-		line-height: 1.71429em;
 	}
 	.qa-q-view-main {
 		width: 100%;
