@@ -1523,27 +1523,28 @@ blockquote p {
 }
 .qa-ranking-item {
 	display: inline-block;
-    position: relative;
-    margin: 5px;
-    padding: 5px;
+	position: relative;
+	margin: 5px;
+	padding: 5px;
 }
 
 .qa-top-users-item {
-    width: 100%;
-    max-width: 320px;
+	width: 100%;
+	max-width: 320px;
 }
 .qa-top-tags-item {
-    width: 100%;
-    max-width: 150px;
+	width: 100%;
+	max-width: 150px;
 }
-@media only screen and (min-width: 992px) { /*Two column layout for Desktops and above*/
+@media only screen and (min-width: 992px) {
+	/* two column layout for Desktops and above*/
 	.qa-top-users-item {
-        width: 48%;
-    	max-width: none;
+		width: 48%;
+		max-width: none;
 	}
 	.qa-top-tags-item {
-        width: 23%;
-    	max-width: none;
+		width: 23%;
+		max-width: none;
 	}
 }
 
