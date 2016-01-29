@@ -31,8 +31,8 @@
 .qa-a-list-item:after, .qa-a-item-buttons:after,
 .qa-c-item-buttons:after, .qa-c-item-clear:after,
 .qam-footer-row:after, .qam-qa-list-meta-box:after,
-.qa-nav-footer-list:after, .qa-footer-clear:after ,
-.qa-part-ranking:after , .qa-ranking-item:after {
+.qa-nav-footer-list:after, .qa-footer-clear:after,
+.qa-part-ranking:after, .qa-ranking-item:after {
 	content: " ";
 	display: table;
 	clear: both;
@@ -1522,16 +1522,31 @@ blockquote p {
 	}
 }
 .qa-ranking-item {
-    margin: 5px 0;
+	display: inline-block;
     position: relative;
+    margin: 5px;
     padding: 5px;
 }
-@media only screen and (min-width: 992px) { /*Two column layout for Desktops and above*/
-    .qa-ranking-item {
-        width: 50%;
-        float: left;
-    }
+
+.qa-top-users-item {
+    width: 100%;
+    max-width: 320px;
 }
+.qa-top-tags-item {
+    width: 100%;
+    max-width: 150px;
+}
+@media only screen and (min-width: 992px) { /*Two column layout for Desktops and above*/
+	.qa-top-users-item {
+        width: 48%;
+    	max-width: none;
+	}
+	.qa-top-tags-item {
+        width: 23%;
+    	max-width: none;
+	}
+}
+
 .qa-top-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
