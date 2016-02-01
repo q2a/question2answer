@@ -10,11 +10,11 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 	public function test__qa_format_number()
 	{
 		// set options/lang cache to bypass database
-		global $qa_options_cache, $qa_phrases_custom;
+		global $qa_options_cache, $qa_phrases_full;
 		$qa_options_cache['show_compact_numbers'] = '0';
 
-		$qa_phrases_custom['main']['_decimal_point'] = '.';
-		$qa_phrases_custom['main']['_thousands_separator'] = ',';
+		$qa_phrases_full['main']['_decimal_point'] = '.';
+		$qa_phrases_full['main']['_thousands_separator'] = ',';
 
 		$this->assertSame('5.5',     qa_format_number(5.452, 1));
 		$this->assertSame('5',       qa_format_number(5.452, 0));
@@ -30,8 +30,8 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('123,456,789', qa_format_number(123456789, 0, true));
 
 		// change separators
-		$qa_phrases_custom['main']['_decimal_point'] = ',';
-		$qa_phrases_custom['main']['_thousands_separator'] = '.';
+		$qa_phrases_full['main']['_decimal_point'] = ',';
+		$qa_phrases_full['main']['_thousands_separator'] = '.';
 
 		$this->assertSame('5,5',     qa_format_number(5.452, 1));
 		$this->assertSame('5',       qa_format_number(5.452, 0));
@@ -45,13 +45,13 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 	public function test__qa_format_number__compact()
 	{
 		// set options/lang cache to bypass database
-		global $qa_options_cache, $qa_phrases_custom;
+		global $qa_options_cache, $qa_phrases_full;
 		$qa_options_cache['show_compact_numbers'] = '1';
 
-		$qa_phrases_custom['main']['_decimal_point'] = '.';
-		$qa_phrases_custom['main']['_thousands_separator'] = ',';
-		$qa_phrases_custom['main']['_thousands_suffix'] = 'k';
-		$qa_phrases_custom['main']['_millions_suffix'] = 'm';
+		$qa_phrases_full['main']['_decimal_point'] = '.';
+		$qa_phrases_full['main']['_thousands_separator'] = ',';
+		$qa_phrases_full['main']['_thousands_suffix'] = 'k';
+		$qa_phrases_full['main']['_millions_suffix'] = 'm';
 
 		// $decimal parameter ignored when 'show_compact_numbers' is true
 		$this->assertSame('5.5', qa_format_number(5.452, 0, true));
@@ -75,10 +75,10 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('123,456,789', qa_format_number(123456789, 0, false));
 
 		// change separators and compact suffixes
-		$qa_phrases_custom['main']['_decimal_point'] = ',';
-		$qa_phrases_custom['main']['_thousands_separator'] = '.';
-		$qa_phrases_custom['main']['_thousands_suffix'] = 'th';
-		$qa_phrases_custom['main']['_millions_suffix'] = 'mi';
+		$qa_phrases_full['main']['_decimal_point'] = ',';
+		$qa_phrases_full['main']['_thousands_separator'] = '.';
+		$qa_phrases_full['main']['_thousands_suffix'] = 'th';
+		$qa_phrases_full['main']['_millions_suffix'] = 'mi';
 
 		$this->assertSame('9,1th', qa_format_number(9123, 0, true));
 		$this->assertSame('123mi', qa_format_number(123456789, 0, true));
