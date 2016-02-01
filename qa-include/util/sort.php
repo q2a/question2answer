@@ -46,16 +46,27 @@ function qa_sort_by_fn($a, $b)
 {
 	global $qa_sort_by_1, $qa_sort_by_2;
 
-	$compare = qa_sort_cmp($a[$qa_sort_by_1], $b[$qa_sort_by_1]);
+	// if the first keys are equal we can sort by the second keys only
+	$sortkey = $qa_sort_by_1;
+	if ($a[$sortkey] == $b[$sortkey]) {
+		if (!isset($qa_sort_by_2))
+			return 0;
 
-	if ($compare == 0 && $qa_sort_by_2)
-		$compare = qa_sort_cmp($a[$qa_sort_by_2], $b[$qa_sort_by_2]);
+		$sortkey = $qa_sort_by_2;
+	}
 
-	return $compare;
+	$av = $a[$sortkey];
+	$bv = $b[$sortkey];
+
+	if (is_numeric($av) && is_numeric($bv)) // straight subtraction won't work for floating bits
+		return $av == $bv ? 0 : ($av < $bv ? -1 : 1);
+	else
+		return strcasecmp($av, $bv); // doesn't do UTF-8 right but it will do for now
 }
 
 /**
  * General comparison function for two values, textual or numeric
+ * @deprecated
  */
 function qa_sort_cmp($a, $b)
 {
