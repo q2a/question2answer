@@ -828,17 +828,21 @@
 	 * 'limit' => the user or IP address has reached a rate limit (if $limitaction specified)
 	 * false => the operation can go ahead
 	 */
-	function qa_user_permit_error($permitoption=null, $limitaction=null, $userlevel=null, $checkblocks=true)
+	function qa_user_permit_error($permitoption=null, $limitaction=null, $userlevel=null, $checkblocks=true, $userfields=null)
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'app/limits.php';
 
-		$userid = qa_get_logged_in_userid();
-		if (!isset($userlevel))
-			$userlevel = qa_get_logged_in_level();
+		if (!isset($userfields))
+			$userfields = qa_get_logged_in_user_cache();
 
-		$flags = qa_get_logged_in_flags();
+		$userid = isset($userfields['userid']) ? $userfields['userid'] : null;
+
+		if (!isset($userlevel))
+			$userlevel = isset($userfields['level']) ? $userfields['level'] : null;
+
+		$flags = isset($userfields['flags']) ? $userfields['flags'] : null;
 		if (!$checkblocks)
 			$flags &= ~QA_USER_FLAGS_USER_BLOCKED;
 

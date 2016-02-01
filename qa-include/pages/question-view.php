@@ -94,23 +94,32 @@
 		$cookieid=qa_cookie_get();
 		$userlevel=qa_user_level_for_post($post);
 
+		$userfields = qa_get_logged_in_user_cache();
+		if (!isset($userfields)) {
+			$userfields = array(
+				'userid' => null,
+				'level' => null,
+				'flags' => null,
+			);
+		}
+
 		$rules['isbyuser']=qa_post_is_by_user($post, $userid, $cookieid);
 		$rules['queued']=(substr($post['type'], 1)=='_QUEUED');
 		$rules['closed']=($post['basetype']=='Q') && (isset($post['closedbyid']) || (isset($post['selchildid']) && qa_opt('do_close_on_select')));
 
 	//	Cache some responses to the user permission checks
 
-		$permiterror_post_q=qa_user_permit_error('permit_post_q', null, $userlevel); // don't check limits here, so we can show error message
-		$permiterror_post_a=qa_user_permit_error('permit_post_a', null, $userlevel);
-		$permiterror_post_c=qa_user_permit_error('permit_post_c', null, $userlevel);
+		$permiterror_post_q=qa_user_permit_error('permit_post_q', null, $userlevel, true, $userfields); // don't check limits here, so we can show error message
+		$permiterror_post_a=qa_user_permit_error('permit_post_a', null, $userlevel, true, $userfields);
+		$permiterror_post_c=qa_user_permit_error('permit_post_c', null, $userlevel, true, $userfields);
 
-		$permiterror_edit=qa_user_permit_error(($post['basetype']=='Q') ? 'permit_edit_q' :
-			(($post['basetype']=='A') ? 'permit_edit_a' : 'permit_edit_c'), null, $userlevel);
-		$permiterror_retagcat=qa_user_permit_error('permit_retag_cat', null, $userlevel);
-		$permiterror_flag=qa_user_permit_error('permit_flag', null, $userlevel);
-		$permiterror_hide_show=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_hide_show', null, $userlevel);
-		$permiterror_close_open=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_close_q', null, $userlevel);
-		$permiterror_moderate=qa_user_permit_error('permit_moderate', null, $userlevel);
+		$edit_option = $post['basetype'] == 'Q' ? 'permit_edit_q' : ($post['basetype'] == 'A' ? 'permit_edit_a' : 'permit_edit_c');
+		$permiterror_edit=qa_user_permit_error($edit_option, null, $userlevel, true, $userfields);
+		$permiterror_retagcat=qa_user_permit_error('permit_retag_cat', null, $userlevel, true, $userfields);
+		$permiterror_flag=qa_user_permit_error('permit_flag', null, $userlevel, true, $userfields);
+		$permiterror_hide_show=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_hide_show', null, $userlevel, true, $userfields);
+		$permiterror_close_open=qa_user_permit_error($rules['isbyuser'] ? null : 'permit_close_q', null, $userlevel, true, $userfields);
+		$permiterror_moderate=qa_user_permit_error('permit_moderate', null, $userlevel, true, $userfields);
 
 	//	General permissions
 
@@ -143,13 +152,13 @@
 				$rules['retagcatbutton']=false;
 		}
 
-		$rules['aselectable']=($post['type']=='Q') && !qa_user_permit_error($rules['isbyuser'] ? null : 'permit_select_a', null, $userlevel);
+		$rules['aselectable']=($post['type']=='Q') && !qa_user_permit_error($rules['isbyuser'] ? null : 'permit_select_a', null, $userlevel, true, $userfields);
 
 		$rules['flagbutton']=qa_opt('flagging_of_posts') && (!$rules['isbyuser']) && (!$post['hidden']) && (!$rules['queued']) &&
 			(!@$post['userflag']) && !in_array($permiterror_flag, $button_errors);
 		$rules['flagtohide']=$rules['flagbutton'] && (!$permiterror_flag) && (($post['flagcount']+1)>=qa_opt('flagging_hide_after'));
 		$rules['unflaggable']=@$post['userflag'] && (!$post['hidden']);
-		$rules['clearflaggable']=($post['flagcount']>=(@$post['userflag'] ? 2 : 1)) && !qa_user_permit_error('permit_hide_show', null, $userlevel);
+		$rules['clearflaggable']=($post['flagcount']>=(@$post['userflag'] ? 2 : 1)) && !qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields);
 
 	//	Other actions only show the button if it's immediately possible
 
@@ -158,18 +167,18 @@
 
 		$rules['closeable']=qa_opt('allow_close_questions') && ($post['type']=='Q') && (!$rules['closed']) && !$permiterror_close_open;
 		$rules['reopenable']=$rules['closed'] && isset($post['closedbyid']) && (!$permiterror_close_open) && (!$post['hidden']) &&
-			($notclosedbyother || !qa_user_permit_error('permit_close_q', null, $userlevel));
+			($notclosedbyother || !qa_user_permit_error('permit_close_q', null, $userlevel, true, $userfields));
 			// cannot reopen a question if it's been hidden, or if it was closed by someone else and you don't have global closing permissions
 		$rules['moderatable']=$rules['queued'] && !$permiterror_moderate;
 		$rules['hideable']=(!$post['hidden']) && ($rules['isbyuser'] || !$rules['queued']) &&
-			(!$permiterror_hide_show) && ($notclosedbyother || !qa_user_permit_error('permit_hide_show', null, $userlevel));
+			(!$permiterror_hide_show) && ($notclosedbyother || !qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields));
 			// cannot hide a question if it was closed by someone else and you don't have global hiding permissions
-		$rules['reshowimmed']=$post['hidden'] && !qa_user_permit_error('permit_hide_show', null, $userlevel);
+		$rules['reshowimmed']=$post['hidden'] && !qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields);
 			// means post can be reshown immediately without checking whether it needs moderation
 		$rules['reshowable']=$post['hidden'] && (!$permiterror_hide_show) &&
 			($rules['reshowimmed'] || ($nothiddenbyother && !$post['flagcount']));
 			// cannot reshow a question if it was hidden by someone else, or if it has flags - unless you have global hide/show permissions
-		$rules['deleteable']=$post['hidden'] && !qa_user_permit_error('permit_delete_hidden', null, $userlevel);
+		$rules['deleteable']=$post['hidden'] && !qa_user_permit_error('permit_delete_hidden', null, $userlevel, true, $userfields);
 		$rules['claimable']=(!isset($post['userid'])) && isset($userid) && strlen(@$post['cookieid']) && (strcmp(@$post['cookieid'], $cookieid)==0) &&
 			!(($post['basetype']=='Q') ? $permiterror_post_q : (($post['basetype']=='A') ? $permiterror_post_a : $permiterror_post_c));
 		$rules['followable']=($post['type']=='A') ? qa_opt('follow_on_as') : false;
