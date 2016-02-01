@@ -121,14 +121,15 @@
 		$permiterror_edit = qa_user_permit_error($edit_option, null, $userlevel, true, $userfields);
 		$permiterror_retagcat = qa_user_permit_error('permit_retag_cat', null, $userlevel, true, $userfields);
 		$permiterror_flag = qa_user_permit_error('permit_flag', null, $userlevel, true, $userfields);
-		$permiterror_hide_show = qa_user_permit_error($rules['isbyuser'] ? null : 'permit_hide_show', null, $userlevel, true, $userfields);
+		$permiterror_hide_show = qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields);
+		$permiterror_hide_show_self = $rules['isbyuser'] ? qa_user_permit_error(null, null, $userlevel, true, $userfields) : $permiterror_hide_show;
 		$permiterror_close_open = qa_user_permit_error($rules['isbyuser'] ? null : 'permit_close_q', null, $userlevel, true, $userfields);
 		$permiterror_moderate = qa_user_permit_error('permit_moderate', null, $userlevel, true, $userfields);
 
 	//	General permissions
 
 		$rules['authorlast'] = !isset($post['lastuserid']) || $post['lastuserid'] === $post['userid'];
-		$rules['viewable'] = $post['hidden'] ? !$permiterror_hide_show : ($rules['queued'] ? ($rules['isbyuser'] || !$permiterror_moderate) : true);
+		$rules['viewable'] = $post['hidden'] ? !$permiterror_hide_show_self : ($rules['queued'] ? ($rules['isbyuser'] || !$permiterror_moderate) : true);
 
 	//	Answer, comment and edit might show the button even if the user still needs to do something (e.g. log in)
 
@@ -163,7 +164,7 @@
 			&& !@$post['userflag'] && !in_array($permiterror_flag, $button_errors);
 		$rules['flagtohide'] = $rules['flagbutton'] && !$permiterror_flag && ($post['flagcount'] + 1) >= qa_opt('flagging_hide_after');
 		$rules['unflaggable'] = @$post['userflag'] && !$post['hidden'];
-		$rules['clearflaggable'] = ($post['flagcount'] >= (@$post['userflag'] ? 2 : 1)) && !qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields);
+		$rules['clearflaggable'] = $post['flagcount'] >= (@$post['userflag'] ? 2 : 1) && !$permiterror_hide_show;
 
 	//	Other actions only show the button if it's immediately possible
 
@@ -177,12 +178,12 @@
 
 		$rules['moderatable'] = $rules['queued'] && !$permiterror_moderate;
 		// cannot hide a question if it was closed by someone else and you don't have global hiding permissions
-		$rules['hideable'] = !$post['hidden'] && ($rules['isbyuser'] || !$rules['queued']) && !$permiterror_hide_show
-			&& ($notclosedbyother || !qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields));
+		$rules['hideable'] = !$post['hidden'] && ($rules['isbyuser'] || !$rules['queued']) && !$permiterror_hide_show_self
+			&& ($notclosedbyother || !$permiterror_hide_show);
 		// means post can be reshown immediately without checking whether it needs moderation
-		$rules['reshowimmed'] = $post['hidden'] && !qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields);
+		$rules['reshowimmed'] = $post['hidden'] && !$permiterror_hide_show;
 		// cannot reshow a question if it was hidden by someone else, or if it has flags - unless you have global hide/show permissions
-		$rules['reshowable'] = $post['hidden'] && (!$permiterror_hide_show) &&
+		$rules['reshowable'] = $post['hidden'] && (!$permiterror_hide_show_self) &&
 			($rules['reshowimmed'] || ($nothiddenbyother && !$post['flagcount']));
 
 		$rules['deleteable'] = $post['hidden'] && !qa_user_permit_error('permit_delete_hidden', null, $userlevel, true, $userfields);
