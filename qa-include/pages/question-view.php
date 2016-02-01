@@ -126,12 +126,14 @@
 			($permiterror_post_c!='level') && qa_opt(($post['type']=='Q') ? 'comment_on_qs' : 'comment_on_as');
 		$rules['commentable']=$rules['commentbutton'] && !$permiterror_post_c;
 
+		$button_errors = array('login', 'level', 'approve');
+
 		$rules['editbutton']=(!$post['hidden']) && (!$rules['closed']) &&
-			($rules['isbyuser'] || (($permiterror_edit!='level') && ($permiterror_edit!='approve') && (!$rules['queued'])));
+			($rules['isbyuser'] || (!in_array($permiterror_edit, $button_errors) && (!$rules['queued'])));
 		$rules['editable']=$rules['editbutton'] && ($rules['isbyuser'] || !$permiterror_edit);
 
 		$rules['retagcatbutton']=($post['basetype']=='Q') && (qa_using_tags() || qa_using_categories()) &&
-			(!$post['hidden']) && ($rules['isbyuser'] || (($permiterror_retagcat!='level') && ($permiterror_retagcat!='approve')) );
+			(!$post['hidden']) && ($rules['isbyuser'] || (!in_array($permiterror_retagcat, $button_errors)) );
 		$rules['retagcatable']=$rules['retagcatbutton'] && ($rules['isbyuser'] || !$permiterror_retagcat);
 
 		if ($rules['editbutton'] && $rules['retagcatbutton']) { // only show one button since they lead to the same form
@@ -144,7 +146,7 @@
 		$rules['aselectable']=($post['type']=='Q') && !qa_user_permit_error($rules['isbyuser'] ? null : 'permit_select_a', null, $userlevel);
 
 		$rules['flagbutton']=qa_opt('flagging_of_posts') && (!$rules['isbyuser']) && (!$post['hidden']) && (!$rules['queued']) &&
-			(!@$post['userflag']) && ($permiterror_flag!='level') && ($permiterror_flag!='approve');
+			(!@$post['userflag']) && !in_array($permiterror_flag, $button_errors);
 		$rules['flagtohide']=$rules['flagbutton'] && (!$permiterror_flag) && (($post['flagcount']+1)>=qa_opt('flagging_hide_after'));
 		$rules['unflaggable']=@$post['userflag'] && (!$post['hidden']);
 		$rules['clearflaggable']=($post['flagcount']>=(@$post['userflag'] ? 2 : 1)) && !qa_user_permit_error('permit_hide_show', null, $userlevel);
