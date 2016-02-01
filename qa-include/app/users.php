@@ -72,8 +72,14 @@
 			global $qa_cached_logged_in_user;
 
 			if (!isset($qa_cached_logged_in_user)) {
-				$user=qa_get_logged_in_user();
-				$qa_cached_logged_in_user=isset($user) ? $user : false; // to save trying again
+				$user = qa_get_logged_in_user();
+
+				if (isset($user)) {
+					$user['flags'] = isset($user['blocked']) ? QA_USER_FLAGS_USER_BLOCKED : 0;
+					$qa_cached_logged_in_user = $user;
+				}
+				else
+					$qa_cached_logged_in_user = false;
 			}
 
 			return @$qa_cached_logged_in_user;
@@ -407,29 +413,42 @@
 		}
 
 
-		function qa_get_logged_in_user_field($field)
-	/*
-		Return $field of the currently logged in user, cache to ensure only one call to external code
-	*/
+		/**
+		 * Return array of information about the currently logged in user, cache to ensure only one call to external code
+		 */
+		function qa_get_logged_in_user_cache()
 		{
-			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
 			global $qa_cached_logged_in_user;
 
-			$userid=qa_get_logged_in_userid();
+			if (!isset($qa_cached_logged_in_user)) {
+				$userid = qa_get_logged_in_userid();
 
-			if (isset($userid) && !isset($qa_cached_logged_in_user)) {
-				require_once QA_INCLUDE_DIR.'db/selects.php';
-				$qa_cached_logged_in_user=qa_db_get_pending_result('loggedinuser', qa_db_user_account_selectspec($userid, true));
+				if (isset($userid)) {
+					require_once QA_INCLUDE_DIR.'db/selects.php';
+					$qa_cached_logged_in_user = qa_db_get_pending_result('loggedinuser', qa_db_user_account_selectspec($userid, true));
 
-				if (!isset($qa_cached_logged_in_user)) {
-					// the user can no longer be found (should only apply to deleted users)
-					qa_clear_session_user();
-					qa_redirect(''); // implicit exit;
+					if (!isset($qa_cached_logged_in_user)) {
+						// the user can no longer be found (should only apply to deleted users)
+						qa_clear_session_user();
+						qa_redirect(''); // implicit exit;
+					}
 				}
 			}
 
-			return @$qa_cached_logged_in_user[$field];
+			return $qa_cached_logged_in_user;
+		}
+
+
+		/**
+		 * Return $field of the currently logged in user
+		 */
+		function qa_get_logged_in_user_field($field)
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+			$usercache = qa_get_logged_in_user_cache();
+
+			return isset($usercache[$field]) ? $usercache[$field] : null;
 		}
 
 
