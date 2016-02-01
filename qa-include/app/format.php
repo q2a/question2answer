@@ -116,11 +116,15 @@
 			$favoritemap = qa_get_favorite_non_qs_map();
 
 			foreach ($useridhandles as $useridhandle) {
-				if (isset($useridhandle['userid']) && $useridhandle['handle']) {
-					$usershtml[$useridhandle['userid']] = qa_get_one_user_html($useridhandle['handle'], $microdata, @$favoritemap['user'][$useridhandle['userid']]);
+				// only add each user to the array once
+				$uid = isset($useridhandle['userid']) ? $useridhandle['userid'] : null;
+				if ($uid && $useridhandle['handle'] && !isset($usershtml[$uid])) {
+					$usershtml[$uid] = qa_get_one_user_html($useridhandle['handle'], $microdata, @$favoritemap['user'][$uid]);
 				}
-				if (isset($useridhandle['lastuserid']) && $useridhandle['lasthandle']) {
-					$usershtml[$useridhandle['lastuserid']] = qa_get_one_user_html($useridhandle['lasthandle'], $microdata, @$favoritemap['user'][$useridhandle['lastuserid']]);
+
+				$luid = isset($useridhandle['lastuserid']) ? $useridhandle['lastuserid'] : null;
+				if ($luid && $useridhandle['lasthandle'] && !isset($usershtml[$luid])) {
+					$usershtml[$luid] = qa_get_one_user_html($useridhandle['lasthandle'], $microdata, @$favoritemap['user'][$luid]);
 				}
 			}
 
