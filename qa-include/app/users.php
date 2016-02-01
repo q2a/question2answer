@@ -812,21 +812,24 @@
 
 
 	/**
-	 * Check whether the logged in user has permission to perform $permitoption. If $permitoption is null, this simply
-	 * checks whether the user is blocked. Optionally provide an $limitaction (see top of qa-app-limits.php) to also check
-	 * against user or IP rate limits. You can pass in a QA_USER_LEVEL_* constant in $userlevel to consider the user at a
-	 * different level to usual (e.g. if they are performing this action in a category for which they have elevated
-	 * privileges). To ignore the user's blocked status, set $checkblocks to false.
+	 * Check whether the logged in user has permission to perform an action.
 	 *
-	 * Possible results, in order of priority (i.e. if more than one reason, the first will be given):
-	 * 'level' => a special privilege level (e.g. expert) or minimum number of points is required
-	 * 'login' => the user should login or register
-	 * 'userblock' => the user has been blocked
-	 * 'ipblock' => the ip address has been blocked
-	 * 'confirm' => the user should confirm their email address
-	 * 'approve' => the user needs to be approved by the site admins
-	 * 'limit' => the user or IP address has reached a rate limit (if $limitaction specified)
-	 * false => the operation can go ahead
+	 * @param string $permitoption The permission to check (if null, this simply checks whether the user is blocked).
+	 * @param string $limitaction Constant from qa-app-limits.php to check against user or IP rate limits.
+	 * @param int $userlevel A QA_USER_LEVEL_* constant to consider the user at a different level to usual (e.g. if
+	 *   they are performing this action in a category for which they have elevated privileges).
+	 * @param bool $checkblocks Whether to check the user's blocked status.
+	 * @param array $userfields Cache for logged in user, containing keys 'userid', 'level' (optional), 'flags'.
+	 *
+	 * @return bool|string The permission error, or false if no error. Possible errors, in order of priority:
+	 *   'login' => the user should login or register
+	 *   'level' => a special privilege level (e.g. expert) or minimum number of points is required
+	 *   'userblock' => the user has been blocked
+	 *   'ipblock' => the ip address has been blocked
+	 *   'confirm' => the user should confirm their email address
+	 *   'approve' => the user needs to be approved by the site admins
+	 *   'limit' => the user or IP address has reached a rate limit (if $limitaction specified)
+	 *   false => the operation can go ahead
 	 */
 	function qa_user_permit_error($permitoption=null, $limitaction=null, $userlevel=null, $checkblocks=true, $userfields=null)
 	{
@@ -869,12 +872,13 @@
 	/**
 	 * Check whether user can perform $permitoption. Result as for qa_user_permit_error(...).
 	 *
-	 * @param int $permitoption permission option name (from database) for action
-	 * @param int $userid ID of user (null for no user)
-	 * @param int $userlevel
-	 * @param int $userflags
-	 * @param int $userpoints user's points: if $userid is currently logged in, you can set $userpoints=null to retrieve them only if necessary.
-	 * @return string|bool reason the user is not permitted, or false if the operation can go ahead
+	 * @param string $permitoption Permission option name (from database) for action.
+	 * @param int $userid ID of user (null for no user).
+	 * @param int $userlevel Level to check against.
+	 * @param int $userflags Flags for this user.
+	 * @param int $userpoints User's points: if $userid is currently logged in, you can set $userpoints=null to retrieve them only if necessary.
+	 *
+	 * @return string|bool Reason the user is not permitted, or false if the operation can go ahead.
 	 */
 	function qa_permit_error($permitoption, $userid, $userlevel, $userflags, $userpoints=null)
 	{
@@ -882,18 +886,17 @@
 
 		$permit = isset($permitoption) ? qa_opt($permitoption) : QA_PERMIT_ALL;
 
-		if (isset($userid) && ($permit == QA_PERMIT_POINTS || $permit == QA_PERMIT_POINTS_CONFIRMED || $permit == QA_PERMIT_APPROVED_POINTS) ) {
+		if (isset($userid) && ($permit == QA_PERMIT_POINTS || $permit == QA_PERMIT_POINTS_CONFIRMED || $permit == QA_PERMIT_APPROVED_POINTS)) {
 			// deal with points threshold by converting as appropriate
 
 			if (!isset($userpoints) && $userid == qa_get_logged_in_userid())
 				$userpoints = qa_get_logged_in_points(); // allow late retrieval of points (to avoid unnecessary DB query when using external users)
 
-			if ($userpoints >= qa_opt($permitoption.'_points')) {
+			if ($userpoints >= qa_opt($permitoption . '_points')) {
 				$permit = $permit == QA_PERMIT_APPROVED_POINTS
 					? QA_PERMIT_APPROVED
 					: ($permit == QA_PERMIT_POINTS_CONFIRMED ? QA_PERMIT_CONFIRMED : QA_PERMIT_USERS); // convert if user has enough points
-			}
-			else
+			} else
 				$permit = QA_PERMIT_EXPERTS; // otherwise show a generic message so they're not tempted to collect points just for this
 		}
 
@@ -903,11 +906,13 @@
 
 	/**
 	 * Check whether user can reach the permission level. Result as for qa_user_permit_error(...).
-	 * @param int $permit permission constant
-	 * @param int $userid ID of user (null for no user)
-	 * @param int $userlevel
-	 * @param int $userflags
-	 * @return string|bool reason the user is not permitted, or false if the operation can go ahead
+	 *
+	 * @param int $permit Permission constant.
+	 * @param int $userid ID of user (null for no user).
+	 * @param int $userlevel Level to check against.
+	 * @param int $userflags Flags for this user.
+	 *
+	 * @return string|bool Reason the user is not permitted, or false if the operation can go ahead
 	 */
 	function qa_permit_value_error($permit, $userid, $userlevel, $userflags)
 	{
