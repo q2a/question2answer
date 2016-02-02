@@ -413,7 +413,7 @@
 */
 	{
 		return qa_db_read_one_assoc(qa_db_query_sub(
-			'SELECT blobid, format FROM ^blobs WHERE blobid>=# AND content IS NULL',
+			'SELECT blobid, format FROM ^blobs WHERE blobid>=# AND content IS NULL LIMIT 1',
 			$startblobid
 		), true);
 	}
