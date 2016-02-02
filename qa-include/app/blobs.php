@@ -119,7 +119,7 @@
 
 		$blob=qa_db_blob_read($blobid);
 
-		if (defined('QA_BLOBS_DIRECTORY') && !isset($blob['content']))
+		if (isset($blob) && defined('QA_BLOBS_DIRECTORY') && !isset($blob['content']))
 			$blob['content']=qa_read_blob_file($blobid, $blob['format']);
 
 		return $blob;
