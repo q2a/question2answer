@@ -641,9 +641,11 @@
 
 
 	/**
-	 * If $function has been overridden by a plugin override, return the name of the overriding function, otherwise return
-	 * null. But if the function is being called with the _base suffix, any override will be bypassed due to $qa_direct
-	 * @param string $function  The function to override
+	 * Determines whether a function is to be overridden by a plugin. But if the function is being called with
+	 * the _base suffix, any override will be bypassed due to $qa_direct.
+	 *
+	 * @param string $function The function to override
+	 * @return string|null The name of the overriding function (of the form `qa_functionname_override_1_in_filename`)
 	 */
 	function qa_to_override($function)
 	{
@@ -660,6 +662,7 @@
 
 		if (@$qa_direct[$function]) {
 			unset($qa_direct[$function]); // bypass the override just this once
+			return null;
 		}
 
 		return $qa_overrides[$function];
