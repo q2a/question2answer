@@ -437,6 +437,11 @@
 		if ($oldquestion['type']!='Q_HIDDEN')
 			qa_fatal_error('Tried to delete a non-hidden question');
 
+		$params = array(
+			'postid' => $oldquestion['postid'],
+			'oldquestion' => $oldquestion,
+		);
+
 		qa_report_event('q_delete_before', $userid, $handle, $cookieid, $params);
 
 		if (isset($oldclosepost) && ($oldclosepost['parentid']==$oldquestion['postid'])) {
@@ -447,11 +452,6 @@
 
 		$useridvotes=qa_db_uservote_post_get($oldquestion['postid']);
 		$oldpath=qa_db_post_get_category_path($oldquestion['postid']);
-
-		$params = array(
-			'postid' => $oldquestion['postid'],
-			'oldquestion' => $oldquestion,
-		);
 
 		qa_post_unindex($oldquestion['postid']);
 		qa_db_post_delete($oldquestion['postid']); // also deletes any related voteds due to foreign key cascading

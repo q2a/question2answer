@@ -70,7 +70,7 @@ function qa_recalc_update(elem, state, noteid)
 						qa_recalc_update(elem, lines[1], noteid);
 
 				} else if (lines[0]=='0') {
-					document.getElementById(noteid).innerHTML=lines[2];
+					document.getElementById(noteid).innerHTML=lines[1];
 					qa_recalc_cleanup(elem);
 
 				} else {

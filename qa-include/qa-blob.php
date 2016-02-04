@@ -47,7 +47,7 @@ qa_db_connect('qa_blob_db_fail_handler');
 
 $blob = qa_read_blob(qa_get('qa_blobid'));
 
-if (isset($blob)) {
+if (isset($blob) && isset($blob['content'])) {
 	// allows browsers and proxies to cache the blob (30 days)
 	header('Cache-Control: max-age=2592000, public');
 

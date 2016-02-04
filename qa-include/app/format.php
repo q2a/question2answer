@@ -118,12 +118,12 @@
 			foreach ($useridhandles as $useridhandle) {
 				// only add each user to the array once
 				$uid = isset($useridhandle['userid']) ? $useridhandle['userid'] : null;
-				if ($uid && $useridhandle['handle'] && !isset($usershtml[$uid])) {
+				if ($uid && !isset($usershtml[$uid])) {
 					$usershtml[$uid] = qa_get_one_user_html($useridhandle['handle'], $microdata, @$favoritemap['user'][$uid]);
 				}
 
 				$luid = isset($useridhandle['lastuserid']) ? $useridhandle['lastuserid'] : null;
-				if ($luid && $useridhandle['lasthandle'] && !isset($usershtml[$luid])) {
+				if ($luid && !isset($usershtml[$luid])) {
 					$usershtml[$luid] = qa_get_one_user_html($useridhandle['lasthandle'], $microdata, @$favoritemap['user'][$luid]);
 				}
 			}
@@ -383,7 +383,7 @@
 
 	//	Post content
 
-		if (@$options['contentview'] && !empty($post['content'])) {
+		if (@$options['contentview'] && isset($post['content'])) {
 			$viewer=qa_load_viewer($post['content'], $post['format']);
 
 			$fields['content']=$viewer->get_html($post['content'], $post['format'], array(
@@ -1381,7 +1381,7 @@
 		if (!$ismyuser)
 			unset($navigation['favorites']);
 
-		if (!$ismyuser || !qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
+		if (QA_FINAL_EXTERNAL_USERS || !$ismyuser || !qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
 			unset($navigation['messages']);
 
 		return $navigation;
@@ -1573,7 +1573,7 @@
 	{
 		require_once QA_INCLUDE_DIR.'util/string.php';
 
-		$text=qa_post_text($fieldname);
+		$text=qa_remove_utf8mb4(qa_post_text($fieldname));
 
 		if (qa_opt('tag_separator_comma'))
 			return array_unique(preg_split('/\s*,\s*/', trim(qa_strtolower(strtr($text, '/', ' '))), -1, PREG_SPLIT_NO_EMPTY));
@@ -1970,6 +1970,15 @@
 		return $viewer->get_html($content, $format, $options);
 	}
 
+	/**
+	 * Retrieve title from HTTP POST, appropriately sanitised.
+	 */
+	function qa_get_post_title($fieldname)
+	{
+		require_once QA_INCLUDE_DIR.'util/string.php';
+
+		return qa_remove_utf8mb4(qa_post_text($fieldname));
+	}
 
 	function qa_get_post_content($editorfield, $contentfield, &$ineditor, &$incontent, &$informat, &$intext)
 /*
@@ -1977,13 +1986,16 @@
 	Assigns the module's output to $incontent and $informat, editor's name in $ineditor, text rendering of content in $intext
 */
 	{
-		$ineditor=qa_post_text($editorfield);
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
+		$ineditor=qa_post_text($editorfield);
 		$editor=qa_load_module('editor', $ineditor);
 		$readdata=$editor->read_post($contentfield);
-		$incontent=$readdata['content'];
+
+		// sanitise 4-byte Unicode
+		$incontent=qa_remove_utf8mb4($readdata['content']);
 		$informat=$readdata['format'];
-		$intext=qa_viewer_text($incontent, $informat);
+		$intext=qa_remove_utf8mb4(qa_viewer_text($incontent, $informat));
 	}
 
 

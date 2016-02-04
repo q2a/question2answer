@@ -418,7 +418,7 @@
 		$in=array();
 
 		if ($question['editable']) {
-			$in['title']=qa_post_text('q_title');
+			$in['title']=qa_get_post_title('q_title');
 			qa_get_post_content('q_editor', 'q_content', $in['editor'], $in['content'], $in['format'], $in['text']);
 			$in['extra']=qa_opt('extra_field_active') ? qa_post_text('q_extra') : null;
 		}

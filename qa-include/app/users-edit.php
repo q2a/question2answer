@@ -36,8 +36,12 @@
 */
 	{
 		require_once QA_INCLUDE_DIR.'db/users.php';
+		require_once QA_INCLUDE_DIR.'util/string.php';
 
 		$errors=array();
+
+		// sanitise 4-byte Unicode
+		$handle = qa_remove_utf8mb4($handle);
 
 		$filtermodules=qa_load_modules_with('filter', 'filter_handle');
 

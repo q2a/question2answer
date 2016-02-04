@@ -32,7 +32,7 @@
 
 	if (!strlen($handle)) {
 		$handle = qa_get_logged_in_handle();
-		qa_redirect(isset($handle) ? 'user/'.$handle : 'users');
+		qa_redirect(!empty($handle) ? 'user/'.$handle : 'users');
 	}
 
 

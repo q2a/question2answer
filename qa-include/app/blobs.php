@@ -119,7 +119,7 @@
 
 		$blob=qa_db_blob_read($blobid);
 
-		if (defined('QA_BLOBS_DIRECTORY') && !isset($blob['content']))
+		if (isset($blob) && defined('QA_BLOBS_DIRECTORY') && !isset($blob['content']))
 			$blob['content']=qa_read_blob_file($blobid, $blob['format']);
 
 		return $blob;
@@ -133,7 +133,11 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		return file_get_contents(qa_get_blob_filename($blobid, $format));
+		$filename = qa_get_blob_filename($blobid, $format);
+		if (is_readable($filename))
+			return file_get_contents($filename);
+		else
+			return null;
 	}
 
 

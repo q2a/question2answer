@@ -83,18 +83,18 @@
 				$question=$question+qa_page_q_post_rules($question, null, null, $qchildposts); // array union
 				$answer=$answer+qa_page_q_post_rules($answer, $question, $qchildposts, $achildposts);
 
-				foreach ($achildposts as $key => $achildpost)
-					$achildposts[$key]=$achildpost+qa_page_q_post_rules($achildpost, $answer, $achildposts, null);
+				$commentsfollows=qa_page_q_load_c_follows($question, $qchildposts, $achildposts);
 
-				$achildposts = qa_page_q_load_c_follows($question, array(), $achildposts);
+				foreach ($commentsfollows as $key => $commentfollow)
+					$commentsfollows[$key]=$commentfollow+qa_page_q_post_rules($commentfollow, $answer, $commentsfollows, null);
 
-				$usershtml=qa_userids_handles_html(array_merge(array($answer), $achildposts), true);
-				qa_sort_by($achildposts, 'created');
+				$usershtml=qa_userids_handles_html(array_merge(array($answer), $commentsfollows), true);
+				qa_sort_by($commentsfollows, 'created');
 
 				$a_view=qa_page_q_answer_view($question, $answer, ($answer['postid']==$question['selchildid']) && ($answer['type']=='A'),
 					$usershtml, false);
 
-				$a_view['c_list']=qa_page_q_comment_follow_list($question, $answer, $achildposts, false, $usershtml, false, null);
+				$a_view['c_list']=qa_page_q_comment_follow_list($question, $answer, $commentsfollows, false, $usershtml, false, null);
 
 				$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-answer', null, null);
 				$themeclass->initialize();

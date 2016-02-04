@@ -399,12 +399,22 @@
 		if (isset($closepost)) {
 
 			if ($closepost['basetype']=='Q') {
-				$q_view['closed']=array(
-					'state' => qa_lang_html('main/closed'),
-					'label' => qa_lang_html('question/closed_as_duplicate'),
-					'content' => qa_html(qa_block_words_replace($closepost['title'], qa_get_block_words_preg())),
-					'url' => qa_q_path_html($closepost['postid'], $closepost['title']),
-				);
+				if ($closepost['hidden']) {
+					// don't show link for hidden questions
+					$q_view['closed']=array(
+						'state' => qa_lang_html('main/closed'),
+						'label' => qa_lang_html('main/closed'),
+						'content' => '',
+					);
+				}
+				else {
+					$q_view['closed']=array(
+						'state' => qa_lang_html('main/closed'),
+						'label' => qa_lang_html('question/closed_as_duplicate'),
+						'content' => qa_html(qa_block_words_replace($closepost['title'], qa_get_block_words_preg())),
+						'url' => qa_q_path_html($closepost['postid'], $closepost['title']),
+					);
+				}
 
 			} elseif ($closepost['type']=='NOTE') {
 				$viewer=qa_load_viewer($closepost['content'], $closepost['format']);
