@@ -159,8 +159,7 @@
 */
 	{
 		return qa_db_read_all_values(qa_db_query_sub(
-			"SELECT postid FROM ^posts WHERE createip=INET_ATON($) AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
-			$ip
+			"SELECT postid FROM ^posts WHERE createip=".inet_pton($ip)." AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')"
 		));
 	}
 
