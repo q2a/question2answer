@@ -583,7 +583,7 @@
 				'value' =>
 					strtr(qa_lang_html('users/x_ago_from_y'), array(
 						'^1' => qa_time_to_string(qa_opt('db_time')-$useraccount['loggedin']),
-						'^2' => qa_ip_anchor_html($useraccount['loginip']),
+						'^2' => qa_ip_anchor_html(inet_ntop($useraccount['loginip'])),
 					)),
 				'note' => $userediting ? null : qa_lang_html('users/only_shown_moderators'),
 				'id' => 'lastlogin',
