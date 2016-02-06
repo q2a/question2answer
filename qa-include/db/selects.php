@@ -166,15 +166,15 @@
 			$selectspec['columns']['updatetype']='^posts.updatetype';
 			$selectspec['columns'][]='^posts.format';
 			$selectspec['columns'][]='^posts.lastuserid';
-			$selectspec['columns']['lastip']='INET_NTOA(^posts.lastip)';
+			$selectspec['columns']['lastip']='^posts.lastip';
 			$selectspec['columns'][]='^posts.parentid';
-			$selectspec['columns']['lastviewip']='INET_NTOA(^posts.lastviewip)';
+			$selectspec['columns']['lastviewip']='^posts.lastviewip';
 		}
 
 		if ($user) {
 			$selectspec['columns'][]='^posts.userid';
 			$selectspec['columns'][]='^posts.cookieid';
-			$selectspec['columns']['createip']='INET_NTOA(^posts.createip)';
+			$selectspec['columns']['createip']='^posts.createip';
 			$selectspec['columns'][]='^userpoints.points';
 
 			if (!QA_FINAL_EXTERNAL_USERS) {
@@ -216,7 +216,7 @@
 		$selectspec['columns']['ouserid']=$poststable.($fromupdated ? '.lastuserid' : '.userid');
 		$selectspec['columns']['ocookieid']=$poststable.'.cookieid';
 		$selectspec['columns']['oname']=$poststable.'.name';
-		$selectspec['columns']['oip']='INET_NTOA('.$poststable.($fromupdated ? '.lastip' : '.createip').')';
+		$selectspec['columns']['oip']=$poststable.($fromupdated ? '.lastip' : '.createip');
 		$selectspec['columns']['otime']='UNIX_TIMESTAMP('.$poststable.($fromupdated ? '.updated' : '.created').')';
 		$selectspec['columns']['oflagcount']=$poststable.'.flagcount';
 
@@ -1187,7 +1187,7 @@
 			'columns' => array(
 				'^users.userid', 'passsalt', 'passcheck' => 'HEX(passcheck)', 'passhash', 'email', 'level', 'emailcode', 'handle',
 				'created' => 'UNIX_TIMESTAMP(created)', 'sessioncode', 'sessionsource', 'flags', 'loggedin' => 'UNIX_TIMESTAMP(loggedin)',
-				'loginip' => 'INET_NTOA(loginip)', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip' => 'INET_NTOA(writeip)',
+				'loginip', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip',
 				'avatarblobid' => 'BINARY avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
 				'avatarwidth', 'avatarheight', 'points', 'wallposts',
 			),
