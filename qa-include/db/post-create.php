@@ -33,8 +33,8 @@
 	{
 		qa_db_query_sub(
 			'INSERT INTO ^posts (categoryid, type, parentid, userid, cookieid, createip, title, content, format, tags, notify, name, created) '.
-			'VALUES (#, $, #, $, #, INET_ATON($), $, $, $, $, $, $, NOW())',
-			$categoryid, $type, $parentid, $userid, $cookieid, $ip, $title, $content, $format, $tagstring, $notify, $name
+			'VALUES (#, $, #, $, #, '.inet_pton($ip).', $, $, $, $, $, $, NOW())',
+			$categoryid, $type, $parentid, $userid, $cookieid, $title, $content, $format, $tagstring, $notify, $name
 		);
 
 		return qa_db_last_insert_id();
