@@ -186,7 +186,7 @@
 */
 	{
 		$results=qa_db_read_all_assoc(qa_db_query_sub(
-			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET_NTOA(createip) AS createip, email, handle, flags, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
+			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, createip, email, handle, flags, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
 			QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED, $count
 		));
 
@@ -194,6 +194,7 @@
 
 		foreach ($results as $result) {
 			$userid=$result['userid'];
+			$result['createip']=inet_ntop($result['createip']);
 
 			if (!isset($users[$userid])) {
 				$users[$result['userid']]=$result;
