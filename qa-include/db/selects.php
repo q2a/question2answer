@@ -166,15 +166,15 @@
 			$selectspec['columns']['updatetype']='^posts.updatetype';
 			$selectspec['columns'][]='^posts.format';
 			$selectspec['columns'][]='^posts.lastuserid';
-			$selectspec['columns']['lastip']='INET_NTOA(^posts.lastip)';
+			$selectspec['columns']['lastip']='^posts.lastip';
 			$selectspec['columns'][]='^posts.parentid';
-			$selectspec['columns']['lastviewip']='INET_NTOA(^posts.lastviewip)';
+			$selectspec['columns']['lastviewip']='^posts.lastviewip';
 		}
 
 		if ($user) {
 			$selectspec['columns'][]='^posts.userid';
 			$selectspec['columns'][]='^posts.cookieid';
-			$selectspec['columns']['createip']='INET_NTOA(^posts.createip)';
+			$selectspec['columns']['createip']='^posts.createip';
 			$selectspec['columns'][]='^userpoints.points';
 
 			if (!QA_FINAL_EXTERNAL_USERS) {
@@ -216,7 +216,7 @@
 		$selectspec['columns']['ouserid']=$poststable.($fromupdated ? '.lastuserid' : '.userid');
 		$selectspec['columns']['ocookieid']=$poststable.'.cookieid';
 		$selectspec['columns']['oname']=$poststable.'.name';
-		$selectspec['columns']['oip']='INET_NTOA('.$poststable.($fromupdated ? '.lastip' : '.createip').')';
+		$selectspec['columns']['oip']=$poststable.($fromupdated ? '.lastip' : '.createip');
 		$selectspec['columns']['otime']='UNIX_TIMESTAMP('.$poststable.($fromupdated ? '.updated' : '.created').')';
 		$selectspec['columns']['oflagcount']=$poststable.'.flagcount';
 
@@ -323,11 +323,8 @@
 
 		$selectspec['source'].=" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($createip) ? "createip=INET_ATON($) AND " : "").
+			(isset($createip) ? "createip=".inet_pton($createip)." AND " : "").
 			"type=$ ".$sortsql." LIMIT #,#) y ON ^posts.postid=y.postid";
-
-		if (isset($createip))
-			$selectspec['arguments'][]=$createip;
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -406,12 +403,9 @@
 			" LEFT JOIN ^userpoints AS auserpoints ON aposts.userid=auserpoints.userid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($createip) ? "createip=INET_ATON($) AND " : "").
+			(isset($createip) ? "createip=".inet_pton($createip)." AND " : "").
 			"type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON aposts.postid=y.postid".
 			($specialtype ? '' : " WHERE ^posts.type='Q'");
-
-		if (isset($createip))
-			$selectspec['arguments'][]=$createip;
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -449,12 +443,9 @@
 			" LEFT JOIN ^userpoints AS cuserpoints ON cposts.userid=cuserpoints.userid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($createip) ? "createip=INET_ATON($) AND " : "").
+			(isset($createip) ? "createip=".inet_pton($createip)." AND " : "").
 			"type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON cposts.postid=y.postid".
 			($specialtype ? '' : " WHERE ^posts.type='Q' AND ((parentposts.type='Q') OR (parentposts.type='A'))");
-
-		if (isset($createip))
-			$selectspec['arguments'][]=$createip;
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -487,13 +478,10 @@
 			" LEFT JOIN ^userpoints AS edituserpoints ON editposts.lastuserid=edituserpoints.userid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($lastip) ? "lastip=INET_ATON($) AND " : "").
+			(isset($lastip) ? "lastip=".inet_pton($lastip)." AND " : "").
 			($onlyvisible ? "type IN ('Q', 'A', 'C')" : "1").
 			" ORDER BY ^posts.updated DESC LIMIT #,#) y ON editposts.postid=y.postid".
 			($onlyvisible ? " WHERE parentposts.type IN ('Q', 'A', 'C') AND ^posts.type IN ('Q', 'A', 'C')" : "");
-
-		if (isset($lastip))
-			$selectspec['arguments'][]=$lastip;
 
 		array_push($selectspec['arguments'], $start, $count);
 
@@ -1199,7 +1187,7 @@
 			'columns' => array(
 				'^users.userid', 'passsalt', 'passcheck' => 'HEX(passcheck)', 'passhash', 'email', 'level', 'emailcode', 'handle',
 				'created' => 'UNIX_TIMESTAMP(created)', 'sessioncode', 'sessionsource', 'flags', 'loggedin' => 'UNIX_TIMESTAMP(loggedin)',
-				'loginip' => 'INET_NTOA(loginip)', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip' => 'INET_NTOA(writeip)',
+				'loginip', 'written' => 'UNIX_TIMESTAMP(written)', 'writeip',
 				'avatarblobid' => 'BINARY avatarblobid', // cast to BINARY due to MySQL bug which renders it signed in a union
 				'avatarwidth', 'avatarheight', 'points', 'wallposts',
 			),
@@ -1678,8 +1666,7 @@
 	{
 		return array(
 			'columns' => array('action', 'period', 'count'),
-			'source' => '^iplimits WHERE ip=COALESCE(INET_ATON($), 0)',
-			'arguments' => array($ip),
+			'source' => '^iplimits WHERE ip='.inet_pton($ip),
 			'arraykey' => 'action',
 		);
 	}
