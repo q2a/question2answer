@@ -549,7 +549,7 @@
 		}
 
 		if (@$options['whoview']) {
-			$fields['who']=qa_who_to_html($isbyuser, @$post['userid'], $usershtml, @$options['ipview'] ? @$post['createip'] : null, $microdata, $post['name']);
+			$fields['who']=qa_who_to_html($isbyuser, @$post['userid'], $usershtml, @$options['ipview'] ? inet_ntop()@$post['createip']) : null, $microdata, $post['name']);
 
 			if (isset($post['points'])) {
 				if (@$options['pointsview'])
