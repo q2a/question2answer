@@ -25,7 +25,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 62);
+	define('QA_DB_VERSION_CURRENT', 63);
 
 
 	function qa_db_user_column_type_verify()
@@ -1467,6 +1467,29 @@
 						qa_db_upgrade_query($locktablesquery);
 						break;
 					}
+
+				case 63:
+					// convert IP addresses to new binary format
+					qa_db_upgrade_query('ALTER TABLE ^eventlog MODIFY ipaddress VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('UPDATE ^eventlog SET ipaddress = UNHEX(HEX(CAST(ipaddress AS UNSIGNED)))');
+					
+					qa_db_upgrade_query('ALTER TABLE ^cookies MODIFY writeip VARBINARY(16) NULL DEFAULT NULL, MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('UPDATE ^cookies SET writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED))), createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					
+					qa_db_upgrade_query('ALTER TABLE ^iplimits MODIFY ip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('UPDATE ^iplimits SET ip = UNHEX(HEX(CAST(ip AS UNSIGNED)))');
+					
+					qa_db_upgrade_query('ALTER TABLE ^blobs MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('UPDATE ^blobs SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					
+					qa_db_upgrade_query('ALTER TABLE ^posts MODIFY lastviewip VARBINARY(16) NULL DEFAULT NULL, MODIFY lastip VARBINARY(16) NULL DEFAULT NULL, MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('UPDATE ^posts SET lastviewip = UNHEX(HEX(CAST(lastviewip AS UNSIGNED))), lastip = UNHEX(HEX(CAST(lastip AS UNSIGNED))), createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					
+					qa_db_upgrade_query('ALTER TABLE ^users MODIFY createip VARBINARY(16) NULL DEFAULT NULL, MODIFY loginip VARBINARY(16) NULL DEFAULT NULL, MODIFY writeip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('UPDATE ^users SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED))), loginip = UNHEX(HEX(CAST(loginip AS UNSIGNED))), writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED)))');
+					qa_db_upgrade_query($locktablesquery);
+					break;
+				}
 
 			//	Up to here: Version 1.8 alpha
 			}
