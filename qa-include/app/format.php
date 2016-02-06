@@ -628,7 +628,7 @@
 			}
 
 			if (isset($post['lastuserid']) && @$options['whoview'])
-				$fields['who_2']=qa_who_to_html(isset($userid) && ($post['lastuserid']==$userid), $post['lastuserid'], $usershtml, @$options['ipview'] ? $post['lastip'] : null, false);
+				$fields['who_2']=qa_who_to_html(isset($userid) && ($post['lastuserid']==$userid), $post['lastuserid'], $usershtml, @$options['ipview'] ? inet_ntop($post['lastip']) : null, false);
 		}
 
 
