@@ -596,7 +596,7 @@
 					'value' =>
 						strtr(qa_lang_html('users/x_ago_from_y'), array(
 							'^1' => qa_time_to_string(qa_opt('db_time')-$useraccount['written']),
-							'^2' => qa_ip_anchor_html($useraccount['writeip']),
+							'^2' => qa_ip_anchor_html(inet_ntop($useraccount['writeip'])),
 						)),
 					'note' => $userediting ? null : qa_lang_html('users/only_shown_moderators'),
 					'id' => 'lastwrite',
