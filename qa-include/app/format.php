@@ -1769,10 +1769,11 @@
 	}
 
 
+	/**
+	 * Return the theme that should be used for displaying the page
+	 * @return string
+	 */
 	function qa_get_site_theme()
-/*
-	Return the theme that should be used for displaying the page
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1780,11 +1781,12 @@
 	}
 
 
+	/**
+	 * Return the initialized class for $theme (or the default if it's gone), passing $template, $content and $request.
+	 * Also applies any registered plugin layers.
+	 * @return qa_html_theme_base
+	 */
 	function qa_load_theme_class($theme, $template, $content, $request)
-/*
-	Return the initialized class for $theme (or the default if it's gone), passing $template, $content and $request.
-	Also applies any registered plugin layers.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1869,11 +1871,15 @@
 	}
 
 
+	/**
+	 * Return an instantiation of the appropriate editor module class, given $content in $format
+	 * Pass the preferred module name in $editorname, on return it will contain the name of the module used.
+	 * @param $content string
+	 * @param $format string
+	 * @param $editorname string
+	 * @return object
+	 */
 	function qa_load_editor($content, $format, &$editorname)
-/*
-	Return an instantiation of the appropriate editor module class, given $content in $format
-	Pass the preferred module name in $editorname, on return it will contain the name of the module used.
-*/
 	{
 		$maxeditor=qa_load_module('editor', $editorname); // take preferred one first
 
@@ -1900,13 +1906,22 @@
 	}
 
 
+	/**
+	 * Return a form field from the $editor module while making necessary modifications to $qa_content. The parameters
+	 * $content, $format, $fieldname, $rows and $focusnow are passed through to the module's get_field() method. ($focusnow
+	 * is deprecated as a parameter to get_field() but it's still passed through for old editor modules.) Based on
+	 * $focusnow and $loadnow, also add the editor's load and/or focus scripts to $qa_content's onload handlers.
+	 * @param $editor object
+	 * @param array $qa_content
+	 * @param string $content
+	 * @param string $format
+	 * @param string $fieldname
+	 * @param int $rows
+	 * @param bool $focusnow
+	 * @param bool $loadnow
+	 * @return string|array
+	 */
 	function qa_editor_load_field($editor, &$qa_content, $content, $format, $fieldname, $rows, $focusnow=false, $loadnow=true)
-/*
-	Return a form field from the $editor module while making necessary modifications to $qa_content. The parameters
-	$content, $format, $fieldname, $rows and $focusnow are passed through to the module's get_field() method. ($focusnow
-	is deprecated as a parameter to get_field() but it's still passed through for old editor modules.) Based on
-	$focusnow and $loadnow, also add the editor's load and/or focus scripts to $qa_content's onload handlers.
-*/
 	{
 		if (!isset($editor))
 			qa_fatal_error('No editor found for format: '.$format);
@@ -1928,10 +1943,13 @@
 	}
 
 
+	/**
+	 * Return an instantiation of the appropriate viewer module class, given $content in $format
+	 * @param string $content
+	 * @param string $format
+	 * @return object
+	 */
 	function qa_load_viewer($content, $format)
-/*
-	Return an instantiation of the appropriate viewer module class, given $content in $format
-*/
 	{
 		$maxviewer=null;
 		$maxquality=0;
@@ -1951,20 +1969,28 @@
 	}
 
 
+	/**
+	 * Return the plain text rendering of $content in $format, passing $options to the appropriate module
+	 * @param string $content
+	 * @param string $format
+	 * @param array $options
+	 * @return string
+	 */
 	function qa_viewer_text($content, $format, $options=array())
-/*
-	Return the plain text rendering of $content in $format, passing $options to the appropriate module
-*/
 	{
 		$viewer=qa_load_viewer($content, $format);
 		return $viewer->get_text($content, $format, $options);
 	}
 
 
+	/**
+	 * Return the HTML rendering of $content in $format, passing $options to the appropriate module
+	 * @param string $content
+	 * @param string $format
+	 * @param array $options
+	 * @return string
+	 */
 	function qa_viewer_html($content, $format, $options=array())
-/*
-	Return the HTML rendering of $content in $format, passing $options to the appropriate module
-*/
 	{
 		$viewer=qa_load_viewer($content, $format);
 		return $viewer->get_html($content, $format, $options);
@@ -1972,6 +1998,8 @@
 
 	/**
 	 * Retrieve title from HTTP POST, appropriately sanitised.
+	 * @param string $fieldname
+	 * @return string
 	 */
 	function qa_get_post_title($fieldname)
 	{
