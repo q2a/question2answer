@@ -1112,14 +1112,25 @@
 	}
 
 
-	function qa_is_http_post()
-/*
-	Return true if we are responding to an HTTP POST request
-*/
+	/**
+	 * Whether we are responding to an HTTP GET request
+	 * @return bool True if the request is GET
+	 */
+	function qa_is_http_get()
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		return ($_SERVER['REQUEST_METHOD']=='POST') || !empty($_POST);
+		return $_SERVER['REQUEST_METHOD'] === 'GET';
+	}
+
+	/**
+	 * Return true if we are responding to an HTTP POST request
+	 */
+	function qa_is_http_post()
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		return $_SERVER['REQUEST_METHOD'] === 'POST' || !empty($_POST);
 	}
 
 
