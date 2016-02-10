@@ -1016,12 +1016,12 @@ blockquote p {
 }
 @media (min-width: 241px) and (max-width: 799px) {
 	.qa-q-item-stats {
-		width: 60px;
+		max-width: 60px;
 	}
 }
 @media (min-width: 800px) {
 	.qa-q-item-stats {
-		width: 133px;
+		max-width: 133px;
 	}
 }
 
