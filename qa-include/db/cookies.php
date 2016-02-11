@@ -56,8 +56,8 @@
 */
 	{
 		qa_db_query_sub(
-			'UPDATE ^cookies SET written=NOW(), writeip='.inet_pton($ipaddress).' WHERE cookieid=#',
-			$cookieid
+			'UPDATE ^cookies SET written=NOW(), writeip=$ WHERE cookieid=#',
+			inet_pton($ipaddress), $cookieid
 		);
 	}
 
