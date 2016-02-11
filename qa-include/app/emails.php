@@ -152,7 +152,11 @@
 			}
 		}
 
-		return $mailer->Send();
+		$send_status = $mailer->Send();
+		if(!$send_status){
+			@error_log('PHP Question2Answer email send error: '.$mailer->ErrorInfo);
+		}
+		return $send_status;
 	}
 
 
