@@ -1014,14 +1014,18 @@ blockquote p {
 		display: none;
 	}
 }
+.qa-template-user-activity .qa-q-item-stats {
+	width: 65px;
+}
+.qa-template-user-answers .qa-q-item-stats {
+	width: 68px;
+}
 @media (min-width: 241px) and (max-width: 799px) {
-	.qa-q-item-stats {
+	.qa-template-user-activity .qa-q-item-stats {
 		width: 60px;
 	}
-}
-@media (min-width: 800px) {
-	.qa-q-item-stats {
-		width: 133px;
+	.qa-template-user-answers .qa-q-item-stats {
+		width: 60px;
 	}
 }
 
