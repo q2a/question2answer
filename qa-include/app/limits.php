@@ -179,6 +179,13 @@
 	Returns whether the ip address $ip is matched by the clause $blockipclause, which can contain a hyphen or asterisk
 */
 	{
+		// check if the input parameters use the same IP version
+		if (
+			((strpos($ip, ".")!==false) && (strpos($blockipclause, ".")==false)) ||
+			((strpos($ip, ".")==false) && (strpos($blockipclause, ".")!==false))
+		)
+	       return false;
+
 		if (filter_var($ip, FILTER_VALIDATE_IP)) {
 			if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
 				if ( filter_var($matches[1], FILTER_VALIDATE_IP) && filter_var($matches[2], FILTER_VALIDATE_IP) ) {
