@@ -1485,8 +1485,10 @@
 					qa_db_upgrade_query('ALTER TABLE ^posts MODIFY lastviewip VARBINARY(16) NULL DEFAULT NULL, MODIFY lastip VARBINARY(16) NULL DEFAULT NULL, MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
 					qa_db_upgrade_query('UPDATE ^posts SET lastviewip = UNHEX(HEX(CAST(lastviewip AS UNSIGNED))), lastip = UNHEX(HEX(CAST(lastip AS UNSIGNED))), createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
 					
-					qa_db_upgrade_query('ALTER TABLE ^users MODIFY createip VARBINARY(16) NULL DEFAULT NULL, MODIFY loginip VARBINARY(16) NULL DEFAULT NULL, MODIFY writeip VARBINARY(16) NULL DEFAULT NULL');
-					qa_db_upgrade_query('UPDATE ^users SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED))), loginip = UNHEX(HEX(CAST(loginip AS UNSIGNED))), writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED)))');
+					if (!QA_FINAL_EXTERNAL_USERS) {
+						qa_db_upgrade_query('ALTER TABLE ^users MODIFY createip VARBINARY(16) NULL DEFAULT NULL, MODIFY loginip VARBINARY(16) NULL DEFAULT NULL, MODIFY writeip VARBINARY(16) NULL DEFAULT NULL');
+						qa_db_upgrade_query('UPDATE ^users SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED))), loginip = UNHEX(HEX(CAST(loginip AS UNSIGNED))), writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED)))');
+					}
 					qa_db_upgrade_query($locktablesquery);
 					break;
 				}
