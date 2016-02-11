@@ -323,8 +323,11 @@
 
 		$selectspec['source'].=" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($createip) ? "createip=".inet_pton($createip)." AND " : "").
+			(isset($createip) ? "createip=$ AND " : "").
 			"type=$ ".$sortsql." LIMIT #,#) y ON ^posts.postid=y.postid";
+
+		if (isset($createip))
+			$selectspec['arguments'][]=inet_pton($createip);
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -403,9 +406,12 @@
 			" LEFT JOIN ^userpoints AS auserpoints ON aposts.userid=auserpoints.userid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($createip) ? "createip=".inet_pton($createip)." AND " : "").
+			(isset($createip) ? "createip=$ AND " : "").
 			"type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON aposts.postid=y.postid".
 			($specialtype ? '' : " WHERE ^posts.type='Q'");
+
+		if (isset($createip))
+			$selectspec['arguments'][]=inet_pton($createip);
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -443,9 +449,12 @@
 			" LEFT JOIN ^userpoints AS cuserpoints ON cposts.userid=cuserpoints.userid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($createip) ? "createip=".inet_pton($createip)." AND " : "").
+			(isset($createip) ? "createip=$ AND " : "").
 			"type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON cposts.postid=y.postid".
 			($specialtype ? '' : " WHERE ^posts.type='Q' AND ((parentposts.type='Q') OR (parentposts.type='A'))");
+
+		if (isset($createip))
+			$selectspec['arguments'][]=inet_pton($createip);
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -478,10 +487,13 @@
 			" LEFT JOIN ^userpoints AS edituserpoints ON editposts.lastuserid=edituserpoints.userid".
 			" JOIN (SELECT postid FROM ^posts WHERE ".
 			qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']).
-			(isset($lastip) ? "lastip=".inet_pton($lastip)." AND " : "").
+			(isset($lastip) ? "lastip=$ AND " : "").
 			($onlyvisible ? "type IN ('Q', 'A', 'C')" : "1").
 			" ORDER BY ^posts.updated DESC LIMIT #,#) y ON editposts.postid=y.postid".
 			($onlyvisible ? " WHERE parentposts.type IN ('Q', 'A', 'C') AND ^posts.type IN ('Q', 'A', 'C')" : "");
+
+		if (isset($lastip))
+			$selectspec['arguments'][]=inet_pton($lastip);
 
 		array_push($selectspec['arguments'], $start, $count);
 
@@ -1666,7 +1678,8 @@
 	{
 		return array(
 			'columns' => array('action', 'period', 'count'),
-			'source' => '^iplimits WHERE ip='.inet_pton($ip),
+			'source' => '^iplimits WHERE ip=$',
+			'arguments' => array(inet_pton($ip)),
 			'arraykey' => 'action',
 		);
 	}
