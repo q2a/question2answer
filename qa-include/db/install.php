@@ -100,7 +100,7 @@
 			'users' => array(
 				'userid' => $useridcoltype.' NOT NULL AUTO_INCREMENT',
 				'created' => 'DATETIME NOT NULL',
-				'createip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address when created
+				'createip' => 'VARBINARY(16) NOT NULL', // INET_ATON of IP address when created
 				'email' => 'VARCHAR('.QA_DB_MAX_EMAIL_LENGTH.') NOT NULL',
 				'handle' => 'VARCHAR('.QA_DB_MAX_HANDLE_LENGTH.') NOT NULL', // username
 				'avatarblobid' => 'BIGINT UNSIGNED', // blobid of stored avatar
@@ -111,9 +111,9 @@
 				'passhash' => 'VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL', // password_hash
 				'level' => 'TINYINT UNSIGNED NOT NULL', // basic, editor, admin, etc...
 				'loggedin' => 'DATETIME NOT NULL', // time of last login
-				'loginip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address of last login
+				'loginip' => 'VARBINARY(16) NOT NULL', // INET_ATON of IP address of last login
 				'written' => 'DATETIME', // time of last write action done by user
-				'writeip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address of last write action done by user
+				'writeip' => 'VARBINARY(16)', // INET_ATON of IP address of last write action done by user
 				'emailcode' => 'CHAR(8) CHARACTER SET ascii NOT NULL DEFAULT \'\'', // for email confirmation or password reset
 				'sessioncode' => 'CHAR(8) CHARACTER SET ascii NOT NULL DEFAULT \'\'', // for comparing against session cookie in browser
 				'sessionsource' => 'VARCHAR (16) CHARACTER SET ascii DEFAULT \'\'', // e.g. facebook, openid, etc...
@@ -227,9 +227,9 @@
 			'cookies' => array(
 				'cookieid' => 'BIGINT UNSIGNED NOT NULL',
 				'created' => 'DATETIME NOT NULL',
-				'createip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address when cookie created
+				'createip' => 'VARBINARY(16) NOT NULL', // INET_ATON of IP address when cookie created
 				'written' => 'DATETIME', // time of last write action done by anon user with cookie
-				'writeip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address of last write action done by anon user with cookie
+				'writeip' => 'VARBINARY(16)', // INET_ATON of IP address of last write action done by anon user with cookie
 				'PRIMARY KEY (cookieid)',
 			),
 
@@ -293,13 +293,13 @@
 					// if closed for another reason, that reason should be added as a comment on the question, and this field is the comment's id
 				'userid' => $useridcoltype, // which user wrote it
 				'cookieid' => 'BIGINT UNSIGNED', // which cookie wrote it, if an anonymous post
-				'createip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address used to create the post
+				'createip' => 'VARBINARY(16)', // INET_ATON of IP address used to create the post
 				'lastuserid' => $useridcoltype, // which user last modified it
-				'lastip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address which last modified the post
+				'lastip' => 'VARBINARY(16)', // INET_ATON of IP address which last modified the post
 				'upvotes' => 'SMALLINT UNSIGNED NOT NULL DEFAULT 0',
 				'downvotes' => 'SMALLINT UNSIGNED NOT NULL DEFAULT 0',
 				'netvotes' => 'SMALLINT NOT NULL DEFAULT 0',
-				'lastviewip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address which last viewed the post
+				'lastviewip' => 'VARBINARY(16)', // INET_ATON of IP address which last viewed the post
 				'views' => 'INT UNSIGNED NOT NULL DEFAULT 0',
 				'hotness' => 'FLOAT',
 				'flagcount' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
@@ -348,7 +348,7 @@
 				'filename' => 'VARCHAR('.QA_DB_MAX_BLOB_FILE_NAME_LENGTH.')', // name of source file (if appropriate)
 				'userid' => $useridcoltype, // which user created it
 				'cookieid' => 'BIGINT UNSIGNED', // which cookie created it
-				'createip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address that created it
+				'createip' => 'VARBINARY(16)', // INET_ATON of IP address that created it
 				'created' => 'DATETIME', // when it was created
 				'PRIMARY KEY (blobid)',
 			),
@@ -449,7 +449,7 @@
 			// most columns in iplimits have the same meaning as those in userlimits
 
 			'iplimits' => array(
-				'ip' => 'VARBINARY(16) NULL DEFAULT NULL', // INET_ATON of IP address
+				'ip' => 'VARBINARY(16) NOT NULL', // INET_ATON of IP address
 				'action' => 'CHAR(1) CHARACTER SET ascii NOT NULL',
 				'period' => 'INT UNSIGNED NOT NULL',
 				'count' => 'SMALLINT UNSIGNED NOT NULL',
