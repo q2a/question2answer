@@ -218,7 +218,7 @@
 		@define('QA_MAX_LIMIT_START', 19999);
 		@define('QA_IGNORED_WORDS_FREQ', 10000);
 		@define('QA_ALLOW_UNINDEXED_QUERIES', false);
-		@define('QA_OPTIMIZE_LOCAL_DB', false);
+		@define('QA_OPTIMIZE_LOCAL_DB', true); // no longer used
 		@define('QA_OPTIMIZE_DISTANT_DB', false);
 		@define('QA_PERSISTENT_CONN_DB', false);
 		@define('QA_DEBUG_PERFORMANCE', false);

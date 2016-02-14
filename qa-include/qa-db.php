@@ -413,7 +413,7 @@
 
 
 /*
-	The selectspec array can contain the elements below. See qa-db-selects.php for lots of examples.
+	The selectspec array can contain the elements below. See db/selects.php for lots of examples.
 
 	By default, qa_db_single_select() and qa_db_multi_select() return the data for each selectspec as a numbered
 	array of arrays, one per row. The array for each row has column names in the keys, and data in the values.
@@ -448,12 +448,12 @@
 	Why does qa_db_multi_select() combine usually unrelated SELECT statements into a single query?
 
 	Because if the database and web servers are on different computers, there will be latency.
-	This way we ensure that every read pageview on the site requires only a single DB query, so
+	This way we ensure that every read pageview on the site requires as few DB queries as possible, so
 	that we pay for this latency only one time.
 
 	For writes we worry less, since the user is more likely to be expecting a delay.
 
-	If QA_OPTIMIZE_LOCAL_DB is set in qa-config.php, we assume zero latency and go back to
+	If QA_OPTIMIZE_DISTANT_DB is set to false in qa-config.php, we assume zero latency and go back to
 	simple queries, since this will allow both MySQL and PHP to provide quicker results.
 */
 
@@ -490,7 +490,7 @@
 
 	//	Perform simple queries if the database is local or there are only 0 or 1 selectspecs
 
-		if (QA_OPTIMIZE_LOCAL_DB || (count($selectspecs)<=1)) {
+		if (!QA_OPTIMIZE_DISTANT_DB || (count($selectspecs)<=1)) {
 			$outresults=array();
 
 			foreach ($selectspecs as $selectkey => $selectspec)

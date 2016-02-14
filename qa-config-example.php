@@ -147,13 +147,14 @@
 	are not indexed efficiently. For example, this will enable browsing unanswered questions per
 	category. If your database becomes large, these queries could become costly.
 
-	Set QA_OPTIMIZE_LOCAL_DB to true if your web server and MySQL are running on the same box.
+	Set QA_OPTIMIZE_DISTANT_DB to false if your web server and MySQL are running on the same box.
 	When viewing a page on your site, this will use many simple MySQL queries instead of fewer
 	complex ones, which makes sense since there is no latency for localhost access.
+	Otherwise, set it to true if your web server and MySQL are far enough apart to create
+	significant latency. This will minimize the number of database queries as much as is possible,
+	even at the cost of significant additional processing at each end.
 
-	Set QA_OPTIMIZE_DISTANT_DB to true if your web server and MySQL are far enough apart to
-	create significant latency. This will minimize the number of database queries as much as
-	is possible, even at the cost of significant additional processing at each end.
+	The option QA_OPTIMIZE_LOCAL_DB is no longer used, since QA_OPTIMIZE_DISTANT_DB covers our uses.
 
 	Set QA_PERSISTENT_CONN_DB to true to use persistent database connections. Requires PHP 5.3.
 	Only use this if you are absolutely sure it is a good idea under your setup - generally it is
@@ -167,7 +168,6 @@
 	define('QA_MAX_LIMIT_START', 19999);
 	define('QA_IGNORED_WORDS_FREQ', 10000);
 	define('QA_ALLOW_UNINDEXED_QUERIES', false);
-	define('QA_OPTIMIZE_LOCAL_DB', false);
 	define('QA_OPTIMIZE_DISTANT_DB', false);
 	define('QA_PERSISTENT_CONN_DB', false);
 	define('QA_DEBUG_PERFORMANCE', false);
