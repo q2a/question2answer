@@ -136,14 +136,8 @@
 				),
 			);
 
-			if (QA_OPTIMIZE_DISTANT_DB) {
-				require_once QA_INCLUDE_DIR.'db/selects.php';
-
-				foreach ($selectspecs as $pendingid => $selectspec)
-					qa_db_queue_pending_select($pendingid, $selectspec);
-
-			} else
-				qa_load_options_results(qa_db_multi_select($selectspecs));
+			// fetch options in a separate query before everything else
+			qa_load_options_results(qa_db_multi_select($selectspecs));
 		}
 	}
 
