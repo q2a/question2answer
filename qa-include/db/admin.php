@@ -195,7 +195,6 @@
 
 		foreach ($results as $result) {
 			$userid=$result['userid'];
-			$result['createip']=inet_ntop($result['createip']);
 
 			if (!isset($users[$userid])) {
 				$users[$result['userid']]=$result;

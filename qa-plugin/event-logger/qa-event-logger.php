@@ -33,7 +33,7 @@ class qa_event_logger
 
 				return 'CREATE TABLE ^eventlog ('.
 					'datetime DATETIME NOT NULL,'.
-					'ipaddress VARBINARY (16),'.
+					'ipaddress VARCHAR (45),'.
 					'userid '.qa_get_mysql_user_column_type().','.
 					'handle VARCHAR('.QA_DB_MAX_HANDLE_LENGTH.'),'.
 					'cookieid BIGINT UNSIGNED,'.
