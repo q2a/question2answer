@@ -44,7 +44,7 @@
 				'(a.acount+0.0)*# + '.
 				'(a.netvotes+0.0)*# + '.
 				'(a.views+0.0+#)*#'.
-			')'.($viewincrement ? ', x.views=x.views+1, x.lastviewip=INET_ATON($)' : '').' WHERE x.postid=a.postid';
+			')'.($viewincrement ? ', x.views=x.views+1, x.lastviewip=$' : '').' WHERE x.postid=a.postid';
 
 			//	Additional multiples based on empirical analysis of activity on Q2A meta site to give approx equal influence for all factors
 
@@ -60,7 +60,7 @@
 			);
 
 			if ($viewincrement)
-				$arguments[]=qa_remote_ip_address();
+				$arguments[]=inet_pton(qa_remote_ip_address());
 
 			 qa_db_query_raw(qa_db_apply_sub($query, $arguments));
 		}
