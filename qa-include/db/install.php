@@ -1470,8 +1470,9 @@
 
 				case 63:
 					// convert IP addresses to new binary format
-					$eventlog_exists = (bool)qa_db_read_one_value(qa_db_query_sub("SELECT 1 FROM ^eventlog LIMIT 1"));
-					if($eventlog_exists){
+					if (isset($keydbtables[qa_db_add_table_prefix('eventlog')])) {
+						$locktablesquery.=', ^eventlog WRITE';
+						qa_db_upgrade_query($locktablesquery);
 						qa_db_upgrade_query('ALTER TABLE ^eventlog MODIFY ipaddress VARCHAR(45) CHARACTER SET ascii');
 					}
 
@@ -1491,6 +1492,7 @@
 						qa_db_upgrade_query('ALTER TABLE ^users MODIFY createip VARBINARY(16) NULL DEFAULT NULL, MODIFY loginip VARBINARY(16) NULL DEFAULT NULL, MODIFY writeip VARBINARY(16) NULL DEFAULT NULL');
 						qa_db_upgrade_query('UPDATE ^users SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED))), loginip = UNHEX(HEX(CAST(loginip AS UNSIGNED))), writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED)))');
 					}
+
 					qa_db_upgrade_query($locktablesquery);
 					break;
 
