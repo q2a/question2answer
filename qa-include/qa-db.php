@@ -59,22 +59,25 @@
 		if ($qa_db_connection instanceof mysqli)
 			return;
 
-		// in mysqli we connect and select database in constructor
-		$host = QA_PERSISTENT_CONN_DB ? 'p:'.QA_FINAL_MYSQL_HOSTNAME : QA_FINAL_MYSQL_HOSTNAME;
+		$host = QA_FINAL_MYSQL_HOSTNAME;
 		$port = null;
 
 		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
-			$host_and_port = preg_split('/:/', $host);
-
-			if (count($host_and_port) == 2) {
-				$host = QA_PERSISTENT_CONN_DB ? 'p:' . $host_and_port[0] : $host_and_port[0];
+			// Wordpress allows setting port inside DB_HOST constant, like 127.0.0.1:3306
+			$host_and_port = explode(':', $host);
+			if (count($host_and_port) >= 2) {
+				$host = $host_and_port[0];
 				$port = $host_and_port[1];
 			}
 		} elseif (defined('QA_FINAL_MYSQL_PORT')) {
 			$port = QA_FINAL_MYSQL_PORT;
 		}
 
-		if (!is_null($port))
+		if (QA_PERSISTENT_CONN_DB)
+			$host = 'p:'.$host;
+
+		// in mysqli we connect and select database in constructor
+		if ($port !== null)
 			$db = new mysqli($host, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE, $port);
 		else
 			$db = new mysqli($host, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE);
