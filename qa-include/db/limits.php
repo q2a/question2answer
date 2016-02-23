@@ -43,7 +43,7 @@
 
 		if (isset($ip)) {
 			$selects[]="(SELECT 'ip' AS limitkey, period, count FROM ^iplimits WHERE ip=$ AND action=$)";
-			$arguments[]=inet_pton($ip);
+			$arguments[]=@inet_pton($ip);
 			$arguments[]=$action;
 		}
 
@@ -77,7 +77,7 @@
 		qa_db_query_sub(
 			'INSERT INTO ^iplimits (ip, action, period, count) VALUES ($, $, #, #) '.
 			'ON DUPLICATE KEY UPDATE count=IF(period=#, count+#, #), period=#',
-			inet_pton($ip), $action, $period, $count, $period, $count, $count, $period
+			@inet_pton($ip), $action, $period, $count, $period, $count, $count, $period
 		);
 	}
 

@@ -40,7 +40,7 @@
 			qa_db_query_sub(
 				'INSERT INTO ^cookies (cookieid, created, createip) '.
 					'VALUES (#, NOW(), $)',
-				$cookieid, inet_pton($ipaddress)
+				$cookieid, @inet_pton($ipaddress)
 			);
 
 			return $cookieid;
@@ -57,7 +57,7 @@
 	{
 		qa_db_query_sub(
 			'UPDATE ^cookies SET written=NOW(), writeip=$ WHERE cookieid=#',
-			inet_pton($ipaddress), $cookieid
+			@inet_pton($ipaddress), $cookieid
 		);
 	}
 

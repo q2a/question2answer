@@ -327,7 +327,7 @@
 			"type=$ ".$sortsql." LIMIT #,#) y ON ^posts.postid=y.postid";
 
 		if (isset($createip))
-			$selectspec['arguments'][]=inet_pton($createip);
+			$selectspec['arguments'][]=@inet_pton($createip);
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -411,7 +411,7 @@
 			($specialtype ? '' : " WHERE ^posts.type='Q'");
 
 		if (isset($createip))
-			$selectspec['arguments'][]=inet_pton($createip);
+			$selectspec['arguments'][]=@inet_pton($createip);
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -454,7 +454,7 @@
 			($specialtype ? '' : " WHERE ^posts.type='Q' AND ((parentposts.type='Q') OR (parentposts.type='A'))");
 
 		if (isset($createip))
-			$selectspec['arguments'][]=inet_pton($createip);
+			$selectspec['arguments'][]=@inet_pton($createip);
 
 		array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -493,7 +493,7 @@
 			($onlyvisible ? " WHERE parentposts.type IN ('Q', 'A', 'C') AND ^posts.type IN ('Q', 'A', 'C')" : "");
 
 		if (isset($lastip))
-			$selectspec['arguments'][]=inet_pton($lastip);
+			$selectspec['arguments'][]=@inet_pton($lastip);
 
 		array_push($selectspec['arguments'], $start, $count);
 
@@ -1679,7 +1679,7 @@
 		return array(
 			'columns' => array('action', 'period', 'count'),
 			'source' => '^iplimits WHERE ip=$',
-			'arguments' => array(inet_pton($ip)),
+			'arguments' => array(@inet_pton($ip)),
 			'arraykey' => 'action',
 		);
 	}

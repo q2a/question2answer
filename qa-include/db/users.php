@@ -44,11 +44,13 @@
 	{
 		require_once QA_INCLUDE_DIR.'util/string.php';
 
+		$ipbin = @inet_pton($ip);
+
 		if (QA_PASSWORD_HASH) {
 			qa_db_query_sub(
 				'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) '.
 				'VALUES (NOW(), $, $, $, #, $, NOW(), $)',
-				inet_pton($ip), $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, inet_pton($ip)
+				$ipbin, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ipbin
 			);
 		} else {
 			$salt = isset($password) ? qa_random_alphanum(16) : null;
@@ -56,7 +58,7 @@
 			qa_db_query_sub(
 				'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) '.
 				'VALUES (NOW(), $, $, $, UNHEX($), #, $, NOW(), $)',
-				inet_pton($ip), $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, inet_pton($ip)
+				$ipbin, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ipbin
 			);
 		}
 
@@ -237,7 +239,7 @@
 	{
 		qa_db_query_sub(
 			'UPDATE ^users SET loggedin=NOW(), loginip=$ WHERE userid=$',
-			inet_pton($ip), $userid
+			@inet_pton($ip), $userid
 		);
 	}
 
@@ -249,7 +251,7 @@
 	{
 		qa_db_query_sub(
 			'UPDATE ^users SET written=NOW(), writeip=$ WHERE userid=$',
-			inet_pton($ip), $userid
+			@inet_pton($ip), $userid
 		);
 	}
 

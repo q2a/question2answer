@@ -202,11 +202,11 @@
 		if (QA_PASSWORD_HASH) {
 			require_once QA_INCLUDE_DIR.'vendor/password_compat.php';
 		}
-		
+
 		// http://stackoverflow.com/a/18277167
 		function ipv6_numeric($ip) {
 			$binNum = '';
-			foreach (unpack('C*', inet_pton($ip)) as $byte) {
+			foreach (unpack('C*', @inet_pton($ip)) as $byte) {
 				$binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
 			}
 			return base_convert(ltrim($binNum, '0'), 2, 10);
@@ -230,10 +230,10 @@
 				}
 				$ip=implode($wildcards,":");
 			}
-			
-			$hex = unpack("H*hex", inet_pton($ip));         
+
+			$hex = unpack("H*hex", @inet_pton($ip));
 			$ip = substr(preg_replace("/([A-f0-9]{4})/", "$1:", $hex['hex']), 0, -1);
-			
+
 			if($ipv6_wildcard){
 				$wildcards = explode(":", $ip);
 				foreach($wildcards_matched as $index => $value){
@@ -241,7 +241,7 @@
 				}
 				$ip=implode($wildcards,":");
 			}
-		
+
 			return $ip;
 		}
 	}

@@ -60,7 +60,7 @@
 			);
 
 			if ($viewincrement)
-				$arguments[]=inet_pton(qa_remote_ip_address());
+				$arguments[]=@inet_pton(qa_remote_ip_address());
 
 			 qa_db_query_raw(qa_db_apply_sub($query, $arguments));
 		}

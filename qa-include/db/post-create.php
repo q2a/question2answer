@@ -34,7 +34,7 @@
 		qa_db_query_sub(
 			'INSERT INTO ^posts (categoryid, type, parentid, userid, cookieid, createip, title, content, format, tags, notify, name, created) '.
 			'VALUES (#, $, #, $, #, $, $, $, $, $, $, $, NOW())',
-			$categoryid, $type, $parentid, $userid, $cookieid, inet_pton($ip), $title, $content, $format, $tagstring, $notify, $name
+			$categoryid, $type, $parentid, $userid, $cookieid, @inet_pton($ip), $title, $content, $format, $tagstring, $notify, $name
 		);
 
 		return qa_db_last_insert_id();
