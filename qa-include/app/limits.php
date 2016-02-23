@@ -170,7 +170,7 @@
 	{
 		$blockipstring=preg_replace('/\s*\-\s*/', '-', $blockipstring); // special case for 'x.x.x.x - x.x.x.x'
 
-		return preg_split('/[^0-9\.\-\*]/', $blockipstring, -1, PREG_SPLIT_NO_EMPTY);
+		return preg_split('/[^0-9a-f\.:\-\*]/', $blockipstring, -1, PREG_SPLIT_NO_EMPTY);
 	}
 
 
