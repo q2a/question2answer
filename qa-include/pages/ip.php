@@ -30,7 +30,7 @@
 
 
 	$ip=qa_request_part(1); // picked up from qa-page.php
-	if (long2ip(ip2long($ip))!==$ip)
+	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4|FILTER_FLAG_IPV6) === false)
 		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
 
 

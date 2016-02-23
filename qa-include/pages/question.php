@@ -430,8 +430,8 @@
 		(!qa_is_http_post()) &&
 		qa_is_human_probably() &&
 		( (!$question['views']) || ( // if it has more than zero views
-			( ($question['lastviewip']!=qa_remote_ip_address()) || (!isset($question['lastviewip'])) ) && // then it must be different IP from last view
-			( ($question['createip']!=qa_remote_ip_address()) || (!isset($question['createip'])) ) && // and different IP from the creator
+			( (@inet_ntop($question['lastviewip'])!=qa_remote_ip_address()) || (!isset($question['lastviewip'])) ) && // then it must be different IP from last view
+			( (@inet_ntop($question['createip'])!=qa_remote_ip_address()) || (!isset($question['createip'])) ) && // and different IP from the creator
 			( ($question['userid']!=$userid) || (!isset($question['userid'])) ) && // and different user from the creator
 			( ($question['cookieid']!=$cookieid) || (!isset($question['cookieid'])) ) // and different cookieid from the creator
 		) )

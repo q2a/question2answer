@@ -170,7 +170,7 @@
 	{
 		$blockipstring=preg_replace('/\s*\-\s*/', '-', $blockipstring); // special case for 'x.x.x.x - x.x.x.x'
 
-		return preg_split('/[^0-9\.\-\*]/', $blockipstring, -1, PREG_SPLIT_NO_EMPTY);
+		return preg_split('/[^0-9a-f\.:\-\*]/', $blockipstring, -1, PREG_SPLIT_NO_EMPTY);
 	}
 
 
@@ -179,19 +179,34 @@
 	Returns whether the ip address $ip is matched by the clause $blockipclause, which can contain a hyphen or asterisk
 */
 	{
-		if (long2ip(ip2long($ip))==$ip) {
-			if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
-				if ( (long2ip(ip2long($matches[1]))==$matches[1]) && (long2ip(ip2long($matches[2]))==$matches[2]) ) {
-					$iplong=sprintf('%u', ip2long($ip));
-					$end1long=sprintf('%u', ip2long($matches[1]));
-					$end2long=sprintf('%u', ip2long($matches[2]));
+		// check if the input parameters use the same IP version
+		if (
+			((strpos($ip, ".")!==false) && (strpos($blockipclause, ".")==false)) ||
+			((strpos($ip, ".")==false) && (strpos($blockipclause, ".")!==false))
+		)
+	       return false;
 
+		if (filter_var($ip, FILTER_VALIDATE_IP)) {
+			if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
+				if ( filter_var($matches[1], FILTER_VALIDATE_IP) && filter_var($matches[2], FILTER_VALIDATE_IP) ) {
+					if(filter_var($ip, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){
+						$ip=ipv6_expand($ip);
+						$matches[1]=ipv6_expand($matches[1],true);
+						$matches[2]=ipv6_expand($matches[2],true);
+					}
+					$iplong=ipv6_numeric($ip);
+					$end1long=ipv6_numeric($matches[1]);
+					$end2long=ipv6_numeric($matches[2]);
 					return (($iplong>=$end1long) && ($iplong<=$end2long)) || (($iplong>=$end2long) && ($iplong<=$end1long));
 				}
-
-			} elseif (strlen($blockipclause))
-				return preg_match('/^'.str_replace('\\*', '[0-9]+', preg_quote($blockipclause, '/')).'$/', $ip) > 0;
+			} elseif (strlen($blockipclause)){
+				if(filter_var($ip, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){
+					$ip=ipv6_expand($ip,true);
+					$blockipclause=ipv6_expand($blockipclause,true);
+				}
+				return preg_match('/^'.str_replace('\\*', '[0-9a-fA-F]+', preg_quote($blockipclause, '/')).'$/', $ip) > 0;
 					// preg_quote misses hyphens but that is OK here
+			}
 		}
 
 		return false;

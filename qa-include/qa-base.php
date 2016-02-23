@@ -202,6 +202,48 @@
 		if (QA_PASSWORD_HASH) {
 			require_once QA_INCLUDE_DIR.'vendor/password_compat.php';
 		}
+
+		// http://stackoverflow.com/a/18277167
+		function ipv6_numeric($ip) {
+			$binNum = '';
+			foreach (unpack('C*', @inet_pton($ip)) as $byte) {
+				$binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
+			}
+			return base_convert(ltrim($binNum, '0'), 2, 10);
+		}
+
+		// http://stackoverflow.com/a/12095836/753676
+		function ipv6_expand($ip){
+			$ipv6_wildcard = false;
+			$wildcards = '';
+			$wildcards_matched=array();
+			if(strpos($ip, "*")!==false){
+				$ipv6_wildcard = true;
+			}
+			if($ipv6_wildcard){
+				$wildcards = explode(":", $ip);
+				foreach($wildcards as $index => $value){
+					if($value == "*"){
+						$wildcards_matched[]=$index;
+						$wildcards[$index]="0";
+					}
+				}
+				$ip=implode($wildcards,":");
+			}
+
+			$hex = unpack("H*hex", @inet_pton($ip));
+			$ip = substr(preg_replace("/([A-f0-9]{4})/", "$1:", $hex['hex']), 0, -1);
+
+			if($ipv6_wildcard){
+				$wildcards = explode(":", $ip);
+				foreach($wildcards_matched as $index => $value){
+					$wildcards[$value]="*";
+				}
+				$ip=implode($wildcards,":");
+			}
+
+			return $ip;
+		}
 	}
 
 

@@ -86,7 +86,7 @@
 			$message['content']=qa_lang_html('users/registered_label').' '.
 				strtr(qa_lang_html('users/x_ago_from_y'), array(
 					'^1' => qa_time_to_string(qa_opt('db_time')-$user['created']),
-					'^2' => qa_ip_anchor_html($user['createip']),
+					'^2' => qa_ip_anchor_html(@inet_ntop($user['createip'])),
 				)).'<br/>';
 
 			$htmlemail=qa_html($user['email']);
