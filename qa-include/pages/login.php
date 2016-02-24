@@ -68,7 +68,7 @@
 					$inuserid=$matchusers[0];
 					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
-					$legacyPassOk = strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck']);
+					$legacyPassOk = hash_equals(strtolower($userinfo['passcheck']), strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])));
 
 					if (QA_PASSWORD_HASH) {
 						$haspassword = isset($userinfo['passhash']);
