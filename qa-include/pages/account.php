@@ -210,7 +210,7 @@
 
 			else {
 				$errors = array();
-				$legacyPassError = strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])) != strtolower($useraccount['passcheck']);
+				$legacyPassError = !hash_equals(strtolower($useraccount['passcheck']), strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])));
 
 				if (QA_PASSWORD_HASH) {
 					$passError = !password_verify($inoldpassword,$useraccount['passhash']);
