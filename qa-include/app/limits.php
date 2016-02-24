@@ -191,8 +191,8 @@
 				if ( filter_var($matches[1], FILTER_VALIDATE_IP) && filter_var($matches[2], FILTER_VALIDATE_IP) ) {
 					if(filter_var($ip, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){
 						$ip=ipv6_expand($ip);
-						$matches[1]=ipv6_expand($matches[1],true);
-						$matches[2]=ipv6_expand($matches[2],true);
+						$matches[1]=ipv6_expand($matches[1]);
+						$matches[2]=ipv6_expand($matches[2]);
 					}
 					$iplong=ipv6_numeric($ip);
 					$end1long=ipv6_numeric($matches[1]);
@@ -201,8 +201,8 @@
 				}
 			} elseif (strlen($blockipclause)){
 				if(filter_var($ip, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){
-					$ip=ipv6_expand($ip,true);
-					$blockipclause=ipv6_expand($blockipclause,true);
+					$ip=ipv6_expand($ip);
+					$blockipclause=ipv6_expand($blockipclause);
 				}
 				return preg_match('/^'.str_replace('\\*', '[0-9a-fA-F]+', preg_quote($blockipclause, '/')).'$/', $ip) > 0;
 					// preg_quote misses hyphens but that is OK here
