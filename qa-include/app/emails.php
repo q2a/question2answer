@@ -142,8 +142,18 @@
 			$mailer->Host=qa_opt('smtp_address');
 			$mailer->Port=qa_opt('smtp_port');
 
-			if (qa_opt('smtp_secure'))
+			if (qa_opt('smtp_secure')){
 				$mailer->SMTPSecure=qa_opt('smtp_secure');
+			}
+			else {
+				$mailer->SMTPOptions=array(
+					'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+					)
+				);
+			}
 
 			if (qa_opt('smtp_authenticate')) {
 				$mailer->SMTPAuth=true;
@@ -152,7 +162,11 @@
 			}
 		}
 
-		return $mailer->Send();
+		$send_status = $mailer->Send();
+		if(!$send_status){
+			@error_log('PHP Question2Answer email send error: '.$mailer->ErrorInfo);
+		}
+		return $send_status;
 	}
 
 
