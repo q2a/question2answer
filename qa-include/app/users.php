@@ -367,7 +367,7 @@
 				$sessionuserid=@$_SESSION['qa_session_userid_'.$suffix];
 
 				if (isset($sessionuserid)) // check verify code matches
-					if (@$_SESSION['qa_session_verify_'.$suffix] != qa_session_verify_code($sessionuserid))
+					if (!hash_equals(qa_session_verify_code($sessionuserid), @$_SESSION['qa_session_verify_'.$suffix]))
 						qa_clear_session_user();
 
 				if (!empty($_COOKIE['qa_session'])) {
@@ -1178,7 +1178,7 @@ in a category for which they have elevated privileges).
 				}
 
 				if (empty($silentproblems) && empty($reportproblems))
-					if (strtolower(qa_calc_form_security_hash($action, $timestamp))!=strtolower($hash))
+					if (!hash_equals(strtolower(qa_calc_form_security_hash($action, $timestamp)), strtolower($hash)))
 						$reportproblems[]='code mismatch';
 
 			} else
