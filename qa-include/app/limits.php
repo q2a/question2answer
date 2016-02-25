@@ -197,16 +197,7 @@ function qa_block_ip_match($ip, $blockipclause)
 	if (filter_var($ip, FILTER_VALIDATE_IP)) {
 		if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
 			if (filter_var($matches[1], FILTER_VALIDATE_IP) && filter_var($matches[2], FILTER_VALIDATE_IP)) {
-				if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-					$ip = qa_ipv6_expand($ip);
-					$matches[1] = qa_ipv6_expand($matches[1]);
-					$matches[2] = qa_ipv6_expand($matches[2]);
-				}
-				$iplong = qa_ipv6_numeric($ip);
-				$end1long = qa_ipv6_numeric($matches[1]);
-				$end2long = qa_ipv6_numeric($matches[2]);
-
-				return ($iplong >= $end1long && $iplong <= $end2long) || ($iplong >= $end2long && $iplong <= $end1long);
+				return qa_ip_between($ip, $matches[1], $matches[2]);
 			}
 		} elseif (strlen($blockipclause)) {
 			if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
@@ -223,17 +214,28 @@ function qa_block_ip_match($ip, $blockipclause)
 }
 
 /**
- * Convert an IPv6 address to its numeric representation. Based on http://stackoverflow.com/a/18277167/37947
- * @param string $ip The IP address to convert
- * @return string
+ * Check if IP falls between two others.
+ * @param $ip
+ * @param $startip
+ * @param $endip
+ * @return bool
  */
-function qa_ipv6_numeric($ip)
+function qa_ip_between($ip, $startip, $endip)
 {
-	$binNum = '';
-	foreach (unpack('C*', @inet_pton($ip)) as $byte) {
-		$binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
+	$uip = unpack('C*', @inet_pton($ip));
+	$ustartip = unpack('C*', @inet_pton($startip));
+	$uendip = unpack('C*', @inet_pton($endip));
+
+	if (count($uip) != count($ustartip) || count($uip) != count($uendip))
+		return false;
+
+	foreach ($uip as $i=>$byte) {
+		if ($byte < $ustartip[$i] || $byte > $uendip[$i]) {
+			return false;
+		}
 	}
-	return base_convert(ltrim($binNum, '0'), 2, 10);
+
+	return true;
 }
 
 /**
