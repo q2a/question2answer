@@ -20,280 +20,291 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
+
+
+define('QA_LIMIT_QUESTIONS', 'Q');
+define('QA_LIMIT_ANSWERS', 'A');
+define('QA_LIMIT_COMMENTS', 'C');
+define('QA_LIMIT_VOTES', 'V');
+define('QA_LIMIT_REGISTRATIONS', 'R');
+define('QA_LIMIT_LOGINS', 'L');
+define('QA_LIMIT_UPLOADS', 'U');
+define('QA_LIMIT_FLAGS', 'F');
+define('QA_LIMIT_MESSAGES', 'M'); // i.e. private messages
+define('QA_LIMIT_WALL_POSTS', 'W');
+
+
+/**
+ * How many more times the logged in user (and requesting IP address) can perform an action this hour.
+ * @param string $action One of the QA_LIMIT_* constants defined above.
+ * @return int
+ */
+function qa_user_limits_remaining($action)
+{
+	$userlimits = qa_db_get_pending_result('userlimits', qa_db_user_limits_selectspec(qa_get_logged_in_userid()));
+	$iplimits = qa_db_get_pending_result('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
+
+	return qa_limits_calc_remaining($action, @$userlimits[$action], @$iplimits[$action]);
+}
+
+/**
+ * Return how many more times user $userid and/or the requesting IP can perform $action (a QA_LIMIT_* constant) this hour.
+ * @deprecated Deprecated from 1.6.0; use `qa_user_limits_remaining($action)` instead.
+ * @param int $userid
+ * @param string $action
+ * @return mixed
+ */
+function qa_limits_remaining($userid, $action)
+{
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	require_once QA_INCLUDE_DIR . 'db/limits.php';
+
+	$dblimits = qa_db_limits_get($userid, qa_remote_ip_address(), $action);
+
+	return qa_limits_calc_remaining($action, @$dblimits['user'], @$dblimits['ip']);
+}
+
+/**
+ * Calculate how many more times an action can be performed this hour by the user/IP.
+ * @param string $action One of the QA_LIMIT_* constants defined above.
+ * @param array $userlimits Limits for the user.
+ * @param array $iplimits Limits for the requesting IP.
+ * @return mixed
+ */
+function qa_limits_calc_remaining($action, $userlimits, $iplimits)
+{
+	switch ($action) {
+		case QA_LIMIT_QUESTIONS:
+			$usermax = qa_opt('max_rate_user_qs');
+			$ipmax = qa_opt('max_rate_ip_qs');
+			break;
+
+		case QA_LIMIT_ANSWERS:
+			$usermax = qa_opt('max_rate_user_as');
+			$ipmax = qa_opt('max_rate_ip_as');
+			break;
+
+		case QA_LIMIT_COMMENTS:
+			$usermax = qa_opt('max_rate_user_cs');
+			$ipmax = qa_opt('max_rate_ip_cs');
+			break;
+
+		case QA_LIMIT_VOTES:
+			$usermax = qa_opt('max_rate_user_votes');
+			$ipmax = qa_opt('max_rate_ip_votes');
+			break;
+
+		case QA_LIMIT_REGISTRATIONS:
+			$usermax = 1; // not really relevant
+			$ipmax = qa_opt('max_rate_ip_registers');
+			break;
+
+		case QA_LIMIT_LOGINS:
+			$usermax = 1; // not really relevant
+			$ipmax = qa_opt('max_rate_ip_logins');
+			break;
+
+		case QA_LIMIT_UPLOADS:
+			$usermax = qa_opt('max_rate_user_uploads');
+			$ipmax = qa_opt('max_rate_ip_uploads');
+			break;
+
+		case QA_LIMIT_FLAGS:
+			$usermax = qa_opt('max_rate_user_flags');
+			$ipmax = qa_opt('max_rate_ip_flags');
+			break;
+
+		case QA_LIMIT_MESSAGES:
+		case QA_LIMIT_WALL_POSTS:
+			$usermax = qa_opt('max_rate_user_messages');
+			$ipmax = qa_opt('max_rate_ip_messages');
+			break;
+
+		default:
+			qa_fatal_error('Unknown limit code in qa_limits_calc_remaining: ' . $action);
+			break;
 	}
 
+	$period = (int)(qa_opt('db_time') / 3600);
 
-	define('QA_LIMIT_QUESTIONS', 'Q');
-	define('QA_LIMIT_ANSWERS', 'A');
-	define('QA_LIMIT_COMMENTS', 'C');
-	define('QA_LIMIT_VOTES', 'V');
-	define('QA_LIMIT_REGISTRATIONS', 'R');
-	define('QA_LIMIT_LOGINS', 'L');
-	define('QA_LIMIT_UPLOADS', 'U');
-	define('QA_LIMIT_FLAGS', 'F');
-	define('QA_LIMIT_MESSAGES', 'M'); // i.e. private messages
-	define('QA_LIMIT_WALL_POSTS', 'W');
+	return max(0, min(
+		$usermax - ((@$userlimits['period'] == $period) ? $userlimits['count'] : 0),
+		$ipmax - ((@$iplimits['period'] == $period) ? $iplimits['count'] : 0)
+	));
+}
 
+/**
+ * Determine whether the requesting IP address has been blocked from write operations.
+ * @return bool
+ */
+function qa_is_ip_blocked()
+{
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	function qa_user_limits_remaining($action)
-/*
-	Return how many more times the logged in user (and requesting IP address) can perform $action this hour,
-	where $action is one of the QA_LIMIT_* constants defined above.
-*/
-	{
-		$userlimits=qa_db_get_pending_result('userlimits', qa_db_user_limits_selectspec(qa_get_logged_in_userid()));
-		$iplimits=qa_db_get_pending_result('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
+	global $qa_curr_ip_blocked;
 
-		return qa_limits_calc_remaining($action, @$userlimits[$action], @$iplimits[$action]);
-	}
-
-
-	/**
-	 * Return how many more times user $userid and/or the requesting IP can perform $action (a QA_LIMIT_* constant) this hour.
-	 *
-	 * @deprecated Deprecated from 1.6.0; use `qa_user_limits_remaining($action)` instead.
-	 */
-	function qa_limits_remaining($userid, $action)
-	{
-		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		require_once QA_INCLUDE_DIR.'db/limits.php';
-
-		$dblimits=qa_db_limits_get($userid, qa_remote_ip_address(), $action);
-
-		return qa_limits_calc_remaining($action, @$dblimits['user'], @$dblimits['ip']);
-	}
-
-
-	function qa_limits_calc_remaining($action, $userlimits, $iplimits)
-/*
-	Calculate how many more times $action can be performed this hour, based on $userlimits and $iplimits retrieved from the database
-*/
-	{
-		switch ($action) {
-			case QA_LIMIT_QUESTIONS:
-				$usermax=qa_opt('max_rate_user_qs');
-				$ipmax=qa_opt('max_rate_ip_qs');
-				break;
-
-			case QA_LIMIT_ANSWERS:
-				$usermax=qa_opt('max_rate_user_as');
-				$ipmax=qa_opt('max_rate_ip_as');
-				break;
-
-			case QA_LIMIT_COMMENTS:
-				$usermax=qa_opt('max_rate_user_cs');
-				$ipmax=qa_opt('max_rate_ip_cs');
-				break;
-
-			case QA_LIMIT_VOTES:
-				$usermax=qa_opt('max_rate_user_votes');
-				$ipmax=qa_opt('max_rate_ip_votes');
-				break;
-
-			case QA_LIMIT_REGISTRATIONS:
-				$usermax=1; // not really relevant
-				$ipmax=qa_opt('max_rate_ip_registers');
-				break;
-
-			case QA_LIMIT_LOGINS:
-				$usermax=1; // not really relevant
-				$ipmax=qa_opt('max_rate_ip_logins');
-				break;
-
-			case QA_LIMIT_UPLOADS:
-				$usermax=qa_opt('max_rate_user_uploads');
-				$ipmax=qa_opt('max_rate_ip_uploads');
-				break;
-
-			case QA_LIMIT_FLAGS:
-				$usermax=qa_opt('max_rate_user_flags');
-				$ipmax=qa_opt('max_rate_ip_flags');
-				break;
-
-			case QA_LIMIT_MESSAGES:
-			case QA_LIMIT_WALL_POSTS:
-				$usermax=qa_opt('max_rate_user_messages');
-				$ipmax=qa_opt('max_rate_ip_messages');
-				break;
-
-			default:
-				qa_fatal_error('Unknown limit code in qa_limits_calc_remaining: '.$action);
-				break;
-		}
-
-		$period=(int)(qa_opt('db_time')/3600);
-
-		return max(0, min(
-			$usermax-((@$userlimits['period']==$period) ? $userlimits['count'] : 0),
-			$ipmax-((@$iplimits['period']==$period) ? $iplimits['count'] : 0)
-		));
-	}
-
-
-	/**
-	 * Determine whether the requesting IP address has been blocked from write operations.
-	 * @return bool
-	 */
-	function qa_is_ip_blocked()
-	{
-		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		global $qa_curr_ip_blocked;
-
-		// return cached value early
-		if (isset($qa_curr_ip_blocked))
-			return $qa_curr_ip_blocked;
-
-		$qa_curr_ip_blocked = false;
-		$blockipclauses = qa_block_ips_explode(qa_opt('block_ips_write'));
-		$ip = qa_remote_ip_address();
-
-		foreach ($blockipclauses as $blockipclause) {
-			if (qa_block_ip_match($ip, $blockipclause)) {
-				$qa_curr_ip_blocked = true;
-				break;
-			}
-		}
-
+	// return cached value early
+	if (isset($qa_curr_ip_blocked))
 		return $qa_curr_ip_blocked;
-	}
 
+	$qa_curr_ip_blocked = false;
+	$blockipclauses = qa_block_ips_explode(qa_opt('block_ips_write'));
+	$ip = qa_remote_ip_address();
 
-	function qa_block_ips_explode($blockipstring)
-/*
-	Return an array of the clauses within $blockipstring, each of which can contain hyphens or asterisks
-*/
-	{
-		$blockipstring=preg_replace('/\s*\-\s*/', '-', $blockipstring); // special case for 'x.x.x.x - x.x.x.x'
-
-		return preg_split('/[^0-9a-f\.:\-\*]/', $blockipstring, -1, PREG_SPLIT_NO_EMPTY);
-	}
-
-
-	function qa_block_ip_match($ip, $blockipclause)
-/*
-	Returns whether the ip address $ip is matched by the clause $blockipclause, which can contain a hyphen or asterisk
-*/
-	{
-		// check if the input parameters use the same IP version
-		if (
-			((strpos($ip, ".")!==false) && (strpos($blockipclause, ".")==false)) ||
-			((strpos($ip, ".")==false) && (strpos($blockipclause, ".")!==false))
-		)
-	       return false;
-
-		if (filter_var($ip, FILTER_VALIDATE_IP)) {
-			if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
-				if ( filter_var($matches[1], FILTER_VALIDATE_IP) && filter_var($matches[2], FILTER_VALIDATE_IP) ) {
-					if(filter_var($ip, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){
-						$ip=ipv6_expand($ip);
-						$matches[1]=ipv6_expand($matches[1]);
-						$matches[2]=ipv6_expand($matches[2]);
-					}
-					$iplong=ipv6_numeric($ip);
-					$end1long=ipv6_numeric($matches[1]);
-					$end2long=ipv6_numeric($matches[2]);
-					return (($iplong>=$end1long) && ($iplong<=$end2long)) || (($iplong>=$end2long) && ($iplong<=$end1long));
-				}
-			} elseif (strlen($blockipclause)){
-				if(filter_var($ip, FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){
-					$ip=ipv6_expand($ip);
-					$blockipclause=ipv6_expand($blockipclause);
-				}
-				return preg_match('/^'.str_replace('\\*', '([0-9A-Fa-f]+)', preg_quote($blockipclause, '/')).'$/', $ip) > 0;
-					// preg_quote misses hyphens but that is OK here
-			}
+	foreach ($blockipclauses as $blockipclause) {
+		if (qa_block_ip_match($ip, $blockipclause)) {
+			$qa_curr_ip_blocked = true;
+			break;
 		}
+	}
 
+	return $qa_curr_ip_blocked;
+}
+
+/**
+ * Return an array of the clauses within $blockipstring, each of which can contain hyphens or asterisks
+ * @param $blockipstring
+ * @return array
+ */
+function qa_block_ips_explode($blockipstring)
+{
+	$blockipstring = preg_replace('/\s*\-\s*/', '-', $blockipstring); // special case for 'x.x.x.x - x.x.x.x'
+
+	return preg_split('/[^0-9A-Fa-f\.:\-\*]/', $blockipstring, -1, PREG_SPLIT_NO_EMPTY);
+}
+
+/**
+ * Checks if the IP address is matched by the individual block clause, which can contain a hyphen or asterisk
+ * @param string $ip The IP address
+ * @param string $blockipclause The IP/clause to check against, e.g. 127.0.0.*
+ * @return bool
+ */
+function qa_block_ip_match($ip, $blockipclause)
+{
+	// check if the input parameters use the same IP version
+	if (
+		(strpos($ip, ".") !== false && strpos($blockipclause, ".") === false) ||
+		(strpos($ip, ".") === false && strpos($blockipclause, ".") !== false)
+	) {
 		return false;
 	}
 
-
-	/**
-	 * Convert an IPv6 address to its numeric representation. Based on http://stackoverflow.com/a/18277167/37947
-	 * @param string $ip The IP address to convert
-	 * @return string
-	 */
-	function qa_ipv6_numeric($ip)
-	{
-		$binNum = '';
-		foreach (unpack('C*', @inet_pton($ip)) as $byte) {
-			$binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
-		}
-		return base_convert(ltrim($binNum, '0'), 2, 10);
-	}
-
-	/**
-	 * Expands an IPv6 address (possibly containing wildcards), e.g. ::ffff:1 to 0000:0000:0000:0000:0000:0000:ffff:0001.
-	 * Based on http://stackoverflow.com/a/12095836/753676
-	 * @param string $ip The IP address to expand.
-	 * @return string
-	 */
-	function qa_ipv6_expand($ip)
-	{
-		$ipv6_wildcard = false;
-		$wildcards = '';
-		$wildcards_matched = array();
-		if (strpos($ip, "*") !== false) {
-			$ipv6_wildcard = true;
-		}
-		if ($ipv6_wildcard) {
-			$wildcards = explode(":", $ip);
-			foreach ($wildcards as $index => $value) {
-				if ($value == "*") {
-					$wildcards_matched[] = count($wildcards) - 1 - $index;
-					$wildcards[$index] = "0";
+	if (filter_var($ip, FILTER_VALIDATE_IP)) {
+		if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
+			if (filter_var($matches[1], FILTER_VALIDATE_IP) && filter_var($matches[2], FILTER_VALIDATE_IP)) {
+				if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+					$ip = qa_ipv6_expand($ip);
+					$matches[1] = qa_ipv6_expand($matches[1]);
+					$matches[2] = qa_ipv6_expand($matches[2]);
 				}
+				$iplong = qa_ipv6_numeric($ip);
+				$end1long = qa_ipv6_numeric($matches[1]);
+				$end2long = qa_ipv6_numeric($matches[2]);
+
+				return ($iplong >= $end1long && $iplong <= $end2long) || ($iplong >= $end2long && $iplong <= $end1long);
 			}
-			$ip = implode($wildcards, ":");
-		}
-
-		$hex = unpack("H*hex", @inet_pton($ip));
-		$ip = substr(preg_replace("/([0-9A-Fa-f]{4})/", "$1:", $hex['hex']), 0, -1);
-
-		if ($ipv6_wildcard) {
-			$wildcards = explode(":", $ip);
-			foreach ($wildcards_matched as $value) {
-				$i = count($wildcards) - 1 - $value;
-				$wildcards[$i] = "*";
+		} elseif (strlen($blockipclause)) {
+			if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$ip = qa_ipv6_expand($ip);
+				$blockipclause = qa_ipv6_expand($blockipclause);
 			}
-			$ip = implode($wildcards, ":");
-		}
 
-		return $ip;
+			// preg_quote misses hyphens but that is OK here
+			return preg_match('/^' . str_replace('\\*', '([0-9A-Fa-f]+)', preg_quote($blockipclause, '/')) . '$/', $ip) > 0;
+		}
 	}
 
+	return false;
+}
 
-	function qa_report_write_action($userid, $cookieid, $action, $questionid, $answerid, $commentid)
-/*
-	Called after a database write $action performed by a user identified by $userid and/or $cookieid.
-*/
-	{}
+/**
+ * Convert an IPv6 address to its numeric representation. Based on http://stackoverflow.com/a/18277167/37947
+ * @param string $ip The IP address to convert
+ * @return string
+ */
+function qa_ipv6_numeric($ip)
+{
+	$binNum = '';
+	foreach (unpack('C*', @inet_pton($ip)) as $byte) {
+		$binNum .= str_pad(decbin($byte), 8, "0", STR_PAD_LEFT);
+	}
+	return base_convert(ltrim($binNum, '0'), 2, 10);
+}
 
-
-	function qa_limits_increment($userid, $action)
-/*
-	Take note for rate limits that user $userid and/or the requesting IP just performed $action,
-	where $action is one of the QA_LIMIT_* constants defined above.
-*/
-	{
-		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		require_once QA_INCLUDE_DIR.'db/limits.php';
-
-		$period=(int)(qa_opt('db_time')/3600);
-
-		if (isset($userid))
-			qa_db_limits_user_add($userid, $action, $period, 1);
-
-		qa_db_limits_ip_add(qa_remote_ip_address(), $action, $period, 1);
+/**
+ * Expands an IPv6 address (possibly containing wildcards), e.g. ::ffff:1 to 0000:0000:0000:0000:0000:0000:ffff:0001.
+ * Based on http://stackoverflow.com/a/12095836/753676
+ * @param string $ip The IP address to expand.
+ * @return string
+ */
+function qa_ipv6_expand($ip)
+{
+	$ipv6_wildcard = false;
+	$wildcards = '';
+	$wildcards_matched = array();
+	if (strpos($ip, "*") !== false) {
+		$ipv6_wildcard = true;
+	}
+	if ($ipv6_wildcard) {
+		$wildcards = explode(":", $ip);
+		foreach ($wildcards as $index => $value) {
+			if ($value == "*") {
+				$wildcards_matched[] = count($wildcards) - 1 - $index;
+				$wildcards[$index] = "0";
+			}
+		}
+		$ip = implode($wildcards, ":");
 	}
 
+	$hex = unpack("H*hex", @inet_pton($ip));
+	$ip = substr(preg_replace("/([0-9A-Fa-f]{4})/", "$1:", $hex['hex']), 0, -1);
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+	if ($ipv6_wildcard) {
+		$wildcards = explode(":", $ip);
+		foreach ($wildcards_matched as $value) {
+			$i = count($wildcards) - 1 - $value;
+			$wildcards[$i] = "*";
+		}
+		$ip = implode($wildcards, ":");
+	}
+
+	return $ip;
+}
+
+/**
+ * Called after a database write $action performed by a user identified by $userid and/or $cookieid.
+ * @param int $userid
+ * @param string $cookieid
+ * @param string $action
+ * @param int $questionid
+ * @param int $answerid
+ * @param int $commentid
+ */
+function qa_report_write_action($userid, $cookieid, $action, $questionid, $answerid, $commentid)
+{
+}
+
+/**
+ * Take note for rate limits that a user and/or the requesting IP just performed an action.
+ * @param int $userid User performing the action.
+ * @param string $action One of the QA_LIMIT_* constants defined above.
+ * @return mixed
+ */
+function qa_limits_increment($userid, $action)
+{
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	require_once QA_INCLUDE_DIR . 'db/limits.php';
+
+	$period = (int)(qa_opt('db_time') / 3600);
+
+	if (isset($userid))
+		qa_db_limits_user_add($userid, $action, $period, 1);
+
+	qa_db_limits_ip_add(qa_remote_ip_address(), $action, $period, 1);
+}
