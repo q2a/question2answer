@@ -204,7 +204,7 @@
 					$ip=ipv6_expand($ip);
 					$blockipclause=ipv6_expand($blockipclause);
 				}
-				return preg_match('/^'.str_replace('\\*', '[0-9a-fA-F]+', preg_quote($blockipclause, '/')).'$/', $ip) > 0;
+				return preg_match('/^'.str_replace('\\*', '([0-9A-Fa-f]+)', preg_quote($blockipclause, '/')).'$/', $ip) > 0;
 					// preg_quote misses hyphens but that is OK here
 			}
 		}

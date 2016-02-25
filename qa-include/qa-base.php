@@ -246,7 +246,7 @@
 			}
 
 			$hex = unpack("H*hex", @inet_pton($ip));
-			$ip = substr(preg_replace("/([A-f0-9]{4})/", "$1:", $hex['hex']), 0, -1);
+			$ip = substr(preg_replace("/([0-9A-Fa-f]{4})/", "$1:", $hex['hex']), 0, -1);
 
 			if($ipv6_wildcard){
 				$wildcards = explode(":", $ip);
