@@ -24,7 +24,7 @@ class AppLimitsTest extends PHPUnit_Framework_TestCase
 		$ipv6_range3 = '::ffff:7f00:0001-0:0:0:0:0:ffff:7f00:0099';
 		$ipv6_wildcard1 = '::ffff:7f00:*';
 		$ipv6_wildcard2 = '::ffff:7e99:*';
-		$ipv6_wildcard3 = '::*:7f00:*';
+		$ipv6_wildcard3 = '::ffff:*:*';
 
 		// check mixed types
 		$this->assertSame(false, qa_block_ip_match($ipv4b, $ipv6), 'Mixed IP types');

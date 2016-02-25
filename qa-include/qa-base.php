@@ -238,7 +238,7 @@
 				$wildcards = explode(":", $ip);
 				foreach($wildcards as $index => $value){
 					if($value == "*"){
-						$wildcards_matched[]=$index;
+						$wildcards_matched[]=count($wildcards)-1-$index;
 						$wildcards[$index]="0";
 					}
 				}
@@ -250,8 +250,9 @@
 
 			if($ipv6_wildcard){
 				$wildcards = explode(":", $ip);
-				foreach($wildcards_matched as $index => $value){
-					$wildcards[$value]="*";
+				foreach($wildcards_matched as $value){
+					$i = count($wildcards)-1-$value;
+					$wildcards[$i]="*";
 				}
 				$ip=implode($wildcards,":");
 			}
