@@ -86,6 +86,15 @@
 */
 
 /*
+	If you wish to use caching, you must define QA_CACHE_DIRECTORY to store the cache files. The
+	directory must be writable by the web server. It also must be OUTSIDE the public root. For
+	example if your site resides in '/var/www/yoursite/public_html', then the cache directory could
+	be '/var/www/yoursite/qa-cache', but it cannot be '/var/www/yoursite/public_html/qa-cache'.
+
+	define('QA_CACHE_DIRECTORY', '/path/to/writable_cache_directory/');
+*/
+
+/*
 	If you wish, you can define QA_COOKIE_DOMAIN so that any cookies created by Q2A are assigned
 	to a specific domain name, instead of the full domain name of the request by default. This is
 	useful if you're running multiple Q2A sites on subdomains with a shared user base.

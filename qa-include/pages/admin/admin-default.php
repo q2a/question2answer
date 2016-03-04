@@ -32,6 +32,8 @@
 	require_once QA_INCLUDE_DIR.'app/admin.php';
 
 
+//	Pages handled by this controller: general, emails, users, layout, viewing, lists, posting, permissions, feeds, spam, caching, mailing
+
 	$adminsection = strtolower(qa_request_part(1));
 
 
@@ -71,6 +73,8 @@
 		'avatar_q_page_q_size' => 'number',
 		'avatar_store_size' => 'number',
 		'avatar_users_size' => 'number',
+		'caching_q_time' => 'number',
+		'caching_qlist_time' => 'number',
 		'columns_tags' => 'number',
 		'columns_users' => 'number',
 		'feed_number_items' => 'number',
@@ -143,6 +147,7 @@
 		'avatar_allow_gravatar' => 'checkbox',
 		'avatar_allow_upload' => 'checkbox',
 		'avatar_default_show' => 'checkbox',
+		'caching_enabled' => 'checkbox',
 		'captcha_on_anon_post' => 'checkbox',
 		'captcha_on_feedback' => 'checkbox',
 		'captcha_on_register' => 'checkbox',
@@ -634,6 +639,19 @@
 
 			$checkboxtodisplay['moderate_notify_admin'] = $checkboxtodisplay['moderate_edited_again'];
 			$checkboxtodisplay['moderate_update_time'] = $checkboxtodisplay['moderate_edited_again'];
+			break;
+
+		case 'caching':
+			$subtitle = 'admin/caching_title';
+			$formstyle = 'wide';
+
+			$showoptions = array('caching_enabled', 'caching_q_time', 'caching_qlist_time');
+
+			$checkboxtodisplay = array(
+				'caching_q_time' => 'option_caching_enabled',
+				'caching_qlist_time' => 'option_caching_enabled',
+			);
+
 			break;
 
 		case 'mailing':
@@ -1530,6 +1548,11 @@
 				case 'mailing_per_minute':
 					$optionfield['suffix'] = qa_lang_html('admin/emails_per_minute');
 					break;
+
+				case 'caching_q_time':
+				case 'caching_qlist_time':
+					$optionfield['note'] = qa_lang_html_sub('main/x_minutes', '');
+				break;
 			}
 
 			if (isset($feedrequest) && $value)
@@ -1754,6 +1777,15 @@
 				$qa_content['form']['fields']['mailing_enabled']['note'] = qa_lang_html('admin/mailing_explanation');
 				$qa_content['form']['fields']['mailing_body']['rows'] = 12;
 				$qa_content['form']['fields']['mailing_body']['note'] = qa_lang_html('admin/mailing_unsubscribe');
+			}
+			break;
+
+		case 'caching':
+			$cacheManager = new Q2A_Storage_CacheManager;
+			if (!$cacheManager->isEnabled()) {
+				$cacheError = $cacheManager->getError();
+				if ($cacheError)
+					$qa_content['error'] = $cacheError;
 			}
 			break;
 	}
