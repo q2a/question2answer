@@ -150,6 +150,15 @@ else {
 				$success .= 'Your Question2Answer database has been created and integrated with your WordPress site.';
 
 			}
+			elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
+				require_once QA_INCLUDE_DIR.'db/admin.php';
+				require_once QA_INCLUDE_DIR.'app/format.php';
+				$jconfig = new JConfig();
+
+				// create link back to Joomla! home page (Joomla doesn't have a 'home' config setting we can use like WP does, so we'll just assume that the Joomla home is the parent of the Q2A site. If it isn't, the user can fix the link for themselves later)
+				qa_db_page_move(qa_db_page_create($jconfig->sitename, QA_PAGE_FLAGS_EXTERNAL, '../', null, null, null), 'O', 1);
+				$success .= 'Your Question2Answer database has been created and integrated with your Joomla! site.';
+			}
 			else {
 				$success .= 'Your Question2Answer database has been created for external user identity management. Please read the online documentation to complete integration.';
 			}
@@ -208,6 +217,10 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 			if (QA_FINAL_EXTERNAL_USERS) {
 				if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
 					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your WordPress site <a href=\"".qa_html(get_option('home'))."\" target=\"_blank\">".qa_html(get_option('blogname'))."</a>. Please consult the online documentation for more information.";
+				}
+				elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
+                    $jconfig = new JConfig();
+					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your Joomla! site <a href=\"../\" target=\"_blank\">".$jconfig->sitename."</a>. To complete the process, you will need to create a ensure that the QAIntegration plugin in Joomla is configured and enabled, and you will need to create a menu entry or a link in your Joomla site pointing to the URL for your Q2A installation. Please consult the online documentation for more information.";
 				}
 				else {
 					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with your existing user database and management. Users will be referenced with database column type ".qa_html(qa_get_mysql_user_column_type()).". Please consult the online documentation for more information.";

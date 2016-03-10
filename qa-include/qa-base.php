@@ -49,8 +49,14 @@
 	qa_initialize_php();
 	qa_initialize_constants_1();
 
-	if (defined('QA_WORDPRESS_LOAD_FILE')) // if relevant, load WordPress integration in global scope
+	if (defined('QA_WORDPRESS_LOAD_FILE')) {
+		// if relevant, load WordPress integration in global scope
 		require_once QA_WORDPRESS_LOAD_FILE;
+	}
+	elseif (defined('QA_JOOMLA_LOAD_FILE')) {
+		// if relevant, load Joomla JConfig class into global scope
+		require_once QA_JOOMLA_LOAD_FILE;
+	}
 
 	qa_initialize_constants_2();
 	qa_initialize_modularity();
@@ -147,7 +153,7 @@
 
 	function qa_initialize_constants_1()
 /*
-	First stage of setting up Q2A constants, before (if necessary) loading WordPress integration
+	First stage of setting up Q2A constants, before (if necessary) loading WordPress or Joomla! integration
 */
 	{
 		global $qa_request_map;
@@ -176,6 +182,16 @@
 
 			if (!is_readable(QA_WORDPRESS_LOAD_FILE))
 				qa_fatal_error('Could not find wp-load.php file for WordPress integration - please check QA_WORDPRESS_INTEGRATE_PATH in qa-config.php');
+		}
+		elseif (defined('QA_JOOMLA_INTEGRATE_PATH') && strlen(QA_JOOMLA_INTEGRATE_PATH)) {
+			define('QA_FINAL_JOOMLA_INTEGRATE_PATH', QA_JOOMLA_INTEGRATE_PATH.((substr(QA_JOOMLA_INTEGRATE_PATH, -1)=='/') ? '' : '/'));
+			define('QA_JOOMLA_LOAD_FILE', QA_FINAL_JOOMLA_INTEGRATE_PATH.'configuration.php');
+			define('QA_JOOMLA_PLUGIN_SSO_FILE', QA_FINAL_JOOMLA_INTEGRATE_PATH.'plugins/q2a/qaintegration/qa-external/qa-external-users.php');
+
+			if (!is_readable(QA_JOOMLA_LOAD_FILE))
+				qa_fatal_error('Could not find configuration.php file for Joomla integration - please check QA_JOOMLA_INTEGRATE_PATH in qa-config.php');
+			if (!is_readable(QA_JOOMLA_PLUGIN_SSO_FILE))
+				qa_fatal_error('Could not find Joomla Q2AIntegration plugin - please check that you have installed the plugin into your Joomla system.');
 		}
 
 		// Polyfills
@@ -221,7 +237,7 @@
 
 	function qa_initialize_constants_2()
 /*
-	Second stage of setting up Q2A constants, after (if necessary) loading WordPress integration
+	Second stage of setting up Q2A constants, after (if necessary) loading WordPress or Joomla! integration
 */
 	{
 
@@ -274,6 +290,14 @@
 			$_POST=qa_undo_wordpress_quoting($_POST, false);
 			$_SERVER['PHP_SELF']=stripslashes($_SERVER['PHP_SELF']);
 
+        } elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
+			//	More for Joomla integration
+			$jconfig = new JConfig();
+			define('QA_FINAL_MYSQL_HOSTNAME', $jconfig->host);
+			define('QA_FINAL_MYSQL_USERNAME', $jconfig->user);
+			define('QA_FINAL_MYSQL_PASSWORD', $jconfig->password);
+			define('QA_FINAL_MYSQL_DATABASE', $jconfig->db);
+			define('QA_FINAL_EXTERNAL_USERS', true);
 		} else {
 			define('QA_FINAL_MYSQL_HOSTNAME', QA_MYSQL_HOSTNAME);
 			define('QA_FINAL_MYSQL_USERNAME', QA_MYSQL_USERNAME);

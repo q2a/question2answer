@@ -22,6 +22,7 @@ Q2A is highly customisable with many awesome features:
 - Private messages and public wall posts.
 - Log in via Facebook or others (using plugins).
 - Out-of-the-box WordPress 3+ integration.
+- Out-of-the-box Joomla! 3.0+ integration (in conjunction with a Joomla! extension).
 - Custom single sign-on support for other sites.
 - PHP/MySQL scalable to millions of users and posts.
 - Safe from XSS, CSRF and SQL injection attacks.

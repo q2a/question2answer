@@ -56,11 +56,16 @@
 
 	//	If we're using single sign-on integration (WordPress or otherwise), load PHP file for that
 
-		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH'))
+		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
 			require_once QA_INCLUDE_DIR.'util/external-users-wp.php';
-		else
+		}
+		elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
+            //grab the integration file that is included as part of the Joomla plugin (we already confirmed that it exists).
+			require_once QA_JOOMLA_PLUGIN_SSO_FILE;
+		}
+		else {
 			require_once QA_EXTERNAL_DIR.'qa-external-users.php';
-
+        }
 
 	//	Access functions for user information
 
