@@ -2522,6 +2522,10 @@ input[type="submit"], button {
 		line-height: 1.71429em;
 	}
 
+	.qa-a-item-avatar-meta {
+		margin-top: 70px;
+	}
+
 	.qa-a-selection {
 		left: 100px;
 		top: 20px;
@@ -2529,7 +2533,7 @@ input[type="submit"], button {
 }
 @media (min-width: 980px) {
 	.qa-a-item-main {
-		float: left;
+		float: right;
 		margin: 0 0 0 20px;
 		width: 86%;
 	}
