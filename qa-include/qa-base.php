@@ -1545,6 +1545,11 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+		// ensure we're fetching a remote URL
+		if (!preg_match('#^https?://#', $url)) {
+			return '';
+		}
+
 		$contents=@file_get_contents($url);
 
 		if ((!strlen($contents)) && function_exists('curl_exec')) { // try curl as a backup (if allow_url_fopen not set)

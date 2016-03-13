@@ -21,6 +21,12 @@
 */
 
 	require_once QA_INCLUDE_DIR.'app/admin.php';
+	require_once QA_INCLUDE_DIR.'app/users.php';
+
+	if (qa_get_logged_in_level() < QA_USER_LEVEL_ADMIN) {
+		echo "QA_AJAX_RESPONSE\n0\n" . qa_lang_html('admin/no_privileges');
+		return;
+	}
 
 	$uri = qa_post_text('uri');
 	$version = qa_post_text('version');
