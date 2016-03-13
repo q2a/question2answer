@@ -535,17 +535,21 @@
 	}
 
 	/**
-	 * Removes 4-byte Unicode characters (e.g. emoji) from a string due to missing support in MySQL < 5.5.3.
+	 * Replace 4-byte Unicode characters (e.g. emoji) with HTML entitles due to missing support in MySQL < 5.5.3.
+	 * Thanks to http://stackoverflow.com/questions/34956163/htmlentites-not-working-for-emoji/35063933
 	 * @param  string $string
 	 * @return string
 	 */
 	function qa_remove_utf8mb4($string)
 	{
-		return preg_replace('%(?:
+		return preg_replace_callback('%(?:
 			  \xF0[\x90-\xBF][\x80-\xBF]{2}  # planes 1-3
 			| [\xF1-\xF3][\x80-\xBF]{3}      # planes 4-15
 			| \xF4[\x80-\x8F][\x80-\xBF]{2}  # plane 16
-			)%xs', '', $string);
+			)%xs', function ($m) {
+				$utf = iconv('UTF-8', 'UCS-4', current($m));
+				return sprintf("&#x%s;", ltrim(strtoupper(bin2hex($utf)), "0"));
+			}, $string);
 	}
 
 
