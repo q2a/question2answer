@@ -25,32 +25,73 @@
  */
 class Q2A_Storage_CacheManager
 {
+	private static $instance;
 	private $enabled = false;
-	private $error = '';
-	private $dir;
+	private $cacheDriver;
 
 	/**
-	 * Creates a new CacheManager instance and checks it's set up properly.
+	 * Creates a new CacheManager instance and sets up the cache driver.
 	 */
-	public function __construct()
+	private function __construct()
 	{
 		$optEnabled = qa_opt('caching_enabled') == 1;
 
-		if (defined('QA_CACHE_DIRECTORY')) {
-			// expand symlinks so we compare true paths
-			$this->dir = realpath(QA_CACHE_DIRECTORY);
-			$baseDir = realpath(QA_BASE_DIR);
+		$config = array(
+			'dir' => defined('QA_CACHE_DIRECTORY') ? QA_CACHE_DIRECTORY : null,
+		);
 
-			if (!is_writable($this->dir)) {
-				$this->error = qa_lang_html_sub('admin/caching_dir_error', QA_CACHE_DIRECTORY);
-			} elseif (strpos($this->dir, $baseDir) === 0) {
-				$this->error = qa_lang_html_sub('admin/caching_dir_public', QA_CACHE_DIRECTORY);
-			}
+		$this->cacheDriver = new Q2A_Storage_FileCache($config);
+		$this->enabled = $optEnabled && $this->cacheDriver->isEnabled();
+	}
 
-			$this->enabled = empty($this->error) && $optEnabled;
-		} elseif ($optEnabled) {
-			$this->error = qa_lang_html('admin/caching_dir_missing');
+	/**
+	 * Initializes the class and returns the singleton.
+	 * @return Q2A_Storage_CacheManager
+	 */
+	public static function getInstance()
+	{
+		if (!isset(self::$instance)) {
+			self::$instance = new self();
 		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Get the cached data for the supplied key.
+	 * @param string $key The unique cache identifier
+	 * @return mixed The cached data, or null otherwise.
+	 */
+	public function get($key)
+	{
+		if ($this->enabled) {
+			$encData = $this->cacheDriver->get($key);
+
+			// retrieve data, ignoring any notices
+			$data = @unserialize($encData);
+			if ($data !== false) {
+				return $data;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Serialize some data and store it in the cache.
+	 * @param string $key The unique cache identifier
+	 * @param mixed $data The data to cache - must be scalar values (i.e. string, int, array).
+	 * @param int $ttl Number of minutes for which to cache the data.
+	 * @return bool Whether the data was successfully cached.
+	 */
+	public function set($key, $data, $ttl)
+	{
+		if ($this->enabled) {
+			$encData = serialize($data);
+			return $this->cacheDriver->set($key, $encData, $ttl);
+		}
+
+		return false;
 	}
 
 	/**
@@ -68,6 +109,6 @@ class Q2A_Storage_CacheManager
 	 */
 	public function getError()
 	{
-		return $this->error;
+		return isset($this->cacheDriver) ? $this->cacheDriver->getError() : '';
 	}
 }

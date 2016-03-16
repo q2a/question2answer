@@ -1781,12 +1781,9 @@
 			break;
 
 		case 'caching':
-			$cacheManager = new Q2A_Storage_CacheManager;
-			if (!$cacheManager->isEnabled()) {
-				$cacheError = $cacheManager->getError();
-				if ($cacheError)
-					$qa_content['error'] = $cacheError;
-			}
+			$cacheManager = Q2A_Storage_CacheManager::getInstance();
+			$qa_content['error'] = $cacheManager->getError();
+
 			break;
 	}
 
