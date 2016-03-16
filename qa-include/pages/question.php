@@ -37,21 +37,39 @@
 	$questionid=qa_request_part(0);
 	$userid=qa_get_logged_in_userid();
 	$cookieid=qa_cookie_get();
+	$pagestate=qa_get_state();
 
 
 //	Get information about this question
 
-	list($question, $childposts, $achildposts, $parentquestion, $closepost, $duplicateposts, $extravalue, $categories, $favorite) = qa_db_select_with_pending(
-		qa_db_full_post_selectspec($userid, $questionid),
-		qa_db_full_child_posts_selectspec($userid, $questionid),
-		qa_db_full_a_child_posts_selectspec($userid, $questionid),
-		qa_db_post_parent_q_selectspec($questionid),
-		qa_db_post_close_post_selectspec($questionid),
-		qa_db_post_duplicates_selectspec($questionid),
-		qa_db_post_meta_selectspec($questionid, 'qa_q_extra'),
-		qa_db_category_nav_selectspec($questionid, true, true, true),
-		isset($userid) ? qa_db_is_favorite_selectspec($userid, QA_ENTITY_QUESTION, $questionid) : null
-	);
+	$cacheHandler = Q2A_Storage_CacheManager::getInstance();
+	$cacheKey = "page:question:$questionid";
+	$useCache = $userid === null && $cacheHandler->isEnabled() && !qa_is_http_post() && empty($pagestate);
+	$saveCache = false;
+
+	if ($useCache) {
+		$questionData = $cacheHandler->get($cacheKey);
+	}
+
+	if (!isset($questionData)) {
+		$questionData = qa_db_select_with_pending(
+			qa_db_full_post_selectspec($userid, $questionid),
+			qa_db_full_child_posts_selectspec($userid, $questionid),
+			qa_db_full_a_child_posts_selectspec($userid, $questionid),
+			qa_db_post_parent_q_selectspec($questionid),
+			qa_db_post_close_post_selectspec($questionid),
+			qa_db_post_duplicates_selectspec($questionid),
+			qa_db_post_meta_selectspec($questionid, 'qa_q_extra'),
+			qa_db_category_nav_selectspec($questionid, true, true, true),
+			isset($userid) ? qa_db_is_favorite_selectspec($userid, QA_ENTITY_QUESTION, $questionid) : null
+		);
+
+		// whether to save the cache (actioned below, after basic checks)
+		$saveCache = $useCache;
+	}
+
+	list($question, $childposts, $achildposts, $parentquestion, $closepost, $duplicateposts, $extravalue, $categories, $favorite) = $questionData;
+
 
 	if ($question['basetype']!='Q') // don't allow direct viewing of other types of post
 		$question=null;
@@ -135,6 +153,13 @@
 	}
 
 
+//	Save question data to cache
+
+	if ($saveCache) {
+		$cacheHandler->set($cacheKey, $questionData, qa_opt('caching_q_time'));
+	}
+
+
 //	Determine if captchas will be required
 
 	$captchareason=qa_user_captcha_reason(qa_user_level_for_post($question));
@@ -145,7 +170,6 @@
 //	This is in a separate file because it's a *lot* of logic, and will slow down ordinary page views
 
 	$pagestart=qa_get_start();
-	$pagestate=qa_get_state();
 	$showid=qa_get('show');
 	$pageerror=null;
 	$formtype=null;
