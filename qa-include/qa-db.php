@@ -479,6 +479,18 @@
 	 */
 	function qa_db_single_select($selectspec)
 	{
+		// check for cached results
+		if (isset($selectspec['caching'])) {
+			$cacheHandler = Q2A_Storage_CacheManager::getInstance();
+			$cacheKey = 'query:' . $selectspec['caching']['key'];
+
+			if ($cacheHandler->isEnabled()) {
+				$queryData = $cacheHandler->get($cacheKey);
+				if ($queryData !== null)
+					return $queryData;
+			}
+		}
+
 		$query = 'SELECT ';
 
 		foreach ($selectspec['columns'] as $columnas => $columnfrom)
@@ -490,6 +502,13 @@
 		), @$selectspec['arraykey']); // arrayvalue is applied in qa_db_post_select()
 
 		qa_db_post_select($results, $selectspec); // post-processing
+
+		// save cached results
+		if (isset($selectspec['caching'])) {
+			if ($cacheHandler->isEnabled()) {
+				$cacheHandler->set($cacheKey, $results, $selectspec['caching']['ttl']);
+			}
+		}
 
 		return $results;
 	}
