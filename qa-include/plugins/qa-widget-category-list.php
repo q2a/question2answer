@@ -42,7 +42,12 @@ class qa_category_list
 			$nav = $qa_content['navigation']['cat'];
 		}
 		else {
-			$navcategories = qa_db_single_select(qa_db_category_nav_selectspec(null, true, false, true));
+			$selectspec = qa_db_category_nav_selectspec(null, true, false, true);
+			$selectspec['caching'] = array(
+				'key' => 'qa_db_category_nav_selectspec:default:full',
+				'ttl' => qa_opt('caching_catwidget_time'),
+			);
+			$navcategories = qa_db_single_select($selectspec);
 			$nav = qa_category_navigation($navcategories);
 		}
 

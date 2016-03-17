@@ -45,6 +45,7 @@
 		'avatar_users_size' => 'Avatar size on top users page:',
 		'block_bad_words' => 'Censored words - separate by spaces or commas:',
 		'block_ips_write' => 'Blocked IP addresses - separate by spaces or commas:',
+		'caching_catwidget_time' => 'Cache category widget for:',
 		'caching_enabled' => 'Enable caching:',
 		'caching_q_time' => 'Cache question pages for:',
 		'caching_qlist_time' => 'Cache question lists for:',

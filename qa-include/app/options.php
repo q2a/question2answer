@@ -213,6 +213,7 @@
 			'avatar_q_page_q_size' => 50,
 			'avatar_store_size' => 400,
 			'avatar_users_size' => 30,
+			'caching_catwidget_time' => 30,
 			'caching_enabled' => 0,
 			'caching_q_time' => 5,
 			'caching_qlist_time' => 5,
