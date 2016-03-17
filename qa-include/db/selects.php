@@ -721,6 +721,13 @@
 
 		$selectspec['sortdesc']='score';
 
+		if (!isset($voteuserid)) {
+			$selectspec['caching'] = array(
+				'key' => __FUNCTION__ . ":$questionid:$count",
+				'ttl' => qa_opt('caching_q_time'),
+			);
+		}
+
 		return $selectspec;
 	}
 
