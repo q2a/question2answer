@@ -86,8 +86,9 @@ class Q2A_Storage_FileCache
 	public function set($key, $str, $ttl)
 	{
 		$success = false;
+		$ttl = (int) $ttl;
 
-		if ($this->enabled) {
+		if ($this->enabled && $ttl > 0) {
 			$file = $this->getFilename($key);
 			$dir = dirname($file);
 			$expiry = time() + ($ttl * 60);
