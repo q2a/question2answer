@@ -29,7 +29,8 @@
 	function qa_db_hotness_update($firstpostid, $lastpostid=null, $viewincrement=false)
 /*
 	Recalculate the hotness in the database for posts $firstpostid to $lastpostid (if specified)
-	If $viewincrement is true, also increment the views counter for the post, and include that in the hotness calculation
+	If $viewincrement is true, also increment the views counter for the post (if different IP from last view),
+	and include that in the hotness calculation
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
@@ -44,7 +45,8 @@
 				'(a.acount+0.0)*# + '.
 				'(a.netvotes+0.0)*# + '.
 				'(a.views+0.0+#)*#'.
-			')'.($viewincrement ? ', x.views=x.views+1, x.lastviewip=$' : '').' WHERE x.postid=a.postid';
+			')'.($viewincrement ? ', x.views=x.views+1, x.lastviewip=$' : '').
+			' WHERE x.postid=a.postid'.($viewincrement ? ' AND (x.lastviewip IS NULL OR x.lastviewip!=$)' : '');
 
 			//	Additional multiples based on empirical analysis of activity on Q2A meta site to give approx equal influence for all factors
 
@@ -59,8 +61,10 @@
 				qa_opt('hot_weight_views')*4000,
 			);
 
-			if ($viewincrement)
-				$arguments[]=@inet_pton(qa_remote_ip_address());
+			if ($viewincrement) {
+				$ipbin = @inet_pton(qa_remote_ip_address());
+				array_push($arguments, $ipbin, $ipbin);
+			}
 
 			 qa_db_query_raw(qa_db_apply_sub($query, $arguments));
 		}
