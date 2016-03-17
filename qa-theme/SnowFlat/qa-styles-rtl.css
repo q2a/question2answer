@@ -370,7 +370,7 @@ h1 {
 	}
 
 	.qa-a-item-main {
-		float: right;
+		float: left;
 		margin: 0 20px 0 0;
 	}
 }

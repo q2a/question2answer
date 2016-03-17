@@ -7,14 +7,16 @@ As of version 1.6.3, all development of [Question2Answer][Home] will take place 
 
 If you find a bug (error) with Question2Answer, please [submit an issue here][Issues]. Be as descriptive as possible: include exactly what you did to make the bug appear, what you expect to happen, and what happened instead. Also include your PHP version and MySQL version. Remember to check for similar issues already reported.
 
+If you think you've found a security issue, you can responsibly disclose it to us using the [contact form here](http://www.question2answer.org/feedback.php).
+
 Note that general troubleshooting issues such as installation or how to use a feature should continue to be asked on the [Question2Answer Q&A][QA].
 
 
 ## Pull requests
 
-If you have found the cause of the bug in the Q2A code, you can submit the patch back to the Q2A repository. Create a fork of the repo, make the changes in your fork, then submit a pull request. **All pull requests must be made to the `dev` branch of Q2A.** The `master` branch is the current, stable release version.
+If you have found the cause of the bug in the Q2A code, you can submit the patch back to the Q2A repository. Create a fork of the repo, make the changes in your fork, then submit a pull request. Bug fix pull requessts must be made to the `dev` branch. PRs for new features must be made to the next version branch, for example `1.8`.
 
-If you wish to implement a feature, you should start a discussion on the [Question2Answer Q&A][QA] first. We welcome all ideas but they may not be appropriate for the Q2A core.
+If you wish to implement a feature, you should start a discussion on the [Question2Answer Q&A][QA] first. We welcome all ideas but they may not be appropriate for the Q2A core. Consider whether your idea could be developed as a plugin.
 
 
 ## Coding style
@@ -33,12 +35,11 @@ However, **please keep style-only changes to a separate commit!** For example if
 - Operators (`=`, `+` etc) should have a space either side.
 - Control structure keywords (`if`, `else`, `foreach` etc) should have a space between them and the opening parenthesis.
 - Opening braces for classes and functions should be on the next line.
-- Opening braces for control structures should be on the same line.
-- Optional braces may be omitted only when the statement spans only one line.
+- Opening braces for control structures should be on the same line. All control structures should use braces.
 
 ### Examples
 
-Here is an example of the old style. Even though the braces are technically optional (the foreach contains only one statement), the statement spans several lines so brances should be used here for clarity.
+Here is an example of the old style. Even though the braces are technically optional (the foreach contains only one statement), they should be used here for clarity.
 
 	foreach ($thingarray as $thing)
 		if (isset($thing['id']))
@@ -53,16 +54,17 @@ It should be rewritten as:
 
 	foreach ($thingarray as $thing) {
 		if (isset($thing['id'])) {
-			if (strpos($thing['id'], 'Hello') === 0)
+			if (strpos($thing['id'], 'Hello') === 0) {
 				$newthing = 'Goodbye';
-			elseif ($thing['id'] == 'World')
+			} elseif ($thing['id'] == 'World') {
 				$newerthing = 'Galaxy';
-		}
-		else
+			}
+		} else {
 			return null;
+		}
 	}
 
-Here is a class example showing the placement of braces, operators, and an advanced DocBlock comment.
+Here is a class example showing the placement of braces, operators, and a DocBlock comment.
 
 	class qa_example
 	{

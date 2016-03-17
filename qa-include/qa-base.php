@@ -21,8 +21,8 @@
 */
 
 
-	define('QA_VERSION', '1.7.3'); // also used as suffix for .js and .css requests
-	define('QA_BUILD_DATE', '2016-01-29');
+	define('QA_VERSION', '1.7.4'); // also used as suffix for .js and .css requests
+	define('QA_BUILD_DATE', '2016-03-14');
 
 
 	/**
@@ -1588,6 +1588,11 @@
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		// ensure we're fetching a remote URL
+		if (!preg_match('#^https?://#', $url)) {
+			return '';
+		}
 
 		$contents=@file_get_contents($url);
 
