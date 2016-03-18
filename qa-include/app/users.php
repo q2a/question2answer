@@ -60,8 +60,7 @@
 			require_once QA_INCLUDE_DIR.'util/external-users-wp.php';
 		}
 		elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
-            //grab the integration file that is included as part of the Joomla plugin (we already confirmed that it exists).
-			require_once QA_JOOMLA_PLUGIN_SSO_FILE;
+			require_once QA_INCLUDE_DIR.'util/external-users-joomla.php';
 		}
 		else {
 			require_once QA_EXTERNAL_DIR.'qa-external-users.php';
