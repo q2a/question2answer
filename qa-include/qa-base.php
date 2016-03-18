@@ -186,12 +186,9 @@
 		elseif (defined('QA_JOOMLA_INTEGRATE_PATH') && strlen(QA_JOOMLA_INTEGRATE_PATH)) {
 			define('QA_FINAL_JOOMLA_INTEGRATE_PATH', QA_JOOMLA_INTEGRATE_PATH.((substr(QA_JOOMLA_INTEGRATE_PATH, -1)=='/') ? '' : '/'));
 			define('QA_JOOMLA_LOAD_FILE', QA_FINAL_JOOMLA_INTEGRATE_PATH.'configuration.php');
-			define('QA_JOOMLA_PLUGIN_SSO_FILE', QA_FINAL_JOOMLA_INTEGRATE_PATH.'plugins/q2a/qaintegration/qa-external/qa-external-users.php');
 
 			if (!is_readable(QA_JOOMLA_LOAD_FILE))
 				qa_fatal_error('Could not find configuration.php file for Joomla integration - please check QA_JOOMLA_INTEGRATE_PATH in qa-config.php');
-			if (!is_readable(QA_JOOMLA_PLUGIN_SSO_FILE))
-				qa_fatal_error('Could not find Joomla Q2AIntegration plugin - please check that you have installed the plugin into your Joomla system.');
 		}
 
 		// Polyfills
