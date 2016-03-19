@@ -153,10 +153,13 @@
 	}
 
 
-//	Save question data to cache
+//	Save question data to cache (if older than configured limit)
 
 	if ($saveCache) {
-		$cacheHandler->set($cacheKey, $questionData, qa_opt('caching_q_time'));
+		$questionAge = qa_opt('db_time') - $question['created'];
+		if ($questionAge > 86400 * qa_opt('caching_q_start')) {
+			$cacheHandler->set($cacheKey, $questionData, qa_opt('caching_q_time'));
+		}
 	}
 
 

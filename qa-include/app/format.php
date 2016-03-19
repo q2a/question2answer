@@ -732,7 +732,7 @@
 	 * Generate array of split HTML (prefix, data, suffix) to represent a timestamp, optionally with the full date.
 	 *
 	 * @param int $timestamp  Unix timestamp.
-	 * @param bool $fulldatedays  Number of days after which to show the full date.
+	 * @param int $fulldatedays  Number of days after which to show the full date.
 	 * @return array  The HTML.
 	 */
 	function qa_when_to_html($timestamp, $fulldatedays)

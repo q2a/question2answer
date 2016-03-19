@@ -74,6 +74,7 @@
 		'avatar_store_size' => 'number',
 		'avatar_users_size' => 'number',
 		'caching_catwidget_time' => 'number',
+		'caching_q_start' => 'number',
 		'caching_q_time' => 'number',
 		'caching_qlist_time' => 'number',
 		'columns_tags' => 'number',
@@ -646,13 +647,7 @@
 			$subtitle = 'admin/caching_title';
 			$formstyle = 'wide';
 
-			$showoptions = array('caching_enabled', 'caching_q_time', 'caching_qlist_time', 'caching_catwidget_time');
-
-			$checkboxtodisplay = array(
-				'caching_q_time' => 'option_caching_enabled',
-				'caching_qlist_time' => 'option_caching_enabled',
-				'caching_catwidget_time' => 'option_caching_enabled',
-			);
+			$showoptions = array('caching_enabled', 'caching_q_start', 'caching_q_time', 'caching_qlist_time', 'caching_catwidget_time');
 
 			break;
 
@@ -1555,7 +1550,10 @@
 				case 'caching_qlist_time':
 				case 'caching_catwidget_time':
 					$optionfield['note'] = qa_lang_html_sub('main/x_minutes', '');
-				break;
+					break;
+				case 'caching_q_start':
+					$optionfield['note'] = qa_lang_html_sub('main/x_days', '');
+					break;
 			}
 
 			if (isset($feedrequest) && $value)
@@ -1786,7 +1784,6 @@
 		case 'caching':
 			$cacheManager = Q2A_Storage_CacheManager::getInstance();
 			$qa_content['error'] = $cacheManager->getError();
-
 			break;
 	}
 

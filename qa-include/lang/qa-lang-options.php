@@ -47,6 +47,7 @@
 		'block_ips_write' => 'Blocked IP addresses - separate by spaces or commas:',
 		'caching_catwidget_time' => 'Cache category widget for:',
 		'caching_enabled' => 'Enable caching:',
+		'caching_q_start' => 'Start caching questions after:',
 		'caching_q_time' => 'Cache question pages for:',
 		'caching_qlist_time' => 'Cache question lists for:',
 		'captcha_module' => 'Use captcha module:',
