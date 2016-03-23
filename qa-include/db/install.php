@@ -745,6 +745,9 @@
 
 	//	Upgrade it step-by-step until it's up to date (do LOCK TABLES after ALTER TABLE because the lock can sometimes be lost)
 
+		// message (used in sprintf) for skipping shared user tables
+		$skipMessage = 'Skipping upgrading %s table since it was already upgraded by another Q2A site sharing it.';
+
 		while (1) {
 			$version=qa_db_get_db_version();
 
@@ -1383,7 +1386,7 @@
 				case 55:
 					if (!QA_FINAL_EXTERNAL_USERS) {
 						$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^users')));
-							// might be using messages table shared with another installation, so check if we need to upgrade
+							// might be using users table shared with another installation, so check if we need to upgrade
 
 						if (isset($keycolumns['wallposts']))
 							qa_db_upgrade_progress('Skipping upgrading users table since it was already upgraded by another Q2A site sharing it.');
@@ -1462,28 +1465,53 @@
 
 				case 62:
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						// add column to qa_users to handle new bcrypt passwords
-						qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash ' . $definitions['users']['passhash'] . ' AFTER passcheck');
-						qa_db_upgrade_query($locktablesquery);
+						$keycolumns=qa_array_to_keys(qa_db_read_all_values(qa_db_query_sub('SHOW COLUMNS FROM ^users')));
+							// might be using users table shared with another installation, so check if we need to upgrade
+
+						if (isset($keycolumns['passhash']))
+							qa_db_upgrade_progress(sprintf($skipMessage, 'users'));
+						else {
+							// add column to qa_users to handle new bcrypt passwords
+							qa_db_upgrade_query('ALTER TABLE ^users ADD COLUMN passhash ' . $definitions['users']['passhash'] . ' AFTER passcheck');
+							qa_db_upgrade_query($locktablesquery);
+						}
 					}
 					break;
 
 				case 63:
-					qa_db_upgrade_query('ALTER TABLE ^cookies MODIFY writeip VARBINARY(16) NULL DEFAULT NULL, MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
-					qa_db_upgrade_query('UPDATE ^cookies SET writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED))), createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					// check for shared cookies table
+					$fieldDef = qa_db_read_one_assoc(qa_db_query_sub('SHOW COLUMNS FROM ^cookies WHERE Field="createip"'));
+					if (strtolower($fieldDef['Type']) === 'varbinary(16)')
+						qa_db_upgrade_progress(sprintf($skipMessage, 'cookies'));
+					else {
+						qa_db_upgrade_query('ALTER TABLE ^cookies MODIFY writeip '.$definitions['cookies']['writeip'].', MODIFY createip '.$definitions['cookies']['createip']);
+						qa_db_upgrade_query('UPDATE ^cookies SET writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED))), createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					}
 
-					qa_db_upgrade_query('ALTER TABLE ^iplimits MODIFY ip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('ALTER TABLE ^iplimits MODIFY ip '.$definitions['iplimits']['ip']);
 					qa_db_upgrade_query('UPDATE ^iplimits SET ip = UNHEX(HEX(CAST(ip AS UNSIGNED)))');
 
-					qa_db_upgrade_query('ALTER TABLE ^blobs MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
-					qa_db_upgrade_query('UPDATE ^blobs SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					// check for shared blobs table
+					$fieldDef = qa_db_read_one_assoc(qa_db_query_sub('SHOW COLUMNS FROM ^blobs WHERE Field="createip"'));
+					if (strtolower($fieldDef['Type']) === 'varbinary(16)')
+						qa_db_upgrade_progress(sprintf($skipMessage, 'blobs'));
+					else {
+						qa_db_upgrade_query('ALTER TABLE ^blobs MODIFY createip '.$definitions['blobs']['createip']);
+						qa_db_upgrade_query('UPDATE ^blobs SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
+					}
 
-					qa_db_upgrade_query('ALTER TABLE ^posts MODIFY lastviewip VARBINARY(16) NULL DEFAULT NULL, MODIFY lastip VARBINARY(16) NULL DEFAULT NULL, MODIFY createip VARBINARY(16) NULL DEFAULT NULL');
+					qa_db_upgrade_query('ALTER TABLE ^posts MODIFY lastviewip '.$definitions['posts']['lastviewip'].', MODIFY lastip '.$definitions['posts']['lastip'].', MODIFY createip '.$definitions['posts']['createip']);
 					qa_db_upgrade_query('UPDATE ^posts SET lastviewip = UNHEX(HEX(CAST(lastviewip AS UNSIGNED))), lastip = UNHEX(HEX(CAST(lastip AS UNSIGNED))), createip = UNHEX(HEX(CAST(createip AS UNSIGNED)))');
 
 					if (!QA_FINAL_EXTERNAL_USERS) {
-						qa_db_upgrade_query('ALTER TABLE ^users MODIFY createip VARBINARY(16) NULL DEFAULT NULL, MODIFY loginip VARBINARY(16) NULL DEFAULT NULL, MODIFY writeip VARBINARY(16) NULL DEFAULT NULL');
-						qa_db_upgrade_query('UPDATE ^users SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED))), loginip = UNHEX(HEX(CAST(loginip AS UNSIGNED))), writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED)))');
+						// check for shared users table
+						$fieldDef = qa_db_read_one_assoc(qa_db_query_sub('SHOW COLUMNS FROM ^users WHERE Field="createip"'));
+						if (strtolower($fieldDef['Type']) === 'varbinary(16)')
+							qa_db_upgrade_progress(sprintf($skipMessage, 'users'));
+						else {
+							qa_db_upgrade_query('ALTER TABLE ^users MODIFY createip '.$definitions['users']['createip'].', MODIFY loginip '.$definitions['users']['loginip'].', MODIFY writeip '.$definitions['users']['writeip']);
+							qa_db_upgrade_query('UPDATE ^users SET createip = UNHEX(HEX(CAST(createip AS UNSIGNED))), loginip = UNHEX(HEX(CAST(loginip AS UNSIGNED))), writeip = UNHEX(HEX(CAST(writeip AS UNSIGNED)))');
+						}
 					}
 
 					qa_db_upgrade_query($locktablesquery);
