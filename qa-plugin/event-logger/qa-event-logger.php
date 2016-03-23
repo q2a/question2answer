@@ -28,12 +28,13 @@ class qa_event_logger
 			$tablename=qa_db_add_table_prefix('eventlog');
 
 			if (!in_array($tablename, $table_list)) {
+				// table does not exist, so create it
 				require_once QA_INCLUDE_DIR.'app/users.php';
 				require_once QA_INCLUDE_DIR.'db/maxima.php';
 
 				return 'CREATE TABLE ^eventlog ('.
 					'datetime DATETIME NOT NULL,'.
-					'ipaddress VARCHAR (45),'.
+					'ipaddress VARCHAR (45) CHARACTER SET ascii,'.
 					'userid '.qa_get_mysql_user_column_type().','.
 					'handle VARCHAR('.QA_DB_MAX_HANDLE_LENGTH.'),'.
 					'cookieid BIGINT UNSIGNED,'.
@@ -44,6 +45,13 @@ class qa_event_logger
 					'KEY userid (userid),'.
 					'KEY event (event)'.
 				') ENGINE=MyISAM DEFAULT CHARSET=utf8';
+			} else {
+				// table exists: check it has the correct schema
+				$column = qa_db_read_one_assoc(qa_db_query_sub('SHOW COLUMNS FROM ^eventlog WHERE Field="ipaddress"'));
+				if (strtolower($column['Type']) !== 'varchar(45)') {
+					// upgrade to handle IPv6
+					return 'ALTER TABLE ^eventlog MODIFY ipaddress VARCHAR(45) CHARACTER SET ascii';
+				}
 			}
 		}
 	}
