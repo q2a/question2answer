@@ -341,10 +341,12 @@
 				'url' => qa_path_html('admin/spam'),
 			);
 
-			$navigation['admin/caching']=array(
-				'label' => qa_lang_html('admin/caching_title'),
-				'url' => qa_path_html('admin/caching'),
-			);
+			if (defined('QA_CACHE_DIRECTORY')) {
+				$navigation['admin/caching']=array(
+					'label' => qa_lang_html('admin/caching_title'),
+					'url' => qa_path_html('admin/caching'),
+				);
+			}
 
 			$navigation['admin/stats']=array(
 				'label' => qa_lang_html('admin/stats_title'),

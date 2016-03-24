@@ -35,16 +35,17 @@ class Q2A_Storage_FileCache
 	 */
 	public function __construct($config)
 	{
-		if (!isset($config['dir']))
-			return;
+		if (isset($config['dir'])) {
+			$this->cacheDir = realpath($config['dir']);
 
-		$this->cacheDir = realpath($config['dir']);
-
-		if (!is_writable($this->cacheDir)) {
-			$this->error = qa_lang_html_sub('admin/caching_dir_error', $this->cacheDir);
-		} elseif (strpos($this->cacheDir, realpath($_SERVER['DOCUMENT_ROOT'])) === 0 || strpos($this->cacheDir, realpath(QA_BASE_DIR)) === 0) {
-			// check the folder is outside the public root - checks against server root and Q2A root, in order to handle symbolic links
-			$this->error = qa_lang_html_sub('admin/caching_dir_public', $this->cacheDir);
+			if (!is_writable($this->cacheDir)) {
+				$this->error = qa_lang_html_sub('admin/caching_dir_error', $this->cacheDir);
+			} elseif (strpos($this->cacheDir, realpath($_SERVER['DOCUMENT_ROOT'])) === 0 || strpos($this->cacheDir, realpath(QA_BASE_DIR)) === 0) {
+				// check the folder is outside the public root - checks against server root and Q2A root, in order to handle symbolic links
+				$this->error = qa_lang_html_sub('admin/caching_dir_public', $this->cacheDir);
+			}
+		} else {
+			$this->error = qa_lang_html('admin/caching_dir_missing');
 		}
 
 		$this->enabled = empty($this->error);

@@ -34,14 +34,15 @@ class Q2A_Storage_CacheManager
 	 */
 	private function __construct()
 	{
-		$optEnabled = qa_opt('caching_enabled') == 1;
+		if (qa_opt('caching_enabled') != 1)
+			return;
 
 		$config = array(
 			'dir' => defined('QA_CACHE_DIRECTORY') ? QA_CACHE_DIRECTORY : null,
 		);
 
 		$this->cacheDriver = new Q2A_Storage_FileCache($config);
-		$this->enabled = $optEnabled && $this->cacheDriver->isEnabled();
+		$this->enabled = $this->cacheDriver->isEnabled();
 	}
 
 	/**
