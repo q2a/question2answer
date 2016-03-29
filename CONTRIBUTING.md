@@ -39,16 +39,7 @@ However, **please keep style-only changes to a separate commit!** For example if
 
 ### Examples
 
-Here is an example of the old style. Even though the braces are technically optional (the foreach contains only one statement), they should be used here for clarity.
-
-	foreach ($thingarray as $thing)
-		if (isset($thing['id']))
-			if (strpos($thing['id'], 'Hello')===0)
-				$newthing='Goodbye';
-			elseif ($thing['id']=='World')
-				$newerthing='Galaxy';
-		else
-			return null;
+Here is some procedural code written in the correct style. We are accepting pull requests to update non-compliant code into this new format.
 
 It should be rewritten as:
 
