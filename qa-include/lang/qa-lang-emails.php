@@ -21,14 +21,14 @@
 */
 
 	return array(
-		'a_commented_body' => "Your answer on ^site_title has a new comment by ^c_handle:\n\n^open^c_content^close\n\nYour answer was:\n\n^open^c_context^close\n\nYou may respond by adding your own comment:\n\n^url\n\nThank you,\n\n^site_title",
-		'a_commented_subject' => 'Your ^site_title answer has a new comment',
+		'a_commented_body' => "Your idea on ^site_title has a new comment by ^c_handle:\n\n^open^c_content^close\n\nYour idea was:\n\n^open^c_context^close\n\nYou may respond by adding your own comment:\n\n^url\n\nThank you,\n\n^site_title",
+		'a_commented_subject' => 'Your ^site_title idea has a new comment',
 
-		'a_followed_body' => "Your answer on ^site_title has a new related question by ^q_handle:\n\n^open^q_title^close\n\nYour answer was:\n\n^open^a_content^close\n\nClick below to answer the new question:\n\n^url\n\nThank you,\n\n^site_title",
-		'a_followed_subject' => 'Your ^site_title answer has a related question',
+		'a_followed_body' => "Your idea on ^site_title has a new related situation by ^q_handle:\n\n^open^q_title^close\n\nYour idea was:\n\n^open^a_content^close\n\nClick below to idea the new situation:\n\n^url\n\nThank you,\n\n^site_title",
+		'a_followed_subject' => 'Your ^site_title idea has a related situation',
 
-		'a_selected_body' => "Congratulations! Your answer on ^site_title has been selected as the best by ^s_handle:\n\n^open^a_content^close\n\nThe question was:\n\n^open^q_title^close\n\nClick below to see your answer:\n\n^url\n\nThank you,\n\n^site_title",
-		'a_selected_subject' => 'Your ^site_title answer has been selected!',
+		'a_selected_body' => "Congratulations! Your idea on ^site_title has been selected as the best by ^s_handle:\n\n^open^a_content^close\n\nThe situation was:\n\n^open^q_title^close\n\nClick below to see your idea:\n\n^url\n\nThank you,\n\n^site_title",
+		'a_selected_subject' => 'Your ^site_title idea has been selected!',
 
 		'c_commented_body' => "A new comment by ^c_handle has been added after your comment on ^site_title:\n\n^open^c_content^close\n\nThe discussion is following:\n\n^open^c_context^close\n\nYou may respond by adding another comment:\n\n^url\n\nThank you,\n\n^site_title",
 		'c_commented_subject' => 'Your ^site_title comment has been added to',
@@ -53,14 +53,14 @@
 		'private_message_reply' => "Click below to reply to ^f_handle by private message:\n\n^url\n\n",
 		'private_message_subject' => 'Message from ^f_handle on ^site_title',
 
-		'q_answered_body' => "Your question on ^site_title has been answered by ^a_handle:\n\n^open^a_content^close\n\nYour question was:\n\n^open^q_title^close\n\nIf you like this answer, you may select it as the best:\n\n^url\n\nThank you,\n\n^site_title",
-		'q_answered_subject' => 'Your ^site_title question was answered',
+		'q_answered_body' => "Your situation on ^site_title has an idea for by ^a_handle:\n\n^open^a_content^close\n\nYour situation was:\n\n^open^q_title^close\n\nIf you like this idea, you may select it as the best:\n\n^url\n\nThank you,\n\n^site_title",
+		'q_answered_subject' => 'Your ^site_title situation has an idea',
 
-		'q_commented_body' => "Your question on ^site_title has a new comment by ^c_handle:\n\n^open^c_content^close\n\nYour question was:\n\n^open^c_context^close\n\nYou may respond by adding your own comment:\n\n^url\n\nThank you,\n\n^site_title",
-		'q_commented_subject' => 'Your ^site_title question has a new comment',
+		'q_commented_body' => "Your situation on ^site_title has a new comment by ^c_handle:\n\n^open^c_content^close\n\nYour situation was:\n\n^open^c_context^close\n\nYou may respond by adding your own comment:\n\n^url\n\nThank you,\n\n^site_title",
+		'q_commented_subject' => 'Your ^site_title situation has a new comment',
 
-		'q_posted_body' => "A new question has been asked by ^q_handle:\n\n^open^q_title\n\n^q_content^close\n\nClick below to see the question:\n\n^url\n\nThank you,\n\n^site_title",
-		'q_posted_subject' => '^site_title has a new question',
+		'q_posted_body' => "A new situation has been asked by ^q_handle:\n\n^open^q_title\n\n^q_content^close\n\nClick below to see the situation:\n\n^url\n\nThank you,\n\n^site_title",
+		'q_posted_subject' => '^site_title has a new situation',
 
 		'remoderate_body' => "An edited post by ^p_handle requires your reapproval:\n\n^open^p_context^close\n\nClick below to approve or hide the edited post:\n\n^url\n\n\nClick below to review all queued posts:\n\n^a_url\n\n\nThank you,\n\n^site_title",
 		'remoderate_subject' => '^site_title moderation',
