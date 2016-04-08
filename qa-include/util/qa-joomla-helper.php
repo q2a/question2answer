@@ -125,9 +125,9 @@ class qa_joomla_default_integration
     public static function onGetURLs()
     {
         return array(
-            'login'  => '/login.html',
-            'logout' => '/logout.html',
-            'reg'    => '/register.html',
+            'login'  => JRoute::_('index.php?option=com_users&view=login'),
+            'logout' => JRoute::_('index.php?option=com_users&view=login&layout=logout'),
+            'reg'    => JRoute::_('index.php?option=com_users&view=registration'),
             'denied' => '/',
         );
     }
