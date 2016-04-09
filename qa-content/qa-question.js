@@ -97,7 +97,7 @@ function qa_submit_answer(questionid, elem)
 				c.style.display='none';
 
 				var l=document.getElementById('a_list');
-				l.insertBefore(c, l.firstChild);
+				l.appendChild(c);
 
 				var a=document.getElementById('anew');
 				a.qa_disabled=true;
