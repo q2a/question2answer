@@ -131,6 +131,9 @@
 		$mailer->Sender=$params['fromemail'];
 		$mailer->FromName=$params['fromname'];
 		$mailer->AddAddress($params['toemail'], $params['toname']);
+		if(!empty($params['replytoemail'])){
+			$mailer->addReplyTo($params['replytoemail'], $params['replytoname']);
+		}
 		$mailer->Subject=$params['subject'];
 		$mailer->Body=$params['body'];
 
