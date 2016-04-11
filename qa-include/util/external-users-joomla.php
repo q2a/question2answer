@@ -51,16 +51,11 @@ function qa_get_logged_in_user()
 
     if($user) {
       if($user->guest || $user->block) {
-        header('location:'.$config_urls['denied']);
-        die;
+        return null;
       }
 
       $access = $jhelper->trigger_access_event($user);
 
-      if(!$access['view']) {     //must be in a group that has the view level set at least.
-        header('location:'.$config_urls['denied']);
-        die;
-      }
       $level = QA_USER_LEVEL_BASIC;
       if($access['post'])  {$level = QA_USER_LEVEL_APPROVED;}
       if($access['edit'])  {$level = QA_USER_LEVEL_EDITOR;}

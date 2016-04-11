@@ -48,7 +48,11 @@ class qa_joomla_helper {
 
     private function load_joomla_app()
     {
-        define( '_JEXEC', 1 ); //This will define the _JEXEC constant that will allow us to access the rest of the Joomla framework
+        // This will define the _JEXEC constant that will allow us to access the rest of the Joomla framework
+        if (!defined('_JEXEC')) {
+            define('_JEXEC', 1);
+        }
+
         require_once(JPATH_BASE.'/includes/defines.php' );
         require_once(JPATH_BASE.'/includes/framework.php' );
         // Instantiate the application.
@@ -69,7 +73,7 @@ class qa_joomla_helper {
 
     public function get_userid($username)
     {
-        JUserHelper::getUserId($username);
+        return JUserHelper::getUserId($username);
     }
 
     function trigger_access_event($user)
@@ -142,7 +146,7 @@ class qa_joomla_default_integration
         list($user) = $args;
 
         return array(
-            'view' => !($user->guest || $user->block),
+            'view' => true,
             'post' => !($user->guest || $user->block),
             'edit' => $user->authorise('core.edit'),
             'mod'  => $user->authorise('core.edit.state'),
