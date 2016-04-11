@@ -70,12 +70,12 @@ function qa_get_logged_in_user()
 
       $teamGroup = $jhelper->trigger_team_group_event($user);
 
-      return [
+      return array(
         'userid' => $user->id,
         'publicusername' => $user->name.($teamGroup ? " ({$teamGroup})" : ''),
         'email' => $user->email,
         'level' => $level,
-      ];
+      );
     }
 
     return null;
@@ -95,7 +95,7 @@ function qa_get_user_email($userid)
 
 function qa_get_userids_from_public($publicusernames)
 {
-    $output = [];
+    $output = array();
     if(count($publicusernames)) {
       $jhelper = new qa_joomla_helper();
       foreach($publicusernames as $username) {
@@ -107,7 +107,7 @@ function qa_get_userids_from_public($publicusernames)
 
 function qa_get_public_from_userids($userids)
 {
-    $output = [];
+    $output = array();
     if(count($userids)) {
       $jhelper = new qa_joomla_helper();
       foreach($userids as $userID) {

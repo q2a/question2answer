@@ -33,7 +33,7 @@ class qa_joomla_helper {
         $this->load_joomla_app();
     }
 
-    /* 
+    /*
      * If your Q2A installation is in a subfolder of your Joomla, then this file should be in joomla-root/qa-root/qa-include/util/
      * We can use this info to track back up the tree to find the Joomla root.
      * If your Q2A installation is in a different folder structure, then you should define JOOMLA_PATH_BASE manually in your qa-config file.
@@ -74,26 +74,26 @@ class qa_joomla_helper {
 
     function trigger_access_event($user)
     {
-        return $this->trigger_joomla_event('onQnaAccess', [$user]);
+        return $this->trigger_joomla_event('onQnaAccess', array($user));
     }
     function trigger_team_group_event($user)
     {
-        return $this->trigger_joomla_event('onTeamGroup', [$user]);
+        return $this->trigger_joomla_event('onTeamGroup', array($user));
     }
     function trigger_get_urls_event()
     {
-        return $this->trigger_joomla_event('onGetURLs', []);
+        return $this->trigger_joomla_event('onGetURLs', array());
     }
     function trigger_get_avatar_event($userid, $size)
     {
-        return $this->trigger_joomla_event('onGetAvatar', [$userid, $size]);
+        return $this->trigger_joomla_event('onGetAvatar', array($userid, $size));
     }
     function trigger_log_event($userid, $action)
     {
-        return $this->trigger_joomla_event('onWriteLog', [$userid, $action], false);
+        return $this->trigger_joomla_event('onWriteLog', array($userid, $action), false);
     }
 
-    private function trigger_joomla_event($event, $args = [], $expectResponse = true)
+    private function trigger_joomla_event($event, $args = array(), $expectResponse = true)
     {
         JPluginHelper::importPlugin('q2a');
         $dispatcher = JEventDispatcher::getInstance();
