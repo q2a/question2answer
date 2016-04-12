@@ -36,8 +36,9 @@ function qa_get_login_links($relative_url_prefix, $redirect_back_to_url)
 {
     $jhelper = new qa_joomla_helper();
     $config_urls = $jhelper->trigger_get_urls_event();
+
     return array(
-        'login'     => $config_urls['login'].'&return='.urlencode(base64_encode($redirect_back_to_url)),
+        'login'     => $config_urls['login'],
         'register'  => $config_urls['reg'],
         'logout'    => $config_urls['logout']
     );
@@ -67,7 +68,7 @@ function qa_get_logged_in_user()
 
       return array(
         'userid' => $user->id,
-        'publicusername' => $user->name.($teamGroup ? " ({$teamGroup})" : ''),
+        'publicusername' => $user->username,
         'email' => $user->email,
         'level' => $level,
       );
@@ -108,7 +109,7 @@ function qa_get_public_from_userids($userids)
       foreach($userids as $userID) {
         $user = $jhelper->get_user($userID);
         $teamGroup = $jhelper->trigger_team_group_event($user);
-        $output[$userID] = $user->name.($teamGroup ? " ({$teamGroup})" : '');
+        $output[$userID] = $user->username;
       }
     }
     return $output;

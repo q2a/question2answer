@@ -220,7 +220,7 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 				}
 				elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
                     $jconfig = new JConfig();
-					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your Joomla! site <a href=\"../\" target=\"_blank\">".$jconfig->sitename."</a>. To complete the process, you will need to create a ensure that the QAIntegration plugin in Joomla is configured and enabled, and you will need to create a menu entry or a link in your Joomla site pointing to the URL for your Q2A installation. Please consult the online documentation for more information.";
+					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your Joomla! site <a href=\"../\" target=\"_blank\">".$jconfig->sitename."</a>. It's also recommended to install the Joomla QAIntegration plugin for additional user-access control. Please consult the online documentation for more information.";
 				}
 				else {
 					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with your existing user database and management. Users will be referenced with database column type ".qa_html(qa_get_mysql_user_column_type()).". Please consult the online documentation for more information.";

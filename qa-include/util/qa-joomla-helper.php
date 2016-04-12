@@ -112,9 +112,8 @@ class qa_joomla_helper {
 
 /**
  * Implements the same methods as a Joomla plugin would implement, but called locally within Q2A.
- * This is intended as a set of default actions in case no Joomla plugin has been installed.
- * (Installing a Joomla plugin is recommended however, as there is a lot more flexibility that way)
- * Note that the implementation of these methods is not the same as it would be in a Joomla plugin, so please don't use it to crib from to create one! Use the actual Joomla Q2A Integration plugin instead.
+ * This is intended as a set of default actions in case no Joomla plugin has been installed. It's
+ * recommended to install the Joomla QAIntegration plugin for additional user-access control.
  */
 class qa_joomla_default_integration
 {
@@ -123,11 +122,16 @@ class qa_joomla_default_integration
      */
     public static function onGetURLs()
     {
+        $login = 'index.php?option=com_users&view=login';
+        $logout = 'index.php?option=com_users&task=user.logout&'.JSession::getFormToken().'=1&return='.urlencode(base64_encode('index.php'));
+        $reg = 'index.php?option=com_users&view=registration';
+
         return array(
-            'login'  => JRoute::_('index.php?option=com_users&view=login'),
-            'logout' => JRoute::_('index.php?option=com_users&view=login&layout=logout'),
-            'reg'    => JRoute::_('index.php?option=com_users&view=registration'),
-            'denied' => '/',
+            // undo Joomla's escaping of characters since Q2A also escapes
+            'login'  => htmlspecialchars_decode(JRoute::_($login)),
+            'logout' => htmlspecialchars_decode(JRoute::_($logout)),
+            'reg'    => htmlspecialchars_decode(JRoute::_($reg)),
+            'denied' => htmlspecialchars_decode(JRoute::_('index.php')),
         );
     }
 
