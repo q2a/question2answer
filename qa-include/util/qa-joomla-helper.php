@@ -33,16 +33,11 @@ class qa_joomla_helper {
         $this->load_joomla_app();
     }
 
-    /*
-     * If your Q2A installation is in a subfolder of your Joomla, then this file should be in joomla-root/qa-root/qa-include/util/
-     * We can use this info to track back up the tree to find the Joomla root.
-     * If your Q2A installation is in a different folder structure, then you should define JOOMLA_PATH_BASE manually in your qa-config file.
-     */
     private function find_joomla_path()
     {
-        if (!defined('JPATH_BASE')) {   //JPATH_BASE must be defined for Joomla to work.
-            $joomlaPath = dirname(dirname(dirname(__DIR__)));
-            define('JPATH_BASE', $joomlaPath);
+        // JPATH_BASE must be defined for Joomla to work
+        if (!defined('JPATH_BASE')) {
+            define('JPATH_BASE', QA_FINAL_JOOMLA_INTEGRATE_PATH);
         }
     }
 
