@@ -45,13 +45,19 @@ class qa_recaptcha_captcha
 		if (qa_clicked('recaptcha_save_button')) {
 			qa_opt('recaptcha_public_key', qa_post_text('recaptcha_public_key_field'));
 			qa_opt('recaptcha_private_key', qa_post_text('recaptcha_private_key_field'));
+			qa_opt('recaptcha_language', qa_post_text('recaptcha_language_field'));
 
 			$saved = true;
 		}
 
 		$pub = trim(qa_opt('recaptcha_public_key'));
 		$pri = trim(qa_opt('recaptcha_private_key'));
-
+		$lang = trim(qa_opt('recaptcha_language'));
+		if(empty($lang))
+		{
+			$lang = 'en';
+		}
+		
 		$error = null;
 		if (!strlen($pub) || !strlen($pri)) {
 			require_once $this->directory.'recaptchalib.php';
@@ -73,6 +79,12 @@ class qa_recaptcha_captcha
 					'value' => $pri,
 					'tags' => 'name="recaptcha_private_key_field"',
 					'error' => $error,
+				),
+				
+				'language' => array(
+					'label' => 'reCAPTCHA language code (<a href="https://developers.google.com/recaptcha/docs/language">available codes</a>):',
+					'value' => $lang,
+					'tags' => 'name="recaptcha_language_field"',
 				),
 			),
 
@@ -120,7 +132,7 @@ class qa_recaptcha_captcha
 			'}',
 		);
 
-		$qa_content['script_src'][] = 'https://www.google.com/recaptcha/api.js?onload=recaptcha_onload&render=explicit';
+		$qa_content['script_src'][] = 'https://www.google.com/recaptcha/api.js?onload=recaptcha_onload&render=explicit&hl='.qa_opt('recaptcha_language');
 
 		return '';
 	}
