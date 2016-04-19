@@ -49,14 +49,10 @@ function qa_get_logged_in_user()
 	$user = $jhelper->get_user();
 	$config_urls = $jhelper->trigger_get_urls_event();
 
-	if ($user) {
-		if ($user->guest || $user->block) {
-			return null;
-		}
-
+	if ($user && !$user->guest) {
 		$access = $jhelper->trigger_access_event($user);
-
 		$level = QA_USER_LEVEL_BASIC;
+
 		if ($access['post']) {
 			$level = QA_USER_LEVEL_APPROVED;
 		}
@@ -75,12 +71,18 @@ function qa_get_logged_in_user()
 
 		$teamGroup = $jhelper->trigger_team_group_event($user);
 
-		return array(
+		$qa_user = array(
 			'userid' => $user->id,
 			'publicusername' => $user->username,
 			'email' => $user->email,
 			'level' => $level,
 		);
+
+        if ($user->block) {
+            $qa_user['blocked'] = true;
+        }
+
+        return $qa_user;
 	}
 
 	return null;
