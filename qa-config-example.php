@@ -137,6 +137,17 @@
 */
 
 /*
+	Out-of-the-box Joomla! 3.x integration - to integrate with your Joomla! site, define
+	QA_JOOMLA_INTEGRATE_PATH. as the full path to the Joomla! directory. If your Q2A
+    site is a subdirectory of your main Joomla site (recommended), you can specify
+    dirname(__DIR__) rather than the full path.
+	With this set, you do not need to set the QA_MYSQL_* constants above since these
+	will be taken from Joomla automatically. See online documentation for more details.
+
+	define('QA_JOOMLA_INTEGRATE_PATH', dirname(__DIR__));
+*/
+
+/*
 	Some settings to help optimize your Question2Answer site's performance.
 
 	If QA_HTML_COMPRESSION is true, HTML web pages will be output using Gzip compression, if
