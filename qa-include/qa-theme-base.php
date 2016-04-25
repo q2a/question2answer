@@ -222,7 +222,7 @@ class qa_html_theme_base
 	{
 		$attribution = '<!-- Powered by Question2Answer - http://www.question2answer.org/ -->';
 		$this->output(
-			'<html>',
+			'<html lang="'.$this->content['language'].'">',
 			$attribution
 		);
 
