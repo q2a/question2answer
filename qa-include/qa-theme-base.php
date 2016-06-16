@@ -723,11 +723,16 @@ class qa_html_theme_base
 		$url = isset($q_view['url']) ? $q_view['url'] : false;
 
 		if (isset($this->content['title'])) {
-			$this->output(
-				$url ? '<a href="'.$url.'">' : '',
-				$this->content['title'],
-				$url ? '</a>' : ''
-			);
+			if($url) {
+				$this->output(
+					'<a href="'.$url.'">'.$this->content['title'].'</a>'
+				);
+			}
+			else {
+				$this->output(
+					'<span class="headlinespan">'.$this->content['title'].'</span>'
+				);
+			}
 		}
 
 		// add closed note in title
