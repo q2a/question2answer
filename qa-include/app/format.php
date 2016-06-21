@@ -2081,8 +2081,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		if ($size>0)
-			return '<img src="'.(qa_is_https_probably() ? 'https' : 'http').
-				'://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
+			return '<img src="https://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
 				'" width="'.(int)$size.'" height="'.(int)$size.'" class="qa-avatar-image" alt=""/>';
 		else
 			return null;
