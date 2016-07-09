@@ -647,25 +647,31 @@
 			'B' => 'bottom',
 		);
 
-		foreach ($widgets as $widget)
-			if (is_numeric(strpos(','.$widget['tags'].',', ','.$qa_template.',')) || is_numeric(strpos(','.$widget['tags'].',', ',all,'))) { // see if it has been selected for display on this template
-				$region=@$regioncodes[substr($widget['place'], 0, 1)];
-				$place=@$placecodes[substr($widget['place'], 1, 2)];
+		foreach ($widgets as $widget) {
+			$tagstring = ',' . $widget['tags'] . ',';
+			if (strpos($tagstring, ",$qa_template,") !== false || strpos($tagstring, ',all,') !== false) {
+				// widget has been selected for display on this template
+				$region = @$regioncodes[substr($widget['place'], 0, 1)];
+				$place = @$placecodes[substr($widget['place'], 1, 2)];
 
-				if (isset($region) && isset($place)) { // check region/place codes recognized
-					$module=qa_load_module('widget', $widget['title']);
+				if (isset($region) && isset($place)) {
+					// region/place codes recognized
+					$module = qa_load_module('widget', $widget['title']);
 
 					if (
 						isset($module) &&
 						method_exists($module, 'allow_template') &&
-						$module->allow_template((substr($qa_template, 0, 7)=='custom-') ? 'custom' : $qa_template) &&
+						$module->allow_template((substr($qa_template, 0, 7) == 'custom-') ? 'custom' : $qa_template) &&
 						method_exists($module, 'allow_region') &&
 						$module->allow_region($region) &&
 						method_exists($module, 'output_widget')
-					)
-						$qa_content['widgets'][$region][$place][]=$module; // if module loaded and happy to be displayed here, tell theme about it
+					) {
+						// if module loaded and happy to be displayed here, tell theme about it
+						$qa_content['widgets'][$region][$place][] = $module;
+					}
 				}
 			}
+		}
 
 		$logoshow=qa_opt('logo_show');
 		$logourl=qa_opt('logo_url');
