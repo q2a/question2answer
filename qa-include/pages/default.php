@@ -100,7 +100,8 @@
 
 		foreach ($pagemodules as $pagemodule)
 			if ($pagemodule->match_request($request)) {
-				qa_set_template('plugin');
+				$tmpl = isset($custompage['pageid']) ? 'custom-'.$custompage['pageid'] : 'custom';
+				qa_set_template($tmpl);
 				return $pagemodule->process_request($request);
 			}
 	}

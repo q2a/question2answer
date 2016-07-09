@@ -103,10 +103,22 @@
 			if ($module->allow_template($template))
 				$templateoptions[$template]=qa_lang_html($langkey);
 
-		if ($module->allow_template('custom'))
-			foreach ($pages as $page)
-				if (!($page['flags']&QA_PAGE_FLAGS_EXTERNAL))
-					$templateoptions['custom-'.$page['pageid']]=qa_html($page['title']);
+		if ($module->allow_template('custom')) {
+			$pagemodules = qa_load_modules_with('page', 'match_request');
+			foreach ($pages as $page) {
+				// check if this is a page plugin by fetching all plugin classes and matching requests - currently quite convoluted!
+				$isPagePlugin = false;
+				foreach ($pagemodules as $pagemodule) {
+					if ($pagemodule->match_request($page['tags'])) {
+						$isPagePlugin = true;
+					}
+				}
+
+				if ($isPagePlugin || !($page['flags'] & QA_PAGE_FLAGS_EXTERNAL))
+					$templateoptions['custom-' . $page['pageid']] = qa_html($page['title']);
+			}
+
+		}
 	}
 
 
