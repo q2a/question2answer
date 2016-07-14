@@ -20,21 +20,16 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
 
 
-	if (QA_FINAL_EXTERNAL_USERS)
-		qa_fatal_error('User logout is handled by external code');
+if (QA_FINAL_EXTERNAL_USERS)
+	qa_fatal_error('User logout is handled by external code');
 
-	if (qa_is_logged_in())
-		qa_set_logged_in_user(null);
+if (qa_is_logged_in())
+	qa_set_logged_in_user(null);
 
-	qa_redirect(''); // back to home page
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+qa_redirect(''); // back to home page
