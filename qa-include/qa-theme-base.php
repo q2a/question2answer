@@ -237,7 +237,7 @@ class qa_html_theme_base
 		$extratags = isset($this->content['html_tags']) ? $this->content['html_tags'] : '';
 
 		$this->output(
-			'<html' . $extratags . '>',
+			'<html ' . $extratags . '>',
 			$attribution
 		);
 

@@ -484,10 +484,15 @@
 
 		$lastcategoryid=count($categoryids) ? end($categoryids) : null;
 		$charset = 'utf-8';
+		$language = qa_opt('site_language');
+		$language = empty($language) ? 'en' : qa_html($language);
 
 		$qa_content=array(
 			'content_type' => 'text/html; charset='.$charset,
 			'charset' => $charset,
+
+			'language' => $language,
+
 			'direction' => qa_opt('site_text_direction'),
 
 			'options' => array(
@@ -495,6 +500,8 @@
 			),
 
 			'site_title' => qa_html(qa_opt('site_title')),
+
+			'html_tags' => 'lang="' . $language . '"',
 
 			'head_lines' => array(),
 

@@ -259,7 +259,7 @@ if ($formtype == 'q_edit') { // ...in edit mode
 $microdata = qa_opt('use_microdata');
 if ($microdata) {
 	$qa_content['head_lines'][] = '<meta itemprop="name" content="' . qa_html($qa_content['q_view']['raw']['title']) . '">';
-	$qa_content['html_tags'] = ' itemscope itemtype="http://schema.org/QAPage"';
+	$qa_content['html_tags'] .= ' itemscope itemtype="http://schema.org/QAPage"';
 	$qa_content['main_tags'] = ' itemscope itemtype="http://schema.org/Question"';
 }
 
