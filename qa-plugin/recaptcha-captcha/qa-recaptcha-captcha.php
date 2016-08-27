@@ -63,13 +63,13 @@ class qa_recaptcha_captcha
 
 			'fields' => array(
 				'public' => array(
-					'label' => 'reCAPTCHA public key:',
+					'label' => 'reCAPTCHA Site key:',
 					'value' => $pub,
 					'tags' => 'name="recaptcha_public_key_field"',
 				),
 
 				'private' => array(
-					'label' => 'reCAPTCHA private key:',
+					'label' => 'reCAPTCHA Secret key:',
 					'value' => $pri,
 					'tags' => 'name="recaptcha_private_key_field"',
 					'error' => $error,
