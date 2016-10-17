@@ -145,3 +145,15 @@ function qa_version_check(uri, version, elem)
 		}
 	);
 }
+
+function qa_get_enabled_plugins_hashes()
+{
+	var hashes = [];
+	$('[id^=plugin_enabled]:checked').each(
+		function (idx, elem) {
+			hashes.push(elem.id.replace("plugin_enabled_", ""));
+		}
+	);
+
+	$('[name=enabled_plugins_hashes]').val(hashes.join(';'));
+}

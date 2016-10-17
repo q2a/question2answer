@@ -608,7 +608,10 @@
 	 */
 	function qa_admin_plugin_directory_hash($directory)
 	{
-		return md5($directory);
+		$pluginManager = new Q2A_Plugin_PluginManager();
+		$hashes = $pluginManager->getHashesForPlugins(array($directory));
+
+		return reset($hashes);
 	}
 
 
