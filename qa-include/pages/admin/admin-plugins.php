@@ -33,6 +33,41 @@ require_once QA_INCLUDE_DIR . 'app/admin.php';
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
+//	Prepare content for theme
+
+$qa_content = qa_content_prepare();
+
+$qa_content['title'] = qa_lang_html('admin/admin_title') . ' - ' . qa_lang_html('admin/plugins_title');
+
+$qa_content['error'] = qa_admin_page_error();
+
+$qa_content['script_rel'][] = 'qa-content/qa-admin.js?' . QA_VERSION;
+
+
+$pluginManager = new Q2A_Plugin_PluginManager();
+$pluginManager->cleanRemovedPlugins();
+
+$enabledPlugins = $pluginManager->getEnabledPlugins();
+$fileSystemPlugins = $pluginManager->getFilesystemPlugins();
+
+$pluginHashes = $pluginManager->getHashesForPlugins($fileSystemPlugins);
+
+$showpluginforms = true;
+if (qa_is_http_post()) {
+	if (!qa_check_form_security_code('admin/plugins', qa_post_text('qa_form_security_code'))) {
+		$qa_content['error'] = qa_lang_html('misc/form_security_reload');
+		$showpluginforms = false;
+	} else {
+		if (qa_clicked('dosave')) {
+			$enabledPluginHashes = qa_post_text('enabled_plugins_hashes');
+			$enabledPluginHashesArray = explode(';', $enabledPluginHashes);
+			$pluginDirectories = array_keys(array_intersect($pluginHashes, $enabledPluginHashesArray));
+			$pluginManager->setEnabledPlugins($pluginDirectories);
+
+			qa_redirect('admin/plugins');
+		}
+	}
+}
 
 //	Map modules with options to their containing plugins
 
@@ -58,32 +93,11 @@ foreach ($moduletypes as $type) {
 	}
 }
 
-
-//	Prepare content for theme
-
-$qa_content = qa_content_prepare();
-
-$qa_content['title'] = qa_lang_html('admin/admin_title') . ' - ' . qa_lang_html('admin/plugins_title');
-
-$qa_content['error'] = qa_admin_page_error();
-
-$qa_content['script_rel'][] = 'qa-content/qa-admin.js?' . QA_VERSION;
-
-
-$pluginManager = new Q2A_Plugin_PluginManager();
-$pluginManager->cleanRemovedPlugins();
-
-$enabledPlugins = $pluginManager->getEnabledPlugins();
-$fileSystemPlugins = $pluginManager->getFilesystemPlugins();
-
-$pluginHashes = $pluginManager->getHashesForPlugins($fileSystemPlugins);
-
 foreach ($moduletypes as $type) {
 	$modules = qa_load_modules_with($type, 'init_queries');
 
 	foreach ($modules as $name => $module) {
 		$queries = $module->init_queries($tables);
-
 
 		if (!empty($queries)) {
 			if (qa_is_http_post())
@@ -101,22 +115,6 @@ foreach ($moduletypes as $type) {
 	}
 }
 
-$showpluginforms = true;
-if (qa_is_http_post()) {
-	if (!qa_check_form_security_code('admin/plugins', qa_post_text('qa_form_security_code'))) {
-		$qa_content['error'] = qa_lang_html('misc/form_security_reload');
-		$showpluginforms = false;
-	} else {
-		if (qa_clicked('dosave')) {
-			$enabledPluginHashes = qa_post_text('enabled_plugins_hashes');
-			$enabledPluginHashesArray = explode(';', $enabledPluginHashes);
-			$pluginDirectories = array_keys(array_intersect($pluginHashes, $enabledPluginHashesArray));
-			$pluginManager->setEnabledPlugins($pluginDirectories);
-
-			qa_redirect('admin/plugins');
-		}
-	}
-}
 
 if (!empty($fileSystemPlugins)) {
 	$metadataUtil = new Q2A_Util_Metadata();
