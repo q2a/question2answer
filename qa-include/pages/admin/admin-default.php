@@ -131,6 +131,7 @@
 		'show_full_date_days' => 'number',
 		'smtp_port' => 'number',
 
+		'allow_anonymous_naming' => 'checkbox',
 		'allow_change_usernames' => 'checkbox',
 		'allow_close_questions' => 'checkbox',
 		'allow_login_email_only' => 'checkbox',
@@ -442,7 +443,7 @@
 
 			$subtitle = 'admin/posting_title';
 
-			$showoptions = array('do_close_on_select', 'allow_close_questions', 'allow_self_answer', 'allow_multi_answers', 'follow_on_as', 'comment_on_qs', 'comment_on_as', '');
+			$showoptions = array('do_close_on_select', 'allow_close_questions', 'allow_self_answer', 'allow_multi_answers', 'allow_anonymous_naming', 'follow_on_as', 'comment_on_qs', 'comment_on_as', '');
 
 			if (count(qa_list_modules('editor'))>1)
 				array_push($showoptions, 'editor_for_qs', 'editor_for_as', 'editor_for_cs', '');

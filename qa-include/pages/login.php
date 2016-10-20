@@ -111,49 +111,58 @@
 
 	$forgothtml='<a href="'.qa_html($forgotpath).'">'.qa_lang_html('users/forgot_link').'</a>';
 
-	$qa_content['form']=array(
-		'tags' => 'method="post" action="'.qa_self_html().'"',
+	if($passwordsent)
+	{
+		$qa_content['error'] = qa_lang_html('users/password_sent');
+		$qa_content['custom'] = '<a class="qa-form-wide-button" href="'.qa_path('login').'?e='.$inemailhandle.'">'.qa_lang_html('users/login_button').'</a>';
+	}
+	else
+	{
+		$qa_content['form']=array(
+			'tags' => 'method="post" action="'.qa_self_html().'"',
 
-		'style' => 'tall',
+			'style' => 'tall',
 
-		'ok' => $passwordsent ? qa_lang_html('users/password_sent') : ($emailexists ? qa_lang_html('users/email_exists') : null),
+			// 'ok' => $passwordsent ? qa_lang_html('users/password_sent') : ($emailexists ? qa_lang_html('users/email_exists') : null),
+			'ok' => ($emailexists ? qa_lang_html('users/email_exists') : null),
 
-		'fields' => array(
-			'email_handle' => array(
-				'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
-				'tags' => 'name="emailhandle" id="emailhandle" dir="auto"',
-				'value' => qa_html(@$inemailhandle),
-				'error' => qa_html(@$errors['emailhandle']),
+			'fields' => array(
+				'email_handle' => array(
+					'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
+					'tags' => 'name="emailhandle" id="emailhandle" dir="auto"',
+					'value' => qa_html(@$inemailhandle),
+					'error' => qa_html(@$errors['emailhandle']),
+				),
+
+				'password' => array(
+					'type' => 'password',
+					'label' => qa_lang_html('users/password_label'),
+					'tags' => 'name="password" id="password" dir="auto"',
+					'value' => qa_html(@$inpassword),
+					'error' => empty($errors['password']) ? '' : (qa_html(@$errors['password']).' - '.$forgothtml),
+					'note' => $passwordsent ? qa_lang_html('users/password_sent') : $forgothtml,
+				),
+
+				'remember' => array(
+					'type' => 'checkbox',
+					'label' => qa_lang_html('users/remember_label'),
+					'tags' => 'name="remember"',
+					'value' => !empty($inremember),
+				),
 			),
 
-			'password' => array(
-				'type' => 'password',
-				'label' => qa_lang_html('users/password_label'),
-				'tags' => 'name="password" id="password" dir="auto"',
-				'value' => qa_html(@$inpassword),
-				'error' => empty($errors['password']) ? '' : (qa_html(@$errors['password']).' - '.$forgothtml),
-				'note' => $passwordsent ? qa_lang_html('users/password_sent') : $forgothtml,
+			'buttons' => array(
+				'login' => array(
+					'label' => qa_lang_html('users/login_button'),
+				),
 			),
 
-			'remember' => array(
-				'type' => 'checkbox',
-				'label' => qa_lang_html('users/remember_label'),
-				'tags' => 'name="remember"',
-				'value' => !empty($inremember),
+			'hidden' => array(
+				'dologin' => '1',
+				'code' => qa_get_form_security_code('login'),
 			),
-		),
-
-		'buttons' => array(
-			'login' => array(
-				'label' => qa_lang_html('users/login_button'),
-			),
-		),
-
-		'hidden' => array(
-			'dologin' => '1',
-			'code' => qa_get_form_security_code('login'),
-		),
-	);
+		);
+	}
 
 	$loginmodules=qa_load_modules_with('login', 'login_html');
 
