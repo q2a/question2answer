@@ -2448,7 +2448,7 @@ input[type="submit"], button {
 	background: #fff;
 	margin-bottom: 5px;
 }
-.qa-part-a-form:empty
+.qa-part-a-form:empty,
 .qa-part-a-form h2 {
 	margin-top: 0;
 }
