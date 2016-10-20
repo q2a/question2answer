@@ -65,7 +65,7 @@
 		'remoderate_body' => "An edited post by ^p_handle requires your reapproval:\n\n^open^p_context^close\n\nClick below to approve or hide the edited post:\n\n^url\n\n\nClick below to review all queued posts:\n\n^a_url\n\n\nThank you,\n\n^site_title",
 		'remoderate_subject' => '^site_title moderation',
 
-		'reset_body' => "Please click below to reset your password for ^site_title.\n\n^url\n\nAlternatively, enter the code below into the field provided.\n\nCode: ^code\n\nIf you did not ask to reset your password, please ignore this message.\n\nThank you,\n^site_title",
+		'reset_body' => "Please click below to reset your password for ^site_title.\n\n^url\n\nIf you did not ask to reset your password, please ignore this message.\n\nThank you,\n^site_title",
 		'reset_subject' => '^site_title - Reset Forgotten Password',
 
 		'to_handle_prefix' => "^,\n\n",
