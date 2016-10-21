@@ -46,6 +46,8 @@ class qa_event_logger
 				') ENGINE=MyISAM DEFAULT CHARSET=utf8';
 			}
 		}
+
+		return array();
 	}
 
 
