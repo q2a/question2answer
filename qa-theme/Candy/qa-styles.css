@@ -25,7 +25,7 @@ p {margin-top:0;}
 
 /* Ajax loading spinner */
 
-.qa-waiting {background:url(spinner-icon-14x14.gif) no-repeat center; width:14px; height:14px; display:inline-block; font-size:0; margin:0px 8px 0px 4px; vertical-align:middle;}
+.qa-waiting {background:url(spinner-icon-14x14.gif) no-repeat center; width:14px; height:14px; display:inline-block; font-size:0; margin:0 8px 0 4px; vertical-align:middle;}
 .qa-favoriting .qa-waiting {position:absolute; padding:18px 0;}
 .qa-a-selection .qa-waiting {position:absolute; padding:18px 0; margin-left:-32px;}
 
@@ -49,9 +49,9 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 .qa-favorite-button,.qa-unfavorite-button {background:url(favorite-heart.png) no-repeat; border:0; height:49px; width:50px;}
 	.qa-favorite-button {background-position: 0 -49px;}
-	.qa-favorite-button:hover {background-position: 0 0px;}
+	.qa-favorite-button:hover {background-position: 0 0;}
 	.qa-unfavorite-button {background-position: 0 -98px;}
-	.qa-unfavorite-button:hover {background-position: 0 0px;}
+	.qa-unfavorite-button:hover {background-position: 0 0;}
 
 .qa-error {background:#fed8d8 url(error-bg.png) repeat-x left top; border:2px solid #c00; color:#c00; font-size:18px; padding:.5em; margin:1em 0; }
 	.qa-error a {color:#900; text-decoration:underline;}
@@ -79,7 +79,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-widget-full-high {margin-bottom:0;}
 .qa-widgets-main-high {margin-bottom:24px;}
 .qa-widget-main {margin:16px 0; width:748px;}
-.qa-widget-main-bottom {margin-bottom:0px;}
+.qa-widget-main-bottom {margin-bottom:0;}
 .qa-widget-side {margin:24px 0; width:160px;}
 
 /* Header sections */
@@ -256,9 +256,9 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 	.qa-voted-down-button {background-position:-27px -87px; color:#f1c96b;}
 	.qa-voted-down-button:hover {background-position:-27px -29px; color:#f1c96b;}
 
-.qa-vote-one-button {position:absolute; left:32px; top:0px;}
-.qa-vote-first-button {position:absolute; left:10px; top:0px;}
-.qa-vote-second-button {position:absolute; left:53px; top:0px;}
+.qa-vote-one-button {position:absolute; left:32px; top:0;}
+.qa-vote-first-button {position:absolute; left:10px; top:0;}
+.qa-vote-second-button {position:absolute; left:53px; top:0;}
 
 .qa-netvote-count {text-align:center; display:block;}
 .qa-netvote-count-data {font-size:28px; font-weight:bold;}
@@ -396,7 +396,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-c-item-who-title {font-size:80%; font-weight:bold; color:#6b0000;}
 .qa-c-item-who-points {display:none;}
 .qa-c-item-flags {color:#f00; font-weight:bold; padding-left:3px;}
-.qa-c-item-buttons {display:block; position:absolute; bottom:0px; right:0px;}
+.qa-c-item-buttons {display:block; position:absolute; bottom:0; right:0;}
 
 .qa-c-item-buttons .qa-form-light-button {background:none; height:auto; font-size:10px; padding:0;}
 
@@ -438,7 +438,7 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 	.qa-tag-link:hover {text-decoration:underline !important;}
 .qa-avatar-image {border:0; vertical-align:middle;}
 .qa-avatar-link,.qa-avatar-link:hover {text-decoration:none;}
-.qa-favorite-image {background:url(favorite-heart.png) no-repeat; background-position: 0 0px; border:0; height:49px; width:50px; vertical-align:middle; display:inline-block;}
+.qa-favorite-image {background:url(favorite-heart.png) no-repeat; background-position: 0 0; border:0; height:49px; width:50px; vertical-align:middle; display:inline-block;}
 
 .qa-q-favorited .qa-q-item-title a, .qa-tag-favorited, .qa-cat-favorited, .qa-user-favorited, .qa-nav-cat-favorited, .qa-browse-cat-favorited {background-image:url(favorite-icon-16x16.png); background-repeat: no-repeat;}
 .qa-cat-parent-favorited {background-image:url(favorite-light-icon-16x16.png); background-repeat: no-repeat;}
@@ -478,4 +478,4 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 * html .qa-voted-down-button {background:url(vote-buttons-ie6.png) no-repeat -27px -87px;}
 * html .qa-tag-link {background:url(tag-icon-ie6.png) no-repeat left center;}
 * html .qa-a-count {background:url(a-count-icon-ie6.png) no-repeat 32px 13px;}
-* html .qa-favorite-image {background:url(favorite-heart-ie6.png) no-repeat 0 0px;}
+* html .qa-favorite-image {background:url(favorite-heart-ie6.png) no-repeat 0 0;}

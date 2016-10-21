@@ -2762,7 +2762,7 @@ input[type="submit"], button {
 @media (min-width: 980px) {
 	.qa-sidepanel {
 		width: 25%;
-		padding: 0px;
+		padding: 0;
 		float: right;
 		*zoom: 1;
 	}
@@ -2826,7 +2826,7 @@ input[type="submit"], button {
 	word-wrap: break-word;
 }
 .qa-sidepanel h1, .qa-sidepanel h2, .qa-sidepanel h3, .qa-sidepanel h4, .qa-sidepanel h5, .qa-sidepanel h6 {
-	margin-top: 0px;
+	margin-top: 0;
 }
 .qa-sidepanel .qa-widget-side {
 	padding: 20px;
