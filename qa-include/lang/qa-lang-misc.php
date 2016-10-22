@@ -76,6 +76,7 @@
 		'nav_user_pms' => 'Private messages',
 		'nav_user_qs' => 'All questions',
 		'nav_user_wall' => 'Wall',
+		'next_step' => 'Next step',
 		'no_activity_from_x' => 'No activity from ^',
 		'no_favorite_categories' => 'No favorite categories',
 		'no_favorite_qs' => 'No favorite questions',

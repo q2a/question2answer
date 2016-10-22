@@ -118,7 +118,6 @@
 		'save_profile' => 'Save Profile',
 		'save_user' => 'Save User',
 		'send_confirm_button' => 'Send Confirmation Link',
-		'send_password_button' => 'Send New Password',
 		'send_reset_button' => 'Send Reset Password Email',
 		'send_reset_note' => 'A message will be sent to your email address with instructions.',
 		'special_users' => 'Special users',
