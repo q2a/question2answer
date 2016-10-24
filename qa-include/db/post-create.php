@@ -33,7 +33,7 @@
 	{
 		qa_db_query_sub(
 			'INSERT INTO ^posts (categoryid, type, parentid, userid, cookieid, createip, title, content, format, tags, notify, name, created) '.
-			'VALUES (#, $, #, $, #, INET_ATON($), $, $, $, $, $, $, NOW())',
+			'VALUES (#, $, #, $, #, INET6_ATON($), $, $, $, $, $, $, NOW())',
 			$categoryid, $type, $parentid, $userid, $cookieid, $ip, $title, $content, $format, $tagstring, $notify, $name
 		);
 

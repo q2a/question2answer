@@ -159,7 +159,7 @@
 */
 	{
 		return qa_db_read_all_values(qa_db_query_sub(
-			"SELECT postid FROM ^posts WHERE createip=INET_ATON($) AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
+			"SELECT postid FROM ^posts WHERE createip=INET6_ATON($) AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
 			$ip
 		));
 	}
@@ -187,7 +187,7 @@
 */
 	{
 		$results=qa_db_read_all_assoc(qa_db_query_sub(
-			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET_NTOA(createip) AS createip, email, handle, flags, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
+			"SELECT ^users.userid, UNIX_TIMESTAMP(created) AS created, INET6_NTOA(createip) AS createip, email, handle, flags, title, content FROM ^users LEFT JOIN ^userprofile ON ^users.userid=^userprofile.userid AND LENGTH(content)>0 WHERE level<# AND NOT (flags&#) ORDER BY created DESC LIMIT #",
 			QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED, $count
 		));
 

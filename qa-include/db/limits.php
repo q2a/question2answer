@@ -42,7 +42,7 @@
 		}
 
 		if (isset($ip)) {
-			$selects[]="(SELECT 'ip' AS limitkey, period, count FROM ^iplimits WHERE ip=COALESCE(INET_ATON($), 0) AND action=$)";
+			$selects[]="(SELECT 'ip' AS limitkey, period, count FROM ^iplimits WHERE ip=COALESCE(INET6_ATON($), 0) AND action=$)";
 			$arguments[]=$ip;
 			$arguments[]=$action;
 		}
@@ -75,7 +75,7 @@
 */
 	{
 		qa_db_query_sub(
-			'INSERT INTO ^iplimits (ip, action, period, count) VALUES (COALESCE(INET_ATON($), 0), $, #, #) '.
+			'INSERT INTO ^iplimits (ip, action, period, count) VALUES (COALESCE(INET6_ATON($), 0), $, #, #) '.
 			'ON DUPLICATE KEY UPDATE count=IF(period=#, count+#, #), period=#',
 			$ip, $action, $period, $count, $period, $count, $count, $period
 		);

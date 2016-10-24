@@ -40,7 +40,7 @@
 				continue;
 
 			qa_db_query_sub(
-				'INSERT INTO ^blobs (blobid, format, content, filename, userid, cookieid, createip, created) VALUES (#, $, $, $, $, #, INET_ATON($), NOW())',
+				'INSERT INTO ^blobs (blobid, format, content, filename, userid, cookieid, createip, created) VALUES (#, $, $, $, $, #, INET6_ATON($), NOW())',
 				$blobid, $format, $content, $sourcefilename, $userid, $cookieid, $ip
 			);
 
