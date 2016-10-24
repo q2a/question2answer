@@ -127,7 +127,7 @@
 	function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $selchildid, $answers)
 /*
 	Set the selected answer (application level) of $oldquestion to $selchildid. Pass details of the user doing this
-	in $userid, $handle and $cookieid, and the database records for all answers to the question in $answers.
+	in $userid, $handle and $cookieid, and the database records for the selected and deselected answers in $answers.
 	Handles user points values and notifications.
 	See qa-app-posts.php for a higher-level function which is easier to use.
 */
@@ -620,7 +620,7 @@
 			}
 
 			if ($question['selchildid'] == $oldanswer['postid']) { // remove selected answer
-				qa_question_set_selchildid(null, null, null, $question, null, $answers);
+				qa_question_set_selchildid(null, null, null, $question, null, array($oldanswer['postid'] => $oldanswer));
 			}
 
 		} elseif ($status==QA_POST_STATUS_NORMAL) {
