@@ -877,7 +877,7 @@
 			qa_post_index($oldanswer['postid'], 'C', $question['postid'], $parentid, null, $content, $format, $text, null, $oldanswer['categoryid']);
 
 		if ($question['selchildid'] == $oldanswer['postid']) { // remove selected answer
-			qa_question_set_selchildid(null, null, null, $question, null, $answers);
+			qa_question_set_selchildid(null, null, null, $question, null, array($oldanswer['postid'] => $oldanswer));
 		}
 
 		$eventparams=array(
