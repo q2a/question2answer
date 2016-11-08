@@ -89,7 +89,7 @@ class qa_filter_basic
 			else {
 				$tagstring = qa_tags_to_tagstring($question['tags']);
 				if (qa_strlen($tagstring) > QA_DB_MAX_TAGS_LENGTH) { // for storage
-					$errors['tags'] = qa_lang_sub('main/max_length_x', $maxlength);
+					$errors['tags'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_TAGS_LENGTH);
 				}
 			}
 		}
