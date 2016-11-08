@@ -107,7 +107,7 @@ class qa_filter_basic
 	public function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
 	{
 		$this->validate_field_length($errors, $comment, 'content', 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_a_content'), null, 'content'); // for display
+		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_c_content'), null, 'content'); // for display
 		$this->validate_post_email($errors, $comment);
 	}
 
