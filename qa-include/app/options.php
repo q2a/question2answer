@@ -320,6 +320,7 @@
 			'permit_post_wall' => QA_PERMIT_CONFIRMED,
 			'permit_select_a' => QA_PERMIT_EXPERTS,
 			'permit_view_q_page' => QA_PERMIT_ALL,
+			'permit_view_special_users_page' => QA_PERMIT_MODERATORS,
 			'permit_view_voters_flaggers' => QA_PERMIT_ADMINS,
 			'permit_vote_a' => QA_PERMIT_USERS,
 			'permit_vote_down' => QA_PERMIT_USERS,
@@ -787,6 +788,8 @@
 
 		if (qa_opt('allow_user_walls'))
 			$permits[]='permit_post_wall';
+
+		$permits[]='permit_view_special_users_page';
 
 		return $permits;
 	}

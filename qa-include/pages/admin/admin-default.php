@@ -1343,6 +1343,7 @@ foreach ($showoptions as $optionname) {
 				break;
 
 			case 'permit_view_q_page':
+			case 'permit_view_special_users_page':
 			case 'permit_post_q':
 			case 'permit_post_a':
 			case 'permit_post_c':
@@ -1370,7 +1371,7 @@ foreach ($showoptions as $optionname) {
 				else
 					$optionfield['label'] = qa_lang_html('profile/' . $optionname) . ':';
 
-				if ($optionname == 'permit_view_q_page' || $optionname == 'permit_post_q' || $optionname == 'permit_post_a' || $optionname == 'permit_post_c' || $optionname == 'permit_anon_view_ips')
+				if ($optionname == 'permit_view_q_page' || $optionname == 'permit_view_special_users_page' || $optionname == 'permit_post_q' || $optionname == 'permit_post_a' || $optionname == 'permit_post_c' || $optionname == 'permit_anon_view_ips')
 					$widest = QA_PERMIT_ALL;
 				elseif ($optionname == 'permit_close_q' || $optionname == 'permit_select_a' || $optionname == 'permit_moderate' || $optionname == 'permit_hide_show')
 					$widest = QA_PERMIT_POINTS;
@@ -1383,6 +1384,9 @@ foreach ($showoptions as $optionname) {
 
 				if ($optionname == 'permit_view_q_page') {
 					$narrowest = QA_PERMIT_APPROVED;
+					$dopoints = false;
+				} elseif ($optionname == 'permit_view_special_users_page') {
+					$narrowest = QA_PERMIT_SUPERS;
 					$dopoints = false;
 				} elseif ($optionname == 'permit_edit_c' || $optionname == 'permit_close_q' || $optionname == 'permit_select_a' || $optionname == 'permit_moderate' || $optionname == 'permit_hide_show' || $optionname == 'permit_anon_view_ips')
 					$narrowest = QA_PERMIT_MODERATORS;
