@@ -64,7 +64,7 @@
 		}
 		else {
 			require_once QA_EXTERNAL_DIR.'qa-external-users.php';
-        }
+		}
 
 	//	Access functions for user information
 
@@ -477,6 +477,37 @@
 
 
 		/**
+		 * Return the URL to the $blobId with a stored size of $width and $height.
+		 * Constrain the image to $size (width AND height)
+		 *
+		 * @param string $blobId The blob ID from the image
+		 * @param int|null $size The resulting image's size. If omitted the original image size will be used. If the
+		 * size is present it must be greater than 0
+		 * @param bool $absolute Whether the link returned should be absolute or relative
+		 * @return string|null The URL to the avatar or null if the $blobId was empty or the $size not valid
+		 */
+		function qa_get_avatar_blob_url($blobId, $size = null, $absolute = false)
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+			require_once QA_INCLUDE_DIR . 'util/image.php';
+
+			if (strlen($blobId) == 0 || (isset($size) && (int)$size <= 0)) {
+				return null;
+			}
+
+			$params = array('qa_blobid' => $blobId);
+			if (isset($size)) {
+				$params['qa_size'] = $size;
+			}
+
+			$rootUrl = $absolute ? qa_opt('site_url') : null;
+
+			return qa_path('image', $params, $rootUrl, QA_URL_FORMAT_PARAMS);
+		}
+
+
+		/**
 		 * Get HTML to display a username, linked to their user page.
 		 *
 		 * @param string $handle  The username.
@@ -501,26 +532,128 @@
 		}
 
 
-		function qa_get_user_avatar_html($flags, $email, $handle, $blobid, $width, $height, $size, $padding=false)
-	/*
-		Return HTML to display for the user's avatar, constrained to $size pixels, with optional $padding to that size
-		Pass the user's fields $flags, $email, $handle, and avatar $blobid, $width and $height
-	*/
+		/**
+		 * Return the URL for the Gravatar corresponding to $email, constrained to $size
+		 *
+		 * @param string $email The email of the Gravatar to return
+		 * @param int|null $size The size of the Gravatar to return. If omitted the default size will be used
+		 * @return string The URL to the Gravatar of the user
+		 */
+		function qa_get_gravatar_url($email, $size = null)
 		{
 			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-			require_once QA_INCLUDE_DIR.'app/format.php';
 
-			if (qa_opt('avatar_allow_gravatar') && ($flags & QA_USER_FLAGS_SHOW_GRAVATAR))
-				$html=qa_get_gravatar_html($email, $size);
-			elseif (qa_opt('avatar_allow_upload') && (($flags & QA_USER_FLAGS_SHOW_AVATAR)) && isset($blobid))
-				$html=qa_get_avatar_blob_html($blobid, $width, $height, $size, $padding);
-			elseif ( (qa_opt('avatar_allow_gravatar')||qa_opt('avatar_allow_upload')) && qa_opt('avatar_default_show') && strlen(qa_opt('avatar_default_blobid')) )
-				$html=qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), $size, $padding);
-			else
-				$html=null;
+			$link = 'https://www.gravatar.com/avatar/%s';
 
-			return (isset($html) && strlen($handle)) ? ('<a href="'.qa_path_html('user/'.$handle).'" class="qa-avatar-link">'.$html.'</a>') : $html;
+			$params = array(md5(strtolower(trim($email))));
+
+			$size = (int)$size;
+			if ($size > 0) {
+				$link .= '?s=%d';
+				$params[] = $size;
+			}
+
+			return vsprintf($link, $params);
+		}
+
+
+		/**
+		 * Return where the avatar will be fetched from for the given user flags. The possible return values are
+		 * 'gravatar' for an avatar that will be fetched from Gravatar, 'local-user' for an avatar fetched locally from
+		 * the user's profile, 'local-default' for an avatar fetched locally from the default avatar blob ID, and NULL
+		 * if the avatar could not be fetched from any of these sources
+		 *
+		 * @param int $flags The user's flags
+		 * @param string|null $email The user's email
+		 * @param string|null $blobId The blob ID for a locally stored avatar.
+		 * @return string|null The source of the avatar: 'gravatar', 'local-user', 'local-default' and null
+		 */
+		function qa_get_user_avatar_source($flags, $email, $blobId)
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+			if (qa_opt('avatar_allow_gravatar') && (($flags & QA_USER_FLAGS_SHOW_GRAVATAR) > 0) && isset($email)) {
+				return 'gravatar';
+			} elseif (qa_opt('avatar_allow_upload') && (($flags & QA_USER_FLAGS_SHOW_AVATAR) > 0) && isset($blobId)) {
+				return 'local-user';
+			} elseif ((qa_opt('avatar_allow_gravatar') || qa_opt('avatar_allow_upload')) && qa_opt('avatar_default_show') && strlen(qa_opt('avatar_default_blobid') > 0)) {
+				return 'local-default';
+			} else {
+				return null;
+			}
+		}
+
+
+		/**
+		 * Return the avatar URL, either Gravatar or from a blob ID, constrained to $size pixels.
+		 *
+		 * @param int $flags The user's flags
+		 * @param string $email The user's email. Only needed to return the Gravatar link
+		 * @param string $blobId The blob ID. Only needed to return the locally stored avatar
+		 * @param int $size The size to constrain the final image
+		 * @param bool $absolute Whether the link returned should be absolute or relative
+		 * @return null|string The URL to the user's avatar or null if none could be found (not even as a default site avatar)
+		 */
+		function qa_get_user_avatar_url($flags, $email, $blobId, $size = null, $absolute = false)
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+			$avatarSource = qa_get_user_avatar_source($flags, $email, $blobId);
+
+			switch ($avatarSource) {
+				case 'gravatar':
+					return qa_get_gravatar_url($email, $size);
+				case 'local-user':
+					return qa_get_avatar_blob_url($blobId, $size, $absolute);
+				case 'local-default':
+					return qa_get_avatar_blob_url(qa_opt('avatar_default_blobid'), $size, $absolute);
+				default: // NULL
+					return null;
+			}
+		}
+
+
+		/**
+		 * Return HTML to display for the user's avatar, constrained to $size pixels, with optional $padding to that size
+		 *
+		 * @param int $flags The user's flags
+		 * @param string $email The user's email. Only needed to return the Gravatar HTML
+		 * @param string $blobId The blob ID. Only needed to return the locally stored avatar HTML
+		 * @param string $handle The handle of the user that the avatar will link to
+		 * @param string $blobId The blob ID. Only needed to return the locally stored avatar
+		 * @param int $width The width to constrain the image
+		 * @param int $height The height to constrain the image
+		 * @param int $size The size to constrain the final image
+		 * @param bool $padding HTML padding to add to the image
+		 * @return string|null The HTML to the user's avatar or null if no valid source for the avatar could be found
+		 */
+		function qa_get_user_avatar_html($flags, $email, $handle, $blobId, $width, $height, $size, $padding = false)
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+			require_once QA_INCLUDE_DIR . 'app/format.php';
+			if (strlen($handle) == 0) {
+				return null;
+			}
+
+			$avatarSource = qa_get_user_avatar_source($flags, $email, $blobId);
+
+			switch ($avatarSource) {
+				case 'gravatar':
+					$html = qa_get_gravatar_html($email, $size);
+					break;
+				case 'local-user':
+					$html = qa_get_avatar_blob_html($blobId, $width, $height, $size, $padding);
+					break;
+				case 'local-default':
+					$html = qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), $size, $padding);
+					break;
+				default: // NULL
+					return null;
+			}
+
+			return sprintf('<a href="%s" class="qa-avatar-link">%s</a>', qa_path_html('user/' . $handle), $html);
 		}
 
 
