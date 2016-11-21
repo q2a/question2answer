@@ -74,8 +74,7 @@ $qa_content['form'] = array(
 		'q2a_latest' => array(
 			'label' => qa_lang_html('admin/q2a_latest_version'),
 			'type' => 'custom',
-			'html' => '<iframe src="http://www.question2answer.org/question2answer-latest.php?version=' . urlencode(QA_VERSION) . '&language=' . urlencode(qa_opt('site_language')) .
-				'" width="100" height="16" style="vertical-align:middle; border:0; background:transparent;" allowTransparency="true" scrolling="no" frameborder="0"></iframe>',
+			'html' => '<span id="q2a-version">...</span>',
 		),
 
 		'break0' => array(
@@ -273,6 +272,10 @@ if (defined('QA_BLOBS_DIRECTORY')) {
 
 $qa_content['script_rel'][] = 'qa-content/qa-admin.js?' . QA_VERSION;
 $qa_content['script_var']['qa_warning_recalc'] = qa_lang('admin/stop_recalc_warning');
+
+$qa_content['script_onloads'][] = array(
+    "qa_version_check('https://raw.githubusercontent.com/q2a/question2answer/master/VERSION.txt', " . qa_js(qa_html(QA_VERSION), true) . ", 'q2a-version', true);"
+);
 
 $qa_content['navigation']['sub'] = qa_admin_sub_navigation();
 

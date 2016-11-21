@@ -153,7 +153,7 @@ if (!empty($pluginfiles)) {
 			$updatehtml = '(<span id="' . $elementid . '">...</span>)';
 
 			$qa_content['script_onloads'][] = array(
-				"qa_version_check(" . qa_js($metadata['update_uri']) . ", " . qa_js($metadata['version'], true) . ", " . qa_js($elementid) . ");"
+				"qa_version_check(" . qa_js($metadata['update_uri']) . ", " . qa_js($metadata['version'], true) . ", " . qa_js($elementid) . ", false);"
 			);
 
 		} else
