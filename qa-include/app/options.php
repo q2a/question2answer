@@ -202,6 +202,7 @@
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		$fixed_defaults=array(
+			'allow_anonymous_naming' => 1,
 			'allow_change_usernames' => 1,
 			'allow_close_questions' => 1,
 			'allow_multi_answers' => 1,
