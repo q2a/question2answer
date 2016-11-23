@@ -65,7 +65,7 @@ $(document).ready(function () {
 	/*
 	 * Add wrapper to users point on users list
 	 */
-	$('.qa-top-users-score').wrapInner('<div class="qam-user-score-icon"></div>');
+	$('.qa-top-users-score, .qa-top-newest-users-score').wrapInner('<div class="qam-user-score-icon"></div>');
 
 	/*
 	 * add wrapper to the message sent note 'td'
