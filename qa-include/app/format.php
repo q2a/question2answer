@@ -1308,12 +1308,15 @@
 		$moderatorPlus = qa_get_logged_in_level() >= QA_USER_LEVEL_MODERATOR;
 		$showSpecialUsersPage = !qa_user_permit_error('permit_view_special_users_page');
 
-		if ($moderatorPlus || $showSpecialUsersPage) { // We want to show this item when more than one item should be displayed
-			$menuItems['users$'] = array(
-				'url' => qa_path_html('users'),
-				'label' => qa_lang_html('main/highest_users'),
-			);
-		}
+		$menuItems['users$'] = array(
+			'label' => qa_lang_html('main/highest_users'),
+			'url' => qa_path_html('users'),
+		);
+
+		$menuItems['users/newest'] = array(
+			'label' => qa_lang_html('main/newest_users'),
+			'url' => qa_path_html('users/newest'),
+		);
 
 		if ($showSpecialUsersPage) {
 			$menuItems['users/special'] = array(

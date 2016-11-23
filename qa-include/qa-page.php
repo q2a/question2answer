@@ -444,6 +444,7 @@
 			'user/' => 'pages/user.php',
 			'users' => 'pages/users.php',
 			'users/blocked' => 'pages/users-blocked.php',
+			'users/newest' => 'pages/users-newest.php',
 			'users/special' => 'pages/users-special.php',
 		);
 	}
