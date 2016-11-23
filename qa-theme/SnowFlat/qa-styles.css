@@ -1516,6 +1516,8 @@ blockquote p {
 }
 
 .qa-top-users-item,
+.qa-top-special-users-item,
+.qa-top-blocked-users-item,
 .qa-top-newest-users-item {
 	width: 100%;
 	max-width: 320px;
@@ -1529,6 +1531,8 @@ blockquote p {
 @media only screen and (min-width: 992px) {
 	/* two column layout for Desktops and above*/
 	.qa-top-users-item,
+	.qa-top-special-users-item,
+	.qa-top-blocked-users-item,
 	.qa-top-newest-users-item {
 		width: 48%;
 		max-width: none;
@@ -1541,6 +1545,7 @@ blockquote p {
 }
 
 .qa-top-users-avatar .qa-avatar-link,
+.qa-top-special-users-avatar .qa-avatar-link,
 .qa-top-newest-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
@@ -1548,11 +1553,15 @@ blockquote p {
 }
 
 .qa-top-users-avatar .qa-avatar-link img,
+.qa-top-special-users-avatar .qa-avatar-link img,
+.qa-top-blocked-users-avatar .qa-avatar-link img,
 .qa-top-newest-users-avatar .qa-avatar-link img {
 	border: 1px solid #cbd7e3;
 }
 
 .qa-top-users-label .qa-user-link,
+.qa-top-special-users-label .qa-user-link,
+.qa-top-blocked-users-label .qa-user-link,
 .qa-top-newest-users-label .qa-user-link {
 	background-color: #e74c3c;
 	display: block;
@@ -1564,6 +1573,10 @@ blockquote p {
 
 .qa-top-users-label .qa-user-link:hover,
 .qa-top-users-label .qa-user-link:focus,
+.qa-top-special-users-label .qa-user-link:hover,
+.qa-top-special-users-label .qa-user-link:focus,
+.qa-top-blocked-users-label .qa-user-link:hover,
+.qa-top-blocked-users-label .qa-user-link:focus,
 .qa-top-newest-users-label .qa-user-link:hover,
 .qa-top-newest-users-label .qa-user-link:focus {
 	background-color: #eb695c;
@@ -1571,6 +1584,8 @@ blockquote p {
 }
 
 .qa-top-users-label .qa-user-link:before,
+.qa-top-special-users-label .qa-user-link:before,
+.qa-top-blocked-users-label .qa-user-link:before,
 .qa-top-newest-users-label .qa-user-link:before {
 	content: "";
 	position: absolute;
@@ -1586,6 +1601,8 @@ blockquote p {
 
 @media (min-width: 980px) {
 	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after,
+	.qa-top-special-users-label .qa-user-link:hover:after, .qa-top-special-users-label .qa-user-link:focus:after,
+	.qa-top-blocked-users-label .qa-user-link:hover:after, .qa-top-blocked-users-label .qa-user-link:focus:after,
 	.qa-top-newest-users-label .qa-user-link:hover:after, .qa-top-newest-users-label .qa-user-link:focus:after {
 		-ms-transform: translate(80px, 0);
 		-webkit-transform: translate(80px, 0);
@@ -1593,6 +1610,8 @@ blockquote p {
 	}
 
 	.qa-top-users-label .qa-user-link:after,
+	.qa-top-special-users-label .qa-user-link:after,
+	.qa-top-blocked-users-label .qa-user-link:after,
 	.qa-top-newest-users-label .qa-user-link:after {
 		content: "";
 		display: block;
@@ -1614,6 +1633,8 @@ blockquote p {
 }
 
 .qa-top-users-label .qa-user-link.qa-user-favorited,
+.qa-top-special-users-label .qa-user-link.qa-user-favorited,
+.qa-top-blocked-users-label .qa-user-link.qa-user-favorited,
 .qa-top-newest-users-label .qa-user-link.qa-user-favorited {
 	background-image: url('images/icons/fev-star.png');
 	background-repeat: no-repeat;
@@ -1647,6 +1668,8 @@ blockquote p {
 	padding: 2px 6px 2px 1.8em;
 }
 
+.qa-top-special-users-score .qam-user-score-icon,
+.qa-top-blocked-users-score .qam-user-score-icon,
 .qa-top-newest-users-score .qam-user-score-icon {
 	padding: 2px 6px 2px 6px;
 }
