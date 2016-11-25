@@ -33,7 +33,7 @@
 		'c_commented_body' => "A new comment by ^c_handle has been added after your comment on ^site_title:\n\n^open^c_content^close\n\nThe discussion is following:\n\n^open^c_context^close\n\nYou may respond by adding another comment:\n\n^url\n\nThank you,\n\n^site_title",
 		'c_commented_subject' => 'Your ^site_title comment has been added to',
 
-		'confirm_body' => "Please click below to confirm your email address for ^site_title.\n\n^url\n\nThank you,\n^site_title",
+		'confirm_body' => "Please click below to confirm your email address for ^site_title.\n\n^url\n\nConfirmation code: ^code\n\n Thank you,\n^site_title",
 		'confirm_subject' => '^site_title - Email Address Confirmation',
 
 		'feedback_body' => "Comments:\n^message\n\nName:\n^name\n\nEmail:\n^email\n\nPrevious page:\n^previous\n\nUser:\n^url\n\nIP address:\n^ip\n\nBrowser:\n^browser",

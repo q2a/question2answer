@@ -250,23 +250,29 @@
 
 		$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($userid, true));
 
+		$emailcode = qa_db_user_rand_emailcode();
+
 		if (!qa_send_notification($userid, $userinfo['email'], $userinfo['handle'], qa_lang('emails/confirm_subject'), qa_lang('emails/confirm_body'), array(
-			'^url' => qa_get_new_confirm_url($userid, $userinfo['handle']),
+			'^url' => qa_get_new_confirm_url($userid, $userinfo['handle'], $emailcode),
+			'^code' => $emailcode,
 		)))
 			qa_fatal_error('Could not send email confirmation');
 	}
 
 
-	function qa_get_new_confirm_url($userid, $handle)
+	function qa_get_new_confirm_url($userid, $handle, $emailcode = null)
 /*
-	Set a new email confirmation code for the user and return the corresponding link
+	Set a new email confirmation code for the user and return the corresponding link. If the email code is also sent then that value
+	is used. Otherwise, a new email code is generated
 */
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR.'db/users.php';
 
-		$emailcode=qa_db_user_rand_emailcode();
+		if (!isset($emailcode)) {
+			$emailcode = qa_db_user_rand_emailcode();
+		}
 		qa_db_user_set($userid, 'emailcode', $emailcode);
 
 		return qa_path_absolute('confirm', array('c' => $emailcode, 'u' => $handle));
