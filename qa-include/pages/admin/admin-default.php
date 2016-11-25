@@ -886,7 +886,7 @@
 
 		}
 		else { // rudimentary non-Javascript version of mass mailing loop
-			echo '<tt>';
+			echo '<code>';
 
 			while (true) {
 				qa_mailing_perform_step();
@@ -902,7 +902,7 @@
 				sleep(1);
 			}
 
-			echo qa_lang_html('admin/mailing_complete').'</tt><p><a href="'.qa_path_html('admin/mailing').'">'.qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/mailing_title').'</a>';
+			echo qa_lang_html('admin/mailing_complete').'</code><p><a href="'.qa_path_html('admin/mailing').'">'.qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/mailing_title').'</a>';
 
 			qa_exit();
 		}
