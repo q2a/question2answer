@@ -89,7 +89,7 @@ class qa_filter_basic
 			else {
 				$tagstring = qa_tags_to_tagstring($question['tags']);
 				if (qa_strlen($tagstring) > QA_DB_MAX_TAGS_LENGTH) { // for storage
-					$errors['tags'] = qa_lang_sub('main/max_length_x', $maxlength);
+					$errors['tags'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_TAGS_LENGTH);
 				}
 			}
 		}
@@ -107,7 +107,7 @@ class qa_filter_basic
 	public function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
 	{
 		$this->validate_field_length($errors, $comment, 'content', 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_a_content'), null, 'content'); // for display
+		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_c_content'), null, 'content'); // for display
 		$this->validate_post_email($errors, $comment);
 	}
 
