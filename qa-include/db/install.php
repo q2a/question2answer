@@ -137,7 +137,7 @@
 
 			'userlevels' => array(
 				'userid' => $useridcoltype.' NOT NULL', // the user who has this level
-				'entitytype' => "CHAR(1) CHARACTER SET ascii NOT NULL", // see qa-app-updates.php
+				'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
 				'entityid' => 'INT UNSIGNED NOT NULL', // relevant postid / userid / tag wordid / categoryid
 				'level' => 'TINYINT UNSIGNED', // if not NULL, special permission level for that user and that entity
 				'UNIQUE userid (userid, entitytype, entityid)',
@@ -180,7 +180,7 @@
 
 			'userfavorites' => array(
 				'userid' => $useridcoltype.' NOT NULL', // the user who favorited the entity
-				'entitytype' => "CHAR(1) CHARACTER SET ascii NOT NULL", // see qa-app-updates.php
+				'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
 				'entityid' => 'INT UNSIGNED NOT NULL', // favorited postid / userid / tag wordid / categoryid
 				'nouserevents' => 'TINYINT UNSIGNED NOT NULL', // do we skip writing events to the user stream?
 				'PRIMARY KEY (userid, entitytype, entityid)',
@@ -201,7 +201,7 @@
 
 			'userevents' => array(
 				'userid' => $useridcoltype.' NOT NULL', // the user to be informed about this event in their updates
-				'entitytype' => "CHAR(1) CHARACTER SET ascii NOT NULL", // see qa-app-updates.php
+				'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
 				'entityid' => 'INT UNSIGNED NOT NULL', // favorited source of event - see userfavorites table - 0 means not from a favorite
 				'questionid' => 'INT UNSIGNED NOT NULL', // the affected question
 				'lastpostid' => 'INT UNSIGNED NOT NULL', // what part of question was affected
@@ -213,7 +213,7 @@
 			),
 
 			'sharedevents' => array(
-				'entitytype' => "CHAR(1) CHARACTER SET ascii NOT NULL", // see qa-app-updates.php
+				'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
 				'entityid' => 'INT UNSIGNED NOT NULL', // see userfavorites table
 				'questionid' => 'INT UNSIGNED NOT NULL', // see userevents table
 				'lastpostid' => 'INT UNSIGNED NOT NULL', // see userevents table

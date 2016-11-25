@@ -367,7 +367,7 @@
 		else
 			switch ($name) {
 				case 'site_url':
-					$value='http://'.@$_SERVER['HTTP_HOST'].strtr(dirname($_SERVER['SCRIPT_NAME']), '\\', '/').'/';
+					$value='http://'.@$_SERVER['HTTP_HOST'].strtr(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'), '\\', '/').'/';
 					break;
 
 				case 'site_title':

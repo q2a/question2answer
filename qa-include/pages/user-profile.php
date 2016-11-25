@@ -42,21 +42,23 @@ if (qa_clicked('doaccount'))
 
 //	Find the user profile and questions and answers for this handle
 
+
 $loginuserid = qa_get_logged_in_userid();
 $identifier = QA_FINAL_EXTERNAL_USERS ? $userid : $handle;
 
-list($useraccount, $userprofile, $userfields, $usermessages, $userpoints, $userlevels, $navcategories, $userrank) = qa_db_select_with_pending(
-	QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
-	QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_profile_selectspec($handle, false),
-	QA_FINAL_EXTERNAL_USERS ? null : qa_db_userfields_selectspec(),
-	QA_FINAL_EXTERNAL_USERS ? null : qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall')),
-	qa_db_user_points_selectspec($identifier),
-	qa_db_user_levels_selectspec($identifier, QA_FINAL_EXTERNAL_USERS, true),
-	qa_db_category_nav_selectspec(null, true),
-	qa_db_user_rank_selectspec($identifier)
-);
+list($useraccount, $userprofile, $userfields, $usermessages, $userpoints, $userlevels, $navcategories, $userrank) =
+	qa_db_select_with_pending(
+		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
+		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_profile_selectspec($handle, false),
+		QA_FINAL_EXTERNAL_USERS ? null : qa_db_userfields_selectspec(),
+		QA_FINAL_EXTERNAL_USERS ? null : qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall')),
+		qa_db_user_points_selectspec($identifier),
+		qa_db_user_levels_selectspec($identifier, QA_FINAL_EXTERNAL_USERS, true),
+		qa_db_category_nav_selectspec(null, true),
+		qa_db_user_rank_selectspec($identifier)
+	);
 
-if (!QA_FINAL_EXTERNAL_USERS) {
+if (!QA_FINAL_EXTERNAL_USERS && $handle !== qa_get_logged_in_handle()) {
 	foreach ($userfields as $index => $userfield) {
 		if (isset($userfield['permit']) && qa_permit_value_error($userfield['permit'], $loginuserid, qa_get_logged_in_level(), qa_get_logged_in_flags()))
 			unset($userfields[$index]); // don't pay attention to user fields we're not allowed to view

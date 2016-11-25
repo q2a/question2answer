@@ -108,13 +108,15 @@
 
 		global $qa_db_fail_handler;
 
-		@error_log('PHP Question2Answer MySQL '.$type.' error '.$errno.': '.$error.(isset($query) ? (' - Query: '.$query) : ''));
+		@error_log('PHP Question2Answer MySQL ' . $type . ' error ' . $errno . ': ' . $error . (isset($query) ? (' - Query: ' . $query) : ''));
 
 		if (function_exists($qa_db_fail_handler))
 			$qa_db_fail_handler($type, $errno, $error, $query);
-
 		else {
-			echo '<hr><font color="red">Database '.htmlspecialchars($type.' error '.$errno).'<p>'.nl2br(htmlspecialchars($error."\n\n".$query));
+			echo sprintf(
+				'<hr><div style="color: red">Database %s<p>%s</p><code>%s</code></div>',
+				htmlspecialchars($type . ' error ' . $errno), nl2br(htmlspecialchars($error)), nl2br(htmlspecialchars($query))
+			);
 			qa_exit('error');
 		}
 	}

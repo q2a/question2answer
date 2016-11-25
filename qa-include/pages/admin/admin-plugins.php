@@ -155,8 +155,8 @@ if (!empty($pluginfiles)) {
 			$qa_content['script_onloads'][] = array(
 				"qa_version_check(" . qa_js($metadata['update_uri']) . ", " . qa_js($metadata['version'], true) . ", " . qa_js($elementid) . ");"
 			);
-
-		} else
+		}
+		else
 			$updatehtml = '';
 
 		if (isset($metadata['description']))
@@ -164,25 +164,23 @@ if (!empty($pluginfiles)) {
 		else
 			$deschtml = '';
 
-		if (isset($pluginoptionmodules[$plugindirectory]) && !$showthisform) {
-			$deschtml .= (strlen($deschtml) ? ' - ' : '') . '<a href="' .
-				qa_admin_plugin_options_path($plugindirectory) . '">' . qa_lang_html('admin/options') . '</a>';
-		}
+		if (isset($pluginoptionmodules[$plugindirectory]) && !$showthisform)
+			$deschtml .= (strlen($deschtml) ? ' - ' : '').'<a href="'.
+				qa_admin_plugin_options_path($plugindirectory).'">'.qa_lang_html('admin/options').'</a>';
 
-		$pluginhtml = $namehtml . ' ' . $authorhtml . ' ' . $updatehtml . '<br>' . $deschtml . (strlen($deschtml) ? '<br>' : '') .
-			'<small style="color:#666">' . qa_html($plugindirectory) . '/</small>';
+		$pluginhtml = $namehtml.' '.$authorhtml.' '.$updatehtml.'<br>'.$deschtml.(strlen($deschtml) ? '<br>' : '').
+			'<small style="color:#666">'.qa_html($plugindirectory).'/</small>';
 
-		if (qa_qa_version_below(@$metadata['min_q2a'])) {
-			$pluginhtml = '<strike style="color:#999">' . $pluginhtml . '</strike><br><span style="color:#f00">' .
-				qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])) . '</span>';
+		if (qa_qa_version_below(@$metadata['min_q2a']))
+			$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
+				qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</span>';
 
-		} elseif (qa_php_version_below(@$metadata['min_php'])) {
-			$pluginhtml = '<strike style="color:#999">' . $pluginhtml . '</strike><br><span style="color:#f00">' .
-				qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])) . '</span>';
-		}
+		elseif (qa_php_version_below(@$metadata['min_php']))
+			$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
+				qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
 
-		$qa_content['form_plugin_' . $pluginIndex] = array(
-			'tags' => 'id="' . qa_html($hash) . '"',
+		$qa_content['form_plugin_'.$pluginIndex] = array(
+			'tags' => 'id="'.qa_html($hash).'"',
 			'style' => 'tall',
 			'fields' => array(
 				array(

@@ -738,14 +738,18 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		echo 'Question2Answer fatal error:<p><font color="red">'.qa_html($message, true).'</font></p>';
-		@error_log('PHP Question2Answer fatal error: '.$message);
+		echo 'Question2Answer fatal error:<p style="color: red">' . qa_html($message, true) . '</p>';
+		@error_log('PHP Question2Answer fatal error: ' . $message);
 		echo '<p>Stack trace:<p>';
 
-		$backtrace=array_reverse(array_slice(debug_backtrace(), 1));
-		foreach ($backtrace as $trace)
-			echo '<font color="#'.((strpos(@$trace['file'], '/qa-plugin/')!==false) ? 'f00' : '999').'">'.
-				qa_html(@$trace['function'].'() in '.basename(@$trace['file']).':'.@$trace['line']).'</font><br>';
+		$backtrace = array_reverse(array_slice(debug_backtrace(), 1));
+		foreach ($backtrace as $trace) {
+			$color = strpos(@$trace['file'], '/qa-plugin/') !== false ? 'red' : '#999';
+			echo sprintf(
+				'<code style="color: %s">%s() in %s:%s</code><br>',
+				$color, qa_html(@$trace['function']), basename(@$trace['file']), @$trace['line']
+			);
+		}
 
 		qa_exit('error');
 	}

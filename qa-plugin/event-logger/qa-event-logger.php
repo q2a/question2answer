@@ -54,6 +54,8 @@ class qa_event_logger
 				}
 			}
 		}
+
+		return array();
 	}
 
 

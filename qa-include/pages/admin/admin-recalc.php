@@ -68,7 +68,7 @@ if ($recalcnow) {
 			<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		</head>
 		<body>
-			<tt>
+			<code>
 
 	<?php
 
@@ -87,7 +87,7 @@ if ($recalcnow) {
 	}
 
 	?>
-			</tt>
+			</code>
 
 			<a href="<?php echo qa_path_html('admin/stats')?>"><?php echo qa_lang_html('admin/admin_title').' - '.qa_lang_html('admin/stats_title')?></a>
 		</body>
