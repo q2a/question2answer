@@ -1936,11 +1936,19 @@ input[type="submit"], button {
 	width: 100%;
 }
 
-.qa-form-tall-ok, .qa-form-wide-ok {
-	background-color: #27ae60;
+.qa-form-tall-result-ok, .qa-form-wide-result-ok,
+.qa-form-tall-result-error, .qa-form-wide-result-error {
 	padding: 10px;
 	display: table-cell;
 	color: #fff;
+}
+
+.qa-form-tall-result-ok, .qa-form-wide-result-ok {
+	background-color: #27ae60;
+}
+
+.qa-form-tall-result-error, .qa-form-wide-result-error {
+	background-color: #e74c3c;
 }
 
 .qa-form-wide-error, .qa-form-tall-error {

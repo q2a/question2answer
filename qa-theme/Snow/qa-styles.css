@@ -1228,13 +1228,20 @@ div.header-banner {
 	padding: 0;
 }
 
-.qa-form-tall-ok {
-	background: #6AAA2B;
-	color: #fff;
+.qa-form-tall-result-ok, .qa-form-tall-result-error {
 	font-size: 18px;
 	text-align: center;
 	padding: 6px;
 	border-radius: 3px;
+	color: #fff;
+}
+
+.qa-form-tall-result-ok {
+	background: #6AAA2B;
+}
+
+.qa-form-tall-result-error {
+	background: #C00;
 }
 
 .qa-form-tall-label {
@@ -1370,11 +1377,18 @@ div.header-banner {
 	padding: 0;
 }
 
-.qa-form-wide-ok {
-	color: #090;
+.qa-form-wide-result-ok, .qa-form-wide-result-error {
 	font-size: 18px;
 	text-align: center;
 	padding: 6px;
+}
+
+.qa-form-wide-result-ok {
+	color: #090;
+}
+
+.qa-form-wide-result-error {
+	color: #C00;
 }
 
 .qa-form-wide-label {

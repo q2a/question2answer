@@ -940,7 +940,7 @@ class qa_html_theme_base
 		if ($columns)
 			$this->output('<table class="qa-form-'.$form['style'].'-table">');
 
-		$this->form_ok($form, $columns);
+		$this->form_result($form, $columns);
 		$this->form_fields($form, $columns);
 		$this->form_buttons($form, $columns);
 
@@ -953,6 +953,29 @@ class qa_html_theme_base
 			$this->output('</div>');
 	}
 
+	public function form_result($form, $columns)
+	{
+		$key = null;
+		if (!empty($form['ok']))
+			$key = 'ok';
+		else if (!empty($form['error']))
+			$key = 'error';
+		if (isset($key)) {
+			$this->output(
+				'<tr>',
+				sprintf('<td colspan="%s" class="qa-form-%s-result-%s">', $columns, $form['style'], $key),
+				$form[$key],
+				'</td>',
+				'</tr>'
+			);
+		}
+	}
+
+	/**
+	 * @deprecated Providing always an OK result is deprecated and it is now possibe to
+	 * add an 'error' key apart from the 'ok' key to the form. Check the form_result function
+	 * to see the new output. You might need to modify CSS or JS files
+	 */
 	public function form_ok($form, $columns)
 	{
 		if (!empty($form['ok'])) {

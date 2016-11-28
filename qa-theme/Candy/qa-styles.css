@@ -145,7 +145,9 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 .qa-form-tall-table {width:500px; border-collapse:collapse;}
 .qa-form-tall-spacer {line-height:1px; padding:0; font-size:1px;}
-.qa-form-tall-ok {color:#090; font-size:18px; padding:6px; text-align:center;}
+.qa-form-tall-result-ok, .qa-form-tall-result-error {font-size:18px; padding:6px; text-align:center;}
+.qa-form-tall-result-ok {color:#090;}
+.qa-form-tall-result-error {color:#c00;}
 .qa-form-tall-label {background:url(form-cell-bg.png) repeat-y scroll left top transparent; border-top:6px solid #fff; color:#253845; padding:8px; font-size:14px;}
 .qa-form-tall-data {background:url(form-cell-bg.png) repeat-y scroll left top transparent; padding:8px; width:480px;}
 .qa-form-tall-text,.qa-form-tall-number {padding:3px;}
@@ -167,7 +169,9 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 .qa-form-wide-table {background:url(form-cell-bg.png) repeat-y scroll left top transparent; border-collapse:collapse;}
 .qa-form-wide-spacer {line-height:1px; padding:0; font-size:1px; border-bottom:4px solid #fff; background:#fff;}
-.qa-form-wide-ok {color:#090; font-size:18px; padding:6px; text-align:center;}
+.qa-form-wide-result-ok, .qa-form-wide-result-error {font-size:18px; padding:6px; text-align:center;}
+.qa-form-wide-result-ok {color:#090;}
+.qa-form-wide-result-error {color:#c00;}
 .qa-form-wide-label {border-bottom:2px solid #FFF; color:#253845; padding:10px; font-size:14px; font-weight:normal; white-space: nowrap;}
 .qa-form-wide-data {border-bottom:2px solid #FFF; padding:6px 10px;}
 .qa-form-wide-text,.qa-form-wide-number {padding:3px;}
