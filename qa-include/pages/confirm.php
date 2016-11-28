@@ -87,10 +87,10 @@ $qa_content['title'] = qa_lang_html('users/confirm_title');
 $qa_content['error'] = @$pageerror;
 
 if ($useremailed) {
-	$qa_content['error'] = qa_lang_html('users/confirm_emailed'); // not an error, but display it prominently anyway
+	$qa_content['success'] = qa_lang_html('users/confirm_emailed');
 
 } elseif ($userconfirmed) {
-	$qa_content['error'] = qa_lang_html('users/confirm_complete');
+	$qa_content['success'] = qa_lang_html('users/confirm_complete');
 
 	if (!isset($loginuserid)) {
 		$qa_content['suggest_next'] = strtr(

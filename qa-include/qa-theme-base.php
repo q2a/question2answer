@@ -729,6 +729,9 @@ class qa_html_theme_base
 				$this->output('</form>');
 			}
 		}
+
+		if (isset($this->content['success']))
+			$this->success($this->content['success']);
 		if (isset($this->content['error']))
 			$this->error($this->content['error']);
 	}
@@ -782,6 +785,17 @@ class qa_html_theme_base
 			$this->output(
 				'<div class="qa-error">',
 				$error,
+				'</div>'
+			);
+		}
+	}
+
+	public function success($message)
+	{
+		if (strlen($message)) {
+			$this->output(
+				'<div class="qa-success">',
+				$message,
 				'</div>'
 			);
 		}

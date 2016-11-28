@@ -921,7 +921,7 @@ div.header-banner {
 	background-position: 0 0;
 }
 
-.qa-error, .qa-warning {
+.qa-error, .qa-warning, .qa-success {
 	font-size: 18px;
 	margin-bottom: 1em;
 	padding: 5px 15px;
@@ -936,6 +936,11 @@ div.header-banner {
 	background: #dd0;
 	border: 1px solid #aa0;
 	color: #ffffd9;
+}
+.qa-success {
+	background: #6a3;
+	border: 1px solid #383;
+	color: #ded;
 }
 
 .qa-error a, .qa-warning a {
@@ -1371,10 +1376,12 @@ div.header-banner {
 }
 
 .qa-form-wide-ok {
-	color: #090;
+	background: #6AAA2B;
+	color: #fff;
 	font-size: 18px;
 	text-align: center;
 	padding: 6px;
+	border-radius: 3px;
 }
 
 .qa-form-wide-label {

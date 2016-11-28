@@ -61,6 +61,10 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 	.qa-warning a {color:#990; text-decoration:underline;}
 	.qa-warning a:hover {color:#cc0;}
 
+.qa-success {background: #d9fcde url(success-bg.png) repeat-x left top; border:2px solid #00cc1b; color: #00a113; font-size:18px; padding:.5em; margin:1em 0; }
+	.qa-success a {color: #009914; text-decoration:underline;}
+	.qa-success a:hover {color: #00ff22;}
+
 /* Page sections */
 
 .qa-header {position:relative;}

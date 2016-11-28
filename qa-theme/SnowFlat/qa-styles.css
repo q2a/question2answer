@@ -335,7 +335,7 @@ blockquote p {
 	margin: 0 10px 10px;
 }
 
-.qa-error, .qa-warning, .qa-notice {
+.qa-error, .qa-warning, .qa-success, .qa-notice {
 	margin-bottom: 5px;
 	padding: 10px;
 	color: #fff;
@@ -354,9 +354,13 @@ blockquote p {
 	position: relative;
 	z-index: 999;
 }
-
 .qa-warning {
 	background: #f1c40f;
+	position: relative;
+	z-index: 999;
+}
+.qa-success {
+	background: #27ae60;
 	position: relative;
 	z-index: 999;
 }
