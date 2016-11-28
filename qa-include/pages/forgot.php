@@ -54,13 +54,12 @@ if (qa_clicked('doforgot')) {
 		if (strpos($inemailhandle, '@') === false) { // handles can't contain @ symbols
 			$matchusers = qa_db_user_find_by_handle($inemailhandle);
 			$passemailhandle = !qa_opt('allow_login_email_only');
-
 		} else {
 			$matchusers = qa_db_user_find_by_email($inemailhandle);
 			$passemailhandle = true;
 		}
 
-		if (count($matchusers) != 1) // if we get more than one match (should be impossible) also give an error
+		if (count($matchusers) != 1 || !$passemailhandle) // if we get more than one match (should be impossible) also give an error
 			$errors['emailhandle'] = qa_lang('users/user_not_found');
 
 		if (qa_opt('captcha_on_reset_password'))
@@ -69,7 +68,7 @@ if (qa_clicked('doforgot')) {
 		if (empty($errors)) {
 			$inuserid = $matchusers[0];
 			qa_start_reset_user($inuserid);
-			qa_redirect('reset', $passemailhandle ? array('e' => $inemailhandle) : null); // redirect to page where code is entered
+			qa_redirect('reset', $passemailhandle ? array('e' => $inemailhandle, 's' => '1') : null); // redirect to page where code is entered
 		}
 	}
 

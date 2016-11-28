@@ -358,10 +358,12 @@
 	}
 
 
+/**
+ * Successfully finish the 'I forgot my password' process for $userid, sending new password
+ *
+ * @deprecated This function has been replaced by qa_finish_reset_user since Q2A 1.8
+ */
 	function qa_complete_reset_user($userid)
-/*
-	Successfully finish the 'I forgot my password' process for $userid, sending new password
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -389,6 +391,44 @@
 		));
 	}
 
+
+/**
+ * Successfully finish the 'I forgot my password' process for $userid, cleaning the emailcode field and logging in the user
+ * @param mixed $userId The userid identifiying the user who will have the password reset
+ * @param string $newPassword The new password for the user
+ * @return void
+ */
+	function qa_finish_reset_user($userId, $newPassword)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		// For qa_db_user_set_password(), qa_db_user_set()
+		require_once QA_INCLUDE_DIR . 'db/users.php';
+
+		// For qa_set_logged_in_user()
+		require_once QA_INCLUDE_DIR . 'app/options.php';
+
+		// For qa_cookie_get()
+		require_once QA_INCLUDE_DIR . 'app/cookies.php';
+
+		// For qa_db_select_with_pending(), qa_db_user_account_selectspec()
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
+
+		// For qa_set_logged_in_user()
+		require_once QA_INCLUDE_DIR . 'app/users.php';
+
+		qa_db_user_set_password($userId, $newPassword);
+
+		qa_db_user_set($userId, 'emailcode', ''); // to prevent re-use of the code
+
+		$userInfo = qa_db_select_with_pending(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_logged_in_user($userId, $userInfo['handle'], false, $userInfo['sessionsource']); // reinstate this specific session
+
+		qa_report_event('u_reset', $userId, $userInfo['handle'], qa_cookie_get(), array(
+			'email' => $userInfo['email'],
+		));
+	}
 
 	function qa_logged_in_user_flush()
 /*
