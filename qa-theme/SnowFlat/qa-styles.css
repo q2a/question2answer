@@ -2540,6 +2540,18 @@ input[type="submit"], button {
 	position: absolute;
 }
 
+@media (max-width: 799px) {
+	.qa-a-item-avatar-meta {
+		margin-top: 10px;
+	}
+}
+
+@media (min-width: 800px) and (max-width: 979px) {
+	.qa-a-item-avatar-meta {
+		margin-top: 70px;
+	}
+}
+
 @media (max-width: 979px) {
 	.qa-a-item-main {
 		width: 100%;
@@ -2549,10 +2561,6 @@ input[type="submit"], button {
 		clear: left;
 		font-size: 0.875em;
 		line-height: 1.71429em;
-	}
-
-	.qa-a-item-avatar-meta {
-		margin-top: 70px;
 	}
 
 	.qa-a-selection {
