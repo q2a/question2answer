@@ -29,16 +29,19 @@ require_once QA_INCLUDE_DIR . 'app/captcha.php';
 require_once QA_INCLUDE_DIR . 'db/users.php';
 
 
-if (qa_is_logged_in())
+if (qa_is_logged_in()) {
 	qa_redirect('');
+}
 
 // Check we're not using single-sign on integration, that we're not logged in, and we're not blocked
 if (QA_FINAL_EXTERNAL_USERS) {
-	$request=qa_request();
-	$topath=qa_get('to'); // lets user switch between login and register without losing destination page
-	$userlinks=qa_get_login_links(qa_path_to_root(), isset($topath) ? $topath : qa_path($request, $_GET, ''));
-	if (!empty($userlinks['register']))
+	$request = qa_request();
+	$topath = qa_get('to'); // lets user switch between login and register without losing destination page
+	$userlinks = qa_get_login_links(qa_path_to_root(), isset($topath) ? $topath : qa_path($request, $_GET, ''));
+
+	if (!empty($userlinks['register'])) {
 		qa_redirect_raw($userlinks['register']);
+	}
 	qa_fatal_error('User registration should be handled by external code');
 }
 
