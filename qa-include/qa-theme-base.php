@@ -2300,6 +2300,10 @@ class qa_html_theme_base
 
 	public function a_item_content($a_item)
 	{
+		if (!isset($a_item['content'])) {
+			$a_item['content'] = '';
+		}
+
 		$this->output('<div class="qa-a-item-content">');
 		$this->output_raw($a_item['content']);
 		$this->output('</div>');
@@ -2384,6 +2388,10 @@ class qa_html_theme_base
 
 	public function c_item_content($c_item)
 	{
+		if (!isset($c_item['content'])) {
+			$c_item['content'] = '';
+		}
+
 		$this->output('<div class="qa-c-item-content">');
 		$this->output_raw($c_item['content']);
 		$this->output('</div>');
