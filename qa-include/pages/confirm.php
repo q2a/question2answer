@@ -33,15 +33,29 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 //	Check if we've been asked to send a new link or have a successful email confirmation
 
-$code = trim(qa_get('c')); // trim to prevent passing in blank values to match uninitiated DB rows
-$handle = trim(qa_get('u'));
+// Fetch the handle from POST or GET
+$handle = qa_post_text('username');
+if (!isset($handle)) {
+	$handle = qa_get('u');
+}
+$handle = trim($handle); // if $handle is null, trim returns an empty string
+
+// Fetch the code from POST or GET
+$code = qa_post_text('code');
+if (!isset($code)) {
+	$code = qa_get('c');
+}
+$code = trim($code); // if $code is null, trim returns an empty string
+
 $loggedInUserId = qa_get_logged_in_userid();
 $emailConfirmationSent = false;
 $userConfirmed = false;
 
+$pageError = null;
+
 if (isset($loggedInUserId) && qa_clicked('dosendconfirm')) { // A logged in user requested to be sent a confirmation link
 	if (!qa_check_form_security_code('confirm', qa_post_text('formcode'))) {
-		$pageerror = qa_lang_html('misc/form_security_again');
+		$pageError = qa_lang_html('misc/form_security_again');
 	} else {
 		// For qa_send_new_confirm
 		require_once QA_INCLUDE_DIR . 'app/users-edit.php';
@@ -83,10 +97,50 @@ if (isset($loggedInUserId) && qa_clicked('dosendconfirm')) { // A logged in user
 $qa_content = qa_content_prepare();
 
 $qa_content['title'] = qa_lang_html('users/confirm_title');
-$qa_content['error'] = @$pageerror;
+$qa_content['error'] = $pageError;
 
 if ($emailConfirmationSent) {
 	$qa_content['success'] = qa_lang_html('users/confirm_emailed');
+
+	$email = qa_get_logged_in_email();
+	$handle = qa_get_logged_in_handle();
+
+	$qa_content['form'] = array(
+		'tags' => 'method="post" action="' . qa_self_html() . '"',
+
+		'style' => 'tall',
+
+		'fields' => array(
+			'email' => array(
+				'label' => qa_lang_html('users/email_label'),
+				'value' => qa_html($email) . strtr(qa_lang_html('users/change_email_link'), array(
+						'^1' => '<a href="' . qa_path_html('account') . '">',
+						'^2' => '</a>',
+					)),
+				'type' => 'static',
+			),
+			'code' => array(
+				'label' => qa_lang_html('users/reset_code_label'),
+				'tags' => 'name="code" id="code"',
+				'value' => isset($code) ? qa_html($code) : null,
+				'note' => qa_lang_html('users/reset_code_emailed') . ' - ' .
+					'<a href="' . qa_path_html('confirm') . '">' . qa_lang_html('users/reset_code_another') . '</a>',
+			),
+		),
+
+		'buttons' => array(
+			'confirm' => array( // This button does not actually need a name attribute
+				'label' => qa_lang_html('users/confirm_button'),
+			),
+		),
+
+		'hidden' => array(
+			'formcode' => qa_get_form_security_code('confirm'),
+			'username' => qa_html($handle),
+		),
+	);
+
+	$qa_content['focusid'] = 'code';
 } elseif ($userConfirmed) {
 	$qa_content['success'] = qa_lang_html('users/confirm_complete');
 
