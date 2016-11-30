@@ -30,41 +30,53 @@
 
 	$uri = qa_post_text('uri');
 	$version = qa_post_text('version');
+	$isCore = qa_post_text('isCore') === "true";
 
-	$metadataUtil = new Q2A_Util_Metadata();
-	$metadata = $metadataUtil->fetchFromUrl($uri);
+	if ($isCore) {
+		$contents = qa_retrieve_url($uri);
 
-	if (strlen(@$metadata['version'])) {
-		if (strcmp($metadata['version'], $version)) {
-			if (qa_qa_version_below(@$metadata['min_q2a'])) {
-				$response = strtr(qa_lang_html('admin/version_requires_q2a'), array(
-					'^1' => qa_html('v'.$metadata['version']),
-					'^2' => qa_html($metadata['min_q2a']),
-				));
+		if (strlen($contents) > 0) {
+			if (qa_qa_version_below($contents)) {
+				$response =
+					'<a href="https://github.com/q2a/question2answer/releases" style="color:#d00;">' .
+					qa_lang_html_sub('admin/version_get_x', qa_html('v' . $contents)) .
+					'</a>';
+			} else {
+				$response = qa_html($contents); // Output the current version number
 			}
-
-			elseif (qa_php_version_below(@$metadata['min_php'])) {
-				$response = strtr(qa_lang_html('admin/version_requires_php'), array(
-					'^1' => qa_html('v'.$metadata['version']),
-					'^2' => qa_html($metadata['min_php']),
-				));
-			}
-
-			else {
-				$response = qa_lang_html_sub('admin/version_get_x', qa_html('v'.$metadata['version']));
-
-				if (strlen(@$metadata['uri']))
-					$response = '<a href="'.qa_html($metadata['uri']).'" style="color:#d00;">'.$response.'</a>';
-			}
-
+		} else {
+			$response = qa_lang_html('admin/version_latest_unknown');
 		}
-		else
-			$response = qa_lang_html('admin/version_latest');
+	} else {
+		$metadataUtil = new Q2A_Util_Metadata();
+		$metadata = $metadataUtil->fetchFromUrl($uri);
 
+		if (strlen(@$metadata['version']) > 0) {
+			if (strcmp($metadata['version'], $version)) {
+				if (qa_qa_version_below(@$metadata['min_q2a'])) {
+					$response = strtr(qa_lang_html('admin/version_requires_q2a'), array(
+						'^1' => qa_html('v' . $metadata['version']),
+						'^2' => qa_html($metadata['min_q2a']),
+					));
+				} elseif (qa_php_version_below(@$metadata['min_php'])) {
+					$response = strtr(qa_lang_html('admin/version_requires_php'), array(
+						'^1' => qa_html('v' . $metadata['version']),
+						'^2' => qa_html($metadata['min_php']),
+					));
+				} else {
+					$response = qa_lang_html_sub('admin/version_get_x', qa_html('v' . $metadata['version']));
+
+					if (strlen(@$metadata['uri'])){
+						$response = '<a href="' . qa_html($metadata['uri']) . '" style="color:#d00;">' . $response . '</a>';
+					}
+				}
+			} else {
+				$response = qa_lang_html('admin/version_latest');
+			}
+		} else {
+			$response = qa_lang_html('admin/version_latest_unknown');
+		}
 	}
-	else
-		$response = qa_lang_html('admin/version_latest_unknown');
-
 
 	echo "QA_AJAX_RESPONSE\n1\n".$response;
 
