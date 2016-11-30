@@ -57,7 +57,7 @@ $errors = array();
 $fields = array(
 	'email_handle' => array(
 		'type' => 'static',
-		'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
+		'label' => qa_lang_html(qa_opt('allow_login_email_only') ? 'users/email_label' : 'users/email_handle_label'),
 		'value' => qa_html($emailHandle),
 	),
 	'code' => array(
@@ -93,11 +93,11 @@ if (strlen($emailHandle) > 0) {
 	if (count($matchingUsers) == 1) {
 		require_once QA_INCLUDE_DIR . 'db/selects.php';
 
-		$userId = $matchingUsers[0];
-		$userInfo = qa_db_select_with_pending(qa_db_user_account_selectspec($userId, true));
-
 		// strlen() check is vital otherwise we can reset code for most users by entering the empty string
 		if (strlen($code) > 0) {
+			$userId = $matchingUsers[0];
+			$userInfo = qa_db_select_with_pending(qa_db_user_account_selectspec($userId, true));
+
 			if (strtolower(trim($userInfo['emailcode'])) == strtolower($code)) {
 				// User input a valid code so no need to ask for it but pass it to the next step
 				unset($fields['code']);
@@ -177,7 +177,7 @@ $qa_content['error'] = isset($errors['page']) ? $errors['page'] : null;
 if (!isset($errors['page'])) {
 	// Using this form action instead of qa_self_html() to get rid of the 's' (success) GET parameter from forgot.php
 	$qa_content['form'] = array(
-		'tags' => 'method="post" action="' . qa_path('reset') . '"',
+		'tags' => 'method="post" action="' . qa_path_html('reset') . '"',
 
 		'style' => 'tall',
 
