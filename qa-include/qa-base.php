@@ -238,6 +238,8 @@
 		if (QA_DEBUG_PERFORMANCE) {
 			global $qa_usage;
 			$qa_usage = new Q2A_Util_Usage;
+			// ensure errors are displayed
+			@ini_set('display_errors', 'On');
 		}
 
 	//	More for WordPress integration
