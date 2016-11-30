@@ -26,6 +26,10 @@
 	require_once QA_INCLUDE_DIR.'app/format.php';
 
 
+//	Make sure session is created
+
+	$userid = qa_get_logged_in_userid();
+	
 //	Collect the information we need from the database
 
 	$intitle = qa_post_text('title');
