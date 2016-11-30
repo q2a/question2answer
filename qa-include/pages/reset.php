@@ -61,12 +61,12 @@ $fields = array(
 		'value' => qa_html($emailHandle),
 	),
 	'code' => array(
-		'label' => qa_lang_html('users/reset_code_label'),
+		'label' => qa_lang_html('users/email_code_label'),
 		'tags' => 'name="code" id="code"',
 		'value' => isset($code) ? qa_html($code) : null,
 		'note_force' => true,
-		'note' => qa_lang_html('users/reset_code_emailed') . ' - ' .
-			'<a href="' . qa_html($forgotPath) . '">' . qa_lang_html('users/reset_code_another') . '</a>',
+		'note' => qa_lang_html('users/email_code_emailed') . ' - ' .
+			'<a href="' . qa_html($forgotPath) . '">' . qa_lang_html('users/email_code_another') . '</a>',
 	),
 );
 $buttons = array(
@@ -151,11 +151,11 @@ if (strlen($emailHandle) > 0) {
 				);
 			} else {
 				// User input wrong code so show field with error
-				$fields['code']['error'] = qa_lang('users/reset_code_wrong');
+				$fields['code']['error'] = qa_lang('users/email_code_wrong');
 			}
 		} else if (qa_clicked('donext')) {
 			// If user submitted the form with an empty code
-			$fields['code']['error'] = qa_lang('users/reset_code_wrong');
+			$fields['code']['error'] = qa_lang('users/email_code_wrong');
 		}
 	} else {
 		// If match more than one (should be impossible), consider it a non-match
@@ -181,7 +181,7 @@ if (!isset($errors['page'])) {
 
 		'style' => 'tall',
 
-		'ok' => qa_get('s') ? qa_lang_html('users/reset_code_emailed') : null,
+		'ok' => qa_get('s') ? qa_lang_html('users/email_code_emailed') : null,
 
 		'fields' => $fields,
 

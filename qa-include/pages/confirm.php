@@ -120,11 +120,11 @@ if ($emailConfirmationSent) {
 				'type' => 'static',
 			),
 			'code' => array(
-				'label' => qa_lang_html('users/reset_code_label'),
+				'label' => qa_lang_html('users/email_code_label'),
 				'tags' => 'name="code" id="code"',
 				'value' => isset($code) ? qa_html($code) : null,
-				'note' => qa_lang_html('users/reset_code_emailed') . ' - ' .
-					'<a href="' . qa_path_html('confirm') . '">' . qa_lang_html('users/reset_code_another') . '</a>',
+				'note' => qa_lang_html('users/email_code_emailed') . ' - ' .
+					'<a href="' . qa_path_html('confirm') . '">' . qa_lang_html('users/email_code_another') . '</a>',
 			),
 		),
 
