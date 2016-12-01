@@ -54,6 +54,7 @@ Thanks and enjoy!
 
 Gideon
 
+This is awesome!
 
 [Q2A]: http://www.question2answer.org/
 [1]: http://www.question2answer.org/qa/user/Scott
