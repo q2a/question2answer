@@ -39,6 +39,14 @@ class qa_activity_count
 		$this->output_count($themeobject, qa_opt('cache_qcount'), 'main/1_question', 'main/x_questions');
 		$this->output_count($themeobject, qa_opt('cache_acount'), 'main/1_answer', 'main/x_answers');
 
+		// added x percent of questions answered
+		$solvedperc = 100-( qa_opt('cache_unaqcount')/qa_opt('cache_qcount')*100 );
+		$themeobject->output('
+			<p class="qa-activity-count-item">
+				<span class="qa-activity-count-data">'.number_format($solvedperc,2,',','.').' %</span> '.qa_lang('main/answered').'
+			</p>
+		');
+		
 		if (qa_opt('comment_on_qs') || qa_opt('comment_on_as'))
 			$this->output_count($themeobject, qa_opt('cache_ccount'), 'main/1_comment', 'main/x_comments');
 
