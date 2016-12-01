@@ -139,6 +139,20 @@ class qa_html_theme_base
 	}
 
 
+	public function output_template($filename) {
+/*
+	Output executed template in theme via output_array()
+*/
+		$filename = realpath(__DIR__ . '/../' . $this->rooturl . '/templates/' . $filename .'.phtml');
+
+		if (is_file($filename)) {
+			ob_start();
+			include $filename;
+			$this->output_array( explode("\n", ob_get_clean()) );
+		}
+	}
+
+
 	public function set_context($key, $value)
 /*
 	Set some context, which be accessed via $this->context for a function to know where it's being used on the page
