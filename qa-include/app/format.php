@@ -1465,7 +1465,7 @@
 			$funcscript[]="\tif (e) { var d=(".$sources."); if (first || (e.nodeName=='SPAN')) { e.style.display=d ? '' : 'none'; } else { if (d) { $(e).fadeIn(); } else { $(e).fadeOut(); } } }";
 		}
 
-		$funcscript[]="}";
+		$funcscript[]="};";
 		$loadscript[]=$function."(true);";
 
 		$qa_content['script_lines'][]=$funcscript;
