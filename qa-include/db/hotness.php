@@ -44,7 +44,7 @@
 				'(a.acount+0.0)*# + '.
 				'(a.netvotes+0.0)*# + '.
 				'(a.views+0.0+#)*#'.
-			')'.($viewincrement ? ', x.views=x.views+1, x.lastviewip=INET_ATON($)' : '').' WHERE x.postid=a.postid';
+			')'.($viewincrement ? ', x.views=x.views+1, x.lastviewip=INET6_ATON($)' : '').' WHERE x.postid=a.postid';
 
 			//	Additional multiples based on empirical analysis of activity on Q2A meta site to give approx equal influence for all factors
 

@@ -48,7 +48,7 @@
 
 		qa_db_query_sub(
 			'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) '.
-			'VALUES (NOW(), COALESCE(INET_ATON($), 0), $, $, UNHEX($), #, $, NOW(), COALESCE(INET_ATON($), 0))',
+			'VALUES (NOW(), COALESCE(INET6_ATON($), 0), $, $, UNHEX($), #, $, NOW(), COALESCE(INET6_ATON($), 0))',
 			$ip, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ip
 		);
 
@@ -219,7 +219,7 @@
 */
 	{
 		qa_db_query_sub(
-			'UPDATE ^users SET loggedin=NOW(), loginip=COALESCE(INET_ATON($), 0) WHERE userid=$',
+			'UPDATE ^users SET loggedin=NOW(), loginip=COALESCE(INET6_ATON($), 0) WHERE userid=$',
 			$ip, $userid
 		);
 	}
@@ -231,7 +231,7 @@
 */
 	{
 		qa_db_query_sub(
-			'UPDATE ^users SET written=NOW(), writeip=COALESCE(INET_ATON($), 0) WHERE userid=$',
+			'UPDATE ^users SET written=NOW(), writeip=COALESCE(INET6_ATON($), 0) WHERE userid=$',
 			$ip, $userid
 		);
 	}

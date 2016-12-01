@@ -48,7 +48,7 @@
 
 		if (isset($selchildid) && isset($lastuserid) && isset($lastip))
 			qa_db_query_sub(
-				"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
+				"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=INET6_ATON($) WHERE postid=#",
 				QA_UPDATE_SELECTED, $lastuserid, $lastip, $selchildid
 			);
 	}
@@ -62,7 +62,7 @@
 	{
 		if (isset($lastuserid) || isset($lastip)) {
 			qa_db_query_sub(
-				"UPDATE ^posts SET closedbyid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
+				"UPDATE ^posts SET closedbyid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET6_ATON($) WHERE postid=#",
 				$closedbyid, QA_UPDATE_CLOSED, $lastuserid, $lastip, $questionid
 			);
 		} else
@@ -80,7 +80,7 @@
 	{
 		if (isset($lastuserid) || isset($lastip)) {
 			qa_db_query_sub(
-				'UPDATE ^posts SET type=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#',
+				'UPDATE ^posts SET type=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET6_ATON($) WHERE postid=#',
 				$type, $updatetype, $lastuserid, $lastip, $postid
 			);
 		} else
@@ -99,7 +99,7 @@
 	{
 		if (isset($lastuserid) || isset($lastip))
 			qa_db_query_sub(
-				"UPDATE ^posts SET parentid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
+				"UPDATE ^posts SET parentid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET6_ATON($) WHERE postid=#",
 				$parentid, QA_UPDATE_PARENT, $lastuserid, $lastip, $postid
 			);
 		else
@@ -119,7 +119,7 @@
 	{
 		if (isset($lastuserid) || isset($lastip)) // use COALESCE() for name since $name=null means it should not be modified (for backwards compatibility)
 			qa_db_query_sub(
-				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#',
+				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET6_ATON($) WHERE postid=#',
 				$title, $content, $format, $tagstring, $name, $notify, $updatetype, $lastuserid, $lastip, $postid
 			);
 		else
@@ -150,7 +150,7 @@
 	{
 		if (isset($lastuserid) || isset($lastip))
 			qa_db_query_sub(
-				"UPDATE ^posts SET categoryid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
+				"UPDATE ^posts SET categoryid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET6_ATON($) WHERE postid=#",
 				$categoryid, QA_UPDATE_CATEGORY, $lastuserid, $lastip, $postid
 			);
 		else

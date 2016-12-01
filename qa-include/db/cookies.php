@@ -39,7 +39,7 @@
 
 			qa_db_query_sub(
 				'INSERT INTO ^cookies (cookieid, created, createip) '.
-					'VALUES (#, NOW(), COALESCE(INET_ATON($), 0))',
+					'VALUES (#, NOW(), COALESCE(INET6_ATON($), 0))',
 				$cookieid, $ipaddress
 			);
 
@@ -56,7 +56,7 @@
 */
 	{
 		qa_db_query_sub(
-			'UPDATE ^cookies SET written=NOW(), writeip=COALESCE(INET_ATON($), 0) WHERE cookieid=#',
+			'UPDATE ^cookies SET written=NOW(), writeip=COALESCE(INET6_ATON($), 0) WHERE cookieid=#',
 			$ipaddress, $cookieid
 		);
 	}
