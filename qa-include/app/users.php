@@ -1189,7 +1189,7 @@ in a category for which they have elevated privileges).
 				$reportproblems[]='code '.$value.' malformed';
 		}
 
-		if (count($reportproblems))
+		if (!empty($reportproblems) && QA_DEBUG_PERFORMANCE)
 			@error_log(
 				'PHP Question2Answer form security violation for '.$action.
 				' by '.(qa_is_logged_in() ? ('userid '.qa_get_logged_in_userid()) : 'anonymous').
