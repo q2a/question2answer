@@ -20,73 +20,68 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-//	Output this header as early as possible
+// Output this header as early as possible
 
-	header('Content-Type: text/plain; charset=utf-8');
-
-
-//	Ensure no PHP errors are shown in the Ajax response
-
-	@ini_set('display_errors', 0);
+header('Content-Type: text/plain; charset=utf-8');
 
 
-//	Load the Q2A base file which sets up a bunch of crucial functions
+// Ensure no PHP errors are shown in the Ajax response
 
-	require 'qa-base.php';
-
-	qa_report_process_stage('init_ajax');
+@ini_set('display_errors', 0);
 
 
-//	Get general Ajax parameters from the POST payload, and clear $_GET
+// Load the Q2A base file which sets up a bunch of crucial functions
 
-	qa_set_request(qa_post_text('qa_request'), qa_post_text('qa_root'));
+require 'qa-base.php';
 
-	$_GET=array(); // for qa_self_html()
-
-
-//	Database failure handler
-
-	function qa_ajax_db_fail_handler()
-	{
-		echo "QA_AJAX_RESPONSE\n0\nA database error occurred.";
-		qa_exit('error');
-	}
+qa_report_process_stage('init_ajax');
 
 
-//	Perform the appropriate Ajax operation
+// Get general Ajax parameters from the POST payload, and clear $_GET
 
-	$routing=array(
-		'notice' => 'notice.php',
-		'favorite' => 'favorite.php',
-		'vote' => 'vote.php',
-		'recalc' => 'recalc.php',
-		'mailing' => 'mailing.php',
-		'version' => 'version.php',
-		'category' => 'category.php',
-		'asktitle' => 'asktitle.php',
-		'answer' => 'answer.php',
-		'comment' => 'comment.php',
-		'click_a' => 'click-answer.php',
-		'click_c' => 'click-comment.php',
-		'click_admin' => 'click-admin.php',
-		'show_cs' => 'show-comments.php',
-		'wallpost' => 'wallpost.php',
-		'click_wall' => 'click-wall.php',
-		'click_pm' => 'click-pm.php',
-	);
+qa_set_request(qa_post_text('qa_request'), qa_post_text('qa_root'));
 
-	$operation=qa_post_text('qa_operation');
-
-	if (isset($routing[$operation])) {
-		qa_db_connect('qa_ajax_db_fail_handler');
-
-		qa_initialize_buffering();
-		require QA_INCLUDE_DIR.'ajax/'.$routing[$operation];
-
-		qa_db_disconnect();
-	}
+$_GET = array(); // for qa_self_html()
 
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+// Database failure handler
+
+function qa_ajax_db_fail_handler()
+{
+	echo "QA_AJAX_RESPONSE\n0\nA database error occurred.";
+	qa_exit('error');
+}
+
+
+// Perform the appropriate Ajax operation
+
+$routing = array(
+	'notice' => 'notice.php',
+	'favorite' => 'favorite.php',
+	'vote' => 'vote.php',
+	'recalc' => 'recalc.php',
+	'mailing' => 'mailing.php',
+	'version' => 'version.php',
+	'category' => 'category.php',
+	'asktitle' => 'asktitle.php',
+	'answer' => 'answer.php',
+	'comment' => 'comment.php',
+	'click_a' => 'click-answer.php',
+	'click_c' => 'click-comment.php',
+	'click_admin' => 'click-admin.php',
+	'show_cs' => 'show-comments.php',
+	'wallpost' => 'wallpost.php',
+	'click_wall' => 'click-wall.php',
+	'click_pm' => 'click-pm.php',
+);
+
+$operation = qa_post_text('qa_operation');
+
+if (isset($routing[$operation])) {
+	qa_db_connect('qa_ajax_db_fail_handler');
+
+	qa_initialize_buffering();
+	require QA_INCLUDE_DIR . 'ajax/' . $routing[$operation];
+
+	qa_db_disconnect();
+}
