@@ -319,6 +319,23 @@
 	}
 
 
+	/**
+	 * Set up output buffering. Use gzip compression if option set and it's not an admin page (since some of these contain lengthy processes).
+	 * @param $request
+	 * @return bool whether buffering was used
+	 */
+	function qa_initialize_buffering($request='')
+	{
+		if (headers_sent()) {
+			return false;
+		}
+
+		$useGzip = QA_HTML_COMPRESSION && substr($request, 0, 6) !== 'admin/' && extension_loaded('zlib');
+		ob_start($useGzip ? 'ob_gzhandler' : null);
+		return true;
+	}
+
+
 	function qa_register_core_modules()
 /*
 	Register all modules that come as part of the Q2A core (as opposed to plugins)

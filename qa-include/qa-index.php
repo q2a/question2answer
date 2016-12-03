@@ -182,11 +182,7 @@
 			require QA_INCLUDE_DIR.'qa-url-test.php';
 		else {
 			// enable gzip compression for output (needs to come early)
-			// skip admin pages since some of these contain lengthy processes
-			if (QA_HTML_COMPRESSION && substr($requestlower, 0, 6) != 'admin/') {
-				if (extension_loaded('zlib') && !headers_sent())
-					ob_start('ob_gzhandler');
-			}
+			qa_initialize_buffering($requestlower);
 
 			if (substr($requestlower, 0, 5) == 'feed/')
 				require QA_INCLUDE_DIR.'qa-feed.php';

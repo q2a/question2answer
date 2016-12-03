@@ -80,6 +80,7 @@
 	if (isset($routing[$operation])) {
 		qa_db_connect('qa_ajax_db_fail_handler');
 
+		qa_initialize_buffering();
 		require QA_INCLUDE_DIR.'ajax/'.$routing[$operation];
 
 		qa_db_disconnect();
