@@ -577,7 +577,8 @@ function qa_page_q_close_q_submit($question, $closepost, &$in, &$errors)
 	$handle = qa_get_logged_in_handle();
 	$cookieid = qa_cookie_get();
 
-	$isduplicateurl = filter_var($in['details'], FILTER_VALIDATE_URL);
+	$sanitizedUrl = filter_var($in['details'], FILTER_SANITIZE_URL);
+	$isduplicateurl = filter_var($sanitizedUrl, FILTER_VALIDATE_URL);
 
 	if (!qa_check_form_security_code('close-' . $question['postid'], qa_post_text('code'))) {
 		$errors['details'] = qa_lang_html('misc/form_security_again');
@@ -587,7 +588,7 @@ function qa_page_q_close_q_submit($question, $closepost, &$in, &$errors)
 		// b) There could be a question title which is just a number, e.g. http://qa.mysite.com/478/12345/...
 		// so we check if more than one question could match, and if so, show an error
 
-		$parts = preg_split('|[=/&]|', $in['details'], -1, PREG_SPLIT_NO_EMPTY);
+		$parts = preg_split('|[=/&]|', $sanitizedUrl, -1, PREG_SPLIT_NO_EMPTY);
 		$keypostids = array();
 
 		foreach ($parts as $part) {
