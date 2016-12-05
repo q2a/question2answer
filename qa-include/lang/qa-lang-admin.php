@@ -105,6 +105,7 @@
 		'edit_title' => ' - ^1edit title^2',
 		'emails_per_minute' => 'emails per minute',
 		'emails_title' => 'Emails',
+		'enabled' => 'Enabled',
 		'feed_link' => 'Feed',
 		'feed_link_example' => 'Example feed',
 		'feeds_title' => 'RSS feeds',

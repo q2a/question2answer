@@ -58,15 +58,18 @@
 		require_once QA_JOOMLA_LOAD_FILE;
 	}
 
+
 	qa_initialize_constants_2();
 	qa_initialize_modularity();
 	qa_register_core_modules();
-	qa_load_plugin_files();
 	qa_load_override_files();
 
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 
 	qa_db_allow_connect();
+
+	qa_load_plugin_files();
+
 
 
 //	Version comparison functions
@@ -401,16 +404,20 @@
 	{
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
 
-		$pluginfiles = glob(QA_PLUGIN_DIR.'*/qa-plugin.php');
+		$pluginManager = new Q2A_Plugin_PluginManager();
+		$pluginDirectories = $pluginManager->getEnabledPlugins(true);
 
 		$metadataUtil = new Q2A_Util_Metadata();
-		foreach ($pluginfiles as $pluginfile) {
-			$pluginDirectory = dirname($pluginfile);
+		foreach ($pluginDirectories as $pluginDirectory) {
+			$pluginFile = $pluginDirectory . 'qa-plugin.php';
 
-			$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
+			if (!file_exists($pluginFile))
+				continue;
+
+			$metadata = $metadataUtil->fetchFromAddonPath($qa_plugin_directory);
 			if (empty($metadata)) {
 				// limit plugin parsing to first 8kB
-				$contents = file_get_contents($pluginfile, false, null, -1, 8192);
+				$contents = file_get_contents($pluginFile, false, null, -1, 8192);
 				$metadata = qa_addon_metadata($contents, 'Plugin', true);
 			}
 
@@ -422,10 +429,10 @@
 				continue;
 
 			// these variables are utilized in the qa_register_plugin_* functions
-			$qa_plugin_directory = $pluginDirectory . '/';
+			$qa_plugin_directory = $pluginDirectory;
 			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
 
-			require_once $pluginfile;
+			require_once $pluginFile;
 		}
 
 		$qa_plugin_directory = null;

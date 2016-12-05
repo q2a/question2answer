@@ -25,7 +25,7 @@
 		exit;
 	}
 
-	define('QA_DB_VERSION_CURRENT', 63);
+	define('QA_DB_VERSION_CURRENT', 64);
 
 
 	function qa_db_user_column_type_verify()
@@ -1516,6 +1516,13 @@
 
 					qa_db_upgrade_query($locktablesquery);
 					break;
+
+                case 64:
+					$pluginManager = new Q2A_Plugin_PluginManager();
+					$allPlugins = $pluginManager->getFilesystemPlugins();
+					$pluginManager->setEnabledPlugins($allPlugins);
+					break;
+
 
 			//	Up to here: Version 1.8 alpha
 			}
