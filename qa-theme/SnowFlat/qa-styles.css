@@ -1455,9 +1455,9 @@ blockquote p {
 }
 
 .qa-top-users-item,
-.qa-top-special-users-item,
-.qa-top-blocked-users-item,
-.qa-top-newest-users-item {
+.qa-special-users-item,
+.qa-blocked-users-item,
+.qa-newest-users-item {
 	width: 100%;
 	max-width: 320px;
 }
@@ -1470,9 +1470,9 @@ blockquote p {
 @media only screen and (min-width: 992px) {
 	/* two column layout for Desktops and above*/
 	.qa-top-users-item,
-	.qa-top-special-users-item,
-	.qa-top-blocked-users-item,
-	.qa-top-newest-users-item {
+	.qa-special-users-item,
+	.qa-blocked-users-item,
+	.qa-newest-users-item {
 		width: 48%;
 		max-width: none;
 	}
@@ -1484,24 +1484,24 @@ blockquote p {
 }
 
 .qa-top-users-avatar .qa-avatar-link,
-.qa-top-special-users-avatar .qa-avatar-link,
-.qa-top-newest-users-avatar .qa-avatar-link {
+.qa-special-users-avatar .qa-avatar-link,
+.qa-newest-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
 	margin-right: 1em;
 }
 
 .qa-top-users-avatar .qa-avatar-link img,
-.qa-top-special-users-avatar .qa-avatar-link img,
-.qa-top-blocked-users-avatar .qa-avatar-link img,
-.qa-top-newest-users-avatar .qa-avatar-link img {
+.qa-special-users-avatar .qa-avatar-link img,
+.qa-blocked-users-avatar .qa-avatar-link img,
+.qa-newest-users-avatar .qa-avatar-link img {
 	border: 1px solid #cbd7e3;
 }
 
 .qa-top-users-label .qa-user-link,
-.qa-top-special-users-label .qa-user-link,
-.qa-top-blocked-users-label .qa-user-link,
-.qa-top-newest-users-label .qa-user-link {
+.qa-special-users-label .qa-user-link,
+.qa-blocked-users-label .qa-user-link,
+.qa-newest-users-label .qa-user-link {
 	background-color: #e74c3c;
 	display: block;
 	float: left;
@@ -1512,20 +1512,20 @@ blockquote p {
 
 .qa-top-users-label .qa-user-link:hover,
 .qa-top-users-label .qa-user-link:focus,
-.qa-top-special-users-label .qa-user-link:hover,
-.qa-top-special-users-label .qa-user-link:focus,
-.qa-top-blocked-users-label .qa-user-link:hover,
-.qa-top-blocked-users-label .qa-user-link:focus,
-.qa-top-newest-users-label .qa-user-link:hover,
-.qa-top-newest-users-label .qa-user-link:focus {
+.qa-special-users-label .qa-user-link:hover,
+.qa-special-users-label .qa-user-link:focus,
+.qa-blocked-users-label .qa-user-link:hover,
+.qa-blocked-users-label .qa-user-link:focus,
+.qa-newest-users-label .qa-user-link:hover,
+.qa-newest-users-label .qa-user-link:focus {
 	background-color: #eb695c;
 	text-decoration: none;
 }
 
 .qa-top-users-label .qa-user-link:before,
-.qa-top-special-users-label .qa-user-link:before,
-.qa-top-blocked-users-label .qa-user-link:before,
-.qa-top-newest-users-label .qa-user-link:before {
+.qa-special-users-label .qa-user-link:before,
+.qa-blocked-users-label .qa-user-link:before,
+.qa-newest-users-label .qa-user-link:before {
 	content: "";
 	position: absolute;
 	left: -5px;
@@ -1540,18 +1540,18 @@ blockquote p {
 
 @media (min-width: 980px) {
 	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after,
-	.qa-top-special-users-label .qa-user-link:hover:after, .qa-top-special-users-label .qa-user-link:focus:after,
-	.qa-top-blocked-users-label .qa-user-link:hover:after, .qa-top-blocked-users-label .qa-user-link:focus:after,
-	.qa-top-newest-users-label .qa-user-link:hover:after, .qa-top-newest-users-label .qa-user-link:focus:after {
+	.qa-special-users-label .qa-user-link:hover:after, .qa-special-users-label .qa-user-link:focus:after,
+	.qa-blocked-users-label .qa-user-link:hover:after, .qa-blocked-users-label .qa-user-link:focus:after,
+	.qa-newest-users-label .qa-user-link:hover:after, .qa-newest-users-label .qa-user-link:focus:after {
 		-ms-transform: translate(80px, 0);
 		-webkit-transform: translate(80px, 0);
 		transform: translate(80px, 0);
 	}
 
 	.qa-top-users-label .qa-user-link:after,
-	.qa-top-special-users-label .qa-user-link:after,
-	.qa-top-blocked-users-label .qa-user-link:after,
-	.qa-top-newest-users-label .qa-user-link:after {
+	.qa-special-users-label .qa-user-link:after,
+	.qa-blocked-users-label .qa-user-link:after,
+	.qa-newest-users-label .qa-user-link:after {
 		content: "";
 		display: block;
 		width: 0;
@@ -1572,45 +1572,42 @@ blockquote p {
 }
 
 .qa-top-users-label .qa-user-link.qa-user-favorited,
-.qa-top-special-users-label .qa-user-link.qa-user-favorited,
-.qa-top-blocked-users-label .qa-user-link.qa-user-favorited,
-.qa-top-newest-users-label .qa-user-link.qa-user-favorited {
+.qa-special-users-label .qa-user-link.qa-user-favorited,
+.qa-blocked-users-label .qa-user-link.qa-user-favorited,
+.qa-newest-users-label .qa-user-link.qa-user-favorited {
 	background-image: url('images/icons/fev-star.png');
 	background-repeat: no-repeat;
 	background-position: 2px center;
 	padding-left: 22px;
 }
 
-.qam-user-score-icon {
-	display: inline-block;
-	background-color: #2ecc71;
-	color: #fff;
+.qa-top-users-score,
+.qa-special-users-score,
+.qa-blocked-users-score,
+.qa-newest-users-score {
 	position: relative;
 	float: right;
+	padding: 2px 6px 2px 1.8em;
+	background-color: #2ecc71;
+	color: #fff;
 }
-
-.qa-top-users-score .qam-user-score-icon:before {
-	background-color: #27ae60;
+.qa-special-users-score,
+.qa-blocked-users-score,
+.qa-newest-users-score {
+	padding-left: 6px;
+}
+.qa-top-users-score:before {
 	content: '\e810';
 	font-family: "fontello";
 	display: inline-block;
-	text-align: center;
-	width: 1.5em;
-	height: 100%;
-	line-height: 1.6em;
 	position: absolute;
 	top: 0;
 	left: 0;
-}
-
-.qa-top-users-score .qam-user-score-icon {
-	padding: 2px 6px 2px 1.8em;
-}
-
-.qa-top-special-users-score .qam-user-score-icon,
-.qa-top-blocked-users-score .qam-user-score-icon,
-.qa-top-newest-users-score .qam-user-score-icon {
-	padding: 2px 6px 2px 6px;
+	width: 1.5em;
+	height: 100%;
+	background-color: #27ae60;
+	text-align: center;
+	line-height: 1.6em;
 }
 
 .qa-top-tags-count {

@@ -1367,7 +1367,7 @@ class qa_html_theme_base
 
 		if (!isset($ranking['type']))
 			$ranking['type'] = 'items';
-		$class = 'qa-top-'.$ranking['type'];
+		$class = 'qa-'.$ranking['type'];
 
 		if (!$this->ranking_block_layout) {
 			// old, less semantic table layout
