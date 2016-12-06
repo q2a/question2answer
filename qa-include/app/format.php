@@ -1313,9 +1313,9 @@
 			'url' => qa_path_html('users'),
 		);
 
-		$menuItems['users/newest'] = array(
+		$menuItems['users/new'] = array(
 			'label' => qa_lang_html('main/newest_users'),
-			'url' => qa_path_html('users/newest'),
+			'url' => qa_path_html('users/new'),
 		);
 
 		if ($showSpecialUsersPage) {
