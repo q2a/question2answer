@@ -33,6 +33,16 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 if (QA_FINAL_EXTERNAL_USERS)
 	qa_fatal_error('User accounts are handled by external code');
 
+
+//	Check we have permission to view this page (moderator or above)
+
+if (qa_user_permit_error('permit_view_new_users_page')) {
+	$qa_content = qa_content_prepare();
+	$qa_content['error'] = qa_lang_html('users/no_permission');
+	return $qa_content;
+}
+
+
 //	Get list of all users
 
 $start = qa_get_start();
