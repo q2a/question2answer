@@ -346,13 +346,11 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * Add RSS feeds icon and closed icon for closed questions
-	 *
-	 * @since Snow 1.4
+	 * Add RSS feeds icon
 	 */
-	public function title()
+	public function favorite()
 	{
-		$q_view = isset($this->content['q_view']) ? $this->content['q_view'] : null;
+		parent::favorite();
 
 		// RSS feed link in title
 		if (isset($this->content['feed']['url'])) {
@@ -360,6 +358,16 @@ class qa_html_theme extends qa_html_theme_base
 			$label = isset($feed['label']) ? $feed['label'] : '';
 			$this->output('<a href="' . $feed['url'] . '" title="' . $label . '"><i class="icon-rss qam-title-rss"></i></a>');
 		}
+	}
+
+	/**
+	 * Add closed icon for closed questions
+	 *
+	 * @since Snow 1.4
+	 */
+	public function title()
+	{
+		$q_view = isset($this->content['q_view']) ? $this->content['q_view'] : null;
 
 		// link title where appropriate
 		$url = isset($q_view['url']) ? $q_view['url'] : false;

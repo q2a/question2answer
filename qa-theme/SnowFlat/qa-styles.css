@@ -107,20 +107,22 @@ a:hover {
 	text-decoration: underline;
 }
 
-h1 {
+.qa-main-heading {
 	position: relative;
 	margin: 0 0 5px;
 	padding: 8px 52px 8px 20px;
 	background: #3498db;
 	color: #fff;
+}
+h1 {
+	margin: 0;
 	font-size: 1.4em;
 	line-height: 1.35em;
 }
 h1 a {
 	color: #fff;
-	border-bottom: 1px dotted #fff;
 	line-height: inherit;
-	border: none;
+	border: 0;
 	text-decoration: none;
 	opacity: 0.85;
 }
@@ -905,6 +907,7 @@ blockquote p {
 .qam-title-rss {
 	float: right;
 	color: #ecf0f1;
+	font-size: 1.4em;
 }
 .qam-title-rss:hover {
 	color: #fff;

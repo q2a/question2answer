@@ -113,14 +113,15 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// add RSS feed icon after the page title
-	public function title()
+	public function favorite()
 	{
-		qa_html_theme_base::title();
+		parent::favorite();
 
-		$feed=@$this->content['feed'];
+		$feed = @$this->content['feed'];
 
-		if (!empty($feed))
+		if (!empty($feed)) {
 			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" border="0" class="qa-rss-icon"/></a>');
+		}
 	}
 
 	// add view count to question list

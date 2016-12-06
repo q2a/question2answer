@@ -718,10 +718,12 @@ class qa_html_theme_base
 			if (isset($favorite))
 				$this->output('<form ' . $favorite['form_tags'] . '>');
 
-			$this->output('<h1>');
+			$this->output('<div class="qa-main-heading">');
 			$this->favorite();
+			$this->output('<h1>');
 			$this->title();
 			$this->output('</h1>');
+			$this->output('</div>');
 
 			if (isset($favorite)) {
 				$formhidden = isset($favorite['form_hidden']) ? $favorite['form_hidden'] : null;
