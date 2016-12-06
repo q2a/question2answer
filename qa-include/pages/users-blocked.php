@@ -71,7 +71,7 @@ $qa_content['title'] = $count > 0 ? qa_lang_html('users/blocked_users') : qa_lan
 $qa_content['ranking'] = array(
 	'items' => array(),
 	'rows' => ceil(count($users) / qa_opt('columns_users')),
-	'type' => 'users'
+	'type' => 'blocked-users'
 );
 
 foreach ($users as $user) {

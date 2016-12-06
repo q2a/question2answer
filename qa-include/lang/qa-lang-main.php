@@ -122,6 +122,7 @@
 		'nav_unanswered' => 'Unanswered',
 		'nav_updates' => 'My Updates',
 		'nav_users' => 'Users',
+		'newest_users' => 'Newest users',
 		'no_active_users' => 'No active users found',
 		'no_answers_found' => 'No answers found',
 		'no_answers_in_x' => 'No answers in ^',

@@ -1294,31 +1294,49 @@
 	}
 
 
+	/**
+	 * Return the sub navigation structure for user listing pages
+	 */
 	function qa_users_sub_navigation()
-/*
-	Return the sub navigation structure for user listing pages
-*/
 	{
-		if ((!QA_FINAL_EXTERNAL_USERS) && (qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR)) {
-			return array(
-				'users$' => array(
-					'url' => qa_path_html('users'),
-					'label' => qa_lang_html('main/highest_users'),
-				),
-
-				'users/special' => array(
-					'label' => qa_lang('users/special_users'),
-					'url' => qa_path_html('users/special'),
-				),
-
-				'users/blocked' => array(
-					'label' => qa_lang('users/blocked_users'),
-					'url' => qa_path_html('users/blocked'),
-				),
-			);
-
-		} else
+		if (QA_FINAL_EXTERNAL_USERS) {
 			return null;
+		}
+
+		$menuItems = array();
+
+		$moderatorPlus = qa_get_logged_in_level() >= QA_USER_LEVEL_MODERATOR;
+		$showNewUsersPage = !qa_user_permit_error('permit_view_new_users_page');
+		$showSpecialUsersPage = !qa_user_permit_error('permit_view_special_users_page');
+
+		if ($moderatorPlus || $showNewUsersPage || $showSpecialUsersPage) {
+			// We want to show this item when more than one item should be displayed
+			$menuItems['users$'] = array(
+				'label' => qa_lang_html('main/highest_users'),
+				'url' => qa_path_html('users'),
+			);
+		}
+
+		$menuItems['users/new'] = array(
+			'label' => qa_lang_html('main/newest_users'),
+			'url' => qa_path_html('users/new'),
+		);
+
+		if ($showSpecialUsersPage) {
+			$menuItems['users/special'] = array(
+				'label' => qa_lang('users/special_users'),
+				'url' => qa_path_html('users/special'),
+			);
+		}
+
+		if ($moderatorPlus) {
+			$menuItems['users/blocked'] = array(
+				'label' => qa_lang('users/blocked_users'),
+				'url' => qa_path_html('users/blocked'),
+			);
+		}
+
+		return $menuItems;
 	}
 
 

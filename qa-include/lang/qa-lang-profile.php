@@ -56,6 +56,8 @@
 		'permit_retag' => 'Retagging any question',
 		'permit_select_a' => 'Selecting answer for any question',
 		'permit_view_q_page' => 'Viewing question pages',
+		'permit_view_new_users_page' => 'Viewing the newest users page',
+		'permit_view_special_users_page' => 'Viewing the special users page',
 		'permit_view_voters_flaggers' => 'Viewing who voted or flagged posts',
 		'permit_vote_a' => 'Voting on answers',
 		'permit_vote_down' => 'Voting posts down',

@@ -1454,35 +1454,54 @@ blockquote p {
 	padding: 5px;
 }
 
-.qa-top-users-item {
+.qa-top-users-item,
+.qa-top-special-users-item,
+.qa-top-blocked-users-item,
+.qa-top-newest-users-item {
 	width: 100%;
 	max-width: 320px;
 }
+
 .qa-top-tags-item {
 	width: 100%;
 	max-width: 150px;
 }
+
 @media only screen and (min-width: 992px) {
 	/* two column layout for Desktops and above*/
-	.qa-top-users-item {
+	.qa-top-users-item,
+	.qa-top-special-users-item,
+	.qa-top-blocked-users-item,
+	.qa-top-newest-users-item {
 		width: 48%;
 		max-width: none;
 	}
+
 	.qa-top-tags-item {
 		width: 23%;
 		max-width: none;
 	}
 }
 
-.qa-top-users-avatar .qa-avatar-link {
+.qa-top-users-avatar .qa-avatar-link,
+.qa-top-special-users-avatar .qa-avatar-link,
+.qa-top-newest-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
 	margin-right: 1em;
 }
-.qa-top-users-avatar .qa-avatar-link img {
+
+.qa-top-users-avatar .qa-avatar-link img,
+.qa-top-special-users-avatar .qa-avatar-link img,
+.qa-top-blocked-users-avatar .qa-avatar-link img,
+.qa-top-newest-users-avatar .qa-avatar-link img {
 	border: 1px solid #cbd7e3;
 }
-.qa-top-users-label .qa-user-link {
+
+.qa-top-users-label .qa-user-link,
+.qa-top-special-users-label .qa-user-link,
+.qa-top-blocked-users-label .qa-user-link,
+.qa-top-newest-users-label .qa-user-link {
 	background-color: #e74c3c;
 	display: block;
 	float: left;
@@ -1490,12 +1509,23 @@ blockquote p {
 	padding: 2px 1em;
 	position: relative;
 }
-.qa-top-users-label .qa-user-link:hover, .qa-top-users-label .qa-user-link:focus {
+
+.qa-top-users-label .qa-user-link:hover,
+.qa-top-users-label .qa-user-link:focus,
+.qa-top-special-users-label .qa-user-link:hover,
+.qa-top-special-users-label .qa-user-link:focus,
+.qa-top-blocked-users-label .qa-user-link:hover,
+.qa-top-blocked-users-label .qa-user-link:focus,
+.qa-top-newest-users-label .qa-user-link:hover,
+.qa-top-newest-users-label .qa-user-link:focus {
 	background-color: #eb695c;
 	text-decoration: none;
 }
 
-.qa-top-users-label .qa-user-link:before {
+.qa-top-users-label .qa-user-link:before,
+.qa-top-special-users-label .qa-user-link:before,
+.qa-top-blocked-users-label .qa-user-link:before,
+.qa-top-newest-users-label .qa-user-link:before {
 	content: "";
 	position: absolute;
 	left: -5px;
@@ -1509,13 +1539,19 @@ blockquote p {
 }
 
 @media (min-width: 980px) {
-	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after {
+	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after,
+	.qa-top-special-users-label .qa-user-link:hover:after, .qa-top-special-users-label .qa-user-link:focus:after,
+	.qa-top-blocked-users-label .qa-user-link:hover:after, .qa-top-blocked-users-label .qa-user-link:focus:after,
+	.qa-top-newest-users-label .qa-user-link:hover:after, .qa-top-newest-users-label .qa-user-link:focus:after {
 		-ms-transform: translate(80px, 0);
 		-webkit-transform: translate(80px, 0);
 		transform: translate(80px, 0);
 	}
 
-	.qa-top-users-label .qa-user-link:after {
+	.qa-top-users-label .qa-user-link:after,
+	.qa-top-special-users-label .qa-user-link:after,
+	.qa-top-blocked-users-label .qa-user-link:after,
+	.qa-top-newest-users-label .qa-user-link:after {
 		content: "";
 		display: block;
 		width: 0;
@@ -1534,7 +1570,11 @@ blockquote p {
 		transition: all 0.5s ease;
 	}
 }
-.qa-top-users-label .qa-user-link.qa-user-favorited {
+
+.qa-top-users-label .qa-user-link.qa-user-favorited,
+.qa-top-special-users-label .qa-user-link.qa-user-favorited,
+.qa-top-blocked-users-label .qa-user-link.qa-user-favorited,
+.qa-top-newest-users-label .qa-user-link.qa-user-favorited {
 	background-image: url('images/icons/fev-star.png');
 	background-repeat: no-repeat;
 	background-position: 2px center;
@@ -1543,13 +1583,13 @@ blockquote p {
 
 .qam-user-score-icon {
 	display: inline-block;
-	padding: 2px 6px 2px 1.8em;
 	background-color: #2ecc71;
 	color: #fff;
 	position: relative;
 	float: right;
 }
-.qam-user-score-icon:before {
+
+.qa-top-users-score .qam-user-score-icon:before {
 	background-color: #27ae60;
 	content: '\e810';
 	font-family: "fontello";
@@ -1561,6 +1601,16 @@ blockquote p {
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+.qa-top-users-score .qam-user-score-icon {
+	padding: 2px 6px 2px 1.8em;
+}
+
+.qa-top-special-users-score .qam-user-score-icon,
+.qa-top-blocked-users-score .qam-user-score-icon,
+.qa-top-newest-users-score .qam-user-score-icon {
+	padding: 2px 6px 2px 6px;
 }
 
 .qa-top-tags-count {

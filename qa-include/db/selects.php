@@ -1307,6 +1307,24 @@
 	}
 
 
+	function qa_db_newest_users_selectspec($start, $count = null)
+/*
+	Return the selectspec to get the newest users. Return $count (if null, a default is used) users starting from the
+	offset $start. This query must not be run when using external users
+*/
+	{
+		$count = isset($count) ? min($count, QA_DB_RETRIEVE_USERS) : QA_DB_RETRIEVE_USERS;
+
+		return array(
+			'columns' => array('userid', 'handle', 'flags', 'email', 'created' => 'UNIX_TIMESTAMP(created)', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
+			'source' => '^users ORDER BY created DESC, userid DESC LIMIT #,#',
+			'arguments' => array($start, $count),
+			'sortdesc' => 'created',
+			'sortdesc_2' => 'userid',
+		);
+	}
+
+
 	function qa_db_users_from_level_selectspec($level)
 /*
 	Return the selectspec to get information about users at a certain privilege level or higher
