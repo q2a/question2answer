@@ -128,7 +128,7 @@
 		$ranking = array(
 			'items' => array(),
 			'rows' => ceil(count($users)/qa_opt('columns_users')),
-			'type' => 'users',
+			'type' => 'top-users',
 		);
 
 		foreach ($users as $user) {
@@ -157,7 +157,7 @@
 		$ranking = array(
 			'items' => array(),
 			'rows' => ceil(count($tags)/qa_opt('columns_tags')),
-			'type' => 'tags'
+			'type' => 'top-tags'
 		);
 
 		foreach ($tags as $tag) {
