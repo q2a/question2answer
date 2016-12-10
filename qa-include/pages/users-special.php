@@ -64,7 +64,8 @@ $qa_content['title'] = qa_lang_html('users/special_users');
 $qa_content['ranking'] = array(
 	'items' => array(),
 	'rows' => ceil(qa_opt('page_size_users') / qa_opt('columns_users')),
-	'type' => 'special-users'
+	'type' => 'users',
+	'sort' => 'level',
 );
 
 foreach ($users as $user) {

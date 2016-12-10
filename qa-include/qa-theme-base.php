@@ -815,6 +815,8 @@ class qa_html_theme_base
 
 	public function main_part($key, $part)
 	{
+		$isRanking = strpos($key, 'ranking') === 0;
+
 		$partdiv = (
 			strpos($key, 'custom') === 0 ||
 			strpos($key, 'form') === 0 ||
@@ -822,13 +824,18 @@ class qa_html_theme_base
 			(strpos($key, 'q_view') === 0 && !isset($this->content['form_q_edit'])) ||
 			strpos($key, 'a_form') === 0 ||
 			strpos($key, 'a_list') === 0 ||
-			strpos($key, 'ranking') === 0 ||
+			$isRanking ||
 			strpos($key, 'message_list') === 0 ||
 			strpos($key, 'nav_list') === 0
 		);
 
-		if ($partdiv)
-			$this->output('<div class="qa-part-'.strtr($key, '_', '-').'">'); // to help target CSS to page parts
+		if ($partdiv) {
+			$class = 'qa-part-' . strtr($key, '_', '-');
+			if ($isRanking)
+				$class .= ' qa-ranking-' . $part['type'] . '-' . (isset($part['sort']) ? $part['sort'] : 'points');
+			// help target CSS to page parts
+			$this->output('<div class="'.$class.'">');
+		}
 
 		if (strpos($key, 'custom') === 0)
 			$this->output_raw($part);
@@ -1367,7 +1374,7 @@ class qa_html_theme_base
 
 		if (!isset($ranking['type']))
 			$ranking['type'] = 'items';
-		$class = 'qa-'.$ranking['type'];
+		$class = 'qa-top-' . $ranking['type'];
 
 		if (!$this->ranking_block_layout) {
 			// old, less semantic table layout

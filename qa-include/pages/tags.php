@@ -50,7 +50,8 @@ $qa_content['title'] = qa_lang_html('main/popular_tags');
 $qa_content['ranking'] = array(
 	'items' => array(),
 	'rows' => ceil($pagesize / qa_opt('columns_tags')),
-	'type' => 'top-tags'
+	'type' => 'tags',
+	'sort' => 'count',
 );
 
 if (count($populartags)) {

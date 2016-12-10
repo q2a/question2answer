@@ -1454,10 +1454,7 @@ blockquote p {
 	padding: 5px;
 }
 
-.qa-top-users-item,
-.qa-special-users-item,
-.qa-blocked-users-item,
-.qa-newest-users-item {
+.qa-top-users-item {
 	width: 100%;
 	max-width: 320px;
 }
@@ -1469,10 +1466,7 @@ blockquote p {
 
 @media only screen and (min-width: 992px) {
 	/* two column layout for Desktops and above*/
-	.qa-top-users-item,
-	.qa-special-users-item,
-	.qa-blocked-users-item,
-	.qa-newest-users-item {
+	.qa-top-users-item {
 		width: 48%;
 		max-width: none;
 	}
@@ -1483,25 +1477,17 @@ blockquote p {
 	}
 }
 
-.qa-top-users-avatar .qa-avatar-link,
-.qa-special-users-avatar .qa-avatar-link,
-.qa-newest-users-avatar .qa-avatar-link {
+.qa-top-users-avatar .qa-avatar-link {
 	display: block;
 	float: left;
 	margin-right: 1em;
 }
 
-.qa-top-users-avatar .qa-avatar-link img,
-.qa-special-users-avatar .qa-avatar-link img,
-.qa-blocked-users-avatar .qa-avatar-link img,
-.qa-newest-users-avatar .qa-avatar-link img {
+.qa-top-users-avatar .qa-avatar-link img {
 	border: 1px solid #cbd7e3;
 }
 
-.qa-top-users-label .qa-user-link,
-.qa-special-users-label .qa-user-link,
-.qa-blocked-users-label .qa-user-link,
-.qa-newest-users-label .qa-user-link {
+.qa-top-users-label .qa-user-link {
 	background-color: #e74c3c;
 	display: block;
 	float: left;
@@ -1511,21 +1497,12 @@ blockquote p {
 }
 
 .qa-top-users-label .qa-user-link:hover,
-.qa-top-users-label .qa-user-link:focus,
-.qa-special-users-label .qa-user-link:hover,
-.qa-special-users-label .qa-user-link:focus,
-.qa-blocked-users-label .qa-user-link:hover,
-.qa-blocked-users-label .qa-user-link:focus,
-.qa-newest-users-label .qa-user-link:hover,
-.qa-newest-users-label .qa-user-link:focus {
+.qa-top-users-label .qa-user-link:focus {
 	background-color: #eb695c;
 	text-decoration: none;
 }
 
-.qa-top-users-label .qa-user-link:before,
-.qa-special-users-label .qa-user-link:before,
-.qa-blocked-users-label .qa-user-link:before,
-.qa-newest-users-label .qa-user-link:before {
+.qa-top-users-label .qa-user-link:before {
 	content: "";
 	position: absolute;
 	left: -5px;
@@ -1539,19 +1516,14 @@ blockquote p {
 }
 
 @media (min-width: 980px) {
-	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after,
-	.qa-special-users-label .qa-user-link:hover:after, .qa-special-users-label .qa-user-link:focus:after,
-	.qa-blocked-users-label .qa-user-link:hover:after, .qa-blocked-users-label .qa-user-link:focus:after,
-	.qa-newest-users-label .qa-user-link:hover:after, .qa-newest-users-label .qa-user-link:focus:after {
+	.qa-top-users-label .qa-user-link:hover:after,
+	.qa-top-users-label .qa-user-link:focus:after {
 		-ms-transform: translate(80px, 0);
 		-webkit-transform: translate(80px, 0);
 		transform: translate(80px, 0);
 	}
 
-	.qa-top-users-label .qa-user-link:after,
-	.qa-special-users-label .qa-user-link:after,
-	.qa-blocked-users-label .qa-user-link:after,
-	.qa-newest-users-label .qa-user-link:after {
+	.qa-top-users-label .qa-user-link:after {
 		content: "";
 		display: block;
 		width: 0;
@@ -1571,32 +1543,24 @@ blockquote p {
 	}
 }
 
-.qa-top-users-label .qa-user-link.qa-user-favorited,
-.qa-special-users-label .qa-user-link.qa-user-favorited,
-.qa-blocked-users-label .qa-user-link.qa-user-favorited,
-.qa-newest-users-label .qa-user-link.qa-user-favorited {
+.qa-top-users-label .qa-user-link.qa-user-favorited {
 	background-image: url('images/icons/fev-star.png');
 	background-repeat: no-repeat;
 	background-position: 2px center;
 	padding-left: 22px;
 }
 
-.qa-top-users-score,
-.qa-special-users-score,
-.qa-blocked-users-score,
-.qa-newest-users-score {
+.qa-top-users-score {
 	position: relative;
 	float: right;
-	padding: 2px 6px 2px 1.8em;
+	padding: 2px 6px 2px 6px;
 	background-color: #2ecc71;
 	color: #fff;
 }
-.qa-special-users-score,
-.qa-blocked-users-score,
-.qa-newest-users-score {
-	padding-left: 6px;
+.qa-ranking-users-points .qa-top-users-score {
+	padding-left: 1.8em;
 }
-.qa-top-users-score:before {
+.qa-ranking-users-points .qa-top-users-score:before {
 	content: '\e810';
 	font-family: "fontello";
 	display: inline-block;

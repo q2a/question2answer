@@ -50,7 +50,8 @@ $qa_content['title'] = qa_lang_html('main/highest_users');
 $qa_content['ranking'] = array(
 	'items' => array(),
 	'rows' => ceil($pagesize / qa_opt('columns_users')),
-	'type' => 'top-users'
+	'type' => 'users',
+	'sort' => 'points',
 );
 
 if (count($users)) {

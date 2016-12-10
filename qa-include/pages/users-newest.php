@@ -62,7 +62,8 @@ $qa_content['title'] = qa_lang_html('main/newest_users');
 $qa_content['ranking'] = array(
 	'items' => array(),
 	'rows' => ceil($pageSize / qa_opt('columns_users')),
-	'type' => 'newest-users',
+	'type' => 'users',
+	'sort' => 'date',
 );
 
 if (!empty($users)) {
