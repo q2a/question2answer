@@ -58,32 +58,20 @@
 				qa_limits_increment(null, QA_LIMIT_LOGINS);
 
 				$errors=array();
+				$res = qa_check_login_credentials($inemailhandle, $inpassword, $inremember);
 
-				if (qa_opt('allow_login_email_only') || (strpos($inemailhandle, '@')!==false)) // handles can't contain @ symbols
-					$matchusers=qa_db_user_find_by_email($inemailhandle);
-				else
-					$matchusers=qa_db_user_find_by_handle($inemailhandle);
+				if ($res == LOGIN_CREDENTIALS_OK) { // login and redirect
+					$topath=qa_get('to');
 
-				if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
-					$inuserid=$matchusers[0];
-					$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
+					if (isset($topath))
+						qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
+					elseif ($passwordsent)
+						qa_redirect('account');
+					else
+						qa_redirect('');
 
-					if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) { // login and redirect
-						require_once QA_INCLUDE_DIR.'app/users.php';
-
-						qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
-
-						$topath=qa_get('to');
-
-						if (isset($topath))
-							qa_redirect_raw(qa_path_to_root().$topath); // path already provided as URL fragment
-						elseif ($passwordsent)
-							qa_redirect('account');
-						else
-							qa_redirect('');
-
-					} else
-						$errors['password']=qa_lang('users/password_wrong');
+				} elseif ($res == LOGIN_PASSWORD_INCORRECT) {
+					$errors['password']=qa_lang('users/password_wrong');
 
 				} else
 					$errors['emailhandle']=qa_lang('users/user_not_found');

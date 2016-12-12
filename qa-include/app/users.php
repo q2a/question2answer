@@ -51,6 +51,9 @@
 	@define('QA_FORM_EXPIRY_SECS', 86400); // how many seconds a form is valid for submission
 	@define('QA_FORM_KEY_LENGTH', 32);
 
+	const LOGIN_CREDENTIALS_OK = 0;
+	const LOGIN_USER_NOT_FOUND = 1;
+	const LOGIN_PASSWORD_INCORRECT = 2;
 
 	if (QA_FINAL_EXTERNAL_USERS) {
 
@@ -225,7 +228,35 @@
 			unset($_SESSION['qa_session_verify_'.$suffix]);
 		}
 
+		function qa_check_login_credentials($inemailhandle, $inpassword, $inremember)
+	/*
+		Call to check login credentials, override in plugin for custom credential checking whilst maintaining the normal cookie handling etc.
+		returns:
+		LOGIN_CREDENTIALS_OK (0) == credentials OK
+		LOGIN_USER_NOT_FOUND (1) == user not found
+		LOGIN_PASSWORD_INCORRECT (2) == password incorrect
+	*/
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+			if (qa_opt('allow_login_email_only') || (strpos($inemailhandle, '@')!==false)) // handles can't contain @ symbols
+				$matchusers=qa_db_user_find_by_email($inemailhandle);
+			else
+				$matchusers=qa_db_user_find_by_handle($inemailhandle);
+
+			if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
+				$inuserid=$matchusers[0];
+				$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
+
+				if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) {
+					qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
+					return LOGIN_CREDENTIALS_OK;
+				} else 
+					return LOGIN_PASSWORD_INCORRECT;
+			}
+			return LOGIN_USER_NOT_FOUND;
+		}
+		
 		function qa_set_logged_in_user($userid, $handle='', $remember=false, $source=null)
 	/*
 		Call for successful log in by $userid and $handle or successful log out with $userid=null.
