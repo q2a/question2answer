@@ -27,20 +27,6 @@
 
 
 	/**
-	 * Indicates to the Q2A database layer that database connections are permitted fro this point forwards
-	 * (before this point, some plugins may not have had a chance to override some database access functions).
-	 */
-	function qa_db_allow_connect()
-	{
-		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		global $qa_db_allow_connect;
-
-		$qa_db_allow_connect=true;
-	}
-
-
-	/**
 	 * Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary).
 	 * Uses mysqli as of Q2A 1.7.
 	 */
@@ -48,10 +34,7 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		global $qa_db_connection, $qa_db_fail_handler, $qa_db_allow_connect;
-
-		if (!$qa_db_allow_connect)
-			qa_fatal_error('It appears that a plugin is trying to access the database, but this is not allowed until Q2A initialization is complete.');
+		global $qa_db_connection, $qa_db_fail_handler;
 
 		if (isset($failhandler))
 			$qa_db_fail_handler = $failhandler; // set this even if connection already opened
