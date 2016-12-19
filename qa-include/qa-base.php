@@ -1072,17 +1072,31 @@
 			if (!is_numeric($unit)) {
 				$postmaxsize = substr($postmaxsize, 0, -1);
 			}
-			switch (strtoupper($unit)) {  // Gets an integer value that can be compared against the size of the HTTP request
-				case 'G':
-					$postmaxsize *= 1024;
-					// fall-through
-				case 'M':
-					$postmaxsize *= 1024;
-					// fall-through
-				case 'K':
-					$postmaxsize *= 1024;
-			}
+			// Gets an integer value that can be compared against the size of the HTTP request
+			$postmaxsize = convert_to_bytes($unit, $postmaxsize);
 			return $_SERVER['CONTENT_LENGTH'] > $postmaxsize;
+		}
+	}
+
+
+	/**
+	* Turns a numeric value and a unit (g/m/k) into bytes
+	* @param string $unit One of 'g', 'm', 'k'. It is case insensitive
+	* @param int $value The value to turn into bytes
+	* @return int The amount of bytes the unit and the value represent. If the unit is not one of 'g', 'm' or 'k' then
+	* the original value is returned
+	*/
+	function convert_to_bytes($unit, $value)
+	{
+		switch (strtolower($unit)) {
+			case 'g':
+				return $value * 1073741824;
+			case 'm':
+				return $value * 1048576;
+			case 'k':
+				return $value * 1024;
+			default:
+				return $value;
 		}
 	}
 
