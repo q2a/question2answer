@@ -25,6 +25,19 @@
 		exit;
 	}
 
+	/**
+	* Set the database fail handler. No matter if the connection is already opened.
+	*
+	* @param callable $failhandler
+	*/
+	function qa_db_set_fail_handler($failhandler)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		global $qa_db_fail_handler;
+
+		$qa_db_fail_handler = $failhandler;
+	}
 
 	/**
 	 * Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary).
@@ -37,7 +50,7 @@
 		global $qa_db_connection, $qa_db_fail_handler;
 
 		if (isset($failhandler))
-			$qa_db_fail_handler = $failhandler; // set this even if connection already opened
+			qa_db_set_fail_handler($failhandler);
 
 		if ($qa_db_connection instanceof mysqli)
 			return;

@@ -27,9 +27,6 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 require_once QA_INCLUDE_DIR.'db/install.php';
 
-qa_report_process_stage('init_install');
-
-
 // Define database failure handler for install process, if not defined already (file could be included more than once)
 
 if (!function_exists('qa_install_db_fail_handler')) {
@@ -60,7 +57,6 @@ $buttons = array();
 $fields = array();
 $fielderrors = array();
 $hidden = array();
-
 
 // Process user handling higher up to avoid 'headers already sent' warning
 
@@ -184,6 +180,8 @@ else {
 	}
 
 	if (qa_clicked('module')) {
+		qa_initialize();
+
 		$moduletype = qa_post_text('moduletype');
 		$modulename = qa_post_text('modulename');
 
@@ -273,6 +271,8 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 			}
 			else {
 				$tables = qa_db_list_tables();
+
+				qa_initialize();
 
 				$moduletypes = qa_list_module_types();
 

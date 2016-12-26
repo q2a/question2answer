@@ -27,8 +27,6 @@
 
 	@ini_set('display_errors', 0); // we don't want to show PHP errors to RSS readers
 
-	qa_report_process_stage('init_feed');
-
 	require_once QA_INCLUDE_DIR.'app/options.php';
 
 
@@ -91,7 +89,12 @@
 
 //	Connect to database and get the type of feed and category requested (in some cases these are overridden later)
 
-	qa_db_connect('qa_feed_db_fail_handler');
+	qa_db_set_fail_handler('qa_feed_db_fail_handler');
+
+	qa_initialize();
+
+	qa_report_process_stage('init_feed');
+
 	qa_preload_options();
 
 	$requestlower=strtolower(qa_request());

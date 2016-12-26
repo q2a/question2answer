@@ -20,30 +20,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-// Output this header as early as possible
-
-header('Content-Type: text/plain; charset=utf-8');
-
-
-// Ensure no PHP errors are shown in the Ajax response
-
-@ini_set('display_errors', 0);
-
-
-// Load the Q2A base file which sets up a bunch of crucial functions
-
-require 'qa-base.php';
-
-qa_report_process_stage('init_ajax');
-
-
-// Get general Ajax parameters from the POST payload, and clear $_GET
-
-qa_set_request(qa_post_text('qa_request'), qa_post_text('qa_root'));
-
-$_GET = array(); // for qa_self_html()
-
-
 // Database failure handler
 
 function qa_ajax_db_fail_handler()
@@ -52,6 +28,29 @@ function qa_ajax_db_fail_handler()
 	qa_exit('error');
 }
 
+// Ensure no PHP errors are shown in the Ajax response
+
+@ini_set('display_errors', 0);
+
+// Output this header as early as possible
+
+header('Content-Type: text/plain; charset=utf-8');
+
+// Load the Q2A base file which sets up a bunch of crucial functions
+
+require 'qa-base.php';
+
+qa_db_set_fail_handler('qa_ajax_db_fail_handler');
+
+qa_initialize();
+
+qa_report_process_stage('init_ajax');
+
+// Get general Ajax parameters from the POST payload, and clear $_GET
+
+qa_set_request(qa_post_text('qa_request'), qa_post_text('qa_root'));
+
+$_GET = array(); // for qa_self_html()
 
 // Perform the appropriate Ajax operation
 
@@ -78,10 +77,8 @@ $routing = array(
 $operation = qa_post_text('qa_operation');
 
 if (isset($routing[$operation])) {
-	qa_db_connect('qa_ajax_db_fail_handler');
-
 	qa_initialize_buffering();
 	require QA_INCLUDE_DIR . 'ajax/' . $routing[$operation];
-
-	qa_db_disconnect();
 }
+
+qa_db_disconnect();

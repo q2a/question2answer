@@ -65,9 +65,12 @@
 
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 
-	qa_load_plugin_files();
-	qa_load_override_files();
+	function qa_initialize() {
+		qa_db_connect();
 
+		qa_load_plugin_files();
+		qa_load_override_files();
+	}
 
 //	Version comparison functions
 

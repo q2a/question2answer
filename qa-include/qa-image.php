@@ -20,10 +20,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-
-//	Ensure no PHP errors are shown in the image data
-
-	@ini_set('display_errors', 0);
+//  Database failure handler
 
 	function qa_image_db_fail_handler()
 	{
@@ -31,19 +28,23 @@
 		qa_exit('error');
 	}
 
+//	Ensure no PHP errors are shown in the image data
+
+	@ini_set('display_errors', 0);
 
 //	Load the Q2A base file which sets up a bunch of crucial stuff
 
 	require 'qa-base.php';
 
-	qa_report_process_stage('init_image');
-
-
 //	Retrieve the scaled image from the cache if available
 
-	require_once QA_INCLUDE_DIR.'db/cache.php';
+	qa_db_set_fail_handler('qa_image_db_fail_handler');
 
-	qa_db_connect('qa_image_db_fail_handler');
+	qa_initialize();
+
+	qa_report_process_stage('init_image');
+
+	require_once QA_INCLUDE_DIR.'db/cache.php';
 
 	$blobid=qa_get('qa_blobid');
 	$size=(int)qa_get('qa_size');

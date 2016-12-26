@@ -20,10 +20,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-
-// Ensure no PHP errors are shown in the blob response
-
-@ini_set('display_errors', 0);
+// Database failure handler
 
 function qa_blob_db_fail_handler()
 {
@@ -31,19 +28,23 @@ function qa_blob_db_fail_handler()
 	qa_exit('error');
 }
 
+// Ensure no PHP errors are shown in the blob response
+
+@ini_set('display_errors', 0);
 
 // Load the Q2A base file which sets up a bunch of crucial stuff
 
 require 'qa-base.php';
 
-qa_report_process_stage('init_blob');
+qa_db_set_fail_handler('qa_blob_db_fail_handler');
 
+qa_initialize();
+
+qa_report_process_stage('init_blob');
 
 // Output the blob in question
 
 require_once QA_INCLUDE_DIR.'app/blobs.php';
-
-qa_db_connect('qa_blob_db_fail_handler');
 
 $blob = qa_read_blob(qa_get('qa_blobid'));
 
