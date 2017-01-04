@@ -357,7 +357,7 @@ switch ($adminsection) {
 				'avatar_q_page_a_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 				'avatar_q_page_c_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
 				'avatar_q_list_size' => 'option_avatar_allow_gravatar || option_avatar_allow_upload',
-				'avatar_message_list_size' => 'option_allow_private_messages || option_allow_user_walls',
+				'avatar_message_list_size' => '(option_avatar_allow_gravatar || option_avatar_allow_upload) && (option_allow_private_messages || option_allow_user_walls)',
 			));
 		}
 
