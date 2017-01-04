@@ -28,16 +28,16 @@
 
 //	If this is an special non-page request, branch off here
 
-	if (isset($_POST['qa']) && $_POST['qa'] == 'ajax')
-		require 'qa-ajax.php';
+	// Will be one of 'ajax', 'image', 'blob', 'page', 'feed', 'install', 'url-test'
+	$qa_location = null;
 
-	elseif (isset($_GET['qa']) && $_GET['qa'] == 'image')
-		require 'qa-image.php';
-
-	elseif (isset($_GET['qa']) && $_GET['qa'] == 'blob')
-		require 'qa-blob.php';
-
-	else {
+	if (isset($_POST['qa']) && $_POST['qa'] == 'ajax') {
+		$qa_location = 'ajax';
+	} elseif (isset($_GET['qa']) && $_GET['qa'] == 'image') {
+		$qa_location = 'image';
+	} elseif (isset($_GET['qa']) && $_GET['qa'] == 'blob') {
+		$qa_location = 'blob';
+	} else {
 
 	//	Otherwise, load the Q2A base file which sets up a bunch of crucial stuff
 
@@ -176,19 +176,56 @@
 
 		$requestlower = strtolower(qa_request());
 
-		if ($requestlower == 'install')
-			require QA_INCLUDE_DIR.'qa-install.php';
-		elseif ($requestlower == 'url/test/'.QA_URL_TEST_STRING)
-			require QA_INCLUDE_DIR.'qa-url-test.php';
-		else {
+		if ($requestlower == 'install') {
+			$qa_location = 'install';
+		} elseif ($requestlower == 'url/test/' . QA_URL_TEST_STRING) {
+			$qa_location = 'url-test';
+		} else {
+			if (substr($requestlower, 0, 5) == 'feed/') {
+				$qa_location = 'feed';
+			} else {
+				$qa_location = 'page';
+			}
+		}
+	}
+
+	switch ($qa_location) {
+		case 'page':
+			$requestlower = strtolower(qa_request());
+
 			// enable gzip compression for output (needs to come early)
 			qa_initialize_buffering($requestlower);
 
-			if (substr($requestlower, 0, 5) == 'feed/')
-				require QA_INCLUDE_DIR.'qa-feed.php';
-			else
-				require QA_INCLUDE_DIR.'qa-page.php';
-		}
+			require QA_INCLUDE_DIR . 'qa-page.php';
+			break;
+
+		case 'ajax':
+			require 'qa-ajax.php';
+			break;
+
+		case 'image':
+			require 'qa-image.php';
+			break;
+
+		case 'blob':
+			require 'qa-blob.php';
+			break;
+
+		case 'feed':
+			$requestlower = strtolower(qa_request());
+
+			// enable gzip compression for output (needs to come early)
+			qa_initialize_buffering($requestlower);
+
+			require QA_INCLUDE_DIR . 'qa-feed.php';
+			break;
+
+		case 'install':
+			require QA_INCLUDE_DIR . 'qa-install.php';
+			break;
+
+		default: // value 'url-test'
+			require QA_INCLUDE_DIR . 'qa-url-test.php';
 	}
 
 	qa_report_process_stage('shutdown');

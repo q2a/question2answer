@@ -815,8 +815,11 @@
 
 	global $qa_usage;
 
+	qa_db_set_fail_handler('qa_page_db_fail_handler');
+
+	qa_initialize();
+
 	qa_report_process_stage('init_page');
-	qa_db_connect('qa_page_db_fail_handler');
 
 	qa_page_queue_pending();
 	qa_load_state();

@@ -62,15 +62,15 @@
 	qa_initialize_constants_2();
 	qa_initialize_modularity();
 	qa_register_core_modules();
-	qa_load_override_files();
 
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 
-	qa_db_allow_connect();
+	function qa_initialize() {
+		qa_db_connect();
 
-	qa_load_plugin_files();
-
-
+		qa_load_plugin_files();
+		qa_load_override_files();
+	}
 
 //	Version comparison functions
 
