@@ -4,7 +4,7 @@ require_once QA_INCLUDE_DIR.'util/string.php';
 class UtilStringTest extends PHPUnit_Framework_TestCase
 {
 	private $strBasic = 'So I tied an onion to my belt, which was the style at the time.';
-	private $strAccents = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƲĘŕ ƮĦȨ ĿÆƶȳ Ƌơǥ';
+	private $strAccents = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƯĘŕ ƬĦȨ ĿÆƶȳ Ƌơǥ';
 	private $blockWordString = 't*d o*n b*t style';
 
 	public function test__qa_string_to_words()
@@ -22,7 +22,7 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 	public function test__qa_string_remove_accents()
 	{
 		$test = qa_string_remove_accents($this->strAccents);
-		$expected = 'The quicK ssroWn Fot jUOIps OVEr THE LAEzy Dog';
+		$expected = 'The quicK ssroWn Fot jUOIps OUEr THE LAEzy Dog';
 
 		$this->assertEquals($expected, $test);
 	}
