@@ -1462,43 +1462,24 @@
 	}
 
 
+	/**
+	 * Get Q2A request for a question, and make it search-engine friendly, shortening it if necessary
+	 * by removing shorter words which are generally less meaningful.
+	 * @param  int $questionid The question ID
+	 * @param string $title The question title
+	 * @return  string
+	 */
 	function qa_q_request($questionid, $title)
-/*
-	Return the Q2A request for question $questionid, and make it search-engine friendly based on $title, which is
-	shortened if necessary by removing shorter words which are generally less meaningful.
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'app/options.php';
-		require_once QA_INCLUDE_DIR.'util/string.php';
+		require_once QA_INCLUDE_DIR . 'app/options.php';
+		require_once QA_INCLUDE_DIR . 'util/string.php';
 
-		$title=qa_block_words_replace($title, qa_get_block_words_preg());
+		$title = qa_block_words_replace($title, qa_get_block_words_preg());
+		$slug = qa_slugify($title, qa_opt('q_urls_remove_accents'), qa_opt('q_urls_title_length'));
 
-		$words=qa_string_to_words($title, true, false, false);
-
-		$wordlength=array();
-		foreach ($words as $index => $word)
-			$wordlength[$index]=qa_strlen($word);
-
-		$remaining=qa_opt('q_urls_title_length');
-
-		if (array_sum($wordlength)>$remaining) {
-			arsort($wordlength, SORT_NUMERIC); // sort with longest words first
-
-			foreach ($wordlength as $index => $length) {
-				if ($remaining>0)
-					$remaining-=$length;
-				else
-					unset($words[$index]);
-			}
-		}
-
-		$title=implode('-', $words);
-		if (qa_opt('q_urls_remove_accents'))
-			$title=qa_string_remove_accents($title);
-
-		return (int)$questionid.'/'.$title;
+		return (int) $questionid . '/' . $slug;
 	}
 
 

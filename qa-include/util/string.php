@@ -450,16 +450,64 @@
 	}
 
 
+	/**
+	 * Convert accents in a UTF-8 string to ASCII.
+	 * @param string $string Input string.
+	 * @return string
+	 */
 	function qa_string_remove_accents($string)
-/*
-	Return UTF-8 input $string with all accents (on Roman characters) removed
-*/
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		global $qa_utf8removeaccents;
 
 		return strtr($string, $qa_utf8removeaccents);
+	}
+
+
+	/**
+	 * Convert string to an SEO-friendly URL segment.
+	 * @param string $string Input string.
+	 * @param bool $asciiOnly If true, removes all non-ASCII characters that weren't converted.
+	 * @param int|null $maxLength Maximum length the segment should be, or null for no limit.
+	 * @return string
+	 */
+	function qa_slugify($string, $asciiOnly=true, $maxLength=null)
+	{
+		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+		$words = qa_string_to_words($string, true, false, false);
+
+		if ($maxLength !== null) {
+			$wordlength = array();
+			foreach ($words as $index => $word) {
+				$wordlength[$index] = qa_strlen($word);
+			}
+
+			$remaining = $maxLength;
+			if (array_sum($wordlength)>$remaining) {
+				arsort($wordlength, SORT_NUMERIC); // sort with longest words first
+
+				foreach ($wordlength as $index => $length) {
+					if ($remaining > 0) {
+						$remaining -= $length;
+					} else {
+						unset($words[$index]);
+					}
+				}
+			}
+		}
+
+		$string = implode('-', $words);
+
+		if ($asciiOnly) {
+			// convert accents to ASCII, then remove all remaining non-ASCII characters
+			$string = qa_string_remove_accents($string);
+			$string = preg_replace('/[^ a-zA-Z0-9-]/', '', $string);
+			$string = preg_replace('/-{2,}/', '-', trim($string, '-'));
+		}
+
+		return $string;
 	}
 
 
