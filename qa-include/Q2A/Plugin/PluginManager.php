@@ -26,13 +26,102 @@ class Q2A_Plugin_PluginManager
 	const PLUGIN_DELIMITER = ';';
 	const OPT_ENABLED_PLUGINS = 'enabled_plugins';
 
+	private $loadBeforeDbInit = array();
+	private $loadAfterDbInit = array();
+
+	public function readAllPluginMetadatas()
+	{
+		$pluginDirectories = $this->getFilesystemPlugins(true);
+
+		foreach ($pluginDirectories as $pluginDirectory) {
+			$pluginFile = $pluginDirectory . 'qa-plugin.php';
+
+			if (!file_exists($pluginFile)) {
+				continue;
+			}
+
+			$metadataUtil = new Q2A_Util_Metadata();
+			$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
+			if (empty($metadata)) {
+				// limit plugin parsing to first 8kB
+				$contents = file_get_contents($pluginFile, false, null, -1, 8192);
+				$metadata = qa_addon_metadata($contents, 'Plugin', true);
+			}
+
+			// skip plugin which requires a later version of Q2A
+			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a'])) {
+				continue;
+			}
+			// skip plugin which requires a later version of PHP
+			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php'])) {
+				continue;
+			}
+
+			$pluginInfoKey = basename($pluginDirectory);
+			$pluginInfo = array(
+				'pluginfile' => $pluginFile,
+				'directory' => $pluginDirectory,
+				'urltoroot' => substr($pluginDirectory, strlen(QA_BASE_DIR)),
+			);
+
+			if (isset($metadata['load_order'])) {
+				switch ($metadata['load_order']) {
+					case 'after_db_init':
+						$this->loadAfterDbInit[$pluginInfoKey] = $pluginInfo;
+						break;
+					case 'before_db_init':
+						$this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
+						break;
+					default:
+				}
+			} else {
+				$this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
+			}
+		}
+	}
+
+	private function loadPlugins($pluginInfos)
+	{
+		global $qa_plugin_directory, $qa_plugin_urltoroot;
+
+		foreach ($pluginInfos as $pluginInfo) {
+			$qa_plugin_directory = $pluginInfo['directory'];
+			$qa_plugin_urltoroot = $pluginInfo['urltoroot'];
+
+			require_once $pluginInfo['pluginfile'];
+		}
+
+		$qa_plugin_directory = null;
+		$qa_plugin_urltoroot = null;
+	}
+
+	public function loadPluginsBeforeDbInit()
+	{
+		$this->loadPlugins($this->loadBeforeDbInit);
+	}
+
+	public function loadPluginsAfterDbInit()
+	{
+		$enabledPlugins = $this->getEnabledPlugins(false);
+		$enabledForAfterDbInit = array();
+
+		foreach ($enabledPlugins as $enabledPluginDirectory) {
+			if (isset($this->loadAfterDbInit[$enabledPluginDirectory])) {
+				$enabledForAfterDbInit[$enabledPluginDirectory] = $this->loadAfterDbInit[$enabledPluginDirectory];
+			}
+		}
+
+		$this->loadPlugins($enabledForAfterDbInit);
+	}
+
 	public function getEnabledPlugins($fullPath = false)
 	{
 		$pluginDirectories = $this->getEnabledPluginsOption();
 
 		if ($fullPath) {
-			foreach ($pluginDirectories as $key => &$pluginDirectory)
+			foreach ($pluginDirectories as $key => &$pluginDirectory) {
 				$pluginDirectory = QA_PLUGIN_DIR . $pluginDirectory . '/';
+			}
 		}
 
 		return $pluginDirectories;
@@ -50,7 +139,7 @@ class Q2A_Plugin_PluginManager
 		$fileSystemPluginFiles = glob(QA_PLUGIN_DIR . '*/qa-plugin.php');
 
 		foreach ($fileSystemPluginFiles as $pluginFile) {
-			$directory = dirname($pluginFile);
+			$directory = dirname($pluginFile) . '/';
 
 			if (!$fullPath) {
 				$directory = basename($directory);

@@ -58,16 +58,27 @@
 		require_once QA_JOOMLA_LOAD_FILE;
 	}
 
+
 	qa_initialize_constants_2();
 	qa_initialize_modularity();
 	qa_register_core_modules();
-	qa_load_plugin_files();
-	qa_load_override_files();
 
 	require_once QA_INCLUDE_DIR.'qa-db.php';
 
-	qa_db_allow_connect();
+	qa_initialize_plugins();
 
+	function qa_initialize_plugins() {
+		$pluginManager = new Q2A_Plugin_PluginManager();
+		$pluginManager->readAllPluginMetadatas();
+
+		$pluginManager->loadPluginsBeforeDbInit();
+		qa_load_override_files();
+
+		qa_db_allow_connect();
+
+		$pluginManager->loadPluginsAfterDbInit();
+		qa_load_override_files();
+	}
 
 //	Version comparison functions
 
@@ -309,11 +320,12 @@
 	Gets everything ready to start using modules, layers and overrides
 */
 	{
-		global $qa_modules, $qa_layers, $qa_override_files, $qa_overrides, $qa_direct;
+		global $qa_modules, $qa_layers, $qa_override_files, $qa_override_files_temp, $qa_overrides, $qa_direct;
 
 		$qa_modules=array();
 		$qa_layers=array();
 		$qa_override_files=array();
+		$qa_override_files_temp=array();
 		$qa_overrides=array();
 		$qa_direct=array();
 	}
@@ -394,62 +406,17 @@
 	}
 
 
-	function qa_load_plugin_files()
-/*
-	Load all the qa-plugin.php files from plugins that are compatible with this version of Q2A
-*/
-	{
-		global $qa_plugin_directory, $qa_plugin_urltoroot;
-
-		// temporarily disabled
-		// $pluginManager = new Q2A_Plugin_PluginManager();
-		// $pluginDirectories = $pluginManager->getEnabledPlugins(true);
-
-		$pluginDirectories = glob(QA_PLUGIN_DIR.'*/');
-
-		$metadataUtil = new Q2A_Util_Metadata();
-		foreach ($pluginDirectories as $pluginDirectory) {
-			$pluginFile = $pluginDirectory . 'qa-plugin.php';
-
-			if (!file_exists($pluginFile))
-				continue;
-
-			$metadata = $metadataUtil->fetchFromAddonPath($qa_plugin_directory);
-			if (empty($metadata)) {
-				// limit plugin parsing to first 8kB
-				$contents = file_get_contents($pluginFile, false, null, -1, 8192);
-				$metadata = qa_addon_metadata($contents, 'Plugin', true);
-			}
-
-			// skip plugin which requires a later version of Q2A
-			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a']))
-				continue;
-			// skip plugin which requires a later version of PHP
-			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php']))
-				continue;
-
-			// these variables are utilized in the qa_register_plugin_* functions
-			$qa_plugin_directory = $pluginDirectory;
-			$qa_plugin_urltoroot = substr($qa_plugin_directory, strlen(QA_BASE_DIR));
-
-			require_once $pluginFile;
-		}
-
-		$qa_plugin_directory = null;
-		$qa_plugin_urltoroot = null;
-	}
-
-
 	function qa_load_override_files()
 /*
 	Apply all the function overrides in override files that have been registered by plugins
 */
 	{
-		global $qa_override_files, $qa_overrides;
+		global $qa_override_files, $qa_override_files_temp, $qa_overrides;
 
 		$functionindex=array();
 
-		foreach ($qa_override_files as $index => $override) {
+		foreach ($qa_override_files_temp as $override) {
+			$qa_override_files[] = $override;
 			$filename=$override['directory'].$override['include'];
 			$functionsphp=file_get_contents($filename);
 
@@ -483,6 +450,8 @@
 
 			qa_eval_from_file($functionsphp, $filename);
 		}
+
+		$qa_override_files_temp = array();
 	}
 
 
@@ -539,9 +508,9 @@
 	pass in the local plugin $directory and the $urltoroot relative url for that directory
 */
 	{
-		global $qa_override_files;
+		global $qa_override_files_temp;
 
-		$qa_override_files[]=array(
+		$qa_override_files_temp[] = array(
 			'directory' => $directory,
 			'urltoroot' => $urltoroot,
 			'include' => $include

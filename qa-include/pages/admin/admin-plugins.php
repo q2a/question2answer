@@ -121,14 +121,16 @@ if (!empty($fileSystemPlugins)) {
 	$sortedPluginFiles = array();
 
 	foreach ($fileSystemPlugins as $pluginDirectory) {
-		$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
+		$pluginDirectoryPath = QA_PLUGIN_DIR . $pluginDirectory;
+		$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectoryPath);
 		if (empty($metadata)) {
-			$pluginFile = QA_PLUGIN_DIR . $pluginDirectory . '/qa-plugin.php';
+			$pluginFile = $pluginDirectoryPath . '/qa-plugin.php';
 
 			// limit plugin parsing to first 8kB
 			$contents = file_get_contents($pluginFile, false, null, -1, 8192);
 			$metadata = qa_addon_metadata($contents, 'Plugin');
 		}
+
 		$metadata['name'] = isset($metadata['name']) && !empty($metadata['name'])
 			? qa_html($metadata['name'])
 			: qa_lang_html('admin/unnamed_plugin');
@@ -189,7 +191,12 @@ if (!empty($fileSystemPlugins)) {
 				qa_lang_html('admin/options') . '</a>';
 		}
 
-		$enabled = in_array($pluginDirectory, $enabledPlugins);
+		$beforeDbInit = isset($metadata['load_order']) && $metadata['load_order'] === 'before_db_init';
+		if ($beforeDbInit) {
+			$enabled = true;
+		} else {
+			$enabled = in_array($pluginDirectory, $enabledPlugins);
+		}
 		$pluginhtml = $namehtml . ' ' . $authorhtml . ' ' . $updatehtml . '<br>';
 		$pluginhtml .= $deschtml . (strlen($deschtml) > 0 ? '<br>' : '');
 		$pluginhtml .= '<small style="color:#666">' . qa_html($pluginDirectoryPath) . '/</small>';
@@ -210,7 +217,7 @@ if (!empty($fileSystemPlugins)) {
 					'type' => 'checkbox',
 					'label' => qa_lang_html('admin/enabled'),
 					'value' => $enabled,
-					'tags' => sprintf('id="plugin_enabled_%s"', $hash),
+					'tags' => sprintf('id="plugin_enabled_%s"%s', $hash, $beforeDbInit ? 'disabled' : ''),
 				),
 				array(
 					'type' => 'custom',
