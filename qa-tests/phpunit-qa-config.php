@@ -1,7 +1,7 @@
 <?php
 // Stand-in config file for PHPUnit
 
-define('QA_MYSQL_HOSTNAME', '');
+define('QA_MYSQL_HOSTNAME', 'localhost');
 define('QA_MYSQL_USERNAME', '');
 define('QA_MYSQL_PASSWORD', '');
 define('QA_MYSQL_DATABASE', '');

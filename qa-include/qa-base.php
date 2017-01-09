@@ -705,7 +705,9 @@
 */
 	{
 		qa_report_process_stage('shutdown', $reason);
-		exit;
+
+		$code = $reason === 'error' ? 1 : 0;
+		exit($code);
 	}
 
 
