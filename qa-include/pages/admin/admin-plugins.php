@@ -191,12 +191,10 @@ if (!empty($fileSystemPlugins)) {
 				qa_lang_html('admin/options') . '</a>';
 		}
 
+		$allowDisable = isset($metadata['load_order']) && $metadata['load_order'] === 'after_db_init';
 		$beforeDbInit = isset($metadata['load_order']) && $metadata['load_order'] === 'before_db_init';
-		if ($beforeDbInit) {
-			$enabled = true;
-		} else {
-			$enabled = in_array($pluginDirectory, $enabledPlugins);
-		}
+		$enabled = $beforeDbInit || !$allowDisable || in_array($pluginDirectory, $enabledPlugins);
+
 		$pluginhtml = $namehtml . ' ' . $authorhtml . ' ' . $updatehtml . '<br>';
 		$pluginhtml .= $deschtml . (strlen($deschtml) > 0 ? '<br>' : '');
 		$pluginhtml .= '<small style="color:#666">' . qa_html($pluginDirectoryPath) . '/</small>';
@@ -217,7 +215,7 @@ if (!empty($fileSystemPlugins)) {
 					'type' => 'checkbox',
 					'label' => qa_lang_html('admin/enabled'),
 					'value' => $enabled,
-					'tags' => sprintf('id="plugin_enabled_%s"%s', $hash, $beforeDbInit ? 'disabled' : ''),
+					'tags' => sprintf('id="plugin_enabled_%s"%s', $hash, $allowDisable ? '' : ' disabled'),
 				),
 				array(
 					'type' => 'custom',
