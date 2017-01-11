@@ -4,7 +4,7 @@
 	http://www.question2answer.org/
 
 	File: qa-include/qa-page.php
-	Description: Routing and utility functions for page requests
+	Description: Initialization for page requests
 
 
 	This program is free software; you can redistribute it and/or
@@ -20,51 +20,46 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
 
-	require_once QA_INCLUDE_DIR.'app/page.php';
+require_once QA_INCLUDE_DIR . 'app/page.php';
 
 
 //	Below are the steps that actually execute for this file - all the above are function definitions
 
-	global $qa_usage;
+global $qa_usage;
 
-	qa_report_process_stage('init_page');
-	qa_db_connect('qa_page_db_fail_handler');
+qa_report_process_stage('init_page');
+qa_db_connect('qa_page_db_fail_handler');
 
-	qa_page_queue_pending();
-	qa_load_state();
-	qa_check_login_modules();
+qa_page_queue_pending();
+qa_load_state();
+qa_check_login_modules();
+
+if (QA_DEBUG_PERFORMANCE)
+	$qa_usage->mark('setup');
+
+qa_check_page_clicks();
+
+$qa_content = qa_get_request_content();
+
+if (is_array($qa_content)) {
+	if (QA_DEBUG_PERFORMANCE)
+		$qa_usage->mark('view');
+
+	qa_output_content($qa_content);
 
 	if (QA_DEBUG_PERFORMANCE)
-		$qa_usage->mark('setup');
+		$qa_usage->mark('theme');
 
-	qa_check_page_clicks();
+	if (qa_do_content_stats($qa_content) && QA_DEBUG_PERFORMANCE)
+		$qa_usage->mark('stats');
 
-	$qa_content = qa_get_request_content();
+	if (QA_DEBUG_PERFORMANCE)
+		$qa_usage->output();
+}
 
-	if (is_array($qa_content)) {
-		if (QA_DEBUG_PERFORMANCE)
-			$qa_usage->mark('view');
-
-		qa_output_content($qa_content);
-
-		if (QA_DEBUG_PERFORMANCE)
-			$qa_usage->mark('theme');
-
-		if (qa_do_content_stats($qa_content) && QA_DEBUG_PERFORMANCE)
-			$qa_usage->mark('stats');
-
-		if (QA_DEBUG_PERFORMANCE)
-			$qa_usage->output();
-	}
-
-	qa_db_disconnect();
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+qa_db_disconnect();
