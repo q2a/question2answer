@@ -2060,7 +2060,7 @@
 	}
 
 
-	function qa_get_avatar_blob_html($blobid, $width, $height, $size, $padding=false)
+	function qa_get_avatar_blob_html($blobId, $width, $height, $size, $padding = false)
 /*
 	Return the <img...> HTML to display avatar $blobid whose stored size is $width and $height
 	Constrain the image to $size (width AND height) and pad it to that size if $padding is true
@@ -2068,26 +2068,33 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		require_once QA_INCLUDE_DIR.'util/image.php';
+		require_once QA_INCLUDE_DIR . 'util/image.php';
+		require_once QA_INCLUDE_DIR . 'app/users.php';
 
-		if (strlen($blobid) && ($size>0)) {
-			qa_image_constrain($width, $height, $size);
-
-			$html='<img src="'.qa_path_html('image', array('qa_blobid' => $blobid, 'qa_size' => $size), null, QA_URL_FORMAT_PARAMS).
-				'"'.(($width && $height) ? (' width="'.$width.'" height="'.$height.'"') : '').' class="qa-avatar-image" alt=""/>';
-
-			if ($padding && $width && $height) {
-				$padleft=floor(($size-$width)/2);
-				$padright=$size-$width-$padleft;
-				$padtop=floor(($size-$height)/2);
-				$padbottom=$size-$height-$padtop;
-				$html='<span style="display:inline-block; padding:'.$padtop.'px '.$padright.'px '.$padbottom.'px '.$padleft.'px;">'.$html.'</span>';
-			}
-
-			return $html;
-
-		} else
+		if (strlen($blobId) == 0 || (int)$size <= 0) {
 			return null;
+		}
+
+		$avatarLink = qa_html(qa_get_avatar_blob_url($blobId, $size));
+
+		qa_image_constrain($width, $height, $size);
+
+		$params = array(
+			$avatarLink,
+			$width && $height ? sprintf(' width="%d" height="%d"', $width, $height) : '',
+		);
+
+		$html = vsprintf('<img src="%s"%s class="qa-avatar-image" alt=""/>', $params);
+
+		if ($padding && $width && $height) {
+			$padleft = floor(($size - $width) / 2);
+			$padright = $size - $width - $padleft;
+			$padtop = floor(($size - $height) / 2);
+			$padbottom = $size - $height - $padtop;
+			$html = sprintf('<span style="display:inline-block; padding:%dpx %dpx %dpx %dpx;">%s</span>', $padtop, $padright, $padbottom, $padleft, $html);
+		}
+
+		return $html;
 	}
 
 
@@ -2098,11 +2105,16 @@
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if ($size>0)
-			return '<img src="https://www.gravatar.com/avatar/'.md5(strtolower(trim($email))).'?s='.(int)$size.
-				'" width="'.(int)$size.'" height="'.(int)$size.'" class="qa-avatar-image" alt=""/>';
-		else
+		require_once QA_INCLUDE_DIR . 'app/users.php';
+
+		$avatarLink = qa_html(qa_get_gravatar_url($email, $size));
+
+		$size = (int)$size;
+		if ($size > 0) {
+			return sprintf('<img src="%s" width="%d" height="%d" class="qa-avatar-image" alt="" />', $avatarLink, $size, $size);
+		} else {
 			return null;
+		}
 	}
 
 
