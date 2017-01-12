@@ -41,7 +41,7 @@ qa_report_process_stage('init_blob');
 
 // Output the blob in question
 
-require_once QA_INCLUDE_DIR.'app/blobs.php';
+require_once QA_INCLUDE_DIR . 'app/blobs.php';
 
 qa_db_connect('qa_blob_db_fail_handler');
 
@@ -83,7 +83,7 @@ if (isset($blob) && isset($blob['content'])) {
 
 	// for compatibility with HTTP headers and all browsers
 	$filename = preg_replace('/[^A-Za-z0-9 \\._-]+/', '', $blob['filename']);
-	header('Content-Disposition: '.$disposition.'; filename="'.$filename.'"');
+	header('Content-Disposition: ' . $disposition . '; filename="' . $filename . '"');
 
 	echo $blob['content'];
 
