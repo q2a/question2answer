@@ -26,7 +26,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 	private $qa_voters_flaggers_cache = array();
 
 
-//	Collect up all required postids for the entire page to save DB queries - common case where whole page output
+	// Collect up all required postids for the entire page to save DB queries - common case where whole page output
 
 	public function main()
 	{
@@ -55,7 +55,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 	}
 
 
-//	Other functions which also collect up required postids for lists to save DB queries - helps with widget output and Ajax calls
+	// Other functions which also collect up required postids for lists to save DB queries - helps with widget output and Ajax calls
 
 	public function q_list_items($q_items)
 	{
@@ -79,7 +79,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 	}
 
 
-//	Actual output of the voters and flaggers
+	// Actual output of the voters and flaggers
 
 	public function vote_count($post)
 	{
@@ -141,7 +141,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 	}
 
 
-//	Utility functions for this layer
+	// Utility functions for this layer
 
 	/**
 	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
