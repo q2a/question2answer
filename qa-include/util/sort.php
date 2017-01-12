@@ -27,6 +27,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Sort the $array of inner arrays by sub-element $by1 of each inner array, and optionally then by sub-element $by2
+ * @param $array
+ * @param $by1
+ * @param null $by2
  */
 function qa_sort_by(&$array, $by1, $by2 = null)
 {
@@ -41,6 +44,9 @@ function qa_sort_by(&$array, $by1, $by2 = null)
 
 /**
  * Function used in uasort to implement qa_sort_by()
+ * @param $a
+ * @param $b
+ * @return int
  */
 function qa_sort_by_fn($a, $b)
 {
@@ -67,6 +73,9 @@ function qa_sort_by_fn($a, $b)
 /**
  * General comparison function for two values, textual or numeric
  * @deprecated
+ * @param $a
+ * @param $b
+ * @return int
  */
 function qa_sort_cmp($a, $b)
 {
@@ -80,6 +89,9 @@ function qa_sort_cmp($a, $b)
 /**
  * Inserts $addelements into $array, preserving their keys, before $beforekey in that array.
  * If $beforekey cannot be found, the elements are appended at the end of the array.
+ * @param $array
+ * @param $beforekey
+ * @param $addelements
  */
 function qa_array_insert(&$array, $beforekey, $addelements)
 {
@@ -118,6 +130,10 @@ define('QA_ARRAY_AT_END', 0.9); // place all the elements at the end of the arra
  * element by passing the key of that element in $beforekey (if $beforekey is not found, the elements are moved to the
  * end of the array). Any of the QA_ARRAY_* values defined above can also be passed in the $beforekey parameter.
  * If $reorderrelative is true, the relative ordering between the elements will also be set by the order in $keys.
+ * @param $array
+ * @param $keys
+ * @param mixed $beforekey
+ * @param bool $reorderrelative
  */
 function qa_array_reorder(&$array, $keys, $beforekey = null, $reorderrelative = true)
 {

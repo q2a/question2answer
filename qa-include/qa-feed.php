@@ -36,6 +36,10 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
 
 /**
  * Database failure handler function for RSS feeds - outputs HTTP and text errors
+ * @param $type
+ * @param int $errno
+ * @param string $error
+ * @param string $query
  */
 function qa_feed_db_fail_handler($type, $errno = null, $error = null, $query = null)
 {
@@ -58,6 +62,15 @@ function qa_feed_not_found()
 
 /**
  * Common function to load appropriate set of questions for requested feed, check category exists, and set up page title
+ * @param array $categoryslugs
+ * @param string $allkey
+ * @param string $catkey
+ * @param string $title
+ * @param array $questionselectspec1
+ * @param array $questionselectspec2
+ * @param array $questionselectspec3
+ * @param array $questionselectspec4
+ * @return array
  */
 function qa_feed_load_ifcategory($categoryslugs, $allkey, $catkey, &$title,
 	$questionselectspec1 = null, $questionselectspec2 = null, $questionselectspec3 = null, $questionselectspec4 = null)

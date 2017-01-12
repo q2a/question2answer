@@ -58,6 +58,10 @@ class qa_html_theme_base
 
 	/**
 	 * Initialize the object and assign local variables.
+	 * @param $template
+	 * @param $content
+	 * @param $rooturl
+	 * @param $request
 	 */
 	public function __construct($template, $content, $rooturl, $request)
 	{
@@ -72,6 +76,10 @@ class qa_html_theme_base
 	/**
 	 * @deprecated PHP4-style constructor deprecated from 1.7; please use proper `__construct`
 	 * function instead.
+	 * @param $template
+	 * @param $content
+	 * @param $rooturl
+	 * @param $request
 	 */
 	public function qa_html_theme_base($template, $content, $rooturl, $request)
 	{
@@ -83,6 +91,7 @@ class qa_html_theme_base
 	 * Output each element in $elements on a separate line, with automatic HTML indenting.
 	 * This should be passed markup which uses the <tag/> form for unpaired tags, to help keep
 	 * track of indenting, although its actual output converts these to <tag> for W3C validation.
+	 * @param $elements
 	 */
 	public function output_array($elements)
 	{
@@ -125,6 +134,7 @@ class qa_html_theme_base
 	/**
 	 * Output $html at the current indent level, but don't change indent level based on the markup within.
 	 * Useful for user-entered HTML which is unlikely to follow the rules we need to track indenting.
+	 * @param $html
 	 */
 	public function output_raw($html)
 	{
@@ -136,8 +146,13 @@ class qa_html_theme_base
 	/**
 	 * Output the three elements ['prefix'], ['data'] and ['suffix'] of $parts (if they're defined),
 	 * with appropriate CSS classes based on $class, using $outertag and $innertag in the markup.
+	 * @param $parts
+	 * @param $class
+	 * @param string $outertag
+	 * @param string $innertag
+	 * @param string $extraclass
 	 */
-	public function output_split($parts, $class, $outertag='span', $innertag='span', $extraclass=null)
+	public function output_split($parts, $class, $outertag = 'span', $innertag = 'span', $extraclass = null)
 	{
 		if (empty($parts) && strtolower($outertag) != 'td')
 			return;
@@ -154,6 +169,8 @@ class qa_html_theme_base
 
 	/**
 	 * Set some context, which be accessed via $this->context for a function to know where it's being used on the page.
+	 * @param $key
+	 * @param $value
 	 */
 	public function set_context($key, $value)
 	{
@@ -163,6 +180,7 @@ class qa_html_theme_base
 
 	/**
 	 * Clear some context (used at the end of the appropriate loop).
+	 * @param $key
 	 */
 	public function clear_context($key)
 	{
@@ -173,8 +191,11 @@ class qa_html_theme_base
 	/**
 	 * Reorder the parts of the page according to the $parts array which contains part keys in their new order. Call this
 	 * before main_parts(). See the docs for qa_array_reorder() in util/sort.php for the other parameters.
+	 * @param $parts
+	 * @param string $beforekey
+	 * @param bool $reorderrelative
 	 */
-	public function reorder_parts($parts, $beforekey=null, $reorderrelative=true)
+	public function reorder_parts($parts, $beforekey = null, $reorderrelative = true)
 	{
 		require_once QA_INCLUDE_DIR.'util/sort.php';
 
@@ -184,6 +205,8 @@ class qa_html_theme_base
 
 	/**
 	 * Output the widgets (as provided in $this->content['widgets']) for $region and $place.
+	 * @param $region
+	 * @param $place
 	 */
 	public function widgets($region, $place)
 	{
@@ -992,8 +1015,12 @@ class qa_html_theme_base
 	/**
 	 * Reorder the fields of $form according to the $keys array which contains the field keys in their new order. Call
 	 * before any fields are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
+	 * @param $form
+	 * @param $keys
+	 * @param mixed $beforekey
+	 * @param bool $reorderrelative
 	 */
-	public function form_reorder_fields(&$form, $keys, $beforekey=null, $reorderrelative=true)
+	public function form_reorder_fields(&$form, $keys, $beforekey = null, $reorderrelative = true)
 	{
 		require_once QA_INCLUDE_DIR.'util/sort.php';
 
@@ -1175,8 +1202,12 @@ class qa_html_theme_base
 	/**
 	 * Reorder the buttons of $form according to the $keys array which contains the button keys in their new order. Call
 	 * before any buttons are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
+	 * @param $form
+	 * @param $keys
+	 * @param mixed $beforekey
+	 * @param bool $reorderrelative
 	 */
-	public function form_reorder_buttons(&$form, $keys, $beforekey=null, $reorderrelative=true)
+	public function form_reorder_buttons(&$form, $keys, $beforekey = null, $reorderrelative = true)
 	{
 		require_once QA_INCLUDE_DIR.'util/sort.php';
 
@@ -1308,6 +1339,8 @@ class qa_html_theme_base
 	 *   tags: any attributes to be added to the select.
 	 *   value: the selected value from the 'options' parameter.
 	 *   match_by: whether to match the 'value' (default) or 'key' of each option to determine if it is to be selected.
+	 * @param $field
+	 * @param $style
 	 */
 	public function form_select($field, $style)
 	{
@@ -1437,6 +1470,8 @@ class qa_html_theme_base
 	 * @deprecated Table-based layout of users/tags is deprecated from 1.7 onwards and may be
 	 * removed in a future version. Themes can switch to the new layout by setting the member
 	 * variable $ranking_block_layout to false.
+	 * @param $ranking
+	 * @param $class
 	 */
 	public function ranking_table($ranking, $class)
 	{
@@ -1465,6 +1500,9 @@ class qa_html_theme_base
 
 	/**
 	 * @deprecated See ranking_table above.
+	 * @param $item
+	 * @param $class
+	 * @param $spacer
 	 */
 	public function ranking_table_item($item, $class, $spacer)
 	{
@@ -1491,6 +1529,7 @@ class qa_html_theme_base
 
 	/**
 	 * @deprecated See ranking_table above.
+	 * @param $class
 	 */
 	public function ranking_spacer($class)
 	{
@@ -1798,7 +1837,7 @@ class qa_html_theme_base
 		$this->output_split(@$post['views'], 'qa-view-count');
 	}
 
-	public function avatar($item, $class, $prefix=null)
+	public function avatar($item, $class, $prefix = null)
 	{
 		if (isset($item['avatar'])) {
 			if (isset($prefix))
@@ -1851,13 +1890,16 @@ class qa_html_theme_base
 
 	/**
 	 * @deprecated Deprecated from 1.7; please use avatar() instead.
+	 * @param $post
+	 * @param $class
+	 * @param string $prefix
 	 */
-	public function post_avatar($post, $class, $prefix=null)
+	public function post_avatar($post, $class, $prefix = null)
 	{
 		$this->avatar($post, $class, $prefix);
 	}
 
-	public function post_meta($post, $class, $prefix=null, $separator='<br/>')
+	public function post_meta($post, $class, $prefix = null, $separator = '<br/>')
 	{
 		$this->output('<span class="'.$class.'-meta">');
 
@@ -2426,8 +2468,10 @@ class qa_html_theme_base
 
 	/**
 	 * Generic method to output a basic list of question links.
+	 * @param array $q_list
+	 * @param string $attrs
 	 */
-	public function q_title_list($q_list, $attrs=null)
+	public function q_title_list($q_list, $attrs = null)
 	{
 		$this->output('<ul class="qa-q-title-list">');
 		foreach ($q_list as $q) {
@@ -2442,8 +2486,10 @@ class qa_html_theme_base
 
 	/**
 	 * Output block of similar questions when asking.
+	 * @param array $q_list
+	 * @param string $pretext
 	 */
-	public function q_ask_similar($q_list, $pretext='')
+	public function q_ask_similar($q_list, $pretext = '')
 	{
 		if (!count($q_list))
 			return;
@@ -2451,7 +2497,7 @@ class qa_html_theme_base
 		$this->output('<div class="qa-ask-similar">');
 
 		if (strlen($pretext) > 0)
-			$this->output('<p class="qa-ask-similar-title">'.$pretext.'</p>');
+			$this->output('<p class="qa-ask-similar-title">' . $pretext . '</p>');
 		$this->q_title_list($q_list, 'target="_blank"');
 
 		$this->output('</div>');

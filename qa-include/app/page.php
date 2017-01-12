@@ -34,6 +34,11 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 /**
  * Standard database failure handler function which bring up the install/repair/upgrade page
+ * @param $type
+ * @param int $errno
+ * @param string $error
+ * @param string $query
+ * @return mixed
  */
 function qa_page_db_fail_handler($type, $errno = null, $error = null, $query = null)
 {
@@ -227,7 +232,9 @@ function qa_get_request_content()
 
 
 /**
- *	Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
+ *    Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
+ * @param $qa_content
+ * @return mixed
  */
 function qa_output_content($qa_content)
 {
@@ -375,6 +382,8 @@ function qa_output_content($qa_content)
 
 /**
  * Update any statistics required by the fields in $qa_content, and return true if something was done
+ * @param $qa_content
+ * @return bool
  */
 function qa_do_content_stats($qa_content)
 {
@@ -452,6 +461,7 @@ function qa_page_routing()
 
 /**
  * Sets the template which should be passed to the theme class, telling it which type of page it's displaying
+ * @param $template
  */
 function qa_set_template($template)
 {
@@ -463,8 +473,11 @@ function qa_set_template($template)
 /**
  * Start preparing theme content in global $qa_content variable, with or without $voting support,
  * in the context of the categories in $categoryids (if not null)
+ * @param bool $voting
+ * @param array $categoryids
+ * @return array
  */
-function qa_content_prepare($voting=false, $categoryids=null)
+function qa_content_prepare($voting = false, $categoryids = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
