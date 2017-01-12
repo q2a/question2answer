@@ -20,25 +20,22 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
 
 
-	function qa_db_set_option($name, $value)
-/*
-	Set option $name to $value in the database
-*/
-	{
-		qa_db_query_sub(
-			'INSERT INTO ^options (title, content) VALUES ($, $) ' .
-			'ON DUPLICATE KEY UPDATE content = VALUES(content)',
-			$name, $value
-		);
-	}
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+/**
+ * Set option $name to $value in the database
+ * @param $name
+ * @param $value
+ */
+function qa_db_set_option($name, $value)
+{
+	qa_db_query_sub(
+		'INSERT INTO ^options (title, content) VALUES ($, $) ' .
+		'ON DUPLICATE KEY UPDATE content = VALUES(content)',
+		$name, $value
+	);
+}
