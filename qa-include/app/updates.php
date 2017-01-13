@@ -20,39 +20,35 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
 
 
-//	Character codes for the different types of entity that can be followed (entitytype columns)
+// Character codes for the different types of entity that can be followed (entitytype columns)
 
-	define('QA_ENTITY_QUESTION', 'Q');
-	define('QA_ENTITY_USER', 'U');
-	define('QA_ENTITY_TAG', 'T');
-	define('QA_ENTITY_CATEGORY', 'C');
-	define('QA_ENTITY_NONE', '-');
-
-
-//	Character codes for the different types of updates on a post (updatetype columns)
-
-	define('QA_UPDATE_CATEGORY', 'A'); // questions only, category changed
-	define('QA_UPDATE_CLOSED', 'C'); // questions only, closed or reopened
-	define('QA_UPDATE_CONTENT', 'E'); // title or content edited
-	define('QA_UPDATE_PARENT', 'M'); // e.g. comment moved when converting its parent answer to a comment
-	define('QA_UPDATE_SELECTED', 'S'); // answers only, removed if unselected
-	define('QA_UPDATE_TAGS', 'T'); // questions only
-	define('QA_UPDATE_TYPE', 'Y'); // e.g. answer to comment
-	define('QA_UPDATE_VISIBLE', 'H'); // hidden or reshown
+define('QA_ENTITY_QUESTION', 'Q');
+define('QA_ENTITY_USER', 'U');
+define('QA_ENTITY_TAG', 'T');
+define('QA_ENTITY_CATEGORY', 'C');
+define('QA_ENTITY_NONE', '-');
 
 
-//	Character codes for types of update that only appear in the streams tables, not on the posts themselves
+// Character codes for the different types of updates on a post (updatetype columns)
 
-	define('QA_UPDATE_FOLLOWS', 'F'); // if a new question was asked related to one of its answers, or for a comment that follows another
-	define('QA_UPDATE_C_FOR_Q', 'U'); // if comment created was on a question of the user whose stream this appears in
-	define('QA_UPDATE_C_FOR_A', 'N'); // if comment created was on an answer of the user whose stream this appears in
+define('QA_UPDATE_CATEGORY', 'A'); // questions only, category changed
+define('QA_UPDATE_CLOSED', 'C'); // questions only, closed or reopened
+define('QA_UPDATE_CONTENT', 'E'); // title or content edited
+define('QA_UPDATE_PARENT', 'M'); // e.g. comment moved when converting its parent answer to a comment
+define('QA_UPDATE_SELECTED', 'S'); // answers only, removed if unselected
+define('QA_UPDATE_TAGS', 'T'); // questions only
+define('QA_UPDATE_TYPE', 'Y'); // e.g. answer to comment
+define('QA_UPDATE_VISIBLE', 'H'); // hidden or reshown
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+
+// Character codes for types of update that only appear in the streams tables, not on the posts themselves
+
+define('QA_UPDATE_FOLLOWS', 'F'); // if a new question was asked related to one of its answers, or for a comment that follows another
+define('QA_UPDATE_C_FOR_Q', 'U'); // if comment created was on a question of the user whose stream this appears in
+define('QA_UPDATE_C_FOR_A', 'N'); // if comment created was on an answer of the user whose stream this appears in

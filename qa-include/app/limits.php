@@ -133,8 +133,8 @@ function qa_limits_calc_remaining($action, $userlimits, $iplimits)
 	$period = (int)(qa_opt('db_time') / 3600);
 
 	return max(0, min(
-		$usermax - ((@$userlimits['period'] == $period) ? $userlimits['count'] : 0),
-		$ipmax - ((@$iplimits['period'] == $period) ? $iplimits['count'] : 0)
+		$usermax - (@$userlimits['period'] == $period ? $userlimits['count'] : 0),
+		$ipmax - (@$iplimits['period'] == $period ? $iplimits['count'] : 0)
 	));
 }
 
@@ -229,7 +229,7 @@ function qa_ip_between($ip, $startip, $endip)
 	if (count($uip) != count($ustartip) || count($uip) != count($uendip))
 		return false;
 
-	foreach ($uip as $i=>$byte) {
+	foreach ($uip as $i => $byte) {
 		if ($byte < $ustartip[$i] || $byte > $uendip[$i]) {
 			return false;
 		}
