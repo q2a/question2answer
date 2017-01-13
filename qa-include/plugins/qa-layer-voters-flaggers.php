@@ -183,23 +183,27 @@ class qa_html_theme_layer extends qa_html_theme_base
 
 			$postids = array_keys($this->qa_voters_flaggers_queue);
 
-			foreach ($postids as $postid)
+			foreach ($postids as $postid) {
 				$this->qa_voters_flaggers_cache[$postid] = array();
+			}
 
 			$newvotersflaggers = qa_db_uservoteflag_posts_get($postids);
 
 			if (QA_FINAL_EXTERNAL_USERS) {
 				$keyuserids = array();
-				foreach ($newvotersflaggers as $voterflagger)
+				foreach ($newvotersflaggers as $voterflagger) {
 					$keyuserids[$voterflagger['userid']] = true;
+				}
 
 				$useridhandles = qa_get_public_from_userids(array_keys($keyuserids));
-				foreach ($newvotersflaggers as $index => $voterflagger)
+				foreach ($newvotersflaggers as $index => $voterflagger) {
 					$newvotersflaggers[$index]['handle'] = isset($useridhandles[$voterflagger['userid']]) ? $useridhandles[$voterflagger['userid']] : null;
+				}
 			}
 
-			foreach ($newvotersflaggers as $voterflagger)
+			foreach ($newvotersflaggers as $voterflagger) {
 				$this->qa_voters_flaggers_cache[$voterflagger['postid']][] = $voterflagger;
+			}
 
 			$this->qa_voters_flaggers_queue = array();
 		}

@@ -30,7 +30,7 @@ class qa_event_limits
 		if (isset($params['delayed']))
 			return;
 
-		require_once QA_INCLUDE_DIR.'app/limits.php';
+		require_once QA_INCLUDE_DIR . 'app/limits.php';
 
 		switch ($event) {
 			case 'q_queue':
@@ -76,7 +76,7 @@ class qa_event_limits
 				break;
 		}
 
-		$writeactions=array(
+		$writeactions = array(
 			'_approve', '_claim', '_clearflags', '_delete', '_edit', '_favorite', '_flag', '_hide',
 			'_post', '_queue', '_reject', '_reshow', '_unfavorite', '_unflag', '_vote_down', '_vote_nil', '_vote_up',
 			'a_select', 'a_to_c', 'a_unselect',

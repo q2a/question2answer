@@ -26,37 +26,37 @@ class qa_facebook_login_page
 
 	public function load_module($directory, $urltoroot)
 	{
-		$this->directory=$directory;
+		$this->directory = $directory;
 	}
 
 	public function match_request($request)
 	{
-		return ($request=='facebook-login');
+		return ($request == 'facebook-login');
 	}
 
 	public function process_request($request)
 	{
-		if ($request=='facebook-login') {
-			$app_id=qa_opt('facebook_app_id');
-			$app_secret=qa_opt('facebook_app_secret');
-			$tourl=qa_get('to');
+		if ($request == 'facebook-login') {
+			$app_id = qa_opt('facebook_app_id');
+			$app_secret = qa_opt('facebook_app_secret');
+			$tourl = qa_get('to');
 			if (!strlen($tourl))
-				$tourl=qa_path_absolute('');
+				$tourl = qa_path_absolute('');
 
 			if (strlen($app_id) && strlen($app_secret)) {
-				require_once $this->directory.'facebook.php';
+				require_once $this->directory . 'facebook.php';
 
 				$facebook = new Facebook(array(
-					'appId'  => $app_id,
+					'appId' => $app_id,
 					'secret' => $app_secret,
 					'cookie' => true,
 				));
 
-				$fb_userid=$facebook->getUser();
+				$fb_userid = $facebook->getUser();
 
 				if ($fb_userid) {
 					try {
-						$user=$facebook->api('/me?fields=email,name,verified,location,website,about,picture.width(250)');
+						$user = $facebook->api('/me?fields=email,name,verified,location,website,about,picture.width(250)');
 
 						if (is_array($user))
 							qa_log_in_external_user('facebook', $fb_userid, array(

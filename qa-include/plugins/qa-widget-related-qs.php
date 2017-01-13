@@ -34,7 +34,7 @@ class qa_related_qs
 
 	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
 	{
-		require_once QA_INCLUDE_DIR.'db/selects.php';
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 		if (!isset($qa_content['q_view']['raw']['type']) || $qa_content['q_view']['raw']['type'] != 'Q') // question might not be visible, etc...
 			return;
@@ -67,11 +67,11 @@ class qa_related_qs
 
 			foreach ($questions as $question) {
 				$themeobject->output(
-						'<li class="qa-related-q-item">' .
-						'<a href="' . qa_q_path_html($question['postid'], $question['title']) . '">' .
-						qa_html($question['title']) .
-						'</a>' .
-						'</li>'
+					'<li class="qa-related-q-item">' .
+					'<a href="' . qa_q_path_html($question['postid'], $question['title']) . '">' .
+					qa_html($question['title']) .
+					'</a>' .
+					'</li>'
 				);
 			}
 
@@ -99,8 +99,9 @@ class qa_related_qs
 			$defaults = qa_post_html_defaults('Q');
 			$usershtml = qa_userids_handles_html($questions);
 
-			foreach ($questions as $question)
+			foreach ($questions as $question) {
 				$q_list['qs'][] = qa_post_html_fields($question, $userid, $cookieid, $usershtml, null, qa_post_html_options($question, $defaults));
+			}
 
 			$themeobject->q_list_and_form($q_list);
 		}

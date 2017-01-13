@@ -24,13 +24,13 @@ class qa_facebook_login
 {
 	public function match_source($source)
 	{
-		return $source=='facebook';
+		return $source == 'facebook';
 	}
 
 
 	public function login_html($tourl, $context)
 	{
-		$app_id=qa_opt('facebook_app_id');
+		$app_id = qa_opt('facebook_app_id');
 
 		if (!strlen($app_id))
 			return;
@@ -41,7 +41,7 @@ class qa_facebook_login
 
 	public function logout_html($tourl)
 	{
-		$app_id=qa_opt('facebook_app_id');
+		$app_id = qa_opt('facebook_app_id');
 
 		if (!strlen($app_id))
 			return;
@@ -52,10 +52,10 @@ class qa_facebook_login
 
 	public function facebook_html($tourl, $logout, $context)
 	{
-		if (($context=='login') || ($context=='register'))
-			$size='large';
+		if (($context == 'login') || ($context == 'register'))
+			$size = 'large';
 		else
-			$size='medium';
+			$size = 'medium';
 
 ?>
 	<div id="fb-root" style="display:inline;"></div>
@@ -89,15 +89,15 @@ class qa_facebook_login
 
 	public function admin_form()
 	{
-		$saved=false;
+		$saved = false;
 
 		if (qa_clicked('facebook_save_button')) {
 			qa_opt('facebook_app_id', qa_post_text('facebook_app_id_field'));
 			qa_opt('facebook_app_secret', qa_post_text('facebook_app_secret_field'));
-			$saved=true;
+			$saved = true;
 		}
 
-		$ready=strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret'));
+		$ready = strlen(qa_opt('facebook_app_id')) && strlen(qa_opt('facebook_app_secret'));
 
 		return array(
 			'ok' => $saved ? 'Facebook application details saved' : null,

@@ -26,6 +26,6 @@ class qa_html_theme_layer extends qa_html_theme_base
 	{
 		qa_html_theme_base::head_links();
 
-		$this->output('<link rel="search" type="application/opensearchdescription+xml" title="'.qa_html(qa_opt('site_title')).'" href="'.qa_path_html('opensearch.xml').'"/>');
+		$this->output('<link rel="search" type="application/opensearchdescription+xml" title="' . qa_html(qa_opt('site_title')) . '" href="' . qa_path_html('opensearch.xml') . '"/>');
 	}
 }
