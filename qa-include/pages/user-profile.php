@@ -31,16 +31,16 @@ require_once QA_INCLUDE_DIR . 'app/limits.php';
 require_once QA_INCLUDE_DIR . 'app/updates.php';
 
 
-//	$handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
+// $handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
 
 
-//	Redirect to 'My Account' page if button clicked
+// Redirect to 'My Account' page if button clicked
 
 if (qa_clicked('doaccount'))
 	qa_redirect('account');
 
 
-//	Find the user profile and questions and answers for this handle
+// Find the user profile and questions and answers for this handle
 
 
 $loginuserid = qa_get_logged_in_userid();
@@ -66,7 +66,7 @@ if (!QA_FINAL_EXTERNAL_USERS && $handle !== qa_get_logged_in_handle()) {
 }
 
 
-//	Check the user exists and work out what can and can't be set (if not using single sign-on)
+// Check the user exists and work out what can and can't be set (if not using single sign-on)
 
 $errors = array();
 
@@ -75,7 +75,7 @@ $loginlevel = qa_get_logged_in_level();
 if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we can know and show more
 	require_once QA_INCLUDE_DIR . 'app/messages.php';
 
-	if ((!is_array($userpoints)) && !is_array($useraccount))
+	if (!is_array($userpoints) && !is_array($useraccount))
 		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 	$userid = $useraccount['userid'];
@@ -115,7 +115,7 @@ if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we
 
 	$wallposterrorhtml = qa_wall_error_html($loginuserid, $useraccount['userid'], $useraccount['flags']);
 
-	//	This code is similar but not identical to that in to qq-page-user-wall.php
+	// This code is similar but not identical to that in to qq-page-user-wall.php
 
 	$usermessages = array_slice($usermessages, 0, qa_opt('page_size_wall'));
 	$usermessages = qa_wall_posts_add_rules($usermessages, 0);
@@ -133,7 +133,7 @@ if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we
 }
 
 
-//	Process edit or save button for user, and other actions
+// Process edit or save button for user, and other actions
 
 if (!QA_FINAL_EXTERNAL_USERS) {
 	$reloaduser = false;
@@ -313,7 +313,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 }
 
 
-//	Process bonus setting button
+// Process bonus setting button
 
 if ($loginlevel >= QA_USER_LEVEL_ADMIN && qa_clicked('dosetbonus')) {
 	require_once QA_INCLUDE_DIR . 'db/points.php';
@@ -330,7 +330,7 @@ if ($loginlevel >= QA_USER_LEVEL_ADMIN && qa_clicked('dosetbonus')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 
@@ -348,7 +348,7 @@ if (isset($loginuserid) && $loginuserid != $useraccount['userid'] && !QA_FINAL_E
 $qa_content['script_rel'][] = 'qa-content/qa-user.js?' . QA_VERSION;
 
 
-//	General information about the user, only available if we're using internal user management
+// General information about the user, only available if we're using internal user management
 
 if (!QA_FINAL_EXTERNAL_USERS) {
 	$membertime = qa_time_to_string(qa_opt('db_time') - $useraccount['created']);
@@ -393,7 +393,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 		unset($qa_content['form_profile']['fields']['avatar']);
 
 
-	//	Private message link
+	// Private message link
 
 	if (qa_opt('allow_private_messages') && isset($loginuserid) && $loginuserid != $userid && !($useraccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) && !$userediting) {
 		$qa_content['form_profile']['fields']['level']['value'] .= strtr(qa_lang_html('profile/send_private_message'), array(
@@ -403,7 +403,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 
-	//	Levels editing or viewing (add category-specific levels)
+	// Levels editing or viewing (add category-specific levels)
 
 	if ($userediting) {
 
@@ -430,12 +430,12 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 			$qa_content['form_profile']['fields']['level']['options'] = $leveloptions;
 
 
-			//	Category-specific levels
+			// Category-specific levels
 
 			if (qa_using_categories()) {
 				$catleveladd = strlen(qa_get('catleveladd')) > 0;
 
-				if ((!$catleveladd) && !count($userlevels)) {
+				if (!$catleveladd && !count($userlevels)) {
 					$qa_content['form_profile']['fields']['level']['suffix'] = strtr(qa_lang_html('users/category_level_add'), array(
 						'^1' => '<a href="' . qa_path_html(qa_request(), array('state' => 'edit', 'catleveladd' => 1)) . '">',
 						'^2' => '</a>',
@@ -518,7 +518,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 
-	//	Show any extra privileges due to user's level or their points
+	// Show any extra privileges due to user's level or their points
 
 	$showpermits = array();
 	$permitoptions = qa_get_permit_options();
@@ -547,7 +547,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 
-	//	Show email address only if we're an administrator
+	// Show email address only if we're an administrator
 
 	if ($loginlevel >= QA_USER_LEVEL_ADMIN && !qa_user_permit_error()) {
 		$doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
@@ -567,7 +567,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 
-	//	Show IP addresses and times for last login or write - only if we're a moderator or higher
+	// Show IP addresses and times for last login or write - only if we're a moderator or higher
 
 	if ($loginlevel >= QA_USER_LEVEL_MODERATOR && !qa_user_permit_error()) {
 		$qa_content['form_profile']['fields']['lastlogin'] = array(
@@ -600,7 +600,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 
-	//	Show other profile fields
+	// Show other profile fields
 
 	$fieldsediting = $fieldseditable && $userediting;
 
@@ -644,7 +644,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 
-	//	Edit form or button, if appropriate
+	// Edit form or button, if appropriate
 
 	if ($userediting) {
 		if (
@@ -741,7 +741,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 }
 
 
-//	Information about user activity, available also with single sign-on integration
+// Information about user activity, available also with single sign-on integration
 
 $qa_content['form_activity'] = array(
 	'title' => '<a name="activity">' . qa_lang_html_sub('profile/activity_by_x', $userhtml) . '</a>',
@@ -898,14 +898,14 @@ if (@$userpoints['aselecteds']) {
 }
 
 
-//	For plugin layers to access
+// For plugin layers to access
 
 $qa_content['raw']['userid'] = $userid;
 $qa_content['raw']['points'] = $userpoints;
 $qa_content['raw']['rank'] = $userrank;
 
 
-//	Wall posts
+// Wall posts
 
 if (!QA_FINAL_EXTERNAL_USERS && qa_opt('allow_user_walls')) {
 	$qa_content['message_list'] = array(
@@ -955,7 +955,7 @@ if (!QA_FINAL_EXTERNAL_USERS && qa_opt('allow_user_walls')) {
 }
 
 
-//	Sub menu for navigation in user pages
+// Sub menu for navigation in user pages
 
 $ismyuser = isset($loginuserid) && $loginuserid == (QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid']);
 $qa_content['navigation']['sub'] = qa_user_sub_navigation($handle, 'profile', $ismyuser);

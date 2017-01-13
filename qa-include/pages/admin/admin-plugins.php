@@ -28,12 +28,12 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 require_once QA_INCLUDE_DIR . 'app/admin.php';
 
 
-//	Check admin privileges
+// Check admin privileges
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 
@@ -69,7 +69,7 @@ if (qa_is_http_post()) {
 	}
 }
 
-//	Map modules with options to their containing plugins
+// Map modules with options to their containing plugins
 
 $pluginoptionmodules = array();
 

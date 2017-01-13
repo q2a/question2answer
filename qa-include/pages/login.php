@@ -43,7 +43,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 }
 
 
-//	Process submitted form after checking we haven't reached rate limit
+// Process submitted form after checking we haven't reached rate limit
 
 $passwordsent = qa_get('ps');
 $emailexists = qa_get('ee');
@@ -127,7 +127,7 @@ if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

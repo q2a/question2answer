@@ -34,7 +34,7 @@ $loginUserId = qa_get_logged_in_userid();
 $loginUserHandle = qa_get_logged_in_handle();
 
 
-//	Check which box we're showing (inbox/sent), we're not using Q2A's single-sign on integration and that we're logged in
+// Check which box we're showing (inbox/sent), we're not using Q2A's single-sign on integration and that we're logged in
 
 $req = qa_request_part(1);
 if ($req === null)
@@ -57,7 +57,7 @@ if (!qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 
-//	Find the messages for this user
+// Find the messages for this user
 
 $start = qa_get_start();
 $pagesize = qa_opt('page_size_pms');
@@ -71,7 +71,7 @@ list($numMessages, $userMessages) = qa_db_select_with_pending($pmSpecCount, $pmS
 $count = $numMessages['count'];
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 $qa_content['title'] = qa_lang_html($showOutbox ? 'misc/pm_outbox_title' : 'misc/pm_inbox_title');

@@ -46,7 +46,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 }
 
 
-//	Get information about possible additional fields
+// Get information about possible additional fields
 
 $show_terms = qa_opt('show_register_terms');
 
@@ -60,7 +60,7 @@ foreach ($userfields as $index => $userfield) {
 }
 
 
-//	Check we haven't suspended registration, and this IP isn't blocked
+// Check we haven't suspended registration, and this IP isn't blocked
 
 if (qa_opt('suspend_register_users')) {
 	$qa_content = qa_content_prepare();
@@ -75,7 +75,7 @@ if (qa_user_permit_error()) {
 }
 
 
-//	Process submitted form
+// Process submitted form
 
 if (qa_clicked('doregister')) {
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
@@ -140,7 +140,7 @@ if (qa_clicked('doregister')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

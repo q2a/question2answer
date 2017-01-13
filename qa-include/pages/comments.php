@@ -34,7 +34,7 @@ $countslugs = count($categoryslugs);
 $userid = qa_get_logged_in_userid();
 
 
-//	Get list of comments with related questions, plus category information
+// Get list of comments with related questions, plus category information
 
 list($questions, $categories, $categoryid) = qa_db_select_with_pending(
 	qa_db_recent_c_qs_selectspec($userid, 0, $categoryslugs),
@@ -56,7 +56,7 @@ if ($countslugs) {
 }
 
 
-//	Prepare and return content for theme
+// Prepare and return content for theme
 
 return qa_q_list_page_content(
 	qa_any_sort_and_dedupe($questions), // questions

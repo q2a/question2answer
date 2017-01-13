@@ -34,7 +34,7 @@ if (filter_var($ip, FILTER_VALIDATE_IP) === false)
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 
-//	Find recently (hidden, queued or not) questions, answers, comments and edits for this IP
+// Find recently (hidden, queued or not) questions, answers, comments and edits for this IP
 
 $userid = qa_get_logged_in_userid();
 
@@ -53,7 +53,7 @@ list($qs, $qs_queued, $qs_hidden, $a_qs, $a_queued_qs, $a_hidden_qs, $c_qs, $c_q
 	);
 
 
-//	Check we have permission to view this page, and whether we can block or unblock IPs
+// Check we have permission to view this page, and whether we can block or unblock IPs
 
 if (qa_user_maximum_permit_error('permit_anon_view_ips')) {
 	$qa_content = qa_content_prepare();
@@ -64,7 +64,7 @@ if (qa_user_maximum_permit_error('permit_anon_view_ips')) {
 $blockable = qa_user_level_maximum() >= QA_USER_LEVEL_MODERATOR; // allow moderator in one category to block across all categories
 
 
-//	Perform blocking or unblocking operations as appropriate
+// Perform blocking or unblocking operations as appropriate
 
 if (qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall')) {
 	if (!qa_check_form_security_code('ip-' . $ip, qa_post_text('code')))
@@ -119,7 +119,7 @@ if (qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall'))
 }
 
 
-//	Combine sets of questions and get information for users
+// Combine sets of questions and get information for users
 
 $questions = qa_any_sort_by_date(array_merge($qs, $qs_queued, $qs_hidden, $a_qs, $a_queued_qs, $a_hidden_qs, $c_qs, $c_queued_qs, $c_hidden_qs, $edit_qs));
 
@@ -128,7 +128,7 @@ $usershtml = qa_userids_handles_html(qa_any_get_userids_handles($questions));
 $hostname = gethostbyaddr($ip);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

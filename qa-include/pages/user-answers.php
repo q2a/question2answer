@@ -29,12 +29,12 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	$handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
+// $handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
 
 $start = qa_get_start();
 
 
-//	Find the questions for this user
+// Find the questions for this user
 
 $loginuserid = qa_get_logged_in_userid();
 $identifier = QA_FINAL_EXTERNAL_USERS ? $userid : $handle;
@@ -49,7 +49,7 @@ if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exist
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 
-//	Get information on user questions
+// Get information on user questions
 
 $pagesize = qa_opt('page_size_activity');
 $count = (int)@$userpoints['aposts'];
@@ -57,7 +57,7 @@ $questions = array_slice($questions, 0, $pagesize);
 $usershtml = qa_userids_handles_html($questions, false);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare(true);
 
@@ -67,7 +67,7 @@ else
 	$qa_content['title'] = qa_lang_html_sub('profile/no_answers_by_x', $userhtml);
 
 
-//	Recent questions by this user
+// Recent questions by this user
 
 $qa_content['q_list']['form'] = array(
 	'tags' => 'method="post" action="' . qa_self_html() . '"',
@@ -96,7 +96,7 @@ foreach ($questions as $question) {
 $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
 
-//	Sub menu for navigation in user pages
+// Sub menu for navigation in user pages
 
 $ismyuser = isset($loginuserid) && $loginuserid == (QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid']);
 $qa_content['navigation']['sub'] = qa_user_sub_navigation($handle, 'answers', $ismyuser);

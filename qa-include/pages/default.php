@@ -29,7 +29,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Determine whether path begins with qa or not (question and answer listing can be accessed either way)
+// Determine whether path begins with qa or not (question and answer listing can be accessed either way)
 
 $requestparts = explode('/', qa_request());
 $explicitqa = (strtolower($requestparts[0]) == 'qa');
@@ -44,7 +44,7 @@ else
 $countslugs = count($slugs);
 
 
-//	Get list of questions, other bits of information that might be useful
+// Get list of questions, other bits of information that might be useful
 
 $userid = qa_get_logged_in_userid();
 
@@ -57,7 +57,7 @@ list($questions1, $questions2, $categories, $categoryid, $custompage) = qa_db_se
 );
 
 
-//	First, if this matches a custom page, return immediately with that page's content
+// First, if this matches a custom page, return immediately with that page's content
 
 if (isset($custompage) && !($custompage['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
 	qa_set_template('custom-' . $custompage['pageid']);
@@ -86,15 +86,15 @@ if (isset($custompage) && !($custompage['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
 }
 
 
-//	Then, see if we should redirect because the 'qa' page is the same as the home page
+// Then, see if we should redirect because the 'qa' page is the same as the home page
 
 if ($explicitqa && (!qa_is_http_post()) && !qa_has_custom_home())
 	qa_redirect(qa_category_path_request($categories, $categoryid), $_GET);
 
 
-//	Then, if there's a slug that matches no category, check page modules provided by plugins
+// Then, if there's a slug that matches no category, check page modules provided by plugins
 
-if ((!$explicitqa) && $countslugs && !isset($categoryid)) {
+if (!$explicitqa && $countslugs && !isset($categoryid)) {
 	$pagemodules = qa_load_modules_with('page', 'match_request');
 	$request = qa_request();
 
@@ -108,9 +108,9 @@ if ((!$explicitqa) && $countslugs && !isset($categoryid)) {
 }
 
 
-//	Then, check whether we are showing a custom home page
+// Then, check whether we are showing a custom home page
 
-if ((!$explicitqa) && (!$countslugs) && qa_opt('show_custom_home')) {
+if (!$explicitqa && !$countslugs && qa_opt('show_custom_home')) {
 	qa_set_template('custom');
 	$qa_content = qa_content_prepare();
 	$qa_content['title'] = qa_html(qa_opt('custom_home_heading'));
@@ -119,7 +119,7 @@ if ((!$explicitqa) && (!$countslugs) && qa_opt('show_custom_home')) {
 }
 
 
-//	If we got this far, it's a good old-fashioned Q&A listing page
+// If we got this far, it's a good old-fashioned Q&A listing page
 
 require_once QA_INCLUDE_DIR . 'app/q-list.php';
 
@@ -141,7 +141,7 @@ if ($countslugs) {
 }
 
 
-//	Prepare and return content for theme for Q&A listing page
+// Prepare and return content for theme for Q&A listing page
 
 $qa_content = qa_q_list_page_content(
 	$questions, // questions

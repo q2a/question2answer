@@ -37,7 +37,7 @@ $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
 
 
-//	Get list of questions, plus category information
+// Get list of questions, plus category information
 
 switch ($sort) {
 	case 'hot':
@@ -110,7 +110,7 @@ switch ($sort) {
 }
 
 
-//	Prepare and return content for theme
+// Prepare and return content for theme
 
 $qa_content = qa_q_list_page_content(
 	$questions, // questions

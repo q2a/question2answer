@@ -108,7 +108,7 @@
 	and the value should be the replacement for that standard part, e.g. 'topics'. If you edit this
 	file in UTF-8 encoding you can also use non-ASCII characters in these URLs.
 
-	$QA_CONST_PATH_MAP=array(
+	$QA_CONST_PATH_MAP = array(
 		'questions' => 'topics',
 		'categories' => 'sections',
 		'users' => 'contributors',
@@ -197,7 +197,3 @@
 	file to override the default setting. Just make sure you know what you're doing!
 */
 
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/

@@ -29,7 +29,7 @@ require_once QA_INCLUDE_DIR . 'app/captcha.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
-//	Get useful information on the logged in user
+// Get useful information on the logged in user
 
 $userid = qa_get_logged_in_userid();
 
@@ -43,7 +43,7 @@ if (isset($userid) && !QA_FINAL_EXTERNAL_USERS) {
 $usecaptcha = qa_opt('captcha_on_feedback') && qa_user_use_captcha();
 
 
-//	Check feedback is enabled and the person isn't blocked
+// Check feedback is enabled and the person isn't blocked
 
 if (!qa_opt('feedback_enabled'))
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
@@ -55,7 +55,7 @@ if (qa_user_permit_error()) {
 }
 
 
-//	Send the feedback form
+// Send the feedback form
 
 
 $feedbacksent = false;
@@ -118,7 +118,7 @@ if (qa_clicked('dofeedback')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

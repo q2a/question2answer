@@ -127,7 +127,7 @@ function qa_image_constrain(&$width, &$height, $maxwidth, $maxheight = null)
 	if (!isset($maxheight))
 		$maxheight = $maxwidth;
 
-	if (($width > $maxwidth) || ($height > $maxheight)) {
+	if ($width > $maxwidth || $height > $maxheight) {
 		$multiplier = min($maxwidth / $width, $maxheight / $height);
 		$width = floor($width * $multiplier);
 		$height = floor($height * $multiplier);

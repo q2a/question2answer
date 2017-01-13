@@ -1843,7 +1843,7 @@ function qa_suspend_event_reports($suspend = true)
  * @param array $params
  * @return mixed|void
  */
-function qa_report_event($event, $userid, $handle, $cookieid, $params=array())
+function qa_report_event($event, $userid, $handle, $cookieid, $params = array())
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 

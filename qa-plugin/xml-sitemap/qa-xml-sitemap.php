@@ -173,7 +173,7 @@ class qa_xml_sitemap
 
 		// User pages
 
-		if ((!QA_FINAL_EXTERNAL_USERS) && qa_opt('xml_sitemap_show_users')) {
+		if (!QA_FINAL_EXTERNAL_USERS && qa_opt('xml_sitemap_show_users')) {
 			$nextuserid = 0;
 
 			while (1) {

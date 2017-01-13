@@ -34,7 +34,7 @@ $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
 
 
-//	Find the questions with this tag
+// Find the questions with this tag
 
 if (!strlen($tag))
 	qa_redirect('tags');
@@ -49,7 +49,7 @@ $questions = array_slice($questions, 0, $pagesize);
 $usershtml = qa_userids_handles_html($questions);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare(true);
 

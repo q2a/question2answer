@@ -573,7 +573,7 @@ function qa_db_missing_columns($table, $definition)
 	$missing = array();
 
 	foreach ($definition as $colname => $coldefn)
-		if ((!is_int($colname)) && !isset($keycolumns[$colname]))
+		if (!is_int($colname) && !isset($keycolumns[$colname]))
 			$missing[$colname] = $coldefn;
 
 	return $missing;
@@ -649,7 +649,7 @@ function qa_db_check_tables()
 							$datamissing++;
 					}
 
-				if (($datacount == $datamissing) && ($datamissing == count($missing)))
+				if ($datacount == $datamissing && $datamissing == count($missing))
 					return 'non-users-missing';
 			}
 

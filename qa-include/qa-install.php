@@ -40,7 +40,7 @@ if (!function_exists('qa_install_db_fail_handler')) {
 	 * @param string $error
 	 * @param string $query
 	 */
-	function qa_install_db_fail_handler($type, $errno=null, $error=null, $query=null)
+	function qa_install_db_fail_handler($type, $errno = null, $error = null, $query = null)
 	{
 		global $pass_failure_from_install;
 
@@ -94,7 +94,7 @@ if (!isset($pass_failure_type) && qa_clicked('super')) {
 }
 
 
-//	Output start of HTML early, so we can see a nicely-formatted list of database queries when upgrading
+// Output start of HTML early, so we can see a nicely-formatted list of database queries when upgrading
 
 ?><!DOCTYPE html>
 <html>
@@ -330,7 +330,7 @@ if (strlen($suggest))
 	echo '<p>'.$suggest.'</p>';
 
 
-//	Very simple general form display logic (we don't use theme since it depends on tons of DB options)
+// Very simple general form display logic (we don't use theme since it depends on tons of DB options)
 
 if (count($fields)) {
 	echo '<table>';

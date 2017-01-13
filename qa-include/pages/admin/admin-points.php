@@ -32,13 +32,13 @@ require_once QA_INCLUDE_DIR . 'app/admin.php';
 require_once QA_INCLUDE_DIR . 'util/sort.php';
 
 
-//	Check admin privileges
+// Check admin privileges
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	Process user actions
+// Process user actions
 
 $securityexpired = false;
 $recalculate = false;
@@ -73,7 +73,7 @@ if (qa_clicked('doshowdefaults')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

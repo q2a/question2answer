@@ -30,13 +30,13 @@ require_once QA_INCLUDE_DIR . 'app/users.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Check we're not using single-sign on integration
+// Check we're not using single-sign on integration
 
 if (QA_FINAL_EXTERNAL_USERS)
 	qa_fatal_error('User accounts are handled by external code');
 
 
-//	Get list of blocked users
+// Get list of blocked users
 
 $start = qa_get_start();
 $pagesize = qa_opt('page_size_users');
@@ -48,7 +48,7 @@ list($numUsers, $users) = qa_db_select_with_pending($userSpecCount, $userSpec);
 $count = $numUsers['count'];
 
 
-//	Check we have permission to view this page (moderator or above)
+// Check we have permission to view this page (moderator or above)
 
 if (qa_get_logged_in_level() < QA_USER_LEVEL_MODERATOR) {
 	$qa_content = qa_content_prepare();
@@ -57,12 +57,12 @@ if (qa_get_logged_in_level() < QA_USER_LEVEL_MODERATOR) {
 }
 
 
-//	Get userids and handles of retrieved users
+// Get userids and handles of retrieved users
 
 $usershtml = qa_userids_handles_html($users);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

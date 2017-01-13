@@ -148,45 +148,45 @@ function qa_db_points_update_ifuser($userid, $columns)
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	if (qa_should_update_counts() && isset($userid)) {
-		require_once QA_INCLUDE_DIR.'app/options.php';
-		require_once QA_INCLUDE_DIR.'app/cookies.php';
+		require_once QA_INCLUDE_DIR . 'app/options.php';
+		require_once QA_INCLUDE_DIR . 'app/cookies.php';
 
-		$calculations=qa_db_points_calculations();
+		$calculations = qa_db_points_calculations();
 
-		if ($columns===true)
-			$keycolumns=$calculations;
+		if ($columns === true)
+			$keycolumns = $calculations;
 		elseif (empty($columns))
-			$keycolumns=array();
+			$keycolumns = array();
 		elseif (is_array($columns))
-			$keycolumns=array_flip($columns);
+			$keycolumns = array_flip($columns);
 		else
-			$keycolumns=array($columns => true);
+			$keycolumns = array($columns => true);
 
-		$insertfields='userid, ';
-		$insertvalues='$, ';
-		$insertpoints=(int)qa_opt('points_base');
+		$insertfields = 'userid, ';
+		$insertvalues = '$, ';
+		$insertpoints = (int)qa_opt('points_base');
 
-		$updates='';
-		$updatepoints=$insertpoints;
+		$updates = '';
+		$updatepoints = $insertpoints;
 
 		foreach ($calculations as $field => $calculation) {
-			$multiple=(int)$calculation['multiple'];
+			$multiple = (int)$calculation['multiple'];
 
 			if (isset($keycolumns[$field])) {
-				$insertfields.=$field.', ';
-				$insertvalues.='@_'.$field.':=(SELECT '.$calculation['formula'].'), ';
-				$updates.=$field.'=@_'.$field.', ';
-				$insertpoints.='+('.(int)$multiple.'*@_'.$field.')';
+				$insertfields .= $field . ', ';
+				$insertvalues .= '@_' . $field . ':=(SELECT ' . $calculation['formula'] . '), ';
+				$updates .= $field . '=@_' . $field . ', ';
+				$insertpoints .= '+(' . (int)$multiple . '*@_' . $field . ')';
 			}
 
-			$updatepoints.='+('.$multiple.'*'.(isset($keycolumns[$field]) ? '@_' : '').$field.')';
+			$updatepoints .= '+(' . $multiple . '*' . (isset($keycolumns[$field]) ? '@_' : '') . $field . ')';
 		}
 
-		$query='INSERT INTO ^userpoints ('.$insertfields.'points) VALUES ('.$insertvalues.$insertpoints.') '.
-			'ON DUPLICATE KEY UPDATE '.$updates.'points='.$updatepoints.'+bonus';
+		$query = 'INSERT INTO ^userpoints (' . $insertfields . 'points) VALUES (' . $insertvalues . $insertpoints . ') ' .
+			'ON DUPLICATE KEY UPDATE ' . $updates . 'points=' . $updatepoints . '+bonus';
 
-		qa_db_query_raw(str_replace('~', "='".qa_db_escape_string($userid)."'", qa_db_apply_sub($query, array($userid))));
-			// build like this so that a #, $ or ^ character in the $userid (if external integration) isn't substituted
+		// build like this so that a #, $ or ^ character in the $userid (if external integration) isn't substituted
+		qa_db_query_raw(str_replace('~', "='" . qa_db_escape_string($userid) . "'", qa_db_apply_sub($query, array($userid))));
 
 		if (qa_db_insert_on_duplicate_inserted())
 			qa_db_userpointscount_update();

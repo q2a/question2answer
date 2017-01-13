@@ -31,7 +31,7 @@ require_once QA_INCLUDE_DIR . 'db/admin.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Get relevant list of categories
+// Get relevant list of categories
 
 $editcategoryid = qa_post_text('edit');
 if (!isset($editcategoryid))
@@ -42,13 +42,13 @@ if (!isset($editcategoryid))
 $categories = qa_db_select_with_pending(qa_db_category_nav_selectspec($editcategoryid, true, false, true));
 
 
-//	Check admin privileges (do late to allow one DB query)
+// Check admin privileges (do late to allow one DB query)
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	Work out the appropriate state for the page
+// Work out the appropriate state for the page
 
 $editcategory = @$categories[$editcategoryid];
 
@@ -78,7 +78,7 @@ foreach ($categories as $category) {
 }
 
 
-//	Process saving options
+// Process saving options
 
 $savedoptions = false;
 $securityexpired = false;
@@ -95,7 +95,7 @@ if (qa_clicked('dosaveoptions')) {
 }
 
 
-//	Process saving an old or new category
+// Process saving an old or new category
 
 if (qa_clicked('docancel')) {
 	if ($setmissing || $setparent)
@@ -136,11 +136,11 @@ if (qa_clicked('docancel')) {
 		$inposition = qa_post_text('position');
 		$errors = array();
 
-		//	Check the parent ID
+		// Check the parent ID
 
 		$incategories = qa_db_select_with_pending(qa_db_category_nav_selectspec($inparentid, true));
 
-		//	Verify the name is legitimate for that parent ID
+		// Verify the name is legitimate for that parent ID
 
 		if (empty($inname))
 			$errors['name'] = qa_lang('main/field_required');
@@ -158,7 +158,7 @@ if (qa_clicked('docancel')) {
 			}
 		}
 
-		//	Verify the slug is legitimate for that parent ID
+		// Verify the slug is legitimate for that parent ID
 
 		for ($attempt = 0; $attempt < 100; $attempt++) {
 			switch ($attempt) {
@@ -190,7 +190,7 @@ if (qa_clicked('docancel')) {
 				$errors['slug'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
 			elseif (preg_match('/[\\+\\/]/', $inslug))
 				$errors['slug'] = qa_lang_sub('admin/slug_bad_chars', '+ /');
-			elseif ((!isset($inparentid)) && qa_admin_is_slug_reserved($inslug)) // only top level is a problem
+			elseif (!isset($inparentid) && qa_admin_is_slug_reserved($inslug)) // only top level is a problem
 				$errors['slug'] = qa_lang('admin/slug_reserved');
 			elseif (isset($matchcategoryid) && strcmp($matchcategoryid, @$editcategory['categoryid']))
 				$errors['slug'] = qa_lang('admin/category_already_used');
@@ -203,7 +203,7 @@ if (qa_clicked('docancel')) {
 				break;
 		}
 
-		//	Perform appropriate database action
+		// Perform appropriate database action
 
 		if (empty($errors)) {
 			if (isset($editcategory['categoryid'])) { // changing existing category
@@ -237,7 +237,7 @@ if (qa_clicked('docancel')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

@@ -26,7 +26,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 
-//	Determine the identify of the user
+// Determine the identify of the user
 
 $handle = qa_request_part(1);
 
@@ -36,7 +36,7 @@ if (!strlen($handle)) {
 }
 
 
-//	Get the HTML to display for the handle, and if we're using external users, determine the userid
+// Get the HTML to display for the handle, and if we're using external users, determine the userid
 
 if (QA_FINAL_EXTERNAL_USERS) {
 	$userid = qa_handle_to_userid($handle);
@@ -50,7 +50,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	$userhtml = qa_html($handle);
 
 
-//	Display the appropriate page based on the request
+// Display the appropriate page based on the request
 
 switch (qa_request_part(2)) {
 	case 'wall':

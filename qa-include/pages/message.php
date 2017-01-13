@@ -37,7 +37,7 @@ $fromhandle = qa_get_logged_in_handle();
 $qa_content = qa_content_prepare();
 
 
-//	Check we have a handle, we're not using Q2A's single-sign on integration and that we're logged in
+// Check we have a handle, we're not using Q2A's single-sign on integration and that we're logged in
 
 if (QA_FINAL_EXTERNAL_USERS)
 	qa_fatal_error('User accounts are handled by external code');
@@ -57,7 +57,7 @@ if ($handle === $fromhandle) {
 }
 
 
-//	Find the user profile and their recent private messages
+// Find the user profile and their recent private messages
 
 list($toaccount, $torecent, $fromrecent) = qa_db_select_with_pending(
 	qa_db_user_account_selectspec($handle, false),
@@ -66,7 +66,7 @@ list($toaccount, $torecent, $fromrecent) = qa_db_select_with_pending(
 );
 
 
-//	Check the user exists and work out what can and can't be set (if not using single sign-on)
+// Check the user exists and work out what can and can't be set (if not using single sign-on)
 
 if (!qa_opt('allow_private_messages') || !is_array($toaccount))
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
@@ -81,7 +81,7 @@ if ($toaccount['flags'] & QA_USER_FLAGS_NO_MESSAGES) {
 	return $qa_content;
 }
 
-//	Check that we have permission and haven't reached the limit, but don't quit just yet
+// Check that we have permission and haven't reached the limit, but don't quit just yet
 
 switch (qa_user_permit_error(null, QA_LIMIT_MESSAGES)) {
 	case 'limit':
@@ -97,7 +97,7 @@ switch (qa_user_permit_error(null, QA_LIMIT_MESSAGES)) {
 }
 
 
-//	Process sending a message to user
+// Process sending a message to user
 
 // check for messages or errors
 $state = qa_get_state();
@@ -164,7 +164,7 @@ if (qa_post_text('domessage')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $hideForm = !empty($pageerror) || $messagesent;
 
@@ -218,7 +218,7 @@ if ($hideForm) {
 }
 
 
-//	If relevant, show recent message history
+// If relevant, show recent message history
 
 if (qa_opt('show_message_history')) {
 	$recent = array_merge($torecent, $fromrecent);

@@ -30,7 +30,7 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 require_once QA_INCLUDE_DIR . 'app/q-list.php';
 
 
-//	Check that we're logged in
+// Check that we're logged in
 
 $userid = qa_get_logged_in_userid();
 
@@ -38,13 +38,13 @@ if (!isset($userid))
 	qa_redirect('login');
 
 
-//	Find out which updates to show
+// Find out which updates to show
 
 $forfavorites = qa_get('show') != 'content';
 $forcontent = qa_get('show') != 'favorites';
 
 
-//	Get lists of recent updates for this user
+// Get lists of recent updates for this user
 
 $questions = qa_db_select_with_pending(
 	qa_db_user_updates_selectspec($userid, $forfavorites, $forcontent)
@@ -66,7 +66,7 @@ if ($forfavorites) {
 }
 
 
-//	Prepare and return content for theme
+// Prepare and return content for theme
 
 $qa_content = qa_q_list_page_content(
 	qa_any_sort_and_dedupe($questions),

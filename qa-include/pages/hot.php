@@ -29,7 +29,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/q-list.php';
 
 
-//	Get list of hottest questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php
+// Get list of hottest questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php
 
 $categoryslugs = QA_ALLOW_UNINDEXED_QUERIES ? qa_request_parts(1) : null;
 $countslugs = @count($categoryslugs);
@@ -57,7 +57,7 @@ if ($countslugs) {
 }
 
 
-//	Prepare and return content for theme
+// Prepare and return content for theme
 
 return qa_q_list_page_content(
 	$questions, // questions

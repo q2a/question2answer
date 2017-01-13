@@ -29,7 +29,7 @@ require_once QA_INCLUDE_DIR . 'app/admin.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
-//	Get current list of user fields and determine the state of this admin page
+// Get current list of user fields and determine the state of this admin page
 
 $fieldid = qa_post_text('edit');
 if (!isset($fieldid))
@@ -44,13 +44,13 @@ foreach ($userfields as $userfield) {
 }
 
 
-//	Check admin privileges (do late to allow one DB query)
+// Check admin privileges (do late to allow one DB query)
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	Process saving an old or new user field
+// Process saving an old or new user field
 
 $securityexpired = false;
 
@@ -79,12 +79,12 @@ elseif (qa_clicked('dosavefield')) {
 
 			$errors = array();
 
-			//	Verify the name is legitimate
+			// Verify the name is legitimate
 
 			if (qa_strlen($inname) > QA_DB_MAX_PROFILE_TITLE_LENGTH)
 				$errors['name'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_PROFILE_TITLE_LENGTH);
 
-			//	Perform appropriate database action
+			// Perform appropriate database action
 
 			if (isset($editfield['fieldid'])) { // changing existing user field
 				qa_db_userfield_set_fields($editfield['fieldid'], isset($errors['name']) ? $editfield['content'] : $inname, $inflags, $inpermit);
@@ -126,7 +126,7 @@ elseif (qa_clicked('dosavefield')) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

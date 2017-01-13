@@ -29,7 +29,7 @@ require_once QA_INCLUDE_DIR . 'db/users.php';
 require_once QA_INCLUDE_DIR . 'app/captcha.php';
 
 
-//	Check we're not using single-sign on integration and that we're not logged in
+// Check we're not using single-sign on integration and that we're not logged in
 
 if (QA_FINAL_EXTERNAL_USERS)
 	qa_fatal_error('User login is handled by external code');
@@ -38,7 +38,7 @@ if (qa_is_logged_in())
 	qa_redirect('');
 
 
-//	Start the 'I forgot my password' process, sending email if appropriate
+// Start the 'I forgot my password' process, sending email if appropriate
 
 if (qa_clicked('doforgot')) {
 	require_once QA_INCLUDE_DIR . 'app/users-edit.php';
@@ -76,7 +76,7 @@ if (qa_clicked('doforgot')) {
 	$inemailhandle = qa_get('e');
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

@@ -30,11 +30,11 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
 require_once QA_INCLUDE_DIR . 'app/search.php';
 
 
-//	Perform the search if appropriate
+// Perform the search if appropriate
 
 if (strlen(qa_get('q'))) {
 
-	//	Pull in input parameters
+	// Pull in input parameters
 
 	$inquery = trim(qa_get('q'));
 	$userid = qa_get_logged_in_userid();
@@ -44,17 +44,17 @@ if (strlen(qa_get('q'))) {
 	$count = 2 * (isset($display) ? $display : QA_DB_RETRIEVE_QS_AS) + 1;
 	// get enough results to be able to give some idea of how many pages of search results there are
 
-	//	Perform the search using appropriate module
+	// Perform the search using appropriate module
 
 	$results = qa_get_search_results($inquery, $start, $count, $userid, false, false);
 
-	//	Count and truncate results
+	// Count and truncate results
 
 	$pagesize = qa_opt('page_size_search');
 	$gotcount = count($results);
 	$results = array_slice($results, 0, $pagesize);
 
-	//	Retrieve extra information on users
+	// Retrieve extra information on users
 
 	$fullquestions = array();
 
@@ -65,7 +65,7 @@ if (strlen(qa_get('q'))) {
 
 	$usershtml = qa_userids_handles_html($fullquestions);
 
-	//	Report the search event
+	// Report the search event
 
 	qa_report_event('search', $userid, qa_get_logged_in_handle(), qa_cookie_get(), array(
 		'query' => $inquery,
@@ -74,7 +74,7 @@ if (strlen(qa_get('q'))) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare(true);
 

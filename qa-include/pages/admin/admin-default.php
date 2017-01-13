@@ -32,17 +32,17 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
 require_once QA_INCLUDE_DIR . 'app/admin.php';
 
 
-//	Pages handled by this controller: general, emails, users, layout, viewing, lists, posting, permissions, feeds, spam, caching, mailing
+// Pages handled by this controller: general, emails, users, layout, viewing, lists, posting, permissions, feeds, spam, caching, mailing
 
 $adminsection = strtolower(qa_request_part(1));
 
 
-//	Get list of categories and all options
+// Get list of categories and all options
 
 $categories = qa_db_select_with_pending(qa_db_category_nav_selectspec(null, true));
 
 
-//	See if we need to redirect
+// See if we need to redirect
 
 if (empty($adminsection)) {
 	$subnav = qa_admin_sub_navigation();
@@ -56,13 +56,13 @@ if (empty($adminsection)) {
 }
 
 
-//	Check admin privileges (do late to allow one DB query)
+// Check admin privileges (do late to allow one DB query)
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	For non-text options, lists of option types, minima and maxima
+// For non-text options, lists of option types, minima and maxima
 
 $optiontype = array(
 	'avatar_message_list_size' => 'number',
@@ -279,7 +279,7 @@ $optionminimum = array(
 );
 
 
-//	Define the options to show (and some other visual stuff) based on request
+// Define the options to show (and some other visual stuff) based on request
 
 $formstyle = 'tall';
 $checkboxtodisplay = null;
@@ -673,7 +673,7 @@ switch ($adminsection) {
 }
 
 
-//	Filter out blanks to get list of valid options
+// Filter out blanks to get list of valid options
 
 $getoptions = array();
 foreach ($showoptions as $optionname) {
@@ -682,7 +682,7 @@ foreach ($showoptions as $optionname) {
 }
 
 
-//	Process user actions
+// Process user actions
 
 $errors = array();
 
@@ -756,7 +756,7 @@ else {
 
 			$formokhtml = qa_lang_html('admin/options_saved');
 
-			//	Uploading default avatar
+			// Uploading default avatar
 			if (is_array(@$_FILES['avatar_default_file'])) {
 				$avatarfileerror = $_FILES['avatar_default_file']['error'];
 
@@ -800,7 +800,7 @@ else {
 }
 
 
-//	Mailings management
+// Mailings management
 
 if ($adminsection == 'mailing') {
 	if (qa_clicked('domailingtest') || qa_clicked('domailingstart') || qa_clicked('domailingresume') || qa_clicked('domailingcancel')) {
@@ -852,12 +852,12 @@ if ($adminsection == 'mailing') {
 }
 
 
-//	Get the actual options
+// Get the actual options
 
 $options = qa_get_options($getoptions);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 
@@ -1300,7 +1300,7 @@ foreach ($showoptions as $optionname) {
 				foreach ($searchmodules as $modulename => $module) {
 					$selectoptions[qa_html($modulename)] = strlen($modulename) ? qa_html($modulename) : qa_lang_html('options/option_default');
 
-					if (($modulename == $value) && method_exists($module, 'admin_form')) {
+					if ($modulename == $value && method_exists($module, 'admin_form')) {
 						$optionfield['note'] = '<a href="' . qa_admin_module_options_path('search', $modulename) . '">' . qa_lang_html('admin/options') . '</a>';
 					}
 				}
@@ -1568,7 +1568,7 @@ foreach ($showoptions as $optionname) {
 }
 
 
-//	Extra items for specific pages
+// Extra items for specific pages
 
 switch ($adminsection) {
 	case 'users':

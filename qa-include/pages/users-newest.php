@@ -28,13 +28,13 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
-//	Check we're not using single-sign on integration
+// Check we're not using single-sign on integration
 
 if (QA_FINAL_EXTERNAL_USERS)
 	qa_fatal_error('User accounts are handled by external code');
 
 
-//	Check we have permission to view this page (moderator or above)
+// Check we have permission to view this page (moderator or above)
 
 if (qa_user_permit_error('permit_view_new_users_page')) {
 	$qa_content = qa_content_prepare();
@@ -43,7 +43,7 @@ if (qa_user_permit_error('permit_view_new_users_page')) {
 }
 
 
-//	Get list of all users
+// Get list of all users
 
 $start = qa_get_start();
 $users = qa_db_select_with_pending(qa_db_newest_users_selectspec($start, qa_opt_if_loaded('page_size_users')));
@@ -53,7 +53,7 @@ $pageSize = qa_opt('page_size_users');
 $users = array_slice($users, 0, $pageSize);
 $usersHtml = qa_userids_handles_html($users);
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

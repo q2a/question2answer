@@ -35,7 +35,7 @@ $countslugs = count($categoryslugs);
 $userid = qa_get_logged_in_userid();
 
 
-//	Get lists of recent activity in all its forms, plus category information
+// Get lists of recent activity in all its forms, plus category information
 
 list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid) = qa_db_select_with_pending(
 	qa_db_qs_selectspec($userid, 'created', 0, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_activity')),
@@ -60,7 +60,7 @@ if ($countslugs) {
 }
 
 
-//	Prepare and return content for theme
+// Prepare and return content for theme
 
 return qa_q_list_page_content(
 	qa_any_sort_and_dedupe(array_merge($questions1, $questions2, $questions3, $questions4)), // questions

@@ -30,7 +30,7 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
-//	Get current list of pages and determine the state of this admin page
+// Get current list of pages and determine the state of this admin page
 
 $pageid = qa_post_text('edit');
 if (!isset($pageid))
@@ -49,13 +49,13 @@ if ((qa_clicked('doaddpage') || qa_clicked('doaddlink') || qa_get('doaddlink') |
 	$isexternal = $editpage['flags'] & QA_PAGE_FLAGS_EXTERNAL;
 
 
-//	Check admin privileges (do late to allow one DB query)
+// Check admin privileges (do late to allow one DB query)
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	Define an array of navigation settings we can change, option name => language key
+// Define an array of navigation settings we can change, option name => language key
 
 $hascustomhome = qa_has_custom_home();
 
@@ -96,7 +96,7 @@ if (!qa_using_tags())
 	unset($navoptions['nav_tags']);
 
 
-//	Process saving an old or new page
+// Process saving an old or new page
 
 $securityexpired = false;
 
@@ -139,7 +139,7 @@ elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('do
 
 			$errors = array();
 
-			//	Verify the name (navigation link) is legitimate
+			// Verify the name (navigation link) is legitimate
 
 			if (empty($inname))
 				$errors['name'] = qa_lang('main/field_required');
@@ -147,7 +147,7 @@ elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('do
 				$errors['name'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
 
 			if ($isexternal) {
-				//	Verify the url is legitimate (vaguely)
+				// Verify the url is legitimate (vaguely)
 
 				if (empty($inurl))
 					$errors['url'] = qa_lang('main/field_required');
@@ -155,12 +155,12 @@ elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('do
 					$errors['url'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
 
 			} else {
-				//	Verify the heading is legitimate
+				// Verify the heading is legitimate
 
 				if (qa_strlen($inheading) > QA_DB_MAX_TITLE_LENGTH)
 					$errors['heading'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_TITLE_LENGTH);
 
-				//	Verify the slug is legitimate (and try some defaults if we're creating a new page, and it's not)
+				// Verify the slug is legitimate (and try some defaults if we're creating a new page, and it's not)
 
 				for ($attempt = 0; $attempt < 100; $attempt++) {
 					switch ($attempt) {
@@ -204,7 +204,7 @@ elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('do
 				}
 			}
 
-			//	Perform appropriate database action
+			// Perform appropriate database action
 
 			if (isset($editpage['pageid'])) { // changing existing page
 				if ($isexternal) {
@@ -277,7 +277,7 @@ elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('do
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 
@@ -319,7 +319,7 @@ if (isset($editpage)) {
 			}
 		}
 
-		if ((!isset($editpage['pageid'])) || $nav != @$editpage['nav']) {
+		if (!isset($editpage['pageid']) || $nav != @$editpage['nav']) {
 			$positionvalue = isset($previous) ? qa_lang_html_sub('admin/after_x_tab', qa_html($previous['title'])) : qa_lang_html($langkey);
 			$positionoptions[$nav . (isset($previous) ? (1 + $maxposition) : 1)] = $positionvalue;
 		}
@@ -465,7 +465,7 @@ if (isset($editpage)) {
 
 } else {
 
-	//	List of standard navigation links
+	// List of standard navigation links
 
 	$qa_content['form'] = array(
 		'tags' => 'method="post" action="' . qa_self_html() . '"',
@@ -515,7 +515,7 @@ if (isset($editpage)) {
 		'type' => 'blank'
 	);
 
-	//	List of suggested plugin pages
+	// List of suggested plugin pages
 
 	$listhtml = '';
 
@@ -549,7 +549,7 @@ if (isset($editpage)) {
 		);
 	}
 
-	//	List of custom pages or links
+	// List of custom pages or links
 
 	$listhtml = '';
 

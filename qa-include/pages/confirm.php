@@ -25,13 +25,13 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-//	Check we're not using single-sign on integration, that we're not already confirmed, and that we're not blocked
+// Check we're not using single-sign on integration, that we're not already confirmed, and that we're not blocked
 
 if (QA_FINAL_EXTERNAL_USERS) {
 	qa_fatal_error('User login is handled by external code');
 }
 
-//	Check if we've been asked to send a new link or have a successful email confirmation
+// Check if we've been asked to send a new link or have a successful email confirmation
 
 // Fetch the handle from POST or GET
 $handle = qa_post_text('username');
@@ -92,7 +92,7 @@ if (isset($loggedInUserId) && qa_clicked('dosendconfirm')) { // A logged in user
 	}
 }
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

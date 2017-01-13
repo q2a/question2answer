@@ -25,7 +25,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-//	Check we're not using single-sign on integration and that we're not logged in
+// Check we're not using single-sign on integration and that we're not logged in
 
 if (QA_FINAL_EXTERNAL_USERS) {
 	qa_fatal_error('User login is handled by external code');
@@ -167,7 +167,7 @@ if (strlen($emailHandle) > 0) {
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

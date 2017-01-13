@@ -29,13 +29,13 @@ require_once QA_INCLUDE_DIR . 'app/admin.php';
 require_once QA_INCLUDE_DIR . 'app/recalc.php';
 
 
-//	Check we have administrative privileges
+// Check we have administrative privileges
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	Find out the operation
+// Find out the operation
 
 $allowstates = array(
 	'dorecountposts',

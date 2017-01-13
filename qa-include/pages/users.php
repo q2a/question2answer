@@ -30,7 +30,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Get list of all users
+// Get list of all users
 
 $start = qa_get_start();
 $users = qa_db_select_with_pending(qa_db_top_users_selectspec($start, qa_opt_if_loaded('page_size_users')));
@@ -41,7 +41,7 @@ $users = array_slice($users, 0, $pagesize);
 $usershtml = qa_userids_handles_html($users);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

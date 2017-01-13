@@ -31,13 +31,13 @@ require_once QA_INCLUDE_DIR . 'db/admin.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Check admin privileges (do late to allow one DB query)
+// Check admin privileges (do late to allow one DB query)
 
 if (!qa_admin_check_privileges($qa_content))
 	return $qa_content;
 
 
-//	Get the information to display
+// Get the information to display
 
 $qcount = (int)qa_opt('cache_qcount');
 $qcount_anon = qa_db_count_posts('Q', false);
@@ -49,7 +49,7 @@ $ccount = (int)qa_opt('cache_ccount');
 $ccount_anon = qa_db_count_posts('C', false);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

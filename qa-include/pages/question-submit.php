@@ -468,7 +468,7 @@ function qa_page_q_add_c_submit($question, $parent, $commentsfollows, $usecaptch
 			$testwords = implode(' ', qa_string_to_words($in['content']));
 
 			foreach ($commentsfollows as $comment) {
-				if (($comment['basetype'] == 'C') && ($comment['parentid'] == $parentid) && !$comment['hidden']) {
+				if ($comment['basetype'] == 'C' && $comment['parentid'] == $parentid && !$comment['hidden']) {
 					if (implode(' ', qa_string_to_words($comment['content'])) == $testwords) {
 						$errors['content'] = qa_lang_html('question/duplicate_content');
 						break;

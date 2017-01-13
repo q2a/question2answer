@@ -52,7 +52,7 @@ class qa_facebook_login
 
 	public function facebook_html($tourl, $logout, $context)
 	{
-		if (($context == 'login') || ($context == 'register'))
+		if ($context == 'login' || $context == 'register')
 			$size = 'large';
 		else
 			$size = 'medium';

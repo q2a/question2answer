@@ -33,7 +33,7 @@ $categoryslugs = qa_request_parts(1);
 $countslugs = count($categoryslugs);
 
 
-//	Get information about appropriate categories and redirect to questions page if category has no sub-categories
+// Get information about appropriate categories and redirect to questions page if category has no sub-categories
 
 $userid = qa_get_logged_in_userid();
 list($categories, $categoryid, $favoritecats) = qa_db_select_with_pending(
@@ -46,7 +46,7 @@ if ($countslugs && !isset($categoryid))
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 
-//	Function for recursive display of categories
+// Function for recursive display of categories
 
 function qa_category_nav_to_browse(&$navigation, $categories, $categoryid, $favoritemap)
 {
@@ -79,7 +79,7 @@ function qa_category_nav_to_browse(&$navigation, $categories, $categoryid, $favo
 }
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare(false, array_keys(qa_category_path($categories, $categoryid)));
 

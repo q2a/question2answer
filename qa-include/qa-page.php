@@ -28,7 +28,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 require_once QA_INCLUDE_DIR . 'app/page.php';
 
 
-//	Below are the steps that actually execute for this file - all the above are function definitions
+// Below are the steps that actually execute for this file - all the above are function definitions
 
 global $qa_usage;
 

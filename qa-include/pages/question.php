@@ -40,7 +40,7 @@ $cookieid = qa_cookie_get();
 $pagestate = qa_get_state();
 
 
-//	Get information about this question
+// Get information about this question
 
 $cacheHandler = Q2A_Storage_CacheManager::getInstance();
 $cacheKey = "page:question:$questionid";
@@ -103,7 +103,7 @@ if (isset($question)) {
 	}
 }
 
-//	Deal with question not found or not viewable, otherwise report the view event
+// Deal with question not found or not viewable, otherwise report the view event
 
 if (!isset($question))
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
@@ -153,7 +153,7 @@ if ($permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots'))) {
 }
 
 
-//	Save question data to cache (if older than configured limit)
+// Save question data to cache (if older than configured limit)
 
 if ($saveCache) {
 	$questionAge = qa_opt('db_time') - $question['created'];
@@ -163,14 +163,14 @@ if ($saveCache) {
 }
 
 
-//	Determine if captchas will be required
+// Determine if captchas will be required
 
 $captchareason = qa_user_captcha_reason(qa_user_level_for_post($question));
 $usecaptcha = ($captchareason != false);
 
 
-//	If we're responding to an HTTP POST, include file that handles all posting/editing/etc... logic
-//	This is in a separate file because it's a *lot* of logic, and will slow down ordinary page views
+// If we're responding to an HTTP POST, include file that handles all posting/editing/etc... logic
+// This is in a separate file because it's a *lot* of logic, and will slow down ordinary page views
 
 $pagestart = qa_get_start();
 $showid = qa_get('show');
@@ -198,20 +198,20 @@ if (qa_is_http_post() || strlen($pagestate))
 
 $formrequested = isset($formtype);
 
-if ((!$formrequested) && $question['answerbutton']) {
+if (!$formrequested && $question['answerbutton']) {
 	$immedoption = qa_opt('show_a_form_immediate');
 
-	if (($immedoption == 'always') || (($immedoption == 'if_no_as') && (!$question['isbyuser']) && (!$question['acount'])))
+	if ($immedoption == 'always' || ($immedoption == 'if_no_as' && !$question['isbyuser'] && !$question['acount']))
 		$formtype = 'a_add'; // show answer form by default
 }
 
 
-//	Get information on the users referenced
+// Get information on the users referenced
 
 $usershtml = qa_userids_handles_html(array_merge(array($question), $answers, $commentsfollows), true);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare(true, array_keys(qa_category_path($categories, $question['categoryid'])));
 
@@ -233,7 +233,7 @@ if ($question['hidden'])
 qa_sort_by($commentsfollows, 'created');
 
 
-//	Prepare content for the question...
+// Prepare content for the question...
 
 if ($formtype == 'q_edit') { // ...in edit mode
 	$qa_content['title'] = qa_lang_html($question['editable'] ? 'question/edit_q_title' :
@@ -264,7 +264,7 @@ if ($microdata) {
 }
 
 
-//	Prepare content for an answer being edited (if any) or to be added
+// Prepare content for an answer being edited (if any) or to be added
 
 if ($formtype == 'a_edit') {
 	$qa_content['a_form'] = qa_page_q_edit_a_form($qa_content, 'a' . $formpostid, $answers[$formpostid],
@@ -275,7 +275,7 @@ if ($formtype == 'a_edit') {
 
 	$jumptoanchor = 'a' . $formpostid;
 
-} elseif (($formtype == 'a_add') || ($question['answerbutton'] && !$formrequested)) {
+} elseif ($formtype == 'a_add' || ($question['answerbutton'] && !$formrequested)) {
 	$qa_content['a_form'] = qa_page_q_add_a_form($qa_content, 'anew', $captchareason, $question, @$anewin, @$anewerrors, $formtype == 'a_add', $formrequested);
 
 	if ($formrequested) {
@@ -288,22 +288,22 @@ if ($formtype == 'a_edit') {
 }
 
 
-//	Prepare content for comments on the question, plus add or edit comment forms
+// Prepare content for comments on the question, plus add or edit comment forms
 
 if ($formtype == 'q_close') {
 	$qa_content['q_view']['c_form'] = qa_page_q_close_q_form($qa_content, $question, 'close', @$closein, @$closeerrors);
 	$jumptoanchor = 'close';
 
-} elseif ((($formtype == 'c_add') && ($formpostid == $questionid)) || ($question['commentbutton'] && !$formrequested)) { // ...to be added
+} elseif (($formtype == 'c_add' && $formpostid == $questionid) || ($question['commentbutton'] && !$formrequested)) { // ...to be added
 	$qa_content['q_view']['c_form'] = qa_page_q_add_c_form($qa_content, $question, $question, 'c' . $questionid,
 		$captchareason, @$cnewin[$questionid], @$cnewerrors[$questionid], $formtype == 'c_add');
 
-	if (($formtype == 'c_add') && ($formpostid == $questionid)) {
+	if ($formtype == 'c_add' && $formpostid == $questionid) {
 		$jumptoanchor = 'c' . $questionid;
 		$commentsall = $questionid;
 	}
 
-} elseif (($formtype == 'c_edit') && (@$commentsfollows[$formpostid]['parentid'] == $questionid)) { // ...being edited
+} elseif ($formtype == 'c_edit' && @$commentsfollows[$formpostid]['parentid'] == $questionid) { // ...being edited
 	$qa_content['q_view']['c_form'] = qa_page_q_edit_c_form($qa_content, 'c' . $formpostid, $commentsfollows[$formpostid],
 		@$ceditin[$formpostid], @$cediterrors[$formpostid]);
 
@@ -315,7 +315,7 @@ $qa_content['q_view']['c_list'] = qa_page_q_comment_follow_list($question, $ques
 	$commentsall == $questionid, $usershtml, $formrequested, $formpostid); // ...for viewing
 
 
-//	Prepare content for existing answers (could be added to by Ajax)
+// Prepare content for existing answers (could be added to by Ajax)
 
 $qa_content['a_list'] = array(
 	'tags' => 'id="a_list"',
@@ -393,7 +393,7 @@ foreach ($answerids as $answerid) {
 	if (!($formtype == 'a_edit' && $formpostid == $answerid)) {
 		$a_view = qa_page_q_answer_view($question, $answer, $answer['isselected'], $usershtml, $formrequested);
 
-		//	Prepare content for comments on this answer, plus add or edit comment forms
+		// Prepare content for comments on this answer, plus add or edit comment forms
 
 		if (($formtype == 'c_add' && $formpostid == $answerid) || ($answer['commentbutton'] && !$formrequested)) { // ...to be added
 			$a_view['c_form'] = qa_page_q_add_c_form($qa_content, $question, $answer, 'c' . $answerid,
@@ -415,7 +415,7 @@ foreach ($answerids as $answerid) {
 		$a_view['c_list'] = qa_page_q_comment_follow_list($question, $answer, $commentsfollows,
 			$commentsall == $answerid, $usershtml, $formrequested, $formpostid); // ...for viewing
 
-		//	Add the answer to the list
+		// Add the answer to the list
 
 		$qa_content['a_list']['as'][] = $a_view;
 	}
@@ -441,7 +441,7 @@ if (!$formrequested)
 	$qa_content['page_links'] = qa_html_page_links(qa_request(), $pagestart, $pagesize, $countforpages, qa_opt('pages_prev_next'), array(), false, 'a_list_title');
 
 
-//	Some generally useful stuff
+// Some generally useful stuff
 
 if (qa_using_categories() && count($categories))
 	$qa_content['navigation']['cat'] = qa_category_navigation($categories, $question['categoryid']);
@@ -452,8 +452,8 @@ if (isset($jumptoanchor))
 	);
 
 
-//	Determine whether this request should be counted for page view statistics.
-//	The lastviewip check is now in the hotness query in order to bypass caching.
+// Determine whether this request should be counted for page view statistics.
+// The lastviewip check is now in the hotness query in order to bypass caching.
 
 if (
 	qa_opt('do_count_q_views') &&
@@ -470,8 +470,3 @@ if (
 
 
 return $qa_content;
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/

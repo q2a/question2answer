@@ -29,7 +29,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Get popular tags
+// Get popular tags
 
 $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
@@ -41,7 +41,7 @@ $tagcount = qa_opt('cache_tagcount');
 $pagesize = qa_opt('page_size_tags');
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 

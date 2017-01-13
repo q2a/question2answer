@@ -30,7 +30,7 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 require_once QA_INCLUDE_DIR . 'app/q-list.php';
 
 
-//	Get list of unanswered questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php
+// Get list of unanswered questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php
 
 if (QA_ALLOW_UNINDEXED_QUERIES)
 	$categoryslugs = qa_request_parts(1);
@@ -114,7 +114,7 @@ switch ($by) {
 }
 
 
-//	Prepare and return content for theme
+// Prepare and return content for theme
 
 $qa_content = qa_q_list_page_content(
 	$questions, // questions

@@ -31,7 +31,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Find recently hidden questions, answers, comments
+// Find recently hidden questions, answers, comments
 
 $userid = qa_get_logged_in_userid();
 
@@ -42,7 +42,7 @@ list($hiddenquestions, $hiddenanswers, $hiddencomments) = qa_db_select_with_pend
 );
 
 
-//	Check admin privileges (do late to allow one DB query)
+// Check admin privileges (do late to allow one DB query)
 
 if (qa_user_maximum_permit_error('permit_hide_show') && qa_user_maximum_permit_error('permit_delete_hidden')) {
 	$qa_content = qa_content_prepare();
@@ -51,12 +51,12 @@ if (qa_user_maximum_permit_error('permit_hide_show') && qa_user_maximum_permit_e
 }
 
 
-//	Check to see if any have been reshown or deleted
+// Check to see if any have been reshown or deleted
 
 $pageerror = qa_admin_check_clicks();
 
 
-//	Combine sets of questions and remove those this user has no permissions for
+// Combine sets of questions and remove those this user has no permissions for
 
 $questions = qa_any_sort_by_date(array_merge($hiddenquestions, $hiddenanswers, $hiddencomments));
 
@@ -69,12 +69,12 @@ if (qa_user_permit_error('permit_hide_show') && qa_user_permit_error('permit_del
 }
 
 
-//	Get information for users
+// Get information for users
 
 $usershtml = qa_userids_handles_html(qa_any_get_userids_handles($questions));
 
 
-//	Create list of actual hidden postids and see which ones have dependents
+// Create list of actual hidden postids and see which ones have dependents
 
 $qhiddenpostid = array();
 foreach ($questions as $key => $question)
@@ -83,7 +83,7 @@ foreach ($questions as $key => $question)
 $dependcounts = qa_db_postids_count_dependents($qhiddenpostid);
 
 
-//	Prepare content for theme
+// Prepare content for theme
 
 $qa_content = qa_content_prepare();
 
@@ -142,7 +142,7 @@ if (count($questions)) {
 			);
 		}
 
-		if ((!qa_user_post_permit_error('permit_delete_hidden', $question)) && !$dependcounts[$qhiddenpostid[$key]]) {
+		if (!qa_user_post_permit_error('permit_delete_hidden', $question) && !$dependcounts[$qhiddenpostid[$key]]) {
 			// Possible values for popup: delete_q_popup, delete_a_popup, delete_c_popup
 			$buttons['delete'] = array(
 				'tags' => 'name="admin_' . qa_html($qhiddenpostid[$key]) . '_delete" onclick="return qa_admin_click(this);"',
