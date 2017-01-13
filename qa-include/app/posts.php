@@ -455,7 +455,7 @@ function qa_post_get_question_commentsfollows($questionid)
 	}
 
 	foreach ($achildposts as $postid => $post) {
-		if (($post['basetype'] == 'Q') || ($post['basetype'] == 'C'))
+		if ($post['basetype'] == 'Q' || $post['basetype'] == 'C')
 			$commentsfollows[$postid] = $post;
 	}
 
@@ -486,7 +486,7 @@ function qa_post_get_answer_commentsfollows($answerid)
 	$childposts = qa_db_single_select(qa_db_full_child_posts_selectspec(null, $answerid));
 
 	foreach ($childposts as $postid => $post) {
-		if (($post['basetype'] == 'Q') || ($post['basetype'] == 'C'))
+		if ($post['basetype'] == 'Q' || $post['basetype'] == 'C')
 			$commentsfollows[$postid] = $post;
 	}
 

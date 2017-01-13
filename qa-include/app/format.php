@@ -903,7 +903,7 @@ function qa_other_to_q_html_fields($question, $userid, $cookieid, $usershtml, $d
 	if (@$question['opersonal'])
 		$fields['what_your'] = true;
 
-	if (($question['obasetype'] != 'Q') || (@$question['oupdatetype'] == QA_UPDATE_FOLLOWS))
+	if ($question['obasetype'] != 'Q' || @$question['oupdatetype'] == QA_UPDATE_FOLLOWS)
 		$fields['what_url'] = qa_q_path_html($question['postid'], $question['title'], false, $question['obasetype'], $question['opostid']);
 
 	if (@$options['contentview'] && !empty($question['ocontent'])) {
@@ -1210,7 +1210,7 @@ function qa_html_page_links($request, $start, $pagesize, $count, $prevnext, $par
 	$thispage = 1 + floor($start / $pagesize);
 	$lastpage = ceil(min($count, 1 + QA_MAX_LIMIT_START) / $pagesize);
 
-	if (($thispage > 1) || ($lastpage > $thispage)) {
+	if ($thispage > 1 || $lastpage > $thispage) {
 		$links = array('label' => qa_lang_html('main/page_label'), 'items' => array());
 
 		$keypages[1] = true;

@@ -610,6 +610,8 @@ class qa_html_theme extends qa_html_theme_base
 	 *
 	 * @since Snow 1.4
 	 * @version 1.0
+	 * @param string $addon_class
+	 * @param string $ids
 	 */
 	private function qam_search($addon_class = null, $ids = null)
 	{

@@ -68,6 +68,7 @@ class Q2A_Util_Usage
 
 	/**
 	 * Mark the beginning of a new stage of script execution and store usages accordingly.
+	 * @param $stage
 	 */
 	public function mark($stage)
 	{
@@ -78,6 +79,10 @@ class Q2A_Util_Usage
 
 	/**
 	 * Logs query and updates database usage stats.
+	 * @param $query
+	 * @param $usedtime
+	 * @param $gotrows
+	 * @param $gotcolumns
 	 */
 	public function logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns)
 	{
@@ -197,6 +202,9 @@ class Q2A_Util_Usage
 
 	/**
 	 * Return the difference between two resource usage arrays, as an array.
+	 * @param $oldusage
+	 * @param $newusage
+	 * @return array
 	 */
 	private function delta($oldusage, $newusage)
 	{

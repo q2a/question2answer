@@ -97,7 +97,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 	else
 		$maxfilesize = qa_get_max_upload_size();
 
-	if (($filesize <= 0) || ($filesize > $maxfilesize)) { // if file was too big for PHP, $filesize will be zero
+	if ($filesize <= 0 || $filesize > $maxfilesize) { // if file was too big for PHP, $filesize will be zero
 		$result['error'] = qa_lang_sub('main/max_upload_size_x', qa_format_number($maxfilesize / 1048576, 1) . 'MB');
 		return $result;
 	}
@@ -134,7 +134,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 	$result['format'] = $format;
 
 	if ($onlyimage) {
-		if ((!$isimage) || !is_array($imagesize)) {
+		if (!$isimage || !is_array($imagesize)) {
 			$result['error'] = qa_lang_sub('main/image_not_read', 'GIF, JPG, PNG');
 			return $result;
 		}

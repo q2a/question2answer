@@ -390,7 +390,7 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 			if ($comment['type'] == 'C') {
 				$answer = @$answers[$comment['parentid']];
 
-				if ((!isset($answer)) || ($answer['type'] == 'A')) { // don't index comment if it or its parent is hidden
+				if (!isset($answer) || $answer['type'] == 'A') { // don't index comment if it or its parent is hidden
 					qa_post_index($comment['postid'], $comment['type'], $oldquestion['postid'], $comment['parentid'], null,
 						$comment['content'], $comment['format'], qa_viewer_text($comment['content'], $comment['format']), null, $comment['categoryid']);
 				}
@@ -630,7 +630,7 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 		$commentsfollows = qa_post_get_answer_commentsfollows($oldanswer['postid']);
 
 		foreach ($commentsfollows as $comment) {
-			if (($comment['basetype'] == 'C') && ($comment['parentid'] == $oldanswer['postid']))
+			if ($comment['basetype'] == 'C' && $comment['parentid'] == $oldanswer['postid'])
 				qa_post_unindex($comment['postid']);
 		}
 
@@ -642,7 +642,7 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 		if ($oldanswer['flagcount'])
 			qa_db_flaggedcount_update();
 
-	} elseif (($oldanswer['type'] == 'A') && ($question['type'] == 'Q')) { // don't index if question or answer are hidden/queued
+	} elseif ($oldanswer['type'] == 'A' && $question['type'] == 'Q') { // don't index if question or answer are hidden/queued
 		qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $content, $format, $text, null, $oldanswer['categoryid']);
 	}
 
@@ -711,7 +711,7 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 	qa_post_unindex($oldanswer['postid']);
 
 	foreach ($commentsfollows as $comment) {
-		if (($comment['basetype'] == 'C') && ($comment['parentid'] == $oldanswer['postid']))
+		if ($comment['basetype'] == 'C' && $comment['parentid'] == $oldanswer['postid'])
 			qa_post_unindex($comment['postid']);
 	}
 
@@ -765,12 +765,12 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 	if ($oldanswer['flagcount'])
 		qa_db_flaggedcount_update();
 
-	if (($question['type'] == 'Q') && ($status == QA_POST_STATUS_NORMAL)) { // even if answer visible, don't index if question is hidden or queued
+	if ($question['type'] == 'Q' && $status == QA_POST_STATUS_NORMAL) { // even if answer visible, don't index if question is hidden or queued
 		qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $oldanswer['content'],
 			$oldanswer['format'], qa_viewer_text($oldanswer['content'], $oldanswer['format']), null, $oldanswer['categoryid']);
 
 		foreach ($commentsfollows as $comment) {
-			if (($comment['type'] == 'C') && ($comment['parentid'] == $oldanswer['postid'])) { // and don't index hidden/queued comments
+			if ($comment['type'] == 'C' && $comment['parentid'] == $oldanswer['postid']) { // and don't index hidden/queued comments
 				qa_post_index($comment['postid'], $comment['type'], $question['postid'], $comment['parentid'], null, $comment['content'],
 					$comment['format'], qa_viewer_text($comment['content'], $comment['format']), null, $comment['categoryid']);
 			}
@@ -1028,7 +1028,7 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 		if ($oldanswer['flagcount'])
 			qa_db_flaggedcount_update();
 
-	} elseif (($oldanswer['type'] == 'A') && ($question['type'] == 'Q') && (($parent['type'] == 'Q') || ($parent['type'] == 'A'))) // only if all fully visible
+	} elseif ($oldanswer['type'] == 'A' && $question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) // only if all fully visible
 		qa_post_index($oldanswer['postid'], 'C', $question['postid'], $parentid, null, $content, $format, $text, null, $oldanswer['categoryid']);
 
 	if ($question['selchildid'] == $oldanswer['postid']) { // remove selected answer

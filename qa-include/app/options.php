@@ -404,7 +404,7 @@ function qa_default_option($name)
 		case 'from_email': // heuristic to remove short prefix (e.g. www. or qa.)
 			$parts = explode('.', @$_SERVER['HTTP_HOST']);
 
-			if ((count($parts) > 2) && (strlen($parts[0]) < 5) && !is_numeric($parts[0]))
+			if (count($parts) > 2 && strlen($parts[0]) < 5 && !is_numeric($parts[0]))
 				unset($parts[0]);
 
 			$value = 'no-reply@' . ((count($parts) > 1) ? implode('.', $parts) : 'example.com');

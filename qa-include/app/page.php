@@ -802,9 +802,10 @@ function qa_content_prepare($voting = false, $categoryids = null)
 	} else {
 		setcookie('qa_noticed', 1, time() + 86400 * 3650, '/', QA_COOKIE_DOMAIN, (bool)ini_get('session.cookie_secure'), true); // don't show first-time notice if a user has logged in
 
-		if (qa_opt('show_notice_welcome') && (qa_get_logged_in_flags() & QA_USER_FLAGS_WELCOME_NOTICE))
-			if (($requestlower != 'confirm') && ($requestlower != 'account')) // let people finish registering in peace
+		if (qa_opt('show_notice_welcome') && (qa_get_logged_in_flags() & QA_USER_FLAGS_WELCOME_NOTICE)) {
+			if ($requestlower != 'confirm' && $requestlower != 'account') // let people finish registering in peace
 				$qa_content['notices'][] = qa_notice_form('welcome', qa_opt('notice_welcome'));
+		}
 	}
 
 	$qa_content['script_rel'] = array('qa-content/jquery-1.11.3.min.js');

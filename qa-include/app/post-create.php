@@ -298,8 +298,9 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 		qa_db_queuedcount_update();
 
 	} else {
-		if (($question['type'] == 'Q') && (($parent['type'] == 'Q') || ($parent['type'] == 'A'))) // only index if antecedents fully visible
+		if ($question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) { // only index if antecedents fully visible
 			qa_post_index($postid, 'C', $question['postid'], $parent['postid'], null, $content, $format, $text, null, $question['categoryid']);
+		}
 
 		qa_db_points_update_ifuser($userid, 'cposts');
 		qa_db_ccount_update();
@@ -308,7 +309,7 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 	$thread = array();
 
 	foreach ($commentsfollows as $comment) {
-		if (($comment['type'] == 'C') && ($comment['parentid'] == $parent['postid'])) // find just those for this parent, fully visible
+		if ($comment['type'] == 'C' && $comment['parentid'] == $parent['postid']) // find just those for this parent, fully visible
 			$thread[] = $comment;
 	}
 

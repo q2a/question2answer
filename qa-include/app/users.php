@@ -405,7 +405,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				$sessioncode = trim($sessioncode); // trim to prevent passing in blank values to match uninitiated DB rows
 
 				// Try to recover session from the database if PHP session has timed out
-				if ((!isset($_SESSION['qa_session_userid_' . $suffix])) && (!empty($handle)) && (!empty($sessioncode))) {
+				if (!isset($_SESSION['qa_session_userid_' . $suffix]) && !empty($handle) && !empty($sessioncode)) {
 					require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 					$userinfo = qa_db_single_select(qa_db_user_account_selectspec($handle, false)); // don't get any pending
@@ -1282,7 +1282,7 @@ function qa_set_form_security_key()
 
 	global $qa_form_key_cookie_set;
 
-	if ((!qa_is_logged_in()) && !@$qa_form_key_cookie_set) {
+	if (!qa_is_logged_in() && !@$qa_form_key_cookie_set) {
 		$qa_form_key_cookie_set = true;
 
 		if (strlen(@$_COOKIE['qa_key']) != QA_FORM_KEY_LENGTH) {

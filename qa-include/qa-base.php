@@ -1001,13 +1001,13 @@ function qa_sanitize_html_hook_tag($element, $attributes = null)
 	if (!isset($attributes)) // it's a closing tag
 		return '</' . $element . '>';
 
-	if (($element == 'param') && (trim(strtolower(@$attributes['name'])) == 'allowscriptaccess'))
+	if ($element == 'param' && trim(strtolower(@$attributes['name'])) == 'allowscriptaccess')
 		$attributes['name'] = 'allowscriptaccess_denied';
 
 	if ($element == 'embed')
 		unset($attributes['allowscriptaccess']);
 
-	if (($element == 'a') && isset($attributes['href']) && $qa_sanitize_html_newwindow)
+	if ($element == 'a' && isset($attributes['href']) && $qa_sanitize_html_newwindow)
 		$attributes['target'] = '_blank';
 
 	$html = '<' . $element;
@@ -1639,7 +1639,7 @@ function qa_q_path($questionid, $title, $absolute = false, $showtype = null, $sh
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	if ((($showtype == 'Q') || ($showtype == 'A') || ($showtype == 'C')) && isset($showid)) {
+	if (($showtype == 'Q' || $showtype == 'A' || $showtype == 'C') && isset($showid)) {
 		$params = array('show' => $showid); // due to pagination
 		$anchor = qa_anchor($showtype, $showid);
 
@@ -1772,7 +1772,7 @@ function qa_retrieve_url($url)
 
 	$contents = @file_get_contents($url);
 
-	if ((!strlen($contents)) && function_exists('curl_exec')) { // try curl as a backup (if allow_url_fopen not set)
+	if (!strlen($contents) && function_exists('curl_exec')) { // try curl as a backup (if allow_url_fopen not set)
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -1794,7 +1794,7 @@ function qa_opt($name, $value = null)
 {
 	global $qa_options_cache;
 
-	if ((!isset($value)) && isset($qa_options_cache[$name]))
+	if (!isset($value) && isset($qa_options_cache[$name]))
 		return $qa_options_cache[$name]; // quick shortcut to reduce calls to qa_get_options()
 
 	require_once QA_INCLUDE_DIR . 'app/options.php';

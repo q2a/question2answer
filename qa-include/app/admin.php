@@ -29,24 +29,26 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 /**
  * Return true if user is logged in with admin privileges. If not, return false
  * and set up $qa_content with the appropriate title and error message
+ * @param $qa_content
+ * @return bool
  */
 function qa_admin_check_privileges(&$qa_content)
 {
 	if (!qa_is_logged_in()) {
-		require_once QA_INCLUDE_DIR.'app/format.php';
+		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		$qa_content=qa_content_prepare();
+		$qa_content = qa_content_prepare();
 
-		$qa_content['title']=qa_lang_html('admin/admin_title');
-		$qa_content['error']=qa_insert_login_links(qa_lang_html('admin/not_logged_in'), qa_request());
+		$qa_content['title'] = qa_lang_html('admin/admin_title');
+		$qa_content['error'] = qa_insert_login_links(qa_lang_html('admin/not_logged_in'), qa_request());
 
 		return false;
 
-	} elseif (qa_get_logged_in_level()<QA_USER_LEVEL_ADMIN) {
-		$qa_content=qa_content_prepare();
+	} elseif (qa_get_logged_in_level() < QA_USER_LEVEL_ADMIN) {
+		$qa_content = qa_content_prepare();
 
-		$qa_content['title']=qa_lang_html('admin/admin_title');
-		$qa_content['error']=qa_lang_html('admin/no_privileges');
+		$qa_content['title'] = qa_lang_html('admin/admin_title');
+		$qa_content['error'] = qa_lang_html('admin/no_privileges');
 
 		return false;
 	}
@@ -124,11 +126,12 @@ function qa_admin_language_options()
 	foreach (glob(QA_LANG_DIR . '*', GLOB_ONLYDIR) as $directory) {
 		$code = basename($directory);
 		$metadata = $metadataUtil->fetchFromAddonPath($directory);
-		if (isset($metadata['name']))
+		if (isset($metadata['name'])) {
 			$options[$code] = $metadata['name'];
-		// otherwise use an entry from above
-		elseif (isset($codetolanguage[$code]))
+		} elseif (isset($codetolanguage[$code])) {
+			// otherwise use an entry from above
 			$options[$code] = $codetolanguage[$code];
+		}
 	}
 
 	asort($options, SORT_STRING);
@@ -184,17 +187,19 @@ function qa_admin_place_options()
 
 /**
  * Return an array of page size options up to $maximum, [page size] => [page size]
+ * @param $maximum
+ * @return array
  */
 function qa_admin_page_size_options($maximum)
 {
-	$rawoptions=array(5, 10, 15, 20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000);
+	$rawoptions = array(5, 10, 15, 20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000);
 
-	$options=array();
+	$options = array();
 	foreach ($rawoptions as $rawoption) {
-		if ($rawoption>$maximum)
+		if ($rawoption > $maximum)
 			break;
 
-		$options[$rawoption]=$rawoption;
+		$options[$rawoption] = $rawoption;
 	}
 
 	return $options;
@@ -219,12 +224,17 @@ function qa_admin_match_options()
 /**
  * Return an array of options representing permission restrictions, [value] => [label]
  * ranging from $widest to $narrowest. Set $doconfirms to whether email confirmations are on
+ * @param $widest
+ * @param $narrowest
+ * @param bool $doconfirms
+ * @param bool $dopoints
+ * @return array
  */
-function qa_admin_permit_options($widest, $narrowest, $doconfirms=true, $dopoints=true)
+function qa_admin_permit_options($widest, $narrowest, $doconfirms = true, $dopoints = true)
 {
-	require_once QA_INCLUDE_DIR.'app/options.php';
+	require_once QA_INCLUDE_DIR . 'app/options.php';
 
-	$options=array(
+	$options = array(
 		QA_PERMIT_ALL => qa_lang_html('options/permit_all'),
 		QA_PERMIT_USERS => qa_lang_html('options/permit_users'),
 		QA_PERMIT_CONFIRMED => qa_lang_html('options/permit_confirmed'),
@@ -239,9 +249,10 @@ function qa_admin_permit_options($widest, $narrowest, $doconfirms=true, $dopoint
 		QA_PERMIT_SUPERS => qa_lang_html('options/permit_supers'),
 	);
 
-	foreach ($options as $key => $label)
-		if (($key<$narrowest) || ($key>$widest))
+	foreach ($options as $key => $label) {
+		if ($key < $narrowest || $key > $widest)
 			unset($options[$key]);
+	}
 
 	if (!$doconfirms) {
 		unset($options[QA_PERMIT_CONFIRMED]);
@@ -270,130 +281,131 @@ function qa_admin_sub_navigation()
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	$navigation=array();
-	$level=qa_get_logged_in_level();
+	$navigation = array();
+	$level = qa_get_logged_in_level();
 
-	if ($level>=QA_USER_LEVEL_ADMIN) {
-		$navigation['admin/general']=array(
+	if ($level >= QA_USER_LEVEL_ADMIN) {
+		$navigation['admin/general'] = array(
 			'label' => qa_lang_html('admin/general_title'),
 			'url' => qa_path_html('admin/general'),
 		);
 
-		$navigation['admin/emails']=array(
+		$navigation['admin/emails'] = array(
 			'label' => qa_lang_html('admin/emails_title'),
 			'url' => qa_path_html('admin/emails'),
 		);
 
-		$navigation['admin/users']=array(
+		$navigation['admin/users'] = array(
 			'label' => qa_lang_html('admin/users_title'),
 			'url' => qa_path_html('admin/users'),
 			'selected_on' => array('admin/users$', 'admin/userfields$', 'admin/usertitles$'),
 		);
 
-		$navigation['admin/layout']=array(
+		$navigation['admin/layout'] = array(
 			'label' => qa_lang_html('admin/layout_title'),
 			'url' => qa_path_html('admin/layout'),
 		);
 
-		$navigation['admin/posting']=array(
+		$navigation['admin/posting'] = array(
 			'label' => qa_lang_html('admin/posting_title'),
 			'url' => qa_path_html('admin/posting'),
 		);
 
-		$navigation['admin/viewing']=array(
+		$navigation['admin/viewing'] = array(
 			'label' => qa_lang_html('admin/viewing_title'),
 			'url' => qa_path_html('admin/viewing'),
 		);
 
-		$navigation['admin/lists']=array(
+		$navigation['admin/lists'] = array(
 			'label' => qa_lang_html('admin/lists_title'),
 			'url' => qa_path_html('admin/lists'),
 		);
 
 		if (qa_using_categories())
-			$navigation['admin/categories']=array(
+			$navigation['admin/categories'] = array(
 				'label' => qa_lang_html('admin/categories_title'),
 				'url' => qa_path_html('admin/categories'),
 			);
 
-		$navigation['admin/permissions']=array(
+		$navigation['admin/permissions'] = array(
 			'label' => qa_lang_html('admin/permissions_title'),
 			'url' => qa_path_html('admin/permissions'),
 		);
 
-		$navigation['admin/pages']=array(
+		$navigation['admin/pages'] = array(
 			'label' => qa_lang_html('admin/pages_title'),
 			'url' => qa_path_html('admin/pages'),
 		);
 
-		$navigation['admin/feeds']=array(
+		$navigation['admin/feeds'] = array(
 			'label' => qa_lang_html('admin/feeds_title'),
 			'url' => qa_path_html('admin/feeds'),
 		);
 
-		$navigation['admin/points']=array(
+		$navigation['admin/points'] = array(
 			'label' => qa_lang_html('admin/points_title'),
 			'url' => qa_path_html('admin/points'),
 		);
 
-		$navigation['admin/spam']=array(
+		$navigation['admin/spam'] = array(
 			'label' => qa_lang_html('admin/spam_title'),
 			'url' => qa_path_html('admin/spam'),
 		);
 
 		if (defined('QA_CACHE_DIRECTORY')) {
-			$navigation['admin/caching']=array(
+			$navigation['admin/caching'] = array(
 				'label' => qa_lang_html('admin/caching_title'),
 				'url' => qa_path_html('admin/caching'),
 			);
 		}
 
-		$navigation['admin/stats']=array(
+		$navigation['admin/stats'] = array(
 			'label' => qa_lang_html('admin/stats_title'),
 			'url' => qa_path_html('admin/stats'),
 		);
 
 		if (!QA_FINAL_EXTERNAL_USERS)
-			$navigation['admin/mailing']=array(
+			$navigation['admin/mailing'] = array(
 				'label' => qa_lang_html('admin/mailing_title'),
 				'url' => qa_path_html('admin/mailing'),
 			);
 
-		$navigation['admin/plugins']=array(
+		$navigation['admin/plugins'] = array(
 			'label' => qa_lang_html('admin/plugins_title'),
 			'url' => qa_path_html('admin/plugins'),
 		);
 	}
 
 	if (!qa_user_maximum_permit_error('permit_moderate')) {
-		$count=qa_user_permit_error('permit_moderate') ? null : qa_opt('cache_queuedcount'); // if only in some categories don't show cached count
+		$count = qa_user_permit_error('permit_moderate') ? null : qa_opt('cache_queuedcount'); // if only in some categories don't show cached count
 
-		$navigation['admin/moderate']=array(
-			'label' => qa_lang_html('admin/moderate_title').($count ? (' ('.$count.')') : ''),
+		$navigation['admin/moderate'] = array(
+			'label' => qa_lang_html('admin/moderate_title') . ($count ? (' (' . $count . ')') : ''),
 			'url' => qa_path_html('admin/moderate'),
 		);
 	}
 
 	if (qa_opt('flagging_of_posts') && !qa_user_maximum_permit_error('permit_hide_show')) {
-		$count=qa_user_permit_error('permit_hide_show') ? null : qa_opt('cache_flaggedcount'); // if only in some categories don't show cached count
+		$count = qa_user_permit_error('permit_hide_show') ? null : qa_opt('cache_flaggedcount'); // if only in some categories don't show cached count
 
-		$navigation['admin/flagged']=array(
-			'label' => qa_lang_html('admin/flagged_title').($count ? (' ('.$count.')') : ''),
+		$navigation['admin/flagged'] = array(
+			'label' => qa_lang_html('admin/flagged_title') . ($count ? (' (' . $count . ')') : ''),
 			'url' => qa_path_html('admin/flagged'),
 		);
 	}
 
-	if ( (!qa_user_maximum_permit_error('permit_hide_show')) || (!qa_user_maximum_permit_error('permit_delete_hidden')) )
-		$navigation['admin/hidden']=array(
+	if (!qa_user_maximum_permit_error('permit_hide_show') || !qa_user_maximum_permit_error('permit_delete_hidden')) {
+		$navigation['admin/hidden'] = array(
 			'label' => qa_lang_html('admin/hidden_title'),
 			'url' => qa_path_html('admin/hidden'),
 		);
+	}
 
-	if ( (!QA_FINAL_EXTERNAL_USERS) && qa_opt('moderate_users') && ($level>=QA_USER_LEVEL_MODERATOR)) {
-		$count=qa_opt('cache_uapprovecount');
+	if (!QA_FINAL_EXTERNAL_USERS && qa_opt('moderate_users') && $level >= QA_USER_LEVEL_MODERATOR) {
+		$count = qa_opt('cache_uapprovecount');
 
-		$navigation['admin/approve']=array(
-			'label' => qa_lang_html('admin/approve_users_title').($count ? (' ('.$count.')') : ''),
+		$navigation['admin/approve'] = array(
+			'label' => qa_lang_html('admin/approve_users_title') . ($count ? (' (' . $count . ')') : ''),
 			'url' => qa_path_html('admin/approve'),
 		);
 	}
@@ -407,24 +419,24 @@ function qa_admin_sub_navigation()
  */
 function qa_admin_page_error()
 {
-	if (file_exists(QA_INCLUDE_DIR.'db/install.php')) // file can be removed for extra security
-		include_once QA_INCLUDE_DIR.'db/install.php';
+	if (file_exists(QA_INCLUDE_DIR . 'db/install.php')) // file can be removed for extra security
+		include_once QA_INCLUDE_DIR . 'db/install.php';
 
-	if (defined('QA_DB_VERSION_CURRENT') && (qa_opt('db_version')<QA_DB_VERSION_CURRENT) && (qa_get_logged_in_level()>=QA_USER_LEVEL_ADMIN))
+	if (defined('QA_DB_VERSION_CURRENT') && qa_opt('db_version') < QA_DB_VERSION_CURRENT && qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
 		return strtr(
 			qa_lang_html('admin/upgrade_db'),
 
 			array(
-				'^1' => '<a href="'.qa_path_html('install').'">',
+				'^1' => '<a href="' . qa_path_html('install') . '">',
 				'^2' => '</a>',
 			)
 		);
 
-	elseif (defined('QA_BLOBS_DIRECTORY') && !is_writable(QA_BLOBS_DIRECTORY))
+	} elseif (defined('QA_BLOBS_DIRECTORY') && !is_writable(QA_BLOBS_DIRECTORY)) {
 		return qa_lang_html_sub('admin/blobs_directory_error', qa_html(QA_BLOBS_DIRECTORY));
+	}
 
-	else
-		return null;
+	return null;
 }
 
 
@@ -439,20 +451,23 @@ function qa_admin_url_test_html()
 
 /**
  * Returns whether a URL path beginning with $requestpart is reserved by the engine or a plugin page module
+ * @param $requestpart
+ * @return bool
  */
 function qa_admin_is_slug_reserved($requestpart)
 {
-	$requestpart=trim(strtolower($requestpart));
-	$routing=qa_page_routing();
+	$requestpart = trim(strtolower($requestpart));
+	$routing = qa_page_routing();
 
-	if (isset($routing[$requestpart]) || isset($routing[$requestpart.'/']) || is_numeric($requestpart))
+	if (isset($routing[$requestpart]) || isset($routing[$requestpart . '/']) || is_numeric($requestpart))
 		return true;
 
-	$pathmap=qa_get_request_map();
+	$pathmap = qa_get_request_map();
 
-	foreach ($pathmap as $mappedrequest)
+	foreach ($pathmap as $mappedrequest) {
 		if (trim(strtolower($mappedrequest)) == $requestpart)
 			return true;
+	}
 
 	switch ($requestpart) {
 		case '':
@@ -465,10 +480,11 @@ function qa_admin_is_slug_reserved($requestpart)
 			return true;
 	}
 
-	$pagemodules=qa_load_modules_with('page', 'match_request');
-	foreach ($pagemodules as $pagemodule)
+	$pagemodules = qa_load_modules_with('page', 'match_request');
+	foreach ($pagemodules as $pagemodule) {
 		if ($pagemodule->match_request($requestpart))
 			return true;
+	}
 
 	return false;
 }
@@ -477,40 +493,44 @@ function qa_admin_is_slug_reserved($requestpart)
 /**
  * Returns true if admin (hidden/flagged/approve/moderate) page $action performed on $entityid is permitted by the
  * logged in user and was processed successfully
+ * @param $entityid
+ * @param $action
+ * @return bool
  */
 function qa_admin_single_click($entityid, $action)
 {
-	$userid=qa_get_logged_in_userid();
+	$userid = qa_get_logged_in_userid();
 
-	if ( (!QA_FINAL_EXTERNAL_USERS) && (($action=='userapprove') || ($action=='userblock')) ) { // approve/block moderated users
-		require_once QA_INCLUDE_DIR.'db/selects.php';
+	if (!QA_FINAL_EXTERNAL_USERS && ($action == 'userapprove' || $action == 'userblock')) { // approve/block moderated users
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
 
-		$useraccount=qa_db_select_with_pending(qa_db_user_account_selectspec($entityid, true));
+		$useraccount = qa_db_select_with_pending(qa_db_user_account_selectspec($entityid, true));
 
-		if ( isset($useraccount) && (qa_get_logged_in_level()>=QA_USER_LEVEL_MODERATOR) )
+		if (isset($useraccount) && qa_get_logged_in_level() >= QA_USER_LEVEL_MODERATOR) {
 			switch ($action) {
 				case 'userapprove':
-					if ($useraccount['level']<=QA_USER_LEVEL_APPROVED) { // don't demote higher level users
-						require_once QA_INCLUDE_DIR.'app/users-edit.php';
+					if ($useraccount['level'] <= QA_USER_LEVEL_APPROVED) { // don't demote higher level users
+						require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 						qa_set_user_level($useraccount['userid'], $useraccount['handle'], QA_USER_LEVEL_APPROVED, $useraccount['level']);
 						return true;
 					}
 					break;
 
 				case 'userblock':
-					require_once QA_INCLUDE_DIR.'app/users-edit.php';
+					require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 					qa_set_user_blocked($useraccount['userid'], $useraccount['handle'], true);
 					return true;
 					break;
 			}
+		}
 
 	} else { // something to do with a post
-		require_once QA_INCLUDE_DIR.'app/posts.php';
+		require_once QA_INCLUDE_DIR . 'app/posts.php';
 
-		$post=qa_post_get_full($entityid);
+		$post = qa_post_get_full($entityid);
 
 		if (isset($post)) {
-			$queued=(substr($post['type'], 1)=='_QUEUED');
+			$queued = (substr($post['type'], 1) == '_QUEUED');
 
 			switch ($action) {
 				case 'approve':
@@ -528,7 +548,7 @@ function qa_admin_single_click($entityid, $action)
 					break;
 
 				case 'hide':
-					if ((!$queued) && !qa_user_post_permit_error('permit_hide_show', $post)) {
+					if (!$queued && !qa_user_post_permit_error('permit_hide_show', $post)) {
 						qa_post_set_hidden($entityid, true, $userid);
 						return true;
 					}
@@ -549,7 +569,7 @@ function qa_admin_single_click($entityid, $action)
 					break;
 
 				case 'clearflags':
-					require_once QA_INCLUDE_DIR.'app/votes.php';
+					require_once QA_INCLUDE_DIR . 'app/votes.php';
 
 					if (!qa_user_post_permit_error('permit_hide_show', $post)) {
 						qa_flags_clear_all($post, $userid, qa_get_logged_in_handle(), null);
@@ -569,18 +589,24 @@ function qa_admin_single_click($entityid, $action)
  */
 function qa_admin_check_clicks()
 {
-	if (qa_is_http_post())
-		foreach ($_POST as $field => $value)
-			if (strpos($field, 'admin_')===0) {
-				@list($dummy, $entityid, $action)=explode('_', $field);
+	if (!qa_is_http_post()) {
+		return null;
+	}
 
-				if (strlen($entityid) && strlen($action)) {
-					if (!qa_check_form_security_code('admin/click', qa_post_text('code')))
-						return qa_lang_html('misc/form_security_again');
-					elseif (qa_admin_single_click($entityid, $action))
-						qa_redirect(qa_request());
-				}
-			}
+	foreach ($_POST as $field => $value) {
+		if (strpos($field, 'admin_') !== 0) {
+			continue;
+		}
+
+		@list($dummy, $entityid, $action) = explode('_', $field);
+
+		if (strlen($entityid) && strlen($action)) {
+			if (!qa_check_form_security_code('admin/click', qa_post_text('code')))
+				return qa_lang_html('misc/form_security_again');
+			elseif (qa_admin_single_click($entityid, $action))
+				qa_redirect(qa_request());
+		}
+	}
 
 	return null;
 }
@@ -590,14 +616,18 @@ function qa_admin_check_clicks()
  * Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields.
  *
  * @deprecated Deprecated from 1.7; use `qa_addon_metadata($contents, $type)` instead.
+ * @param $contents
+ * @param $fields
+ * @return array
  */
 function qa_admin_addon_metadata($contents, $fields)
 {
-	$metadata=array();
+	$metadata = array();
 
-	foreach ($fields as $key => $field)
-		if (preg_match('/'.str_replace(' ', '[ \t]*', preg_quote($field, '/')).':[ \t]*([^\n\f]*)[\n\f]/i', $contents, $matches))
-			$metadata[$key]=trim($matches[1]);
+	foreach ($fields as $key => $field) {
+		if (preg_match('/' . str_replace(' ', '[ \t]*', preg_quote($field, '/')) . ':[ \t]*([^\n\f]*)[\n\f]/i', $contents, $matches))
+			$metadata[$key] = trim($matches[1]);
+	}
 
 	return $metadata;
 }
@@ -605,6 +635,8 @@ function qa_admin_addon_metadata($contents, $fields)
 
 /**
  * Return the hash code for the plugin in $directory (without trailing slash), used for in-page navigation on admin/plugins page
+ * @param $directory
+ * @return mixed
  */
 function qa_admin_plugin_directory_hash($directory)
 {
@@ -617,6 +649,8 @@ function qa_admin_plugin_directory_hash($directory)
 
 /**
  * Return the URL (relative to the current page) to navigate to the options panel for the plugin in $directory (without trailing slash)
+ * @param $directory
+ * @return mixed|string
  */
 function qa_admin_plugin_options_path($directory)
 {
@@ -627,6 +661,9 @@ function qa_admin_plugin_options_path($directory)
 
 /**
  * Return the URL (relative to the current page) to navigate to the options panel for plugin module $name of $type
+ * @param $type
+ * @param $name
+ * @return mixed|string
  */
 function qa_admin_module_options_path($type, $name)
 {

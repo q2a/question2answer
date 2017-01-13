@@ -35,6 +35,10 @@ qa_report_process_stage('init_install');
 if (!function_exists('qa_install_db_fail_handler')) {
 	/**
 	 * Handler function for database failures during the installation process
+	 * @param $type
+	 * @param int $errno
+	 * @param string $error
+	 * @param string $query
 	 */
 	function qa_install_db_fail_handler($type, $errno=null, $error=null, $query=null)
 	{

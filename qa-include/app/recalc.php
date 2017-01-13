@@ -303,9 +303,9 @@ function qa_recalc_perform_step(&$state)
 
 						if ($followonq)
 							$updatetype = QA_UPDATE_FOLLOWS;
-						elseif (($post['basetype'] == 'C') && (@$posts[$post['parentid']]['basetype'] == 'Q'))
+						elseif ($post['basetype'] == 'C' && @$posts[$post['parentid']]['basetype'] == 'Q')
 							$updatetype = QA_UPDATE_C_FOR_Q;
-						elseif (($post['basetype'] == 'C') && (@$posts[$post['parentid']]['basetype'] == 'A'))
+						elseif ($post['basetype'] == 'C' && @$posts[$post['parentid']]['basetype'] == 'A')
 							$updatetype = QA_UPDATE_C_FOR_A;
 						else
 							$updatetype = null;
@@ -337,9 +337,11 @@ function qa_recalc_perform_step(&$state)
 						qa_sort_by($comments, 'created');
 
 						foreach ($comments as $comment) {
-							foreach ($keyuserids as $keyuserid => $dummy)
-								if (($keyuserid != $comment['userid']) && ($keyuserid != @$posts[$parentid]['userid']))
+							foreach ($keyuserids as $keyuserid => $dummy) {
+								if ($keyuserid != $comment['userid'] && $keyuserid != @$posts[$parentid]['userid']) {
 									qa_db_event_create_not_entity($keyuserid, $questionid, $comment['postid'], QA_UPDATE_FOLLOWS, $comment['userid'], $comment['created']);
+								}
+							}
 
 							if (isset($comment['userid']))
 								$keyuserids[$comment['userid']] = true;
