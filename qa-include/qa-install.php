@@ -223,7 +223,7 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your WordPress site <a href=\"".qa_html(get_option('home'))."\" target=\"_blank\">".qa_html(get_option('blogname'))."</a>. Please consult the online documentation for more information.";
 				}
 				elseif (defined('QA_FINAL_JOOMLA_INTEGRATE_PATH')) {
-                    $jconfig = new JConfig();
+					$jconfig = new JConfig();
 					$errorhtml .= "\n\nWhen you click below, your Question2Answer site will be set up to integrate with the users of your Joomla! site <a href=\"../\" target=\"_blank\">".$jconfig->sitename."</a>. It's also recommended to install the Joomla QAIntegration plugin for additional user-access control. Please consult the online documentation for more information.";
 				}
 				else {

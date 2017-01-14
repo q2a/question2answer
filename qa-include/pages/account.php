@@ -168,7 +168,7 @@ else {
 
 			qa_logged_in_user_flush();
 		}
-	} else if (qa_clicked('dosaveprofile') && $pending_confirmation) {
+	} elseif (qa_clicked('dosaveprofile') && $pending_confirmation) {
 		// only allow user to update email if they are not confirmed yet
 		$inemail = qa_post_text('email');
 

@@ -268,23 +268,24 @@ function qa_output_content($qa_content)
 
 	// Slide down notifications
 
-	if (!empty($qa_content['notices']))
+	if (!empty($qa_content['notices'])) {
 		foreach ($qa_content['notices'] as $notice) {
 			$qa_content['script_onloads'][] = array(
 				"qa_reveal(document.getElementById(" . qa_js($notice['id']) . "), 'notice');",
 			);
 		}
+	}
 
 	// Handle maintenance mode
 
 	if (qa_opt('site_maintenance') && ($requestlower != 'login')) {
 		if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
-			if (!isset($qa_content['error']))
+			if (!isset($qa_content['error'])) {
 				$qa_content['error'] = strtr(qa_lang_html('admin/maintenance_admin_only'), array(
 					'^1' => '<a href="' . qa_path_html('admin/general') . '">',
 					'^2' => '</a>',
 				));
-
+			}
 		} else {
 			$qa_content = qa_content_prepare();
 			$qa_content['error'] = qa_lang_html('misc/site_in_maintenance');
@@ -319,15 +320,18 @@ function qa_output_content($qa_content)
 
 	$script = array('<script>');
 
-	if (isset($qa_content['script_var']))
-		foreach ($qa_content['script_var'] as $var => $value)
+	if (isset($qa_content['script_var'])) {
+		foreach ($qa_content['script_var'] as $var => $value) {
 			$script[] = 'var ' . $var . ' = ' . qa_js($value) . ';';
+		}
+	}
 
-	if (isset($qa_content['script_lines']))
+	if (isset($qa_content['script_lines'])) {
 		foreach ($qa_content['script_lines'] as $scriptlines) {
 			$script[] = '';
 			$script = array_merge($script, $scriptlines);
 		}
+	}
 
 	$script[] = '</script>';
 
@@ -739,11 +743,12 @@ function qa_content_prepare($voting = false, $categoryids = null)
 			'label' => qa_lang_html('main/nav_updates'),
 		);
 
-		if (!empty($userlinks['logout']))
+		if (!empty($userlinks['logout'])) {
 			$qa_content['navigation']['user']['logout'] = array(
 				'url' => qa_html(@$userlinks['logout']),
 				'label' => qa_lang_html('main/nav_logout'),
 			);
+		}
 
 		if (!QA_FINAL_EXTERNAL_USERS) {
 			$source = qa_get_logged_in_source();
@@ -751,12 +756,13 @@ function qa_content_prepare($voting = false, $categoryids = null)
 			if (strlen($source)) {
 				$loginmodules = qa_load_modules_with('login', 'match_source');
 
-				foreach ($loginmodules as $module)
+				foreach ($loginmodules as $module) {
 					if ($module->match_source($source) && method_exists($module, 'logout_html')) {
 						ob_start();
 						$module->logout_html(qa_path('logout', array(), qa_opt('site_url')));
 						$qa_content['navigation']['user']['logout'] = array('label' => ob_get_clean());
 					}
+				}
 			}
 		}
 

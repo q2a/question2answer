@@ -153,7 +153,7 @@ if (strlen($emailHandle) > 0) {
 				// User input wrong code so show field with error
 				$fields['code']['error'] = qa_lang('users/email_code_wrong');
 			}
-		} else if (qa_clicked('donext')) {
+		} elseif (qa_clicked('donext')) {
 			// If user submitted the form with an empty code
 			$fields['code']['error'] = qa_lang('users/email_code_wrong');
 		}

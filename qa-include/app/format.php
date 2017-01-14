@@ -1788,11 +1788,13 @@ function qa_set_up_category_field(&$qa_content, &$field, $fieldname, $navcategor
 	} else {
 		$haschildren = false;
 
-		foreach ($navcategories as $navcategory) // check if it has any children
+		foreach ($navcategories as $navcategory) {
+			// check if it has any children
 			if (!strcmp($navcategory['parentid'], $categoryid)) {
 				$haschildren = true;
 				break;
 			}
+		}
 
 		if (!$haschildren)
 			$keycategoryids[$categoryid] = true; // show this category if it has no children
@@ -2004,13 +2006,14 @@ function qa_load_theme_class($theme, $template, $content, $request)
 				'QA_HTML_THEME_LAYER_URLTOROOT' => "'" . qa_path_to_root() . $layer['urltoroot'] . "'",
 			);
 
-			foreach ($searchwordreplace as $searchword => $replace)
+			foreach ($searchwordreplace as $searchword => $replace) {
 				if (preg_match_all('/\W(' . preg_quote($searchword, '/') . ')\W/im', $layerphp, $matches, PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE)) {
 					$searchmatches = array_reverse($matches[1]); // don't use preg_replace due to complication of escaping replacement phrase
 
 					foreach ($searchmatches as $searchmatch)
 						$layerphp = substr_replace($layerphp, $replace, $searchmatch[1], strlen($searchmatch[0]));
 				}
+			}
 
 			// echo '<pre style="text-align:left;">'.htmlspecialchars($layerphp).'</pre>'; // to debug munged code
 

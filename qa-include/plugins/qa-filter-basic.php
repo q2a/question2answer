@@ -157,7 +157,7 @@ class qa_filter_basic
 
 			if ($length < $minlength) {
 				$errors[$errorKey] = $minlength == 1 ? qa_lang('main/field_required') : qa_lang_sub('main/min_length_x', $minlength);
-			} else if (isset($maxlength) && ($length > $maxlength)) {
+			} elseif (isset($maxlength) && ($length > $maxlength)) {
 				$errors[$errorKey] = qa_lang_sub('main/max_length_x', $maxlength);
 			}
 		}

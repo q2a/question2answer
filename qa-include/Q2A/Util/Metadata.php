@@ -45,7 +45,7 @@ class Q2A_Util_Metadata
 	 * @param string $url URL linking to a metadata.json file
 	 * @return array The metadata fetched from the file
 	 */
-	public function fetchFromUrl($url, $type='Plugin')
+	public function fetchFromUrl($url, $type = 'Plugin')
 	{
 		$contents = qa_retrieve_url($url);
 		$metadata = $this->getArrayFromJson($contents);

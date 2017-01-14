@@ -773,7 +773,7 @@ function qa_strtolower($string)
  * @param int $length
  * @return mixed|string
  */
-function qa_substr($string, $start, $length=2147483647)
+function qa_substr($string, $start, $length = 2147483647)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 

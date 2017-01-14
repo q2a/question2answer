@@ -641,13 +641,14 @@ function qa_db_check_tables()
 				$datacount = 0;
 				$datamissing = 0;
 
-				foreach ($definitions as $rawname => $definition)
+				foreach ($definitions as $rawname => $definition) {
 					if (qa_db_add_table_prefix($rawname) == (QA_MYSQL_TABLE_PREFIX . $rawname)) {
 						$datacount++;
 
 						if (isset($missing[$rawname]))
 							$datamissing++;
 					}
+				}
 
 				if ($datacount == $datamissing && $datamissing == count($missing))
 					return 'non-users-missing';
@@ -1548,7 +1549,7 @@ function qa_db_upgrade_tables()
 
 	// Perform any necessary recalculations, as determined by upgrade steps
 
-	foreach ($keyrecalc as $state => $dummy)
+	foreach ($keyrecalc as $state => $dummy) {
 		while ($state) {
 			set_time_limit(60);
 
@@ -1559,6 +1560,7 @@ function qa_db_upgrade_tables()
 
 			qa_db_upgrade_progress(qa_recalc_get_message($state));
 		}
+	}
 }
 
 

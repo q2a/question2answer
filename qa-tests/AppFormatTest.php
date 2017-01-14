@@ -16,16 +16,16 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 		$qa_phrases_full['main']['_decimal_point'] = '.';
 		$qa_phrases_full['main']['_thousands_separator'] = ',';
 
-		$this->assertSame('5.5',     qa_format_number(5.452, 1));
-		$this->assertSame('5',       qa_format_number(5.452, 0));
-		$this->assertSame('5',       qa_format_number(4.5, 0));
-		$this->assertSame('9,123',   qa_format_number(9123, 0));
+		$this->assertSame('5.5', qa_format_number(5.452, 1));
+		$this->assertSame('5', qa_format_number(5.452, 0));
+		$this->assertSame('5', qa_format_number(4.5, 0));
+		$this->assertSame('9,123', qa_format_number(9123, 0));
 		$this->assertSame('9,123.0', qa_format_number(9123, 1));
 
 		// not shortened unless 'show_compact_numbers' is true
-		$this->assertSame('5.0',   qa_format_number(5, 1, true));
-		$this->assertSame('5.5',   qa_format_number(5.452, 1, true));
-		$this->assertSame('5',     qa_format_number(5.452, 0, true));
+		$this->assertSame('5.0', qa_format_number(5, 1, true));
+		$this->assertSame('5.5', qa_format_number(5.452, 1, true));
+		$this->assertSame('5', qa_format_number(5.452, 0, true));
 		$this->assertSame('9,123', qa_format_number(9123, 0, true));
 		$this->assertSame('123,456,789', qa_format_number(123456789, 0, true));
 
@@ -33,9 +33,9 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 		$qa_phrases_full['main']['_decimal_point'] = ',';
 		$qa_phrases_full['main']['_thousands_separator'] = '.';
 
-		$this->assertSame('5,5',     qa_format_number(5.452, 1));
-		$this->assertSame('5',       qa_format_number(5.452, 0));
-		$this->assertSame('9.123',   qa_format_number(9123, 0));
+		$this->assertSame('5,5', qa_format_number(5.452, 1));
+		$this->assertSame('5', qa_format_number(5.452, 0));
+		$this->assertSame('9.123', qa_format_number(9123, 0));
 		$this->assertSame('9.123,0', qa_format_number(9123, 1));
 	}
 
@@ -56,22 +56,22 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 		// $decimal parameter ignored when 'show_compact_numbers' is true
 		$this->assertSame('5.5', qa_format_number(5.452, 0, true));
 		$this->assertSame('5.5', qa_format_number(5.452, 1, true));
-		$this->assertSame('5',   qa_format_number(5, 1, true));
+		$this->assertSame('5', qa_format_number(5, 1, true));
 
 		$this->assertSame('9.1k', qa_format_number(9123, 0, true));
 		$this->assertSame('9.1k', qa_format_number(9123, 1, true));
-		$this->assertSame('9k',   qa_format_number(9040, 0, true));
-		$this->assertSame('9k',   qa_format_number(9040, 1, true));
+		$this->assertSame('9k', qa_format_number(9040, 0, true));
+		$this->assertSame('9k', qa_format_number(9040, 1, true));
 		$this->assertSame('9.1k', qa_format_number(9050, 0, true));
 
-		$this->assertSame('123m',   qa_format_number(123456789, 0, true));
-		$this->assertSame('23.5m',  qa_format_number(23456789, 1, true));
-		$this->assertSame('123m',   qa_format_number(123456789, 1, true));
-		$this->assertSame('235m',   qa_format_number(234567891, 1, true));
+		$this->assertSame('123m', qa_format_number(123456789, 0, true));
+		$this->assertSame('23.5m', qa_format_number(23456789, 1, true));
+		$this->assertSame('123m', qa_format_number(123456789, 1, true));
+		$this->assertSame('235m', qa_format_number(234567891, 1, true));
 		$this->assertSame('1,223m', qa_format_number(1223456789, 0, true));
 
-		$this->assertSame('9,000',  qa_format_number(9000, 0, false));
-		$this->assertSame('912.3',  qa_format_number(912.3, 1, false));
+		$this->assertSame('9,000', qa_format_number(9000, 0, false));
+		$this->assertSame('912.3', qa_format_number(912.3, 1, false));
 		$this->assertSame('123,456,789', qa_format_number(123456789, 0, false));
 
 		// change separators and compact suffixes

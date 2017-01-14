@@ -78,11 +78,11 @@ function qa_get_logged_in_user()
 			'level' => $level,
 		);
 
-        if ($user->block) {
-            $qa_user['blocked'] = true;
-        }
+		if ($user->block) {
+			$qa_user['blocked'] = true;
+		}
 
-        return $qa_user;
+		return $qa_user;
 	}
 
 	return null;

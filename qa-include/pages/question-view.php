@@ -36,7 +36,7 @@ function qa_page_q_load_as($question, $childposts)
 {
 	$answers = array();
 
-	foreach ($childposts as $postid => $post)
+	foreach ($childposts as $postid => $post) {
 		switch ($post['type']) {
 			case 'A':
 			case 'A_HIDDEN':
@@ -44,6 +44,7 @@ function qa_page_q_load_as($question, $childposts)
 				$answers[$postid] = $post;
 				break;
 		}
+	}
 
 	return $answers;
 }

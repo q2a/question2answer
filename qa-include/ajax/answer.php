@@ -80,10 +80,11 @@ if (@$question['basetype'] == 'Q' && !isset($question['closedbyid']) && !qa_user
 
 		$countanswers = $question['acount'] + 1;
 
-		if ($countanswers == 1)
+		if ($countanswers == 1) {
 			echo qa_lang_html('question/1_answer_title') . "\n";
-		else
+		} else {
 			echo qa_lang_html_sub('question/x_answers_title', $countanswers) . "\n";
+		}
 
 
 		// Send back the HTML

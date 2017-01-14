@@ -219,7 +219,8 @@ function qa_initialize_constants_1()
 			} else {
 				$res = $str1 ^ $str2;
 				$ret = 0;
-				for ($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+				for ($i = strlen($res) - 1; $i >= 0; $i--)
+					$ret |= ord($res[$i]);
 				return !$ret;
 			}
 		}

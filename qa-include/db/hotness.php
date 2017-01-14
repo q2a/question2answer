@@ -35,7 +35,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  * @param bool $viewincrement
  * @return mixed
  */
-function qa_db_hotness_update($firstpostid, $lastpostid=null, $viewincrement=false)
+function qa_db_hotness_update($firstpostid, $lastpostid = null, $viewincrement = false)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 

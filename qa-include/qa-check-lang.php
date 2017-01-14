@@ -53,10 +53,11 @@ function get_phrase_substitutions($phrase)
 {
 	$substitutions = array();
 
-	if (preg_match_all('/\^(([0-9]+)|([a-z_]+)|)/', $phrase, $matches))
+	if (preg_match_all('/\^(([0-9]+)|([a-z_]+)|)/', $phrase, $matches)) {
 		foreach ($matches[0] as $match) {
 			@$substitutions[$match]++;
 		}
+	}
 
 	return $substitutions;
 }
@@ -125,23 +126,26 @@ output_finish_includes();
 
 foreach ($definite as $key => $valuecount) {
 	foreach ($valuecount as $value => $count) {
-		if (!@$defined[$key][$value])
+		if (!@$defined[$key][$value]) {
 			output_lang_issue($key, $value, 'used by ' . $count . ' file/s but not defined');
+		}
 	}
 }
 
 foreach ($defined as $key => $valuecount) {
 	foreach ($valuecount as $value => $count) {
-		if (!@$definite[$key][$value] && !@$probable[$key][$value] && !@$possible[$value])
+		if (!@$definite[$key][$value] && !@$probable[$key][$value] && !@$possible[$value]) {
 			output_lang_issue($key, $value, 'defined but apparently not used');
+		}
 	}
 }
 
 foreach ($backmap as $phrase => $where) {
-	if (count($where) > 1)
+	if (count($where) > 1) {
 		foreach ($where as $onewhere) {
 			output_lang_issue($onewhere['prefix'], $onewhere['key'], 'contains the shared phrase "' . $phrase . '"', false);
 		}
+	}
 }
 
 require_once QA_INCLUDE_DIR . 'app/admin.php';
@@ -179,19 +183,20 @@ foreach ($languages as $code => $language) {
 
 	foreach ($langdefined as $key => $valuecount) {
 		foreach ($valuecount as $value => $count) {
-			if (!@$defined[$key][$value])
+			if (!@$defined[$key][$value]) {
 				output_lang_issue($key, $value, 'defined but not in US English files');
 
-			elseif (!$langdifferent[$key][$value])
+			} elseif (!$langdifferent[$key][$value]) {
 				output_lang_issue($key, $value, 'identical to US English files', false);
 
-			else
+			} else {
 				foreach ($substitutions[$key][$value] as $substitution => $subcount) {
 					if (!@$langsubstitutions[$key][$value][$substitution])
 						output_lang_issue($key, $value, 'omitted the substitution ' . $substitution);
 					elseif ($subcount > @$langsubstitutions[$key][$value][$substitution])
 						output_lang_issue($key, $value, 'has fewer of the substitution ' . $substitution);
 				}
+			}
 		}
 	}
 
@@ -202,15 +207,17 @@ foreach ($languages as $code => $language) {
 			if (count($langdefined[$key]) < (count($valuecount) / 2)) { // only a few phrases defined
 				output_lang_issue($key, null, 'few translations provided so will use US English defaults', $showaserror);
 
-			} else
+			} else {
 				foreach ($valuecount as $value => $count) {
 					if (!@$langdefined[$key][$value]) {
 						output_lang_issue($key, $value, 'undefined so will use US English defaults', $showaserror);
 						$langnewphrases[$key][$value] = $english[$key][$value];
 					}
 				}
-		} else
+			}
+		} else {
 			output_lang_issue($key, null, 'no translations provided so will use US English defaults', $showaserror);
+		}
 	}
 
 	foreach ($langnewphrases as $prefix => $phrases) {
