@@ -143,7 +143,6 @@ function qa_db_favorite_create($userid, $entitytype, $entityid)
 	// If we're going to use the shared stream...
 
 	if ($useshared) {
-
 		// ... for all the people for whom we're switching this to a shared stream, find the highest number of other shared streams they have
 
 		$maxshared = qa_db_read_one_value(qa_db_query_sub(

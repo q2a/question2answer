@@ -84,8 +84,7 @@ class qa_event_limits
 			'u_block', 'u_edit', 'u_level', 'u_message', 'u_password', 'u_save', 'u_unblock',
 		);
 
-		if (
-			is_numeric(array_search(strstr($event, '_'), $writeactions)) ||
+		if (is_numeric(array_search(strstr($event, '_'), $writeactions)) ||
 			is_numeric(array_search($event, $writeactions))
 		) {
 			if (isset($userid)) {

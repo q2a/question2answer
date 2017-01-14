@@ -95,7 +95,6 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<div class="qa-main-shadow">', '');
 		$this->output('<div class="qa-main-wrapper">', '');
 		$this->nav_main_sub();
-
 	}
 
 	// removes sidebar for user profile pages

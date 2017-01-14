@@ -25,7 +25,6 @@ require_once QA_INCLUDE_DIR . 'app/recalc.php';
 
 
 if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
-
 	if (!qa_check_form_security_code('admin/recalc', qa_post_text('code'))) {
 		$state = '';
 		$message = qa_lang('misc/form_security_reload');

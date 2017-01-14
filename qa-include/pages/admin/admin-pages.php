@@ -464,9 +464,7 @@ if (isset($editpage)) {
 	$qa_content['focusid'] = 'name';
 
 } else {
-
 	// List of standard navigation links
-
 	$qa_content['form'] = array(
 		'tags' => 'method="post" action="' . qa_self_html() . '"',
 

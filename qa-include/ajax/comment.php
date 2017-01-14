@@ -40,8 +40,7 @@ list($question, $parent, $children) = qa_db_select_with_pending(
 
 // Check if the question and parent exist, and whether the user has permission to do this
 
-if (
-	@$question['basetype'] == 'Q' && (@$parent['basetype'] == 'Q' || @$parent['basetype'] == 'A') &&
+if (@$question['basetype'] == 'Q' && (@$parent['basetype'] == 'Q' || @$parent['basetype'] == 'A') &&
 	!qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)
 ) {
 	require_once QA_INCLUDE_DIR . 'app/captcha.php';

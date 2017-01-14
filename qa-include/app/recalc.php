@@ -277,7 +277,6 @@ function qa_recalc_perform_step(&$state)
 				$lastquestionid = max($questionids);
 
 				foreach ($questionids as $questionid) {
-
 					// Retrieve all posts relating to this question
 
 					list($question, $childposts, $achildposts) = qa_db_select_with_pending(

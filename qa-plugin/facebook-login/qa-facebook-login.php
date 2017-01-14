@@ -83,7 +83,6 @@ class qa_facebook_login
 	<div class="fb-login-button" style="display:inline; vertical-align:middle;" size="<?php echo $size?>" <?php echo $logout ? 'autologoutlink="true"' : 'scope="email,user_about_me,user_location,user_website"'?>>
 	</div>
 <?php
-
 	}
 
 

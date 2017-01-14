@@ -771,7 +771,6 @@ function qa_db_upgrade_tables()
 		qa_db_upgrade_progress(QA_DB_VERSION_CURRENT - $version . ' upgrade step/s remaining...');
 
 		switch ($newversion) {
-
 			// Up to here: Version 1.0 beta 1
 
 			case 2:

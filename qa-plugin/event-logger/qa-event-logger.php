@@ -173,9 +173,7 @@ class qa_event_logger
 		}
 
 		if (qa_opt('event_logger_to_files')) {
-
 			// Substitute some placeholders if certain information is missing
-
 			if (!strlen($userid))
 				$userid = 'no_userid';
 

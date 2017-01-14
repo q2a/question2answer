@@ -187,8 +187,7 @@ function qa_block_ips_explode($blockipstring)
 function qa_block_ip_match($ip, $blockipclause)
 {
 	// check if the input parameters use the same IP version
-	if (
-		(strpos($ip, ".") !== false && strpos($blockipclause, ".") === false) ||
+	if ((strpos($ip, ".") !== false && strpos($blockipclause, ".") === false) ||
 		(strpos($ip, ".") === false && strpos($blockipclause, ".") !== false)
 	) {
 		return false;

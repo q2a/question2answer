@@ -148,8 +148,7 @@ if (qa_clicked('docancel')) {
 			$errors['name'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
 		else {
 			foreach ($incategories as $category) {
-				if (
-					!strcmp($category['parentid'], $inparentid) &&
+				if (!strcmp($category['parentid'], $inparentid) &&
 					strcmp($category['categoryid'], @$editcategory['categoryid']) &&
 					qa_strtolower($category['title']) == qa_strtolower($inname)
 				) {
@@ -284,7 +283,6 @@ if ($setmissing) {
 
 
 } elseif (isset($editcategory)) {
-
 	$qa_content['form'] = array(
 		'tags' => 'method="post" action="' . qa_path_html(qa_request()) . '"',
 

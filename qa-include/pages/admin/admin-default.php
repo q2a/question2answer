@@ -712,9 +712,7 @@ else {
 			foreach ($getoptions as $optionname) {
 				$optionvalue = qa_post_text('option_' . $optionname);
 
-				if (
-					@$optiontype[$optionname] == 'number' ||
-					@$optiontype[$optionname] == 'checkbox' ||
+				if (@$optiontype[$optionname] == 'number' || @$optiontype[$optionname] == 'checkbox' ||
 					(@$optiontype[$optionname] == 'number-blank' && strlen($optionvalue))
 				)
 					$optionvalue = (int)$optionvalue;
@@ -905,7 +903,6 @@ if ($recalchotness) {
 	);
 
 } elseif ($startmailing) {
-
 	if (qa_post_text('has_js')) {
 		$qa_content['form']['ok'] = '<span id="mailing_ok">' . qa_html($mailingprogress) . '</span>';
 

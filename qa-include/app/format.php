@@ -602,9 +602,8 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 	// Updated when and by whom
 
-	if (
-		@$options['updateview'] && isset($post['updated']) &&
-		(($post['updatetype'] != QA_UPDATE_SELECTED) || $isselected) && // only show selected change if it's still selected
+	if (@$options['updateview'] && isset($post['updated']) &&
+		($post['updatetype'] != QA_UPDATE_SELECTED || $isselected) && // only show selected change if it's still selected
 		( // otherwise check if one of these conditions is fulfilled...
 			(!isset($post['created'])) || // ... we didn't show the created time (should never happen in practice)
 			($post['hidden'] && ($post['updatetype'] == QA_UPDATE_VISIBLE)) || // ... the post was hidden as the last action
@@ -1567,9 +1566,7 @@ function qa_custom_page_url($page)
  */
 function qa_navigation_add_page(&$navigation, $page)
 {
-	if (
-		!isset($page['permit']) || !qa_permit_value_error($page['permit'], qa_get_logged_in_userid(), qa_get_logged_in_level(), qa_get_logged_in_flags())
-	) {
+	if (!isset($page['permit']) || !qa_permit_value_error($page['permit'], qa_get_logged_in_userid(), qa_get_logged_in_level(), qa_get_logged_in_flags())) {
 		$url = qa_custom_page_url($page);
 
 		$navigation[($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) ? ('custom-' . $page['pageid']) : ($page['tags'] . '$')] = array(
@@ -2201,8 +2198,7 @@ function qa_get_post_content($editorfield, $contentfield, &$ineditor, &$inconten
  */
 function qa_update_post_text(&$fields, $oldfields)
 {
-	if (
-		strcmp($oldfields['content'], $fields['content']) ||
+	if (strcmp($oldfields['content'], $fields['content']) ||
 		strcmp($oldfields['format'], $fields['format']) ||
 		strcmp($oldfields['text'], $fields['text'])
 	) {

@@ -45,9 +45,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
-	if (
-		is_array($post) &&
-		($post['basetype'] == 'Q' || $post['basetype'] == 'A') &&
+	if (is_array($post) && ($post['basetype'] == 'Q' || $post['basetype'] == 'A') &&
 		qa_opt(($post['basetype'] == 'Q') ? 'voting_on_qs' : 'voting_on_as') &&
 		(!isset($post['userid']) || !isset($userid) || $post['userid'] != $userid)
 	) {
@@ -167,12 +165,9 @@ function qa_flag_error_html($post, $userid, $topage)
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
-	if (
-		is_array($post) &&
-		qa_opt('flagging_of_posts') &&
+	if (is_array($post) && qa_opt('flagging_of_posts') &&
 		(!isset($post['userid']) || !isset($userid) || $post['userid'] != $userid)
 	) {
-
 		switch (qa_user_post_permit_error('permit_flag', $post, QA_LIMIT_FLAGS)) {
 			case 'login':
 				return qa_insert_login_links(qa_lang_html('question/flag_must_login'), $topage);

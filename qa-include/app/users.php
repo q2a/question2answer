@@ -53,7 +53,6 @@ define('QA_FIELD_FLAGS_ON_REGISTER', 4);
 
 
 if (QA_FINAL_EXTERNAL_USERS) {
-
 	// If we're using single sign-on integration (WordPress or otherwise), load PHP file for that
 
 	if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
@@ -1134,19 +1133,15 @@ function qa_permit_value_error($permit, $userid, $userlevel, $userflags)
 
 	if ($permit >= QA_PERMIT_CONFIRMED) {
 		$confirmed = ($userflags & QA_USER_FLAGS_EMAIL_CONFIRMED);
-		if (
-			!QA_FINAL_EXTERNAL_USERS && // not currently supported by single sign-on integration
-			qa_opt('confirm_user_emails') && // if this option off, we can't ask it of the user
-			$userlevel < QA_USER_LEVEL_APPROVED && // if user approved or assigned to a higher level, no need
-			!$confirmed // actual confirmation
-		)
+		// not currently supported by single sign-on integration; approved users and above don't need confirmation
+		if (!QA_FINAL_EXTERNAL_USERS && qa_opt('confirm_user_emails') && $userlevel < QA_USER_LEVEL_APPROVED && !$confirmed) {
 			return 'confirm';
+		}
 	} elseif ($permit >= QA_PERMIT_APPROVED) {
-		if (
-			qa_opt('moderate_users') && // if this option off, we can't ask it of the user
-			$userlevel < QA_USER_LEVEL_APPROVED // user has not been approved
-		)
+		// check user is approved, only if we require it
+		if (qa_opt('moderate_users') && $userlevel < QA_USER_LEVEL_APPROVED) {
 			return 'approve';
+		}
 	}
 
 	return false;
@@ -1225,10 +1220,8 @@ function qa_user_moderation_reason($userlevel = null)
 	if (!isset($userlevel))
 		$userlevel = qa_get_logged_in_level();
 
-	if (
-		($userlevel < QA_USER_LEVEL_EXPERT) && // experts and above aren't moderated
-		qa_user_permit_error('permit_moderate') // if the user can approve posts, no point in moderating theirs
-	) {
+	if ($userlevel < QA_USER_LEVEL_EXPERT && qa_user_permit_error('permit_moderate')) {
+		// experts and above aren't moderated; if the user can approve posts, no point in moderating theirs
 		$userid = qa_get_logged_in_userid();
 
 		if (isset($userid)) {

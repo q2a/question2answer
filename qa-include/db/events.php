@@ -98,9 +98,7 @@ function qa_db_event_create_for_entity($entitytype, $entityid, $questionid, $las
 	), true);
 
 	if (isset($randomuserid)) {
-
 		// If one was found, this means we have one or more individual event streams, so update them all
-
 		qa_db_query_sub(
 			'INSERT INTO ^userevents (userid, entitytype, entityid, questionid, lastpostid, updatetype, lastuserid, updated) ' .
 			'SELECT userid, $, #, #, #, $, $, ' . $updatedsql . ' FROM ^userfavorites WHERE entitytype=$ AND entityid=# AND nouserevents=0',
@@ -109,7 +107,6 @@ function qa_db_event_create_for_entity($entitytype, $entityid, $questionid, $las
 
 		// Now truncate the random individual event stream that was found earlier
 		// (in theory we should truncate them all, but truncation is just a 'housekeeping' activity, so it's not necessary)
-
 		qa_db_user_events_truncate($randomuserid, $questionid);
 	}
 }

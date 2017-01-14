@@ -406,7 +406,6 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	// Levels editing or viewing (add category-specific levels)
 
 	if ($userediting) {
-
 		if (isset($maxlevelassign)) {
 			$qa_content['form_profile']['fields']['level']['type'] = 'select';
 
@@ -525,8 +524,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 
 	foreach ($permitoptions as $permitoption) {
 		// if not available to approved and email confirmed users with no points, but yes available to the user, it's something special
-		if (
-			qa_permit_error($permitoption, $userid, QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_EMAIL_CONFIRMED, 0) &&
+		if (qa_permit_error($permitoption, $userid, QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_EMAIL_CONFIRMED, 0) &&
 			!qa_permit_error($permitoption, $userid, $useraccount['level'], $useraccount['flags'], $userpoints['points'])
 		) {
 			if ($permitoption == 'permit_retag_cat')
@@ -647,8 +645,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	// Edit form or button, if appropriate
 
 	if ($userediting) {
-		if (
-			(qa_opt('avatar_allow_gravatar') && ($useraccount['flags'] & QA_USER_FLAGS_SHOW_GRAVATAR)) ||
+		if ((qa_opt('avatar_allow_gravatar') && ($useraccount['flags'] & QA_USER_FLAGS_SHOW_GRAVATAR)) ||
 			(qa_opt('avatar_allow_upload') && ($useraccount['flags'] & QA_USER_FLAGS_SHOW_AVATAR) && isset($useraccount['avatarblobid']))
 		) {
 			$qa_content['form_profile']['fields']['removeavatar'] = array(

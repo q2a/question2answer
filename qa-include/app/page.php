@@ -642,11 +642,8 @@ function qa_content_prepare($voting = false, $categoryids = null)
 	}
 
 
-	if (
-		qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN ||
-		!qa_user_maximum_permit_error('permit_moderate') ||
-		!qa_user_maximum_permit_error('permit_hide_show') ||
-		!qa_user_maximum_permit_error('permit_delete_hidden')
+	if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN || !qa_user_maximum_permit_error('permit_moderate') ||
+		!qa_user_maximum_permit_error('permit_hide_show') || !qa_user_maximum_permit_error('permit_delete_hidden')
 	) {
 		$qa_content['navigation']['main']['admin'] = array(
 			'url' => qa_path_html('admin'),
@@ -696,13 +693,11 @@ function qa_content_prepare($voting = false, $categoryids = null)
 			if (isset($region) && isset($place)) {
 				// region/place codes recognized
 				$module = qa_load_module('widget', $widget['title']);
+				$allowTmpl = (substr($qa_template, 0, 7) == 'custom-') ? 'custom' : $qa_template;
 
-				if (
-					isset($module) &&
-					method_exists($module, 'allow_template') &&
-					$module->allow_template((substr($qa_template, 0, 7) == 'custom-') ? 'custom' : $qa_template) &&
-					method_exists($module, 'allow_region') &&
-					$module->allow_region($region) &&
+				if (isset($module) &&
+					method_exists($module, 'allow_template') && $module->allow_template($allowTmpl) &&
+					method_exists($module, 'allow_region') && $module->allow_region($region) &&
 					method_exists($module, 'output_widget')
 				) {
 					// if module loaded and happy to be displayed here, tell theme about it

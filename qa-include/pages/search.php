@@ -33,9 +33,7 @@ require_once QA_INCLUDE_DIR . 'app/search.php';
 // Perform the search if appropriate
 
 if (strlen(qa_get('q'))) {
-
 	// Pull in input parameters
-
 	$inquery = trim(qa_get('q'));
 	$userid = qa_get_logged_in_userid();
 	$start = qa_get_start();

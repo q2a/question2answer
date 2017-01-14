@@ -429,7 +429,6 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 	// Information about the question that this question is a duplicate of (if appropriate)
 
 	if (isset($closepost)) {
-
 		if ($closepost['basetype'] == 'Q') {
 			if ($closepost['hidden']) {
 				// don't show link for hidden questions

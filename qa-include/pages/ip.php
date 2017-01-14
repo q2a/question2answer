@@ -71,7 +71,6 @@ if (qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall'))
 		$pageerror = qa_lang_html('misc/form_security_again');
 
 	elseif ($blockable) {
-
 		if (qa_clicked('doblock')) {
 			$oldblocked = qa_opt('block_ips_write');
 			qa_set_option('block_ips_write', (strlen($oldblocked) ? ($oldblocked . ' , ') : '') . $ip);
