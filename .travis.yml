@@ -16,9 +16,9 @@ notifications:
 
 before_script:
   # PHP_CodeSniffer
-  - curl -o phpcs.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+  - curl -L -o phpcs.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
   # PHP Copy/Paste Detector
-  - curl -o phpcpd.phar https://phar.phpunit.de/phpcpd.phar
+  - curl -L -o phpcpd.phar https://phar.phpunit.de/phpcpd.phar
   # Basic config required for PHPUnit
   - cp qa-tests/phpunit-qa-config.php qa-config.php
 
