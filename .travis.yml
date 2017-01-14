@@ -23,8 +23,8 @@ before_script:
   - cp qa-tests/phpunit-qa-config.php qa-config.php
 
 script:
-  # PHP_CodeSniffer (turned off for now)
-  #- php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
+  # PHP_CodeSniffer
+  - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
   # PHP Copy/Paste Detector
   - php phpcpd.phar --exclude vendor .
   # PHPUnit
