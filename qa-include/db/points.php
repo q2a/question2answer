@@ -162,7 +162,7 @@ function qa_db_points_calculations()
  * @param $columns
  * @return mixed
  */
-function qa_db_points_update_ifuser($userid, $columns)
+function qa_db_points_update_ifuser($userid, $columns = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -202,8 +202,15 @@ function qa_db_points_update_ifuser($userid, $columns)
 			$updatepoints .= '+(' . $multiple . '*' . (isset($keycolumns[$field]) ? '@_' : '') . $field . ')';
 		}
 
+		$pluginPoints = 0;
+
+		$modules = qa_load_modules_for_type('point');
+		foreach ($modules as $module) {
+			$pluginPoints += $module->getPointsForUser($userid);
+		}
+
 		$query = 'INSERT INTO ^userpoints (' . $insertfields . 'points) VALUES (' . $insertvalues . $insertpoints . ') ' .
-			'ON DUPLICATE KEY UPDATE ' . $updates . 'points=' . $updatepoints . '+bonus';
+			'ON DUPLICATE KEY UPDATE ' . $updates . 'points=' . $updatepoints . '+ bonus + ' . ((string) $pluginPoints);
 
 		// build like this so that a #, $ or ^ character in the $userid (if external integration) isn't substituted
 		qa_db_query_raw(str_replace('~', "='" . qa_db_escape_string($userid) . "'", qa_db_apply_sub($query, array($userid))));

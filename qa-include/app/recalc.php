@@ -246,7 +246,29 @@ function qa_recalc_perform_step(&$state)
 
 			if ($recalccount > 0) {
 				$lastuserid = $userids[$recalccount - 1];
-				qa_db_users_recalc_points($next, $lastuserid);
+
+				// Get points from all registered point modules
+
+				$userIdPointsMap = array();
+
+				$modules = qa_load_modules_for_type('point');
+				if (!empty($modules)) {
+					$processUserIds = array_slice($userids, 0, $recalccount);
+
+					foreach ($modules as $module) {
+						$currentPluginUserIdPointsMap = $module->getPointsForUsers($processUserIds);
+						foreach ($currentPluginUserIdPointsMap as $userId => $points) {
+							if (!isset($userIdPointsMap[$userId])) {
+								$userIdPointsMap[$userId] = 0;
+							}
+
+							$userIdPointsMap[$userId] += $points;
+						}
+					}
+				}
+
+				qa_db_users_recalc_points($next, $lastuserid, $userIdPointsMap);
+
 				$done += $recalccount;
 
 			} else {
