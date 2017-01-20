@@ -1038,7 +1038,7 @@ foreach ($showoptions as $optionname) {
 				$metadata = $metadataUtil->fetchFromAddonPath($themedirectory);
 				if (empty($metadata)) {
 					// limit theme parsing to first 8kB
-					$contents = file_get_contents($themedirectory . '/qa-styles.css', false, null, -1, 8192);
+					$contents = file_get_contents($themedirectory . '/qa-styles.css', false, null, 0, 8192);
 					$metadata = qa_addon_metadata($contents, 'Theme');
 				}
 

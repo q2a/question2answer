@@ -127,7 +127,7 @@ if (!empty($fileSystemPlugins)) {
 			$pluginFile = $pluginDirectoryPath . '/qa-plugin.php';
 
 			// limit plugin parsing to first 8kB
-			$contents = file_get_contents($pluginFile, false, null, -1, 8192);
+			$contents = file_get_contents($pluginFile, false, null, 0, 8192);
 			$metadata = qa_addon_metadata($contents, 'Plugin');
 		}
 
