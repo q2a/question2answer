@@ -176,11 +176,11 @@
 				'<small style="color:#666">'.qa_html($plugindirectory).'/</small>';
 
 			if (qa_qa_version_below(@$metadata['min_q2a']))
-				$pluginhtml = '<strike style="color:#999">'.$pluginhtml.'</strike><br><span style="color:#f00">'.
+				$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
 					qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</span>';
 
 			elseif (qa_php_version_below(@$metadata['min_php']))
-				$pluginhtml = '<strike style="color:#999">'.$pluginhtml.'</strike><br><span style="color:#f00">'.
+				$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
 					qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
 
 			$qa_content['form_plugin_'.$pluginIndex] = array(

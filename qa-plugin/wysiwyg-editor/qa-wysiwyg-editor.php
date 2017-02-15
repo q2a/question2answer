@@ -234,7 +234,7 @@ class qa_wysiwyg_editor
 			}
 			else {
 				// convert to text
-				$viewer = qa_load_module('viewer', '');
+				qa_load_module('viewer', '');
 
 				return array(
 					'format' => '',

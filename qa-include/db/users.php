@@ -105,7 +105,7 @@
 
 	function qa_db_user_get_userid_handles($userids)
 /*
-	Return an array mapping mapping each userid in $userids that can be found to that user's handle
+	Return an array mapping each userid in $userids that can be found to that user's handle
 */
 	{
 		if (count($userids))

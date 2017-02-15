@@ -912,7 +912,7 @@ blockquote p {
 .qa-q-view-content,
 .qa-a-item-content,
 .qa-c-item-content {
-	word-break: break-word;
+	word-wrap: break-word;
 }
 
 .qa-q-view-content table, .qa-a-item-content table, .qa-c-item-content table {
@@ -1773,7 +1773,7 @@ blockquote p {
 	text-transform: none;
 	line-height: 1em;
 	margin-left: .2em;
-	content: '\e82d';
+	content: '\e821';
 }
 
 /*------[ forms ]------*/
@@ -2448,7 +2448,7 @@ input[type="submit"], button {
 	background: #fff;
 	margin-bottom: 5px;
 }
-.qa-part-a-form:empty
+.qa-part-a-form:empty,
 .qa-part-a-form h2 {
 	margin-top: 0;
 }
@@ -2762,7 +2762,7 @@ input[type="submit"], button {
 @media (min-width: 980px) {
 	.qa-sidepanel {
 		width: 25%;
-		padding: 0px;
+		padding: 0;
 		float: right;
 		*zoom: 1;
 	}
@@ -2826,7 +2826,7 @@ input[type="submit"], button {
 	word-wrap: break-word;
 }
 .qa-sidepanel h1, .qa-sidepanel h2, .qa-sidepanel h3, .qa-sidepanel h4, .qa-sidepanel h5, .qa-sidepanel h6 {
-	margin-top: 0px;
+	margin-top: 0;
 }
 .qa-sidepanel .qa-widget-side {
 	padding: 20px;

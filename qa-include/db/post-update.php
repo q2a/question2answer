@@ -93,7 +93,8 @@
 
 	function qa_db_post_set_parent($postid, $parentid, $lastuserid=null, $lastip=null)
 /*
-	Set the parent in the database of $postid to $parentid, and optionally record that $lastuserid did it from $lastip (if at least one is specified)
+	Set the parent in the database of $postid to $parentid, and optionally record that $lastuserid did it from $lastip
+	(if at least one is specified)
 */
 	{
 		if (isset($lastuserid) || isset($lastip))
@@ -143,7 +144,8 @@
 
 	function qa_db_post_set_category($postid, $categoryid, $lastuserid=null, $lastip=null)
 /*
-	Set the (exact) category in the database of $postid to $categoryid, and optionally record that $lastuserid did it from $lastip (if at least one is specified)
+	Set the (exact) category in the database of $postid to $categoryid, and optionally record that $lastuserid did it from
+	$lastip (if at least one is specified)
 */
 	{
 		if (isset($lastuserid) || isset($lastip))
@@ -192,7 +194,7 @@
 
 	function qa_db_post_set_updated($postid, $updated)
 /*
-	Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is nul, set to now.
+	Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is null, set to now.
 */
 	{
 		if (isset($updated))
@@ -318,7 +320,7 @@
 
 	function qa_db_posts_filter_q_postids($postids)
 /*
-	Return the array $postids containing only those elements which are the postid of a qustion in the database
+	Return the array $postids containing only those elements which are the postid of a question in the database
 */
 	{
 		if (count($postids))

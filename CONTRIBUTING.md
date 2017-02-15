@@ -94,6 +94,10 @@ Class names should be of the form `Q2A_<Namespace>_<Class>`, e.g. `Q2A_Util_Debu
 Classes are mapped to PHP files with the underscores converted to directory separators. The `Q2A_Util_Debug` class is in the file `qa-include/Q2A/Util/Debug.php`. A class named `Q2A_Db_User_Messages` would be in a file `qa-include/Q2A/Db/User/Messages.php`.
 
 
+## Documentation
+
+Please see the repository https://github.com/q2a/q2a.github.io/ which automatically produces the documentation website http://docs.question2answer.org/
+
 
 [Home]: http://www.question2answer.org/
 [QA]: http://www.question2answer.org/qa/
