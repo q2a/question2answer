@@ -297,7 +297,7 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output_raw($this->content['sidepanel']);
 		$this->feed();
 		$this->widgets('side', 'bottom');
-		$this->output('</div>', '');
+		$this->output('</div> <!-- qa-sidepanel -->', '');
 	}
 
 	/**
@@ -312,7 +312,7 @@ class qa_html_theme extends qa_html_theme_base
 			if (!empty($sidebar)) {
 				$this->output('<div class="qa-sidebar ' . $this->welcome_widget_class . '">');
 				$this->output_raw($sidebar);
-				$this->output('</div>', '');
+				$this->output('</div> <!-- qa-sidebar -->', '');
 			}
 		}
 	}

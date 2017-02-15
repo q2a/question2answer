@@ -57,7 +57,7 @@
 			qa_db_user_rank_selectspec($identifier)
 		);
 
-	if (!QA_FINAL_EXTERNAL_USERS) {
+	if (!QA_FINAL_EXTERNAL_USERS && $handle !== qa_get_logged_in_handle()) {
 		foreach ($userfields as $index => $userfield) {
 			if ( isset($userfield['permit']) && qa_permit_value_error($userfield['permit'], $loginuserid, qa_get_logged_in_level(), qa_get_logged_in_flags()) )
 				unset($userfields[$index]); // don't pay attention to user fields we're not allowed to view

@@ -222,7 +222,7 @@ class qa_html_theme_base
 	{
 		$attribution = '<!-- Powered by Question2Answer - http://www.question2answer.org/ -->';
 		$this->output(
-			'<html>',
+			'<html lang="'.$this->content['language'].'">',
 			$attribution
 		);
 
@@ -1087,6 +1087,10 @@ class qa_html_theme_base
 				$this->form_number($field, $style);
 				break;
 
+			case 'file':
+				$this->form_file($field, $style);
+				break;
+
 			case 'select':
 				$this->form_select($field, $style);
 				break;
@@ -1230,6 +1234,11 @@ class qa_html_theme_base
 	public function form_number($field, $style)
 	{
 		$this->output('<input '.@$field['tags'].' type="text" value="'.@$field['value'].'" class="qa-form-'.$style.'-number"/>');
+	}
+
+	public function form_file($field, $style)
+	{
+		$this->output('<input '.@$field['tags'].' type="file" class="qa-form-'.$style.'-file"/>');
 	}
 
 	/**
