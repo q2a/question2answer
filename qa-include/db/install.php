@@ -716,18 +716,42 @@ function qa_db_create_table_sql($rawname, $definition)
  */
 function qa_db_default_userfields_sql()
 {
-	$oldprofileflags = array(
-		'name' => 0,
-		'location' => 0,
-		'website' => QA_FIELD_FLAGS_LINK_URL,
-		'about' => QA_FIELD_FLAGS_MULTI_LINE,
+	require_once QA_INCLUDE_DIR . 'app/options.php';
+
+	$profileFields = array(
+		array(
+			'title' => 'name',
+			'position' => 0,
+			'flags' => 0,
+			'permit' => QA_PERMIT_ALL,
+		),
+		array(
+			'title' => 'location',
+			'position' => 1,
+			'flags' => 0,
+			'permit' => QA_PERMIT_ALL,
+		),
+		array(
+			'title' => 'website',
+			'position' => 2,
+			'flags' => QA_FIELD_FLAGS_LINK_URL,
+			'permit' => QA_PERMIT_ALL,
+		),
+		array(
+			'title' => 'about',
+			'position' => 3,
+			'flags' => QA_FIELD_FLAGS_MULTI_LINE,
+			'permit' => QA_PERMIT_ALL,
+		),
 	);
 
-	$sql = 'INSERT INTO ^userfields (title, position, flags) VALUES '; // content column will be NULL, meaning use default from lang files
+	$sql = 'INSERT INTO ^userfields (title, position, flags, permit) VALUES'; // content column will be NULL, meaning use default from lang files
 
-	$index = 0;
-	foreach ($oldprofileflags as $title => $flags)
-		$sql .= ($index ? ', ' : '') . "('" . qa_db_escape_string($title) . "', " . (++$index) . ", " . (int)@$oldprofileflags[$title] . ")";
+	foreach ($profileFields as $field) {
+		$sql .= sprintf('("%s", %d, %d, %d), ', qa_db_escape_string($field['title']), $field['position'], $field['flags'], $field['permit']);
+	}
+
+	$sql = substr($sql, 0, -2);
 
 	return $sql;
 }
