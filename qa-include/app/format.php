@@ -1638,7 +1638,7 @@ function qa_set_display_rules(&$qa_content, $effects)
 	// set default state of options
 	$loadscript = array(
 		"for (var i = 0; i < {$optVar}.length; i++) {",
-		"\t$('#'+{$optVar}[i]).click(function() { " . $function . "(false); });",
+		"\t$('#'+{$optVar}[i]).change(function() { " . $function . "(false); });",
 		"}",
 		"{$function}(true);",
 	);
