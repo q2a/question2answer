@@ -180,7 +180,14 @@ function qa_get_request_content()
 
 	if (isset($routing[$requestlower])) {
 		qa_set_template($firstlower);
-		$qa_content = require QA_INCLUDE_DIR . $routing[$requestlower];
+		$route = $routing[$requestlower];
+		if (is_array($route)) {
+			$ctrl = new $route[0];
+			$qa_content = $ctrl->{$route[1]}();
+		}
+		else {
+			$qa_content = require QA_INCLUDE_DIR . $route;
+		}
 
 	} elseif (isset($routing[$firstlower . '/'])) {
 		qa_set_template($firstlower);
@@ -438,10 +445,10 @@ function qa_page_routing()
 		'unsubscribe' => 'pages/unsubscribe.php',
 		'updates' => 'pages/updates.php',
 		'user/' => 'pages/user.php',
-		'users' => 'pages/users.php',
-		'users/blocked' => 'pages/users-blocked.php',
-		'users/new' => 'pages/users-newest.php',
-		'users/special' => 'pages/users-special.php',
+		'users' => ['\Q2A\Controllers\UsersController', 'top'],
+		'users/blocked' => ['\Q2A\Controllers\UsersController', 'blocked'],
+		'users/new' => ['\Q2A\Controllers\UsersController', 'newest'],
+		'users/special' => ['\Q2A\Controllers\UsersController', 'special'],
 	);
 }
 

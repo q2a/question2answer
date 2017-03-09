@@ -41,6 +41,10 @@ function qa_autoload($class)
 {
 	if (strpos($class, 'Q2A_') === 0)
 		require QA_INCLUDE_DIR . strtr($class, '_', '/') . '.php';
+
+	if (strpos($class, 'Q2A\\') === 0) {
+		require QA_BASE_DIR . 'qa-src/' . strtr(substr($class, 4), '\\', '/') . '.php';
+	}
 }
 spl_autoload_register('qa_autoload');
 
