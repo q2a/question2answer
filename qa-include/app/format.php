@@ -309,7 +309,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	$isbyuser = qa_post_is_by_user($post, $userid, $cookieid);
 	$anchor = urlencode(qa_anchor($post['basetype'], $postid));
 	$elementid = isset($options['elementid']) ? $options['elementid'] : $anchor;
-	$microdata = qa_opt('use_microdata');
+	$microdata = qa_opt('use_microdata') && !empty($options['contentview']);
 	$isselected = @$options['isselected'];
 	$favoritedview = @$options['favoritedview'];
 	$favoritemap = $favoritedview ? qa_get_favorite_non_qs_map() : array();
@@ -467,10 +467,9 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		// ...with microformats if appropriate
 
 		if ($microdata) {
-			// vote display might be compacted so use meta tag for true count
+			// vote display might be formatted (e.g. '2k') so use meta tag for true count
 			$netvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '"/>';
 			$upvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '"/>';
-			$downvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($downvotes) . '"/>';
 		}
 
 		// Pass information on vote viewing
