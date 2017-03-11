@@ -24,14 +24,16 @@ class qa_tag_cloud
 {
 	public function option_default($option)
 	{
-		if ($option === 'tag_cloud_count_tags')
-			return 100;
-		if ($option === 'tag_cloud_font_size')
-			return 24;
-		if ($option === 'tag_cloud_minimal_font_size')
-			return 10;
-		if ($option === 'tag_cloud_size_popular')
-			return true;
+		switch ($option) {
+			case 'tag_cloud_count_tags':
+				return 100;
+			case 'tag_cloud_font_size':
+				return 24;
+			case 'tag_cloud_minimal_font_size':
+				return 10;
+			case 'tag_cloud_size_popular':
+				return true;
+		}
 	}
 
 
@@ -131,16 +133,20 @@ class qa_tag_cloud
 
 		foreach ($populartagslog as $tag => $count) {
 			$matches = qa_block_words_match_all($tag, $blockwordspreg);
-			if (empty($matches)) {
-				if ($scale) {
-					$size = number_format($maxsize * $count / $maxcount, 1);
-					if ($size < $minsize)
-						$size = $minsize;
-				} else
-					$size = $maxsize;
-
-				$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
+			if (!empty($matches)) {
+				continue;
 			}
+
+			if ($scale) {
+				$size = number_format($maxsize * $count / $maxcount, 1);
+				if ($size < $minsize) {
+					$size = $minsize;
+				}
+			} else {
+				$size = $maxsize;
+			}
+
+			$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
 		}
 
 		$themeobject->output('</div>');
