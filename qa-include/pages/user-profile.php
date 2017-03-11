@@ -741,7 +741,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 // Information about user activity, available also with single sign-on integration
 
 $qa_content['form_activity'] = array(
-	'title' => '<a name="activity">' . qa_lang_html_sub('profile/activity_by_x', $userhtml) . '</a>',
+	'title' => '<span id="activity">' . qa_lang_html_sub('profile/activity_by_x', $userhtml) . '</span>',
 
 	'style' => 'wide',
 
@@ -906,7 +906,7 @@ $qa_content['raw']['rank'] = $userrank;
 
 if (!QA_FINAL_EXTERNAL_USERS && qa_opt('allow_user_walls')) {
 	$qa_content['message_list'] = array(
-		'title' => '<a name="wall">' . qa_lang_html_sub('profile/wall_for_x', $userhtml) . '</a>',
+		'title' => '<span id="wall">' . qa_lang_html_sub('profile/wall_for_x', $userhtml) . '</span>',
 
 		'tags' => 'id="wallmessages"',
 

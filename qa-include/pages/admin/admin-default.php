@@ -1009,7 +1009,7 @@ foreach ($showoptions as $optionname) {
 
 				foreach ($rawoptions as $rawoption) {
 					$neatoptions[$rawoption] =
-						'<iframe src="' . qa_path_html('url/test/' . QA_URL_TEST_STRING, array('dummy' => '', 'param' => QA_URL_TEST_STRING), null, $rawoption) . '" width="20" height="16" style="vertical-align:middle; border:0" scrolling="no" frameborder="0"></iframe>&nbsp;' .
+						'<iframe src="' . qa_path_html('url/test/' . QA_URL_TEST_STRING, array('dummy' => '', 'param' => QA_URL_TEST_STRING), null, $rawoption) . '" width="20" height="16" style="vertical-align:middle; border:0" scrolling="no"></iframe>&nbsp;' .
 						'<small>' .
 						qa_html(urldecode(qa_path('123/why-do-birds-sing', null, '/', $rawoption))) .
 						(($rawoption == QA_URL_FORMAT_NEAT) ? strtr(qa_lang_html('admin/neat_urls_note'), array(

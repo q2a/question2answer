@@ -119,7 +119,7 @@ class qa_html_theme extends qa_html_theme_base
 		$feed = @$this->content['feed'];
 
 		if (!empty($feed)) {
-			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" border="0" class="qa-rss-icon"/></a>');
+			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" class="qa-rss-icon"/></a>');
 		}
 	}
 

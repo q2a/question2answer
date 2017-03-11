@@ -959,7 +959,7 @@ class qa_html_theme_base
 	public function form_columns($form)
 	{
 		if (isset($form['ok']) || !empty($form['fields']))
-			$columns = ($form['style'] == 'wide') ? 3 : 1;
+			$columns = ($form['style'] == 'wide') ? 2 : 1;
 		else
 			$columns = 0;
 
@@ -1052,7 +1052,7 @@ class qa_html_theme_base
 		if (isset($field['style'])) { // field has different style to most of form
 			$style = $field['style'];
 			$colspan = $columns;
-			$columns = ($style == 'wide') ? 3 : 1;
+			$columns = ($style == 'wide') ? 2 : 1;
 		} else
 			$colspan = null;
 

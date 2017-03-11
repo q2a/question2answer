@@ -58,7 +58,7 @@ class qa_facebook_login
 			$size = 'medium';
 
 ?>
-	<div id="fb-root" style="display:inline;"></div>
+	<span id="fb-root" style="display:inline;"></span>
 	<script>
 	window.fbAsyncInit = function() {
 		FB.init({
@@ -80,8 +80,8 @@ class qa_facebook_login
 		d.getElementsByTagName('head')[0].appendChild(js);
 	}(document));
 	</script>
-	<div class="fb-login-button" style="display:inline; vertical-align:middle;" size="<?php echo $size?>" <?php echo $logout ? 'autologoutlink="true"' : 'scope="email,user_about_me,user_location,user_website"'?>>
-	</div>
+	<span class="fb-login-button" style="display:inline; vertical-align:middle;" size="<?php echo $size?>" <?php echo $logout ? 'autologoutlink="true"' : 'scope="email,user_about_me,user_location,user_website"'?>>
+	</span>
 <?php
 	}
 
