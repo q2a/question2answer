@@ -29,7 +29,7 @@ class qa_tag_cloud
 		if ($option === 'tag_cloud_font_size')
 			return 24;
 		if ($option === 'tag_cloud_minimal_font_size')
-			return 8;
+			return 10;
 		if ($option === 'tag_cloud_size_popular')
 			return true;
 	}
@@ -114,7 +114,11 @@ class qa_tag_cloud
 
 		$populartags = qa_db_single_select(qa_db_popular_tags_selectspec(0, (int) qa_opt('tag_cloud_count_tags')));
 
-		$maxcount = reset($populartags);
+		$populartagslog = array_map(function($e) {
+			return log($e) + 1;
+		}, $populartags);
+
+		$maxcount = reset($populartagslog);
 
 		$themeobject->output(sprintf('<h2 style="margin-top: 0; padding-top: 0;">%s</h2>', qa_lang_html('main/popular_tags')));
 
@@ -125,7 +129,7 @@ class qa_tag_cloud
 		$scale = qa_opt('tag_cloud_size_popular');
 		$blockwordspreg = qa_get_block_words_preg();
 
-		foreach ($populartags as $tag => $count) {
+		foreach ($populartagslog as $tag => $count) {
 			$matches = qa_block_words_match_all($tag, $blockwordspreg);
 			if (empty($matches)) {
 				if ($scale) {
