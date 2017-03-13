@@ -21,8 +21,10 @@
 */
 
 return array(
+	'allow_anonymous_naming' => 'Allow anonymous posters to specify their name:',
 	'allow_change_usernames' => 'Allow users with posts to change their username:',
 	'allow_close_questions' => 'Allow questions to be manually closed:',
+	'allow_close_own_questions' => 'Allow users to close their own questions:',
 	'allow_login_email_only' => 'Only log in by email address (not username):',
 	'allow_multi_answers' => 'Allow multiple answers per user:',
 	'allow_no_category' => 'Allow questions with no category',

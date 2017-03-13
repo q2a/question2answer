@@ -217,8 +217,10 @@ function qa_default_option($name)
 	}
 
 	$fixed_defaults = array(
+		'allow_anonymous_naming' => 1,
 		'allow_change_usernames' => 1,
 		'allow_close_questions' => 1,
+		'allow_close_own_questions' => 1,
 		'allow_multi_answers' => 1,
 		'allow_private_messages' => 1,
 		'allow_user_walls' => 1,

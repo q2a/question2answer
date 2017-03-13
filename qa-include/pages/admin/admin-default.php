@@ -137,8 +137,10 @@ $optiontype = array(
 	'show_full_date_days' => 'number',
 	'smtp_port' => 'number',
 
+	'allow_anonymous_naming' => 'checkbox',
 	'allow_change_usernames' => 'checkbox',
 	'allow_close_questions' => 'checkbox',
+	'allow_close_own_questions' => 'checkbox',
 	'allow_login_email_only' => 'checkbox',
 	'allow_multi_answers' => 'checkbox',
 	'allow_private_messages' => 'checkbox',
@@ -464,7 +466,7 @@ switch ($adminsection) {
 
 		$subtitle = 'admin/posting_title';
 
-		$showoptions = array('do_close_on_select', 'allow_close_questions', 'allow_self_answer', 'allow_multi_answers', 'follow_on_as', 'comment_on_qs', 'comment_on_as', '');
+		$showoptions = array('do_close_on_select', 'allow_close_questions', 'allow_close_own_questions', 'allow_self_answer', 'allow_multi_answers', 'follow_on_as', 'comment_on_qs', 'comment_on_as', 'allow_anonymous_naming', '');
 
 		if (count(qa_list_modules('editor')) > 1)
 			array_push($showoptions, 'editor_for_qs', 'editor_for_as', 'editor_for_cs', '');
@@ -486,6 +488,7 @@ switch ($adminsection) {
 		$formstyle = 'wide';
 
 		$checkboxtodisplay = array(
+			'allow_close_own_questions' => 'option_allow_close_questions',
 			'editor_for_cs' => 'option_comment_on_qs || option_comment_on_as',
 			'custom_ask' => 'option_show_custom_ask',
 			'extra_field_prompt' => 'option_extra_field_active',
