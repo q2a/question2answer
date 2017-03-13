@@ -134,7 +134,9 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 	$permiterror_flag = qa_user_permit_error('permit_flag', null, $userlevel, true, $userfields);
 	$permiterror_hide_show = qa_user_permit_error('permit_hide_show', null, $userlevel, true, $userfields);
 	$permiterror_hide_show_self = $rules['isbyuser'] ? qa_user_permit_error(null, null, $userlevel, true, $userfields) : $permiterror_hide_show;
-	$permiterror_close_open = qa_user_permit_error($rules['isbyuser'] ? null : 'permit_close_q', null, $userlevel, true, $userfields);
+
+	$close_option = $rules['isbyuser'] && qa_opt('allow_close_own_questions') ? null : 'permit_close_q';
+	$permiterror_close_open = qa_user_permit_error($close_option, null, $userlevel, true, $userfields);
 	$permiterror_moderate = qa_user_permit_error('permit_moderate', null, $userlevel, true, $userfields);
 
 	// General permissions
@@ -182,9 +184,9 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 	$notclosedbyother = !($rules['closed'] && isset($post['closedbyid']) && !$rules['authorlast']);
 	$nothiddenbyother = !($post['hidden'] && !$rules['authorlast']);
 
-	$rules['closeable'] = qa_opt('allow_close_questions') && $post['type'] == 'Q' && !$rules['closed'] && !$permiterror_close_open;
+	$rules['closeable'] = qa_opt('allow_close_questions') && $post['type'] == 'Q' && !$rules['closed'] && $permiterror_close_open === false;
 	// cannot reopen a question if it's been hidden, or if it was closed by someone else and you don't have global closing permissions
-	$rules['reopenable'] = $rules['closed'] && isset($post['closedbyid']) && !$permiterror_close_open && !$post['hidden']
+	$rules['reopenable'] = $rules['closed'] && isset($post['closedbyid']) && $permiterror_close_open === false && !$post['hidden']
 		&& ($notclosedbyother || !qa_user_permit_error('permit_close_q', null, $userlevel, true, $userfields));
 
 	$rules['moderatable'] = $rules['queued'] && !$permiterror_moderate;
