@@ -959,7 +959,7 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 					'label' => qa_lang_html('main/cancel_button'),
 				);
 
-			if (!qa_is_logged_in())
+			if (!qa_is_logged_in() && qa_opt('allow_anonymous_naming'))
 				qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], 'a_');
 
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'A', qa_get_logged_in_email(),
@@ -1104,7 +1104,7 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 			if (!strlen($custom))
 				unset($form['fields']['custom']);
 
-			if (!qa_is_logged_in())
+			if (!qa_is_logged_in() && qa_opt('allow_anonymous_naming'))
 				qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], $prefix);
 
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),

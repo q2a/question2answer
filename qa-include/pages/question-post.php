@@ -390,7 +390,7 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 	}
 
 	if ($question['isbyuser']) {
-		if (!qa_is_logged_in())
+		if (!qa_is_logged_in() && qa_opt('allow_anonymous_naming'))
 			qa_set_up_name_field($qa_content, $form['fields'], isset($in['name']) ? $in['name'] : @$question['name'], 'q_');
 
 		qa_set_up_notify_fields($qa_content, $form['fields'], 'Q', qa_get_logged_in_email(),
@@ -441,7 +441,7 @@ function qa_page_q_edit_q_submit($question, $answers, $commentsfollows, $closepo
 		$userlevel = null;
 
 	if ($question['isbyuser']) {
-		$in['name'] = qa_post_text('q_name');
+		$in['name'] = qa_opt('allow_anonymous_naming') ? qa_post_text('q_name') : null;
 		$in['notify'] = qa_post_text('q_notify') !== null;
 		$in['email'] = qa_post_text('q_email');
 	}
@@ -730,7 +730,7 @@ function qa_page_q_edit_a_form(&$qa_content, $id, $answer, $question, $answers, 
 	// Show name and notification field if appropriate
 
 	if ($answer['isbyuser']) {
-		if (!qa_is_logged_in())
+		if (!qa_is_logged_in() && qa_opt('allow_anonymous_naming'))
 			qa_set_up_name_field($qa_content, $form['fields'], isset($in['name']) ? $in['name'] : @$answer['name'], $prefix);
 
 		qa_set_up_notify_fields($qa_content, $form['fields'], 'A', qa_get_logged_in_email(),
@@ -765,7 +765,7 @@ function qa_page_q_edit_a_submit($answer, $question, $answers, $commentsfollows,
 	);
 
 	if ($answer['isbyuser']) {
-		$in['name'] = qa_post_text($prefix . 'name');
+		$in['name'] = qa_opt('allow_anonymous_naming') ? qa_post_text($prefix . 'name') : null;
 		$in['notify'] = qa_post_text($prefix . 'notify') !== null;
 		$in['email'] = qa_post_text($prefix . 'email');
 	}
@@ -936,7 +936,7 @@ function qa_page_q_edit_c_form(&$qa_content, $id, $comment, $in, $errors)
 	);
 
 	if ($comment['isbyuser']) {
-		if (!qa_is_logged_in())
+		if (!qa_is_logged_in() && qa_opt('allow_anonymous_naming'))
 			qa_set_up_name_field($qa_content, $form['fields'], isset($in['name']) ? $in['name'] : @$comment['name'], $prefix);
 
 		qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),
@@ -968,7 +968,7 @@ function qa_page_q_edit_c_submit($comment, $question, $parent, &$in, &$errors)
 	$in = array();
 
 	if ($comment['isbyuser']) {
-		$in['name'] = qa_post_text($prefix . 'name');
+		$in['name'] = qa_opt('allow_anonymous_naming') ? qa_post_text($prefix . 'name') : null;
 		$in['notify'] = qa_post_text($prefix . 'notify') !== null;
 		$in['email'] = qa_post_text($prefix . 'email');
 	}

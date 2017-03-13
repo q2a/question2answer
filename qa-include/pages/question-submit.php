@@ -352,7 +352,7 @@ function qa_page_q_click_check_form_code($post, &$error)
 function qa_page_q_add_a_submit($question, $answers, $usecaptcha, &$in, &$errors)
 {
 	$in = array(
-		'name' => qa_post_text('a_name'),
+		'name' => qa_opt('allow_anonymous_naming') ? qa_post_text('a_name') : null,
 		'notify' => qa_post_text('a_notify') !== null,
 		'email' => qa_post_text('a_email'),
 		'queued' => qa_user_moderation_reason(qa_user_level_for_post($question)) !== false,
@@ -440,7 +440,7 @@ function qa_page_q_add_c_submit($question, $parent, $commentsfollows, $usecaptch
 	$prefix = 'c' . $parentid . '_';
 
 	$in = array(
-		'name' => qa_post_text($prefix . 'name'),
+		'name' => qa_opt('allow_anonymous_naming') ? qa_post_text($prefix . 'name') : null,
 		'notify' => qa_post_text($prefix . 'notify') !== null,
 		'email' => qa_post_text($prefix . 'email'),
 		'queued' => qa_user_moderation_reason(qa_user_level_for_post($parent)) !== false,
