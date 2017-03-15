@@ -63,6 +63,7 @@ return array(
 	'email_required' => 'Email address required - not public',
 	'forgot_link' => 'I forgot my password',
 	'full_name' => 'Full name',
+	'handle_blocked' => 'Username is disallowed - please try another',
 	'handle_empty' => 'Username must not be empty',
 	'handle_exists' => 'Username is taken - please try another',
 	'handle_has_bad' => 'Username may not contain: ^',

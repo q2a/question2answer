@@ -52,6 +52,12 @@ class qa_filter_basic
 		if (qa_strlen($handle) > QA_DB_MAX_HANDLE_LENGTH) {
 			return qa_lang_sub('main/max_length_x', QA_DB_MAX_HANDLE_LENGTH);
 		}
+		// check for banned usernames (e.g. "anonymous")
+		$wordspreg = qa_block_words_to_preg(qa_opt('block_bad_usernames'));
+		$blocked = qa_block_words_match_all($handle, $wordspreg);
+		if (!empty($blocked)) {
+			return qa_lang('users/handle_blocked');
+		}
 	}
 
 	public function filter_question(&$question, &$errors, $oldquestion)

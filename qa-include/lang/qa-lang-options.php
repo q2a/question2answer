@@ -45,6 +45,7 @@ return array(
 	'avatar_q_page_q_size' => 'Avatar size on questions:',
 	'avatar_store_size' => 'Maximum size for storing avatars:',
 	'avatar_users_size' => 'Avatar size on top users page:',
+	'block_bad_usernames' => 'Disallowed usernames - separate by spaces or commas:',
 	'block_bad_words' => 'Censored words - separate by spaces or commas:',
 	'block_ips_write' => 'Blocked IP addresses - separate by spaces or commas:',
 	'caching_catwidget_time' => 'Cache category widget for:',

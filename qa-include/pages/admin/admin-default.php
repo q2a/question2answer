@@ -322,7 +322,7 @@ switch ($adminsection) {
 			require_once QA_INCLUDE_DIR . 'util/image.php';
 
 			array_push($showoptions, 'show_custom_register', 'custom_register', 'show_register_terms', 'register_terms', 'show_notice_welcome', 'notice_welcome', 'show_custom_welcome', 'custom_welcome',
-				'', 'allow_login_email_only', 'allow_change_usernames', 'register_notify_admin', 'suspend_register_users',
+				'', 'allow_login_email_only', 'allow_change_usernames', 'register_notify_admin', 'suspend_register_users', '', 'block_bad_usernames',
 				'', 'allow_private_messages', 'show_message_history', 'page_size_pms', 'allow_user_walls', 'page_size_wall',
 				'', 'avatar_allow_gravatar');
 
@@ -747,6 +747,7 @@ else {
 						break;
 
 					case 'block_bad_words':
+					case 'block_bad_usernames':
 						require_once QA_INCLUDE_DIR . 'util/string.php';
 						$optionvalue = implode(' , ', qa_block_words_explode($optionvalue));
 						break;
@@ -1243,6 +1244,7 @@ foreach ($showoptions as $optionname) {
 				break;
 
 			case 'block_bad_words':
+			case 'block_bad_usernames':
 				$optionfield['style'] = 'tall';
 				$optionfield['rows'] = 4;
 				$optionfield['note'] = qa_lang_html('admin/block_words_note');

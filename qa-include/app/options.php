@@ -436,6 +436,10 @@ function qa_default_option($name)
 			$value = qa_lang_html_sub('options/default_terms', qa_html(qa_opt('site_title')));
 			break;
 
+		case 'block_bad_usernames':
+			$value = qa_lang_html('main/anonymous');
+			break;
+
 		case 'custom_sidebar':
 			$value = qa_lang_html_sub('options/default_sidebar', qa_html(qa_opt('site_title')));
 			break;
