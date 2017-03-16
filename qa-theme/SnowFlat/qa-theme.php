@@ -201,8 +201,8 @@ class qa_html_theme extends qa_html_theme_base
 	 * Remove the '-' from the note for the category page (notes).
 	 *
 	 * @since Snow 1.4
-	 * @param type $navlink
-	 * @param type $class
+	 * @param array $navlink
+	 * @param string $class
 	 */
 	public function nav_link($navlink, $class)
 	{
@@ -409,7 +409,7 @@ class qa_html_theme extends qa_html_theme_base
 	 * Prevent display view counter on usual place
 	 *
 	 * @since Snow 1.4
-	 * @param type $q_item
+	 * @param array $q_item
 	 */
 	public function view_count($q_item)
 	{
@@ -420,7 +420,7 @@ class qa_html_theme extends qa_html_theme_base
 	 * Add view counter to question view
 	 *
 	 * @since Snow 1.4
-	 * @param type $q_view
+	 * @param array $q_view
 	 */
 	public function q_view_stats($q_view)
 	{
@@ -437,7 +437,7 @@ class qa_html_theme extends qa_html_theme_base
 	 * Modify user whometa, move to top
 	 *
 	 * @since Snow 1.4
-	 * @param type $q_view
+	 * @param array $q_view
 	 */
 	public function q_view_main($q_view)
 	{
@@ -471,7 +471,7 @@ class qa_html_theme extends qa_html_theme_base
 	 * Move user whometa to top in answer
 	 *
 	 * @since Snow 1.4
-	 * @param type $a_item
+	 * @param array $a_item
 	 */
 	public function a_item_main($a_item)
 	{
@@ -520,7 +520,7 @@ class qa_html_theme extends qa_html_theme_base
 	 * Move user whometa to top in comment
 	 *
 	 * @since Snow 1.4
-	 * @param type $c_item
+	 * @param array $c_item
 	 */
 	public function c_item_main($c_item)
 	{
