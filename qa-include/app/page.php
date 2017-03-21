@@ -689,7 +689,11 @@ function qa_content_prepare($voting = false, $categoryids = null)
 
 	foreach ($widgets as $widget) {
 		$tagstring = ',' . $widget['tags'] . ',';
-		if (strpos($tagstring, ",$qa_template,") !== false || strpos($tagstring, ',all,') !== false) {
+		$showOnTmpl = strpos($tagstring, ",$qa_template,") !== false || strpos($tagstring, ',all,') !== false;
+		// special case for user pages
+		$showOnUser = strpos($tagstring, ',user,') !== false && preg_match('/^user(-.+)?$/', $qa_template) === 1;
+
+		if ($showOnTmpl || $showOnUser) {
 			// widget has been selected for display on this template
 			$region = @$regioncodes[substr($widget['place'], 0, 1)];
 			$place = @$placecodes[substr($widget['place'], 1, 2)];
