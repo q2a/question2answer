@@ -36,19 +36,21 @@
 		$mindb = 16777215; // from MEDIUMBLOB column type
 
 		$minphp = trim(ini_get('upload_max_filesize'));
-
+		$minphp_val = (int)$minphp;
+		
 		switch (strtolower(substr($minphp, -1))) {
 			case 'g':
-				$minphp *= 1024;
+				$minphp_val *= 1024;
 				// fall-through
 			case 'm':
-				$minphp *= 1024;
+				$minphp_val *= 1024;
 				// fall-through
 			case 'k':
-				$minphp *= 1024;
+				$minphp_val *= 1024;
 		}
 
-		return min($mindb, $minphp);
+		return min($mindb, $minphp_val);
+
 	}
 
 
