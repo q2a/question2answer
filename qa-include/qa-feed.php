@@ -104,7 +104,7 @@ function qa_feed_load_ifcategory($categoryslugs, $allkey, $catkey, &$title,
 // Connect to database and get the type of feed and category requested (in some cases these are overridden later)
 
 qa_db_connect('qa_feed_db_fail_handler');
-qa_preload_options();
+qa_initialize_postdb_plugins();
 
 $requestlower = strtolower(qa_request());
 $foursuffix = substr($requestlower, -4);
