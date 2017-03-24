@@ -118,8 +118,8 @@ function qa_options_set_pending($names)
 
 
 /**
- * Load all of the Q2A options from the database, unless QA_OPTIMIZE_DISTANT_DB is set in qa-config.php,
- * in which case queue the options for later retrieval
+ * Load all of the Q2A options from the database.
+ * From Q2A 1.8 we always load the options in a separate query regardless of QA_OPTIMIZE_DISTANT_DB.
  */
 function qa_preload_options()
 {

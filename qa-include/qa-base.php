@@ -64,9 +64,10 @@ qa_initialize_constants_2();
 qa_initialize_modularity();
 qa_register_core_modules();
 
+qa_initialize_predb_plugins();
 require_once QA_INCLUDE_DIR . 'qa-db.php';
+qa_db_allow_connect();
 
-qa_initialize_plugins();
 
 
 // Version comparison functions
@@ -369,19 +370,30 @@ function qa_register_core_modules()
 
 
 /**
- * Load all plugins. They are split into two groups: plugins loaded before database is available, and those loaded afterward.
+ * Load plugins before database is available. Generally this includes database overrides and
+ * process plugins that run early in the request lifecycle.
  */
-function qa_initialize_plugins()
+function qa_initialize_predb_plugins()
 {
-	$pluginManager = new Q2A_Plugin_PluginManager();
-	$pluginManager->readAllPluginMetadatas();
+	global $qa_pluginManager;
+	$qa_pluginManager = new Q2A_Plugin_PluginManager();
+	$qa_pluginManager->readAllPluginMetadatas();
 
-	$pluginManager->loadPluginsBeforeDbInit();
+	$qa_pluginManager->loadPluginsBeforeDbInit();
 	qa_load_override_files();
+}
 
-	qa_db_allow_connect();
+/**
+ * Load plugins after database is available. Plugins loaded here are able to be disabled in admin.
+ */
+function qa_initialize_postdb_plugins()
+{
+	global $qa_pluginManager;
 
-	$pluginManager->loadPluginsAfterDbInit();
+	require_once QA_INCLUDE_DIR . 'app/options.php';
+	qa_preload_options();
+
+	$qa_pluginManager->loadPluginsAfterDbInit();
 	qa_load_override_files();
 }
 

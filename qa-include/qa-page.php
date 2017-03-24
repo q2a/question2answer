@@ -34,6 +34,7 @@ global $qa_usage;
 
 qa_report_process_stage('init_page');
 qa_db_connect('qa_page_db_fail_handler');
+qa_initialize_postdb_plugins();
 
 qa_page_queue_pending();
 qa_load_state();
