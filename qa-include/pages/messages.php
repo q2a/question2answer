@@ -75,7 +75,6 @@ $count = $numMessages['count'];
 
 $qa_content = qa_content_prepare();
 $qa_content['title'] = qa_lang_html($showOutbox ? 'misc/pm_outbox_title' : 'misc/pm_inbox_title');
-$qa_content['script_rel'][] = 'qa-content/qa-user.js?' . QA_VERSION;
 
 $qa_content['message_list'] = array(
 	'tags' => 'id="privatemessages"',

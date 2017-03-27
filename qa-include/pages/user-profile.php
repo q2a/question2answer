@@ -345,8 +345,6 @@ if (isset($loginuserid) && $loginuserid != $useraccount['userid'] && !QA_FINAL_E
 		qa_lang_sub($favorite ? 'main/remove_x_favorites' : 'users/add_user_x_favorites', $handle));
 }
 
-$qa_content['script_rel'][] = 'qa-content/qa-user.js?' . QA_VERSION;
-
 
 // General information about the user, only available if we're using internal user management
 

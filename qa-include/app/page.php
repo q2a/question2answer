@@ -821,7 +821,7 @@ function qa_content_prepare($voting = false, $categoryids = null)
 	}
 
 	$qa_content['script_rel'] = array('qa-content/jquery-1.11.3.min.js');
-	$qa_content['script_rel'][] = 'qa-content/qa-page.js?' . QA_VERSION;
+	$qa_content['script_rel'][] = 'qa-content/qa-global.js?' . QA_VERSION;
 
 	if ($voting)
 		$qa_content['error'] = @$qa_page_error_html;
