@@ -337,15 +337,19 @@ function qa_output_content($qa_content)
 
 	if (isset($qa_content['script_rel'])) {
 		$uniquerel = array_unique($qa_content['script_rel']); // remove any duplicates
-		foreach ($uniquerel as $script_rel)
+		foreach ($uniquerel as $script_rel) {
 			$script[] = '<script src="' . qa_html(qa_path_to_root() . $script_rel) . '"></script>';
+		}
 	}
 
 	if (isset($qa_content['script_src'])) {
 		$uniquesrc = array_unique($qa_content['script_src']); // remove any duplicates
-		foreach ($uniquesrc as $script_src)
+		foreach ($uniquesrc as $script_src) {
 			$script[] = '<script src="' . qa_html($script_src) . '"></script>';
+		}
 	}
+
+	// JS onloads must come after jQuery is loaded
 
 	if (isset($qa_content['focusid'])) {
 		$qa_content['script_onloads'][] = array(
@@ -353,20 +357,19 @@ function qa_output_content($qa_content)
 		);
 	}
 
-	// JS onloads must come after jQuery is loaded
-
-	$script[] = '<script>';
 	if (isset($qa_content['script_onloads'])) {
+		$script[] = '<script>';
 		$script[] = '$(window).load(function() {';
 
 		foreach ($qa_content['script_onloads'] as $scriptonload) {
-			foreach ((array)$scriptonload as $scriptline)
+			foreach ((array)$scriptonload as $scriptline) {
 				$script[] = "\t" . $scriptline;
+			}
 		}
 
 		$script[] = '});';
+		$script[] = '</script>';
 	}
-	$script[] = '</script>';
 
 	if (!isset($qa_content['script'])) {
 		$qa_content['script'] = array();

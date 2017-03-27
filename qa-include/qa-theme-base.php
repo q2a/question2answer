@@ -411,8 +411,8 @@ class qa_html_theme_base
 	{
 		$this->output(
 			'<script>',
-			"var b=document.getElementsByTagName('body')[0];",
-			"b.className=b.className.replace('qa-body-js-off', 'qa-body-js-on');",
+			"var b = document.getElementsByTagName('body')[0];",
+			"b.className = b.className.replace('qa-body-js-off', 'qa-body-js-on');",
 			'</script>'
 		);
 	}

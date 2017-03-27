@@ -973,23 +973,25 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 				$captchaloadscript = qa_set_up_captcha_field($qa_content, $form['fields'], $errors, qa_captcha_reason_note($captchareason));
 
 				if (strlen($captchaloadscript))
-					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_show=function() { ' . $captchaloadscript . ' };';
+					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_show = function() { ' . $captchaloadscript . ' };';
 			}
 
 			if (!$loadnow) {
 				if (method_exists($editor, 'load_script'))
-					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_load=function() { ' . $editor->load_script('a_content') . ' };';
+					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_load = function() { ' . $editor->load_script('a_content') . ' };';
 
 				$form['buttons']['cancel']['tags'] .= ' onclick="return qa_toggle_element();"';
 			}
 
 			if (!$formrequested) {
 				if (method_exists($editor, 'focus_script'))
-					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_focus=function() { ' . $editor->focus_script('a_content') . ' };';
+					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_focus = function() { ' . $editor->focus_script('a_content') . ' };';
 			}
 
-			if (count($onloads))
+			if (count($onloads)) {
 				$qa_content['script_onloads'][] = $onloads;
+			}
+
 			break;
 	}
 
@@ -1118,20 +1120,23 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 				$captchaloadscript = qa_set_up_captcha_field($qa_content, $form['fields'], $errors, qa_captcha_reason_note($captchareason));
 
 				if (strlen($captchaloadscript))
-					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_show=function() { ' . $captchaloadscript . ' };';
+					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_show = function() { ' . $captchaloadscript . ' };';
 			}
 
 			if (!$loadfocusnow) {
 				if (method_exists($editor, 'load_script'))
-					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_load=function() { ' . $editor->load_script($prefix . 'content') . ' };';
+					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_load = function() { ' . $editor->load_script($prefix . 'content') . ' };';
 				if (method_exists($editor, 'focus_script'))
-					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_focus=function() { ' . $editor->focus_script($prefix . 'content') . ' };';
+					$onloads[] = 'document.getElementById(' . qa_js($formid) . ').qa_focus = function() { ' . $editor->focus_script($prefix . 'content') . ' };';
 
 				$form['buttons']['cancel']['tags'] .= ' onclick="return qa_toggle_element()"';
 			}
 
-			if (count($onloads))
+			if (count($onloads)) {
 				$qa_content['script_onloads'][] = $onloads;
+			}
+
+			break;
 	}
 
 	$form['id'] = $formid;
