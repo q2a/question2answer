@@ -1,12 +1,9 @@
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-content/qa-page.js
-	Version: See define()s at top of qa-include/qa-base.php
-	Description: Common Javascript including voting, notices and favorites
+	Description: THIS FILE HAS BEEN DEPRECATED IN FAVOUR OF qa-global.js
 
 
 	This program is free software; you can redistribute it and/or

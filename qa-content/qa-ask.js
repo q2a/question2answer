@@ -1,12 +1,9 @@
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-content/qa-ask.js
-	Version: See define()s at top of qa-include/qa-base.php
-	Description: Javascript for ask page and question editing, including tag auto-completion
+	Description: THIS FILE HAS BEEN DEPRECATED IN FAVOUR OF qa-global.js
 
 
 	This program is free software; you can redistribute it and/or

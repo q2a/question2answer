@@ -1,11 +1,8 @@
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-content/qa-admin.js
-	Version: See define()s at top of qa-include/qa-base.php
 	Description: Javascript for admin pages to handle Ajax-triggered operations
 
 
