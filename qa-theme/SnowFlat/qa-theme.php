@@ -74,11 +74,33 @@ class qa_html_theme extends qa_html_theme_base
 		if ($this->isRTL)
 			$this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
-		// add Ubuntu font CSS file from Google Fonts
-		if ($this->localfonts)
-			$this->content['css_src'][] = $this->rooturl . 'fonts/ubuntu.css?' . QA_VERSION;
-		else
-			$this->content['css_src'][] = '//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
+		if ($this->localfonts) {
+			// add Ubuntu font locally (inlined for speed)
+			$this->output_array(array(
+				'<style>',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: normal; font-weight: 400;',
+				' src: local("Ubuntu"), url("' . $this->rooturl . 'fonts/Ubuntu-regular.woff") format("woff");',
+				'}',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: normal; font-weight: 700;',
+				' src: local("Ubuntu Bold"), local("Ubuntu-Bold"), url("' . $this->rooturl . 'fonts/Ubuntu-700.woff") format("woff");',
+				'}',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: italic; font-weight: 400;',
+				' src: local("Ubuntu Italic"), local("Ubuntu-Italic"), url("' . $this->rooturl . 'fonts/Ubuntu-italic.woff") format("woff");',
+				'}',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: italic; font-weight: 700;',
+				' src: local("Ubuntu Bold Italic"), local("Ubuntu-BoldItalic"), url("' . $this->rooturl . 'fonts/Ubuntu-700italic.woff") format("woff");',
+				'}',
+				'</style>',
+			));
+		}
+		else {
+			// add Ubuntu font CSS file from Google Fonts
+			$this->content['css_src'][] = 'https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700,700i';
+		}
 
 		parent::head_css();
 
