@@ -668,7 +668,7 @@ function qa_admin_plugin_options_path($directory)
 function qa_admin_module_options_path($type, $name)
 {
 	$info = qa_get_module_info($type, $name);
-	$dir = rtrim($info['directory'], '/');
+	$dir = basename($info['directory']);
 
 	return qa_admin_plugin_options_path($dir);
 }
