@@ -32,6 +32,7 @@ header('Content-Type: text/plain; charset=utf-8');
 
 // Load the Q2A base file which sets up a bunch of crucial functions
 
+$qa_autoconnect = false;
 require 'qa-base.php';
 
 qa_report_process_stage('init_ajax');

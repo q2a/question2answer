@@ -68,6 +68,12 @@ qa_initialize_predb_plugins();
 require_once QA_INCLUDE_DIR . 'qa-db.php';
 qa_db_allow_connect();
 
+// $qa_autoconnect defaults to true so that optional plugins will load for external code. Q2A core
+// code sets $qa_autoconnect to false so that we can use custom fail handlers.
+if (!isset($qa_autoconnect) || $qa_autoconnect !== false) {
+	qa_db_connect('qa_page_db_fail_handler');
+	qa_initialize_postdb_plugins();
+}
 
 
 // Version comparison functions
@@ -383,6 +389,7 @@ function qa_initialize_predb_plugins()
 	qa_load_override_files();
 }
 
+
 /**
  * Load plugins after database is available. Plugins loaded here are able to be disabled in admin.
  */
@@ -395,6 +402,29 @@ function qa_initialize_postdb_plugins()
 
 	$qa_pluginManager->loadPluginsAfterDbInit();
 	qa_load_override_files();
+}
+
+
+/**
+ * Standard database failure handler function which bring up the install/repair/upgrade page
+ * @param $type
+ * @param int $errno
+ * @param string $error
+ * @param string $query
+ * @return mixed
+ */
+function qa_page_db_fail_handler($type, $errno = null, $error = null, $query = null)
+{
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	$pass_failure_type = $type;
+	$pass_failure_errno = $errno;
+	$pass_failure_error = $error;
+	$pass_failure_query = $query;
+
+	require_once QA_INCLUDE_DIR . 'qa-install.php';
+
+	qa_exit('error');
 }
 
 

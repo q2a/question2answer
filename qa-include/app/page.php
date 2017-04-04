@@ -33,29 +33,6 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
 /**
- * Standard database failure handler function which bring up the install/repair/upgrade page
- * @param $type
- * @param int $errno
- * @param string $error
- * @param string $query
- * @return mixed
- */
-function qa_page_db_fail_handler($type, $errno = null, $error = null, $query = null)
-{
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-	$pass_failure_type = $type;
-	$pass_failure_errno = $errno;
-	$pass_failure_error = $error;
-	$pass_failure_query = $query;
-
-	require_once QA_INCLUDE_DIR . 'qa-install.php';
-
-	qa_exit('error');
-}
-
-
-/**
  * Queue any pending requests which are required independent of which page will be shown
  */
 function qa_page_queue_pending()

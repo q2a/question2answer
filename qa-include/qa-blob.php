@@ -34,6 +34,7 @@ function qa_blob_db_fail_handler()
 
 // Load the Q2A base file which sets up a bunch of crucial stuff
 
+$qa_autoconnect = false;
 require 'qa-base.php';
 
 qa_report_process_stage('init_blob');
