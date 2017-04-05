@@ -123,7 +123,7 @@ function qa_db_table_definitions()
 			'KEY email (email)',
 			'KEY handle (handle)',
 			'KEY level (level)',
-			'kEY created (created, level, flags)',
+			'KEY created (created, level, flags)',
 		),
 
 		'userlogins' => array(
@@ -400,7 +400,7 @@ function qa_db_table_definitions()
 			'wordid' => 'INT UNSIGNED NOT NULL',
 			'postcreated' => 'DATETIME NOT NULL', // created time of post (copied here for tag page's list of recent questions)
 			'KEY postid (postid)',
-			'KEY wordid (wordid,postcreated)',
+			'KEY wordid (wordid, postcreated)',
 			'CONSTRAINT ^posttags_ibfk_1 FOREIGN KEY (postid) REFERENCES ^posts(postid) ON DELETE CASCADE',
 			'CONSTRAINT ^posttags_ibfk_2 FOREIGN KEY (wordid) REFERENCES ^words(wordid)',
 		),
@@ -468,7 +468,7 @@ function qa_db_table_definitions()
 			'content' => 'MEDIUMBLOB NOT NULL',
 			'created' => 'DATETIME NOT NULL',
 			'lastread' => 'DATETIME NOT NULL',
-			'PRIMARY KEY (type,cacheid)',
+			'PRIMARY KEY (type, cacheid)',
 			'KEY (lastread)',
 		),
 
@@ -960,7 +960,7 @@ function qa_db_upgrade_tables()
 					'content' => $definitions['cache']['content'],
 					'created' => $definitions['cache']['created'],
 					'lastread' => $definitions['cache']['lastread'],
-					'PRIMARY KEY (type,cacheid)',
+					'PRIMARY KEY (type, cacheid)',
 					'KEY (lastread)',
 				))); // hard-code list of columns and indexes to ensure we ignore any added at a later stage
 
