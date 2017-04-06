@@ -25,7 +25,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-define('QA_DB_VERSION_CURRENT', 64);
+define('QA_DB_VERSION_CURRENT', 65);
 
 
 /**
@@ -410,8 +410,11 @@ function qa_db_table_definitions()
 			'userid' => $useridcoltype . ' NOT NULL',
 			'vote' => 'TINYINT NOT NULL', // -1, 0 or 1
 			'flag' => 'TINYINT NOT NULL', // 0 or 1
+			'votecreated' => 'DATETIME', // time of first vote
+			'voteupdated' => 'DATETIME', // time of last vote change
 			'UNIQUE userid (userid, postid)',
 			'KEY postid (postid)',
+			'KEY created (created, updated)',
 			'CONSTRAINT ^uservotes_ibfk_1 FOREIGN KEY (postid) REFERENCES ^posts(postid) ON DELETE CASCADE',
 		),
 
@@ -1558,6 +1561,15 @@ function qa_db_upgrade_tables()
 				$pluginManager->setEnabledPlugins($allPlugins);
 				break;
 
+			case 65:
+				qa_db_upgrade_query('ALTER TABLE ^uservotes ADD COLUMN votecreated ' . $definitions['uservotes']['votecreated'] . ' AFTER flag');
+				qa_db_upgrade_query('ALTER TABLE ^uservotes ADD COLUMN voteupdated ' . $definitions['uservotes']['voteupdated'] . ' AFTER votecreated');
+				qa_db_upgrade_query('ALTER TABLE ^uservotes ADD KEY voted (votecreated, voteupdated)');
+				qa_db_upgrade_query($locktablesquery);
+
+				// for old votes, set a default date of when that post was made
+				qa_db_upgrade_query('UPDATE ^uservotes, ^posts SET ^uservotes.votecreated=^posts.created WHERE ^uservotes.postid=^posts.postid AND (^uservotes.vote != 0 OR ^uservotes.flag=0)');
+				break;
 
 			// Up to here: Version 1.8 alpha
 		}

@@ -37,7 +37,7 @@ function qa_db_uservote_set($postid, $userid, $vote)
 	$vote = max(min(($vote), 1), -1);
 
 	qa_db_query_sub(
-		'INSERT INTO ^uservotes (postid, userid, vote, flag) VALUES (#, #, #, 0) ON DUPLICATE KEY UPDATE vote=#',
+		'INSERT INTO ^uservotes (postid, userid, vote, flag, votecreated) VALUES (#, #, #, 0, NOW()) ON DUPLICATE KEY UPDATE vote=#, voteupdated=NOW()',
 		$postid, $userid, $vote, $vote
 	);
 }
@@ -153,12 +153,12 @@ function qa_db_uservoteflag_posts_get($postids)
 {
 	if (QA_FINAL_EXTERNAL_USERS) {
 		return qa_db_read_all_assoc(qa_db_query_sub(
-			'SELECT postid, userid, vote, flag FROM ^uservotes WHERE postid IN (#) AND ((vote!=0) OR (flag!=0))',
+			'SELECT postid, userid, vote, flag, votecreated, voteupdated FROM ^uservotes WHERE postid IN (#) AND (vote!=0 OR flag!=0)',
 			$postids
 		));
 	} else {
 		return qa_db_read_all_assoc(qa_db_query_sub(
-			'SELECT postid, handle, vote, flag FROM ^uservotes LEFT JOIN ^users ON ^uservotes.userid=^users.userid WHERE postid IN (#) AND ((vote!=0) OR (flag!=0))',
+			'SELECT postid, handle, vote, flag, votecreated, voteupdated FROM ^uservotes LEFT JOIN ^users ON ^uservotes.userid=^users.userid WHERE postid IN (#) AND (vote!=0 OR flag!=0)',
 			$postids
 		));
 	}
