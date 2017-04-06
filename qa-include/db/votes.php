@@ -138,7 +138,7 @@ function qa_db_uservote_post_get($postid)
 function qa_db_uservoteflag_user_get($userid)
 {
 	return qa_db_read_all_values(qa_db_query_sub(
-		'SELECT postid FROM ^uservotes WHERE userid=# AND (vote!=0) OR (flag!=0)',
+		'SELECT postid FROM ^uservotes WHERE userid=# AND (vote!=0 OR flag!=0)',
 		$userid
 	));
 }
