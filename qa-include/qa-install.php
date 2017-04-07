@@ -138,8 +138,6 @@ if (isset($pass_failure_type)) {
 }
 else {
 	// this page was requested by user GET/POST, so handle any incoming clicks on buttons
-	qa_db_connect('qa_install_db_fail_handler');
-	qa_initialize_postdb_plugins();
 
 	if (qa_clicked('create')) {
 		qa_db_install_tables();
@@ -188,6 +186,7 @@ else {
 		$success .= 'The Question2Answer database tables have been repaired.';
 	}
 
+	qa_initialize_postdb_plugins();
 	if (qa_clicked('module')) {
 		$moduletype = qa_post_text('moduletype');
 		$modulename = qa_post_text('modulename');
