@@ -414,7 +414,7 @@ function qa_db_table_definitions()
 			'voteupdated' => 'DATETIME', // time of last vote change
 			'UNIQUE userid (userid, postid)',
 			'KEY postid (postid)',
-			'KEY created (created, updated)',
+			'KEY voted (votecreated, voteupdated)',
 			'CONSTRAINT ^uservotes_ibfk_1 FOREIGN KEY (postid) REFERENCES ^posts(postid) ON DELETE CASCADE',
 		),
 
