@@ -225,7 +225,37 @@
 			unset($_SESSION['qa_session_verify_'.$suffix]);
 		}
 
+		function qa_check_login_credentials($inemailhandle, $inpassword)
+	/*
+		Call to check login credentials, override in plugin for custom credential checking whilst maintaining the normal cookie handling etc.
+		returns:
+		0 == credentials OK
+		1 == user not found
+		2 == password incorrect
+	*/
+		{
+			if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+			if (qa_opt('allow_login_email_only') || (strpos($inemailhandle, '@')!==false)) // handles can't contain @ symbols
+				$matchusers=qa_db_user_find_by_email($inemailhandle);
+			else
+				$matchusers=qa_db_user_find_by_handle($inemailhandle);
+
+			if (count($matchusers)==1) { // if matches more than one (should be impossible), don't log in
+				$inuserid=$matchusers[0];
+			
+				require_once QA_INCLUDE_DIR.'app/users.php';
+				$userinfo=qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
+
+				if (strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])) == strtolower($userinfo['passcheck'])) {
+					qa_set_logged_in_user($inuserid, $userinfo['handle'], !empty($inremember));
+					return 0;
+				} else 
+					return 2;
+			}
+			return 1;
+		}
+		
 		function qa_set_logged_in_user($userid, $handle='', $remember=false, $source=null)
 	/*
 		Call for successful log in by $userid and $handle or successful log out with $userid=null.
