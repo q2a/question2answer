@@ -1284,11 +1284,13 @@ function qa_post_limit_exceeded()
 */
 function convert_to_bytes($unit, $value)
 {
+	$value = (int) $value;
+
 	switch (strtolower($unit)) {
 		case 'g':
-			return $value * 1073741824;
+			return $value * pow(1024, 3);
 		case 'm':
-			return $value * 1048576;
+			return $value * pow(1024, 2);
 		case 'k':
 			return $value * 1024;
 		default:
