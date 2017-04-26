@@ -1206,7 +1206,7 @@ function qa_html_page_links($request, $start, $pagesize, $count, $prevnext, $par
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	$thispage = 1 + floor($start / $pagesize);
-	$lastpage = ceil(min($count, 1 + QA_MAX_LIMIT_START) / $pagesize);
+	$lastpage = ceil(min((int)$count, 1 + QA_MAX_LIMIT_START) / $pagesize);
 
 	if ($thispage > 1 || $lastpage > $thispage) {
 		$links = array('label' => qa_lang_html('main/page_label'), 'items' => array());
