@@ -24,8 +24,8 @@
 	Plugin Name: WYSIWYG Editor
 	Plugin URI:
 	Plugin Description: Wrapper for CKEditor WYSIWYG rich text editor
-	Plugin Version: 1.1.1
-	Plugin Date: 2011-12-06
+	Plugin Version: 1.1.2
+	Plugin Date: 2017-04-29
 	Plugin Author: Question2Answer
 	Plugin Author URI: http://www.question2answer.org/
 	Plugin License: GPLv2

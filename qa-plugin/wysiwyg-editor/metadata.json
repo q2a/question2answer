@@ -1,8 +1,8 @@
 {
 	"name": "WYSIWYG Editor",
 	"description": "Wrapper for CKEditor WYSIWYG rich text editor",
-	"version": "1.1.1",
-	"date": "2011-12-06",
+	"version": "1.1.2",
+	"date": "2017-04-29",
 	"author": "Question2Answer",
 	"author_uri": "http://www.question2answer.org",
 	"license": "GPLv2",
