@@ -3,7 +3,7 @@ Question2Answer
 
 [![Build Status](https://travis-ci.org/q2a/question2answer.png?branch=master)](https://travis-ci.org/q2a/question2answer)
 
-[Question2Answer][Q2A] (Q2A) is a popular free open source Q&A platform for PHP/MySQL, used by over 16,000 sites in 40 languages.
+[Question2Answer][Q2A] (Q2A) is a popular free open source Q&A platform for PHP/MySQL, used by over 20,898 [sites] in 40 languages.
 
 Q2A is highly customisable with many awesome features:
 
@@ -59,3 +59,4 @@ Gideon
 [Q2A]: http://www.question2answer.org/
 [1]: http://www.question2answer.org/qa/user/Scott
 [2]: https://github.com/q2a/question2answer/blob/master/CONTRIBUTING.md
+[sites]: http://www.question2answer.org/sites.php
