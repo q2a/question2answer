@@ -51,7 +51,7 @@ function qa_get_max_upload_size()
  * images, set $imagemaxwidth and $imagemaxheight. The function returns an array which may contain the following elements:
  *
  * 'error' => a string containing an error, if one occurred
- * 'format' => the format (file extension) of the blob created (all scaled images end up as 'jpeg')
+ * 'format' => the format (file extension) of the blob created (all scaled images end up as 'jpg')
  * 'width' => if an image, the width in pixels of the blob created (after possible scaling)
  * 'height' => if an image, the height in pixels of the blob created (after possible scaling)
  * 'blobid' => the blobid that was created (if there was no error)
@@ -106,7 +106,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 
 	$pathinfo = pathinfo($sourcefilename);
 	$format = strtolower(@$pathinfo['extension']);
-	$isimage = ($format == 'png') || ($format == 'gif') || ($format == 'jpeg') || ($format == 'jpg'); // allowed image extensions
+	$isimage = in_array($format, array('png', 'gif', 'jpeg', 'jpg')); // allowed image extensions
 
 	if ($isimage) {
 		$imagesize = @getimagesize($localfilename);
@@ -121,7 +121,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 					break;
 
 				case IMAGETYPE_JPEG:
-					$format = 'jpeg';
+					$format = 'jpg';
 					break;
 
 				case IMAGETYPE_PNG:
@@ -165,7 +165,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 
 					if (is_resource($image)) {
 						$content = qa_gd_image_jpeg($image);
-						$result['format'] = $format = 'jpeg';
+						$result['format'] = $format = 'jpg';
 						$result['width'] = $width;
 						$result['height'] = $height;
 					}
