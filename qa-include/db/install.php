@@ -724,25 +724,25 @@ function qa_db_default_userfields_sql()
 	$profileFields = array(
 		array(
 			'title' => 'name',
-			'position' => 0,
-			'flags' => 0,
-			'permit' => QA_PERMIT_ALL,
-		),
-		array(
-			'title' => 'location',
 			'position' => 1,
 			'flags' => 0,
 			'permit' => QA_PERMIT_ALL,
 		),
 		array(
-			'title' => 'website',
+			'title' => 'location',
 			'position' => 2,
+			'flags' => 0,
+			'permit' => QA_PERMIT_ALL,
+		),
+		array(
+			'title' => 'website',
+			'position' => 3,
 			'flags' => QA_FIELD_FLAGS_LINK_URL,
 			'permit' => QA_PERMIT_ALL,
 		),
 		array(
 			'title' => 'about',
-			'position' => 3,
+			'position' => 4,
 			'flags' => QA_FIELD_FLAGS_MULTI_LINE,
 			'permit' => QA_PERMIT_ALL,
 		),
