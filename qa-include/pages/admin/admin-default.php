@@ -1790,8 +1790,8 @@ switch ($adminsection) {
 		break;
 
 	case 'caching':
-		$cacheManager = Q2A_Storage_CacheManager::getInstance();
-		$qa_content['error'] = $cacheManager->getError();
+		$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+		$qa_content['error'] = $cacheDriver->getError();
 		break;
 }
 

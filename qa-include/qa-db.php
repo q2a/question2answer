@@ -511,11 +511,11 @@ function qa_db_single_select($selectspec)
 {
 	// check for cached results
 	if (isset($selectspec['caching'])) {
-		$cacheHandler = Q2A_Storage_CacheManager::getInstance();
+		$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
 		$cacheKey = 'query:' . $selectspec['caching']['key'];
 
-		if ($cacheHandler->isEnabled()) {
-			$queryData = $cacheHandler->get($cacheKey);
+		if ($cacheDriver->isEnabled()) {
+			$queryData = $cacheDriver->get($cacheKey);
 			if ($queryData !== null)
 				return $queryData;
 		}
@@ -535,8 +535,8 @@ function qa_db_single_select($selectspec)
 
 	// save cached results
 	if (isset($selectspec['caching'])) {
-		if ($cacheHandler->isEnabled()) {
-			$cacheHandler->set($cacheKey, $results, $selectspec['caching']['ttl']);
+		if ($cacheDriver->isEnabled()) {
+			$cacheDriver->set($cacheKey, $results, $selectspec['caching']['ttl']);
 		}
 	}
 

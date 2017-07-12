@@ -42,13 +42,13 @@ $pagestate = qa_get_state();
 
 // Get information about this question
 
-$cacheHandler = Q2A_Storage_CacheManager::getInstance();
+$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
 $cacheKey = "page:question:$questionid";
-$useCache = $userid === null && $cacheHandler->isEnabled() && !qa_is_http_post() && empty($pagestate);
+$useCache = $userid === null && $cacheDriver->isEnabled() && !qa_is_http_post() && empty($pagestate);
 $saveCache = false;
 
 if ($useCache) {
-	$questionData = $cacheHandler->get($cacheKey);
+	$questionData = $cacheDriver->get($cacheKey);
 }
 
 if (!isset($questionData)) {
@@ -158,7 +158,7 @@ if ($permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots'))) {
 if ($saveCache) {
 	$questionAge = qa_opt('db_time') - $question['created'];
 	if ($questionAge > 86400 * qa_opt('caching_q_start')) {
-		$cacheHandler->set($cacheKey, $questionData, qa_opt('caching_q_time'));
+		$cacheDriver->set($cacheKey, $questionData, qa_opt('caching_q_time'));
 	}
 }
 

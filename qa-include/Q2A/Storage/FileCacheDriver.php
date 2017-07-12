@@ -23,7 +23,7 @@
 /**
  * Caches data (typically from database queries) to the filesystem.
  */
-class Q2A_Storage_FileCache
+class Q2A_Storage_FileCacheDriver
 {
 	private $enabled = false;
 	private $error;
@@ -35,6 +35,10 @@ class Q2A_Storage_FileCache
 	 */
 	public function __construct($config)
 	{
+		if (!$config['enabled']) {
+			return;
+		}
+
 		if (isset($config['dir'])) {
 			$this->cacheDir = realpath($config['dir']);
 
@@ -58,6 +62,10 @@ class Q2A_Storage_FileCache
 	 */
 	public function get($key)
 	{
+		if (!$this->enabled) {
+			return null;
+		}
+
 		$file = $this->getFilename($key);
 
 		if (is_readable($file)) {
@@ -69,7 +77,12 @@ class Q2A_Storage_FileCache
 				$expiry = array_shift($lines);
 
 				if (is_numeric($expiry) && time() < $expiry) {
-					return implode("\n", $lines);
+					$encData = implode("\n", $lines);
+					// decode data, ignoring any notices
+					$data = @unserialize($encData);
+					if ($data !== false) {
+						return $data;
+					}
 				}
 			}
 		}
@@ -78,23 +91,24 @@ class Q2A_Storage_FileCache
 	}
 
 	/**
-	 * Store a string (usually serialized data) in the cache along with the key and expiry time.
+	 * Store something in the cache along with the key and expiry time. Data gets 'serialized' to a string before storing.
 	 * @param string $key The unique cache identifier.
-	 * @param string $str The data to cache (usually a serialized string).
+	 * @param mixed $data The data to cache (in core Q2A this is usually an array).
 	 * @param int $ttl Number of minutes for which to cache the data.
 	 * @return bool Whether the file was successfully cached.
 	 */
-	public function set($key, $str, $ttl)
+	public function set($key, $data, $ttl)
 	{
 		$success = false;
 		$ttl = (int) $ttl;
 
 		if ($this->enabled && $ttl > 0) {
+			$encData = serialize($data);
+			$expiry = time() + ($ttl * 60);
+			$cache = $key . "\n" . $expiry . "\n" . $encData;
+
 			$file = $this->getFilename($key);
 			$dir = dirname($file);
-			$expiry = time() + ($ttl * 60);
-			$cache = $key . "\n" . $expiry . "\n" . $str;
-
 			if (is_dir($dir) || mkdir($dir, 0777, true)) {
 				$success = file_put_contents($file, $cache) !== false;
 			}
