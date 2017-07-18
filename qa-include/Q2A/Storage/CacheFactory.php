@@ -25,17 +25,23 @@
  */
 class Q2A_Storage_CacheFactory
 {
+	private static $cacheDriver = null;
+
 	/**
 	 * Get the appropriate cache handler.
 	 * @return Q2A_Storage_CacheInterface The cache handler.
 	 */
 	public static function getCacheDriver()
 	{
-		$config = array(
-			'enabled' => (int) qa_opt('caching_enabled') === 1,
-			'dir' => defined('QA_CACHE_DIRECTORY') ? QA_CACHE_DIRECTORY : null,
-		);
+		if (self::$cacheDriver === null) {
+			$config = array(
+				'enabled' => (int) qa_opt('caching_enabled') === 1,
+				'dir' => defined('QA_CACHE_DIRECTORY') ? QA_CACHE_DIRECTORY : null,
+			);
 
-		return new Q2A_Storage_FileCacheDriver($config);
+			self::$cacheDriver = new Q2A_Storage_FileCacheDriver($config);
+		}
+
+		return self::$cacheDriver;
 	}
 }

@@ -1792,6 +1792,27 @@ switch ($adminsection) {
 	case 'caching':
 		$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
 		$qa_content['error'] = $cacheDriver->getError();
+		$cacheStats = $cacheDriver->getStats();
+
+		$qa_content['form_2'] = array(
+			'tags' => 'method="post" action="' . qa_path_html('admin/recalc') . '"',
+
+			'title' => qa_lang_html('admin/caching_cleanup'),
+
+			'style' => 'wide',
+
+			'buttons' => array(
+				'delete_all' => array(
+					'label' => qa_lang_html('admin/caching_delete_all'),
+					'tags' => 'name="docacheclear" onclick="return qa_recalc_click(this.name, this, ' . qa_js(qa_lang_html('admin/delete_stop')) . ', \'cacheclear_note\');"',
+					'note' => '<span id="cacheclear_note"></span>',
+				),
+			),
+
+			'hidden' => array(
+				'code' => qa_get_form_security_code('admin/recalc'),
+			),
+		);
 		break;
 }
 

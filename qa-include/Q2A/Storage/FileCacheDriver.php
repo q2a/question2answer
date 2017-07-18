@@ -110,11 +110,79 @@ class Q2A_Storage_FileCacheDriver
 			$file = $this->getFilename($key);
 			$dir = dirname($file);
 			if (is_dir($dir) || mkdir($dir, 0777, true)) {
-				$success = file_put_contents($file, $cache) !== false;
+				$success = @file_put_contents($file, $cache) !== false;
 			}
 		}
 
 		return $success;
+	}
+
+	/**
+	 * Delete an item from the cache.
+	 * @param  string $key The unique cache identifier.
+	 * @return bool Whether the operation succeeded.
+	 */
+	public function delete($key)
+	{
+		if ($this->enabled) {
+			$file = $this->getFilename($key);
+			$dir = dirname($key);
+
+			return $this->deleteFile($file);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete multiple items from the cache.
+	 * @param  int $limit Maximum number of items to process. 0 = unlimited
+	 * @param  int $start Offset from which to start (used for 'batching' deletes).
+	 * @param  bool $expiredOnly Delete cache only if it has expired.
+	 * @return int Number of files deleted.
+	 */
+	public function clear($limit=0, $start=0, $expiredOnly=false)
+	{
+		$seek = $processed = $deleted = 0;
+
+		// fetch directories first to lower memory usage
+		$cacheDirs = glob($this->cacheDir . '/*/*', GLOB_ONLYDIR);
+		foreach ($cacheDirs as $dir) {
+			$cacheFiles = glob($dir . '/*');
+			foreach ($cacheFiles as $file) {
+				if ($seek < $start) {
+					$seek++;
+					continue;
+				}
+
+				$wasDeleted = false;
+				if ($expiredOnly) {
+					if (is_readable($file)) {
+						$fp = fopen($file, 'r');
+						$key = fgets($fp);
+						$expiry = fgets($fp);
+						// fclose($fp);
+						if (is_numeric($expiry) && time() > $expiry) {
+							$wasDeleted = $this->deleteFile($file);
+						}
+					}
+				} else {
+					$wasDeleted = $this->deleteFile($file);
+				}
+
+				if ($wasDeleted) {
+					$deleted++;
+				}
+
+				$processed++;
+				if ($processed >= $limit) {
+					break 2;
+				}
+			}
+		}
+
+		// return how many files were deleted - caller can figure out how many to skip next time
+		return $deleted;
 	}
 
 	/**
@@ -133,6 +201,49 @@ class Q2A_Storage_FileCacheDriver
 	public function getError()
 	{
 		return $this->error;
+	}
+
+	/**
+	 * Get current statistics for the cache.
+	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.
+	 */
+	public function getStats()
+	{
+		if (!$this->enabled) {
+			return array('files' => 0, 'size' => 0);
+		}
+
+		$totalFiles = 0;
+		$totalBytes = 0;
+		$dirIter = new RecursiveDirectoryIterator($this->cacheDir);
+		foreach (new RecursiveIteratorIterator($dirIter) as $file) {
+			if (strpos($file->getFilename(), '.') === 0) {
+				// TODO: use FilesystemIterator::SKIP_DOTS once we're on minimum PHP 5.3
+				continue;
+			}
+
+			$totalFiles++;
+			$totalBytes += $file->getSize();
+		}
+
+		return array(
+			'files' => $totalFiles,
+			'size' => $totalBytes,
+		);
+	}
+
+	/**
+	 * Delete a specific file
+	 * @param  string $file Filename to delete
+	 * @return bool Whether the file was deleted successfully.
+	 */
+	private function deleteFile($file)
+	{
+		if (is_writable($file)) {
+			return @unlink($file) === true;
+		}
+
+		return false;
 	}
 
 	/**
