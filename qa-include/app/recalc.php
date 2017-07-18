@@ -528,9 +528,9 @@ function qa_recalc_perform_step(&$state)
 			break;
 
 		case 'docacheclear_process':
-			$limit = 5;
 			$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
 			$cacheStats = $cacheDriver->getStats();
+			$limit = min($cacheStats['files'], 20);
 
 			if ($next > $length) {
 				qa_recalc_transition($state, 'docacheclear_error');
