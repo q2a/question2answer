@@ -1801,6 +1801,19 @@ switch ($adminsection) {
 
 			'style' => 'wide',
 
+			'fields' => array(
+				'cache_files' => array(
+					'type' => 'static',
+					'label' => qa_lang_html('admin/caching_num_items'),
+					'value' => qa_html(qa_format_number($cacheStats['files'])),
+				),
+				'cache_size' => array(
+					'type' => 'static',
+					'label' => qa_lang_html('admin/caching_space_used'),
+					'value' => qa_html(qa_format_number($cacheStats['size'] / 1048576, 1) . ' MB'),
+				),
+			),
+
 			'buttons' => array(
 				'delete_all' => array(
 					'label' => qa_lang_html('admin/caching_delete_all'),
