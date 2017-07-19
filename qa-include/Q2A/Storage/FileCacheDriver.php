@@ -141,7 +141,7 @@ class Q2A_Storage_FileCacheDriver
 	 * @param  bool $expiredOnly Delete cache only if it has expired.
 	 * @return int Number of files deleted.
 	 */
-	public function clear($limit=0, $start=0, $expiredOnly=false)
+	public function clear($limit = 0, $start = 0, $expiredOnly = false)
 	{
 		$seek = $processed = $deleted = 0;
 
