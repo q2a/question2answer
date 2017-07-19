@@ -1815,6 +1815,11 @@ switch ($adminsection) {
 			),
 
 			'buttons' => array(
+				'delete_expired' => array(
+					'label' => qa_lang_html('admin/caching_delete_expired'),
+					'tags' => 'name="docachetrim" onclick="return qa_recalc_click(this.name, this, ' . qa_js(qa_lang_html('admin/delete_stop')) . ', \'cachetrim_note\');"',
+					'note' => '<span id="cachetrim_note"></span>',
+				),
 				'delete_all' => array(
 					'label' => qa_lang_html('admin/caching_delete_all'),
 					'tags' => 'name="docacheclear" onclick="return qa_recalc_click(this.name, this, ' . qa_js(qa_lang_html('admin/delete_stop')) . ', \'cacheclear_note\');"',

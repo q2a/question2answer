@@ -56,7 +56,6 @@ return array(
 	'caching_cleanup' => 'Caching clean-up operations',
 	'caching_delete_all' => 'Delete entire cache',
 	'caching_delete_complete' => 'Cache successfully deleted',
-	'caching_delete_error' => 'There was an error deleting some cache files',
 	'caching_delete_expired' => 'Delete expired cache',
 	'caching_delete_progress' => 'Deleted ^1 of ^2 cache files...',
 	'caching_dir_error' => 'The directory ^ defined as QA_CACHE_DIRECTORY is not writable by the web server.',

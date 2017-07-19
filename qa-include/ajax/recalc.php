@@ -33,7 +33,7 @@ if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
 		$state = qa_post_text('state');
 		$stoptime = time() + 3;
 
-		while (qa_recalc_perform_step($state) && (time() < $stoptime))
+		while (qa_recalc_perform_step($state) && time() < $stoptime)
 			;
 
 		$message = qa_recalc_get_message($state);

@@ -160,8 +160,7 @@ class Q2A_Storage_FileCacheDriver
 					if (is_readable($file)) {
 						$fp = fopen($file, 'r');
 						$key = fgets($fp);
-						$expiry = fgets($fp);
-						// fclose($fp);
+						$expiry = (int) trim(fgets($fp));
 						if (is_numeric($expiry) && time() > $expiry) {
 							$wasDeleted = $this->deleteFile($file);
 						}
