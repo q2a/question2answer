@@ -133,6 +133,11 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 		$qa_content['navigation']['cat'] = qa_category_navigation($navcategories, $categoryid, $categorypathprefix, $categoryqcount, $categoryparams);
 	}
 
+	// set meta description on category pages
+	if (!empty($navcategories[$categoryid]['content'])) {
+		$qa_content['description'] = qa_html($navcategories[$categoryid]['content']);
+	}
+
 	if (isset($feedpathprefix) && (qa_opt('feed_per_category') || !isset($categoryid))) {
 		$qa_content['feed'] = array(
 			'url' => qa_path_html(qa_feed_request($feedpathprefix . (isset($categoryid) ? ('/' . qa_category_path_request($navcategories, $categoryid)) : ''))),
