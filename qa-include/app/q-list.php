@@ -69,8 +69,9 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 
 	// Chop down to size, get user information for display
 
-	if (isset($pagesize))
+	if (isset($pagesize)) {
 		$questions = array_slice($questions, 0, $pagesize);
+	}
 
 	$usershtml = qa_userids_handles_html(qa_any_get_userids_handles($questions));
 
@@ -93,8 +94,9 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 		$qa_content['title'] = $sometitle;
 
 		$defaults = qa_post_html_defaults('Q');
-		if (isset($categorypathprefix))
+		if (isset($categorypathprefix)) {
 			$defaults['categorypathprefix'] = $categorypathprefix;
+		}
 
 		foreach ($questions as $question) {
 			$fields = qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, qa_post_html_options($question, $defaults));
@@ -107,9 +109,9 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 
 			$qa_content['q_list']['qs'][] = $fields;
 		}
-
-	} else
+	} else {
 		$qa_content['title'] = $nonetitle;
+	}
 
 	if (isset($userid) && isset($categoryid)) {
 		$favoritemap = qa_get_favorite_non_qs_map();
@@ -119,20 +121,24 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 			qa_lang_sub($categoryisfavorite ? 'main/remove_x_favorites' : 'main/add_category_x_favorites', $navcategories[$categoryid]['title']));
 	}
 
-	if (isset($count) && isset($pagesize))
+	if (isset($count) && isset($pagesize)) {
 		$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'), $pagelinkparams);
+	}
 
-	if (empty($qa_content['page_links']))
+	if (empty($qa_content['page_links'])) {
 		$qa_content['suggest_next'] = $suggest;
+	}
 
-	if (qa_using_categories() && count($navcategories) && isset($categorypathprefix))
+	if (qa_using_categories() && count($navcategories) && isset($categorypathprefix)) {
 		$qa_content['navigation']['cat'] = qa_category_navigation($navcategories, $categoryid, $categorypathprefix, $categoryqcount, $categoryparams);
+	}
 
-	if (isset($feedpathprefix) && (qa_opt('feed_per_category') || !isset($categoryid)))
+	if (isset($feedpathprefix) && (qa_opt('feed_per_category') || !isset($categoryid))) {
 		$qa_content['feed'] = array(
 			'url' => qa_path_html(qa_feed_request($feedpathprefix . (isset($categoryid) ? ('/' . qa_category_path_request($navcategories, $categoryid)) : ''))),
 			'label' => strip_tags($sometitle),
 		);
+	}
 
 	return $qa_content;
 }
@@ -181,13 +187,15 @@ function qa_qs_sub_navigation($sort, $categoryslugs)
 		),
 	);
 
-	if (isset($navigation[$sort]))
+	if (isset($navigation[$sort])) {
 		$navigation[$sort]['selected'] = true;
-	else
+	} else {
 		$navigation['recent']['selected'] = true;
+	}
 
-	if (!qa_opt('do_count_q_views'))
+	if (!qa_opt('do_count_q_views')) {
 		unset($navigation['views']);
+	}
 
 	return $navigation;
 }
@@ -226,13 +234,15 @@ function qa_unanswered_sub_navigation($by, $categoryslugs)
 		),
 	);
 
-	if (isset($navigation['by-' . $by]))
+	if (isset($navigation['by-' . $by])) {
 		$navigation['by-' . $by]['selected'] = true;
-	else
+	} else {
 		$navigation['by-answers']['selected'] = true;
+	}
 
-	if (!qa_opt('voting_on_as'))
+	if (!qa_opt('voting_on_as')) {
 		unset($navigation['by-upvotes']);
+	}
 
 	return $navigation;
 }

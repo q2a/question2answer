@@ -42,8 +42,9 @@ list($categories, $categoryid, $favoritecats) = qa_db_select_with_pending(
 	isset($userid) ? qa_db_user_favorite_categories_selectspec($userid) : null
 );
 
-if ($countslugs && !isset($categoryid))
+if ($countslugs && !isset($categoryid)) {
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+}
 
 
 // Function for recursive display of categories
@@ -53,16 +54,17 @@ function qa_category_nav_to_browse(&$navigation, $categories, $categoryid, $favo
 	foreach ($navigation as $key => $navlink) {
 		$category = $categories[$navlink['categoryid']];
 
-		if (!$category['childcount'])
+		if (!$category['childcount']) {
 			unset($navigation[$key]['url']);
-		elseif ($navlink['selected']) {
+		} elseif ($navlink['selected']) {
 			$navigation[$key]['state'] = 'open';
 			$navigation[$key]['url'] = qa_path_html('categories/' . qa_category_path_request($categories, $category['parentid']));
 		} else
 			$navigation[$key]['state'] = 'closed';
 
-		if (@$favoritemap[$navlink['categoryid']])
+		if (@$favoritemap[$navlink['categoryid']]) {
 			$navigation[$key]['favorited'] = true;
+		}
 
 		$navigation[$key]['note'] =
 			' - <a href="'.qa_path_html('questions/'.implode('/', array_reverse(explode('/', $category['backpath'])))).'">'.( ($category['qcount']==1)
@@ -91,9 +93,11 @@ if (count($categories)) {
 	unset($navigation['all']);
 
 	$favoritemap = array();
-	if (isset($favoritecats))
-		foreach ($favoritecats as $category)
+	if (isset($favoritecats)) {
+		foreach ($favoritecats as $category) {
 			$favoritemap[$category['categoryid']] = true;
+		}
+	}
 
 	qa_category_nav_to_browse($navigation, $categories, $categoryid, $favoritemap);
 

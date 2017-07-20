@@ -34,12 +34,13 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 $requestparts = explode('/', qa_request());
 $explicitqa = (strtolower($requestparts[0]) == 'qa');
 
-if ($explicitqa)
+if ($explicitqa) {
 	$slugs = array_slice($requestparts, 1);
-elseif (strlen($requestparts[0]))
+} elseif (strlen($requestparts[0])) {
 	$slugs = $requestparts;
-else
+} else {
 	$slugs = array();
+}
 
 $countslugs = count($slugs);
 
@@ -53,7 +54,7 @@ list($questions1, $questions2, $categories, $categoryid, $custompage) = qa_db_se
 	qa_db_recent_a_qs_selectspec($userid, 0, $slugs),
 	qa_db_category_nav_selectspec($slugs, false, false, true),
 	$countslugs ? qa_db_slugs_to_category_id_selectspec($slugs) : null,
-	(($countslugs == 1) && !$explicitqa) ? qa_db_page_full_selectspec($slugs[0], false) : null
+	($countslugs == 1 && !$explicitqa) ? qa_db_page_full_selectspec($slugs[0], false) : null
 );
 
 
@@ -79,8 +80,9 @@ if (isset($custompage) && !($custompage['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
 			);
 		}
 
-	} else
+	} else {
 		$qa_content['error'] = qa_lang_html('users/no_permission');
+	}
 
 	return $qa_content;
 }
@@ -88,8 +90,9 @@ if (isset($custompage) && !($custompage['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
 
 // Then, see if we should redirect because the 'qa' page is the same as the home page
 
-if ($explicitqa && (!qa_is_http_post()) && !qa_has_custom_home())
+if ($explicitqa && !qa_is_http_post() && !qa_has_custom_home()) {
 	qa_redirect(qa_category_path_request($categories, $categoryid), $_GET);
+}
 
 
 // Then, if there's a slug that matches no category, check page modules provided by plugins
@@ -128,8 +131,9 @@ $questions = qa_any_sort_and_dedupe(array_merge($questions1, $questions2));
 $pagesize = qa_opt('page_size_home');
 
 if ($countslugs) {
-	if (!isset($categoryid))
+	if (!isset($categoryid)) {
 		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
 
 	$categorytitlehtml = qa_html($categories[$categoryid]['title']);
 	$sometitle = qa_lang_html_sub('main/recent_qs_as_in_x', $categorytitlehtml);

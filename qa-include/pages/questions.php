@@ -68,8 +68,9 @@ list($questions, $categories, $categoryid) = qa_db_select_with_pending(
 );
 
 if ($countslugs) {
-	if (!isset($categoryid))
+	if (!isset($categoryid)) {
 		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
 
 	$categorytitlehtml = qa_html($categories[$categoryid]['title']);
 	$nonetitle = qa_lang_html_sub('main/no_questions_in_x', $categorytitlehtml);

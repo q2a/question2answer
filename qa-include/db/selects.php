@@ -52,8 +52,9 @@ function qa_db_select_with_pending() // any number of parameters read via func_g
 
 	if (is_array($qa_db_pending_selectspecs)) {
 		foreach ($qa_db_pending_selectspecs as $pendingid => $selectspec) {
-			if (!isset($qa_db_pending_results[$pendingid]))
+			if (!isset($qa_db_pending_results[$pendingid])) {
 				$selectspecs['pending_' . $pendingid] = $selectspec;
+			}
 		}
 	}
 
@@ -96,13 +97,15 @@ function qa_db_get_pending_result($pendingid, $selectspec = null)
 {
 	global $qa_db_pending_selectspecs, $qa_db_pending_results;
 
-	if (isset($selectspec))
+	if (isset($selectspec)) {
 		qa_db_queue_pending_select($pendingid, $selectspec);
-	elseif (!isset($qa_db_pending_selectspecs[$pendingid]))
+	} elseif (!isset($qa_db_pending_selectspecs[$pendingid])) {
 		qa_fatal_error('Pending query was never set up: ' . $pendingid);
+	}
 
-	if (!isset($qa_db_pending_results[$pendingid]))
+	if (!isset($qa_db_pending_results[$pendingid])) {
 		qa_db_select_with_pending();
+	}
 
 	return $qa_db_pending_results[$pendingid];
 }
@@ -240,16 +243,18 @@ function qa_db_add_selectspec_opost(&$selectspec, $poststable, $fromupdated = fa
 	$selectspec['columns']['otime'] = 'UNIX_TIMESTAMP(' . $poststable . ($fromupdated ? '.updated' : '.created') . ')';
 	$selectspec['columns']['oflagcount'] = $poststable . '.flagcount';
 
-	if ($fromupdated)
+	if ($fromupdated) {
 		$selectspec['columns']['oupdatetype'] = $poststable . '.updatetype';
+	}
 
 	if ($full) {
 		$selectspec['columns']['ocontent'] = $poststable . '.content';
 		$selectspec['columns']['oformat'] = $poststable . '.format';
 	}
 
-	if ($fromupdated || $full)
+	if ($fromupdated || $full) {
 		$selectspec['columns']['oupdated'] = 'UNIX_TIMESTAMP(' . $poststable . '.updated)';
+	}
 }
 
 
@@ -285,8 +290,10 @@ function qa_db_add_selectspec_ousers(&$selectspec, $userstable, $pointstable)
  */
 function qa_db_slugs_to_backpath($categoryslugs)
 {
-	if (!is_array($categoryslugs)) // accept old-style string arguments for one category deep
+	if (!is_array($categoryslugs)) {
+		// accept old-style string arguments for one category deep
 		$categoryslugs = array($categoryslugs);
+	}
 
 	return implode('/', array_reverse($categoryslugs));
 }
@@ -300,8 +307,10 @@ function qa_db_slugs_to_backpath($categoryslugs)
  */
 function qa_db_categoryslugs_sql_args($categoryslugs, &$arguments)
 {
-	if (!is_array($categoryslugs)) // accept old-style string arguments for one category deep
+	if (!is_array($categoryslugs)) {
+		// accept old-style string arguments for one category deep
 		$categoryslugs = strlen($categoryslugs) ? array($categoryslugs) : array();
+	}
 
 	$levels = count($categoryslugs);
 
@@ -331,10 +340,11 @@ function qa_db_categoryslugs_sql_args($categoryslugs, &$arguments)
  */
 function qa_db_qs_selectspec($voteuserid, $sort, $start, $categoryslugs = null, $createip = null, $specialtype = false, $full = false, $count = null)
 {
-	if ($specialtype == 'Q' || $specialtype == 'Q_QUEUED')
+	if ($specialtype == 'Q' || $specialtype == 'Q_QUEUED') {
 		$type = $specialtype;
-	else
+	} else {
 		$type = $specialtype ? 'Q_HIDDEN' : 'Q'; // for backwards compatibility
+	}
 
 	$count = isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
@@ -358,13 +368,15 @@ function qa_db_qs_selectspec($voteuserid, $sort, $start, $categoryslugs = null, 
 
 	$selectspec = qa_db_posts_basic_selectspec($voteuserid, $full);
 
-	$selectspec['source'] .= " JOIN (SELECT postid FROM ^posts WHERE " .
+	$selectspec['source'] .=
+		" JOIN (SELECT postid FROM ^posts WHERE " .
 		qa_db_categoryslugs_sql_args($categoryslugs, $selectspec['arguments']) .
 		(isset($createip) ? "createip=$ AND " : "") .
 		"type=$ " . $sortsql . " LIMIT #,#) y ON ^posts.postid=y.postid";
 
-	if (isset($createip))
+	if (isset($createip)) {
 		$selectspec['arguments'][] = @inet_pton($createip);
+	}
 
 	array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -391,10 +403,11 @@ function qa_db_qs_selectspec($voteuserid, $sort, $start, $categoryslugs = null, 
  */
 function qa_db_unanswered_qs_selectspec($voteuserid, $by, $start, $categoryslugs = null, $specialtype = false, $full = false, $count = null)
 {
-	if ($specialtype == 'Q' || $specialtype == 'Q_QUEUED')
+	if ($specialtype == 'Q' || $specialtype == 'Q_QUEUED') {
 		$type = $specialtype;
-	else
+	} else {
 		$type = $specialtype ? 'Q_HIDDEN' : 'Q'; // for backwards compatibility
+	}
 
 	$count = isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
@@ -441,10 +454,11 @@ function qa_db_unanswered_qs_selectspec($voteuserid, $by, $start, $categoryslugs
  */
 function qa_db_recent_a_qs_selectspec($voteuserid, $start, $categoryslugs = null, $createip = null, $specialtype = false, $fullanswers = false, $count = null)
 {
-	if ($specialtype == 'A' || $specialtype == 'A_QUEUED')
+	if ($specialtype == 'A' || $specialtype == 'A_QUEUED') {
 		$type = $specialtype;
-	else
+	} else {
 		$type = $specialtype ? 'A_HIDDEN' : 'A'; // for backwards compatibility
+	}
 
 	$count = isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
@@ -453,7 +467,8 @@ function qa_db_recent_a_qs_selectspec($voteuserid, $start, $categoryslugs = null
 	qa_db_add_selectspec_opost($selectspec, 'aposts', false, $fullanswers);
 	qa_db_add_selectspec_ousers($selectspec, 'ausers', 'auserpoints');
 
-	$selectspec['source'] .= " JOIN ^posts AS aposts ON ^posts.postid=aposts.parentid" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS aposts ON ^posts.postid=aposts.parentid" .
 		(QA_FINAL_EXTERNAL_USERS ? "" : " LEFT JOIN ^users AS ausers ON aposts.userid=ausers.userid") .
 		" LEFT JOIN ^userpoints AS auserpoints ON aposts.userid=auserpoints.userid" .
 		" JOIN (SELECT postid FROM ^posts WHERE " .
@@ -462,8 +477,9 @@ function qa_db_recent_a_qs_selectspec($voteuserid, $start, $categoryslugs = null
 		"type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON aposts.postid=y.postid" .
 		($specialtype ? '' : " WHERE ^posts.type='Q'");
 
-	if (isset($createip))
+	if (isset($createip)) {
 		$selectspec['arguments'][] = @inet_pton($createip);
+	}
 
 	array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -490,10 +506,11 @@ function qa_db_recent_a_qs_selectspec($voteuserid, $start, $categoryslugs = null
  */
 function qa_db_recent_c_qs_selectspec($voteuserid, $start, $categoryslugs = null, $createip = null, $specialtype = false, $fullcomments = false, $count = null)
 {
-	if ($specialtype == 'C' || $specialtype == 'C_QUEUED')
+	if ($specialtype == 'C' || $specialtype == 'C_QUEUED') {
 		$type = $specialtype;
-	else
+	} else {
 		$type = $specialtype ? 'C_HIDDEN' : 'C'; // for backwards compatibility
+	}
 
 	$count = isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
@@ -502,7 +519,8 @@ function qa_db_recent_c_qs_selectspec($voteuserid, $start, $categoryslugs = null
 	qa_db_add_selectspec_opost($selectspec, 'cposts', false, $fullcomments);
 	qa_db_add_selectspec_ousers($selectspec, 'cusers', 'cuserpoints');
 
-	$selectspec['source'] .= " JOIN ^posts AS parentposts ON" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=(CASE LEFT(parentposts.type, 1) WHEN 'A' THEN parentposts.parentid ELSE parentposts.postid END)" .
 		" JOIN ^posts AS cposts ON parentposts.postid=cposts.parentid" .
 		(QA_FINAL_EXTERNAL_USERS ? "" : " LEFT JOIN ^users AS cusers ON cposts.userid=cusers.userid") .
@@ -513,8 +531,9 @@ function qa_db_recent_c_qs_selectspec($voteuserid, $start, $categoryslugs = null
 		"type=$ ORDER BY ^posts.created DESC LIMIT #,#) y ON cposts.postid=y.postid" .
 		($specialtype ? '' : " WHERE ^posts.type='Q' AND ((parentposts.type='Q') OR (parentposts.type='A'))");
 
-	if (isset($createip))
+	if (isset($createip)) {
 		$selectspec['arguments'][] = @inet_pton($createip);
+	}
 
 	array_push($selectspec['arguments'], $type, $start, $count);
 
@@ -548,7 +567,8 @@ function qa_db_recent_edit_qs_selectspec($voteuserid, $start, $categoryslugs = n
 	qa_db_add_selectspec_opost($selectspec, 'editposts', true, $fulledited);
 	qa_db_add_selectspec_ousers($selectspec, 'editusers', 'edituserpoints');
 
-	$selectspec['source'] .= " JOIN ^posts AS parentposts ON" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=IF(LEFT(parentposts.type, 1)='Q', parentposts.postid, parentposts.parentid)" .
 		" JOIN ^posts AS editposts ON parentposts.postid=IF(LEFT(editposts.type, 1)='Q', editposts.postid, editposts.parentid)" .
 		(QA_FINAL_EXTERNAL_USERS ? "" : " LEFT JOIN ^users AS editusers ON editposts.lastuserid=editusers.userid") .
@@ -560,8 +580,9 @@ function qa_db_recent_edit_qs_selectspec($voteuserid, $start, $categoryslugs = n
 		" ORDER BY ^posts.updated DESC LIMIT #,#) y ON editposts.postid=y.postid" .
 		($onlyvisible ? " WHERE parentposts.type IN ('Q', 'A', 'C') AND ^posts.type IN ('Q', 'A', 'C')" : "");
 
-	if (isset($lastip))
+	if (isset($lastip)) {
 		$selectspec['arguments'][] = @inet_pton($lastip);
+	}
 
 	array_push($selectspec['arguments'], $start, $count);
 
@@ -591,7 +612,8 @@ function qa_db_flagged_post_qs_selectspec($voteuserid, $start, $fullflagged = fa
 	qa_db_add_selectspec_opost($selectspec, 'flagposts', false, $fullflagged);
 	qa_db_add_selectspec_ousers($selectspec, 'flagusers', 'flaguserpoints');
 
-	$selectspec['source'] .= " JOIN ^posts AS parentposts ON" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=IF(LEFT(parentposts.type, 1)='Q', parentposts.postid, parentposts.parentid)" .
 		" JOIN ^posts AS flagposts ON parentposts.postid=IF(LEFT(flagposts.type, 1)='Q', flagposts.postid, flagposts.parentid)" .
 		(QA_FINAL_EXTERNAL_USERS ? "" : " LEFT JOIN ^users AS flagusers ON flagposts.userid=flagusers.userid") .
@@ -657,7 +679,8 @@ function qa_db_posts_to_qs_selectspec($voteuserid, $postids, $full = false)
 	$selectspec['columns']['obasetype'] = 'LEFT(childposts.type, 1)';
 	$selectspec['columns']['opostid'] = 'childposts.postid';
 
-	$selectspec['source'] .= " JOIN ^posts AS parentposts ON" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=IF(LEFT(parentposts.type, 1)='Q', parentposts.postid, parentposts.parentid)" .
 		" JOIN ^posts AS childposts ON parentposts.postid=IF(LEFT(childposts.type, 1)='Q', childposts.postid, childposts.parentid)" .
 		" WHERE childposts.postid IN (#)";
@@ -789,10 +812,11 @@ function qa_db_post_meta_selectspec($postid, $title)
 		'arrayvalue' => 'content',
 	);
 
-	if (is_array($title))
+	if (is_array($title)) {
 		$selectspec['arraykey'] = 'title';
-	else
+	} else {
 		$selectspec['single'] = true;
+	}
 
 	return $selectspec;
 }
@@ -946,8 +970,9 @@ function qa_db_search_posts_selectspec($voteuserid, $titlewords, $contentwords, 
 		}
 	}
 
-	if ($selectparts == 0)
+	if ($selectparts == 0) {
 		$selectspec['source'] .= '(SELECT NULL as questionid, 0 AS score, NULL AS matchposttype, NULL AS matchpostid FROM ^posts WHERE postid IS NULL)';
+	}
 
 	$selectspec['source'] .= ") x LEFT JOIN ^posts ON ^posts.postid=questionid GROUP BY questionid ORDER BY score DESC LIMIT #,#) y ON ^posts.postid=y.questionid";
 
@@ -995,9 +1020,9 @@ function qa_search_set_max_match($question, &$type, &$postid)
  */
 function qa_db_full_category_selectspec($slugsorid, $isid)
 {
-	if ($isid)
+	if ($isid) {
 		$identifiersql = 'categoryid=#';
-	else {
+	} else {
 		$identifiersql = 'backpath=$';
 		$slugsorid = qa_db_slugs_to_backpath($slugsorid);
 	}
@@ -1026,11 +1051,11 @@ function qa_db_full_category_selectspec($slugsorid, $isid)
 function qa_db_category_nav_selectspec($slugsorid, $isid, $ispostid = false, $full = false)
 {
 	if ($isid) {
-		if ($ispostid)
+		if ($ispostid) {
 			$identifiersql = 'categoryid=(SELECT categoryid FROM ^posts WHERE postid=#)';
-		else
+		} else {
 			$identifiersql = 'categoryid=#';
-
+		}
 	} else {
 		$identifiersql = 'backpath=$';
 		$slugsorid = qa_db_slugs_to_backpath($slugsorid);
@@ -1115,13 +1140,12 @@ function qa_db_pages_selectspec($onlynavin = null, $onlypageids = null)
 	if (isset($onlypageids)) {
 		$selectspec['source'] = '^pages WHERE pageid IN (#)';
 		$selectspec['arguments'] = array($onlypageids);
-
 	} elseif (isset($onlynavin)) {
 		$selectspec['source'] = '^pages WHERE nav IN ($) ORDER BY position';
 		$selectspec['arguments'] = array($onlynavin);
-
-	} else
+	} else {
 		$selectspec['source'] = '^pages ORDER BY position';
+	}
 
 	return $selectspec;
 }
@@ -1249,7 +1273,8 @@ function qa_db_user_recent_a_qs_selectspec($voteuserid, $identifier, $count = nu
 	$selectspec['columns']['odownvotes'] = 'aposts.downvotes';
 	$selectspec['columns']['onetvotes'] = 'aposts.netvotes';
 
-	$selectspec['source'] .= " JOIN ^posts AS aposts ON ^posts.postid=aposts.parentid" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS aposts ON ^posts.postid=aposts.parentid" .
 		" JOIN (SELECT postid FROM ^posts WHERE " .
 		" userid=" . (QA_FINAL_EXTERNAL_USERS ? "$" : "(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)") .
 		" AND type='A' ORDER BY created DESC LIMIT #,#) y ON aposts.postid=y.postid WHERE ^posts.type='Q'";
@@ -1279,7 +1304,8 @@ function qa_db_user_recent_c_qs_selectspec($voteuserid, $identifier, $count = nu
 
 	qa_db_add_selectspec_opost($selectspec, 'cposts');
 
-	$selectspec['source'] .= " JOIN ^posts AS parentposts ON" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=(CASE parentposts.type WHEN 'A' THEN parentposts.parentid ELSE parentposts.postid END)" .
 		" JOIN ^posts AS cposts ON parentposts.postid=cposts.parentid" .
 		" JOIN (SELECT postid FROM ^posts WHERE " .
@@ -1311,7 +1337,8 @@ function qa_db_user_recent_edit_qs_selectspec($voteuserid, $identifier, $count =
 
 	qa_db_add_selectspec_opost($selectspec, 'editposts', true);
 
-	$selectspec['source'] .= " JOIN ^posts AS parentposts ON" .
+	$selectspec['source'] .=
+		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=IF(LEFT(parentposts.type, 1)='Q', parentposts.postid, parentposts.parentid)" .
 		" JOIN ^posts AS editposts ON parentposts.postid=IF(LEFT(editposts.type, 1)='Q', editposts.postid, editposts.parentid)" .
 		" JOIN (SELECT postid FROM ^posts WHERE " .
@@ -1470,7 +1497,7 @@ function qa_db_top_users_selectspec($start, $count = null)
 {
 	$count = isset($count) ? min($count, QA_DB_RETRIEVE_USERS) : QA_DB_RETRIEVE_USERS;
 
-	if (QA_FINAL_EXTERNAL_USERS)
+	if (QA_FINAL_EXTERNAL_USERS) {
 		return array(
 			'columns' => array('userid', 'points'),
 			'source' => '^userpoints ORDER BY points DESC LIMIT #,#',
@@ -1478,15 +1505,15 @@ function qa_db_top_users_selectspec($start, $count = null)
 			'arraykey' => 'userid',
 			'sortdesc' => 'points',
 		);
+	}
 
-	else
-		return array(
-			'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
-			'source' => '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid',
-			'arguments' => array($start, $count),
-			'arraykey' => 'userid',
-			'sortdesc' => 'points',
-		);
+	return array(
+		'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
+		'source' => '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid',
+		'arguments' => array($start, $count),
+		'arraykey' => 'userid',
+		'sortdesc' => 'points',
+	);
 }
 
 
@@ -1595,8 +1622,9 @@ function qa_db_recent_messages_selectspec($fromidentifier, $fromisuserid, $toide
 	if (isset($fromidentifier)) {
 		$fromsub = $fromisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)';
 		$where = 'fromuserid=' . $fromsub . " AND type='PRIVATE'";
-	} else
+	} else {
 		$where = "type='PUBLIC'";
+	}
 	$tosub = $toisuserid ? '$' : '(SELECT userid FROM ^users WHERE handle=$ LIMIT 1)';
 
 	$source = '^messages LEFT JOIN ^users ufrom ON fromuserid=ufrom.userid LEFT JOIN ^users uto ON touserid=uto.userid WHERE ' . $where . ' AND touserid=' . $tosub . ' ORDER BY ^messages.created DESC LIMIT #,#';
