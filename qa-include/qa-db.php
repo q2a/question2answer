@@ -512,7 +512,7 @@ function qa_db_single_select($selectspec)
 	// check for cached results
 	if (isset($selectspec['caching'])) {
 		$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
-		$cacheKey = 'query:' . $selectspec['caching']['key'];
+		$cacheKey = 'q2a.query:' . $selectspec['caching']['key'];
 
 		if ($cacheDriver->isEnabled()) {
 			$queryData = $cacheDriver->get($cacheKey);

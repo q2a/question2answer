@@ -43,7 +43,7 @@ $pagestate = qa_get_state();
 // Get information about this question
 
 $cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
-$cacheKey = "page:question:$questionid";
+$cacheKey = "q2a.question:$questionid";
 $useCache = $userid === null && $cacheDriver->isEnabled() && !qa_is_http_post() && empty($pagestate);
 $saveCache = false;
 
