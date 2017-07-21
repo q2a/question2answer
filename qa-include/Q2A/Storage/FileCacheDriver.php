@@ -23,7 +23,7 @@
 /**
  * Caches data (typically from database queries) to the filesystem.
  */
-class Q2A_Storage_FileCacheDriver
+class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 {
 	private $enabled = false;
 	private $error;
@@ -58,6 +58,7 @@ class Q2A_Storage_FileCacheDriver
 	/**
 	 * Get the cached data for the supplied key.
 	 * @param string $key The unique cache identifier.
+	 *
 	 * @return string The cached data, or null otherwise.
 	 */
 	public function get($key)
@@ -95,6 +96,7 @@ class Q2A_Storage_FileCacheDriver
 	 * @param string $key The unique cache identifier.
 	 * @param mixed $data The data to cache (in core Q2A this is usually an array).
 	 * @param int $ttl Number of minutes for which to cache the data.
+	 *
 	 * @return bool Whether the file was successfully cached.
 	 */
 	public function set($key, $data, $ttl)
@@ -119,7 +121,8 @@ class Q2A_Storage_FileCacheDriver
 
 	/**
 	 * Delete an item from the cache.
-	 * @param  string $key The unique cache identifier.
+	 * @param string $key The unique cache identifier.
+	 *
 	 * @return bool Whether the operation succeeded.
 	 */
 	public function delete($key)
@@ -136,9 +139,10 @@ class Q2A_Storage_FileCacheDriver
 
 	/**
 	 * Delete multiple items from the cache.
-	 * @param  int $limit Maximum number of items to process. 0 = unlimited
-	 * @param  int $start Offset from which to start (used for 'batching' deletes).
-	 * @param  bool $expiredOnly Delete cache only if it has expired.
+	 * @param int $limit Maximum number of items to process. 0 = unlimited
+	 * @param int $start Offset from which to start (used for 'batching' deletes).
+	 * @param bool $expiredOnly Delete cache only if it has expired.
+	 *
 	 * @return int Number of files deleted.
 	 */
 	public function clear($limit = 0, $start = 0, $expiredOnly = false)
@@ -186,6 +190,7 @@ class Q2A_Storage_FileCacheDriver
 
 	/**
 	 * Whether caching is available.
+	 *
 	 * @return bool
 	 */
 	public function isEnabled()
@@ -195,6 +200,7 @@ class Q2A_Storage_FileCacheDriver
 
 	/**
 	 * Get the last error.
+	 *
 	 * @return string
 	 */
 	public function getError()
@@ -204,6 +210,7 @@ class Q2A_Storage_FileCacheDriver
 
 	/**
 	 * Get current statistics for the cache.
+	 *
 	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.
 	 */
 	public function getStats()
@@ -233,7 +240,8 @@ class Q2A_Storage_FileCacheDriver
 
 	/**
 	 * Delete a specific file
-	 * @param  string $file Filename to delete
+	 * @param string $file Filename to delete.
+	 *
 	 * @return bool Whether the file was deleted successfully.
 	 */
 	private function deleteFile($file)
@@ -248,6 +256,7 @@ class Q2A_Storage_FileCacheDriver
 	/**
 	 * Generates filename for cache key, of the form `1/23/123abc`
 	 * @param string $key The unique cache key.
+	 *
 	 * @return string
 	 */
 	private function getFilename($key)
