@@ -176,11 +176,16 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	 */
 	public function getStats()
 	{
-		$stats = $this->memcached->getStats();
-		$key = self::HOST . ':' . self::PORT;
+		$totalFiles = 0;
+		$totalBytes = 0;
 
-		$totalFiles = isset($stats[$key]['curr_items']) ? $stats[$key]['curr_items'] : 0;
-		$totalBytes = isset($stats[$key]['bytes']) ? $stats[$key]['bytes'] : 0;
+		if ($this->enabled) {
+			$stats = $this->memcached->getStats();
+			$key = self::HOST . ':' . self::PORT;
+
+			$totalFiles = isset($stats[$key]['curr_items']) ? $stats[$key]['curr_items'] : 0;
+			$totalBytes = isset($stats[$key]['bytes']) ? $stats[$key]['bytes'] : 0;
+		}
 
 		return array(
 			'files' => $totalFiles,

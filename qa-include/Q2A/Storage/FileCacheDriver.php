@@ -3,7 +3,7 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Storage/FileCache.php
+	File: qa-include/Q2A/Storage/FileCacheDriver.php
 	Description: File-based driver for caching system.
 
 

@@ -211,10 +211,7 @@ function qa_reset_options($names)
  */
 function qa_default_option($name)
 {
-	if (qa_to_override(__FUNCTION__)) {
-		$args = func_get_args();
-		return qa_call_override(__FUNCTION__, $args);
-	}
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	$fixed_defaults = array(
 		'allow_anonymous_naming' => 1,
@@ -237,6 +234,7 @@ function qa_default_option($name)
 		'avatar_store_size' => 400,
 		'avatar_users_size' => 30,
 		'caching_catwidget_time' => 30,
+		'caching_driver' => 'filesystem',
 		'caching_enabled' => 0,
 		'caching_q_start' => 7,
 		'caching_q_time' => 30,

@@ -650,7 +650,7 @@ switch ($adminsection) {
 		$subtitle = 'admin/caching_title';
 		$formstyle = 'wide';
 
-		$showoptions = array('caching_enabled', 'caching_q_start', 'caching_q_time', 'caching_qlist_time', 'caching_catwidget_time');
+		$showoptions = array('caching_enabled', 'caching_driver', 'caching_q_start', 'caching_q_time', 'caching_qlist_time', 'caching_catwidget_time');
 
 		break;
 
@@ -1549,6 +1549,13 @@ foreach ($showoptions as $optionname) {
 
 			case 'mailing_per_minute':
 				$optionfield['suffix'] = qa_lang_html('admin/emails_per_minute');
+				break;
+
+			case 'caching_driver':
+				qa_optionfield_make_select($optionfield, array(
+					'filesystem' => qa_lang_html('options/caching_filesystem'),
+					'memcached' => qa_lang_html('options/caching_memcached'),
+				), $value, 'filesystem');
 				break;
 
 			case 'caching_q_time':
