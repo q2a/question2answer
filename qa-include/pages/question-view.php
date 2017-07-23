@@ -119,7 +119,6 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 	}
 
 	$rules['isbyuser'] = qa_post_is_by_user($post, $userid, $cookieid);
-	$rules['queued'] = substr($post['type'], 1) == '_QUEUED';
 	$rules['closed'] = $post['basetype'] == 'Q' && (isset($post['closedbyid']) || (isset($post['selchildid']) && qa_opt('do_close_on_select')));
 
 	// Cache some responses to the user permission checks
@@ -142,7 +141,7 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 	// General permissions
 
 	$rules['authorlast'] = !isset($post['lastuserid']) || $post['lastuserid'] === $post['userid'];
-	$rules['viewable'] = $post['hidden'] ? !$permiterror_hide_show_self : ($rules['queued'] ? ($rules['isbyuser'] || !$permiterror_moderate) : true);
+	$rules['viewable'] = $post['hidden'] ? !$permiterror_hide_show_self : ($post['queued'] ? ($rules['isbyuser'] || !$permiterror_moderate) : true);
 
 	// Answer, comment and edit might show the button even if the user still needs to do something (e.g. log in)
 
@@ -156,7 +155,7 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 	$button_errors = array('login', 'level', 'approve');
 
 	$rules['editbutton'] = !$post['hidden'] && !$rules['closed']
-		&& ($rules['isbyuser'] || (!in_array($permiterror_edit, $button_errors) && (!$rules['queued'])));
+		&& ($rules['isbyuser'] || (!in_array($permiterror_edit, $button_errors) && (!$post['queued'])));
 	$rules['editable'] = $rules['editbutton'] && ($rules['isbyuser'] || !$permiterror_edit);
 
 	$rules['retagcatbutton'] = $post['basetype'] == 'Q' && (qa_using_tags() || qa_using_categories())
@@ -173,7 +172,7 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 
 	$rules['aselectable'] = $post['type'] == 'Q' && !qa_user_permit_error($rules['isbyuser'] ? null : 'permit_select_a', null, $userlevel, true, $userfields);
 
-	$rules['flagbutton'] = qa_opt('flagging_of_posts') && !$rules['isbyuser'] && !$post['hidden'] && !$rules['queued']
+	$rules['flagbutton'] = qa_opt('flagging_of_posts') && !$rules['isbyuser'] && !$post['hidden'] && !$post['queued']
 		&& !@$post['userflag'] && !in_array($permiterror_flag, $button_errors);
 	$rules['flagtohide'] = $rules['flagbutton'] && !$permiterror_flag && ($post['flagcount'] + 1) >= qa_opt('flagging_hide_after');
 	$rules['unflaggable'] = @$post['userflag'] && !$post['hidden'];
@@ -189,9 +188,9 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 	$rules['reopenable'] = $rules['closed'] && isset($post['closedbyid']) && $permiterror_close_open === false && !$post['hidden']
 		&& ($notclosedbyother || !qa_user_permit_error('permit_close_q', null, $userlevel, true, $userfields));
 
-	$rules['moderatable'] = $rules['queued'] && !$permiterror_moderate;
+	$rules['moderatable'] = $post['queued'] && !$permiterror_moderate;
 	// cannot hide a question if it was closed by someone else and you don't have global hiding permissions
-	$rules['hideable'] = !$post['hidden'] && ($rules['isbyuser'] || !$rules['queued']) && !$permiterror_hide_show_self
+	$rules['hideable'] = !$post['hidden'] && ($rules['isbyuser'] || !$post['queued']) && !$permiterror_hide_show_self
 		&& ($notclosedbyother || !$permiterror_hide_show);
 	// means post can be reshown immediately without checking whether it needs moderation
 	$rules['reshowimmed'] = $post['hidden'] && !$permiterror_hide_show;

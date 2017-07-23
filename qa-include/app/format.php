@@ -316,7 +316,8 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 	// High level information
 
-	$fields['hidden'] = @$post['hidden'];
+	$fields['hidden'] = isset($post['hidden']) ? $post['hidden'] : null;
+	$fields['queued'] = isset($post['queued']) ? $post['queued'] : null;
 	$fields['tags'] = 'id="' . qa_html($elementid) . '"';
 
 	$fields['classes'] = ($isquestion && $favoritedview && @$post['userfavoriteq']) ? 'qa-q-favorited' : '';
@@ -498,7 +499,12 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 		if ($fields['hidden']) {
 			$fields['vote_state'] = 'disabled';
-			$fields['vote_up_tags'] = 'title="' . qa_lang_html($isanswer ? 'main/vote_disabled_hidden_a' : 'main/vote_disabled_hidden_q') . '"';
+			$fields['vote_up_tags'] = 'title="' . qa_lang_html('main/vote_disabled_hidden') . '"';
+			$fields['vote_down_tags'] = $fields['vote_up_tags'];
+
+		} elseif ($fields['queued']) {
+			$fields['vote_state'] = 'disabled';
+			$fields['vote_up_tags'] = 'title="' . qa_lang_html('main/vote_disabled_queued') . '"';
 			$fields['vote_down_tags'] = $fields['vote_up_tags'];
 
 		} elseif ($isbyuser) {

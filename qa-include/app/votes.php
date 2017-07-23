@@ -45,7 +45,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
-	if (is_array($post) && ($post['basetype'] == 'Q' || $post['basetype'] == 'A') &&
+	if (is_array($post) && !$post['hidden'] && !$post['queued'] && ($post['basetype'] == 'Q' || $post['basetype'] == 'A') &&
 		qa_opt(($post['basetype'] == 'Q') ? 'voting_on_qs' : 'voting_on_as') &&
 		(!isset($post['userid']) || !isset($userid) || $post['userid'] != $userid)
 	) {

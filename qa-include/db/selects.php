@@ -155,7 +155,8 @@ function qa_db_posts_basic_selectspec($voteuserid = null, $full = false, $user =
 
 	$selectspec = array(
 		'columns' => array(
-			'^posts.postid', '^posts.categoryid', '^posts.type', 'basetype' => 'LEFT(^posts.type, 1)', 'hidden' => "INSTR(^posts.type, '_HIDDEN')>0",
+			'^posts.postid', '^posts.categoryid', '^posts.type', 'basetype' => 'LEFT(^posts.type, 1)',
+			'hidden' => "INSTR(^posts.type, '_HIDDEN')>0", 'queued' => "INSTR(^posts.type, '_QUEUED')>0",
 			'^posts.acount', '^posts.selchildid', '^posts.closedbyid', '^posts.upvotes', '^posts.downvotes', '^posts.netvotes', '^posts.views', '^posts.hotness',
 			'^posts.flagcount', '^posts.title', '^posts.tags', 'created' => 'UNIX_TIMESTAMP(^posts.created)', '^posts.name',
 			'categoryname' => '^categories.title', 'categorybackpath' => "^categories.backpath",
