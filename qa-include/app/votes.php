@@ -45,17 +45,30 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
-	if (is_array($post) && !$post['hidden'] && !$post['queued'] && ($post['basetype'] == 'Q' || $post['basetype'] == 'A') &&
-		qa_opt(($post['basetype'] == 'Q') ? 'voting_on_qs' : 'voting_on_as') &&
+	if ($post['hidden']) {
+		return qa_lang_html('main/vote_disabled_hidden');
+	}
+	if ($post['queued']) {
+		return qa_lang_html('main/vote_disabled_queued');
+	}
+
+	$allowVoting = qa_opt($post['basetype'] == 'Q' ? 'voting_on_qs' : 'voting_on_as');
+
+	if (($post['basetype'] === 'Q' || $post['basetype'] === 'A') && $allowVoting &&
 		(!isset($post['userid']) || !isset($userid) || $post['userid'] != $userid)
 	) {
 		$permiterror = qa_user_post_permit_error(($post['basetype'] == 'Q') ? 'permit_vote_q' : 'permit_vote_a', $post, QA_LIMIT_VOTES);
 
 		$errordownonly = !$permiterror && $vote < 0;
-		if ($errordownonly)
+		if ($errordownonly) {
 			$permiterror = qa_user_post_permit_error('permit_vote_down', $post);
+		}
 
 		switch ($permiterror) {
+			case false:
+				return false;
+				break;
+
 			case 'login':
 				return qa_insert_login_links(qa_lang_html('main/vote_must_login'), $topage);
 				break;
@@ -71,13 +84,11 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 			default:
 				return qa_lang_html('users/no_permission');
 				break;
-
-			case false:
-				return false;
 		}
-
-	} else
-		return qa_lang_html('main/vote_not_allowed'); // voting option should not have been presented (but could happen due to options change)
+	} else {
+		// voting option should not have been presented (but could happen due to options change)
+		return qa_lang_html('main/vote_not_allowed');
+	}
 }
 
 
