@@ -145,15 +145,19 @@ foreach ($optionnames as $optionname) {
 
 		case 'points_per_q_voted_up':
 		case 'points_per_a_voted_up':
+		case 'points_per_c_voted_up':
 		case 'points_q_voted_max_gain':
 		case 'points_a_voted_max_gain':
+		case 'points_c_voted_max_gain':
 			$prefix = '+';
 			break;
 
 		case 'points_per_q_voted_down':
 		case 'points_per_a_voted_down':
+		case 'points_per_c_voted_down':
 		case 'points_q_voted_max_loss':
 		case 'points_a_voted_max_loss':
+		case 'points_c_voted_max_loss':
 			$prefix = '&ndash;';
 			break;
 
@@ -172,8 +176,9 @@ foreach ($optionnames as $optionname) {
 }
 
 qa_array_insert($qa_content['form']['fields'], 'points_post_a', array('blank0' => array('type' => 'blank')));
-qa_array_insert($qa_content['form']['fields'], 'points_vote_up_q', array('blank1' => array('type' => 'blank')));
-qa_array_insert($qa_content['form']['fields'], 'points_multiple', array('blank2' => array('type' => 'blank')));
+qa_array_insert($qa_content['form']['fields'], 'points_per_c_voted_up', array('blank1' => array('type' => 'blank')));
+qa_array_insert($qa_content['form']['fields'], 'points_vote_up_q', array('blank2' => array('type' => 'blank')));
+qa_array_insert($qa_content['form']['fields'], 'points_multiple', array('blank3' => array('type' => 'blank')));
 
 
 $qa_content['navigation']['sub'] = qa_admin_sub_navigation();

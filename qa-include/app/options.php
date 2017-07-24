@@ -345,13 +345,18 @@ function qa_default_option($name)
 		'permit_view_special_users_page' => QA_PERMIT_MODERATORS,
 		'permit_view_voters_flaggers' => QA_PERMIT_ADMINS,
 		'permit_vote_a' => QA_PERMIT_USERS,
+		'permit_vote_c' => QA_PERMIT_USERS,
 		'permit_vote_down' => QA_PERMIT_USERS,
 		'permit_vote_q' => QA_PERMIT_USERS,
 		'points_a_selected' => 30,
 		'points_a_voted_max_gain' => 20,
 		'points_a_voted_max_loss' => 5,
 		'points_base' => 100,
+		'points_c_voted_max_gain' => 10,
+		'points_c_voted_max_loss' => 3,
 		'points_multiple' => 10,
+		'points_per_c_voted_down' => 0,
+		'points_per_c_voted_up' => 0,
 		'points_post_a' => 4,
 		'points_post_q' => 2,
 		'points_q_voted_max_gain' => 10,
@@ -381,6 +386,7 @@ function qa_default_option($name)
 		'tags_or_categories' => 'tc',
 		'use_microdata' => 1,
 		'voting_on_as' => 1,
+		'voting_on_cs' => 0,
 		'voting_on_qs' => 1,
 	);
 
@@ -795,7 +801,10 @@ function qa_get_permit_options()
 	if (qa_opt('voting_on_as'))
 		$permits[] = 'permit_vote_a';
 
-	if (qa_opt('voting_on_qs') || qa_opt('voting_on_as'))
+	if (qa_opt('voting_on_cs'))
+		$permits[] = 'permit_vote_c';
+
+	if (qa_opt('voting_on_qs') || qa_opt('voting_on_as') || qa_opt('voting_on_cs'))
 		$permits[] = 'permit_vote_down';
 
 	if (qa_using_tags() || qa_using_categories())
@@ -813,7 +822,7 @@ function qa_get_permit_options()
 
 	array_push($permits, 'permit_select_a', 'permit_anon_view_ips');
 
-	if (qa_opt('voting_on_qs') || qa_opt('voting_on_as') || qa_opt('flagging_of_posts'))
+	if (qa_opt('voting_on_qs') || qa_opt('voting_on_as') || qa_opt('voting_on_cs') || qa_opt('flagging_of_posts'))
 		$permits[] = 'permit_view_voters_flaggers';
 
 	if (qa_opt('flagging_of_posts'))

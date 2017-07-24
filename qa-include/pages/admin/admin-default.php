@@ -231,6 +231,7 @@ $optiontype = array(
 	'minify_html' => 'checkbox',
 	'votes_separated' => 'checkbox',
 	'voting_on_as' => 'checkbox',
+	'voting_on_cs' => 'checkbox',
 	'voting_on_q_page_only' => 'checkbox',
 	'voting_on_qs' => 'checkbox',
 
@@ -389,7 +390,7 @@ switch ($adminsection) {
 		$subtitle = 'admin/viewing_title';
 		$showoptions = array(
 			'q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', 'show_view_count_q_page', '',
-			'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'votes_separated', '',
+			'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'voting_on_cs', 'votes_separated', '',
 			'show_url_links', 'links_in_new_window', 'show_when_created', 'show_full_date_days'
 		);
 
@@ -613,7 +614,7 @@ switch ($adminsection) {
 
 		$showoptions[] = '';
 
-		if (qa_opt('voting_on_qs') || qa_opt('voting_on_as'))
+		if (qa_opt('voting_on_qs') || qa_opt('voting_on_as') || qa_opt('voting_on_cs'))
 			array_push($showoptions, 'max_rate_ip_votes', 'max_rate_user_votes');
 
 		array_push($showoptions, 'max_rate_ip_flags', 'max_rate_user_flags', 'max_rate_ip_uploads', 'max_rate_user_uploads');
@@ -1352,6 +1353,7 @@ foreach ($showoptions as $optionname) {
 			case 'permit_post_c':
 			case 'permit_vote_q':
 			case 'permit_vote_a':
+			case 'permit_vote_c':
 			case 'permit_vote_down':
 			case 'permit_edit_q':
 			case 'permit_retag_cat':
@@ -1395,7 +1397,7 @@ foreach ($showoptions as $optionname) {
 					$narrowest = QA_PERMIT_MODERATORS;
 				elseif ($optionname == 'permit_post_c' || $optionname == 'permit_edit_q' || $optionname == 'permit_retag_cat' || $optionname == 'permit_edit_a' || $optionname == 'permit_flag')
 					$narrowest = QA_PERMIT_EDITORS;
-				elseif ($optionname == 'permit_vote_q' || $optionname == 'permit_vote_a' || $optionname == 'permit_post_wall')
+				elseif ($optionname == 'permit_vote_q' || $optionname == 'permit_vote_a' || $optionname == 'permit_vote_c' || $optionname == 'permit_post_wall')
 					$narrowest = QA_PERMIT_APPROVED_POINTS;
 				elseif ($optionname == 'permit_delete_hidden' || $optionname == 'permit_edit_silent')
 					$narrowest = QA_PERMIT_ADMINS;
@@ -1420,6 +1422,7 @@ foreach ($showoptions as $optionname) {
 			case 'permit_post_c_points':
 			case 'permit_vote_q_points':
 			case 'permit_vote_a_points':
+			case 'permit_vote_c_points':
 			case 'permit_vote_down_points':
 			case 'permit_flag_points':
 			case 'permit_edit_q_points':

@@ -36,6 +36,7 @@ function qa_db_points_option_names()
 	return array(
 		'points_post_q', 'points_select_a', 'points_per_q_voted_up', 'points_per_q_voted_down', 'points_q_voted_max_gain', 'points_q_voted_max_loss',
 		'points_post_a', 'points_a_selected', 'points_per_a_voted_up', 'points_per_a_voted_down', 'points_a_voted_max_gain', 'points_a_voted_max_loss',
+		'points_per_c_voted_up', 'points_per_c_voted_down', 'points_c_voted_max_gain', 'points_c_voted_max_loss',
 		'points_vote_up_q', 'points_vote_down_q', 'points_vote_up_a', 'points_vote_down_a',
 
 		'points_multiple', 'points_base',

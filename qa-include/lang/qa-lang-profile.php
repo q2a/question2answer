@@ -60,6 +60,7 @@ return array(
 	'permit_view_special_users_page' => 'Viewing the special users page',
 	'permit_view_voters_flaggers' => 'Viewing who voted or flagged posts',
 	'permit_vote_a' => 'Voting on answers',
+	'permit_vote_c' => 'Voting on comments',
 	'permit_vote_down' => 'Voting posts down',
 	'permit_vote_q' => 'Voting on questions',
 	'post_wall_blocked' => 'This user has disallowed new posts on their wall',
