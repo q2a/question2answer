@@ -25,7 +25,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-define('QA_DB_VERSION_CURRENT', 65);
+define('QA_DB_VERSION_CURRENT', 66);
 
 
 /**
@@ -432,8 +432,11 @@ function qa_db_table_definitions()
 			'qdownvotes' => 'MEDIUMINT NOT NULL DEFAULT 0', // number of questions the user has voted down
 			'aupvotes' => 'MEDIUMINT NOT NULL DEFAULT 0', // number of answers the user has voted up
 			'adownvotes' => 'MEDIUMINT NOT NULL DEFAULT 0', // number of answers the user has voted down
+			'cupvotes' => 'MEDIUMINT NOT NULL DEFAULT 0', // number of comments the user has voted up
+			'cdownvotes' => 'MEDIUMINT NOT NULL DEFAULT 0', // number of comments the user has voted down
 			'qvoteds' => 'INT NOT NULL DEFAULT 0', // points from votes on this user's questions (applying per-question limits), before final multiple
 			'avoteds' => 'INT NOT NULL DEFAULT 0', // points from votes on this user's answers (applying per-answer limits), before final multiple
+			'cvoteds' => 'INT NOT NULL DEFAULT 0', // points from votes on this user's comments (applying per-comment limits), before final multiple
 			'upvoteds' => 'INT NOT NULL DEFAULT 0', // number of up votes received on this user's questions or answers
 			'downvoteds' => 'INT NOT NULL DEFAULT 0', // number of down votes received on this user's questions or answers
 			'bonus' => 'INT NOT NULL DEFAULT 0', // bonus assigned by administrator to a user
@@ -1569,6 +1572,15 @@ function qa_db_upgrade_tables()
 
 				// for old votes, set a default date of when that post was made
 				qa_db_upgrade_query('UPDATE ^uservotes, ^posts SET ^uservotes.votecreated=^posts.created WHERE ^uservotes.postid=^posts.postid AND (^uservotes.vote != 0 OR ^uservotes.flag=0)');
+				break;
+
+			case 66:
+				$newColumns = array(
+					'ADD COLUMN cupvotes ' . $definitions['userpoints']['cupvotes'] . ' AFTER adownvotes',
+					'ADD COLUMN cdownvotes ' . $definitions['userpoints']['cdownvotes'] . ' AFTER cupvotes',
+					'ADD COLUMN cvoteds ' . $definitions['userpoints']['cvoteds'] . ' AFTER avoteds',
+				);
+				qa_db_upgrade_query('ALTER TABLE ^userpoints ' . implode(', ', $newColumns));
 				break;
 
 			// Up to here: Version 1.8 alpha
