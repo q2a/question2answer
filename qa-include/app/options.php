@@ -642,13 +642,13 @@ function qa_message_html_defaults()
 
 
 /**
- * Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php for the post in $postorbasetype
- * with buttons enabled if appropriate (based on whether $full post shown) unless $enabledif is false.
- * For compatibility $postorbasetype can also just be a basetype, i.e. 'Q', 'A' or 'C'
- * @param $postorbasetype
- * @param bool $full
- * @param bool $enabledif
- * @return bool|string
+ * Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php.
+ * @param $postorbasetype The post, or for compatibility just a basetype, i.e. 'Q', 'A' or 'C'
+ * @param bool $full Whether full post is shown
+ * @param bool $enabledif Whether to do checks for voting buttons (i.e. will always disable voting if false)
+ * @return bool|string Possible values:
+ *   updown, updown-disabled-page, updown-disabled-level, updown-uponly-level, updown-disabled-approve, updown-uponly-approve
+ *   net, net-disabled-page, net-disabled-level, net-uponly-level, net-disabled-approve, net-uponly-approve
  */
 function qa_get_vote_view($postorbasetype, $full = false, $enabledif = true)
 {
