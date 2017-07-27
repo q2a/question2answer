@@ -170,8 +170,8 @@ function qa_db_get_user_visible_postids($userid)
 function qa_db_get_ip_visible_postids($ip)
 {
 	return qa_db_read_all_values(qa_db_query_sub(
-		"SELECT postid FROM ^posts WHERE createip=$ AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
-		@inet_pton($ip)
+		"SELECT postid FROM ^posts WHERE createip=UNHEX($) AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')",
+		bin2hex(@inet_pton($ip))
 	));
 }
 

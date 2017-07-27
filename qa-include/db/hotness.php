@@ -49,8 +49,8 @@ function qa_db_hotness_update($firstpostid, $lastpostid = null, $viewincrement =
 			'(a.acount+0.0)*# + ' .
 			'(a.netvotes+0.0)*# + ' .
 			'(a.views+0.0+#)*#' .
-			')' . ($viewincrement ? ', x.views=x.views+1, x.lastviewip=$' : '') .
-			' WHERE x.postid=a.postid' . ($viewincrement ? ' AND (x.lastviewip IS NULL OR x.lastviewip!=$)' : '');
+			')' . ($viewincrement ? ', x.views=x.views+1, x.lastviewip=UNHEX($)' : '') .
+			' WHERE x.postid=a.postid' . ($viewincrement ? ' AND (x.lastviewip IS NULL OR x.lastviewip!=UNHEX($))' : '');
 
 		// Additional multiples based on empirical analysis of activity on Q2A meta site to give approx equal influence for all factors
 
@@ -66,8 +66,8 @@ function qa_db_hotness_update($firstpostid, $lastpostid = null, $viewincrement =
 		);
 
 		if ($viewincrement) {
-			$ipbin = @inet_pton(qa_remote_ip_address());
-			array_push($arguments, $ipbin, $ipbin);
+			$ipHex = bin2hex(@inet_pton(qa_remote_ip_address()));
+			array_push($arguments, $ipHex, $ipHex);
 		}
 
 		qa_db_query_raw(qa_db_apply_sub($query, $arguments));

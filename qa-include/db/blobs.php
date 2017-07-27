@@ -47,8 +47,8 @@ function qa_db_blob_create($content, $format, $sourcefilename = null, $userid = 
 			continue;
 
 		qa_db_query_sub(
-			'INSERT INTO ^blobs (blobid, format, content, filename, userid, cookieid, createip, created) VALUES (#, $, $, $, $, #, $, NOW())',
-			$blobid, $format, $content, $sourcefilename, $userid, $cookieid, @inet_pton($ip)
+			'INSERT INTO ^blobs (blobid, format, content, filename, userid, cookieid, createip, created) VALUES (#, $, $, $, $, #, UNHEX($), NOW())',
+			$blobid, $format, $content, $sourcefilename, $userid, $cookieid, bin2hex(@inet_pton($ip))
 		);
 
 		return $blobid;

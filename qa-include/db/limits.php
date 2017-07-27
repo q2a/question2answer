@@ -46,8 +46,8 @@ function qa_db_limits_get($userid, $ip, $action)
 	}
 
 	if (isset($ip)) {
-		$selects[] = "(SELECT 'ip' AS limitkey, period, count FROM ^iplimits WHERE ip=$ AND action=$)";
-		$arguments[] = @inet_pton($ip);
+		$selects[] = "(SELECT 'ip' AS limitkey, period, count FROM ^iplimits WHERE ip=UNHEX($) AND action=$)";
+		$arguments[] = bin2hex(@inet_pton($ip));
 		$arguments[] = $action;
 	}
 
@@ -87,8 +87,8 @@ function qa_db_limits_user_add($userid, $action, $period, $count)
 function qa_db_limits_ip_add($ip, $action, $period, $count)
 {
 	qa_db_query_sub(
-		'INSERT INTO ^iplimits (ip, action, period, count) VALUES ($, $, #, #) ' .
+		'INSERT INTO ^iplimits (ip, action, period, count) VALUES (UNHEX($), $, #, #) ' .
 		'ON DUPLICATE KEY UPDATE count=IF(period=#, count+#, #), period=#',
-		@inet_pton($ip), $action, $period, $count, $period, $count, $count, $period
+		bin2hex(@inet_pton($ip)), $action, $period, $count, $period, $count, $count, $period
 	);
 }

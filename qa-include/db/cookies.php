@@ -41,8 +41,8 @@ function qa_db_cookie_create($ipaddress)
 
 		qa_db_query_sub(
 			'INSERT INTO ^cookies (cookieid, created, createip) ' .
-			'VALUES (#, NOW(), $)',
-			$cookieid, @inet_pton($ipaddress)
+			'VALUES (#, NOW(), UNHEX($))',
+			$cookieid, bin2hex(@inet_pton($ipaddress))
 		);
 
 		return $cookieid;
@@ -60,8 +60,8 @@ function qa_db_cookie_create($ipaddress)
 function qa_db_cookie_written($cookieid, $ipaddress)
 {
 	qa_db_query_sub(
-		'UPDATE ^cookies SET written=NOW(), writeip=$ WHERE cookieid=#',
-		@inet_pton($ipaddress), $cookieid
+		'UPDATE ^cookies SET written=NOW(), writeip=UNHEX($) WHERE cookieid=#',
+		bin2hex(@inet_pton($ipaddress)), $cookieid
 	);
 }
 

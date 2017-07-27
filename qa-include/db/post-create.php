@@ -46,8 +46,8 @@ function qa_db_post_create($type, $parentid, $userid, $cookieid, $ip, $title, $c
 {
 	qa_db_query_sub(
 		'INSERT INTO ^posts (categoryid, type, parentid, userid, cookieid, createip, title, content, format, tags, notify, name, created) ' .
-		'VALUES (#, $, #, $, #, $, $, $, $, $, $, $, NOW())',
-		$categoryid, $type, $parentid, $userid, $cookieid, @inet_pton($ip), $title, $content, $format, $tagstring, $notify, $name
+		'VALUES (#, $, #, $, #, UNHEX($), $, $, $, $, $, $, NOW())',
+		$categoryid, $type, $parentid, $userid, $cookieid, bin2hex(@inet_pton($ip)), $title, $content, $format, $tagstring, $notify, $name
 	);
 
 	return qa_db_last_insert_id();

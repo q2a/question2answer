@@ -53,21 +53,21 @@ function qa_db_user_create($email, $password, $handle, $level, $ip)
 {
 	require_once QA_INCLUDE_DIR . 'util/string.php';
 
-	$ipbin = @inet_pton($ip);
+	$ipHex = bin2hex(@inet_pton($ip));
 
 	if (QA_PASSWORD_HASH) {
 		qa_db_query_sub(
 			'INSERT INTO ^users (created, createip, email, passhash, level, handle, loggedin, loginip) ' .
-			'VALUES (NOW(), $, $, $, #, $, NOW(), $)',
-			$ipbin, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ipbin
+			'VALUES (NOW(), UNHEX($), $, $, #, $, NOW(), UNHEX($))',
+			$ipHex, $email, isset($password) ? password_hash($password, PASSWORD_BCRYPT) : null, (int)$level, $handle, $ipHex
 		);
 	} else {
 		$salt = isset($password) ? qa_random_alphanum(16) : null;
 
 		qa_db_query_sub(
 			'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) ' .
-			'VALUES (NOW(), $, $, $, UNHEX($), #, $, NOW(), $)',
-			$ipbin, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ipbin
+			'VALUES (NOW(), UNHEX($), $, $, UNHEX($), #, $, NOW(), UNHEX($))',
+			$ipHex, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ipHex
 		);
 	}
 
@@ -272,8 +272,8 @@ function qa_db_user_profile_set($userid, $field, $value)
 function qa_db_user_logged_in($userid, $ip)
 {
 	qa_db_query_sub(
-		'UPDATE ^users SET loggedin=NOW(), loginip=$ WHERE userid=$',
-		@inet_pton($ip), $userid
+		'UPDATE ^users SET loggedin=NOW(), loginip=UNHEX($) WHERE userid=$',
+		bin2hex(@inet_pton($ip)), $userid
 	);
 }
 
@@ -286,8 +286,8 @@ function qa_db_user_logged_in($userid, $ip)
 function qa_db_user_written($userid, $ip)
 {
 	qa_db_query_sub(
-		'UPDATE ^users SET written=NOW(), writeip=$ WHERE userid=$',
-		@inet_pton($ip), $userid
+		'UPDATE ^users SET written=NOW(), writeip=UNHEX($) WHERE userid=$',
+		bin2hex(@inet_pton($ip)), $userid
 	);
 }
 

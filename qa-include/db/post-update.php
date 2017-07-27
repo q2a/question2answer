@@ -52,8 +52,8 @@ function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid = null,
 
 	if (isset($selchildid) && isset($lastuserid) && isset($lastip)) {
 		qa_db_query_sub(
-			"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=$ WHERE postid=#",
-			QA_UPDATE_SELECTED, $lastuserid, @inet_pton($lastip), $selchildid
+			"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			QA_UPDATE_SELECTED, $lastuserid, bin2hex(@inet_pton($lastip)), $selchildid
 		);
 	}
 }
@@ -71,8 +71,8 @@ function qa_db_post_set_closed($questionid, $closedbyid, $lastuserid = null, $la
 {
 	if (isset($lastuserid) || isset($lastip)) {
 		qa_db_query_sub(
-			"UPDATE ^posts SET closedbyid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=$ WHERE postid=#",
-			$closedbyid, QA_UPDATE_CLOSED, $lastuserid, @inet_pton($lastip), $questionid
+			"UPDATE ^posts SET closedbyid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			$closedbyid, QA_UPDATE_CLOSED, $lastuserid, bin2hex(@inet_pton($lastip)), $questionid
 		);
 	} else {
 		qa_db_query_sub(
@@ -95,8 +95,8 @@ function qa_db_post_set_type($postid, $type, $lastuserid = null, $lastip = null,
 {
 	if (isset($lastuserid) || isset($lastip)) {
 		qa_db_query_sub(
-			'UPDATE ^posts SET type=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=$ WHERE postid=#',
-			$type, $updatetype, $lastuserid, @inet_pton($lastip), $postid
+			'UPDATE ^posts SET type=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#',
+			$type, $updatetype, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
 		);
 	} else {
 		qa_db_query_sub(
@@ -119,8 +119,8 @@ function qa_db_post_set_parent($postid, $parentid, $lastuserid = null, $lastip =
 {
 	if (isset($lastuserid) || isset($lastip)) {
 		qa_db_query_sub(
-			"UPDATE ^posts SET parentid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=$ WHERE postid=#",
-			$parentid, QA_UPDATE_PARENT, $lastuserid, @inet_pton($lastip), $postid
+			"UPDATE ^posts SET parentid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			$parentid, QA_UPDATE_PARENT, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
 		);
 	} else {
 		qa_db_query_sub(
@@ -151,8 +151,8 @@ function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, 
 	if (isset($lastuserid) || isset($lastip)) {
 		// use COALESCE() for name since $name=null means it should not be modified (for backwards compatibility)
 		qa_db_query_sub(
-			'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=$ WHERE postid=#',
-			$title, $content, $format, $tagstring, $name, $notify, $updatetype, $lastuserid, @inet_pton($lastip), $postid
+			'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#',
+			$title, $content, $format, $tagstring, $name, $notify, $updatetype, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
 		);
 	} else {
 		qa_db_query_sub(
@@ -189,8 +189,8 @@ function qa_db_post_set_category($postid, $categoryid, $lastuserid = null, $last
 {
 	if (isset($lastuserid) || isset($lastip)) {
 		qa_db_query_sub(
-			"UPDATE ^posts SET categoryid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=$ WHERE postid=#",
-			$categoryid, QA_UPDATE_CATEGORY, $lastuserid, @inet_pton($lastip), $postid
+			"UPDATE ^posts SET categoryid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			$categoryid, QA_UPDATE_CATEGORY, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
 		);
 	} else {
 		qa_db_query_sub(
