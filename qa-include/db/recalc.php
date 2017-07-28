@@ -282,24 +282,26 @@ function qa_db_users_recalc_points($firstuserid, $lastuserid)
 	);
 
 	$zeropoints = 'points=0';
-	foreach ($qa_userpoints_calculations as $field => $calculation)
+	foreach ($qa_userpoints_calculations as $field => $calculation) {
 		$zeropoints .= ', ' . $field . '=0';
+	}
 
 	qa_db_query_sub(
 		'UPDATE ^userpoints SET ' . $zeropoints . ' WHERE userid>=# AND userid<=#', // zero out the rest
 		$firstuserid, $lastuserid
 	);
 
-	if (QA_FINAL_EXTERNAL_USERS)
+	if (QA_FINAL_EXTERNAL_USERS) {
 		qa_db_query_sub(
 			'INSERT IGNORE INTO ^userpoints (userid) SELECT DISTINCT userid FROM ^posts WHERE userid>=# AND userid<=# UNION SELECT DISTINCT userid FROM ^uservotes WHERE userid>=# AND userid<=#',
 			$firstuserid, $lastuserid, $firstuserid, $lastuserid
 		);
-	else
+	} else {
 		qa_db_query_sub(
 			'INSERT IGNORE INTO ^userpoints (userid) SELECT DISTINCT userid FROM ^users WHERE userid>=# AND userid<=#',
 			$firstuserid, $lastuserid
 		);
+	}
 
 	$updatepoints = (int)qa_opt('points_base');
 
