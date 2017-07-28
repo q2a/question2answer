@@ -1065,7 +1065,7 @@ blockquote p {
 
 .qa-vote-up-button, .qa-vote-down-button, .qa-voted-up-button, .qa-voted-down-button, .qa-vote-up-disabled, .qa-vote-down-disabled {
 	text-indent: -9999px;
-	background: url('images/vote-buttons.png');
+	background: url('images/vote-buttons-2.png');
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 10px;
@@ -1080,7 +1080,6 @@ blockquote p {
 .qa-vote-up-button:hover, .qa-vote-up-button:focus, .qa-vote-up-button:active,.qa-vote-down-button:hover, .qa-vote-down-button:focus, .qa-vote-down-button:active,
 .qa-voted-up-button:hover, .qa-voted-up-button:focus, .qa-voted-up-button:active,.qa-voted-down-button:hover, .qa-voted-down-button:focus, .qa-voted-down-button:active,
 .qa-vote-up-disabled:hover, .qa-vote-up-disabled:focus, .qa-vote-up-disabled:active,.qa-vote-down-disabled:hover, .qa-vote-down-disabled:focus, .qa-vote-down-disabled:active {
-	background: url('images/vote-buttons.png');
 	border: none;
 	cursor: pointer;
 }
@@ -1117,10 +1116,6 @@ blockquote p {
 	background-position: -16px -40px;
 }
 
-.qa-vote-one-button {
-	top: 25px;
-}
-
 .qa-voted-up-button {
 	background-position: 0 -10px;
 }
@@ -1133,6 +1128,10 @@ blockquote p {
 }
 .qa-voted-down-button:hover, .qa-voted-down-button:focus, .qa-voted-down-button:active {
 	background-position: -16px 0;
+}
+
+.qa-vote-one-button {
+	top: 25px;
 }
 
 .qa-q-item-main {
@@ -2597,6 +2596,106 @@ input[type="submit"], button {
     -webkit-animation: comment-highlight 2s ease-in-out;
     animation: comment-highlight 2s ease-in-out;
 }
+
+/* voting styles for comments */
+.qa-c-list-item .qa-voting {
+	width: auto;
+	height: auto;
+	background-color: transparent;
+}
+.qa-c-list-item .qa-vote-buttons {
+	height: 22px;
+	width: 12px;
+	margin-right: 4px;
+}
+.qa-c-list-item .qa-vote-count {
+	float: left;
+	min-width: 16px;
+	margin-right: 8px;
+}
+.qa-c-list-item .qa-netvote-count {
+	text-align: left;
+}
+.qa-c-list-item .qa-netvote-count-data {
+	font-size: 13px;
+	line-height: 20px;
+}
+/*.qa-c-list-item .qa-netvote-count-pad {
+	display: none;
+}*/
+
+.qa-c-list-item .qa-vote-up-button,
+.qa-c-list-item .qa-vote-down-button,
+.qa-c-list-item .qa-voted-up-button,
+.qa-c-list-item .qa-voted-down-button,
+.qa-c-list-item .qa-vote-up-disabled,
+.qa-c-list-item .qa-vote-down-disabled {
+	width: 12px;
+	height: 8px;
+	left: 0;
+	transform: scale(0.75);
+}
+.qa-c-list-item .qa-vote-first-button {
+	top: 0;
+}
+.qa-c-list-item .qa-vote-second-button {
+	top: 12px;
+}
+
+.qa-c-list-item .qa-vote-up-button {
+	background-position: -32px 0;
+}
+.qa-c-list-item .qa-vote-up-button:hover,
+.qa-c-list-item .qa-vote-up-button:focus,
+.qa-c-list-item .qa-vote-up-button:active {
+	background-position: -32px -8px;
+}
+
+.qa-c-list-item .qa-vote-down-button {
+	background-position: -44px 0;
+}
+.qa-c-list-item .qa-vote-down-button:hover,
+.qa-c-list-item .qa-vote-down-button:focus,
+.qa-c-list-item .qa-vote-down-button:active {
+	background-position: -44px -8px;
+}
+
+.qa-c-list-item .qa-vote-up-disabled {
+	background-position: -32px -32px;
+}
+.qa-c-list-item .qa-vote-up-disabled:hover,
+.qa-c-list-item .qa-vote-up-disabled:focus,
+.qa-c-list-item .qa-vote-up-disabled:active {
+	background-position: -32px -32px;
+}
+
+.qa-c-list-item .qa-vote-down-disabled {
+	background-position: -44px -32px;
+}
+.qa-c-list-item .qa-vote-down-disabled:hover,
+.qa-c-list-item .qa-vote-down-disabled:focus,
+.qa-c-list-item .qa-vote-down-disabled:active {
+	background-position: -44px -32px;
+}
+
+.qa-c-list-item .qa-voted-up-button {
+	background-position: -32px -8px;
+}
+.qa-c-list-item .qa-voted-up-button:hover,
+.qa-c-list-item .qa-voted-up-button:focus,
+.qa-c-list-item .qa-voted-up-button:active {
+	background-position: -32px 0;
+}
+
+.qa-c-list-item .qa-voted-down-button {
+	background-position: -44px -8px;
+}
+.qa-c-list-item .qa-voted-down-button:hover,
+.qa-c-list-item .qa-voted-down-button:focus,
+.qa-c-list-item .qa-voted-down-button:active {
+	background-position: -44px 0;
+}
+
 
 .qa-c-list-item .qa-form-light-button {
 	padding: 10px 15px;

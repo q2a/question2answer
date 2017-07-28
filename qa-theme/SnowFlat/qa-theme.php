@@ -539,6 +539,22 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
+	 * Remove voting here
+	 * @param array $c_item
+	 */
+	public function c_list_item($c_item)
+	{
+		$extraclass = @$c_item['classes'] . (@$c_item['hidden'] ? ' qa-c-item-hidden' : '');
+
+		$this->output('<div class="qa-c-list-item ' . $extraclass . '" ' . @$c_item['tags'] . '>');
+
+		$this->c_item_main($c_item);
+		$this->c_item_clear();
+
+		$this->output('</div> <!-- END qa-c-item -->');
+	}
+
+	/**
 	 * Move user whometa to top in comment
 	 *
 	 * @since Snow 1.4
@@ -550,6 +566,8 @@ class qa_html_theme extends qa_html_theme_base
 
 		if (isset($c_item['error']))
 			$this->error($c_item['error']);
+
+		$this->voting($c_item);
 
 		if (isset($c_item['expand_tags']))
 			$this->c_item_expand($c_item);

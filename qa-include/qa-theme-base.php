@@ -2399,6 +2399,7 @@ class qa_html_theme_base
 
 		$this->output('<div class="qa-c-list-item ' . $extraclass . '" ' . @$c_item['tags'] . '>');
 
+		$this->voting($c_item);
 		$this->c_item_main($c_item);
 		$this->c_item_clear();
 
