@@ -1804,8 +1804,9 @@ class qa_html_theme_base
 		if ($post['vote_view'] == 'updown') {
 			$this->output_split($post['upvotes_view'], 'qa-upvote-count');
 			$this->output_split($post['downvotes_view'], 'qa-downvote-count');
-		} else
+		} else {
 			$this->output_split($post['netvotes_view'], 'qa-netvote-count');
+		}
 
 		$this->output('</div>');
 	}

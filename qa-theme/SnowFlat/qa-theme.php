@@ -490,6 +490,19 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
+	 * Hide votes when zero
+	 * @param  array $post
+	 */
+	public function vote_count($post)
+	{
+		if ($post['raw']['basetype'] === 'C' && $post['netvotes_view']['data'] == 0) {
+			$post['netvotes_view']['data'] = '';
+		}
+
+		parent::vote_count($post);
+	}
+
+	/**
 	 * Move user whometa to top in answer
 	 *
 	 * @since Snow 1.4

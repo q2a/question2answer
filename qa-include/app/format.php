@@ -475,14 +475,22 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 		$fields['vote_on_page'] = strpos($voteview, '-disabled-page') ? 'disabled' : 'enabled';
 
-		$fields['upvotes_view'] = ($upvotes == 1) ? qa_lang_html_sub_split('main/1_liked', $upvoteshtml, '1')
-			: qa_lang_html_sub_split('main/x_liked', $upvoteshtml);
-
-		$fields['downvotes_view'] = ($downvotes == 1) ? qa_lang_html_sub_split('main/1_disliked', $downvoteshtml, '1')
-			: qa_lang_html_sub_split('main/x_disliked', $downvoteshtml);
-
-		$fields['netvotes_view'] = ($netvotes == 1) ? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
-			: qa_lang_html_sub_split('main/x_votes', $netvoteshtml);
+		if ($iscomment) {
+			// for comments just show number, no additional text
+			$fields['upvotes_view'] = array('prefix' => '', 'data' => $upvoteshtml, 'suffix' => '');
+			$fields['downvotes_view'] = array('prefix' => '', 'data' => $downvoteshtml, 'suffix' => '');
+			$fields['netvotes_view'] = array('prefix' => '', 'data' => $netvoteshtml, 'suffix' => '');
+		} else {
+			$fields['upvotes_view'] = $upvotes == 1
+				? qa_lang_html_sub_split('main/1_liked', $upvoteshtml, '1')
+				: qa_lang_html_sub_split('main/x_liked', $upvoteshtml);
+			$fields['downvotes_view'] = $downvotes == 1
+				? qa_lang_html_sub_split('main/1_disliked', $downvoteshtml, '1')
+				: qa_lang_html_sub_split('main/x_disliked', $downvoteshtml);
+			$fields['netvotes_view'] = $netvotes == 1
+				? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
+				: qa_lang_html_sub_split('main/x_votes', $netvoteshtml);
+		}
 
 		// schema.org microdata - vote display might be formatted (e.g. '2k') so we use meta tag for true count
 		if ($microdata) {

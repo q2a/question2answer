@@ -2618,11 +2618,21 @@ input[type="submit"], button {
 }
 .qa-c-list-item .qa-netvote-count-data {
 	font-size: 13px;
-	line-height: 20px;
+	line-height: 18px;
 }
-/*.qa-c-list-item .qa-netvote-count-pad {
-	display: none;
-}*/
+
+.qa-c-list-item .qa-upvote-count {
+	line-height: 6px;
+}
+.qa-c-list-item .qa-downvote-count {
+	line-height: 14px;
+}
+.qa-c-list-item .qa-upvote-count-data,
+.qa-c-list-item .qa-downvote-count-data {
+	font-size: 13px;
+	font-weight: normal;
+}
+
 
 .qa-c-list-item .qa-vote-up-button,
 .qa-c-list-item .qa-vote-down-button,
