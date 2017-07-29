@@ -303,9 +303,9 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	// Useful stuff used throughout function
 
 	$postid = $post['postid'];
-	$isquestion = ($post['basetype'] == 'Q');
-	$isanswer = ($post['basetype'] == 'A');
-	$iscomment = ($post['basetype'] == 'C');
+	$isquestion = $post['basetype'] == 'Q';
+	$isanswer = $post['basetype'] == 'A';
+	$iscomment = $post['basetype'] == 'C';
 	$isbyuser = qa_post_is_by_user($post, $userid, $cookieid);
 	$anchor = urlencode(qa_anchor($post['basetype'], $postid));
 	$elementid = isset($options['elementid']) ? $options['elementid'] : $anchor;
@@ -465,14 +465,6 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		$netvotes = abs($netvotes);
 		$netvoteshtml = $netvotesPrefix . qa_html(qa_format_number($netvotes, 0, true));
 
-		// ...with microformats if appropriate
-
-		if ($microdata) {
-			// vote display might be formatted (e.g. '2k') so use meta tag for true count
-			$netvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '"/>';
-			$upvoteshtml .= '<meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '"/>';
-		}
-
 		// Pass information on vote viewing
 
 		// $voteview will be one of:
@@ -491,6 +483,12 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 		$fields['netvotes_view'] = ($netvotes == 1) ? qa_lang_html_sub_split('main/1_vote', $netvoteshtml, '1')
 			: qa_lang_html_sub_split('main/x_votes', $netvoteshtml);
+
+		// schema.org microdata - vote display might be formatted (e.g. '2k') so we use meta tag for true count
+		if ($microdata) {
+			$fields['netvotes_view']['suffix'] .= ' <meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '"/>';
+			$fields['upvotes_view']['suffix'] .= ' <meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '"/>';
+		}
 
 		// Voting buttons
 
