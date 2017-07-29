@@ -495,7 +495,7 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function vote_count($post)
 	{
-		if ($post['raw']['basetype'] === 'C' && $post['netvotes_view']['data'] == 0) {
+		if ($post['raw']['basetype'] === 'C' && $post['raw']['netvotes'] == 0) {
 			$post['netvotes_view']['data'] = '';
 		}
 

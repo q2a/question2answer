@@ -10,8 +10,9 @@ class AppOptionsTest extends PHPUnit_Framework_TestCase
 		'voting_on_cs' => 1,
 		'voting_on_q_page_only' => 1,
 		'votes_separated' => 0,
-		'permit_vote_a' => QA_PERMIT_USERS,
 		'permit_vote_q' => QA_PERMIT_USERS,
+		'permit_vote_a' => QA_PERMIT_USERS,
+		'permit_vote_c' => QA_PERMIT_USERS,
 		'permit_vote_down' => QA_PERMIT_USERS,
 	);
 
@@ -61,14 +62,16 @@ class AppOptionsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('net-disabled-page', qa_get_vote_view('A', true, false));
 		$this->assertSame('net-disabled-page', qa_get_vote_view('A', false, false));
 
-		$this->assertSame(false, qa_get_vote_view('C', true));
-		$this->assertSame(false, qa_get_vote_view('C', false));
+		$this->assertSame('net', qa_get_vote_view('C', true));
+		$this->assertSame('net', qa_get_vote_view('C', false));
 
 
 		$qa_options_cache['voting_on_qs'] = 0;
 		$qa_options_cache['voting_on_as'] = 0;
+		$qa_options_cache['voting_on_cs'] = 0;
 		$this->assertSame(false, qa_get_vote_view('Q', true));
 		$this->assertSame(false, qa_get_vote_view('A', true));
+		$this->assertSame(false, qa_get_vote_view('C', true));
 	}
 
 	/**
@@ -92,13 +95,15 @@ class AppOptionsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame('updown-disabled-page', qa_get_vote_view('A', true, false));
 		$this->assertSame('updown-disabled-page', qa_get_vote_view('A', false, false));
 
-		$this->assertSame(false, qa_get_vote_view('C', true));
-		$this->assertSame(false, qa_get_vote_view('C', false));
+		$this->assertSame('updown', qa_get_vote_view('C', true));
+		$this->assertSame('updown', qa_get_vote_view('C', false));
 
 		$qa_options_cache['voting_on_qs'] = 0;
 		$qa_options_cache['voting_on_as'] = 0;
+		$qa_options_cache['voting_on_cs'] = 0;
 		$this->assertSame(false, qa_get_vote_view('Q', true));
 		$this->assertSame(false, qa_get_vote_view('A', true));
+		$this->assertSame(false, qa_get_vote_view('C', true));
 
 	}
 

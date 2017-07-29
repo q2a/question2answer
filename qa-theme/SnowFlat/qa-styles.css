@@ -2643,13 +2643,15 @@ input[type="submit"], button {
 	width: 12px;
 	height: 8px;
 	left: 0;
-	transform: scale(0.75);
 }
 .qa-c-list-item .qa-vote-first-button {
 	top: 0;
 }
 .qa-c-list-item .qa-vote-second-button {
 	top: 12px;
+}
+.qa-c-list-item .qa-vote-one-button {
+	top: 6px;
 }
 
 .qa-c-list-item .qa-vote-up-button {
