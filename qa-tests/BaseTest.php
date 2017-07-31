@@ -26,6 +26,9 @@ class BaseTest extends PHPUnit_Framework_TestCase
 
 		$this->assertSame(100, convert_to_bytes('', 100));
 		$this->assertSame(1048576, convert_to_bytes('k', 1024));
+
+		// numeric strings cause warnings in PHP 7.1
+		$this->assertSame(102400, convert_to_bytes('k', '100K'));
 	}
 
 	public function test__qa_q_request()
