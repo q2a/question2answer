@@ -114,5 +114,4 @@ class AppVotesTest extends PHPUnit_Framework_TestCase
 
 		// can't test more right now due to qa_user_limits_remaining() call from qa_user_permit_error()
 	}
-
 }

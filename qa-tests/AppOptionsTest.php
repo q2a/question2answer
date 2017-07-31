@@ -104,7 +104,5 @@ class AppOptionsTest extends PHPUnit_Framework_TestCase
 		$this->assertSame(false, qa_get_vote_view('Q', true));
 		$this->assertSame(false, qa_get_vote_view('A', true));
 		$this->assertSame(false, qa_get_vote_view('C', true));
-
 	}
-
 }
