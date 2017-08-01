@@ -58,6 +58,9 @@ class qa_event_limits
 			case 'a_vote_up':
 			case 'a_vote_down':
 			case 'a_vote_nil':
+			case 'c_vote_up':
+			case 'c_vote_down':
+			case 'c_vote_nil':
 				qa_limits_increment($userid, QA_LIMIT_VOTES);
 				break;
 

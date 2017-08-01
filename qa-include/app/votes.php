@@ -112,7 +112,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
  * @param $handle
  * @param $cookieid
  * @param $vote
- * @return mixed
+ * @return void
  */
 function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 {
@@ -130,9 +130,13 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 	qa_db_uservote_set($post['postid'], $userid, $vote);
 	qa_db_post_recount_votes($post['postid']);
 
-	$postisanswer = ($post['basetype'] == 'A');
+	if (!in_array($post['basetype'], array('Q', 'A', 'C'))) {
+		return;
+	}
 
-	if ($postisanswer) {
+	$prefix = strtolower($post['basetype']);
+
+	if ($prefix === 'a') {
 		qa_db_post_acount_update($post['parentid']);
 		qa_db_unupaqcount_update();
 	}
@@ -140,24 +144,24 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 	$columns = array();
 
 	if ($vote > 0 || $oldvote > 0)
-		$columns[] = $postisanswer ? 'aupvotes' : 'qupvotes';
+		$columns[] = $prefix . 'upvotes';
 
 	if ($vote < 0 || $oldvote < 0)
-		$columns[] = $postisanswer ? 'adownvotes' : 'qdownvotes';
+		$columns[] = $prefix . 'downvotes';
 
 	qa_db_points_update_ifuser($userid, $columns);
 
-	qa_db_points_update_ifuser($post['userid'], array($postisanswer ? 'avoteds' : 'qvoteds', 'upvoteds', 'downvoteds'));
+	qa_db_points_update_ifuser($post['userid'], array($prefix . 'voteds', 'upvoteds', 'downvoteds'));
 
-	if ($post['basetype'] == 'Q')
+	if ($prefix === 'q')
 		qa_db_hotness_update($post['postid']);
 
 	if ($vote < 0)
-		$event = $postisanswer ? 'a_vote_down' : 'q_vote_down';
+		$event = $prefix . '_vote_down';
 	elseif ($vote > 0)
-		$event = $postisanswer ? 'a_vote_up' : 'q_vote_up';
+		$event = $prefix . '_vote_up';
 	else
-		$event = $postisanswer ? 'a_vote_nil' : 'q_vote_nil';
+		$event = $prefix . '_vote_nil';
 
 	qa_report_event($event, $userid, $handle, $cookieid, array(
 		'postid' => $post['postid'],
