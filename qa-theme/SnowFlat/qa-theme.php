@@ -465,8 +465,9 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$this->output('<div class="qa-q-view-main">');
 
-		if (isset($q_view['main_form_tags']))
+		if (isset($q_view['main_form_tags'])) {
 			$this->output('<form ' . $q_view['main_form_tags'] . '>'); // form for buttons on question
+		}
 
 		$this->post_avatar_meta($q_view, 'qa-q-view');
 		$this->q_view_content($q_view);
@@ -476,7 +477,6 @@ class qa_html_theme extends qa_html_theme_base
 		$this->post_tags($q_view, 'qa-q-view');
 
 		$this->q_view_buttons($q_view);
-		$this->c_list(isset($q_view['c_list']) ? $q_view['c_list'] : null, 'qa-q-view');
 
 		if (isset($q_view['main_form_tags'])) {
 			if (isset($q_view['buttons_form_hidden']))
@@ -484,6 +484,7 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output('</form>');
 		}
 
+		$this->c_list(isset($q_view['c_list']) ? $q_view['c_list'] : null, 'qa-q-view');
 		$this->c_form(isset($q_view['c_form']) ? $q_view['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-q-view-main -->');
@@ -512,33 +513,26 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$this->output('<div class="qa-a-item-main">');
 
+		if (isset($a_item['main_form_tags'])) {
+			$this->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
+		}
+
 		$this->post_avatar_meta($a_item, 'qa-a-item');
 
-		if (isset($a_item['main_form_tags']))
-			$this->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
-
 		if ($a_item['hidden'])
-			$answerState = 'hidden';
+			$this->output('<div class="qa-a-item-hidden">');
 		elseif ($a_item['selected'])
-			$answerState = 'selected';
-		else
-			$answerState = null;
-
-		if (isset($answerState))
-			$this->output('<div class="qa-a-item-' . $answerState . '">');
+			$this->output('<div class="qa-a-item-selected">');
 
 		$this->a_selection($a_item);
 		if (isset($a_item['error']))
 			$this->error($a_item['error']);
 		$this->a_item_content($a_item);
 
-		if (isset($answerState))
+		if ($a_item['hidden'] || $a_item['selected'])
 			$this->output('</div>');
 
 		$this->a_item_buttons($a_item);
-
-		if (isset($a_item['c_list']))
-			$this->c_list($a_item['c_list'], 'qa-a-item');
 
 		if (isset($a_item['main_form_tags'])) {
 			if (isset($a_item['buttons_form_hidden']))
@@ -546,13 +540,14 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output('</form>');
 		}
 
+		$this->c_list(isset($a_item['c_list']) ? $a_item['c_list'] : null, 'qa-a-item');
 		$this->c_form(isset($a_item['c_form']) ? $a_item['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-a-item-main -->');
 	}
 
 	/**
-	 * Remove voting here
+	 * Remove comment voting here
 	 * @param array $c_item
 	 */
 	public function c_list_item($c_item)
@@ -568,7 +563,7 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * Move user whometa to top in comment
+	 * Move user whometa to top in comment, add comment voting back in
 	 *
 	 * @since Snow 1.4
 	 * @param array $c_item
@@ -580,7 +575,20 @@ class qa_html_theme extends qa_html_theme_base
 		if (isset($c_item['error']))
 			$this->error($c_item['error']);
 
+		if (isset($c_item['main_form_tags'])) {
+			$this->output('<form ' . $c_item['main_form_tags'] . '>'); // form for comment voting buttons
+		}
+
 		$this->voting($c_item);
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->form_hidden_elements(@$c_item['voting_form_hidden']);
+			$this->output('</form>');
+		}
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->output('<form ' . $c_item['main_form_tags'] . '>'); // form for buttons on comment
+		}
 
 		if (isset($c_item['expand_tags']))
 			$this->c_item_expand($c_item);
@@ -592,6 +600,11 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<div class="qa-c-item-footer">');
 		$this->c_item_buttons($c_item);
 		$this->output('</div>');
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->form_hidden_elements(@$c_item['buttons_form_hidden']);
+			$this->output('</form>');
+		}
 	}
 
 	/**

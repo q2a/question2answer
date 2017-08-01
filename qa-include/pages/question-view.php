@@ -654,6 +654,10 @@ function qa_page_q_comment_view($question, $parent, $comment, $usershtml, $formr
 	if ($comment['queued'])
 		$c_view['error'] = $comment['isbyuser'] ? qa_lang_html('question/c_your_waiting_approval') : qa_lang_html('question/c_waiting_your_approval');
 
+	$c_view['main_form_tags'] = 'method="post" action="' . qa_self_html() . '"';
+	$c_view['voting_form_hidden'] = array('code' => qa_get_form_security_code('vote'));
+	$c_view['buttons_form_hidden'] = array('code' => qa_get_form_security_code('buttons-' . $parent['postid']), 'qa_click' => '');
+
 
 	// Buttons for operating on this comment
 
