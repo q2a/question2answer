@@ -143,25 +143,29 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 
 	$columns = array();
 
-	if ($vote > 0 || $oldvote > 0)
+	if ($vote > 0 || $oldvote > 0) {
 		$columns[] = $prefix . 'upvotes';
+	}
 
-	if ($vote < 0 || $oldvote < 0)
+	if ($vote < 0 || $oldvote < 0) {
 		$columns[] = $prefix . 'downvotes';
+	}
 
 	qa_db_points_update_ifuser($userid, $columns);
 
 	qa_db_points_update_ifuser($post['userid'], array($prefix . 'voteds', 'upvoteds', 'downvoteds'));
 
-	if ($prefix === 'q')
+	if ($prefix === 'q') {
 		qa_db_hotness_update($post['postid']);
+	}
 
-	if ($vote < 0)
+	if ($vote < 0) {
 		$event = $prefix . '_vote_down';
-	elseif ($vote > 0)
+	} elseif ($vote > 0) {
 		$event = $prefix . '_vote_up';
-	else
+	} else {
 		$event = $prefix . '_vote_nil';
+	}
 
 	qa_report_event($event, $userid, $handle, $cookieid, array(
 		'postid' => $post['postid'],
@@ -215,9 +219,9 @@ function qa_flag_error_html($post, $userid, $topage)
 			case false:
 				return false;
 		}
-
-	} else
+	} else {
 		return qa_lang_html('question/flag_not_allowed'); // flagging option should not have been presented
+	}
 }
 
 

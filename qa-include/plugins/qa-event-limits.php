@@ -27,8 +27,9 @@ class qa_event_limits
 		// Don't increment limits or report user actions for events that were delayed. For example, a 'q_post'
 		// event sent when a post is approved by the admin, for which a 'q_queue' event was already sent.
 
-		if (isset($params['delayed']))
+		if (isset($params['delayed'])) {
 			return;
+		}
 
 		require_once QA_INCLUDE_DIR . 'app/limits.php';
 
@@ -92,12 +93,10 @@ class qa_event_limits
 		) {
 			if (isset($userid)) {
 				require_once QA_INCLUDE_DIR . 'app/users.php';
-
 				qa_user_report_action($userid, $event);
 
 			} elseif (isset($cookieid)) {
 				require_once QA_INCLUDE_DIR . 'app/cookies.php';
-
 				qa_cookie_report_action($cookieid, $event);
 			}
 		}

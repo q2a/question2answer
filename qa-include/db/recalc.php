@@ -252,16 +252,17 @@ function qa_db_posts_answers_recount($firstpostid, $lastpostid)
  */
 function qa_db_users_get_for_recalc_points($startuserid, $count)
 {
-	if (QA_FINAL_EXTERNAL_USERS)
+	if (QA_FINAL_EXTERNAL_USERS) {
 		return qa_db_read_all_values(qa_db_query_sub(
 			'SELECT userid FROM ((SELECT DISTINCT userid FROM ^posts WHERE userid>=# ORDER BY userid LIMIT #) UNION (SELECT DISTINCT userid FROM ^uservotes WHERE userid>=# ORDER BY userid LIMIT #)) x ORDER BY userid LIMIT #',
 			$startuserid, $count, $startuserid, $count, $count
 		));
-	else
+	} else {
 		return qa_db_read_all_values(qa_db_query_sub(
 			'SELECT DISTINCT userid FROM ^users WHERE userid>=# ORDER BY userid LIMIT #',
 			$startuserid, $count
 		));
+	}
 }
 
 

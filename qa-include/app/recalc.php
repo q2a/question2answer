@@ -100,8 +100,9 @@ function qa_recalc_perform_step(&$state)
 				foreach ($pages as $pageid => $page) {
 					if (!($page['flags'] & QA_PAGE_FLAGS_EXTERNAL)) {
 						$searchmodules = qa_load_modules_with('search', 'unindex_page');
-						foreach ($searchmodules as $searchmodule)
+						foreach ($searchmodules as $searchmodule) {
 							$searchmodule->unindex_page($pageid);
+						}
 
 						$searchmodules = qa_load_modules_with('search', 'index_page');
 						if (count($searchmodules)) {
@@ -117,8 +118,9 @@ function qa_recalc_perform_step(&$state)
 				$done += count($pages);
 				$continue = true;
 
-			} else
+			} else {
 				qa_recalc_transition($state, 'doreindexcontent_postcount');
+			}
 			break;
 
 		case 'doreindexcontent_postcount':
@@ -200,8 +202,9 @@ function qa_recalc_perform_step(&$state)
 				$done += count($postids);
 				$continue = true;
 
-			} else
+			} else {
 				qa_recalc_transition($state, 'dorecountposts_acount');
+			}
 			break;
 
 		case 'dorecountposts_acount':
@@ -243,13 +246,13 @@ function qa_recalc_perform_step(&$state)
 				qa_db_users_recalc_points($next, $lastuserid);
 				$done += $recalccount;
 
-			} else
+			} else {
 				$lastuserid = $next; // for truncation
+			}
 
 			if ($gotcount > $recalccount) { // more left to do
 				$next = $userids[$recalccount]; // start next round at first one not recalculated
 				$continue = true;
-
 			} else {
 				qa_db_truncate_userpoints($lastuserid);
 				qa_db_userpointscount_update(); // quick so just do it here
@@ -289,30 +292,34 @@ function qa_recalc_perform_step(&$state)
 
 					$posts = array($questionid => $question);
 
-					foreach ($childposts as $postid => $post)
+					foreach ($childposts as $postid => $post) {
 						$posts[$postid] = $post;
+					}
 
-					foreach ($achildposts as $postid => $post)
+					foreach ($achildposts as $postid => $post) {
 						$posts[$postid] = $post;
+					}
 
 					// Creation and editing of each post
 
 					foreach ($posts as $postid => $post) {
 						$followonq = ($post['basetype'] == 'Q') && ($postid != $questionid);
 
-						if ($followonq)
+						if ($followonq) {
 							$updatetype = QA_UPDATE_FOLLOWS;
-						elseif ($post['basetype'] == 'C' && @$posts[$post['parentid']]['basetype'] == 'Q')
+						} elseif ($post['basetype'] == 'C' && @$posts[$post['parentid']]['basetype'] == 'Q') {
 							$updatetype = QA_UPDATE_C_FOR_Q;
-						elseif ($post['basetype'] == 'C' && @$posts[$post['parentid']]['basetype'] == 'A')
+						} elseif ($post['basetype'] == 'C' && @$posts[$post['parentid']]['basetype'] == 'A') {
 							$updatetype = QA_UPDATE_C_FOR_A;
-						else
+						} else {
 							$updatetype = null;
+						}
 
 						qa_create_event_for_q_user($questionid, $postid, $updatetype, $post['userid'], @$posts[$post['parentid']]['userid'], $post['created']);
 
-						if (isset($post['updated']) && !$followonq)
+						if (isset($post['updated']) && !$followonq) {
 							qa_create_event_for_q_user($questionid, $postid, $post['updatetype'], $post['lastuserid'], $post['userid'], $post['updated']);
+						}
 					}
 
 					// Tags and categories of question
@@ -324,9 +331,11 @@ function qa_recalc_perform_step(&$state)
 
 					$parentidcomments = array();
 
-					foreach ($posts as $postid => $post)
-						if ($post['basetype'] == 'C')
+					foreach ($posts as $postid => $post) {
+						if ($post['basetype'] == 'C') {
 							$parentidcomments[$post['parentid']][$postid] = $post;
+						}
+					}
 
 					// For each comment thread, notify all previous comment authors of each comment in the thread (could get slow)
 
@@ -342,8 +351,9 @@ function qa_recalc_perform_step(&$state)
 								}
 							}
 
-							if (isset($comment['userid']))
+							if (isset($comment['userid'])) {
 								$keyuserids[$comment['userid']] = true;
+							}
 						}
 					}
 				}
@@ -352,8 +362,9 @@ function qa_recalc_perform_step(&$state)
 				$done += count($questionids);
 				$continue = true;
 
-			} else
+			} else {
 				qa_recalc_transition($state, 'dorefillevents_complete');
+			}
 			break;
 
 		case 'dorecalccategories':
@@ -379,7 +390,6 @@ function qa_recalc_perform_step(&$state)
 				$next = 1 + $lastpostid;
 				$done += count($postids);
 				$continue = true;
-
 			} else {
 				qa_recalc_transition($state, 'dorecalccategories_recount');
 			}
@@ -391,13 +401,13 @@ function qa_recalc_perform_step(&$state)
 			if (count($categoryids)) {
 				$lastcategoryid = max($categoryids);
 
-				foreach ($categoryids as $categoryid)
+				foreach ($categoryids as $categoryid) {
 					qa_db_ifcategory_qcount_update($categoryid);
+				}
 
 				$next = 1 + $lastcategoryid;
 				$done += count($categoryids);
 				$continue = true;
-
 			} else {
 				qa_recalc_transition($state, 'dorecalccategories_backpaths');
 			}
@@ -431,15 +441,14 @@ function qa_recalc_perform_step(&$state)
 				require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 				$postid = $posts[0];
-
 				qa_post_delete($postid);
 
 				$next = 1 + $postid;
 				$done++;
 				$continue = true;
-
-			} else
+			} else {
 				qa_recalc_transition($state, 'dodeletehidden_answers');
+			}
 			break;
 
 		case 'dodeletehidden_answers':
@@ -449,15 +458,15 @@ function qa_recalc_perform_step(&$state)
 				require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 				$postid = $posts[0];
-
 				qa_post_delete($postid);
 
 				$next = 1 + $postid;
 				$done++;
 				$continue = true;
 
-			} else
+			} else {
 				qa_recalc_transition($state, 'dodeletehidden_questions');
+			}
 			break;
 
 		case 'dodeletehidden_questions':
@@ -467,15 +476,15 @@ function qa_recalc_perform_step(&$state)
 				require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 				$postid = $posts[0];
-
 				qa_post_delete($postid);
 
 				$next = 1 + $postid;
 				$done++;
 				$continue = true;
 
-			} else
+			} else {
 				qa_recalc_transition($state, 'dodeletehidden_complete');
+			}
 			break;
 
 		case 'doblobstodisk':
@@ -489,15 +498,16 @@ function qa_recalc_perform_step(&$state)
 				require_once QA_INCLUDE_DIR . 'app/blobs.php';
 				require_once QA_INCLUDE_DIR . 'db/blobs.php';
 
-				if (qa_write_blob_file($blob['blobid'], $blob['content'], $blob['format']))
+				if (qa_write_blob_file($blob['blobid'], $blob['content'], $blob['format'])) {
 					qa_db_blob_set_content($blob['blobid'], null);
+				}
 
 				$next = 1 + $blob['blobid'];
 				$done++;
 				$continue = true;
-
-			} else
+			} else {
 				qa_recalc_transition($state, 'doblobstodisk_complete');
+			}
 			break;
 
 		case 'doblobstodb':
@@ -518,9 +528,9 @@ function qa_recalc_perform_step(&$state)
 				$next = 1 + $blob['blobid'];
 				$done++;
 				$continue = true;
-
-			} else
+			} else {
 				qa_recalc_transition($state, 'doblobstodb_complete');
+			}
 			break;
 
 		case 'docachetrim':
@@ -551,8 +561,9 @@ function qa_recalc_perform_step(&$state)
 			break;
 	}
 
-	if ($continue)
+	if ($continue) {
 		$state = $operation . "\t" . $length . "\t" . $next . "\t" . $done;
+	}
 
 	return $continue && $done < $length;
 }
@@ -678,8 +689,8 @@ function qa_recalc_get_message($state)
 
 	@list($operation, $length, $next, $done) = explode("\t", $state);
 
-	$done = (int)$done;
-	$length = (int)$length;
+	$done = (int) $done;
+	$length = (int) $length;
 
 	switch ($operation) {
 		case 'doreindexcontent_postcount':

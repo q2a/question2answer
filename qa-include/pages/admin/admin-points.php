@@ -34,8 +34,9 @@ require_once QA_INCLUDE_DIR . 'util/sort.php';
 
 // Check admin privileges
 
-if (!qa_admin_check_privileges($qa_content))
+if (!qa_admin_check_privileges($qa_content)) {
 	return $qa_content;
+}
 
 
 // Process user actions
@@ -47,25 +48,23 @@ $optionnames = qa_db_points_option_names();
 if (qa_clicked('doshowdefaults')) {
 	$options = array();
 
-	foreach ($optionnames as $optionname)
+	foreach ($optionnames as $optionname) {
 		$options[$optionname] = qa_default_option($optionname);
-
+	}
 } else {
-	if (qa_clicked('docancel'))
-		;
-
-	elseif (qa_clicked('dosaverecalc')) {
-		if (!qa_check_form_security_code('admin/points', qa_post_text('code')))
+	if (qa_clicked('dosaverecalc')) {
+		if (!qa_check_form_security_code('admin/points', qa_post_text('code'))) {
 			$securityexpired = true;
-
-		else {
-			foreach ($optionnames as $optionname)
+		} else {
+			foreach ($optionnames as $optionname) {
 				qa_set_option($optionname, (int)qa_post_text('option_' . $optionname));
+			}
 
-			if (!qa_post_text('has_js'))
+			if (!qa_post_text('has_js')) {
 				qa_redirect('admin/recalc', array('dorecalcpoints' => 1));
-			else
+			} else {
 				$recalculate = true;
+			}
 		}
 	}
 
@@ -107,7 +106,6 @@ if (qa_clicked('doshowdefaults')) {
 		'tags' => 'name="docancel"',
 		'label' => qa_lang_html('main/cancel_button'),
 	);
-
 } else {
 	if ($recalculate) {
 		$qa_content['form']['ok'] = '<span id="recalc_ok"></span>';
