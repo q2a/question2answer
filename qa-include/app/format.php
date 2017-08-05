@@ -278,7 +278,7 @@ function qa_ip_anchor_html($ip, $anchorhtml = null)
  * $userid and $cookieid refer to the user *viewing* the page.
  * $usershtml is an array of [user id] => [HTML representation of user] built ahead of time.
  * $dummy is a placeholder (used to be $categories parameter but that's no longer needed)
- * $options is an array which sets what is displayed (see qa_post_html_defaults() in qa-app-options.php)
+ * $options is an array which sets what is displayed (see qa_post_html_defaults() in /qa-include/app/options.php)
  * If something is missing from $post (e.g. ['content']), correponding HTML also omitted.
  * @param $post
  * @param $userid
@@ -679,7 +679,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
  * Generate array of mostly HTML representing a message, to be passed to theme layer.
  *
  * @param array $message  The message object (as retrieved from database).
- * @param array $options  Viewing options (see qa_message_html_defaults() in app/options.php).
+ * @param array $options  Viewing options (see qa_message_html_defaults() in /qa-include/app/options.php).
  * @return array  The HTML.
  */
 function qa_message_html_fields($message, $options = array())

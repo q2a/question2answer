@@ -228,7 +228,7 @@ foreach ($commentsfollows as $commentid => $comment) {
 }
 
 
-// Functions used above - also see functions in qa-page-question-submit.php (which are shared with Ajax)
+// Functions used above - also see functions in /qa-include/pages/question-submit.php (which are shared with Ajax)
 
 /*
 	Redirects back to the question page, with the specified parameters

@@ -250,7 +250,7 @@ function qa_post_set_hidden($postid, $hidden = true, $byuserid = null)
 
 /**
  * Change the status of $postid to $status, which should be one of the QA_POST_STATUS_* constants defined in
- * qa-app-post-update.php. Pass the identify of the user making this change in $byuserid (or null for a silent change).
+ * /qa-include/app/post-update.php. Pass the identify of the user making this change in $byuserid (or null for a silent change).
  * @param $postid
  * @param $status
  * @param $byuserid

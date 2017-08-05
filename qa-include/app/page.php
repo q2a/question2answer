@@ -167,7 +167,7 @@ function qa_check_page_clicks()
 
 
 /**
- *	Run the appropriate qa-page-*.php file for this request and return back the $qa_content it passed
+ *	Run the appropriate /qa-include/pages/*.php file for this request and return back the $qa_content it passed
  */
 function qa_get_request_content()
 {
@@ -387,7 +387,7 @@ function qa_do_content_stats($qa_content)
 // Other functions which might be called from anywhere
 
 /**
- * Return an array of the default Q2A requests and which qa-page-*.php file implements them
+ * Return an array of the default Q2A requests and which /qa-include/pages/*.php file implements them
  * If the key of an element ends in /, it should be used for any request with that key as its prefix
  */
 function qa_page_routing()
@@ -615,7 +615,7 @@ function qa_content_prepare($voting = false, $categoryids = null)
 		);
 	}
 
-	// Only the 'level' permission error prevents the menu option being shown - others reported on qa-page-ask.php
+	// Only the 'level' permission error prevents the menu option being shown - others reported on /qa-include/pages/ask.php
 
 	if (qa_opt('nav_ask') && qa_user_maximum_permit_error('permit_post_q') != 'level') {
 		$qa_content['navigation']['main']['ask'] = array(

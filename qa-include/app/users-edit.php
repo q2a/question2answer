@@ -330,7 +330,7 @@ function qa_complete_confirm($userid, $email, $handle)
 
 
 /**
- * Set the user level of user $userid with $handle to $level (one of the QA_USER_LEVEL_* constraints in qa-app-users.php)
+ * Set the user level of user $userid with $handle to $level (one of the QA_USER_LEVEL_* constraints in /qa-include/app/users.php)
  * Pass the previous user level in $oldlevel. Reports the appropriate event, assumes change performed by the logged in user.
  * @param $userid
  * @param $handle

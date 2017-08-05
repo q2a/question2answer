@@ -28,7 +28,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-// $handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
+// $handle, $userhtml are already set by /qa-include/page/user.php - also $userid if using external user integration
 
 $start = qa_get_start();
 

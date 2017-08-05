@@ -1008,7 +1008,7 @@ function qa_user_maximum_permit_error($permitoption, $limitaction = null, $check
  * Check whether the logged in user has permission to perform an action.
  *
  * @param string $permitoption The permission to check (if null, this simply checks whether the user is blocked).
- * @param string $limitaction Constant from qa-app-limits.php to check against user or IP rate limits.
+ * @param string $limitaction Constant from /qa-include/app/limits.php to check against user or IP rate limits.
  * @param int $userlevel A QA_USER_LEVEL_* constant to consider the user at a different level to usual (e.g. if
  *   they are performing this action in a category for which they have elevated privileges).
  * @param bool $checkblocks Whether to check the user's blocked status.

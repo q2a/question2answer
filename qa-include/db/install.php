@@ -78,7 +78,7 @@ function qa_db_table_definitions()
 
 		* In MySQL versions prior to 5.0.3, VARCHAR(x) columns will be silently converted to TEXT where x>255
 
-		* See box at top of qa-app-recalc.php for a list of redundant (non-normal) information in the database
+		* See box at top of /qa-include/app/recalc.php for a list of redundant (non-normal) information in the database
 
 		* Starting in version 1.2, we explicitly name keys and foreign key constraints, instead of allowing MySQL
 		  to name these by default. Our chosen names match the default names that MySQL would have assigned, and
@@ -116,7 +116,7 @@ function qa_db_table_definitions()
 			'emailcode' => 'CHAR(8) CHARACTER SET ascii NOT NULL DEFAULT \'\'', // for email confirmation or password reset
 			'sessioncode' => 'CHAR(8) CHARACTER SET ascii NOT NULL DEFAULT \'\'', // for comparing against session cookie in browser
 			'sessionsource' => 'VARCHAR (16) CHARACTER SET ascii DEFAULT \'\'', // e.g. facebook, openid, etc...
-			'flags' => 'SMALLINT UNSIGNED NOT NULL DEFAULT 0', // see constants at top of qa-app-users.php
+			'flags' => 'SMALLINT UNSIGNED NOT NULL DEFAULT 0', // see constants at top of /qa-include/app/users.php
 			'wallposts' => 'MEDIUMINT NOT NULL DEFAULT 0', // cached count of wall posts
 			'PRIMARY KEY (userid)',
 			'KEY email (email)',
@@ -136,7 +136,7 @@ function qa_db_table_definitions()
 
 		'userlevels' => array(
 			'userid' => $useridcoltype . ' NOT NULL', // the user who has this level
-			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
+			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see /qa-include/app/updates.php
 			'entityid' => 'INT UNSIGNED NOT NULL', // relevant postid / userid / tag wordid / categoryid
 			'level' => 'TINYINT UNSIGNED', // if not NULL, special permission level for that user and that entity
 			'UNIQUE userid (userid, entitytype, entityid)',
@@ -155,7 +155,7 @@ function qa_db_table_definitions()
 			'title' => 'VARCHAR(' . QA_DB_MAX_PROFILE_TITLE_LENGTH . ') NOT NULL', // to match title column in userprofile table
 			'content' => 'VARCHAR(' . QA_DB_MAX_PROFILE_TITLE_LENGTH . ')', // label for display on user profile pages - NULL means use default
 			'position' => 'SMALLINT UNSIGNED NOT NULL',
-			'flags' => 'TINYINT UNSIGNED NOT NULL', // QA_FIELD_FLAGS_* at top of qa-app-users.php
+			'flags' => 'TINYINT UNSIGNED NOT NULL', // QA_FIELD_FLAGS_* at top of /qa-include/app/users.php
 			'permit' => 'TINYINT UNSIGNED', // minimum user level required to view (uses QA_PERMIT_* constants), null means no restriction
 			'PRIMARY KEY (fieldid)',
 		),
@@ -179,7 +179,7 @@ function qa_db_table_definitions()
 
 		'userfavorites' => array(
 			'userid' => $useridcoltype . ' NOT NULL', // the user who favorited the entity
-			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
+			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see /qa-include/app/updates.php
 			'entityid' => 'INT UNSIGNED NOT NULL', // favorited postid / userid / tag wordid / categoryid
 			'nouserevents' => 'TINYINT UNSIGNED NOT NULL', // do we skip writing events to the user stream?
 			'PRIMARY KEY (userid, entitytype, entityid)',
@@ -200,11 +200,11 @@ function qa_db_table_definitions()
 
 		'userevents' => array(
 			'userid' => $useridcoltype . ' NOT NULL', // the user to be informed about this event in their updates
-			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
+			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see /qa-include/app/updates.php
 			'entityid' => 'INT UNSIGNED NOT NULL', // favorited source of event - see userfavorites table - 0 means not from a favorite
 			'questionid' => 'INT UNSIGNED NOT NULL', // the affected question
 			'lastpostid' => 'INT UNSIGNED NOT NULL', // what part of question was affected
-			'updatetype' => 'CHAR(1) CHARACTER SET ascii', // what was done to this part - see qa-app-updates.php
+			'updatetype' => 'CHAR(1) CHARACTER SET ascii', // what was done to this part - see /qa-include/app/updates.php
 			'lastuserid' => $useridcoltype, // which user (if any) did this action
 			'updated' => 'DATETIME NOT NULL', // when the event happened
 			'KEY userid (userid, updated)', // for truncation
@@ -212,7 +212,7 @@ function qa_db_table_definitions()
 		),
 
 		'sharedevents' => array(
-			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see qa-app-updates.php
+			'entitytype' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see /qa-include/app/updates.php
 			'entityid' => 'INT UNSIGNED NOT NULL', // see userfavorites table
 			'questionid' => 'INT UNSIGNED NOT NULL', // see userevents table
 			'lastpostid' => 'INT UNSIGNED NOT NULL', // see userevents table
@@ -305,7 +305,7 @@ function qa_db_table_definitions()
 			'format' => 'VARCHAR(' . QA_DB_MAX_FORMAT_LENGTH . ') CHARACTER SET ascii NOT NULL DEFAULT \'\'', // format of content, e.g. 'html'
 			'created' => 'DATETIME NOT NULL',
 			'updated' => 'DATETIME', // time of last update
-			'updatetype' => 'CHAR(1) CHARACTER SET ascii', // see qa-app-updates.php
+			'updatetype' => 'CHAR(1) CHARACTER SET ascii', // see /qa-include/app/updates.php
 			'title' => 'VARCHAR(' . QA_DB_MAX_TITLE_LENGTH . ')',
 			'content' => 'VARCHAR(' . QA_DB_MAX_CONTENT_LENGTH . ')',
 			'tags' => 'VARCHAR(' . QA_DB_MAX_TAGS_LENGTH . ')', // string of tags separated by commas
@@ -445,7 +445,7 @@ function qa_db_table_definitions()
 
 		'userlimits' => array(
 			'userid' => $useridcoltype . ' NOT NULL',
-			'action' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see constants at top of qa-app-limits.php
+			'action' => 'CHAR(1) CHARACTER SET ascii NOT NULL', // see constants at top of /qa-include/app/limits.php
 			'period' => 'INT UNSIGNED NOT NULL', // integer representing hour of last action
 			'count' => 'SMALLINT UNSIGNED NOT NULL', // how many of this action has been performed within that hour
 			'UNIQUE userid (userid, action)',

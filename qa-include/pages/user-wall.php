@@ -34,7 +34,7 @@ if (QA_FINAL_EXTERNAL_USERS)
 	qa_fatal_error('User accounts are handled by external code');
 
 
-// $handle, $userhtml are already set by qa-page-user.php
+// $handle, $userhtml are already set by /qa-include/page/user.php
 
 $start = qa_get_start();
 

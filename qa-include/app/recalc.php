@@ -49,7 +49,7 @@
 
 	Recalculated in dorebuildupdates:
 	=================================
-	^sharedevents (all): per-entity event streams (see big comment in qa-db-favorites.php)
+	^sharedevents (all): per-entity event streams (see big comment in /qa-include/db/favorites.php)
 	^userevents (all): per-subscriber event streams
 
 	[but these are not entirely redundant since they can contain historical information no longer in ^posts]

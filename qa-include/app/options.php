@@ -641,7 +641,7 @@ function qa_message_html_defaults()
 
 
 /**
- * Return $voteview parameter to pass to qa_post_html_fields() in qa-app-format.php.
+ * Return $voteview parameter to pass to qa_post_html_fields() in /qa-include/app/format.php.
  * @param $postorbasetype The post, or for compatibility just a basetype, i.e. 'Q', 'A' or 'C'
  * @param bool $full Whether full post is shown
  * @param bool $enabledif Whether to do checks for voting buttons (i.e. will always disable voting if false)
