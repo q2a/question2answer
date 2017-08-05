@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-ajax-click-pm.php
 	Description: Server-side response to Ajax single clicks on private messages
 
 

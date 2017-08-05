@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-ajax-asktitle.php
 	Description: Server-side response to Ajax request based on ask a question title
 
 

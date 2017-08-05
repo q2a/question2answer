@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-image.php
 	Description: Outputs image for a specific blob at a specific size, caching as appropriate
 
 

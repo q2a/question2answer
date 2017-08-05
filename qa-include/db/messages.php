@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-messages.php
 	Description: Database-level access to messages table for private message history
 
 

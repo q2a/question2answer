@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-viewer-basic.php
 	Description: Basic viewer module for displaying HTML or plain text
 
 

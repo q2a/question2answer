@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-base.php
 	Description: Sets up Q2A environment, plus many globally useful functions
 
 

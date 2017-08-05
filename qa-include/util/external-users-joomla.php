@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-external-users-joomla.php
 	Description: External user functions for basic Joomla integration
 
 

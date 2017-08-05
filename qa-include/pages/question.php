@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-question.php
 	Description: Controller for question page (only viewing functionality here)
 
 

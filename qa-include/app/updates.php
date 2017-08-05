@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-app-updates.php
 	Description: Definitions relating to favorites and updates in the database tables
 
 

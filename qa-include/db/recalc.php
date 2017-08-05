@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-recalc.php
 	Description: Database functions for recalculations (clean-up operations)
 
 

@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-question-post.php
 	Description: More control for question page if it's submitted by HTTP POST
 
 

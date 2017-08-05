@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-admin-usertitles.php
 	Description: Controller for admin page for editing custom user titles
 
 

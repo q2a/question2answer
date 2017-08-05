@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-selects.php
 	Description: Builders of selectspec arrays (see qa-db.php) used to specify database SELECTs
 
 

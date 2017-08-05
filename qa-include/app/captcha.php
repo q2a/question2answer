@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-app-captcha.php
 	Description: Wrapper functions and utilities for captcha modules
 
 

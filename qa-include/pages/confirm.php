@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-confirm.php
 	Description: Controller for email confirmation page (can also request a new code)
 
 

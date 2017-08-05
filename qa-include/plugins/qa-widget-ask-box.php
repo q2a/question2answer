@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-widget-ask-box.php
 	Description: Widget module class for ask a question box
 
 

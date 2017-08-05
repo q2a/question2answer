@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-users-blocked.php
 	Description: Controller for page showing users who have been blocked
 
 

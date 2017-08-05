@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-blobs.php
 	Description: Database-level access to blobs table for large chunks of data (e.g. images)
 
 

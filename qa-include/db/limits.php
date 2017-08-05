@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-limits.php
 	Description: Database-level access to tables which monitor rate limits
 
 
