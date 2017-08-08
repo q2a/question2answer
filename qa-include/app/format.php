@@ -1396,8 +1396,8 @@
 	Return the url for $page retrieved from the database
 */
 	{
-		return ($page['flags'] & QA_PAGE_FLAGS_EXTERNAL)
-			? (is_numeric(strpos($page['tags'], '://')) ? $page['tags'] : qa_path_to_root().$page['tags'])
+		return ($page['flags'] & QA_PAGE_FLAGS_EXTERNAL) && (strpos($page['tags'], '://') !== false)
+			? $page['tags']
 			: qa_path($page['tags']);
 	}
 
