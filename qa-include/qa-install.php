@@ -68,27 +68,30 @@ $hidden = array();
 // Process user handling higher up to avoid 'headers already sent' warning
 
 if (!isset($pass_failure_type) && qa_clicked('super')) {
+	require_once QA_INCLUDE_DIR.'db/admin.php';
 	require_once QA_INCLUDE_DIR.'db/users.php';
 	require_once QA_INCLUDE_DIR.'app/users-edit.php';
 
-	$inemail = qa_post_text('email');
-	$inpassword = qa_post_text('password');
-	$inhandle = qa_post_text('handle');
+	if (qa_db_count_users() == 0) { // prevent creating multiple accounts
+		$inemail = qa_post_text('email');
+		$inpassword = qa_post_text('password');
+		$inhandle = qa_post_text('handle');
 
-	$fielderrors = array_merge(
-		qa_handle_email_filter($inhandle, $inemail),
-		qa_password_validate($inpassword)
-	);
+		$fielderrors = array_merge(
+			qa_handle_email_filter($inhandle, $inemail),
+			qa_password_validate($inpassword)
+		);
 
-	if (empty($fielderrors)) {
-		require_once QA_INCLUDE_DIR.'app/users.php';
+		if (empty($fielderrors)) {
+			require_once QA_INCLUDE_DIR.'app/users.php';
 
-		$userid = qa_create_new_user($inemail, $inpassword, $inhandle, QA_USER_LEVEL_SUPER);
-		qa_set_logged_in_user($userid, $inhandle);
+			$userid = qa_create_new_user($inemail, $inpassword, $inhandle, QA_USER_LEVEL_SUPER);
+			qa_set_logged_in_user($userid, $inhandle);
 
-		qa_set_option('feedback_email', $inemail);
+			qa_set_option('feedback_email', $inemail);
 
-		$success .= "Congratulations - Your Question2Answer site is ready to go!\n\nYou are logged in as the super administrator and can start changing settings.\n\nThank you for installing Question2Answer.";
+			$success .= "Congratulations - Your Question2Answer site is ready to go!\n\nYou are logged in as the super administrator and can start changing settings.\n\nThank you for installing Question2Answer.";
+		}
 	}
 }
 
