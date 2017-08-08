@@ -1416,10 +1416,12 @@ function qa_users_sub_navigation()
 		);
 	}
 
-	$menuItems['users/new'] = array(
-		'label' => qa_lang_html('main/newest_users'),
-		'url' => qa_path_html('users/new'),
-	);
+	if ($showNewUsersPage) {
+		$menuItems['users/new'] = array(
+			'label' => qa_lang_html('main/newest_users'),
+			'url' => qa_path_html('users/new'),
+		);
+	}
 
 	if ($showSpecialUsersPage) {
 		$menuItems['users/special'] = array(
