@@ -504,7 +504,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 		if ($fields['hidden']) {
 			$fields['vote_state'] = 'disabled';
-			$fields['vote_up_tags'] = 'title="' . qa_lang_html('main/vote_disabled_hidden') . '"';
+			$fields['vote_up_tags'] = 'title="' . qa_lang_html('main/vote_disabled_hidden_post') . '"';
 			$fields['vote_down_tags'] = $fields['vote_up_tags'];
 
 		} elseif ($fields['queued']) {
