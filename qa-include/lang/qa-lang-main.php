@@ -193,8 +193,9 @@ return array(
 	'vote_disabled_hidden_a' => 'You cannot vote on hidden answers',  // @deprecated
 	'vote_disabled_hidden_q' => 'You cannot vote on hidden questions',  // @deprecated
 	'vote_disabled_level' => 'Voting is only available to some users',
-	'vote_disabled_my_a' => 'You cannot vote on your own answers',
-	'vote_disabled_my_q' => 'You cannot vote on your own questions',
+	'vote_disabled_my_post' => 'You cannot vote on your own posts',
+	'vote_disabled_my_a' => 'You cannot vote on your own answers',  // @deprecated
+	'vote_disabled_my_q' => 'You cannot vote on your own questions',  // @deprecated
 	'vote_disabled_q_page_only' => 'Please view this question to vote',
 	'vote_disabled_queued' => 'You can only vote on approved posts',
 	'vote_down_must_confirm' => 'Please ^5confirm your email address^6 to vote down.',
