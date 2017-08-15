@@ -514,7 +514,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 		} elseif ($isbyuser) {
 			$fields['vote_state'] = 'disabled';
-			$fields['vote_up_tags'] = 'title="' . qa_lang_html($isanswer ? 'main/vote_disabled_my_a' : 'main/vote_disabled_my_q') . '"';
+			$fields['vote_up_tags'] = 'title="' . qa_lang_html('main/vote_disabled_my_post') . '"';
 			$fields['vote_down_tags'] = $fields['vote_up_tags'];
 
 		} elseif (strpos($voteview, '-disabled-')) {
