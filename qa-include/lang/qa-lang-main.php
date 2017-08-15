@@ -189,7 +189,7 @@ return array(
 	'vote_disabled_approve' => 'Your account must be approved before you can vote',
 	'vote_disabled_down' => 'Voting down is only available to some users',
 	'vote_disabled_down_approve' => 'Your account must be approved before you can vote down',
-	'vote_disabled_hidden' => 'You cannot vote on hidden posts',
+	'vote_disabled_hidden_post' => 'You cannot vote on hidden posts',
 	'vote_disabled_hidden_a' => 'You cannot vote on hidden answers',  // @deprecated
 	'vote_disabled_hidden_q' => 'You cannot vote on hidden questions',  // @deprecated
 	'vote_disabled_level' => 'Voting is only available to some users',
