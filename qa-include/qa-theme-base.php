@@ -2402,13 +2402,10 @@ class qa_html_theme_base
 
 		$this->output('<div class="qa-c-list-item ' . $extraclass . '" ' . @$c_item['tags'] . '>');
 
-		if (isset($c_item['main_form_tags'])) {
-			$this->output('<form ' . $c_item['main_form_tags'] . '>'); // form for comment voting buttons
-		}
-
-		$this->voting($c_item);
-
-		if (isset($c_item['main_form_tags'])) {
+		if (isset($c_item['vote_view']) && isset($c_item['main_form_tags'])) {
+			// form for comment voting buttons
+			$this->output('<form ' . $c_item['main_form_tags'] . '>');
+			$this->voting($c_item);
 			$this->form_hidden_elements(@$c_item['voting_form_hidden']);
 			$this->output('</form>');
 		}
