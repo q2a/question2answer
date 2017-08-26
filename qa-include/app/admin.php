@@ -151,7 +151,7 @@ function qa_admin_theme_options()
 		$metadata = $metadataUtil->fetchFromAddonPath($directory);
 		if (empty($metadata)) {
 			// limit theme parsing to first 8kB
-			$contents = file_get_contents($directory . '/qa-styles.css', false, null, 0, 8192);
+			$contents = @file_get_contents($directory . '/qa-styles.css', false, null, 0, 8192);
 			$metadata = qa_addon_metadata($contents, 'Theme');
 		}
 		$options[$theme] = isset($metadata['name']) ? $metadata['name'] : $theme;
