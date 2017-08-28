@@ -2132,6 +2132,94 @@ a.qa-browse-cat-link:visited {
 	height: 1%;
 }
 
+/* voting styles for comments */
+.qa-c-list-item .qa-voting {
+	width: 40px;
+	height: auto;
+	background-color: transparent;
+	border: 0;
+}
+
+.qa-c-list-item .qa-vote-first-button,
+.qa-c-list-item .qa-vote-second-button,
+.qa-c-list-item .qa-vote-one-button {
+	width: 8px;
+	height: 10px;
+	background: url(images/vote-buttons-small.png) no-repeat;
+	padding: 0;
+}
+.qa-c-list-item .qa-vote-first-button {
+	left: 0;
+	top: 0;
+}
+.qa-c-list-item .qa-vote-second-button {
+	left: 0;
+	top: 12px;
+}
+.qa-c-list-item .qa-vote-one-button {
+	left: 0;
+	top: 6px;
+}
+.qa-c-list-item .qa-vote-count {
+	float: left;
+	margin: 0;
+}
+.qa-c-list-item .qa-netvote-count-data {
+	margin-top: 0;
+	font-size: 13px;
+}
+
+.qa-c-list-item .qa-vote-up-button {
+	background-position: 0 0;
+}
+.qa-c-list-item .qa-vote-up-button:hover,
+.qa-c-list-item .qa-vote-up-button:focus,
+.qa-c-list-item .qa-vote-up-button:active {
+	background-position: 0 -10px;
+}
+
+.qa-c-list-item .qa-vote-down-button {
+	background-position: -8px 0;
+}
+.qa-c-list-item .qa-vote-down-button:hover,
+.qa-c-list-item .qa-vote-down-button:focus,
+.qa-c-list-item .qa-vote-down-button:active {
+	background-position: -8px -10px;
+}
+
+.qa-c-list-item .qa-vote-up-disabled,
+.qa-c-list-item .qa-vote-up-disabled:hover,
+.qa-c-list-item .qa-vote-up-disabled:focus,
+.qa-c-list-item .qa-vote-up-disabled:active {
+	background-position: 0 -40px;
+}
+
+.qa-c-list-item .qa-vote-down-disabled,
+.qa-c-list-item .qa-vote-down-disabled:hover,
+.qa-c-list-item .qa-vote-down-disabled:focus,
+.qa-c-list-item .qa-vote-down-disabled:active {
+	background-position: -8px -40px;
+}
+
+.qa-c-list-item .qa-voted-up-button {
+	background-position: 0 -20px;
+}
+.qa-c-list-item .qa-voted-up-button:hover,
+.qa-c-list-item .qa-voted-up-button:focus,
+.qa-c-list-item .qa-voted-up-button:active {
+	background-position: 0 -30px;
+}
+
+.qa-c-list-item .qa-voted-down-button {
+	background-position: -8px -20px;
+}
+.qa-c-list-item .qa-voted-down-button:hover,
+.qa-c-list-item .qa-voted-down-button:focus,
+.qa-c-list-item .qa-voted-down-button:active {
+	background-position: -8px -30px;
+}
+
+
 /* height for IE6 */
 .qa-c-item-avatar {
 	display: inline-block;
