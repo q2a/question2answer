@@ -242,21 +242,21 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 
 .qa-vote-buttons {position:relative; height:40px; width:90px;}
 
-.qa-vote-up-button,.qa-vote-up-disabled {background:url(vote-buttons.png) no-repeat; border:0; color:#f1c96b; font-size:1px; height:29px; width:27px;}
+.qa-vote-up-button,.qa-vote-up-disabled {background:url(vote-buttons.png) no-repeat; border:0; color:#f1c96b; font-size:1px; width:27px; height:29px;}
 	.qa-vote-up-button {background-position:0 0; color:#f1c96b;}
 	.qa-vote-up-disabled {background-position:0 -116px; color:#CCC;}
 	.qa-vote-up-button:hover {background-position:0 -29px; color:#f1c96b;}
 
-.qa-vote-down-button,.qa-vote-down-disabled {background:url(vote-buttons.png) no-repeat; border:0; color:#f1c96b; font-size:1px; height:29px; width:27px;}
+.qa-vote-down-button,.qa-vote-down-disabled {background:url(vote-buttons.png) no-repeat; border:0; color:#f1c96b; font-size:1px; width:27px; height:29px;}
 	.qa-vote-down-button {background-position:-27px 0; color:#f1c96b;}
 	.qa-vote-down-disabled {background-position:-27px -116px; color:#CCC;}
 	.qa-vote-down-button:hover {background-position:-27px -29px; color:#f1c96b;}
 
-.qa-voted-up-button {background:url(vote-buttons.png); border:0; color:#f1c96b; font-size:1px; height:29px; width:27px;}
+.qa-voted-up-button {background:url(vote-buttons.png); border:0; color:#f1c96b; font-size:1px; width:27px; height:29px;}
 	.qa-voted-up-button {background-position:0 -87px; color:#f1c96b;}
 	.qa-voted-up-button:hover {background-position:0 -29px; color:#f1c96b;}
 
-.qa-voted-down-button {background:url(vote-buttons.png); border:0; color:#f1c96b; font-size:1px; height:29px; width:27px;}
+.qa-voted-down-button {background:url(vote-buttons.png); border:0; color:#f1c96b; font-size:1px; width:27px; height:29px;}
 	.qa-voted-down-button {background-position:-27px -87px; color:#f1c96b;}
 	.qa-voted-down-button:hover {background-position:-27px -29px; color:#f1c96b;}
 
@@ -403,6 +403,38 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-c-item-buttons {display:block; position:absolute; bottom:0; right:0;}
 
 .qa-c-item-buttons .qa-form-light-button {background:none; height:auto; font-size:10px; padding:0;}
+
+/* Comment voting */
+
+.qa-c-list-item .qa-voting {width:60px; margin-right:12px; padding-top:0;}
+.qa-c-list-item .qa-vote-buttons {width:60px; height:25px;}
+.qa-c-list-item .qa-netvote-count-data {font-size:14px;}
+.qa-c-list-item .qa-upvote-count, .qa-c-list-item .qa-downvote-count {width:30px;}
+.qa-c-list-item .qa-upvote-count-data, .qa-c-list-item .qa-downvote-count-data {font-size:13px;}
+
+.qa-c-list-item .qa-vote-up-button,
+.qa-c-list-item .qa-vote-up-disabled,
+.qa-c-list-item .qa-vote-down-button,
+.qa-c-list-item .qa-vote-down-disabled,
+.qa-c-list-item .qa-voted-up-button,
+.qa-c-list-item .qa-voted-down-button {
+	background-image:url(vote-buttons-sm.png); width:18px; height:19px;
+}
+
+.qa-c-list-item .qa-vote-one-button {left:21px;}
+.qa-c-list-item .qa-vote-first-button {left:6px;}
+.qa-c-list-item .qa-vote-second-button {left:36px;}
+
+.qa-c-list-item .qa-vote-up-button {background-position:0 0;}
+.qa-c-list-item .qa-vote-up-disabled {background-position:0 -76px;}
+.qa-c-list-item .qa-vote-up-button:hover {background-position:0 -19px;}
+.qa-c-list-item .qa-vote-down-button {background-position:-18px 0;}
+.qa-c-list-item .qa-vote-down-disabled {background-position:-18px -76px;}
+.qa-c-list-item .qa-vote-down-button:hover {background-position:-18px -19px;}
+.qa-c-list-item .qa-voted-up-button {background-position:0 -57px;}
+.qa-c-list-item .qa-voted-up-button:hover {background-position:0 -19px;}
+.qa-c-list-item .qa-voted-down-button {background-position:-18px -57px;}
+.qa-c-list-item .qa-voted-down-button:hover {background-position:-18px -19px;}
 
 /* Message list */
 
