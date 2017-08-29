@@ -1071,35 +1071,11 @@ div.header-banner {
 }
 
 .qa-nav-cat-list li {
-	padding: 0 10px;
-}
-
-.qa-nav-cat-list .qa-nav-cat-all {
 	padding: 0;
-	margin-top: 0;
-	font-size: 16px;
-	font-weight: 700;
-	color: #111;
 }
 
 .qa-nav-cat-all a {
-	padding: 0;
-	margin-top: 0;
-	font-size: 18px;
-	font-family: Arial,Helvetica,sans-serif;
-}
-
-.qa-nav-cat-all a,
-.qa-nav-cat-all a:visited {
-	padding: 2px 5px;
-	color: #444;
-	display: block;
-}
-
-.qa-nav-cat-all a:hover,
-.qa-nav-cat-all a:active {
-	text-decoration: none;
-	color: #0099CC;
+	font-weight: bold;
 }
 
 .qa-nav-cat-list ul {
