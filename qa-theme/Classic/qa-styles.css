@@ -224,21 +224,21 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-vote-one-button {margin:12px 0;}
 .qa-vote-second-button {margin-top:12px;}
 
-.qa-vote-up-button,.qa-vote-up-disabled {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; height:15px; width:17px;}
+.qa-vote-up-button,.qa-vote-up-disabled {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; text-indent:-9999px; width:17px; height:15px;}
 	.qa-vote-up-button {background-position:0 0; color:#38544e;}
 	.qa-vote-up-disabled {background-position:0 -60px; color:#38544e;}
 	.qa-vote-up-button:hover {background-position:0 -15px; color:#65968e;}
 
-.qa-vote-down-button,.qa-vote-down-disabled {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; height:15px; width:17px;}
+.qa-vote-down-button,.qa-vote-down-disabled {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; text-indent:-9999px; width:17px; height:15px;}
 	.qa-vote-down-button {background-position:-17px 0; color:#38544e;}
 	.qa-vote-down-disabled {background-position:-17px -60px; color:#38544e;}
 	.qa-vote-down-button:hover {background-position:-17px -15px; color:#65968e;}
 
-.qa-voted-up-button {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; height:15px; width:17px;}
+.qa-voted-up-button {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; text-indent:-9999px; width:17px; height:15px;}
 	.qa-voted-up-button {background-position:0 -30px; color:#f3cb7f;}
 	.qa-voted-up-button:hover {background-position:0 -45px; color:#f3cb7f;}
 
-.qa-voted-down-button {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; height:15px; width:17px; margin:12px 0;}
+.qa-voted-down-button {background:url(vote-buttons.gif) no-repeat; border:0; font-size:1px; text-indent:-9999px; width:17px; height:15px; margin:12px 0;}
 	.qa-voted-down-button {background-position:-17px -30px; color:#f3cb7f;}
 	.qa-voted-down-button:hover {background-position:-17px -45px; color:#f3cb7f;}
 
@@ -379,6 +379,38 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-c-item-who-points {display:none;}
 .qa-c-item-flags {background:#f00; color:#fff; font-weight:bold; padding:2px 5px; display:inline-block;}
 .qa-c-item-buttons {display:block; position:absolute; bottom:0; right:0;}
+
+/* Comment voting */
+
+.qa-c-list-item .qa-voting {background:transparent; border:0; padding:0; margin-right:8px;}
+.qa-c-list-item .qa-vote-buttons {padding:0;}
+.qa-c-list-item .qa-netvote-count {width:40px; line-height:24px;}
+.qa-c-list-item .qa-netvote-count-data {font-size:12px;}
+.qa-c-list-item .qa-upvote-count, .qa-c-list-item .qa-downvote-count {height: auto; top:0;}
+.qa-c-list-item .qa-upvote-count-data, .qa-c-list-item .qa-downvote-count-data {font-size:12px;}
+
+.qa-c-list-item .qa-vote-up-button,
+.qa-c-list-item .qa-vote-up-disabled,
+.qa-c-list-item .qa-vote-down-button,
+.qa-c-list-item .qa-vote-down-disabled,
+.qa-c-list-item .qa-voted-up-button,
+.qa-c-list-item .qa-voted-down-button {
+	background-image:url(vote-buttons-sm.gif); width:12px; height:11px;
+}
+
+.qa-c-list-item .qa-vote-one-button {margin-top:8px;}
+.qa-c-list-item .qa-vote-second-button {margin-top:0;}
+
+.qa-c-list-item .qa-vote-up-button {background-position:0 0;}
+.qa-c-list-item .qa-vote-up-disabled {background-position:0 -44px;}
+.qa-c-list-item .qa-vote-up-button:hover {background-position:0 -11px;}
+.qa-c-list-item .qa-vote-down-button {background-position:-12px 0;}
+.qa-c-list-item .qa-vote-down-disabled {background-position:-12px -44px;}
+.qa-c-list-item .qa-vote-down-button:hover {background-position:-12px -11px;}
+.qa-c-list-item .qa-voted-up-button {background-position:0 -22px;}
+.qa-c-list-item .qa-voted-up-button:hover {background-position:0 -33px;}
+.qa-c-list-item .qa-voted-down-button {background-position:-12px -22px;}
+.qa-c-list-item .qa-voted-down-button:hover {background-position:-12px -33px;}
 
 /* Message list */
 
