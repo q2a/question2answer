@@ -1067,7 +1067,7 @@ div.header-banner {
 .qa-nav-cat-list {
 	list-style: none;
 	margin: 0;
-	padding: 20px;
+	padding: 10px 20px 20px;
 }
 
 .qa-nav-cat-list li {
@@ -1121,12 +1121,14 @@ div.header-banner {
 }
 
 .qa-nav-cat-link {
-	clear: both;
 	float: left;
+	clear: both;
+	word-break: break-word;
 }
 
 .qa-nav-cat-note {
 	color: #000;
+	white-space: nowrap;
 }
 
 /* Pagination */
