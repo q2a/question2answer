@@ -541,8 +541,9 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if (!strlen($handle))
-			return '';
+		if (strlen($handle) === 0) {
+			return qa_lang('main/anonymous');
+		}
 
 		$url = qa_path_html('user/' . $handle);
 		$favclass = $favorited ? ' qa-user-favorited' : '';
