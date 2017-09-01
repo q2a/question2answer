@@ -140,7 +140,10 @@ if ($permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots'))) {
 			break;
 
 		case 'approve':
-			$qa_content['error'] = qa_lang_html('main/view_q_must_be_approved');
+			$qa_content['error'] = strtr(qa_lang_html('main/view_q_must_be_approved'), array(
+				'^1' => '<a href="' . qa_path_html('account') . '">',
+				'^2' => '</a>',
+			));
 			break;
 
 		default:

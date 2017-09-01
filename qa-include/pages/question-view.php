@@ -894,7 +894,10 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 
 		case 'approve':
 			$form = array(
-				'title' => qa_lang_html('question/answer_must_be_approved'),
+				'title' => strtr(qa_lang_html('question/answer_must_be_approved'), array(
+					'^1' => '<a href="' . qa_path_html('account') . '">',
+					'^2' => '</a>',
+				)),
 			);
 			break;
 
@@ -1040,7 +1043,10 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 
 		case 'approve':
 			$form = array(
-				'title' => qa_lang_html('question/comment_must_be_approved'),
+				'title' => strtr(qa_lang_html('question/comment_must_be_approved'), array(
+					'^1' => '<a href="' . qa_path_html('account') . '">',
+					'^2' => '</a>',
+				)),
 			);
 			break;
 

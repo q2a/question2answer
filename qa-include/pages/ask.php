@@ -78,7 +78,10 @@ if ($permiterror) {
 			break;
 
 		case 'approve':
-			$qa_content['error'] = qa_lang_html('question/ask_must_be_approved');
+			$qa_content['error'] = strtr(qa_lang_html('question/ask_must_be_approved'), array(
+				'^1' => '<a href="' . qa_path_html('account') . '">',
+				'^2' => '</a>',
+			));
 			break;
 
 		default:

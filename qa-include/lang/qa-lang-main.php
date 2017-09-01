@@ -181,7 +181,7 @@ return array(
 	'unupvoteda_qs_in_x' => 'Questions without an upvoted answer in ^',
 	'unupvoteda_qs_title' => 'Recent questions without an upvoted answer',
 	'upload_limit' => 'Too many uploads - please try again in an hour',
-	'view_q_must_be_approved' => 'Your account must be approved to view question pages.',
+	'view_q_must_be_approved' => 'Your account must be approved to view question pages. Please wait or ^1add more information^2.',
 	'view_q_must_confirm' => 'Please ^5confirm your email address^6 to view question pages.',
 	'view_q_must_login' => 'Please ^1log in^2 or ^3register^4 to view question pages.',
 	'viewed_qs_in_x' => 'Most viewed questions in ^',

@@ -57,7 +57,10 @@ if ($question['answerbutton']) {
 				break;
 
 			case 'approve':
-				$pageerror = qa_lang_html('question/answer_must_be_approved');
+				$pageerror = strtr(qa_lang_html('question/answer_must_be_approved'), array(
+					'^1' => '<a href="' . qa_path_html('account') . '">',
+					'^2' => '</a>',
+				));
 				break;
 
 			case 'limit':
@@ -850,7 +853,10 @@ function qa_page_q_do_comment($question, $parent, $commentsfollows, $pagestart, 
 			break;
 
 		case 'approve':
-			$error = qa_lang_html('question/comment_must_be_approved');
+			$error = strtr(qa_lang_html('question/comment_must_be_approved'), array(
+				'^1' => '<a href="' . qa_path_html('account') . '">',
+				'^2' => '</a>',
+			));
 			break;
 
 		case 'limit':

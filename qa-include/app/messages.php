@@ -58,7 +58,10 @@ function qa_wall_error_html($fromuserid, $touserid, $touserflags)
 					break;
 
 				case 'approve':
-					return qa_lang_html('profile/post_wall_must_be_approved');
+					return strtr(qa_lang_html('profile/post_wall_must_be_approved'), array(
+						'^1' => '<a href="' . qa_path_html('account') . '">',
+						'^2' => '</a>',
+					));
 					break;
 
 				case false:
