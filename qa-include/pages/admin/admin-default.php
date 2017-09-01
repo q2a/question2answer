@@ -146,7 +146,6 @@ $optiontype = array(
 	'allow_user_walls' => 'checkbox',
 	'allow_self_answer' => 'checkbox',
 	'allow_view_q_bots' => 'checkbox',
-	'approve_user_required' => 'checkbox',
 	'avatar_allow_gravatar' => 'checkbox',
 	'avatar_allow_upload' => 'checkbox',
 	'avatar_default_show' => 'checkbox',
@@ -562,7 +561,7 @@ switch ($adminsection) {
 		$getoptions = qa_get_options(array('feedback_enabled', 'permit_post_q', 'permit_post_a', 'permit_post_c'));
 
 		if (!QA_FINAL_EXTERNAL_USERS)
-			array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'moderate_users', 'approve_user_required', '');
+			array_push($showoptions, 'confirm_user_emails', 'confirm_user_required', 'moderate_users', '');
 
 		$captchamodules = qa_list_modules('captcha');
 
@@ -625,7 +624,6 @@ switch ($adminsection) {
 
 		$checkboxtodisplay = array(
 			'confirm_user_required' => 'option_confirm_user_emails',
-			'approve_user_required' => 'option_moderate_users',
 			'captcha_on_unapproved' => 'option_moderate_users',
 			'captcha_on_unconfirmed' => 'option_confirm_user_emails && !(option_moderate_users && option_captcha_on_unapproved)',
 			'captcha_module' => 'option_captcha_on_register || option_captcha_on_anon_post || (option_confirm_user_emails && option_captcha_on_unconfirmed) || (option_moderate_users && option_captcha_on_unapproved) || option_captcha_on_reset_password || option_captcha_on_feedback',

@@ -32,7 +32,7 @@ return array(
 	'allow_self_answer' => 'Allow users to answer their own question:',
 	'allow_user_walls' => 'Enable wall posts on user profiles:',
 	'allow_view_q_bots' => 'Allow search engines to view question pages',
-	'approve_user_required' => 'All new users must be approved:',
+	'approve_user_required' => 'All new users must be approved:', // @deprecated
 	'avatar_allow_gravatar' => 'Allow ^1Gravatar^2 avatars:',
 	'avatar_allow_upload' => 'Allow users to upload avatars:',
 	'avatar_default_show' => 'Default avatar:',

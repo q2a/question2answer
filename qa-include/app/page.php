@@ -281,15 +281,9 @@ function qa_output_content($qa_content)
 				'^1' => '<a href="' . qa_path_html('confirm') . '">',
 				'^2' => '</a>',
 			));
-
-		} elseif (($flags & QA_USER_FLAGS_MUST_APPROVE) && qa_get_logged_in_level() < QA_USER_LEVEL_APPROVED && qa_opt('moderate_users')) {
-			$qa_content = qa_content_prepare();
-			$qa_content['title'] = qa_lang_html('users/approve_title');
-			$qa_content['error'] = strtr(qa_lang_html('users/approve_required'), array(
-				'^1' => '<a href="' . qa_path_html('account') . '">',
-				'^2' => '</a>',
-			));
 		}
+
+		// we no longer block access here for unapproved users; this is handled by the Permissions settings
 	}
 
 	// Combine various Javascript elements in $qa_content into single array for theme layer

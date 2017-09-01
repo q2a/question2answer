@@ -203,8 +203,7 @@ function qa_create_new_user($email, $password, $handle, $level = QA_USER_LEVEL_B
 	} else
 		$confirm = '';
 
-	if (qa_opt('moderate_users') && qa_opt('approve_user_required') && $level < QA_USER_LEVEL_EXPERT)
-		qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, true);
+	// we no longer use the 'approve_user_required' option to set QA_USER_FLAGS_MUST_APPROVE; this can be handled by the Permissions settings
 
 	qa_send_notification($userid, $email, $handle, qa_lang('emails/welcome_subject'), qa_lang('emails/welcome_body'), array(
 		'^password' => isset($password) ? qa_lang('main/hidden') : qa_lang('users/password_to_set'), // v 1.6.3: no longer email out passwords
@@ -344,8 +343,10 @@ function qa_set_user_level($userid, $handle, $level, $oldlevel)
 	qa_db_user_set($userid, 'level', $level);
 	qa_db_uapprovecount_update();
 
-	if ($level >= QA_USER_LEVEL_APPROVED)
+	if ($level >= QA_USER_LEVEL_APPROVED) {
+		// no longer necessary as QA_USER_FLAGS_MUST_APPROVE is deprecated, but kept for posterity
 		qa_db_user_set_flag($userid, QA_USER_FLAGS_MUST_APPROVE, false);
+	}
 
 	qa_report_event('u_level', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
 		'userid' => $userid,

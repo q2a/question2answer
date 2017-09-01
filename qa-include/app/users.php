@@ -41,7 +41,7 @@ define('QA_USER_FLAGS_NO_MAILINGS', 32);
 define('QA_USER_FLAGS_WELCOME_NOTICE', 64);
 define('QA_USER_FLAGS_MUST_CONFIRM', 128);
 define('QA_USER_FLAGS_NO_WALL_POSTS', 256);
-define('QA_USER_FLAGS_MUST_APPROVE', 512);
+define('QA_USER_FLAGS_MUST_APPROVE', 512); // @deprecated
 
 define('QA_FIELD_FLAGS_MULTI_LINE', 1);
 define('QA_FIELD_FLAGS_LINK_URL', 2);
@@ -1021,7 +1021,7 @@ function qa_user_maximum_permit_error($permitoption, $limitaction = null, $check
  *   'userblock' => the user has been blocked
  *   'ipblock' => the ip address has been blocked
  *   'confirm' => the user should confirm their email address
- *   'approve' => the user needs to be approved by the site admins
+ *   'approve' => the user needs to be approved by the site admins (no longer used as global permission)
  *   'limit' => the user or IP address has reached a rate limit (if $limitaction specified)
  *   false => the operation can go ahead
  */
@@ -1050,9 +1050,6 @@ function qa_user_permit_error($permitoption = null, $limitaction = null, $userle
 
 	if (!$error && isset($userid) && ($flags & QA_USER_FLAGS_MUST_CONFIRM) && qa_opt('confirm_user_emails'))
 		$error = 'confirm';
-
-	if (!$error && isset($userid) && ($flags & QA_USER_FLAGS_MUST_APPROVE) && qa_opt('moderate_users'))
-		$error = 'approve';
 
 	if (isset($limitaction) && !$error) {
 		if (qa_user_limits_remaining($limitaction) <= 0)
