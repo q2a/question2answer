@@ -24,7 +24,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-define('QA_DB_VERSION_CURRENT', 66);
+define('QA_DB_VERSION_CURRENT', 67);
 
 
 /**
@@ -163,8 +163,8 @@ function qa_db_table_definitions()
 		'messages' => array(
 			'messageid' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 			'type' => "ENUM('PUBLIC', 'PRIVATE') NOT NULL DEFAULT 'PRIVATE'",
-			'fromuserid' => $useridcoltype . ' NOT NULL',
-			'touserid' => $useridcoltype . ' NOT NULL',
+			'fromuserid' => $useridcoltype,
+			'touserid' => $useridcoltype,
 			'fromhidden' => 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0',
 			'tohidden' => 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0',
 			'content' => 'VARCHAR(' . QA_DB_MAX_CONTENT_LENGTH . ') NOT NULL',
@@ -529,6 +529,8 @@ function qa_db_table_definitions()
 		$tables['userevents'][] = 'CONSTRAINT ^userevents_ibfk_1 ' . $userforeignkey . ' ON DELETE CASCADE';
 		$tables['userlevels'][] = 'CONSTRAINT ^userlevels_ibfk_1 ' . $userforeignkey . ' ON DELETE CASCADE';
 		$tables['usermetas'][] = 'CONSTRAINT ^usermetas_ibfk_1 ' . $userforeignkey . ' ON DELETE CASCADE';
+		$tables['messages'][] = 'CONSTRAINT ^messages_ibfk_1 FOREIGN KEY (fromuserid) REFERENCES ^users(userid) ON DELETE SET NULL';
+		$tables['messages'][] = 'CONSTRAINT ^messages_ibfk_2 FOREIGN KEY (touserid) REFERENCES ^users(userid) ON DELETE SET NULL';
 	}
 
 	return $tables;
@@ -1580,6 +1582,20 @@ function qa_db_upgrade_tables()
 					'ADD COLUMN cvoteds ' . $definitions['userpoints']['cvoteds'] . ' AFTER avoteds',
 				);
 				qa_db_upgrade_query('ALTER TABLE ^userpoints ' . implode(', ', $newColumns));
+				qa_db_upgrade_query($locktablesquery);
+				break;
+
+			case 67:
+				// ensure we don't have old userids lying around
+				qa_db_upgrade_query('ALTER TABLE ^messages MODIFY fromuserid ' . $definitions['messages']['fromuserid']);
+				qa_db_upgrade_query('ALTER TABLE ^messages MODIFY touserid ' . $definitions['messages']['touserid']);
+				qa_db_upgrade_query('UPDATE ^messages SET fromuserid=NULL WHERE fromuserid NOT IN (SELECT userid FROM ^users)');
+				qa_db_upgrade_query('UPDATE ^messages SET touserid=NULL WHERE touserid NOT IN (SELECT userid FROM ^users)');
+				// set up foreign key on messages table
+				qa_db_upgrade_query('ALTER TABLE ^messages ADD CONSTRAINT ^messages_ibfk_1 FOREIGN KEY (fromuserid) REFERENCES ^users(userid) ON DELETE SET NULL');
+				qa_db_upgrade_query('ALTER TABLE ^messages ADD CONSTRAINT ^messages_ibfk_2 FOREIGN KEY (touserid) REFERENCES ^users(userid) ON DELETE SET NULL');
+
+				qa_db_upgrade_query($locktablesquery);
 				break;
 
 			// Up to here: Version 1.8 alpha
