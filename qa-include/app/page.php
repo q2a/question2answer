@@ -329,7 +329,7 @@ function qa_output_content($qa_content)
 
 	if (isset($qa_content['script_onloads'])) {
 		$script[] = '<script>';
-		$script[] = '$(window).load(function() {';
+		$script[] = '$(window).on(\'load\', function() {';
 
 		foreach ($qa_content['script_onloads'] as $scriptonload) {
 			foreach ((array)$scriptonload as $scriptline) {
@@ -790,7 +790,7 @@ function qa_content_prepare($voting = false, $categoryids = null)
 		}
 	}
 
-	$qa_content['script_rel'] = array('qa-content/jquery-1.11.3.min.js');
+	$qa_content['script_rel'] = array('qa-content/jquery-3.2.1.min.js');
 	$qa_content['script_rel'][] = 'qa-content/qa-global.js?' . QA_VERSION;
 
 	if ($voting)
