@@ -26,6 +26,20 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 
 /**
+ * Increment the views counter for the post (if different IP from last view).
+ * @param  int $postid The ID of the post
+ * @return void
+ */
+function qa_db_increment_views($postid)
+{
+	$query = 'UPDATE ^posts SET views=views+1, lastviewip=UNHEX($) WHERE postid=# AND (lastviewip IS NULL OR lastviewip!=UNHEX($))';
+	$ipHex = bin2hex(@inet_pton(qa_remote_ip_address()));
+
+	qa_db_query_sub($query, $ipHex, $postid, $ipHex);
+}
+
+
+/**
  * Recalculate the hotness in the database for posts $firstpostid to $lastpostid (if specified)
  * If $viewincrement is true, also increment the views counter for the post (if different IP from last view),
  * and include that in the hotness calculation
@@ -47,9 +61,8 @@ function qa_db_hotness_update($firstpostid, $lastpostid = null, $viewincrement =
 			'((TO_DAYS(a.acreated)-734138)*86400.0+TIME_TO_SEC(a.acreated))*# + ' .
 			'(a.acount+0.0)*# + ' .
 			'(a.netvotes+0.0)*# + ' .
-			'(a.views+0.0+#)*#' .
-			')' . ($viewincrement ? ', x.views=x.views+1, x.lastviewip=UNHEX($)' : '') .
-			' WHERE x.postid=a.postid' . ($viewincrement ? ' AND (x.lastviewip IS NULL OR x.lastviewip!=UNHEX($))' : '');
+			'(a.views+0.0)*#' .
+			') WHERE x.postid=a.postid';
 
 		// Additional multiples based on empirical analysis of activity on Q2A meta site to give approx equal influence for all factors
 
@@ -60,14 +73,8 @@ function qa_db_hotness_update($firstpostid, $lastpostid = null, $viewincrement =
 			qa_opt('hot_weight_a_age'),
 			qa_opt('hot_weight_answers') * 160000,
 			qa_opt('hot_weight_votes') * 160000,
-			$viewincrement ? 1 : 0,
 			qa_opt('hot_weight_views') * 4000,
 		);
-
-		if ($viewincrement) {
-			$ipHex = bin2hex(@inet_pton(qa_remote_ip_address()));
-			array_push($arguments, $ipHex, $ipHex);
-		}
 
 		qa_db_query_raw(qa_db_apply_sub($query, $arguments));
 	}
