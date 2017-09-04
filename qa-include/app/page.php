@@ -368,18 +368,18 @@ function qa_output_content($qa_content)
  */
 function qa_do_content_stats($qa_content)
 {
-	if (isset($qa_content['inc_views_postid'])) {
-		require_once QA_INCLUDE_DIR . 'db/hotness.php';
-
-		qa_db_increment_views($qa_content['inc_views_postid']);
-		if (qa_opt('recalc_hotness_q_view')) {
-			qa_db_hotness_update($qa_content['inc_views_postid']);
-		}
-
-		return true;
+	if (!isset($qa_content['inc_views_postid'])) {
+		return false;
 	}
 
-	return false;
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
+	qa_db_increment_views($qa_content['inc_views_postid']);
+	if (qa_opt('recalc_hotness_q_view')) {
+		qa_db_hotness_update($qa_content['inc_views_postid']);
+	}
+
+	return true;
 }
 
 

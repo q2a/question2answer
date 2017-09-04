@@ -810,6 +810,7 @@ function qa_suspend_update_counts($suspend = true)
 
 /**
  * Returns whether counts should currently be updated (i.e. if count updating has not been suspended).
+ * @return bool
  */
 function qa_should_update_counts()
 {

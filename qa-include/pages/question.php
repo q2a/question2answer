@@ -429,27 +429,30 @@ if ($question['basetype'] == 'Q') {
 			? qa_lang_html_sub_split('question/1_answer_title', '1', '1')
 			: qa_lang_html_sub_split('question/x_answers_title', $countfortitle);
 
-		if ($microdata)
+		if ($microdata) {
 			$split['data'] = '<span itemprop="answerCount">' . $split['data'] . '</span>';
-
+		}
 		$qa_content['a_list']['title'] = $split['prefix'] . $split['data'] . $split['suffix'];
 	} else
 		$qa_content['a_list']['title_tags'] .= ' style="display:none;" ';
 }
 
-if (!$formrequested)
+if (!$formrequested) {
 	$qa_content['page_links'] = qa_html_page_links(qa_request(), $pagestart, $pagesize, $countforpages, qa_opt('pages_prev_next'), array(), false, 'a_list_title');
+}
 
 
 // Some generally useful stuff
 
-if (qa_using_categories() && count($categories))
+if (qa_using_categories() && count($categories)) {
 	$qa_content['navigation']['cat'] = qa_category_navigation($categories, $question['categoryid']);
+}
 
-if (isset($jumptoanchor))
+if (isset($jumptoanchor)) {
 	$qa_content['script_onloads'][] = array(
 		'qa_scroll_page_to($("#"+' . qa_js($jumptoanchor) . ').offset().top);'
 	);
+}
 
 
 // Determine whether this request should be counted for page view statistics.
