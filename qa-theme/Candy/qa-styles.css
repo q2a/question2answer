@@ -184,6 +184,8 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-form-wide-button {background:#f6f5f5 url(button-bg.png) repeat-x left top; border:1px solid #bfbfbf; color:#206b00; padding:4px 8px; text-transform:uppercase;}
 .qa-form-wide-button:hover {background:#e8c6df url(button-hover-bg.png) repeat-x left top; border:1px solid #c1a0b9; color:#6a1b56; padding:4px 8px; text-transform:uppercase;}
 
+.qa-form-tall-help, .qa-form-wide-help {display:inline-block; width:17px; height:17px; margin-left:4px; border-radius:17px; background-color:#6a1b56; color:#fff; font-size:10px; line-height:17px; text-align:center; cursor:help;}
+
 /* Standard form (light version - buttons only) */
 
 .qa-form-light-button {background:none; border:0; height:24px; cursor:pointer; padding:0; margin-right:6px; font-size:12px; text-align:left; overflow:visible;} /* overflow:visible for IE */

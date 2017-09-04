@@ -180,6 +180,8 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 .qa-form-wide-note {font-size:10px; margin-left:4px;}
 .qa-form-wide-buttons {padding:8px; text-align:center;}
 
+.qa-form-tall-help, .qa-form-wide-help {display:inline-block; width:16px; height:16px; margin-left:4px; border-radius:16px; background-color:#396e63; color:#fff; font-size:10px; line-height:16px; text-align:center; cursor:help;}
+
 /* Standard form (light version - buttons only) */
 
 .qa-form-light-button {background:none; border:1px solid #fff; cursor:pointer; padding:0; margin-right:6px; font-size:10px; overflow: visible;} /* overflow:visible for IE, 1px border needed for tooltips to work more reliably in IE */

@@ -1938,6 +1938,20 @@ input[type="submit"], button {
 	line-height: 0;
 }
 
+.qa-form-tall-help, .qa-form-wide-help {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	margin-left: 4px;
+	border-radius: 18px;
+	background-color: #3498db;
+	color: #fff;
+	font-size: 11px;
+	line-height: 18px;
+	text-align: center;
+	cursor: help;
+}
+
 .qa-ask-similar {
 	background-color: #ecf0f1;
 	padding: 10px;

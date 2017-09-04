@@ -1422,6 +1422,20 @@ div.header-banner {
 	font-size: 14px;
 }
 
+.qa-form-tall-help, .qa-form-wide-help {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	margin-left: 4px;
+	border-radius: 18px;
+	background-color: #0179b5;
+	color: #fff;
+	font-size: 11px;
+	line-height: 19px;
+	text-align: center;
+	cursor: help;
+}
+
 /* Standard form (light version - buttons only) */
 .qa-form-light-button {
 	background: none;
