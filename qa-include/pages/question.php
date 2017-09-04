@@ -453,13 +453,14 @@ if (isset($jumptoanchor))
 
 
 // Determine whether this request should be counted for page view statistics.
-// The lastviewip check is now in the hotness query in order to bypass caching.
+// The lastviewip check is now part of the hotness query in order to bypass caching.
 
 if (qa_opt('do_count_q_views') && !$formrequested && !qa_is_http_post() && qa_is_human_probably() &&
-	((!$question['views']) || ( // if it has more than zero views
-		(@inet_ntop($question['createip']) != qa_remote_ip_address() || !isset($question['createip'])) && // and different IP from the creator
-		($question['userid'] != $userid || !isset($question['userid'])) && // and different user from the creator
-		($question['cookieid'] != $cookieid || !isset($question['cookieid'])) // and different cookieid from the creator
+	(!$question['views'] || (
+		// if it has more than zero views, then it must be different IP & user & cookieid from the creator
+		(@inet_ntop($question['createip']) != qa_remote_ip_address() || !isset($question['createip'])) &&
+		($question['userid'] != $userid || !isset($question['userid'])) &&
+		($question['cookieid'] != $cookieid || !isset($question['cookieid']))
 	))
 ) {
 	$qa_content['inc_views_postid'] = $questionid;
