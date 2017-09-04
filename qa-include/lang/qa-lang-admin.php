@@ -203,6 +203,7 @@ return array(
 	'recalc_categories_note' => ' - for post categories and category counts',
 	'recalc_categories_recounting' => 'Recounting questions for ^1 of ^2 categories...',
 	'recalc_categories_updated' => 'Recalculated for ^1 of ^2 posts...',
+	'recalc_hotness_q_view_note' => 'Slightly more efficient if disabled, but hotness values will become out of date if views are given higher importance in settings',
 	'recalc_points' => 'Recalculate user points',
 	'recalc_points_complete' => 'All user points were successfully recalculated.',
 	'recalc_points_note' => ' - for user ranking and points displays',

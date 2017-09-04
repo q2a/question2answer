@@ -238,6 +238,7 @@ return array(
 	'points_vote_up_q' => 'Voting up a question:',
 	'q_urls_remove_accents' => 'Remove accents from question URLs:',
 	'q_urls_title_length' => 'Question title length in URLs:',
+	'recalc_hotness_q_view' => 'Recalculate hotness on every question page view:',
 	'register_notify_admin' => 'Email me when a new user registers:',
 	'search_module' => 'Use search module:',
 	'show_a_form_immediate' => 'Show answer form immediately:',

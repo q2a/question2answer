@@ -193,6 +193,7 @@ $optiontype = array(
 	'notify_admin_q_post' => 'checkbox',
 	'notify_users_default' => 'checkbox',
 	'q_urls_remove_accents' => 'checkbox',
+	'recalc_hotness_q_view' => 'checkbox',
 	'register_notify_admin' => 'checkbox',
 	'show_c_reply_buttons' => 'checkbox',
 	'show_compact_numbers' => 'checkbox',
@@ -387,7 +388,7 @@ switch ($adminsection) {
 	case 'viewing':
 		$subtitle = 'admin/viewing_title';
 		$showoptions = array(
-			'q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', 'show_view_count_q_page', '',
+			'q_urls_title_length', 'q_urls_remove_accents', 'do_count_q_views', 'show_view_counts', 'show_view_count_q_page', 'recalc_hotness_q_view', '',
 			'voting_on_qs', 'voting_on_q_page_only', 'voting_on_as', 'voting_on_cs', 'votes_separated', '',
 			'show_url_links', 'links_in_new_window', 'show_when_created', 'show_full_date_days'
 		);
@@ -423,6 +424,7 @@ switch ($adminsection) {
 		$checkboxtodisplay = array(
 			'show_view_counts' => 'option_do_count_q_views',
 			'show_view_count_q_page' => 'option_do_count_q_views',
+			'recalc_hotness_q_view' => 'option_do_count_q_views',
 			'votes_separated' => 'option_voting_on_qs || option_voting_on_as',
 			'voting_on_q_page_only' => 'option_voting_on_qs',
 			'show_full_date_days' => 'option_show_when_created',
@@ -1200,6 +1202,10 @@ foreach ($showoptions as $optionname) {
 			case 'min_len_a_content':
 			case 'min_len_c_content':
 				$optionfield['note'] = qa_lang_html('admin/characters');
+				break;
+
+			case 'recalc_hotness_q_view':
+				$optionfield['note'] = '<span class="qa-form-wide-help" title="' . qa_lang_html('admin/recalc_hotness_q_view_note') . '">?</span>';
 				break;
 
 			case 'min_num_q_tags':
