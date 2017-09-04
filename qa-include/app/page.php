@@ -374,8 +374,9 @@ function qa_do_content_stats($qa_content)
 
 	require_once QA_INCLUDE_DIR . 'db/hotness.php';
 
-	qa_db_increment_views($qa_content['inc_views_postid']);
-	if (qa_opt('recalc_hotness_q_view')) {
+	$viewsIncremented = qa_db_increment_views($qa_content['inc_views_postid']);
+
+	if ($viewsIncremented && qa_opt('recalc_hotness_q_view')) {
 		qa_db_hotness_update($qa_content['inc_views_postid']);
 	}
 

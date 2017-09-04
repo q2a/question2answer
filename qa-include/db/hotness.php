@@ -28,7 +28,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 /**
  * Increment the views counter for the post (if different IP from last view).
  * @param  int $postid The ID of the post
- * @return void
+ * @return bool Whether views were actually incremented.
  */
 function qa_db_increment_views($postid)
 {
@@ -36,6 +36,8 @@ function qa_db_increment_views($postid)
 	$ipHex = bin2hex(@inet_pton(qa_remote_ip_address()));
 
 	qa_db_query_sub($query, $ipHex, $postid, $ipHex);
+
+	return qa_db_affected_rows() > 0;
 }
 
 
