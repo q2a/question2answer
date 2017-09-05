@@ -109,7 +109,7 @@ if (qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall'))
 			$postids = qa_db_get_ip_visible_postids($ip);
 
 			foreach ($postids as $postid)
-				qa_post_set_hidden($postid, true, $userid);
+				qa_post_set_status($postid, QA_POST_STATUS_HIDDEN, $userid);
 
 			qa_redirect(qa_request());
 		}

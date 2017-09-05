@@ -270,7 +270,7 @@ function qa_question_close_other($oldquestion, $oldclosepost, $note, $userid, $h
 
 /**
  * Set $oldquestion to hidden if $hidden is true, visible/normal if otherwise. All other parameters are as for qa_question_set_status(...)
- * This function is included mainly for backwards compatibility.
+ * @deprecated Replaced by qa_question_set_status.
  * @param $oldquestion
  * @param $hidden
  * @param $userid
@@ -670,7 +670,7 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 
 /**
  * Set $oldanswer to hidden if $hidden is true, visible/normal if otherwise. All other parameters are as for qa_answer_set_status(...)
- * This function is included mainly for backwards compatibility.
+ * @deprecated Replaced by qa_answer_set_status.
  * @param $oldanswer
  * @param $hidden
  * @param $userid
@@ -1064,7 +1064,7 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 
 /**
  * Set $oldcomment to hidden if $hidden is true, visible/normal if otherwise. All other parameters are as for qa_comment_set_status(...)
- * This function is included mainly for backwards compatibility.
+ * @deprecated Replaced by qa_comment_set_status.
  * @param $oldcomment
  * @param $hidden
  * @param $userid

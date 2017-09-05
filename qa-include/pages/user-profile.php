@@ -275,7 +275,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 					$postids = qa_db_get_user_visible_postids($userid);
 
 					foreach ($postids as $postid)
-						qa_post_set_hidden($postid, true, $loginuserid);
+						qa_post_set_status($postid, QA_POST_STATUS_HIDDEN, $loginuserid);
 
 					qa_redirect(qa_request());
 				}

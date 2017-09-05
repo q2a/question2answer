@@ -237,7 +237,8 @@ function qa_post_set_closed($questionid, $closed = true, $originalpostid = null,
 
 /**
  * Hide $postid if $hidden is true, otherwise show the post. Pass the identify of the user making this change in
- * $byuserid (or null for a silent change). This function is included mainly for backwards compatibility.
+ * $byuserid (or null for a silent change).
+ * @deprecated Replaced by qa_post_set_status.
  * @param $postid
  * @param bool $hidden
  * @param $byuserid
@@ -315,7 +316,7 @@ function qa_post_delete($postid)
 	$oldpost = qa_post_get_full($postid, 'QAC');
 
 	if (!$oldpost['hidden']) {
-		qa_post_set_hidden($postid, true, null);
+		qa_post_set_status($postid, QA_POST_STATUS_HIDDEN, null);
 		$oldpost = qa_post_get_full($postid, 'QAC');
 	}
 

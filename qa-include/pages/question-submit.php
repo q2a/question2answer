@@ -56,7 +56,7 @@ function qa_page_q_single_click_q($question, $answers, $commentsfollows, $closep
 
 	if ((qa_clicked('q_dohide') && $question['hideable']) || (qa_clicked('q_doreject') && $question['moderatable'])) {
 		if (qa_page_q_click_check_form_code($question, $error)) {
-			qa_question_set_hidden($question, true, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
+			qa_question_set_status($question, QA_POST_STATUS_HIDDEN, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost);
 			return true;
 		}
 	}
@@ -99,7 +99,7 @@ function qa_page_q_single_click_q($question, $answers, $commentsfollows, $closep
 		$error = qa_flag_error_html($question, $userid, qa_request());
 		if (!$error) {
 			if (qa_flag_set_tohide($question, $userid, $handle, $cookieid, $question))
-				qa_question_set_hidden($question, true, null, null, null, $answers, $commentsfollows, $closepost); // hiding not really by this user so pass nulls
+				qa_question_set_status($question, QA_POST_STATUS_HIDDEN, null, null, null, $answers, $commentsfollows, $closepost); // hiding not really by this user so pass nulls
 			return true;
 		}
 	}
@@ -155,7 +155,7 @@ function qa_page_q_single_click_a($answer, $question, $answers, $commentsfollows
 
 	if ((qa_clicked($prefix . 'dohide') && $answer['hideable']) || (qa_clicked($prefix . 'doreject') && $answer['moderatable'])) {
 		if (qa_page_q_click_check_form_code($answer, $error)) {
-			qa_answer_set_hidden($answer, true, $userid, $handle, $cookieid, $question, $commentsfollows);
+			qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, $userid, $handle, $cookieid, $question, $commentsfollows);
 			return true;
 		}
 	}
@@ -203,7 +203,7 @@ function qa_page_q_single_click_a($answer, $question, $answers, $commentsfollows
 		$error = qa_flag_error_html($answer, $userid, qa_request());
 		if (!$error) {
 			if (qa_flag_set_tohide($answer, $userid, $handle, $cookieid, $question))
-				qa_answer_set_hidden($answer, true, null, null, null, $question, $commentsfollows); // hiding not really by this user so pass nulls
+				qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, null, null, null, $question, $commentsfollows); // hiding not really by this user so pass nulls
 
 			return true;
 		}
@@ -247,7 +247,7 @@ function qa_page_q_single_click_c($comment, $question, $parent, &$error)
 
 	if ((qa_clicked($prefix . 'dohide') && $comment['hideable']) || (qa_clicked($prefix . 'doreject') && $comment['moderatable'])) {
 		if (qa_page_q_click_check_form_code($parent, $error)) {
-			qa_comment_set_hidden($comment, true, $userid, $handle, $cookieid, $question, $parent);
+			qa_comment_set_status($comment, QA_POST_STATUS_HIDDEN, $userid, $handle, $cookieid, $question, $parent);
 			return true;
 		}
 	}
@@ -295,7 +295,7 @@ function qa_page_q_single_click_c($comment, $question, $parent, &$error)
 		$error = qa_flag_error_html($comment, $userid, qa_request());
 		if (!$error) {
 			if (qa_flag_set_tohide($comment, $userid, $handle, $cookieid, $question))
-				qa_comment_set_hidden($comment, true, null, null, null, $question, $parent); // hiding not really by this user so pass nulls
+				qa_comment_set_status($comment, QA_POST_STATUS_HIDDEN, null, null, null, $question, $parent); // hiding not really by this user so pass nulls
 
 			return true;
 		}

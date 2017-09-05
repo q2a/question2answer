@@ -532,28 +532,28 @@ function qa_admin_single_click($entityid, $action)
 			switch ($action) {
 				case 'approve':
 					if ($queued && !qa_user_post_permit_error('permit_moderate', $post)) {
-						qa_post_set_hidden($entityid, false, $userid);
+						qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
 						return true;
 					}
 					break;
 
 				case 'reject':
 					if ($queued && !qa_user_post_permit_error('permit_moderate', $post)) {
-						qa_post_set_hidden($entityid, true, $userid);
+						qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
 						return true;
 					}
 					break;
 
 				case 'hide':
 					if (!$queued && !qa_user_post_permit_error('permit_hide_show', $post)) {
-						qa_post_set_hidden($entityid, true, $userid);
+						qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
 						return true;
 					}
 					break;
 
 				case 'reshow':
 					if ($post['hidden'] && !qa_user_post_permit_error('permit_hide_show', $post)) {
-						qa_post_set_hidden($entityid, false, $userid);
+						qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
 						return true;
 					}
 					break;
