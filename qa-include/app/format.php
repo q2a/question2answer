@@ -1513,6 +1513,7 @@ function qa_user_sub_navigation($handle, $selected, $ismyuser = false)
 
 /**
  * Return the sub navigation structure for private message pages
+ * @deprecated 1.8.0 This menu is no longer used.
  * @param null $selected
  * @return array
  */

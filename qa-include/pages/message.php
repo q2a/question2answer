@@ -237,7 +237,7 @@ if (qa_opt('show_message_history')) {
 			$qa_content['message_list']['messages'][] = qa_message_html_fields($message, $options);
 	}
 
-	$qa_content['navigation']['sub'] = qa_messages_sub_navigation();
+	$qa_content['navigation']['sub'] = qa_user_sub_navigation($fromhandle, 'messages', true);
 }
 
 

@@ -75,6 +75,13 @@ $count = $numMessages['count'];
 $qa_content = qa_content_prepare();
 $qa_content['title'] = qa_lang_html($showOutbox ? 'misc/pm_outbox_title' : 'misc/pm_inbox_title');
 
+$qa_content['custom'] =
+	'<div style="text-align:center">' .
+		($showOutbox ? '<a href="' . qa_path_html('messages') . '">' . qa_lang_html('misc/inbox') . '</a>' : qa_lang_html('misc/inbox')) .
+		' - ' .
+		($showOutbox ? qa_lang_html('misc/outbox') : '<a href="' . qa_path_html('messages/sent') . '">' . qa_lang_html('misc/outbox') . '</a>') .
+	'</div>';
+
 $qa_content['message_list'] = array(
 	'tags' => 'id="privatemessages"',
 	'messages' => array(),
@@ -122,6 +129,6 @@ foreach ($userMessages as $message) {
 
 $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
-$qa_content['navigation']['sub'] = qa_messages_sub_navigation($showOutbox ? 'outbox' : 'inbox');
+$qa_content['navigation']['sub'] = qa_user_sub_navigation($loginUserHandle, 'messages', true);
 
 return $qa_content;
