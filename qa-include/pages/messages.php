@@ -97,20 +97,24 @@ if ($showOutbox)
 foreach ($userMessages as $message) {
 	$msgFormat = qa_message_html_fields($message, $htmlDefaults);
 	$replyHandle = $showOutbox ? $message['tohandle'] : $message['fromhandle'];
+	$replyId = $showOutbox ? $message['touserid'] : $message['fromuserid'];
 
 	$msgFormat['form'] = array(
 		'style' => 'light',
-		'buttons' => array(
-			'reply' => array(
-				'tags' => 'onclick="window.location.href=\'' . qa_path_html('message/' . $replyHandle) . '\';return false"',
-				'label' => qa_lang_html('question/reply_button'),
-			),
-			'delete' => array(
-				'tags' => 'name="m' . qa_html($message['messageid']) . '_dodelete" onclick="return qa_pm_click(' . qa_js($message['messageid']) . ', this, ' . qa_js($showOutbox ? 'outbox' : 'inbox') . ');"',
-				'label' => qa_lang_html('question/delete_button'),
-				'popup' => qa_lang_html('profile/delete_pm_popup'),
-			),
-		),
+		'buttons' => array(),
+	);
+
+	if (!empty($replyHandle) && $replyId != $loginUserId) {
+		$msgFormat['form']['buttons']['reply'] = array(
+			'tags' => 'onclick="window.location.href=\'' . qa_path_html('message/' . $replyHandle) . '\';return false"',
+			'label' => qa_lang_html('question/reply_button'),
+		);
+	}
+
+	$msgFormat['form']['buttons']['delete'] = array(
+		'tags' => 'name="m' . qa_html($message['messageid']) . '_dodelete" onclick="return qa_pm_click(' . qa_js($message['messageid']) . ', this, ' . qa_js($showOutbox ? 'outbox' : 'inbox') . ');"',
+		'label' => qa_lang_html('question/delete_button'),
+		'popup' => qa_lang_html('profile/delete_pm_popup'),
 	);
 
 	$qa_content['message_list']['messages'][] = $msgFormat;
