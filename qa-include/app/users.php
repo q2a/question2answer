@@ -47,8 +47,13 @@ define('QA_FIELD_FLAGS_MULTI_LINE', 1);
 define('QA_FIELD_FLAGS_LINK_URL', 2);
 define('QA_FIELD_FLAGS_ON_REGISTER', 4);
 
-@define('QA_FORM_EXPIRY_SECS', 86400); // how many seconds a form is valid for submission
-@define('QA_FORM_KEY_LENGTH', 32);
+if (!defined('QA_FORM_EXPIRY_SECS')) {
+	// how many seconds a form is valid for submission
+	define('QA_FORM_EXPIRY_SECS', 86400);
+}
+if (!defined('QA_FORM_KEY_LENGTH')) {
+	define('QA_FORM_KEY_LENGTH', 32);
+}
 
 
 if (QA_FINAL_EXTERNAL_USERS) {

@@ -812,12 +812,18 @@ function qa_string_matches_one($string, $matches)
 // Some static definitions and initialization
 
 // Notable exclusions here: $ & - _ # % @
-@define('QA_PREG_INDEX_WORD_SEPARATOR', '[\n\r\t\ \!\"\\\'\(\)\*\+\,\.\/\:\;\<\=\>\?\[\\\\\]\^\`\{\|\}\~]');
+if (!defined('QA_PREG_INDEX_WORD_SEPARATOR')) {
+	define('QA_PREG_INDEX_WORD_SEPARATOR', '[\n\r\t\ \!\"\\\'\(\)\*\+\,\.\/\:\;\<\=\>\?\[\\\\\]\^\`\{\|\}\~]');
+}
 
 // Asterisk (*) excluded here because it's used to match anything
-@define('QA_PREG_BLOCK_WORD_SEPARATOR', '[\n\r\t\ \!\"\\\'\(\)\+\,\.\/\:\;\<\=\>\?\[\\\\\]\^\`\{\|\}\~\$\&\-\_\#\%\@]');
+if (!defined('QA_PREG_BLOCK_WORD_SEPARATOR')) {
+	define('QA_PREG_BLOCK_WORD_SEPARATOR', '[\n\r\t\ \!\"\\\'\(\)\+\,\.\/\:\;\<\=\>\?\[\\\\\]\^\`\{\|\}\~\$\&\-\_\#\%\@]');
+}
 
 // Pattern to match Chinese/Japanese/Korean ideographic symbols in UTF-8 encoding
-@define('QA_PREG_CJK_IDEOGRAPHS_UTF8', '\xE2[\xBA-\xBF][\x80-\xBF]|\xE3[\x80\x88-\xBF][\x80-\xBF]|[\xE4-\xE9][\x80-\xBF][\x80-\xBF]|\xEF[\xA4-\xAB][\x80-\xBF]|\xF0[\xA0-\xAF][\x80-\xBF][\x80-\xBF]');
+if (!defined('QA_PREG_CJK_IDEOGRAPHS_UTF8')) {
+	define('QA_PREG_CJK_IDEOGRAPHS_UTF8', '\xE2[\xBA-\xBF][\x80-\xBF]|\xE3[\x80\x88-\xBF][\x80-\xBF]|[\xE4-\xE9][\x80-\xBF][\x80-\xBF]|\xEF[\xA4-\xAB][\x80-\xBF]|\xF0[\xA0-\xAF][\x80-\xBF][\x80-\xBF]');
+}
 
 qa_string_initialize();
