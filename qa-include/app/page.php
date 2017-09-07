@@ -828,3 +828,26 @@ function qa_get_state()
 	global $qa_state;
 	return $qa_state;
 }
+
+
+/**
+ * Generate a canonical URL for the current request. Preserves certain GET parameters.
+ * @return string The full canonical URL.
+ */
+function qa_get_canonical()
+{
+	$params = array();
+
+	// variable assignment intentional here
+	if (($start = qa_get_start()) > 0) {
+		$params['start'] = $start;
+	}
+	if ($sort = qa_get('sort')) {
+		$params['sort'] = $sort;
+	}
+	if ($by = qa_get('by')) {
+		$params['by'] = $by;
+	}
+
+	return qa_path_html(qa_request(), $params, qa_opt('site_url'));
+}

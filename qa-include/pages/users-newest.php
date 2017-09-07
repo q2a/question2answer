@@ -83,8 +83,7 @@ if (!empty($users)) {
 	$qa_content['title'] = qa_lang_html('main/no_active_users');
 }
 
-// set the canonical url based on possible pagination
-$qa_content['canonical'] = qa_path_html(qa_request(), ($start > 0 ? array('start' => $start) : null), qa_opt('site_url'));
+$qa_content['canonical'] = qa_get_canonical();
 
 $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pageSize, $userCount, qa_opt('pages_prev_next'));
 

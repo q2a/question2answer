@@ -124,6 +124,8 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 		$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'), $pagelinkparams);
 	}
 
+	$qa_content['canonical'] = qa_get_canonical();
+
 	if (empty($qa_content['page_links'])) {
 		$qa_content['suggest_next'] = $suggest;
 	}
