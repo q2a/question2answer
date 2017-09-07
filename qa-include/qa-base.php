@@ -253,7 +253,7 @@ function qa_initialize_constants_2()
 		'QA_DEBUG_PERFORMANCE' => false,
 	);
 
-	foreach ($defaults as $key=>$def) {
+	foreach ($defaults as $key => $def) {
 		if (!defined($key)) {
 			define($key, $def);
 		}

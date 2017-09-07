@@ -35,8 +35,9 @@ $userid = qa_get_logged_in_userid();
 
 // Find the questions with this tag
 
-if (!strlen($tag))
+if (!strlen($tag)) {
 	qa_redirect('tags');
+}
 
 list($questions, $tagword) = qa_db_select_with_pending(
 	qa_db_tag_recent_qs_selectspec($userid, $tag, $start, false, qa_opt_if_loaded('page_size_tag_qs')),

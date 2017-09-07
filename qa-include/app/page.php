@@ -813,6 +813,7 @@ function qa_content_prepare($voting = false, $categoryids = null)
 
 /**
  * Get the start parameter which should be used, as constrained by the setting in qa-config.php
+ * @return int
  */
 function qa_get_start()
 {
@@ -822,6 +823,7 @@ function qa_get_start()
 
 /**
  * Get the state parameter which should be used, as set earlier in qa_load_state()
+ * @return string
  */
 function qa_get_state()
 {

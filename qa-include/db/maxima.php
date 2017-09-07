@@ -63,7 +63,7 @@ $maximaDefaults = array(
 	'QA_DB_MAX_EVENTS_PER_Q' => 5,
 );
 
-foreach ($maximaDefaults as $key=>$def) {
+foreach ($maximaDefaults as $key => $def) {
 	if (!defined($key)) {
 		define($key, $def);
 	}

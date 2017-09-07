@@ -31,8 +31,9 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 
 // Check we're not using single-sign on integration
 
-if (QA_FINAL_EXTERNAL_USERS)
+if (QA_FINAL_EXTERNAL_USERS) {
 	qa_fatal_error('User accounts are handled by external code');
+}
 
 
 // Get list of special users
@@ -76,5 +77,6 @@ foreach ($users as $user) {
 }
 
 $qa_content['navigation']['sub'] = qa_users_sub_navigation();
+
 
 return $qa_content;

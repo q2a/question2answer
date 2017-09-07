@@ -30,8 +30,9 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 
 // Check we're not using single-sign on integration
 
-if (QA_FINAL_EXTERNAL_USERS)
+if (QA_FINAL_EXTERNAL_USERS) {
 	qa_fatal_error('User accounts are handled by external code');
+}
 
 
 // Check we have permission to view this page (moderator or above)
@@ -88,5 +89,6 @@ $qa_content['canonical'] = qa_get_canonical();
 $qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pageSize, $userCount, qa_opt('pages_prev_next'));
 
 $qa_content['navigation']['sub'] = qa_users_sub_navigation();
+
 
 return $qa_content;
