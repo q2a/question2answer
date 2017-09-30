@@ -448,10 +448,19 @@ function qa_db_list_tables_lc()
 
 /**
  * Return an array of the names of all tables in the Q2A database.
+ *
+ * @param bool $onlyTablesWithPrefix Determine if the result should only include tables with the
+ * QA_MYSQL_TABLE_PREFIX or if it should include all tables in the database.
  */
-function qa_db_list_tables()
+function qa_db_list_tables($onlyTablesWithPrefix = false)
 {
-	return qa_db_read_all_values(qa_db_query_raw('SHOW TABLES'));
+	$query = 'SHOW TABLES';
+
+	if ($onlyTablesWithPrefix) {
+		$query .= ' LIKE "' . QA_MYSQL_TABLE_PREFIX . '%"';
+	}
+
+	return qa_db_read_all_values(qa_db_query_raw($query));
 }
 
 
