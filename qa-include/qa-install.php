@@ -56,7 +56,10 @@ if (!function_exists('qa_install_db_fail_handler')) {
 }
 
 
-ob_clean(); // clears any current theme output to prevent broken design
+if (ob_get_level() > 0) {
+	// clears any current theme output to prevent broken design
+	ob_clean();
+}
 
 $success = '';
 $errorhtml = '';
