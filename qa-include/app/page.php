@@ -178,16 +178,18 @@ function qa_get_request_content()
 	$firstlower = strtolower($requestparts[0]);
 	$routing = qa_page_routing();
 
-	if (isset($routing[$requestlower])) {
+	$router = new \Q2A\Http\Router(qa_routing_config());
+	$routeInfo = $router->match($requestlower);
+
+	if ($routeInfo !== false) {
+		// use new Controller system
+		qa_set_template($routeInfo['id']);
+		$ctrl = new $routeInfo['controller']();
+		$qa_content = call_user_func_array(array($ctrl, $routeInfo['function']), $routeInfo['params']);
+
+	} elseif (isset($routing[$requestlower])) {
 		qa_set_template($firstlower);
-		$route = $routing[$requestlower];
-		if (is_array($route)) {
-			$ctrl = new $route[0];
-			$qa_content = $ctrl->{$route[1]}();
-		}
-		else {
-			$qa_content = require QA_INCLUDE_DIR . $route;
-		}
+		$qa_content = require QA_INCLUDE_DIR . $routing[$requestlower];
 
 	} elseif (isset($routing[$firstlower . '/'])) {
 		qa_set_template($firstlower);
@@ -444,11 +446,27 @@ function qa_page_routing()
 		'unanswered/' => 'pages/unanswered.php',
 		'unsubscribe' => 'pages/unsubscribe.php',
 		'updates' => 'pages/updates.php',
-		'user/' => 'pages/user.php',
-		'users' => ['\Q2A\Controllers\UsersController', 'top'],
-		'users/blocked' => ['\Q2A\Controllers\UsersController', 'blocked'],
-		'users/new' => ['\Q2A\Controllers\UsersController', 'newest'],
-		'users/special' => ['\Q2A\Controllers\UsersController', 'special'],
+	);
+}
+
+/**
+ * [qa_routing_config description]
+ * @return [type] [description]
+ */
+function qa_routing_config()
+{
+	return array(
+		'user' => array('get', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile'),
+		'user-self' => array('get', 'user', '\Q2A\Controllers\User\UserProfile', 'index'),
+		'user-wall' => array('get', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall'),
+		'user-activity' => array('get', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity'),
+		'user-questions' => array('get', 'user/{str}/questions', '\Q2A\Controllers\User\UserPosts', 'questions'),
+		'user-answers' => array('get', 'user/{str}/answers', '\Q2A\Controllers\User\UserPosts', 'answers'),
+
+		'users-top' => array('get', 'users', '\Q2A\Controllers\User\UsersList', 'top'),
+		'users-blocked' => array('get', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked'),
+		'users-new' => array('get', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest'),
+		'users-special' => array('get', 'users/special', '\Q2A\Controllers\User\UsersList', 'special'),
 	);
 }
 

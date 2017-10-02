@@ -16,14 +16,14 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-namespace Q2A\Controllers;
+namespace Q2A\Controllers\User;
 
 require_once QA_INCLUDE_DIR . 'db/users.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/users.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 
-class UsersController extends BaseController
+class UsersList extends \Q2A\Controllers\BaseController
 {
 	/**
 	 * Display top users page (ordered by points)
