@@ -150,9 +150,9 @@
 /*
 	Some settings to help optimize your Question2Answer site's performance.
 
-	If QA_HTML_COMPRESSION is true, HTML web pages will be output using Gzip compression, if
-	the user's browser indicates this is supported. This will increase the performance of your
-	site, but may make debugging harder if PHP does not complete execution.
+	If QA_HTML_COMPRESSION is true, HTML web pages will be output using Gzip compression, which
+	will increase the performance of your site (if the user's browser indicates this is supported).
+	This is best done at the server level if possible, but many hosts don't provide server access.
 
 	QA_MAX_LIMIT_START is the maximum start parameter that can be requested, for paging through
 	long lists of questions, etc... As the start parameter gets higher, queries tend to get
@@ -184,7 +184,7 @@
 	bottom of every Question2Answer page.
 */
 
-	define('QA_HTML_COMPRESSION', true);
+	define('QA_HTML_COMPRESSION', false);
 	define('QA_MAX_LIMIT_START', 19999);
 	define('QA_IGNORED_WORDS_FREQ', 10000);
 	define('QA_ALLOW_UNINDEXED_QUERIES', false);
