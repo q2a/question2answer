@@ -555,7 +555,7 @@ function qa_array_to_keys($array)
  */
 function qa_db_missing_tables($definitions)
 {
-	$keydbtables = qa_array_to_keys(qa_db_list_tables());
+	$keydbtables = qa_array_to_keys(qa_db_list_tables(true));
 
 	$missing = array();
 
@@ -776,7 +776,7 @@ function qa_db_upgrade_tables()
 
 	// Write-lock all Q2A tables before we start so no one can read or write anything
 
-	$keydbtables = qa_array_to_keys(qa_db_list_tables());
+	$keydbtables = qa_array_to_keys(qa_db_list_tables(true));
 
 	foreach ($definitions as $rawname => $definition)
 		if (isset($keydbtables[qa_db_add_table_prefix($rawname)]))
