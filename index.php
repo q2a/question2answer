@@ -20,13 +20,8 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-//	Set base path here so this works with symbolic links for multiple installations
+// Set base path here so this works with symbolic links for multiple installations
 
-	define('QA_BASE_DIR', dirname(empty($_SERVER['SCRIPT_FILENAME']) ? __FILE__ : $_SERVER['SCRIPT_FILENAME']).'/');
+define('QA_BASE_DIR', dirname(empty($_SERVER['SCRIPT_FILENAME']) ? __FILE__ : $_SERVER['SCRIPT_FILENAME']) . '/');
 
-	require 'qa-include/qa-index.php';
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+require 'qa-include/qa-index.php';

@@ -24,14 +24,16 @@ class qa_tag_cloud
 {
 	public function option_default($option)
 	{
-		if ($option === 'tag_cloud_count_tags')
-			return 100;
-		if ($option === 'tag_cloud_font_size')
-			return 24;
-		if ($option === 'tag_cloud_minimal_font_size')
-			return 8;
-		if ($option === 'tag_cloud_size_popular')
-			return true;
+		switch ($option) {
+			case 'tag_cloud_count_tags':
+				return 100;
+			case 'tag_cloud_font_size':
+				return 24;
+			case 'tag_cloud_minimal_font_size':
+				return 10;
+			case 'tag_cloud_size_popular':
+				return true;
+		}
 	}
 
 
@@ -114,7 +116,11 @@ class qa_tag_cloud
 
 		$populartags = qa_db_single_select(qa_db_popular_tags_selectspec(0, (int) qa_opt('tag_cloud_count_tags')));
 
-		$maxcount = reset($populartags);
+		$populartagslog = array_map(function($e) {
+			return log($e) + 1;
+		}, $populartags);
+
+		$maxcount = reset($populartagslog);
 
 		$themeobject->output(sprintf('<h2 style="margin-top: 0; padding-top: 0;">%s</h2>', qa_lang_html('main/popular_tags')));
 
@@ -125,18 +131,22 @@ class qa_tag_cloud
 		$scale = qa_opt('tag_cloud_size_popular');
 		$blockwordspreg = qa_get_block_words_preg();
 
-		foreach ($populartags as $tag => $count) {
+		foreach ($populartagslog as $tag => $count) {
 			$matches = qa_block_words_match_all($tag, $blockwordspreg);
-			if (empty($matches)) {
-				if ($scale) {
-					$size = number_format($maxsize * $count / $maxcount, 1);
-					if ($size < $minsize)
-						$size = $minsize;
-				} else
-					$size = $maxsize;
-
-				$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
+			if (!empty($matches)) {
+				continue;
 			}
+
+			if ($scale) {
+				$size = number_format($maxsize * $count / $maxcount, 1);
+				if ($size < $minsize) {
+					$size = $minsize;
+				}
+			} else {
+				$size = $maxsize;
+			}
+
+			$themeobject->output(sprintf('<a href="%s" style="font-size: %dpx; vertical-align: baseline;">%s</a>', qa_path_html('tag/' . $tag), $size, qa_html($tag)));
 		}
 
 		$themeobject->output('</div>');

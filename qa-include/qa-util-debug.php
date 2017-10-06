@@ -6,6 +6,15 @@
  * new class where applicable.
  */
 
+if (!defined('QA_VERSION')) {
+	header('Location: ../');
+	exit;
+}
+
+if (defined('QA_DEBUG_PERFORMANCE') && QA_DEBUG_PERFORMANCE) {
+	trigger_error('Included file ' . basename(__FILE__) . ' is deprecated');
+}
+
 function qa_usage_init()
 {
 	// should already be initialised in qa-base.php

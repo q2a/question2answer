@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-event-updates.php
 	Description: Event module for maintaining events tables
 
 
@@ -27,8 +26,8 @@ class qa_event_updates
 		if (@$params['silent']) // don't create updates about silent edits, and possibly other silent events in future
 			return;
 
-		require_once QA_INCLUDE_DIR.'db/events.php';
-		require_once QA_INCLUDE_DIR.'app/events.php';
+		require_once QA_INCLUDE_DIR . 'db/events.php';
+		require_once QA_INCLUDE_DIR . 'app/events.php';
 
 		switch ($event) {
 			case 'q_post':
@@ -47,44 +46,46 @@ class qa_event_updates
 
 
 			case 'c_post':
-				$keyuserids=array();
+				$keyuserids = array();
 
 				foreach ($params['thread'] as $comment) // previous comments in thread (but not author of parent again)
+				{
 					if (isset($comment['userid']))
-						$keyuserids[$comment['userid']]=true;
+						$keyuserids[$comment['userid']] = true;
+				}
 
-				foreach ($keyuserids as $keyuserid => $dummy)
+				foreach ($keyuserids as $keyuserid => $dummy) {
 					if ($keyuserid != $userid)
 						qa_db_event_create_not_entity($keyuserid, $params['questionid'], $params['postid'], QA_UPDATE_FOLLOWS, $userid);
+				}
 
-				switch ($params['parent']['basetype'])
-				{
+				switch ($params['parent']['basetype']) {
 					case 'Q':
-						$updatetype=QA_UPDATE_C_FOR_Q;
+						$updatetype = QA_UPDATE_C_FOR_Q;
 						break;
 
 					case 'A':
-						$updatetype=QA_UPDATE_C_FOR_A;
+						$updatetype = QA_UPDATE_C_FOR_A;
 						break;
 
 					default:
-						$updatetype=null;
+						$updatetype = null;
 						break;
 				}
 
+				// give precedence to 'your comment followed' rather than 'your Q/A commented' if both are true
 				qa_create_event_for_q_user($params['questionid'], $params['postid'], $updatetype, $userid,
 					@$keyuserids[$params['parent']['userid']] ? null : $params['parent']['userid']);
-						// give precedence to 'your comment followed' rather than 'your Q/A commented' if both are true
 				break;
 
 
 			case 'q_edit':
 				if ($params['titlechanged'] || $params['contentchanged'])
-					$updatetype=QA_UPDATE_CONTENT;
+					$updatetype = QA_UPDATE_CONTENT;
 				elseif ($params['tagschanged'])
-					$updatetype=QA_UPDATE_TAGS;
+					$updatetype = QA_UPDATE_TAGS;
 				else
-					$updatetype=null;
+					$updatetype = null;
 
 				if (isset($updatetype)) {
 					qa_create_event_for_q_user($params['postid'], $params['postid'], $updatetype, $userid, $params['oldquestion']['userid']);

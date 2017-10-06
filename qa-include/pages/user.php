@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-user.php
 	Description: Controller for user profile page
 
 
@@ -20,71 +19,66 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-//	Determine the identify of the user
+// Determine the identify of the user
 
-	$handle = qa_request_part(1);
+$handle = qa_request_part(1);
 
-	if (!strlen($handle)) {
-		$handle = qa_get_logged_in_handle();
-		qa_redirect(!empty($handle) ? 'user/'.$handle : 'users');
-	}
-
-
-//	Get the HTML to display for the handle, and if we're using external users, determine the userid
-
-	if (QA_FINAL_EXTERNAL_USERS) {
-		$userid = qa_handle_to_userid($handle);
-		if (!isset($userid))
-			return include QA_INCLUDE_DIR.'qa-page-not-found.php';
-
-		$usershtml = qa_get_users_html(array($userid), false, qa_path_to_root(), true);
-		$userhtml = @$usershtml[$userid];
-
-	}
-	else
-		$userhtml = qa_html($handle);
+if (!strlen($handle)) {
+	$handle = qa_get_logged_in_handle();
+	qa_redirect(!empty($handle) ? 'user/' . $handle : 'users');
+}
 
 
-//	Display the appropriate page based on the request
+// Get the HTML to display for the handle, and if we're using external users, determine the userid
 
-	switch (qa_request_part(2)) {
-		case 'wall':
-			qa_set_template('user-wall');
-			$qa_content = include QA_INCLUDE_DIR.'pages/user-wall.php';
-			break;
+if (QA_FINAL_EXTERNAL_USERS) {
+	$userid = qa_handle_to_userid($handle);
+	if (!isset($userid))
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
-		case 'activity':
-			qa_set_template('user-activity');
-			$qa_content = include QA_INCLUDE_DIR.'pages/user-activity.php';
-			break;
+	$usershtml = qa_get_users_html(array($userid), false, qa_path_to_root(), true);
+	$userhtml = @$usershtml[$userid];
 
-		case 'questions':
-			qa_set_template('user-questions');
-			$qa_content = include QA_INCLUDE_DIR.'pages/user-questions.php';
-			break;
+} else
+	$userhtml = qa_html($handle);
 
-		case 'answers':
-			qa_set_template('user-answers');
-			$qa_content = include QA_INCLUDE_DIR.'pages/user-answers.php';
-			break;
 
-		case null:
-			$qa_content = include QA_INCLUDE_DIR.'pages/user-profile.php';
-			break;
+// Display the appropriate page based on the request
 
-		default:
-			$qa_content = include QA_INCLUDE_DIR.'qa-page-not-found.php';
-			break;
-	}
+switch (qa_request_part(2)) {
+	case 'wall':
+		qa_set_template('user-wall');
+		$qa_content = include QA_INCLUDE_DIR . 'pages/user-wall.php';
+		break;
 
-	return $qa_content;
+	case 'activity':
+		qa_set_template('user-activity');
+		$qa_content = include QA_INCLUDE_DIR . 'pages/user-activity.php';
+		break;
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+	case 'questions':
+		qa_set_template('user-questions');
+		$qa_content = include QA_INCLUDE_DIR . 'pages/user-questions.php';
+		break;
+
+	case 'answers':
+		qa_set_template('user-answers');
+		$qa_content = include QA_INCLUDE_DIR . 'pages/user-answers.php';
+		break;
+
+	case null:
+		$qa_content = include QA_INCLUDE_DIR . 'pages/user-profile.php';
+		break;
+
+	default:
+		$qa_content = include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+		break;
+}
+
+return $qa_content;

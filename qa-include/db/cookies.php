@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-cookies.php
 	Description: Database access functions for user cookies
 
 
@@ -20,60 +19,63 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-	function qa_db_cookie_create($ipaddress)
-/*
-	Create a new random cookie for $ipaddress and insert into database, returning it
-*/
-	{
-		for ($attempt=0; $attempt<10; $attempt++) {
-			$cookieid=qa_db_random_bigint();
+/**
+ * Create a new random cookie for $ipaddress and insert into database, returning it
+ * @param $ipaddress
+ * @return null|string
+ */
+function qa_db_cookie_create($ipaddress)
+{
+	for ($attempt = 0; $attempt < 10; $attempt++) {
+		$cookieid = qa_db_random_bigint();
 
-			if (qa_db_cookie_exists($cookieid))
-				continue;
+		if (qa_db_cookie_exists($cookieid))
+			continue;
 
-			qa_db_query_sub(
-				'INSERT INTO ^cookies (cookieid, created, createip) '.
-					'VALUES (#, NOW(), COALESCE(INET_ATON($), 0))',
-				$cookieid, $ipaddress
-			);
-
-			return $cookieid;
-		}
-
-		return null;
-	}
-
-
-	function qa_db_cookie_written($cookieid, $ipaddress)
-/*
-	Note in database that a write operation has been done by user identified by $cookieid and from $ipaddress
-*/
-	{
 		qa_db_query_sub(
-			'UPDATE ^cookies SET written=NOW(), writeip=COALESCE(INET_ATON($), 0) WHERE cookieid=#',
-			$ipaddress, $cookieid
+			'INSERT INTO ^cookies (cookieid, created, createip) ' .
+			'VALUES (#, NOW(), UNHEX($))',
+			$cookieid, bin2hex(@inet_pton($ipaddress))
 		);
+
+		return $cookieid;
 	}
 
-
-	function qa_db_cookie_exists($cookieid)
-/*
-	Return whether $cookieid exists in database
-*/
-	{
-		return qa_db_read_one_value(qa_db_query_sub(
-			'SELECT COUNT(*) FROM ^cookies WHERE cookieid=#',
-			$cookieid
-		)) > 0;
-	}
+	return null;
+}
 
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+/**
+ * Note in database that a write operation has been done by user identified by $cookieid and from $ipaddress
+ * @param $cookieid
+ * @param $ipaddress
+ */
+function qa_db_cookie_written($cookieid, $ipaddress)
+{
+	qa_db_query_sub(
+		'UPDATE ^cookies SET written=NOW(), writeip=UNHEX($) WHERE cookieid=#',
+		bin2hex(@inet_pton($ipaddress)), $cookieid
+	);
+}
+
+
+/**
+ * Return whether $cookieid exists in database
+ * @param $cookieid
+ * @return bool
+ */
+function qa_db_cookie_exists($cookieid)
+{
+	$cookie = qa_db_read_one_value(qa_db_query_sub(
+		'SELECT COUNT(*) FROM ^cookies WHERE cookieid=#',
+		$cookieid
+	));
+
+	return $cookie > 0;
+}

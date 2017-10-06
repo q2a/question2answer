@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-not-found.php
 	Description: Controller for page not found (error 404)
 
 
@@ -20,26 +19,21 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../');
+	exit;
+}
 
-	require_once QA_INCLUDE_DIR.'app/format.php';
-
-
-	header('HTTP/1.0 404 Not Found');
-
-	qa_set_template('not-found');
-
-	$qa_content=qa_content_prepare();
-	$qa_content['error']=qa_lang_html('main/page_not_found');
-	$qa_content['suggest_next']=qa_html_suggest_qs_tags(qa_using_tags());
+require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-	return $qa_content;
+header('HTTP/1.0 404 Not Found');
+
+qa_set_template('not-found');
+
+$qa_content = qa_content_prepare();
+$qa_content['error'] = qa_lang_html('main/page_not_found');
+$qa_content['suggest_next'] = qa_html_suggest_qs_tags(qa_using_tags());
 
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+return $qa_content;

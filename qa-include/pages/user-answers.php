@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-page-user-answers.php
 	Description: Controller for user page showing all user's answers
 
 
@@ -20,91 +19,86 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
-	require_once QA_INCLUDE_DIR.'db/selects.php';
-	require_once QA_INCLUDE_DIR.'app/format.php';
-
-
-//	$handle, $userhtml are already set by qa-page-user.php - also $userid if using external user integration
-
-	$start = qa_get_start();
+require_once QA_INCLUDE_DIR . 'db/selects.php';
+require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-//	Find the questions for this user
+// $handle, $userhtml are already set by /qa-include/page/user.php - also $userid if using external user integration
 
-	$loginuserid = qa_get_logged_in_userid();
-	$identifier = QA_FINAL_EXTERNAL_USERS ? $userid : $handle;
-
-	list($useraccount, $userpoints, $questions) = qa_db_select_with_pending(
-		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
-		qa_db_user_points_selectspec($identifier),
-		qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_activity'), $start)
-	);
-
-	if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
-		return include QA_INCLUDE_DIR.'qa-page-not-found.php';
+$start = qa_get_start();
 
 
-//	Get information on user questions
+// Find the questions for this user
 
-	$pagesize = qa_opt('page_size_activity');
-	$count = (int)@$userpoints['aposts'];
-	$questions = array_slice($questions, 0, $pagesize);
-	$usershtml = qa_userids_handles_html($questions, false);
+$loginuserid = qa_get_logged_in_userid();
+$identifier = QA_FINAL_EXTERNAL_USERS ? $userid : $handle;
 
+list($useraccount, $userpoints, $questions) = qa_db_select_with_pending(
+	QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
+	qa_db_user_points_selectspec($identifier),
+	qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_activity'), $start)
+);
 
-//	Prepare content for theme
-
-	$qa_content = qa_content_prepare(true);
-
-	if (count($questions))
-		$qa_content['title'] = qa_lang_html_sub('profile/answers_by_x', $userhtml);
-	else
-		$qa_content['title'] = qa_lang_html_sub('profile/no_answers_by_x', $userhtml);
+if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
+	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 
-//	Recent questions by this user
+// Get information on user questions
 
-	$qa_content['q_list']['form'] = array(
-		'tags' => 'method="post" action="'.qa_self_html().'"',
-
-		'hidden' => array(
-			'code' => qa_get_form_security_code('vote'),
-		),
-	);
-
-	$qa_content['q_list']['qs'] = array();
-
-	$htmldefaults = qa_post_html_defaults('Q');
-	$htmldefaults['whoview'] = false;
-	$htmldefaults['avatarsize'] = 0;
-	$htmldefaults['ovoteview'] = true;
-	$htmldefaults['answersview'] = false;
-
-	foreach ($questions as $question) {
-		$options = qa_post_html_options($question, $htmldefaults);
-		$options['voteview'] = qa_get_vote_view('A', false, false);
-
-		$qa_content['q_list']['qs'][] = qa_other_to_q_html_fields($question, $loginuserid, qa_cookie_get(),
-			$usershtml, null, $options);
-	}
-
-	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
+$pagesize = qa_opt('page_size_activity');
+$count = (int)@$userpoints['aposts'];
+$questions = array_slice($questions, 0, $pagesize);
+$usershtml = qa_userids_handles_html($questions, false);
 
 
-//	Sub menu for navigation in user pages
+// Prepare content for theme
 
-	$ismyuser = isset($loginuserid) && $loginuserid == (QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid']);
-	$qa_content['navigation']['sub'] = qa_user_sub_navigation($handle, 'answers', $ismyuser);
+$qa_content = qa_content_prepare(true);
+
+if (count($questions))
+	$qa_content['title'] = qa_lang_html_sub('profile/answers_by_x', $userhtml);
+else
+	$qa_content['title'] = qa_lang_html_sub('profile/no_answers_by_x', $userhtml);
 
 
-	return $qa_content;
+// Recent questions by this user
+
+$qa_content['q_list']['form'] = array(
+	'tags' => 'method="post" action="' . qa_self_html() . '"',
+
+	'hidden' => array(
+		'code' => qa_get_form_security_code('vote'),
+	),
+);
+
+$qa_content['q_list']['qs'] = array();
+
+$htmldefaults = qa_post_html_defaults('Q');
+$htmldefaults['whoview'] = false;
+$htmldefaults['avatarsize'] = 0;
+$htmldefaults['ovoteview'] = true;
+$htmldefaults['answersview'] = false;
+
+foreach ($questions as $question) {
+	$options = qa_post_html_options($question, $htmldefaults);
+	$options['voteview'] = qa_get_vote_view('A', false, false);
+
+	$qa_content['q_list']['qs'][] = qa_other_to_q_html_fields($question, $loginuserid, qa_cookie_get(),
+		$usershtml, null, $options);
+}
+
+$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
 
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+// Sub menu for navigation in user pages
+
+$ismyuser = isset($loginuserid) && $loginuserid == (QA_FINAL_EXTERNAL_USERS ? $userid : $useraccount['userid']);
+$qa_content['navigation']['sub'] = qa_user_sub_navigation($handle, 'answers', $ismyuser);
+
+
+return $qa_content;

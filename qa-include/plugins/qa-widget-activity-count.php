@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-widget-activity-count.php
 	Description: Widget module class for activity count plugin
 
 
@@ -29,7 +28,7 @@ class qa_activity_count
 
 	public function allow_region($region)
 	{
-		return ($region=='side');
+		return ($region == 'side');
 	}
 
 	public function output_widget($region, $place, $themeobject, $template, $request, $qa_content)
@@ -49,12 +48,14 @@ class qa_activity_count
 
 	public function output_count($themeobject, $value, $langsingular, $langplural)
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		$themeobject->output('<p class="qa-activity-count-item">');
 
-		if ($value==1)
+		if ($value == 1)
 			$themeobject->output(qa_lang_html_sub($langsingular, '<span class="qa-activity-count-data">1</span>', '1'));
 		else
-			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">'.number_format((int)$value).'</span>'));
+			$themeobject->output(qa_lang_html_sub($langplural, '<span class="qa-activity-count-data">' . qa_format_number((int)$value, 0, true) . '</span>'));
 
 		$themeobject->output('</p>');
 	}

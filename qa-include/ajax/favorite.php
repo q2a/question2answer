@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-ajax-favorite.php
 	Description: Server-side response to Ajax favorite requests
 
 
@@ -20,37 +19,31 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'app/users.php';
-	require_once QA_INCLUDE_DIR.'app/cookies.php';
-	require_once QA_INCLUDE_DIR.'app/favorites.php';
-	require_once QA_INCLUDE_DIR.'app/format.php';
+require_once QA_INCLUDE_DIR . 'app/users.php';
+require_once QA_INCLUDE_DIR . 'app/cookies.php';
+require_once QA_INCLUDE_DIR . 'app/favorites.php';
+require_once QA_INCLUDE_DIR . 'app/format.php';
 
 
-	$entitytype=qa_post_text('entitytype');
-	$entityid=qa_post_text('entityid');
-	$setfavorite=qa_post_text('favorite');
+$entitytype = qa_post_text('entitytype');
+$entityid = qa_post_text('entityid');
+$setfavorite = qa_post_text('favorite');
 
-	$userid=qa_get_logged_in_userid();
+$userid = qa_get_logged_in_userid();
 
-	if (!qa_check_form_security_code('favorite-'.$entitytype.'-'.$entityid, qa_post_text('code')))
-		echo "QA_AJAX_RESPONSE\n0\n".qa_lang('misc/form_security_reload');
+if (!qa_check_form_security_code('favorite-' . $entitytype . '-' . $entityid, qa_post_text('code'))) {
+	echo "QA_AJAX_RESPONSE\n0\n" . qa_lang('misc/form_security_reload');
+} elseif (isset($userid)) {
+	$cookieid = qa_cookie_get();
 
-	elseif (isset($userid)) {
-		$cookieid=qa_cookie_get();
+	qa_user_favorite_set($userid, qa_get_logged_in_handle(), $cookieid, $entitytype, $entityid, $setfavorite);
 
-		qa_user_favorite_set($userid, qa_get_logged_in_handle(), $cookieid, $entitytype, $entityid, $setfavorite);
+	$favoriteform = qa_favorite_form($entitytype, $entityid, $setfavorite, qa_lang($setfavorite ? 'main/remove_favorites' : 'main/add_favorites'));
 
-		$favoriteform=qa_favorite_form($entitytype, $entityid, $setfavorite, qa_lang($setfavorite ? 'main/remove_favorites' : 'main/add_favorites'));
+	$themeclass = qa_load_theme_class(qa_get_site_theme(), 'ajax-favorite', null, null);
+	$themeclass->initialize();
 
-		$themeclass=qa_load_theme_class(qa_get_site_theme(), 'ajax-favorite', null, null);
-		$themeclass->initialize();
+	echo "QA_AJAX_RESPONSE\n1\n";
 
-		echo "QA_AJAX_RESPONSE\n1\n";
-
-		$themeclass->favorite_inner_html($favoriteform);
-	}
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+	$themeclass->favorite_inner_html($favoriteform);
+}

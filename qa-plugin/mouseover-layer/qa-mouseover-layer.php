@@ -35,9 +35,7 @@ class qa_html_theme_layer extends qa_html_theme_base
 			}
 
 			if (!empty($postids)) {
-
 				// Retrieve the content for these questions from the database
-
 				$maxlength = qa_opt('mouseover_content_max_len');
 				$result = qa_db_query_sub('SELECT postid, content, format FROM ^posts WHERE postid IN (#)', $postids);
 				$postinfo = qa_db_read_all_assoc($result, 'postid');

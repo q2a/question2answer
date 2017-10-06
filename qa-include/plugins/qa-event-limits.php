@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-event-limits.php
 	Description: Event module for updating per-user limits
 
 
@@ -27,10 +26,11 @@ class qa_event_limits
 		// Don't increment limits or report user actions for events that were delayed. For example, a 'q_post'
 		// event sent when a post is approved by the admin, for which a 'q_queue' event was already sent.
 
-		if (isset($params['delayed']))
+		if (isset($params['delayed'])) {
 			return;
+		}
 
-		require_once QA_INCLUDE_DIR.'app/limits.php';
+		require_once QA_INCLUDE_DIR . 'app/limits.php';
 
 		switch ($event) {
 			case 'q_queue':
@@ -58,6 +58,9 @@ class qa_event_limits
 			case 'a_vote_up':
 			case 'a_vote_down':
 			case 'a_vote_nil':
+			case 'c_vote_up':
+			case 'c_vote_down':
+			case 'c_vote_nil':
 				qa_limits_increment($userid, QA_LIMIT_VOTES);
 				break;
 
@@ -76,7 +79,7 @@ class qa_event_limits
 				break;
 		}
 
-		$writeactions=array(
+		$writeactions = array(
 			'_approve', '_claim', '_clearflags', '_delete', '_edit', '_favorite', '_flag', '_hide',
 			'_post', '_queue', '_reject', '_reshow', '_unfavorite', '_unflag', '_vote_down', '_vote_nil', '_vote_up',
 			'a_select', 'a_to_c', 'a_unselect',
@@ -84,18 +87,15 @@ class qa_event_limits
 			'u_block', 'u_edit', 'u_level', 'u_message', 'u_password', 'u_save', 'u_unblock',
 		);
 
-		if (
-			is_numeric(array_search(strstr($event, '_'), $writeactions)) ||
+		if (is_numeric(array_search(strstr($event, '_'), $writeactions)) ||
 			is_numeric(array_search($event, $writeactions))
 		) {
 			if (isset($userid)) {
 				require_once QA_INCLUDE_DIR . 'app/users.php';
-
 				qa_user_report_action($userid, $event);
 
 			} elseif (isset($cookieid)) {
 				require_once QA_INCLUDE_DIR . 'app/cookies.php';
-
 				qa_cookie_report_action($cookieid, $event);
 			}
 		}

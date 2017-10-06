@@ -4,6 +4,7 @@ class qa_html_theme extends qa_html_theme_base
 {
 	// use new ranking layout
 	protected $ranking_block_layout = true;
+	protected $theme = 'snow';
 
 	// outputs login form if user not logged in
 	public function nav_user_search()
@@ -32,6 +33,8 @@ class qa_html_theme extends qa_html_theme_base
 
 	public function logged_in()
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		if (qa_is_logged_in()) // output user avatar to login bar
 			$this->output(
 				'<div class="qa-logged-in-avatar">',
@@ -50,7 +53,7 @@ class qa_html_theme extends qa_html_theme_base
 
 			$pointshtml=($userpoints==1)
 				? qa_lang_html_sub('main/1_point', '1', '1')
-				: qa_lang_html_sub('main/x_points', qa_html(number_format($userpoints)));
+				: qa_lang_html_sub('main/x_points', qa_html(qa_format_number($userpoints)));
 
 			$this->output(
 				'<span class="qa-logged-in-points">',
@@ -92,7 +95,6 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<div class="qa-main-shadow">', '');
 		$this->output('<div class="qa-main-wrapper">', '');
 		$this->nav_main_sub();
-
 	}
 
 	// removes sidebar for user profile pages
@@ -110,14 +112,15 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	// add RSS feed icon after the page title
-	public function title()
+	public function favorite()
 	{
-		qa_html_theme_base::title();
+		parent::favorite();
 
-		$feed=@$this->content['feed'];
+		$feed = @$this->content['feed'];
 
-		if (!empty($feed))
-			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" border="0" class="qa-rss-icon"/></a>');
+		if (!empty($feed)) {
+			$this->output('<a href="'.$feed['url'].'" title="'.@$feed['label'].'"><img src="'.$this->rooturl.'images/rss.jpg" alt="" width="16" height="16" class="qa-rss-icon"/></a>');
+		}
 	}
 
 	// add view count to question list

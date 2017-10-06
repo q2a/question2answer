@@ -4,7 +4,7 @@ require_once QA_INCLUDE_DIR.'util/string.php';
 class UtilStringTest extends PHPUnit_Framework_TestCase
 {
 	private $strBasic = 'So I tied an onion to my belt, which was the style at the time.';
-	private $strAccents = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƲĘŕ ƮĦȨ ĿÆƶȳ Ƌơǥ';
+	private $strAccents = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƯĘŕ ƬĦȨ ĿÆƶȳ Ƌơǥ';
 	private $blockWordString = 't*d o*n b*t style';
 
 	public function test__qa_string_to_words()
@@ -22,9 +22,26 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 	public function test__qa_string_remove_accents()
 	{
 		$test = qa_string_remove_accents($this->strAccents);
-		$expected = 'The quicK ssroWn Fot jUOIps OVEr THE LAEzy Dog';
+		$expected = 'The quicK ssroWn Fot jUOIps OUEr THE LAEzy Dog';
 
 		$this->assertEquals($expected, $test);
+	}
+
+	public function test__qa_slugify()
+	{
+
+		$title1 = 'How much wood would a woodchuck chuck if a woodchuck could chuck wood?';
+		$title2 = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƯĘŕ ƬĦȨ ĿÆƶȳ Ƌơǥ';
+
+		$expected1 = 'how-much-wood-would-a-woodchuck-chuck-if-a-woodchuck-could-chuck-wood';
+		$expected2 = 'much-wood-would-woodchuck-chuck-woodchuck-could-chuck-wood';
+		$expected3 = 'țĥé-qũīçķ-ßřǭŵƞ-ƒöŧ-ǰùƣƥş-øưęŕ-ƭħȩ-ŀæƶȳ-ƌơǥ';
+		$expected4 = 'the-quick-ssrown-fot-juoips-ouer-the-laezy-dog';
+
+		$this->assertSame($expected1, qa_slugify($title1));
+		$this->assertSame($expected2, qa_slugify($title1, true, 50));
+		$this->assertSame($expected3, qa_slugify($title2, false));
+		$this->assertSame($expected4, qa_slugify($title2, true));
 	}
 
 	public function test__qa_tags_to_tagstring()

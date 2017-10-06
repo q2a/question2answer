@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-ajax-category.php
 	Description: Server-side response to Ajax category information requests
 
 
@@ -20,26 +19,23 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	require_once QA_INCLUDE_DIR.'db/selects.php';
+require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
-	$categoryid=qa_post_text('categoryid');
-	if (!strlen($categoryid))
-		$categoryid=null;
+$categoryid = qa_post_text('categoryid');
+if (!strlen($categoryid))
+	$categoryid = null;
 
-	list($fullcategory, $categories)=qa_db_select_with_pending(
-		qa_db_full_category_selectspec($categoryid, true),
-		qa_db_category_sub_selectspec($categoryid)
-	);
+list($fullcategory, $categories) = qa_db_select_with_pending(
+	qa_db_full_category_selectspec($categoryid, true),
+	qa_db_category_sub_selectspec($categoryid)
+);
 
-	echo "QA_AJAX_RESPONSE\n1\n";
+echo "QA_AJAX_RESPONSE\n1\n";
 
-	echo qa_html(strtr(@$fullcategory['content'], "\r\n", '  ')); // category description
+echo qa_html(strtr(@$fullcategory['content'], "\r\n", '  ')); // category description
 
-	foreach ($categories as $category)
-		echo "\n".$category['categoryid'].'/'.$category['title']; // subcategory information
-
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+foreach ($categories as $category) {
+	// subcategory information
+	echo "\n" . $category['categoryid'] . '/' . $category['title'];
+}

@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-filter-basic.php
 	Description: Basic module for validating form inputs
 
 
@@ -52,6 +51,12 @@ class qa_filter_basic
 		if (qa_strlen($handle) > QA_DB_MAX_HANDLE_LENGTH) {
 			return qa_lang_sub('main/max_length_x', QA_DB_MAX_HANDLE_LENGTH);
 		}
+		// check for banned usernames (e.g. "anonymous")
+		$wordspreg = qa_block_words_to_preg(qa_opt('block_bad_usernames'));
+		$blocked = qa_block_words_match_all($handle, $wordspreg);
+		if (!empty($blocked)) {
+			return qa_lang('users/handle_blocked');
+		}
 	}
 
 	public function filter_question(&$question, &$errors, $oldquestion)
@@ -82,14 +87,12 @@ class qa_filter_basic
 
 			if ($counttags < $mintags) {
 				$errors['tags'] = qa_lang_sub('question/min_tags_x', $mintags);
-			}
-			elseif ($counttags > $maxtags) {
+			} elseif ($counttags > $maxtags) {
 				$errors['tags'] = qa_lang_sub('question/max_tags_x', $maxtags);
-			}
-			else {
+			} else {
 				$tagstring = qa_tags_to_tagstring($question['tags']);
 				if (qa_strlen($tagstring) > QA_DB_MAX_TAGS_LENGTH) { // for storage
-					$errors['tags'] = qa_lang_sub('main/max_length_x', $maxlength);
+					$errors['tags'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_TAGS_LENGTH);
 				}
 			}
 		}
@@ -107,7 +110,7 @@ class qa_filter_basic
 	public function filter_comment(&$comment, &$errors, $question, $parent, $oldcomment)
 	{
 		$this->validate_field_length($errors, $comment, 'content', 0, QA_DB_MAX_CONTENT_LENGTH); // for storage
-		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_a_content'), null, 'content'); // for display
+		$this->validate_field_length($errors, $comment, 'text', qa_opt('min_len_c_content'), null, 'content'); // for display
 		$this->validate_post_email($errors, $comment);
 	}
 
@@ -115,7 +118,7 @@ class qa_filter_basic
 	{
 		foreach (array_keys($profile) as $field) {
 			// ensure fields are not NULL
-			$profile[$field] = (string) $profile[$field];
+			$profile[$field] = (string)$profile[$field];
 			$this->validate_field_length($errors, $profile, $field, 0, QA_DB_MAX_CONTENT_LENGTH);
 		}
 	}
@@ -141,13 +144,13 @@ class qa_filter_basic
 	/**
 	 * Check that a field meets the length requirements. If we're editing the post we can ignore missing fields.
 	 *
-	 * @param array $errors    Array of errors, with keys matching $post
-	 * @param array $post      The post containing the field we want to validate
-	 * @param string $key      The element of $post to validate
+	 * @param array $errors Array of errors, with keys matching $post
+	 * @param array $post The post containing the field we want to validate
+	 * @param string $key The element of $post to validate
 	 * @param int $minlength
 	 * @param int $maxlength
 	 */
-	private function validate_field_length(&$errors, &$post, $key, $minlength, $maxlength, $errorKey=null)
+	private function validate_field_length(&$errors, &$post, $key, $minlength, $maxlength, $errorKey = null)
 	{
 		if (!$errorKey) {
 			$errorKey = $key;
@@ -159,8 +162,7 @@ class qa_filter_basic
 
 			if ($length < $minlength) {
 				$errors[$errorKey] = $minlength == 1 ? qa_lang('main/field_required') : qa_lang_sub('main/min_length_x', $minlength);
-			}
-			else if (isset($maxlength) && ($length > $maxlength)) {
+			} elseif (isset($maxlength) && ($length > $maxlength)) {
 				$errors[$errorKey] = qa_lang_sub('main/max_length_x', $maxlength);
 			}
 		}

@@ -31,16 +31,15 @@ class qa_xml_sitemap
 			case 'xml_sitemap_show_category_qs':
 			case 'xml_sitemap_show_categories':
 				return true;
-				break;
 		}
 	}
 
 
 	public function admin_form()
 	{
-		require_once QA_INCLUDE_DIR.'util/sort.php';
+		require_once QA_INCLUDE_DIR . 'util/sort.php';
 
-		$saved=false;
+		$saved = false;
 
 		if (qa_clicked('xml_sitemap_save_button')) {
 			qa_opt('xml_sitemap_show_questions', (int)qa_post_text('xml_sitemap_show_questions_field'));
@@ -56,10 +55,10 @@ class qa_xml_sitemap
 				qa_opt('xml_sitemap_show_categories', (int)qa_post_text('xml_sitemap_show_categories_field'));
 			}
 
-			$saved=true;
+			$saved = true;
 		}
 
-		$form=array(
+		$form = array(
 			'ok' => $saved ? 'XML sitemap settings saved' : null,
 
 			'fields' => array(
@@ -79,31 +78,33 @@ class qa_xml_sitemap
 			),
 		);
 
-		if (!QA_FINAL_EXTERNAL_USERS)
-			$form['fields']['users']=array(
+		if (!QA_FINAL_EXTERNAL_USERS) {
+			$form['fields']['users'] = array(
 				'label' => 'Include user pages',
 				'type' => 'checkbox',
 				'value' => (int)qa_opt('xml_sitemap_show_users'),
 				'tags' => 'name="xml_sitemap_show_users_field"',
 			);
+		}
 
-		if (qa_using_tags())
-			$form['fields']['tagqs']=array(
+		if (qa_using_tags()) {
+			$form['fields']['tagqs'] = array(
 				'label' => 'Include question list for each tag',
 				'type' => 'checkbox',
 				'value' => (int)qa_opt('xml_sitemap_show_tag_qs'),
 				'tags' => 'name="xml_sitemap_show_tag_qs_field"',
 			);
+		}
 
 		if (qa_using_categories()) {
-			$form['fields']['categoryqs']=array(
+			$form['fields']['categoryqs'] = array(
 				'label' => 'Include question list for each category',
 				'type' => 'checkbox',
 				'value' => (int)qa_opt('xml_sitemap_show_category_qs'),
 				'tags' => 'name="xml_sitemap_show_category_qs_field"',
 			);
 
-			$form['fields']['categories']=array(
+			$form['fields']['categories'] = array(
 				'label' => 'Include category browser',
 				'type' => 'checkbox',
 				'value' => (int)qa_opt('xml_sitemap_show_categories'),
@@ -129,7 +130,7 @@ class qa_xml_sitemap
 
 	public function match_request($request)
 	{
-		return ($request=='sitemap.xml');
+		return ($request == 'sitemap.xml');
 	}
 
 
@@ -139,21 +140,21 @@ class qa_xml_sitemap
 
 		header('Content-type: text/xml; charset=utf-8');
 
-		echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+		echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+		echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
 
-	//	Question pages
+		// Question pages
 
 		if (qa_opt('xml_sitemap_show_questions')) {
-			$hotstats=qa_db_read_one_assoc(qa_db_query_sub(
+			$hotstats = qa_db_read_one_assoc(qa_db_query_sub(
 				"SELECT MIN(hotness) AS base, MAX(hotness)-MIN(hotness) AS spread FROM ^posts WHERE type='Q'"
 			));
 
-			$nextpostid=0;
+			$nextpostid = 0;
 
 			while (1) {
-				$questions=qa_db_read_all_assoc(qa_db_query_sub(
+				$questions = qa_db_read_all_assoc(qa_db_query_sub(
 					"SELECT postid, title, hotness FROM ^posts WHERE postid>=# AND type='Q' ORDER BY postid LIMIT 100",
 					$nextpostid
 				));
@@ -163,20 +164,20 @@ class qa_xml_sitemap
 
 				foreach ($questions as $question) {
 					$this->sitemap_output(qa_q_request($question['postid'], $question['title']),
-						0.1+0.9*($question['hotness']-$hotstats['base'])/(1+$hotstats['spread']));
-					$nextpostid=max($nextpostid, $question['postid']+1);
+						0.1 + 0.9 * ($question['hotness'] - $hotstats['base']) / (1 + $hotstats['spread']));
+					$nextpostid = max($nextpostid, $question['postid'] + 1);
 				}
 			}
 		}
 
 
-	//	User pages
+		// User pages
 
-		if ((!QA_FINAL_EXTERNAL_USERS) && qa_opt('xml_sitemap_show_users')) {
-			$nextuserid=0;
+		if (!QA_FINAL_EXTERNAL_USERS && qa_opt('xml_sitemap_show_users')) {
+			$nextuserid = 0;
 
 			while (1) {
-				$users=qa_db_read_all_assoc(qa_db_query_sub(
+				$users = qa_db_read_all_assoc(qa_db_query_sub(
 					"SELECT userid, handle FROM ^users WHERE userid>=# ORDER BY userid LIMIT 100",
 					$nextuserid
 				));
@@ -185,20 +186,20 @@ class qa_xml_sitemap
 					break;
 
 				foreach ($users as $user) {
-					$this->sitemap_output('user/'.$user['handle'], 0.25);
-					$nextuserid=max($nextuserid, $user['userid']+1);
+					$this->sitemap_output('user/' . $user['handle'], 0.25);
+					$nextuserid = max($nextuserid, $user['userid'] + 1);
 				}
 			}
 		}
 
 
-	//	Tag pages
+		// Tag pages
 
 		if (qa_using_tags() && qa_opt('xml_sitemap_show_tag_qs')) {
-			$nextwordid=0;
+			$nextwordid = 0;
 
 			while (1) {
-				$tagwords=qa_db_read_all_assoc(qa_db_query_sub(
+				$tagwords = qa_db_read_all_assoc(qa_db_query_sub(
 					"SELECT wordid, word, tagcount FROM ^words WHERE wordid>=# AND tagcount>0 ORDER BY wordid LIMIT 100",
 					$nextwordid
 				));
@@ -207,20 +208,20 @@ class qa_xml_sitemap
 					break;
 
 				foreach ($tagwords as $tagword) {
-					$this->sitemap_output('tag/'.$tagword['word'], 0.5/(1+(1/$tagword['tagcount']))); // priority between 0.25 and 0.5 depending on tag frequency
-					$nextwordid=max($nextwordid, $tagword['wordid']+1);
+					$this->sitemap_output('tag/' . $tagword['word'], 0.5 / (1 + (1 / $tagword['tagcount']))); // priority between 0.25 and 0.5 depending on tag frequency
+					$nextwordid = max($nextwordid, $tagword['wordid'] + 1);
 				}
 			}
 		}
 
 
-	//	Question list for each category
+		// Question list for each category
 
 		if (qa_using_categories() && qa_opt('xml_sitemap_show_category_qs')) {
-			$nextcategoryid=0;
+			$nextcategoryid = 0;
 
 			while (1) {
-				$categories=qa_db_read_all_assoc(qa_db_query_sub(
+				$categories = qa_db_read_all_assoc(qa_db_query_sub(
 					"SELECT categoryid, backpath FROM ^categories WHERE categoryid>=# AND qcount>0 ORDER BY categoryid LIMIT 2",
 					$nextcategoryid
 				));
@@ -229,23 +230,23 @@ class qa_xml_sitemap
 					break;
 
 				foreach ($categories as $category) {
-					$this->sitemap_output('questions/'.implode('/', array_reverse(explode('/', $category['backpath']))), 0.5);
-					$nextcategoryid=max($nextcategoryid, $category['categoryid']+1);
+					$this->sitemap_output('questions/' . implode('/', array_reverse(explode('/', $category['backpath']))), 0.5);
+					$nextcategoryid = max($nextcategoryid, $category['categoryid'] + 1);
 				}
 			}
 		}
 
 
-	//	Pages in category browser
+		// Pages in category browser
 
 		if (qa_using_categories() && qa_opt('xml_sitemap_show_categories')) {
 			$this->sitemap_output('categories', 0.5);
 
-			$nextcategoryid=0;
+			$nextcategoryid = 0;
 
 			while (1) { // only find categories with a child
-				$categories=qa_db_read_all_assoc(qa_db_query_sub(
-					"SELECT parent.categoryid, parent.backpath FROM ^categories AS parent ".
+				$categories = qa_db_read_all_assoc(qa_db_query_sub(
+					"SELECT parent.categoryid, parent.backpath FROM ^categories AS parent " .
 					"JOIN ^categories AS child ON child.parentid=parent.categoryid WHERE parent.categoryid>=# GROUP BY parent.categoryid LIMIT 100",
 					$nextcategoryid
 				));
@@ -254,8 +255,8 @@ class qa_xml_sitemap
 					break;
 
 				foreach ($categories as $category) {
-					$this->sitemap_output('categories/'.implode('/', array_reverse(explode('/', $category['backpath']))), 0.5);
-					$nextcategoryid=max($nextcategoryid, $category['categoryid']+1);
+					$this->sitemap_output('categories/' . implode('/', array_reverse(explode('/', $category['backpath']))), 0.5);
+					$nextcategoryid = max($nextcategoryid, $category['categoryid'] + 1);
 				}
 			}
 		}
@@ -272,9 +273,9 @@ class qa_xml_sitemap
 	 */
 	public function sitemap_output($request, $priority)
 	{
-		echo "\t<url>\n".
-			"\t\t<loc>".qa_xml(qa_path($request, null, qa_opt('site_url')))."</loc>\n".
-			"\t\t<priority>".max(0, min(1.0, $priority))."</priority>\n".
+		echo "\t<url>\n" .
+			"\t\t<loc>" . qa_xml(qa_path($request, null, qa_opt('site_url'))) . "</loc>\n" .
+			"\t\t<priority>" . max(0, min(1.0, $priority)) . "</priority>\n" .
 			"\t</url>\n";
 	}
 }

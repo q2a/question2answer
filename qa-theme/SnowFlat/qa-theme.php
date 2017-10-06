@@ -34,6 +34,8 @@
  */
 class qa_html_theme extends qa_html_theme_base
 {
+	protected $theme = 'snowflat';
+
 	// use local font files instead of Google Fonts
 	private $localfonts = true;
 
@@ -46,6 +48,9 @@ class qa_html_theme extends qa_html_theme_base
 	private $ask_search_box_class = 'turquoise';
 	// Size of the user avatar in the navigation bar
 	private $nav_bar_avatar_size = 52;
+
+	// use new block layout in rankings
+	protected $ranking_block_layout = true;
 
 	/**
 	 * Adding aditional meta for responsive design
@@ -69,11 +74,33 @@ class qa_html_theme extends qa_html_theme_base
 		if ($this->isRTL)
 			$this->content['css_src'][] = $this->rooturl . 'qa-styles-rtl.css?' . QA_VERSION;
 
-		// add Ubuntu font CSS file from Google Fonts
-		if ($this->localfonts)
-			$this->content['css_src'][] = $this->rooturl . 'fonts/ubuntu.css?' . QA_VERSION;
-		else
-			$this->content['css_src'][] = '//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic';
+		if ($this->localfonts) {
+			// add Ubuntu font locally (inlined for speed)
+			$this->output_array(array(
+				'<style>',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: normal; font-weight: 400;',
+				' src: local("Ubuntu"), url("' . $this->rooturl . 'fonts/Ubuntu-regular.woff") format("woff");',
+				'}',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: normal; font-weight: 700;',
+				' src: local("Ubuntu Bold"), local("Ubuntu-Bold"), url("' . $this->rooturl . 'fonts/Ubuntu-700.woff") format("woff");',
+				'}',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: italic; font-weight: 400;',
+				' src: local("Ubuntu Italic"), local("Ubuntu-Italic"), url("' . $this->rooturl . 'fonts/Ubuntu-italic.woff") format("woff");',
+				'}',
+				'@font-face {',
+				' font-family: "Ubuntu"; font-style: italic; font-weight: 700;',
+				' src: local("Ubuntu Bold Italic"), local("Ubuntu-BoldItalic"), url("' . $this->rooturl . 'fonts/Ubuntu-700italic.woff") format("woff");',
+				'}',
+				'</style>',
+			));
+		}
+		else {
+			// add Ubuntu font CSS file from Google Fonts
+			$this->content['css_src'][] = 'https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700,700i';
+		}
 
 		parent::head_css();
 
@@ -106,7 +133,7 @@ class qa_html_theme extends qa_html_theme_base
 			$userpoints = qa_get_logged_in_points();
 			$pointshtml = $userpoints == 1
 				? qa_lang_html_sub('main/1_point', '1', '1')
-				: qa_html(number_format($userpoints))
+				: qa_html(qa_format_number($userpoints))
 			;
 			$this->output('<div class="qam-logged-in-points">' . $pointshtml . '</div>');
 		}
@@ -120,13 +147,15 @@ class qa_html_theme extends qa_html_theme_base
 	public function body_tags()
 	{
 		$class = 'qa-template-' . qa_html($this->template);
+		$class .= empty($this->theme) ? '' : ' qa-theme-' . qa_html($this->theme);
 
 		if (isset($this->content['categoryids'])) {
-			foreach ($this->content['categoryids'] as $categoryid)
+			foreach ($this->content['categoryids'] as $categoryid) {
 				$class .= ' qa-category-' . qa_html($categoryid);
+			}
 		}
 
-		// add class if admin/appovoe-users page
+		// add class if admin/approve-users page
 		if ($this->template === 'admin' && qa_request_part(1) === 'approve')
 			$class .= ' qam-approve-users';
 
@@ -194,8 +223,8 @@ class qa_html_theme extends qa_html_theme_base
 	 * Remove the '-' from the note for the category page (notes).
 	 *
 	 * @since Snow 1.4
-	 * @param type $navlink
-	 * @param type $class
+	 * @param array $navlink
+	 * @param string $class
 	 */
 	public function nav_link($navlink, $class)
 	{
@@ -291,13 +320,12 @@ class qa_html_theme extends qa_html_theme_base
 		$this->widgets('side', 'top');
 		$this->sidebar();
 		$this->widgets('side', 'high');
-		$this->nav('cat', 1);
 		$this->widgets('side', 'low');
 		if (isset($this->content['sidepanel']))
 			$this->output_raw($this->content['sidepanel']);
 		$this->feed();
 		$this->widgets('side', 'bottom');
-		$this->output('</div>', '');
+		$this->output('</div> <!-- qa-sidepanel -->', '');
 	}
 
 	/**
@@ -312,7 +340,7 @@ class qa_html_theme extends qa_html_theme_base
 			if (!empty($sidebar)) {
 				$this->output('<div class="qa-sidebar ' . $this->welcome_widget_class . '">');
 				$this->output_raw($sidebar);
-				$this->output('</div>', '');
+				$this->output('</div> <!-- qa-sidebar -->', '');
 			}
 		}
 	}
@@ -340,13 +368,11 @@ class qa_html_theme extends qa_html_theme_base
 	}
 
 	/**
-	 * Add RSS feeds icon and closed icon for closed questions
-	 *
-	 * @since Snow 1.4
+	 * Add RSS feeds icon
 	 */
-	public function title()
+	public function favorite()
 	{
-		$q_view = isset($this->content['q_view']) ? $this->content['q_view'] : null;
+		parent::favorite();
 
 		// RSS feed link in title
 		if (isset($this->content['feed']['url'])) {
@@ -354,6 +380,16 @@ class qa_html_theme extends qa_html_theme_base
 			$label = isset($feed['label']) ? $feed['label'] : '';
 			$this->output('<a href="' . $feed['url'] . '" title="' . $label . '"><i class="icon-rss qam-title-rss"></i></a>');
 		}
+	}
+
+	/**
+	 * Add closed icon for closed questions
+	 *
+	 * @since Snow 1.4
+	 */
+	public function title()
+	{
+		$q_view = isset($this->content['q_view']) ? $this->content['q_view'] : null;
 
 		// link title where appropriate
 		$url = isset($q_view['url']) ? $q_view['url'] : false;
@@ -395,15 +431,18 @@ class qa_html_theme extends qa_html_theme_base
 	 * Prevent display view counter on usual place
 	 *
 	 * @since Snow 1.4
-	 * @param type $q_item
+	 * @param array $q_item
 	 */
-	public function view_count($q_item) {}
+	public function view_count($q_item)
+	{
+		// do nothing
+	}
 
 	/**
 	 * Add view counter to question view
 	 *
 	 * @since Snow 1.4
-	 * @param type $q_view
+	 * @param array $q_view
 	 */
 	public function q_view_stats($q_view)
 	{
@@ -420,14 +459,15 @@ class qa_html_theme extends qa_html_theme_base
 	 * Modify user whometa, move to top
 	 *
 	 * @since Snow 1.4
-	 * @param type $q_view
+	 * @param array $q_view
 	 */
 	public function q_view_main($q_view)
 	{
 		$this->output('<div class="qa-q-view-main">');
 
-		if (isset($q_view['main_form_tags']))
+		if (isset($q_view['main_form_tags'])) {
 			$this->output('<form ' . $q_view['main_form_tags'] . '>'); // form for buttons on question
+		}
 
 		$this->post_avatar_meta($q_view, 'qa-q-view');
 		$this->q_view_content($q_view);
@@ -437,7 +477,6 @@ class qa_html_theme extends qa_html_theme_base
 		$this->post_tags($q_view, 'qa-q-view');
 
 		$this->q_view_buttons($q_view);
-		$this->c_list(isset($q_view['c_list']) ? $q_view['c_list'] : null, 'qa-q-view');
 
 		if (isset($q_view['main_form_tags'])) {
 			if (isset($q_view['buttons_form_hidden']))
@@ -445,48 +484,55 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output('</form>');
 		}
 
+		$this->c_list(isset($q_view['c_list']) ? $q_view['c_list'] : null, 'qa-q-view');
 		$this->c_form(isset($q_view['c_form']) ? $q_view['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-q-view-main -->');
 	}
 
 	/**
+	 * Hide votes when zero
+	 * @param  array $post
+	 */
+	public function vote_count($post)
+	{
+		if ($post['raw']['basetype'] === 'C' && $post['raw']['netvotes'] == 0) {
+			$post['netvotes_view']['data'] = '';
+		}
+
+		parent::vote_count($post);
+	}
+
+	/**
 	 * Move user whometa to top in answer
 	 *
 	 * @since Snow 1.4
-	 * @param type $a_item
+	 * @param array $a_item
 	 */
 	public function a_item_main($a_item)
 	{
 		$this->output('<div class="qa-a-item-main">');
 
+		if (isset($a_item['main_form_tags'])) {
+			$this->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
+		}
+
 		$this->post_avatar_meta($a_item, 'qa-a-item');
 
-		if (isset($a_item['main_form_tags']))
-			$this->output('<form ' . $a_item['main_form_tags'] . '>'); // form for buttons on answer
-
 		if ($a_item['hidden'])
-			$answerState = 'hidden';
+			$this->output('<div class="qa-a-item-hidden">');
 		elseif ($a_item['selected'])
-			$answerState = 'selected';
-		else
-			$answerState = null;
-
-		if (isset($answerState))
-			$this->output('<div class="qa-a-item-' . $answerState . '">');
+			$this->output('<div class="qa-a-item-selected">');
 
 		$this->a_selection($a_item);
 		if (isset($a_item['error']))
 			$this->error($a_item['error']);
 		$this->a_item_content($a_item);
 
-		if (isset($answerState))
+		if ($a_item['hidden'] || $a_item['selected'])
 			$this->output('</div>');
 
 		$this->a_item_buttons($a_item);
-
-		if (isset($a_item['c_list']))
-			$this->c_list($a_item['c_list'], 'qa-a-item');
 
 		if (isset($a_item['main_form_tags'])) {
 			if (isset($a_item['buttons_form_hidden']))
@@ -494,16 +540,33 @@ class qa_html_theme extends qa_html_theme_base
 			$this->output('</form>');
 		}
 
+		$this->c_list(isset($a_item['c_list']) ? $a_item['c_list'] : null, 'qa-a-item');
 		$this->c_form(isset($a_item['c_form']) ? $a_item['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-a-item-main -->');
 	}
 
 	/**
-	 * Move user whometa to top in comment
+	 * Remove comment voting here
+	 * @param array $c_item
+	 */
+	public function c_list_item($c_item)
+	{
+		$extraclass = @$c_item['classes'] . (@$c_item['hidden'] ? ' qa-c-item-hidden' : '');
+
+		$this->output('<div class="qa-c-list-item ' . $extraclass . '" ' . @$c_item['tags'] . '>');
+
+		$this->c_item_main($c_item);
+		$this->c_item_clear();
+
+		$this->output('</div> <!-- END qa-c-item -->');
+	}
+
+	/**
+	 * Move user whometa to top in comment, add comment voting back in
 	 *
 	 * @since Snow 1.4
-	 * @param type $c_item
+	 * @param array $c_item
 	 */
 	public function c_item_main($c_item)
 	{
@@ -511,6 +574,21 @@ class qa_html_theme extends qa_html_theme_base
 
 		if (isset($c_item['error']))
 			$this->error($c_item['error']);
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->output('<form ' . $c_item['main_form_tags'] . '>'); // form for comment voting buttons
+		}
+
+		$this->voting($c_item);
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->form_hidden_elements(@$c_item['voting_form_hidden']);
+			$this->output('</form>');
+		}
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->output('<form ' . $c_item['main_form_tags'] . '>'); // form for buttons on comment
+		}
 
 		if (isset($c_item['expand_tags']))
 			$this->c_item_expand($c_item);
@@ -522,6 +600,11 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<div class="qa-c-item-footer">');
 		$this->c_item_buttons($c_item);
 		$this->output('</div>');
+
+		if (isset($c_item['main_form_tags'])) {
+			$this->form_hidden_elements(@$c_item['buttons_form_hidden']);
+			$this->output('</form>');
+		}
 	}
 
 	/**
@@ -596,6 +679,8 @@ class qa_html_theme extends qa_html_theme_base
 	 *
 	 * @since Snow 1.4
 	 * @version 1.0
+	 * @param string $addon_class
+	 * @param string $ids
 	 */
 	private function qam_search($addon_class = null, $ids = null)
 	{
@@ -657,5 +742,4 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
-
 }

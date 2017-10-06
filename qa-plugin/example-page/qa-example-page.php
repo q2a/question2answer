@@ -28,8 +28,8 @@ class qa_example_page
 
 	public function load_module($directory, $urltoroot)
 	{
-		$this->directory=$directory;
-		$this->urltoroot=$urltoroot;
+		$this->directory = $directory;
+		$this->urltoroot = $urltoroot;
 	}
 
 
@@ -53,14 +53,14 @@ class qa_example_page
 
 	public function process_request($request)
 	{
-		$qa_content=qa_content_prepare();
+		$qa_content = qa_content_prepare();
 
-		$qa_content['title']=qa_lang_html('example_page/page_title');
-		$qa_content['error']='An example error';
-		$qa_content['custom']='Some <b>custom html</b>';
+		$qa_content['title'] = qa_lang_html('example_page/page_title');
+		$qa_content['error'] = 'An example error';
+		$qa_content['custom'] = 'Some <b>custom html</b>';
 
-		$qa_content['form']=array(
-			'tags' => 'method="post" action="'.qa_self_html().'"',
+		$qa_content['form'] = array(
+			'tags' => 'method="post" action="' . qa_self_html() . '"',
 
 			'style' => 'wide',
 
@@ -91,7 +91,7 @@ class qa_example_page
 			),
 		);
 
-		$qa_content['custom_2']='<p><br>More <i>custom html</i></p>';
+		$qa_content['custom_2'] = '<p><br>More <i>custom html</i></p>';
 
 		return $qa_content;
 	}

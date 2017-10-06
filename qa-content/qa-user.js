@@ -1,12 +1,9 @@
 /*
 	Question2Answer by Gideon Greenspan and contributors
-
 	http://www.question2answer.org/
 
-
 	File: qa-content/qa-user.js
-	Version: See define()s at top of qa-include/qa-base.php
-	Description: Javascript to handle user page actions
+	Description: THIS FILE HAS BEEN DEPRECATED IN FAVOUR OF qa-global.js
 
 
 	This program is free software; you can redistribute it and/or
@@ -24,32 +21,31 @@
 
 function qa_submit_wall_post(elem, morelink)
 {
-	var params={};
+	var params = {};
 
-	params.message=document.forms.wallpost.message.value;
-	params.handle=document.forms.wallpost.handle.value;
-	params.start=document.forms.wallpost.start.value;
-	params.code=document.forms.wallpost.code.value;
-	params.morelink=morelink ? 1 : 0;
+	params.message = document.forms.wallpost.message.value;
+	params.handle = document.forms.wallpost.handle.value;
+	params.start = document.forms.wallpost.start.value;
+	params.code = document.forms.wallpost.code.value;
+	params.morelink = morelink ? 1 : 0;
 
 	qa_ajax_post('wallpost', params,
 		function(lines) {
+			if (lines[0] == '1') {
+				var l = document.getElementById('wallmessages');
+				l.innerHTML = lines.slice(2).join("\n");
 
-			if (lines[0]=='1') {
-				var l=document.getElementById('wallmessages');
-				l.innerHTML=lines.slice(2).join("\n");
-
-				var c=document.getElementById(lines[1]); // id of new message
+				var c = document.getElementById(lines[1]); // id of new message
 				if (c) {
-					c.style.display='none';
+					c.style.display = 'none';
 					qa_reveal(c, 'wallpost');
 				}
 
-				document.forms.wallpost.message.value='';
+				document.forms.wallpost.message.value = '';
 				qa_hide_waiting(elem);
 
-			} else if (lines[0]=='0') {
-				document.forms.wallpost.qa_click.value=elem.name;
+			} else if (lines[0] == '0') {
+				document.forms.wallpost.qa_click.value = elem.name;
 				document.forms.wallpost.submit();
 
 			} else {
@@ -63,31 +59,30 @@ function qa_submit_wall_post(elem, morelink)
 	return false;
 }
 
-
 function qa_wall_post_click(messageid, target)
 {
-	var params={};
+	var params = {};
 
-	params.messageid=messageid;
-	params.handle=document.forms.wallpost.handle.value;
-	params.start=document.forms.wallpost.start.value;
-	params.code=document.forms.wallpost.code.value;
+	params.messageid = messageid;
+	params.handle = document.forms.wallpost.handle.value;
+	params.start = document.forms.wallpost.start.value;
+	params.code = document.forms.wallpost.code.value;
 
-	params[target.name]=target.value;
+	params[target.name] = target.value;
 
 	qa_ajax_post('click_wall', params,
-		function (lines) {
-			if (lines[0]=='1') {
-				var l=document.getElementById('m'+messageid);
-				var h=lines.slice(1).join("\n");
+		function(lines) {
+			if (lines[0] == '1') {
+				var l = document.getElementById('m' + messageid);
+				var h = lines.slice(1).join("\n");
 
 				if (h.length)
-					qa_set_outer_html(l, 'wallpost', h)
+					qa_set_outer_html(l, 'wallpost', h);
 				else
 					qa_conceal(l, 'wallpost');
 
 			} else {
-				document.forms.wallpost.qa_click.value=target.name;
+				document.forms.wallpost.qa_click.value = target.name;
 				document.forms.wallpost.submit();
 			}
 		}
@@ -97,7 +92,6 @@ function qa_wall_post_click(messageid, target)
 
 	return false;
 }
-
 
 function qa_pm_click(messageid, target, box)
 {
@@ -112,13 +106,13 @@ function qa_pm_click(messageid, target, box)
 	params[target.name] = target.value;
 
 	qa_ajax_post('click_pm', params,
-		function (lines) {
-			if (lines[0]=='1') {
-				var l = document.getElementById('m'+messageid);
+		function(lines) {
+			if (lines[0] == '1') {
+				var l = document.getElementById('m' + messageid);
 				var h = lines.slice(1).join("\n");
 
 				if (h.length)
-					qa_set_outer_html(l, 'pmessage', h)
+					qa_set_outer_html(l, 'pmessage', h);
 				else
 					qa_conceal(l, 'pmessage');
 

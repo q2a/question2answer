@@ -113,9 +113,9 @@ class qa_wysiwyg_editor
 				array(
 					'id' => 'wysiwyg_editor_upload_max_size_display',
 					'label' => 'Maximum size of uploads:',
-					'suffix' => 'MB (max '.$this->bytes_to_mega_html(qa_get_max_upload_size()).')',
+					'suffix' => 'MB (max '.qa_html(number_format($this->bytes_to_mega(qa_get_max_upload_size()), 1)).')',
 					'type' => 'number',
-					'value' => $this->bytes_to_mega_html(qa_opt('wysiwyg_editor_upload_max_size')),
+					'value' => qa_html(number_format($this->bytes_to_mega(qa_opt('wysiwyg_editor_upload_max_size')), 1)),
 					'tags' => 'name="wysiwyg_editor_upload_max_size_field"',
 				),
 
@@ -234,15 +234,14 @@ class qa_wysiwyg_editor
 			}
 			else {
 				// convert to text
-				$viewer = qa_load_module('viewer', '');
+				qa_load_module('viewer', '');
 
 				return array(
 					'format' => '',
 					'content' => $this->html_to_text($html),
 				);
 			}
-		}
-		else {
+		} else {
 			// CKEditor was not loaded so treat it as plain text
 			return array(
 				'format' => '',
@@ -266,8 +265,8 @@ class qa_wysiwyg_editor
 	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
 	 * should not be used by outside code.
 	 */
-	public function bytes_to_mega_html($bytes)
+	public function bytes_to_mega($bytes)
 	{
-		return qa_html(number_format($bytes/1048576, 1));
+		return $bytes / 1048576;
 	}
 }

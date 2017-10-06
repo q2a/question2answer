@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-db-post-update.php
 	Description:  Database functions for changing a question, answer or comment
 
 
@@ -20,341 +19,414 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-	if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-		header('Location: ../');
-		exit;
-	}
+if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
+	header('Location: ../../');
+	exit;
+}
 
 
-	require_once QA_INCLUDE_DIR.'app/updates.php';
+require_once QA_INCLUDE_DIR . 'app/updates.php';
 
 
-	function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid=null, $lastip=null)
-/*
-	Update the selected answer in the database for $questionid to $selchildid, and optionally record that $lastuserid did it from $lastip
-*/
-	{
+/**
+ * Update the selected answer in the database for $questionid to $selchildid, and optionally record that $lastuserid did it from $lastip
+ * @param $questionid
+ * @param $selchildid
+ * @param $lastuserid
+ * @param $lastip
+ */
+function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid = null, $lastip = null)
+{
+	qa_db_query_sub(
+		"UPDATE ^posts AS x, (SELECT selchildid FROM ^posts WHERE postid=#) AS a " .
+		"SET x.updated=NULL, x.updatetype=NULL, x.lastuserid=NULL, x.lastip=NULL WHERE " . // if previous answer's last edit was to be selected, remove that
+		"x.postid=a.selchildid AND x.updatetype=$",
+		$questionid, QA_UPDATE_SELECTED
+	);
+
+	qa_db_query_sub(
+		'UPDATE ^posts SET selchildid=# WHERE postid=#',
+		$selchildid, $questionid
+	);
+
+	if (isset($selchildid) && isset($lastuserid) && isset($lastip)) {
 		qa_db_query_sub(
-			"UPDATE ^posts AS x, (SELECT selchildid FROM ^posts WHERE postid=#) AS a ".
-			"SET x.updated=NULL, x.updatetype=NULL, x.lastuserid=NULL, x.lastip=NULL WHERE ". // if previous answer's last edit was to be selected, remove that
-			"x.postid=a.selchildid AND x.updatetype=$",
-			$questionid, QA_UPDATE_SELECTED
-		);
-
-		qa_db_query_sub(
-			'UPDATE ^posts SET selchildid=# WHERE postid=#',
-			$selchildid, $questionid
-		);
-
-		if (isset($selchildid) && isset($lastuserid) && isset($lastip))
-			qa_db_query_sub(
-				"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
-				QA_UPDATE_SELECTED, $lastuserid, $lastip, $selchildid
-			);
-	}
-
-
-	function qa_db_post_set_closed($questionid, $closedbyid, $lastuserid=null, $lastip=null)
-/*
-	Set $questionid to be closed by post $closedbyid (null if not closed) in the database, and optionally record that
-	$lastuserid did it from $lastip
-*/
-	{
-		if (isset($lastuserid) || isset($lastip)) {
-			qa_db_query_sub(
-				"UPDATE ^posts SET closedbyid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
-				$closedbyid, QA_UPDATE_CLOSED, $lastuserid, $lastip, $questionid
-			);
-		} else
-			qa_db_query_sub(
-				'UPDATE ^posts SET closedbyid=# WHERE postid=#',
-				$closedbyid, $questionid
-			);
-	}
-
-
-	function qa_db_post_set_type($postid, $type, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_TYPE)
-/*
-	Set the type in the database of $postid to $type, and optionally record that $lastuserid did it from $lastip
-*/
-	{
-		if (isset($lastuserid) || isset($lastip)) {
-			qa_db_query_sub(
-				'UPDATE ^posts SET type=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#',
-				$type, $updatetype, $lastuserid, $lastip, $postid
-			);
-		} else
-			qa_db_query_sub(
-				'UPDATE ^posts SET type=$ WHERE postid=#',
-				$type, $postid
-			);
-	}
-
-
-	function qa_db_post_set_parent($postid, $parentid, $lastuserid=null, $lastip=null)
-/*
-	Set the parent in the database of $postid to $parentid, and optionally record that $lastuserid did it from $lastip (if at least one is specified)
-*/
-	{
-		if (isset($lastuserid) || isset($lastip))
-			qa_db_query_sub(
-				"UPDATE ^posts SET parentid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
-				$parentid, QA_UPDATE_PARENT, $lastuserid, $lastip, $postid
-			);
-		else
-			qa_db_query_sub(
-				'UPDATE ^posts SET parentid=# WHERE postid=#',
-				$parentid, $postid
-			);
-	}
-
-
-	function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid=null, $lastip=null, $updatetype=QA_UPDATE_CONTENT, $name=null)
-/*
-	Set the text fields in the database of $postid to $title, $content, $tagstring, $notify and $name, and record that
-	$lastuserid did it from $lastip (if at least one is specified) with $updatetype. For backwards compatibility if $name
-	is null then the name will not be changed.
-*/
-	{
-		if (isset($lastuserid) || isset($lastip)) // use COALESCE() for name since $name=null means it should not be modified (for backwards compatibility)
-			qa_db_query_sub(
-				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#',
-				$title, $content, $format, $tagstring, $name, $notify, $updatetype, $lastuserid, $lastip, $postid
-			);
-		else
-			qa_db_query_sub(
-				'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$ WHERE postid=#',
-				$title, $content, $format, $tagstring, $name, $notify, $postid
-			);
-	}
-
-
-	function qa_db_post_set_userid($postid, $userid)
-/*
-	Set the author in the database of $postid to $userid, and set the lastuserid to $userid as well if appropriate
-*/
-	{
-		qa_db_query_sub(
-			'UPDATE ^posts SET userid=$, lastuserid=IF(updated IS NULL, lastuserid, COALESCE(lastuserid,$)) WHERE postid=#',
-			$userid, $userid, $postid
+			"UPDATE ^posts SET updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			QA_UPDATE_SELECTED, $lastuserid, bin2hex(@inet_pton($lastip)), $selchildid
 		);
 	}
+}
 
 
-	function qa_db_post_set_category($postid, $categoryid, $lastuserid=null, $lastip=null)
-/*
-	Set the (exact) category in the database of $postid to $categoryid, and optionally record that $lastuserid did it from $lastip (if at least one is specified)
-*/
-	{
-		if (isset($lastuserid) || isset($lastip))
-			qa_db_query_sub(
-				"UPDATE ^posts SET categoryid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=INET_ATON($) WHERE postid=#",
-				$categoryid, QA_UPDATE_CATEGORY, $lastuserid, $lastip, $postid
-			);
-		else
-			qa_db_query_sub(
-				'UPDATE ^posts SET categoryid=# WHERE postid=#',
-				$categoryid, $postid
-			);
-	}
-
-
-	function qa_db_posts_set_category_path($postids, $path)
-/*
-	Set the category path in the database of each of $postids to $path retrieved via qa_db_post_get_category_path()
-*/
-	{
-		if (count($postids))
-			qa_db_query_sub(
-				'UPDATE ^posts SET categoryid=#, catidpath1=#, catidpath2=#, catidpath3=# WHERE postid IN (#)',
-				$path['categoryid'], $path['catidpath1'], $path['catidpath2'], $path['catidpath3'], $postids
-			); // requires QA_CATEGORY_DEPTH=4
-	}
-
-
-	function qa_db_post_set_created($postid, $created)
-/*
-	Set the created date of $postid to $created, which is a unix timestamp. If created is null, set to now.
-*/
-	{
-		if (isset($created))
-			qa_db_query_sub(
-				'UPDATE ^posts SET created=FROM_UNIXTIME(#) WHERE postid=#',
-				$created, $postid
-			);
-		else
-			qa_db_query_sub(
-				'UPDATE ^posts SET created=NOW() WHERE postid=#',
-				$postid
-			);
-	}
-
-
-	function qa_db_post_set_updated($postid, $updated)
-/*
-	Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is nul, set to now.
-*/
-	{
-		if (isset($updated))
-			qa_db_query_sub(
-				'UPDATE ^posts SET updated=FROM_UNIXTIME(#) WHERE postid=#',
-				$updated, $postid
-			);
-		else
-			qa_db_query_sub(
-				'UPDATE ^posts SET updated=NOW() WHERE postid=#',
-				$postid
-			);
-	}
-
-
-	function qa_db_post_delete($postid)
-/*
-	Deletes post $postid from the database (will also delete any votes on the post due to foreign key cascading)
-*/
-	{
+/**
+ * Set $questionid to be closed by post $closedbyid (null if not closed) in the database, and optionally record that
+ * $lastuserid did it from $lastip
+ * @param $questionid
+ * @param $closedbyid
+ * @param $lastuserid
+ * @param $lastip
+ */
+function qa_db_post_set_closed($questionid, $closedbyid, $lastuserid = null, $lastip = null)
+{
+	if (isset($lastuserid) || isset($lastip)) {
 		qa_db_query_sub(
-			'DELETE FROM ^posts WHERE postid=#',
+			"UPDATE ^posts SET closedbyid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			$closedbyid, QA_UPDATE_CLOSED, $lastuserid, bin2hex(@inet_pton($lastip)), $questionid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET closedbyid=# WHERE postid=#',
+			$closedbyid, $questionid
+		);
+	}
+}
+
+
+/**
+ * Set the type in the database of $postid to $type, and optionally record that $lastuserid did it from $lastip
+ * @param $postid
+ * @param $type
+ * @param $lastuserid
+ * @param $lastip
+ * @param string $updatetype
+ */
+function qa_db_post_set_type($postid, $type, $lastuserid = null, $lastip = null, $updatetype = QA_UPDATE_TYPE)
+{
+	if (isset($lastuserid) || isset($lastip)) {
+		qa_db_query_sub(
+			'UPDATE ^posts SET type=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#',
+			$type, $updatetype, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET type=$ WHERE postid=#',
+			$type, $postid
+		);
+	}
+}
+
+
+/**
+ * Set the parent in the database of $postid to $parentid, and optionally record that $lastuserid did it from $lastip
+ * (if at least one is specified)
+ * @param $postid
+ * @param $parentid
+ * @param $lastuserid
+ * @param $lastip
+ */
+function qa_db_post_set_parent($postid, $parentid, $lastuserid = null, $lastip = null)
+{
+	if (isset($lastuserid) || isset($lastip)) {
+		qa_db_query_sub(
+			"UPDATE ^posts SET parentid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			$parentid, QA_UPDATE_PARENT, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET parentid=# WHERE postid=#',
+			$parentid, $postid
+		);
+	}
+}
+
+
+/**
+ * Set the text fields in the database of $postid to $title, $content, $tagstring, $notify and $name, and record that
+ * $lastuserid did it from $lastip (if at least one is specified) with $updatetype. For backwards compatibility if $name
+ * is null then the name will not be changed.
+ * @param $postid
+ * @param $title
+ * @param $content
+ * @param $format
+ * @param $tagstring
+ * @param $notify
+ * @param $lastuserid
+ * @param $lastip
+ * @param string $updatetype
+ * @param $name
+ */
+function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid = null, $lastip = null, $updatetype = QA_UPDATE_CONTENT, $name = null)
+{
+	if (isset($lastuserid) || isset($lastip)) {
+		// use COALESCE() for name since $name=null means it should not be modified (for backwards compatibility)
+		qa_db_query_sub(
+			'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#',
+			$title, $content, $format, $tagstring, $name, $notify, $updatetype, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET title=$, content=$, format=$, tags=$, name=COALESCE($, name), notify=$ WHERE postid=#',
+			$title, $content, $format, $tagstring, $name, $notify, $postid
+		);
+	}
+}
+
+
+/**
+ * Set the author in the database of $postid to $userid, and set the lastuserid to $userid as well if appropriate
+ * @param $postid
+ * @param $userid
+ */
+function qa_db_post_set_userid($postid, $userid)
+{
+	qa_db_query_sub(
+		'UPDATE ^posts SET userid=$, lastuserid=IF(updated IS NULL, lastuserid, COALESCE(lastuserid,$)) WHERE postid=#',
+		$userid, $userid, $postid
+	);
+}
+
+
+/**
+ * Set the (exact) category in the database of $postid to $categoryid, and optionally record that $lastuserid did it from
+ * $lastip (if at least one is specified)
+ * @param $postid
+ * @param $categoryid
+ * @param $lastuserid
+ * @param $lastip
+ */
+function qa_db_post_set_category($postid, $categoryid, $lastuserid = null, $lastip = null)
+{
+	if (isset($lastuserid) || isset($lastip)) {
+		qa_db_query_sub(
+			"UPDATE ^posts SET categoryid=#, updated=NOW(), updatetype=$, lastuserid=$, lastip=UNHEX($) WHERE postid=#",
+			$categoryid, QA_UPDATE_CATEGORY, $lastuserid, bin2hex(@inet_pton($lastip)), $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET categoryid=# WHERE postid=#',
+			$categoryid, $postid
+		);
+	}
+}
+
+
+/**
+ * Set the category path in the database of each of $postids to $path retrieved via qa_db_post_get_category_path()
+ * @param $postids
+ * @param $path
+ */
+function qa_db_posts_set_category_path($postids, $path)
+{
+	if (count($postids)) {
+		// requires QA_CATEGORY_DEPTH=4
+		qa_db_query_sub(
+			'UPDATE ^posts SET categoryid=#, catidpath1=#, catidpath2=#, catidpath3=# WHERE postid IN (#)',
+			$path['categoryid'], $path['catidpath1'], $path['catidpath2'], $path['catidpath3'], $postids
+		);
+	}
+}
+
+
+/**
+ * Set the created date of $postid to $created, which is a unix timestamp. If created is null, set to now.
+ * @param $postid
+ * @param $created
+ */
+function qa_db_post_set_created($postid, $created)
+{
+	if (isset($created)) {
+		qa_db_query_sub(
+			'UPDATE ^posts SET created=FROM_UNIXTIME(#) WHERE postid=#',
+			$created, $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET created=NOW() WHERE postid=#',
 			$postid
 		);
 	}
+}
 
 
-	function qa_db_titlewords_get_post_wordids($postid)
-/*
-	Return an array of wordids that were indexed in the database for the title of $postid
-*/
-	{
+/**
+ * Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is null, set to now.
+ * @param $postid
+ * @param $updated
+ */
+function qa_db_post_set_updated($postid, $updated)
+{
+	if (isset($updated)) {
+		qa_db_query_sub(
+			'UPDATE ^posts SET updated=FROM_UNIXTIME(#) WHERE postid=#',
+			$updated, $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts SET updated=NOW() WHERE postid=#',
+			$postid
+		);
+	}
+}
+
+
+/**
+ * Deletes post $postid from the database (will also delete any votes on the post due to foreign key cascading)
+ * @param $postid
+ */
+function qa_db_post_delete($postid)
+{
+	qa_db_query_sub(
+		'DELETE FROM ^posts WHERE postid=#',
+		$postid
+	);
+}
+
+
+/**
+ * Return an array of wordids that were indexed in the database for the title of $postid
+ * @param $postid
+ * @return array
+ */
+function qa_db_titlewords_get_post_wordids($postid)
+{
+	return qa_db_read_all_values(qa_db_query_sub(
+		'SELECT wordid FROM ^titlewords WHERE postid=#',
+		$postid
+	));
+}
+
+
+/**
+ * Remove all entries in the database index of title words for $postid
+ * @param $postid
+ */
+function qa_db_titlewords_delete_post($postid)
+{
+	qa_db_query_sub(
+		'DELETE FROM ^titlewords WHERE postid=#',
+		$postid
+	);
+}
+
+
+/**
+ * Return an array of wordids that were indexed in the database for the content of $postid
+ * @param $postid
+ * @return array
+ */
+function qa_db_contentwords_get_post_wordids($postid)
+{
+	return qa_db_read_all_values(qa_db_query_sub(
+		'SELECT wordid FROM ^contentwords WHERE postid=#',
+		$postid
+	));
+}
+
+
+/**
+ * Remove all entries in the database index of content words for $postid
+ * @param $postid
+ */
+function qa_db_contentwords_delete_post($postid)
+{
+	qa_db_query_sub(
+		'DELETE FROM ^contentwords WHERE postid=#',
+		$postid
+	);
+}
+
+
+/**
+ * Return an array of wordids that were indexed in the database for the individual words in tags of $postid
+ * @param $postid
+ * @return array
+ */
+function qa_db_tagwords_get_post_wordids($postid)
+{
+	return qa_db_read_all_values(qa_db_query_sub(
+		'SELECT wordid FROM ^tagwords WHERE postid=#',
+		$postid
+	));
+}
+
+
+/**
+ * Remove all entries in the database index of individual words in tags of $postid
+ * @param $postid
+ */
+function qa_db_tagwords_delete_post($postid)
+{
+	qa_db_query_sub(
+		'DELETE FROM ^tagwords WHERE postid=#',
+		$postid
+	);
+}
+
+
+/**
+ * Return an array of wordids that were indexed in the database for the whole tags of $postid
+ * @param $postid
+ * @return array
+ */
+function qa_db_posttags_get_post_wordids($postid)
+{
+	return qa_db_read_all_values(qa_db_query_sub(
+		'SELECT wordid FROM ^posttags WHERE postid=#',
+		$postid
+	));
+}
+
+
+/**
+ * Remove all entries in the database index of whole tags for $postid
+ * @param $postid
+ */
+function qa_db_posttags_delete_post($postid)
+{
+	qa_db_query_sub(
+		'DELETE FROM ^posttags WHERE postid=#',
+		$postid
+	);
+}
+
+
+/**
+ * Return the array $postids containing only those elements which are the postid of a question in the database
+ * @param $postids
+ * @return array
+ */
+function qa_db_posts_filter_q_postids($postids)
+{
+	if (count($postids)) {
 		return qa_db_read_all_values(qa_db_query_sub(
-			'SELECT wordid FROM ^titlewords WHERE postid=#',
-			$postid
+			"SELECT postid FROM ^posts WHERE type='Q' AND postid IN (#)",
+			$postids
 		));
 	}
 
-
-	function qa_db_titlewords_delete_post($postid)
-/*
-	Remove all entries in the database index of title words for $postid
-*/
-	{
-		qa_db_query_sub(
-			'DELETE FROM ^titlewords WHERE postid=#',
-			$postid
-		);
-	}
+	return array();
+}
 
 
-	function qa_db_contentwords_get_post_wordids($postid)
-/*
-	Return an array of wordids that were indexed in the database for the content of $postid
-*/
-	{
+/**
+ * Return an array of all the userids of authors of posts in the array $postids
+ * @param $postids
+ * @return array
+ */
+function qa_db_posts_get_userids($postids)
+{
+	if (count($postids)) {
 		return qa_db_read_all_values(qa_db_query_sub(
-			'SELECT wordid FROM ^contentwords WHERE postid=#',
-			$postid
+			"SELECT DISTINCT userid FROM ^posts WHERE postid IN (#) AND userid IS NOT NULL",
+			$postids
 		));
 	}
 
+	return array();
+}
 
-	function qa_db_contentwords_delete_post($postid)
-/*
-	Remove all entries in the database index of content words for $postid
-*/
-	{
+
+/**
+ * Update the cached count of the number of flagged posts in the database
+ */
+function qa_db_flaggedcount_update()
+{
+	if (qa_should_update_counts()) {
 		qa_db_query_sub(
-			'DELETE FROM ^contentwords WHERE postid=#',
-			$postid
+			"INSERT INTO ^options (title, content) " .
+			"SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts " .
+			"WHERE flagcount > 0 AND type IN ('Q', 'A', 'C') " .
+			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
 		);
 	}
-
-
-	function qa_db_tagwords_get_post_wordids($postid)
-/*
-	Return an array of wordids that were indexed in the database for the individual words in tags of $postid
-*/
-	{
-		return qa_db_read_all_values(qa_db_query_sub(
-			'SELECT wordid FROM ^tagwords WHERE postid=#',
-			$postid
-		));
-	}
-
-
-	function qa_db_tagwords_delete_post($postid)
-/*
-	Remove all entries in the database index of individual words in tags of $postid
-*/
-	{
-		qa_db_query_sub(
-			'DELETE FROM ^tagwords WHERE postid=#',
-			$postid
-		);
-	}
-
-
-	function qa_db_posttags_get_post_wordids($postid)
-/*
-	Return an array of wordids that were indexed in the database for the whole tags of $postid
-*/
-	{
-		return qa_db_read_all_values(qa_db_query_sub(
-			'SELECT wordid FROM ^posttags WHERE postid=#',
-			$postid
-		));
-	}
-
-
-	function qa_db_posttags_delete_post($postid)
-/*
-	Remove all entries in the database index of whole tags for $postid
-*/
-	{
-		qa_db_query_sub(
-			'DELETE FROM ^posttags WHERE postid=#',
-			$postid
-		);
-	}
-
-
-	function qa_db_posts_filter_q_postids($postids)
-/*
-	Return the array $postids containing only those elements which are the postid of a qustion in the database
-*/
-	{
-		if (count($postids))
-			return qa_db_read_all_values(qa_db_query_sub(
-				"SELECT postid FROM ^posts WHERE type='Q' AND postid IN (#)",
-				$postids
-			));
-		else
-			return array();
-	}
-
-
-	function qa_db_posts_get_userids($postids)
-/*
-	Return an array of all the userids of authors of posts in the array $postids
-*/
-	{
-		if (count($postids))
-			return qa_db_read_all_values(qa_db_query_sub(
-				"SELECT DISTINCT userid FROM ^posts WHERE postid IN (#) AND userid IS NOT NULL",
-				$postids
-			));
-		else
-			return array();
-	}
-
-
-	function qa_db_flaggedcount_update()
-/*
-	Update the cached count of the number of flagged posts in the database
-*/
-	{
-		if (qa_should_update_counts())
-			qa_db_query_sub("REPLACE ^options (title, content) SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts WHERE flagcount>0 AND type IN ('Q', 'A', 'C')");
-	}
-
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+}

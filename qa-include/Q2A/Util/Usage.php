@@ -68,6 +68,7 @@ class Q2A_Util_Usage
 
 	/**
 	 * Mark the beginning of a new stage of script execution and store usages accordingly.
+	 * @param $stage
 	 */
 	public function mark($stage)
 	{
@@ -78,6 +79,10 @@ class Q2A_Util_Usage
 
 	/**
 	 * Logs query and updates database usage stats.
+	 * @param $query
+	 * @param $usedtime
+	 * @param $gotrows
+	 * @param $gotcolumns
 	 */
 	public function logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns)
 	{
@@ -102,6 +107,8 @@ class Q2A_Util_Usage
 	public function output()
 	{
 		$totaldelta = $this->delta($this->startUsage, $this->getCurrent());
+		$stages = $this->stages;
+		$stages['total'] = $totaldelta;
 ?>
 		<style>
 		.debug-table { border-collapse: collapse; width: auto; margin: 20px auto; }
@@ -148,31 +155,23 @@ class Q2A_Util_Usage
 				</tr>
 			</thead>
 		<tbody>
-
-			<?php
-				$stages = $this->stages;
-				$stages['total'] = $totaldelta;
-
-				foreach ($stages as $stage => $stagedelta):
-			?>
-					<tr>
-						<td class="row-heading"><?php echo ucfirst($stage); ?></td>
-						<td><?php echo sprintf('%.1f', $stagedelta['clock'] * 1000); ?></td>
-						<td><?php echo sprintf('%d%%', $stagedelta['clock'] * 100 / $totaldelta['clock']); ?></td>
-						<td><?php echo sprintf('%.1f', $stagedelta['cpu'] * 1000); ?></td>
-						<td><?php echo sprintf('%d%%', $stagedelta['cpu'] * 100 / $totaldelta['clock']); ?></td>
-						<td><?php echo $stagedelta['files']; ?></td>
-						<td><?php echo sprintf('%.1f', $stagedelta['mysql'] * 1000); ?></td>
-						<td><?php echo sprintf('%d%%', $stagedelta['mysql'] * 100 / $totaldelta['clock']); ?></td>
-						<td><?php echo $stagedelta['queries']; ?></td>
-						<td><?php echo sprintf('%.1f', $stagedelta['other'] * 1000); ?></td>
-						<td><?php echo sprintf('%d%%', $stagedelta['other'] * 100 / $totaldelta['clock']); ?></td>
-						<td><?php echo sprintf('%dk', $stagedelta['ram'] / 1024); ?></td>
-						<td><?php echo sprintf('%d%%', $stagedelta['ram'] ? ($stagedelta['ram'] * 100 / $totaldelta['ram']) : 0); ?></td>
-					</tr>
-			<?php
-				endforeach;
-			?>
+<?php foreach ($stages as $stage => $stagedelta) : ?>
+			<tr>
+				<td class="row-heading"><?php echo ucfirst($stage); ?></td>
+				<td><?php echo sprintf('%.1f', $stagedelta['clock'] * 1000); ?></td>
+				<td><?php echo sprintf('%d%%', $stagedelta['clock'] * 100 / $totaldelta['clock']); ?></td>
+				<td><?php echo sprintf('%.1f', $stagedelta['cpu'] * 1000); ?></td>
+				<td><?php echo sprintf('%d%%', $stagedelta['cpu'] * 100 / $totaldelta['clock']); ?></td>
+				<td><?php echo $stagedelta['files']; ?></td>
+				<td><?php echo sprintf('%.1f', $stagedelta['mysql'] * 1000); ?></td>
+				<td><?php echo sprintf('%d%%', $stagedelta['mysql'] * 100 / $totaldelta['clock']); ?></td>
+				<td><?php echo $stagedelta['queries']; ?></td>
+				<td><?php echo sprintf('%.1f', $stagedelta['other'] * 1000); ?></td>
+				<td><?php echo sprintf('%d%%', $stagedelta['other'] * 100 / $totaldelta['clock']); ?></td>
+				<td><?php echo sprintf('%dk', $stagedelta['ram'] / 1024); ?></td>
+				<td><?php echo sprintf('%d%%', $stagedelta['ram'] ? ($stagedelta['ram'] * 100 / $totaldelta['ram']) : 0); ?></td>
+			</tr>
+<?php endforeach; ?>
 		</tbody>
 		</table>
 
@@ -197,6 +196,9 @@ class Q2A_Util_Usage
 
 	/**
 	 * Return the difference between two resource usage arrays, as an array.
+	 * @param $oldusage
+	 * @param $newusage
+	 * @return array
 	 */
 	private function delta($oldusage, $newusage)
 	{
@@ -207,5 +209,4 @@ class Q2A_Util_Usage
 
 		return $delta;
 	}
-
 }

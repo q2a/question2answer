@@ -63,13 +63,13 @@ class qa_recaptcha_captcha
 
 			'fields' => array(
 				'public' => array(
-					'label' => 'reCAPTCHA public key:',
+					'label' => 'reCAPTCHA Site key:',
 					'value' => $pub,
 					'tags' => 'name="recaptcha_public_key_field"',
 				),
 
 				'private' => array(
-					'label' => 'reCAPTCHA private key:',
+					'label' => 'reCAPTCHA Secret key:',
 					'value' => $pri,
 					'tags' => 'name="recaptcha_private_key_field"',
 					'error' => $error,
@@ -139,7 +139,7 @@ class qa_recaptcha_captcha
 		if (ini_get('allow_url_fopen'))
 			$recaptcha = new ReCaptcha(qa_opt('recaptcha_private_key'));
 		else
-			$recaptcha = new ReCaptcha(qa_opt('recaptcha_private_key') , new ReCaptchaSocketPostRequestMethod());
+			$recaptcha = new ReCaptcha(qa_opt('recaptcha_private_key'), new ReCaptchaSocketPostRequestMethod());
 
 		$remoteIp = qa_remote_ip_address();
 		$userResponse = qa_post_text('g-recaptcha-response');

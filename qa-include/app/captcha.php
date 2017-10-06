@@ -3,7 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/qa-app-captcha.php
 	Description: Wrapper functions and utilities for captcha modules
 
 
@@ -21,7 +20,7 @@
 */
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-	header('Location: ../');
+	header('Location: ../../');
 	exit;
 }
 
@@ -39,6 +38,8 @@ function qa_captcha_available()
 
 /**
  * Return an HTML string explaining $captchareason (from qa_user_captcha_reason()) to the user about why they are seeing a captcha
+ * @param $captchareason
+ * @return mixed|null|string
  */
 function qa_captcha_reason_note($captchareason)
 {
@@ -65,8 +66,13 @@ function qa_captcha_reason_note($captchareason)
 /**
  * Prepare $qa_content for showing a captcha, adding the element to $fields, given previous $errors, and a $note to display.
  * Returns JavaScript required to load CAPTCHA when field is shown by user (e.g. clicking comment button).
+ * @param $qa_content
+ * @param $fields
+ * @param $errors
+ * @param $note
+ * @return string
  */
-function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note=null)
+function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note = null)
 {
 	if (!qa_captcha_available())
 		return '';
@@ -79,8 +85,7 @@ function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note=null)
 	if ($count > 1) {
 		// use blank captcha in order to load via JS
 		$html = '';
-	}
-	else {
+	} else {
 		// first captcha is always loaded explicitly
 		$qa_content['script_var']['qa_captcha_in'] = 'qa_captcha_div_1';
 		$html = $captcha->form_html($qa_content, @$errors['captcha']);
@@ -89,17 +94,19 @@ function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note=null)
 	$fields['captcha'] = array(
 		'type' => 'custom',
 		'label' => qa_lang_html('misc/captcha_label'),
-		'html' => '<div id="qa_captcha_div_'.$count.'">'.$html.'</div>',
+		'html' => '<div id="qa_captcha_div_' . $count . '">' . $html . '</div>',
 		'error' => @array_key_exists('captcha', $errors) ? qa_lang_html('misc/captcha_error') : null,
 		'note' => $note,
 	);
 
-	return "if (!document.getElementById('qa_captcha_div_".$count."').hasChildNodes()) { recaptcha_load('qa_captcha_div_".$count."'); }";
+	return "if (!document.getElementById('qa_captcha_div_" . $count . "').hasChildNodes()) { recaptcha_load('qa_captcha_div_" . $count . "'); }";
 }
 
 
 /**
  * Check if captcha is submitted correctly, and if not, set $errors['captcha'] to a descriptive string.
+ * @param $errors
+ * @return bool
  */
 function qa_captcha_validate_post(&$errors)
 {

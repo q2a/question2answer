@@ -48,7 +48,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  */
 function qa_get_mysql_user_column_type()
 {
-	//	Set this before anything else
+	// Set this before anything else
 
 	return null;
 
@@ -101,7 +101,7 @@ function qa_get_mysql_user_column_type()
  */
 function qa_get_login_links($relative_url_prefix, $redirect_back_to_url)
 {
-	//	Until you edit this function, don't show login, register or logout links
+	// Until you edit this function, don't show login, register or logout links
 
 	return array(
 		'login' => null,
@@ -187,7 +187,7 @@ function qa_get_login_links($relative_url_prefix, $redirect_back_to_url)
  */
 function qa_get_logged_in_user()
 {
-	//	Until you edit this function, nobody is ever logged in
+	// Until you edit this function, nobody is ever logged in
 
 	return null;
 
@@ -267,7 +267,7 @@ function qa_get_logged_in_user()
  */
 function qa_get_user_email($userid)
 {
-	//	Until you edit this function, always return null
+	// Until you edit this function, always return null
 
 	return null;
 
@@ -308,7 +308,7 @@ function qa_get_user_email($userid)
  */
 function qa_get_userids_from_public($publicusernames)
 {
-	//	Until you edit this function, always return null
+	// Until you edit this function, always return null
 
 	return null;
 
@@ -371,7 +371,7 @@ function qa_get_userids_from_public($publicusernames)
  */
 function qa_get_public_from_userids($userids)
 {
-	//	Until you edit this function, always return null
+	// Until you edit this function, always return null
 
 	return null;
 
@@ -440,7 +440,7 @@ function qa_get_public_from_userids($userids)
  */
 function qa_get_logged_in_user_html($logged_in_user, $relative_url_prefix)
 {
-	//	By default, show the public username linked to the Q2A profile page for the user
+	// By default, show the public username linked to the Q2A profile page for the user
 
 	$publicusername = $logged_in_user['publicusername'];
 
@@ -502,7 +502,7 @@ function qa_get_logged_in_user_html($logged_in_user, $relative_url_prefix)
  */
 function qa_get_users_html($userids, $should_include_link, $relative_url_prefix)
 {
-	//	By default, show the public username linked to the Q2A profile page for each user
+	// By default, show the public username linked to the Q2A profile page for each user
 
 	$useridtopublic = qa_get_public_from_userids($userids);
 
