@@ -464,7 +464,7 @@ function qa_set_template($template)
  * @param array $categoryids
  * @return array
  */
-function qa_content_prepare($voting = false, $categoryids = null)
+function qa_content_prepare($voting = false, $categoryids = array())
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -480,10 +480,12 @@ function qa_content_prepare($voting = false, $categoryids = null)
 	$navpages = qa_db_get_pending_result('navpages');
 	$widgets = qa_db_get_pending_result('widgets');
 
-	if (isset($categoryids) && !is_array($categoryids)) // accept old-style parameter
+	if (!is_array($categoryids)) {
+		// accept old-style parameter
 		$categoryids = array($categoryids);
+	}
 
-	$lastcategoryid = count($categoryids) ? end($categoryids) : null;
+	$lastcategoryid = count($categoryids) > 0 ? end($categoryids) : null;
 	$charset = 'utf-8';
 	$language = qa_opt('site_language');
 	$language = empty($language) ? 'en' : qa_html($language);

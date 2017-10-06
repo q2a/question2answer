@@ -65,7 +65,7 @@ return qa_q_list_page_content(
 	$countslugs ? $categories[$categoryid]['qcount'] : qa_opt('cache_qcount'), // total count
 	$sometitle, // title if some questions
 	$nonetitle, // title if no questions
-	QA_ALLOW_UNINDEXED_QUERIES ? $categories : null, // categories for navigation
+	QA_ALLOW_UNINDEXED_QUERIES ? $categories : array(), // categories for navigation
 	$categoryid, // selected category id
 	true, // show question counts in category navigation
 	QA_ALLOW_UNINDEXED_QUERIES ? 'hot/' : null, // prefix for links in category navigation (null if no navigation)

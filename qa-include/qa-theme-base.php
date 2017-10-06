@@ -208,10 +208,11 @@ class qa_html_theme_base
 	 */
 	public function widgets($region, $place)
 	{
-		if (count(@$this->content['widgets'][$region][$place])) {
+		$widgetsHere = isset($this->content['widgets'][$region][$place]) ? $this->content['widgets'][$region][$place] : array();
+		if (is_array($widgetsHere) && count($widgetsHere) > 0) {
 			$this->output('<div class="qa-widgets-' . $region . ' qa-widgets-' . $region . '-' . $place . '">');
 
-			foreach ($this->content['widgets'][$region][$place] as $module) {
+			foreach ($widgetsHere as $module) {
 				$this->output('<div class="qa-widget-' . $region . ' qa-widget-' . $region . '-' . $place . '">');
 				$module->output_widget($region, $place, $this, $this->template, $this->request, $this->content);
 				$this->output('</div>');
@@ -629,8 +630,10 @@ class qa_html_theme_base
 			(@$navlink['state'] ? (' qa-' . $class . '-' . $navlink['state']) : '') . ' qa-' . $class . '-' . $suffix . '">');
 		$this->nav_link($navlink, $class);
 
-		if (count(@$navlink['subnav']))
-			$this->nav_list($navlink['subnav'], $class, 1 + $level);
+		$subnav = isset($navlink['subnav']) ? $navlink['subnav'] : array();
+		if (is_array($subnav) && count($subnav) > 0) {
+			$this->nav_list($subnav, $class, 1 + $level);
+		}
 
 		$this->output('</li>');
 	}
