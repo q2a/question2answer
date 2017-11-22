@@ -21,7 +21,10 @@ h1 {
 	padding: 8px 20px 8px 52px;
 }
 
-
+.qa-netvote-count-data {
+    direction: ltr;
+    display: inline-block;
+}
 .qa-search-field {
 	margin: 0 0 0 -40px;
 	padding: 0 5px 0 40px;
@@ -34,7 +37,9 @@ h1 {
 .qam-title-rss {
 	float: left;
 }
-
+.qa-vote-buttons {
+	float:right
+}
 .entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
 	text-align: right;
 }
