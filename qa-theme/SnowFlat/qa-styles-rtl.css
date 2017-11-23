@@ -449,3 +449,11 @@ h1 {
 		float: right;
 	}
 }
+
+.qa-vote-buttons {
+	float: right;
+}
+.qa-netvote-count-data {
+	direction: ltr;
+	display: inline-block;
+}
