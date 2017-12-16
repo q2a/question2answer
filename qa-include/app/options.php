@@ -382,7 +382,7 @@ function qa_default_option($name)
 		'show_view_counts' => 0,
 		'show_when_created' => 1,
 		'site_text_direction' => 'ltr',
-		'site_theme' => 'Snow',
+		'site_theme' => 'SnowFlat',
 		'smtp_port' => 25,
 		'sort_answers_by' => 'created',
 		'tags_or_categories' => 'tc',
