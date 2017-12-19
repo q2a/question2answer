@@ -63,7 +63,7 @@ $qa_content = qa_content_prepare();
 $qa_content['title'] = qa_lang_html('users/unsubscribe_title');
 
 if ($unsubscribed) {
-	$qa_content['error'] = strtr(qa_lang_html('users/unsubscribe_complete'), array(
+	$qa_content['success'] = strtr(qa_lang_html('users/unsubscribe_complete'), array(
 		'^0' => qa_html(qa_opt('site_title')),
 		'^1' => '<a href="' . qa_path_html('account') . '">',
 		'^2' => '</a>',
