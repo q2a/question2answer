@@ -1,7 +1,7 @@
 Question2Answer
 -----------------------------
 
-[![Build Status](https://travis-ci.org/q2a/question2answer.png?branch=1.8)](https://travis-ci.org/q2a/question2answer/branches)
+[![Build Status](https://travis-ci.org/q2a/question2answer.png?branch=dev)](https://travis-ci.org/q2a/question2answer/branches)
 
 [Question2Answer][Q2A] (Q2A) is a popular free open source Q&A platform for PHP/MySQL, used by over 20,898 [sites] in 40 languages.
 
