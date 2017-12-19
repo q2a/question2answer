@@ -457,7 +457,11 @@ function qa_db_list_tables($onlyTablesWithPrefix = false)
 	$query = 'SHOW TABLES';
 
 	if ($onlyTablesWithPrefix) {
-		$query .= ' LIKE "' . QA_MYSQL_TABLE_PREFIX . '%"';
+		$col = 'Tables_in_' . QA_MYSQL_DATABASE;
+		$query .= ' WHERE `' . $col . '` LIKE "' . str_replace('_', '\\_', QA_MYSQL_TABLE_PREFIX) . '%"';
+		if (defined('QA_MYSQL_USERS_PREFIX')) {
+			$query .= ' OR `' . $col . '` LIKE "' . str_replace('_', '\\_', QA_MYSQL_USERS_PREFIX) . '%"';
+		}
 	}
 
 	return qa_db_read_all_values(qa_db_query_raw($query));
