@@ -409,6 +409,8 @@ function qa_initialize_postdb_plugins()
 
 	$qa_pluginManager->loadPluginsAfterDbInit();
 	qa_load_override_files();
+
+	qa_report_process_stage('plugins_loaded');
 }
 
 
