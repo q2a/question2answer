@@ -30,6 +30,8 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	private $error;
 	private $cacheDir;
 
+	private $phpProtect = '<?php header($_SERVER[\'SERVER_PROTOCOL\'].\' 404 Not Found\'); die; ?>';
+
 	/**
 	 * Creates a new FileCache instance and checks we can write to the cache directory.
 	 * @param array $config Configuration data, including cache storage directory.
@@ -46,12 +48,8 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 
 		if (isset($config['dir'])) {
 			$this->cacheDir = realpath($config['dir']);
-
 			if (!is_writable($this->cacheDir)) {
 				$this->error = qa_lang_html_sub('admin/caching_dir_error', $config['dir']);
-			} elseif (strpos($this->cacheDir, realpath($_SERVER['DOCUMENT_ROOT'])) === 0 || strpos($this->cacheDir, realpath(QA_BASE_DIR)) === 0) {
-				// check the folder is outside the public root - checks against server root and Q2A root, in order to handle symbolic links
-				$this->error = qa_lang_html_sub('admin/caching_dir_public', $config['dir']);
 			}
 		} else {
 			$this->error = qa_lang_html('admin/caching_dir_missing');
@@ -77,6 +75,7 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 
 		if (is_readable($file)) {
 			$lines = file($file, FILE_IGNORE_NEW_LINES);
+			$skipLine = array_shift($lines);
 			$actualKey = array_shift($lines);
 
 			// double check this is the correct data
@@ -114,7 +113,7 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 		if ($this->enabled && $ttl > 0) {
 			$encData = serialize($data);
 			$expiry = time() + ($ttl * 60);
-			$cache = $fullKey . "\n" . $expiry . "\n" . $encData;
+			$cache = $this->phpProtect . "\n" . $fullKey . "\n" . $expiry . "\n" . $encData;
 
 			$file = $this->getFilename($fullKey);
 			$dir = dirname($file);
@@ -279,6 +278,6 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	private function getFilename($fullKey)
 	{
 		$filename = sha1($fullKey);
-		return $this->cacheDir . '/' . substr($filename, 0, 1) . '/' . substr($filename, 1, 2) . '/' . $filename;
+		return $this->cacheDir . '/' . substr($filename, 0, 1) . '/' . substr($filename, 1, 2) . '/' . $filename . '.php';
 	}
 }

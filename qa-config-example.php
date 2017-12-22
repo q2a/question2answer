@@ -86,10 +86,10 @@
 */
 
 /*
-	If you wish to use caching, you must define QA_CACHE_DIRECTORY to store the cache files. The
-	directory must be writable by the web server. It also must be OUTSIDE the public root. For
-	example if your site resides in '/var/www/yoursite/public_html', then the cache directory could
-	be '/var/www/yoursite/qa-cache', but it cannot be '/var/www/yoursite/public_html/qa-cache'.
+	If you wish to use file-based caching, you must define QA_CACHE_DIRECTORY to store the cache
+	files. The directory must be writable by the web server. For maximum security it's STRONGLY
+	recommended to place the folder outside of the web root (so they can never be accessed via a
+	web browser).
 
 	define('QA_CACHE_DIRECTORY', '/path/to/writable_cache_directory/');
 */
