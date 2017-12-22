@@ -26,6 +26,7 @@
 class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 {
 	private $enabled = false;
+	private $keyPrefix = '';
 	private $error;
 	private $cacheDir;
 
@@ -37,6 +38,10 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	{
 		if (!$config['enabled']) {
 			return;
+		}
+
+		if (isset($config['keyprefix'])) {
+			$this->keyPrefix = $config['keyprefix'];
 		}
 
 		if (isset($config['dir'])) {
@@ -67,14 +72,15 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 			return null;
 		}
 
-		$file = $this->getFilename($key);
+		$fullKey = $this->keyPrefix . $key;
+		$file = $this->getFilename($fullKey);
 
 		if (is_readable($file)) {
 			$lines = file($file, FILE_IGNORE_NEW_LINES);
 			$actualKey = array_shift($lines);
 
 			// double check this is the correct data
-			if ($key === $actualKey) {
+			if ($fullKey === $actualKey) {
 				$expiry = array_shift($lines);
 
 				if (is_numeric($expiry) && time() < $expiry) {
@@ -103,13 +109,14 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	{
 		$success = false;
 		$ttl = (int) $ttl;
+		$fullKey = $this->keyPrefix . $key;
 
 		if ($this->enabled && $ttl > 0) {
 			$encData = serialize($data);
 			$expiry = time() + ($ttl * 60);
-			$cache = $key . "\n" . $expiry . "\n" . $encData;
+			$cache = $fullKey . "\n" . $expiry . "\n" . $encData;
 
-			$file = $this->getFilename($key);
+			$file = $this->getFilename($fullKey);
 			$dir = dirname($file);
 			if (is_dir($dir) || mkdir($dir, 0777, true)) {
 				$success = @file_put_contents($file, $cache) !== false;
@@ -127,10 +134,10 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	 */
 	public function delete($key)
 	{
-		if ($this->enabled) {
-			$file = $this->getFilename($key);
-			$dir = dirname($key);
+		$fullKey = $this->keyPrefix . $key;
 
+		if ($this->enabled) {
+			$file = $this->getFilename($fullKey);
 			return $this->deleteFile($file);
 		}
 
@@ -209,6 +216,16 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	}
 
 	/**
+	 * Get the prefix used for all cache keys.
+	 *
+	 * @return string
+	 */
+	public function getKeyPrefix()
+	{
+		return $this->keyPrefix;
+	}
+
+	/**
 	 * Get current statistics for the cache.
 	 *
 	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.
@@ -255,13 +272,13 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 
 	/**
 	 * Generates filename for cache key, of the form `1/23/123abc`
-	 * @param string $key The unique cache key.
+	 * @param string $key The unique cache key (including prefix).
 	 *
 	 * @return string
 	 */
-	private function getFilename($key)
+	private function getFilename($fullKey)
 	{
-		$filename = sha1($key);
+		$filename = sha1($fullKey);
 		return $this->cacheDir . '/' . substr($filename, 0, 1) . '/' . substr($filename, 1, 2) . '/' . $filename;
 	}
 }

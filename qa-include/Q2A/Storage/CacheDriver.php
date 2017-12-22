@@ -76,6 +76,13 @@ interface Q2A_Storage_CacheDriver
 	public function getError();
 
 	/**
+	 * Get the prefix used for all cache keys.
+	 *
+	 * @return string
+	 */
+	public function getKeyPrefix();
+
+	/**
 	 * Get current statistics for the cache.
 	 *
 	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.

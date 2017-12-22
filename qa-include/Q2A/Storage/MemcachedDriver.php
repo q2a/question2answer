@@ -27,6 +27,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 {
 	private $memcached;
 	private $enabled = false;
+	private $keyPrefix = '';
 	private $error;
 	private $flushed = false;
 
@@ -45,10 +46,14 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 			return;
 		}
 
+		if (isset($config['keyprefix'])) {
+			$this->keyPrefix = $config['keyprefix'];
+		}
+
 		if (extension_loaded('memcached')) {
 			$this->memcached = new Memcached;
 			$this->memcached->addServer(self::HOST, self::PORT);
-			if ($this->memcached->set('q2a.test', 'TEST')) {
+			if ($this->memcached->set($this->keyPrefix . 'test', 'TEST')) {
 				$this->enabled = true;
 			} else {
 				$this->setMemcachedError();
@@ -70,7 +75,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 			return null;
 		}
 
-		$result = $this->memcached->get($key);
+		$result = $this->memcached->get($this->keyPrefix . $key);
 
 		if ($result === false) {
 			$this->setMemcachedError();
@@ -96,7 +101,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 
 		$ttl = (int) $ttl;
 		$expiry = time() + ($ttl * 60);
-		$success = $this->memcached->set($key, $data, $expiry);
+		$success = $this->memcached->set($this->keyPrefix . $key, $data, $expiry);
 
 		if (!$success) {
 			$this->setMemcachedError();
@@ -117,7 +122,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 			return false;
 		}
 
-		$success = $this->memcached->delete($key);
+		$success = $this->memcached->delete($this->keyPrefix . $key);
 
 		if (!$success) {
 			$this->setMemcachedError();
@@ -167,6 +172,16 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	public function getError()
 	{
 		return $this->error;
+	}
+
+	/**
+	 * Get the prefix used for all cache keys.
+	 *
+	 * @return string
+	 */
+	public function getKeyPrefix()
+	{
+		return $this->keyPrefix;
 	}
 
 	/**

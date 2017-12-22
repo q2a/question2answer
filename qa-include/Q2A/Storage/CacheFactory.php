@@ -36,6 +36,7 @@ class Q2A_Storage_CacheFactory
 		if (self::$cacheDriver === null) {
 			$config = array(
 				'enabled' => (int) qa_opt('caching_enabled') === 1,
+				'keyprefix' => QA_FINAL_MYSQL_DATABASE . '.' . QA_MYSQL_TABLE_PREFIX . '.',
 				'dir' => defined('QA_CACHE_DIRECTORY') ? QA_CACHE_DIRECTORY : null,
 			);
 
