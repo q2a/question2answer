@@ -59,7 +59,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 				$this->setMemcachedError();
 			}
 		} else {
-			$this->error = 'The Memcached PHP extension is not installed';
+			$this->error = qa_lang_html('admin/no_memcached');
 		}
 	}
 
@@ -215,6 +215,6 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	 */
 	private function setMemcachedError()
 	{
-		$this->error = 'Memcached error: ' . $this->memcached->getResultMessage();
+		$this->error = qa_lang_html_sub('admin/memcached_error', $this->memcached->getResultMessage());
 	}
 }
