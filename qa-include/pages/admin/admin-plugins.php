@@ -194,7 +194,9 @@ if (!empty($fileSystemPlugins)) {
 		$beforeDbInit = isset($metadata['load_order']) && $metadata['load_order'] === 'before_db_init';
 		$enabled = $beforeDbInit || !$allowDisable || in_array($pluginDirectory, $enabledPlugins);
 
-		$pluginhtml = $namehtml . ' ' . $authorhtml . ' ' . $updatehtml . '<br>';
+		$slugid = qa_slugify($metadata['name']);
+		$anchorhtml = '<a id="'.$slugid.'" href="'.qa_self_html().'#'.$slugid.'">🔗</a> ';
+		$pluginhtml = $anchorhtml . $namehtml . ' ' . $authorhtml . ' ' . $updatehtml . '<br>';
 		$pluginhtml .= $deschtml . (strlen($deschtml) > 0 ? '<br>' : '');
 		$pluginhtml .= '<small style="color:#666">' . qa_html($pluginDirectoryPath) . '/</small>';
 
