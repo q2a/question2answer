@@ -17,7 +17,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote' ] },
 		{ name: 'links', items: [ 'Link', 'Unlink' ] },
 		{ name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Smiley' ] },
-		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', '-', 'Undo', 'Redo' ] },
 		{ name: 'last', items: [ 'RemoveFormat', 'Maximize' ] }
 	];
 
