@@ -552,11 +552,16 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 		$url = qa_path_html('user/' . $handle);
 		$favclass = $favorited ? ' qa-user-favorited' : '';
-		$mfAttr = $microdata ? ' itemprop="name"' : '';
-		$mfPrefix = $microdata ? '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' : '';
-		$mfSuffix = $microdata ? '</span>' : '';
+		$mfAttr = $microdata ? ' itemprop="url"' : '';
 
-		return $mfPrefix . '<a href="' . $url . '" class="qa-user-link' . $favclass . '"' . $mfAttr . '>' . qa_html($handle) . '</a>' . $mfSuffix;
+		$userHandle = $microdata ? '<span itemprop="name">' . qa_html($handle) . '</span>' : qa_html($handle);
+		$userHtml = '<a href="' . $url . '" class="qa-user-link' . $favclass . '"' . $mfAttr . '>' . $userHandle . '</a>';
+
+		if ($microdata) {
+			$userHtml = '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' . $userHtml . '</span>';
+		}
+
+		return $userHtml;
 	}
 
 

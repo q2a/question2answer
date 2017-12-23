@@ -755,6 +755,11 @@ function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip = null, $microda
 		else
 			$whohtml = qa_lang_html('main/anonymous');
 
+		if ($microdata) {
+			// duplicate HTML from qa_get_one_user_html()
+			$whohtml = '<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">' . $whohtml . '</span></span>';
+		}
+
 		if (isset($ip))
 			$whohtml = qa_ip_anchor_html($ip, $whohtml);
 	}
