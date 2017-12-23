@@ -9,16 +9,15 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// The toolbar arrangement, two rows of buttons
 	config.toolbar = [
+		{ name: 'font', items: [ 'Font', 'FontSize', 'Format' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', 'Outdent', 'Indent', 'Blockquote' ] },
+		{ name: 'align', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+		'/',
 		{ name: 'basic', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
 		{ name: 'color', items: [ 'TextColor', 'BGColor' ] },
-		{ name: 'align', items: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
-		{ name: 'font', items: [ 'Font', 'FontSize', 'Format' ] },
-		'/',
-		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote' ] },
 		{ name: 'links', items: [ 'Link', 'Unlink' ] },
 		{ name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Smiley' ] },
-		{ name: 'clipboard', items: [ 'Cut', 'Copy', '-', 'Undo', 'Redo' ] },
-		{ name: 'last', items: [ 'RemoveFormat', 'Maximize' ] }
+		{ name: 'last', items: [ 'Undo', 'Redo', 'RemoveFormat', 'Maximize' ] }
 	];
 
 	// Set the most common block elements
@@ -33,5 +32,4 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Prevent blank paragraphs
 	config.fillEmptyBlocks = false;
-
 };
