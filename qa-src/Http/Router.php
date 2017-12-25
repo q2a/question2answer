@@ -20,11 +20,25 @@ namespace Q2A\Http;
 
 class Router
 {
+	/** @var array */
 	protected $routes;
+
+	/** @var array */
+	private $paramsConverterKeys;
+
+	/** @var array */
+	private $paramsConverterValues;
 
 	public function __construct($routeData = array())
 	{
 		$this->routes = $routeData;
+
+		$paramsConverter = array(
+			'{str}' => '([^/]+)',
+			'{int}' => '([0-9]+)',
+		);
+		$this->paramsConverterKeys = array_keys($paramsConverter);
+		$this->paramsConverterValues = array_values($paramsConverter);
 	}
 
 	public function addRoute($id, $httpMethod, $routePath, $class, $func)
@@ -34,7 +48,7 @@ class Router
 
 	public function match($request)
 	{
-		foreach ($this->routes as $id=>$route) {
+		foreach ($this->routes as $id => $route) {
 			if (count($route) !== 4) {
 				continue;
 			}
@@ -45,17 +59,27 @@ class Router
 				continue;
 			}
 
-			$pathRegex = '#^' . str_replace(array('{str}', '{int}'), array('([^/]+)', '([0-9]+)'), $routePath) . '$#';
+			$pathRegex = $this->buildPathRegex($routePath);
 			if (preg_match($pathRegex, $request, $matches)) {
 				return array(
 					'id' => $id,
 					'controller' => $callClass,
 					'function' => $callFunc,
-					'params' => array_slice($matches, 1)
+					'params' => array_slice($matches, 1),
 				);
 			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param $routePath
+	 *
+	 * @return string
+	 */
+	private function buildPathRegex($routePath)
+	{
+		return '#^' . str_replace($this->paramsConverterKeys, $this->paramsConverterValues, $routePath) . '$#';
 	}
 }
