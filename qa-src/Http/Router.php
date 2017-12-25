@@ -29,6 +29,9 @@ class Router
 	/** @var array */
 	private $paramsConverterValues;
 
+	/** @var string */
+	private $httpMethod;
+
 	public function __construct($routeData = array())
 	{
 		$this->routes = $routeData;
@@ -39,6 +42,8 @@ class Router
 		);
 		$this->paramsConverterKeys = array_keys($paramsConverter);
 		$this->paramsConverterValues = array_values($paramsConverter);
+
+		$this->httpMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 	}
 
 	public function addRoute($id, $httpMethod, $routePath, $class, $func)
@@ -55,7 +60,7 @@ class Router
 
 			list($httpMethod, $routePath, $callClass, $callFunc) = $route;
 
-			if (strtoupper($httpMethod) !== strtoupper($_SERVER['REQUEST_METHOD'])) {
+			if (strtoupper($httpMethod) !== $this->httpMethod) {
 				continue;
 			}
 
@@ -81,5 +86,15 @@ class Router
 	private function buildPathRegex($routePath)
 	{
 		return '#^' . str_replace($this->paramsConverterKeys, $this->paramsConverterValues, $routePath) . '$#';
+	}
+
+	/**
+	 * Return the HTTP method of the current request.
+	 *
+	 * @return string
+	 */
+	public function getHttpMethod()
+	{
+		return $this->httpMethod;
 	}
 }
