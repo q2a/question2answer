@@ -20,7 +20,7 @@ namespace Q2A\Http;
 
 class Router
 {
-	/** @var array */
+	/** @var Route[] */
 	protected $routes;
 
 	/** @var array */
@@ -48,34 +48,25 @@ class Router
 
 	public function addRoute($id, $httpMethod, $routePath, $class, $func)
 	{
-		$this->routes[$id] = array($httpMethod, $routePath, $class, $func);
+		$this->routes[] = new Route($id, $httpMethod, $routePath, $class, $func);
 	}
 
 	public function match($request)
 	{
-		foreach ($this->routes as $id => $route) {
-			if (count($route) !== 4) {
+		foreach ($this->routes as $route) {
+			if ($route->getHttpMethod() !== $this->httpMethod) {
 				continue;
 			}
 
-			list($httpMethod, $routePath, $callClass, $callFunc) = $route;
-
-			if (strtoupper($httpMethod) !== $this->httpMethod) {
-				continue;
-			}
-
-			$pathRegex = $this->buildPathRegex($routePath);
+			$pathRegex = $this->buildPathRegex($route->getRoutePath());
 			if (preg_match($pathRegex, $request, $matches)) {
-				return array(
-					'id' => $id,
-					'controller' => $callClass,
-					'function' => $callFunc,
-					'params' => array_slice($matches, 1),
-				);
+				$route->bindParameters(array_slice($matches, 1));
+
+				return $route;
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	/**
