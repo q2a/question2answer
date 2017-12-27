@@ -193,7 +193,7 @@ function qa_get_request_content()
 		qa_set_template($route->getId());
 		$controllerClass = $route->getController();
 		$ctrl = new $controllerClass();
-		$qa_content = call_user_func_array(array($ctrl, $route->getFunction()), $route->getParameters());
+		$qa_content = $ctrl->executeAction($route->getAction(), $route->getParameters());
 
 	} elseif (isset($routing[$requestlower])) {
 		qa_set_template($firstlower);

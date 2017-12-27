@@ -21,4 +21,17 @@ namespace Q2A\Controllers;
 abstract class BaseController
 {
 	// TODO: constructor taking Database class parameter
+
+	/**
+	 * Execute the given action with the given parameters on this controller.
+	 *
+	 * @param string $action Action to execute
+	 * @param array $parameters Parameters to send to the action
+	 *
+	 * @return mixed
+	 */
+	public function executeAction($action, $parameters)
+	{
+		return call_user_func_array(array($this, $action), $parameters);
+	}
 }

@@ -33,18 +33,18 @@ class Route
 	private $controller;
 
 	/** @var string */
-	private $function;
+	private $action;
 
 	/** @var array */
 	private $parameters;
 
-	public function __construct($id = null, $httpMethod = null, $routePath = null, $controller = null, $function = null)
+	public function __construct($id = null, $httpMethod = null, $routePath = null, $controller = null, $action = null)
 	{
 		$this->id = $id;
 		$this->setHttpMethod($httpMethod);
 		$this->routePath = $routePath;
 		$this->controller = $controller;
-		$this->function = $function;
+		$this->action = $action;
 
 		$this->parameters = array();
 	}
@@ -126,17 +126,17 @@ class Route
 	/**
 	 * @return string
 	 */
-	public function getFunction()
+	public function getAction()
 	{
-		return $this->function;
+		return $this->action;
 	}
 
 	/**
-	 * @param string $function
+	 * @param string $action
 	 */
-	public function setFunction($function)
+	public function setAction($action)
 	{
-		$this->function = $function;
+		$this->action = $action;
 	}
 
 	/**
