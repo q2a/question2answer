@@ -23,8 +23,9 @@ use Q2A\Controllers\User\UserMessages;
 use Q2A\Controllers\User\UserPosts;
 use Q2A\Controllers\User\UserProfile;
 use Q2A\Controllers\User\UsersList;
-use Q2A\Http\Route;
-use Q2A\Http\Router;
+use Q2A\Exceptions\ExceptionHandler;
+use Q2A\Http\Routing\Route;
+use Q2A\Http\Routing\Router;
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
@@ -193,8 +194,11 @@ function qa_get_request_content()
 		qa_set_template($route->getId());
 		$controllerClass = $route->getController();
 		$ctrl = new $controllerClass();
-		$qa_content = $ctrl->executeAction($route->getAction(), $route->getParameters());
-
+		try {
+			$qa_content = $ctrl->executeAction($route->getAction(), $route->getParameters());
+		} catch (Exception $e) {
+			$qa_content = (new ExceptionHandler())->handle($e);
+		}
 	} elseif (isset($routing[$requestlower])) {
 		qa_set_template($firstlower);
 		$qa_content = require QA_INCLUDE_DIR . $routing[$requestlower];

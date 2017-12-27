@@ -18,12 +18,53 @@
 
 namespace Q2A\Controllers;
 
+use Q2A\Middleware\BaseMiddleware;
+
 abstract class BaseController
 {
-	// TODO: constructor taking Database class parameter
+	/** @var BaseMiddleware[string] */
+	private $middleware;
+
+	public function __construct()
+	{
+		// TODO: constructor taking Database class parameter
+		$this->middleware = array();
+	}
 
 	/**
-	 * Execute the given action with the given parameters on this controller.
+	 * Attach a middleware to one action or an array of actions. Use '*' to match all actions.
+	 *
+	 * @param BaseMiddleware $middleware
+	 * @param array|string $actions
+	 */
+	public function addMiddleware(BaseMiddleware $middleware, $actions = '*')
+	{
+		if (is_array($actions)) {
+			foreach ($actions as $action) {
+				$this->addMiddlewareToAction($middleware, $action);
+			}
+		} else { // If it is a string
+			$this->addMiddlewareToAction($middleware, $actions);
+		}
+	}
+
+	/**
+	 * @param BaseMiddleware $middleware
+	 * @param string $action
+	 */
+	private function addMiddlewareToAction(BaseMiddleware $middleware, $action)
+	{
+		if (!isset($this->middleware[$action])) {
+			$this->middleware[$action] = array();
+		}
+
+		$this->middleware[$action][] = $middleware;
+	}
+
+	/**
+	 * Execute the given action with the given parameters on this controller. after running all
+	 * middleware for the action. This method is expected to return a qa_content array or throw an
+	 * exception.
 	 *
 	 * @param string $action Action to execute
 	 * @param array $parameters Parameters to send to the action
@@ -32,6 +73,23 @@ abstract class BaseController
 	 */
 	public function executeAction($action, $parameters)
 	{
+		$this->executeMiddlewareForAction('*');
+		$this->executeMiddlewareForAction($action);
+
 		return call_user_func_array(array($this, $action), $parameters);
+	}
+
+	/**
+	 * @param string $action
+	 */
+	private function executeMiddlewareForAction($action)
+	{
+		if (!isset($this->middleware[$action])) {
+			return;
+		}
+
+		foreach ($this->middleware[$action] as $middleware) {
+			$middleware->handle();
+		}
 	}
 }

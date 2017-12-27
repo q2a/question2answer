@@ -18,6 +18,8 @@
 
 namespace Q2A\Controllers\User;
 
+use Q2A\Http\PageNotFoundException;
+
 require_once QA_INCLUDE_DIR . 'db/users.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/users.php';
@@ -45,10 +47,9 @@ class UserPosts extends \Q2A\Controllers\BaseController
 			qa_db_user_recent_edit_qs_selectspec($loginuserid, $identifier)
 		);
 
-		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
-			return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
-
-
+		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) { // check the user exists
+			throw new PageNotFoundException();
+		}
 		// Get information on user references
 
 		$questions = qa_any_sort_and_dedupe(array_merge($questions, $answerqs, $commentqs, $editqs));
@@ -115,8 +116,9 @@ class UserPosts extends \Q2A\Controllers\BaseController
 			qa_db_user_recent_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_qs'), $start)
 		);
 
-		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
-			return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) { // check the user exists
+			throw new PageNotFoundException();
+		}
 
 
 		// Get information on user questions
@@ -188,8 +190,9 @@ class UserPosts extends \Q2A\Controllers\BaseController
 			qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_activity'), $start)
 		);
 
-		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
-			return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) { // check the user exists
+			throw new PageNotFoundException();
+		}
 
 
 		// Get information on user questions
@@ -254,12 +257,12 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		if (QA_FINAL_EXTERNAL_USERS) {
 			$this->userid = qa_handle_to_userid($handle);
-			if (!isset($this->userid))
-				return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+			if (!isset($this->userid)) { // check the user exists
+				throw new PageNotFoundException();
+			}
 
 			$usershtml = qa_get_users_html(array($this->userid), false, qa_path_to_root(), true);
 			$this->userhtml = @$usershtml[$this->userid];
-
 		} else
 			$this->userhtml = qa_html($handle);
 	}

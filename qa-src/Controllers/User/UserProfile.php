@@ -18,6 +18,8 @@
 
 namespace Q2A\Controllers\User;
 
+use Q2A\Http\PageNotFoundException;
+
 require_once QA_INCLUDE_DIR . 'db/users.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/users.php';
@@ -40,8 +42,9 @@ class UserProfile extends \Q2A\Controllers\BaseController
 
 		if (QA_FINAL_EXTERNAL_USERS) {
 			$userid = qa_handle_to_userid($handle);
-			if (!isset($userid))
-				return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+			if (!isset($userid)) { // check the user exists
+				throw new PageNotFoundException();
+			}
 
 			$usershtml = qa_get_users_html(array($userid), false, qa_path_to_root(), true);
 			$userhtml = @$usershtml[$userid];
@@ -90,8 +93,9 @@ class UserProfile extends \Q2A\Controllers\BaseController
 		if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we can know and show more
 			require_once QA_INCLUDE_DIR . 'app/messages.php';
 
-			if (!is_array($userpoints) && !is_array($useraccount))
-				return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+			if (!is_array($userpoints) && !is_array($useraccount)) { // check the user exists
+				throw new PageNotFoundException();
+			}
 
 			$userid = $useraccount['userid'];
 			$fieldseditable = false;

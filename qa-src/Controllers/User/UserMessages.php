@@ -18,23 +18,26 @@
 
 namespace Q2A\Controllers\User;
 
+use Q2A\Http\PageNotFoundException;
+use Q2A\Middleware\Auth\InternalUsersOnly;
+
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 require_once QA_INCLUDE_DIR . 'app/messages.php';
 
 class UserMessages extends \Q2A\Controllers\BaseController
 {
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->addMiddleware(new InternalUsersOnly());
+	}
+
 	public function wall($handle)
 	{
-		if (QA_FINAL_EXTERNAL_USERS) {
-			// Check we're not using single-sign on integration, which doesn't allow walls
-			qa_fatal_error('User accounts are handled by external code');
-			return;
-		}
-
 		$userhtml = qa_html($handle);
 
 		$start = qa_get_start();
-
 
 		// Find the questions for this user
 
@@ -42,10 +45,9 @@ class UserMessages extends \Q2A\Controllers\BaseController
 			qa_db_user_account_selectspec($handle, false),
 			qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall'), $start)
 		);
-
-		if (!is_array($useraccount)) // check the user exists
-			return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
-
+		if (!is_array($useraccount)) { // check the user exists
+			throw new PageNotFoundException();
+		}
 
 		// Perform pagination
 
@@ -149,5 +151,4 @@ class UserMessages extends \Q2A\Controllers\BaseController
 
 		return $qa_content;
 	}
-
 }
