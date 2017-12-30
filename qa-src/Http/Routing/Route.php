@@ -41,7 +41,7 @@ class Route
 	public function __construct($id = null, $httpMethod = null, $routePath = null, $controller = null, $action = null)
 	{
 		$this->id = $id;
-		$this->setHttpMethod($httpMethod);
+		$this->httpMethod = strtoupper($httpMethod);
 		$this->routePath = $routePath;
 		$this->controller = $controller;
 		$this->action = $action;
@@ -68,27 +68,11 @@ class Route
 	}
 
 	/**
-	 * @param string $id
-	 */
-	public function setId($id)
-	{
-		$this->id = $id;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getHttpMethod()
 	{
 		return $this->httpMethod;
-	}
-
-	/**
-	 * @param string $httpMethod
-	 */
-	public function setHttpMethod($httpMethod)
-	{
-		$this->httpMethod = strtoupper($httpMethod);
 	}
 
 	/**
@@ -100,14 +84,6 @@ class Route
 	}
 
 	/**
-	 * @param string $routePath
-	 */
-	public function setRoutePath($routePath)
-	{
-		$this->routePath = $routePath;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getController()
@@ -116,27 +92,11 @@ class Route
 	}
 
 	/**
-	 * @param string $controller
-	 */
-	public function setController($controller)
-	{
-		$this->controller = $controller;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getAction()
 	{
 		return $this->action;
-	}
-
-	/**
-	 * @param string $action
-	 */
-	public function setAction($action)
-	{
-		$this->action = $action;
 	}
 
 	/**
