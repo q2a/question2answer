@@ -468,17 +468,17 @@ function qa_page_routing()
 function qa_routing_config()
 {
 	return array(
-		new Route('user', 'get', 'user/{str}', UserProfile::class, 'profile'),
-		new Route('user-self', 'get', 'user', UserProfile::class, 'index'),
-		new Route('user-wall', 'get', 'user/{str}/wall', UserMessages::class, 'wall'),
-		new Route('user-activity', 'get', 'user/{str}/activity', UserPosts::class, 'activity'),
-		new Route('user-questions', 'get', 'user/{str}/questions', UserPosts::class, 'questions'),
-		new Route('user-answers', 'get', 'user/{str}/answers', UserPosts::class, 'answers'),
+		new Route('user', 'get', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile'),
+		new Route('user-self', 'get', 'user', '\Q2A\Controllers\User\UserProfile', 'index'),
+		new Route('user-wall', 'get', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall'),
+		new Route('user-activity', 'get', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity'),
+		new Route('user-questions', 'get', 'user/{str}/questions', '\Q2A\Controllers\User\UserPosts', 'questions'),
+		new Route('user-answers', 'get', 'user/{str}/answers', '\Q2A\Controllers\User\UserPosts', 'answers'),
 
-		new Route('user-top', 'get', 'users', UsersList::class, 'top'),
-		new Route('user-blocked', 'get', 'users/blocked', UsersList::class, 'blocked'),
-		new Route('user-new', 'get', 'users/new', UsersList::class, 'newest'),
-		new Route('user-special', 'get', 'users/special', UsersList::class, 'special'),
+		new Route('user-top', 'get', 'users', '\Q2A\Controllers\User\UsersList', 'top'),
+		new Route('user-blocked', 'get', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked'),
+		new Route('user-new', 'get', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest'),
+		new Route('user-special', 'get', 'users/special', '\Q2A\Controllers\User\UsersList', 'special'),
 	);
 }
 
