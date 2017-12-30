@@ -19,7 +19,7 @@
 namespace Q2A\Exceptions;
 
 use Exception;
-use Q2A\Http\PageNotFoundException;
+use Q2A\Http\Exceptions\PageNotFoundException;
 
 require_once QA_INCLUDE_DIR . 'app/format.php';
 

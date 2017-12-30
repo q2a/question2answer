@@ -24,8 +24,8 @@ use Q2A\Controllers\User\UserPosts;
 use Q2A\Controllers\User\UserProfile;
 use Q2A\Controllers\User\UsersList;
 use Q2A\Exceptions\ExceptionHandler;
-use Q2A\Http\Routing\Route;
-use Q2A\Http\Routing\Router;
+use Q2A\Http\Route;
+use Q2A\Http\Router;
 
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');

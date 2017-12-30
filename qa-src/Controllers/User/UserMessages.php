@@ -18,7 +18,7 @@
 
 namespace Q2A\Controllers\User;
 
-use Q2A\Http\PageNotFoundException;
+use Q2A\Http\Exceptions\PageNotFoundException;
 use Q2A\Middleware\Auth\InternalUsersOnly;
 
 require_once QA_INCLUDE_DIR . 'db/selects.php';

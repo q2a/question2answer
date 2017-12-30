@@ -16,7 +16,7 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-namespace Q2A\Http\Routing;
+namespace Q2A\Http;
 
 class Route
 {
