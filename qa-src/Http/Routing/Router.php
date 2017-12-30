@@ -24,10 +24,7 @@ class Router
 	protected $routes;
 
 	/** @var array */
-	private $paramsConverterKeys;
-
-	/** @var array */
-	private $paramsConverterValues;
+	private $paramsConverter;
 
 	/** @var string */
 	private $httpMethod;
@@ -36,12 +33,10 @@ class Router
 	{
 		$this->routes = $routeData;
 
-		$paramsConverter = array(
+		$this->paramsConverter = array(
 			'{str}' => '([^/]+)',
 			'{int}' => '([0-9]+)',
 		);
-		$this->paramsConverterKeys = array_keys($paramsConverter);
-		$this->paramsConverterValues = array_values($paramsConverter);
 
 		$this->httpMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 	}
@@ -51,6 +46,14 @@ class Router
 		$this->routes[] = new Route($id, $httpMethod, $routePath, $class, $func);
 	}
 
+	/**
+	 * Return the route definition that matches the given request. If none is found then null is
+	 * returned.
+	 *
+	 * @param string $request Request that will be looked for a match
+	 *
+	 * @return Route|null
+	 */
 	public function match($request)
 	{
 		foreach ($this->routes as $route) {
@@ -70,13 +73,16 @@ class Router
 	}
 
 	/**
-	 * @param $routePath
+	 * Build the final regular expression to match the request. This method replaces all the
+	 * parameters' placeholders with the given regular expression.
+	 *
+	 * @param string $routePath Route that might have placeholders
 	 *
 	 * @return string
 	 */
 	private function buildPathRegex($routePath)
 	{
-		return '#^' . str_replace($this->paramsConverterKeys, $this->paramsConverterValues, $routePath) . '$#';
+		return '#^' . strtr($routePath, $this->paramsConverter) . '$#';
 	}
 
 	/**
