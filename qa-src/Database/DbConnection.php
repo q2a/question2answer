@@ -18,6 +18,9 @@
 
 namespace Q2A\Database;
 
+use PDO;
+use PDOException;
+
 class DbConnection
 {
 	protected $pdo;
@@ -47,11 +50,21 @@ class DbConnection
 		}
 	}
 
+	/**
+	 * Indicates to the Q2A database layer that database connections are permitted from this point forwards (before
+	 * this point, some plugins may not have had a chance to override some database access functions).
+	 */
 	public function allowConnect()
 	{
 		$this->allowConnect = true;
 	}
 
+	/**
+	 * Connect to the Q2A database, optionally install the $failhandler (and call it if necessary). Uses PDO as of Q2A
+	 * 1.9.
+	 * @param string $failhandler
+	 * @return mixed|void
+	 */
 	public function connect($failHandler = null)
 	{
 		if (!$this->allowConnect) {
@@ -71,20 +84,28 @@ class DbConnection
 			$dsn .= ';port=' . $this->config['port'];
 		}
 
-		$options = array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);
+		$options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 		if (QA_PERSISTENT_CONN_DB) {
-			$options[\PDO::ATTR_PERSISTENT] = true;
+			$options[PDO::ATTR_PERSISTENT] = true;
 		}
 
 		try {
-			$this->pdo = new \PDO($dsn, $this->config['username'], $this->config['password'], $options);
-		} catch (\PDOException $ex) {
+			$this->pdo = new PDO($dsn, $this->config['username'], $this->config['password'], $options);
+		} catch (PDOException $ex) {
 			$this->failError('connect', $ex->getCode(), $ex->getMessage());
 		}
 
 		qa_report_process_stage('db_connected');
 	}
 
+	/**
+	 * If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately.
+	 * @param $type
+	 * @param int $errno
+	 * @param string $error
+	 * @param string $query
+	 * @return mixed
+	 */
 	public function failError($type, $errno = null, $error = null, $query = null)
 	{
 		@error_log('PHP Question2Answer MySQL ' . $type . ' error ' . $errno . ': ' . $error . (isset($query) ? (' - Query: ' . $query) : ''));
@@ -100,6 +121,12 @@ class DbConnection
 		}
 	}
 
+	/**
+	 * Prepare and execute a SQL query, handling any failures. In debugging mode, track the queries and resources used.
+	 * @param  string $query
+	 * @param  array  $params
+	 * @return PDOStatement
+	 */
 	public function query($query, $params = array())
 	{
 		try {
@@ -122,11 +149,20 @@ class DbConnection
 			} else {
 				$stmt = $this->execute($query, $params);
 			}
-		} catch (\PDOException $ex) {
+
+			return $stmt;
+		} catch (PDOException $ex) {
 			$this->failError('query', $ex->getCode(), $ex->getMessage(), $query);
 		}
 	}
 
+	/**
+	 * Lower-level function to prepare and execute a SQL query. Automatically retries if there is a MySQL deadlock
+	 * error.
+	 * @param  string $query
+	 * @param  array  $params
+	 * @return PDOStatement
+	 */
 	protected function execute($query, $params = array())
 	{
 		$stmt = $this->pdo->prepare($query);
