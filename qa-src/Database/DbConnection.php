@@ -20,6 +20,7 @@ namespace Q2A\Database;
 
 use PDO;
 use PDOException;
+use Q2A\Database\DbResult;
 
 class DbConnection
 {
@@ -27,6 +28,7 @@ class DbConnection
 	protected $config;
 	protected $allowConnect = false;
 	protected $failHandler;
+	protected $updateCountsSuspended = 0;
 
 	public function __construct()
 	{
@@ -48,6 +50,15 @@ class DbConnection
 		} elseif (defined('QA_FINAL_MYSQL_PORT')) {
 			$this->config['port'] = QA_FINAL_MYSQL_PORT;
 		}
+	}
+
+	/**
+	 * Obtain the raw PDO object.
+	 * @return PDO
+	 */
+	public function getPDO()
+	{
+		return $this->pdo;
 	}
 
 	/**
@@ -99,6 +110,15 @@ class DbConnection
 	}
 
 	/**
+	 * Disconnect from the Q2A database.
+	 * @return void
+	 */
+	public function disconnect()
+	{
+		$this->pdo = null;
+	}
+
+	/**
 	 * If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately.
 	 * @param $type
 	 * @param int $errno
@@ -123,12 +143,17 @@ class DbConnection
 
 	/**
 	 * Prepare and execute a SQL query, handling any failures. In debugging mode, track the queries and resources used.
-	 * @param  string $query
-	 * @param  array  $params
-	 * @return PDOStatement
+	 * @param string $query
+	 * @param array $params
+	 * @return DbResult
 	 */
 	public function query($query, $params = array())
 	{
+		// Substitute ^ with the configured table prefix
+		$query = preg_replace_callback('/\^([A-Za-z_0-9]+)/', function($matches) {
+			return $this->addTablePrefix($matches[1]);
+		}, $query);
+
 		try {
 			if (QA_DEBUG_PERFORMANCE) {
 				global $qa_usage;
@@ -138,19 +163,12 @@ class DbConnection
 				$stmt = $this->execute($query, $params);
 				$usedtime = array_sum(explode(' ', microtime())) - $oldtime;
 
-				// fetch counts
-				$gotrows = $gotcolumns = null;
-				if ($result instanceof mysqli_result) {
-					$gotrows = $result->num_rows;
-					$gotcolumns = $result->field_count;
-				}
-
-				$qa_usage->logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns);
+				$qa_usage->logDatabaseQuery($query, $usedtime, $stmt->rowCount(), $stmt->columnCount());
 			} else {
 				$stmt = $this->execute($query, $params);
 			}
 
-			return $stmt;
+			return new DbResult($stmt);
 		} catch (PDOException $ex) {
 			$this->failError('query', $ex->getCode(), $ex->getMessage(), $query);
 		}
@@ -159,8 +177,8 @@ class DbConnection
 	/**
 	 * Lower-level function to prepare and execute a SQL query. Automatically retries if there is a MySQL deadlock
 	 * error.
-	 * @param  string $query
-	 * @param  array  $params
+	 * @param string $query
+	 * @param array $params
 	 * @return PDOStatement
 	 */
 	protected function execute($query, $params = array())
@@ -179,5 +197,63 @@ class DbConnection
 		}
 
 		return $stmt;
+	}
+
+	/**
+	 * Return the full name (with prefix) of database table $rawname, usually if it used after a ^ symbol.
+	 * @param string $rawName
+	 * @return string
+	 */
+	public function addTablePrefix($rawName)
+	{
+		$prefix = QA_MYSQL_TABLE_PREFIX;
+
+		if (defined('QA_MYSQL_USERS_PREFIX')) {
+			switch (strtolower($rawName)) {
+				case 'users':
+				case 'userlogins':
+				case 'userprofile':
+				case 'userfields':
+				case 'messages':
+				case 'cookies':
+				case 'blobs':
+				case 'cache':
+				case 'userlogins_ibfk_1': // also special cases for constraint names
+				case 'userprofile_ibfk_1':
+					$prefix = QA_MYSQL_USERS_PREFIX;
+					break;
+			}
+		}
+
+		return $prefix . $rawName;
+	}
+
+	/**
+	 * Return the value of the auto-increment column for the last inserted row.
+	 * @return string
+	 */
+	public function lastInsertId()
+	{
+		return $this->pdo->lastInsertId();
+	}
+
+	/**
+	 * Suspend or reinstate the updating of counts (of many different types) in the database, to save time when making
+	 * a lot of changes. A counter is kept to allow multiple calls.
+	 * @param bool $suspend
+	 */
+	public function suspendUpdateCounts($suspend = true)
+	{
+		$this->updateCountsSuspended += ($suspend ? 1 : -1);
+	}
+
+
+	/**
+	 * Returns whether counts should currently be updated (i.e. if count updating has not been suspended).
+	 * @return bool
+	 */
+	public function shouldUpdateCounts()
+	{
+		return $this->updateCountsSuspended <= 0;
 	}
 }
