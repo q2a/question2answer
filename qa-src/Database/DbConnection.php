@@ -100,7 +100,7 @@ class DbConnection
 		}
 	}
 
-	public function query($query, $params=array())
+	public function query($query, $params = array())
 	{
 		try {
 			if (QA_DEBUG_PERFORMANCE) {
@@ -127,7 +127,7 @@ class DbConnection
 		}
 	}
 
-	protected function execute($query, $params=array())
+	protected function execute($query, $params = array())
 	{
 		$stmt = $this->pdo->prepare($query);
 

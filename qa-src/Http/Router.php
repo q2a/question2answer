@@ -20,42 +20,78 @@ namespace Q2A\Http;
 
 class Router
 {
+	/** @var Route[] */
 	protected $routes;
+
+	/** @var array */
+	private $paramsConverter;
+
+	/** @var string */
+	private $httpMethod;
 
 	public function __construct($routeData = array())
 	{
 		$this->routes = $routeData;
+
+		$this->paramsConverter = array(
+			'{str}' => '([^/]+)',
+			'{int}' => '([0-9]+)',
+		);
+
+		$this->httpMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 	}
 
 	public function addRoute($id, $httpMethod, $routePath, $class, $func)
 	{
-		$this->routes[$id] = array($httpMethod, $routePath, $class, $func);
+		$this->routes[] = new Route($id, $httpMethod, $routePath, $class, $func);
 	}
 
+	/**
+	 * Return the route definition that matches the given request. If none is found then null is
+	 * returned.
+	 *
+	 * @param string $request Request that will be looked for a match
+	 *
+	 * @return Route|null
+	 */
 	public function match($request)
 	{
-		foreach ($this->routes as $id=>$route) {
-			if (count($route) !== 4) {
+		foreach ($this->routes as $route) {
+			if ($route->getHttpMethod() !== $this->httpMethod) {
 				continue;
 			}
 
-			list($httpMethod, $routePath, $callClass, $callFunc) = $route;
-
-			if (strtoupper($httpMethod) !== strtoupper($_SERVER['REQUEST_METHOD'])) {
-				continue;
-			}
-
-			$pathRegex = '#^' . str_replace(array('{str}', '{int}'), array('([^/]+)', '([0-9]+)'), $routePath) . '$#';
+			$pathRegex = $this->buildPathRegex($route->getRoutePath());
 			if (preg_match($pathRegex, $request, $matches)) {
-				return array(
-					'id' => $id,
-					'controller' => $callClass,
-					'function' => $callFunc,
-					'params' => array_slice($matches, 1)
-				);
+				$route->bindParameters(array_slice($matches, 1));
+
+				return $route;
 			}
 		}
 
-		return false;
+		return null;
+	}
+
+	/**
+	 * Build the final regular expression to match the request. This method replaces all the
+	 * parameters' placeholders with the given regular expression.
+	 *
+	 * @param string $routePath Route that might have placeholders
+	 *
+	 * @return string
+	 */
+	private function buildPathRegex($routePath)
+	{
+		return '#^' . strtr($routePath, $this->paramsConverter) . '$#';
+	}
+
+	/**
+	 * Return the HTTP method of the current request.
+	 *
+	 * @return string
+	 */
+	public function getHttpMethod()
+	{
+		return $this->httpMethod;
 	}
 }
