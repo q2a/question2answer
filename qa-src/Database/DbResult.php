@@ -30,35 +30,46 @@ class DbResult
 		$this->stmt = $stmt;
 	}
 
-	public function fetchNextAssoc()
+	/**
+	 * Return the first row from the results as an array of [column name] => [column value].
+	 * @param  bool $allowempty If false, throw a fatal error if there is no result.
+	 * @return array|null
+	 */
+	public function fetchNextAssoc($allowempty = false)
 	{
-		return $this->stmt->fetch(PDO::FETCH_ASSOC);
+		return $this->handleResult($this->stmt->fetch(PDO::FETCH_ASSOC), $allowempty, 'Reading one assoc from invalid result');
 	}
 
-	public function fetchAllAssoc()
+	/**
+	 * Return the data as an associative array.
+	 * @param string $key Unique field to use as the array key for each row.
+	 * @param string $value Field to use as the value (for key=>value format instead of the default key=>row)
+	 * @return array
+	 */
+	public function fetchAllAssoc($key = null, $value = null)
 	{
-		return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+		$data = array();
+
+		while (($row = $this->stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
+			if (isset($key)) {
+				$data[$row[$key]] = isset($value) ? $row[$value] : $row;
+			} else {
+				$data[] = isset($value) ? $row[$value] : $row;
+			}
+		}
+
+		return $data;
 	}
 
 	/**
 	 * Return a specific cell from the results. Typically used with (single-row, single-column) aggregate queries.
 	 * @param $col 0-indexed column to select from (defaults to first column).
 	 * @param bool $allowempty If false, throw a fatal error if there is no result.
-	 * @return mixed|null
+	 * @return array|null
 	 */
 	public function fetchOneValue($col = 0, $allowempty = false)
 	{
-		$data = $this->stmt->fetchColumn($col);
-
-		if ($data !== false) {
-			return $data;
-		}
-
-		if (!$allowempty) {
-			qa_fatal_error('Reading one value from empty results');
-		}
-
-		return null;
+		return $this->handleResult($this->stmt->fetchColumn($col), $allowempty, 'Reading one value from empty results');
 	}
 
 	/**
@@ -69,6 +80,26 @@ class DbResult
 	public function fetchAllValues($col = 0)
 	{
 		return $this->stmt->fetchAll(PDO::FETCH_COLUMN, $col);
+	}
+
+	/**
+	 * Return data or optionally fail if no more rows.
+	 * @param array $data
+	 * @param bool $allowempty
+	 * @param string $errorMsg
+	 * @return mixed
+	 */
+	private function handleResult($data, $allowempty, $errorMsg)
+	{
+		if ($data !== false) {
+			return $data;
+		}
+
+		if (!$allowempty) {
+			qa_fatal_error($errorMsg);
+		}
+
+		return null;
 	}
 
 	/**

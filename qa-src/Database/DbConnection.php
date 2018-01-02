@@ -42,7 +42,7 @@ class DbConnection
 
 		if (defined('QA_FINAL_WORDPRESS_INTEGRATE_PATH')) {
 			// Wordpress allows setting port inside DB_HOST constant, like 127.0.0.1:3306
-			$hostAndPort = explode(':', $host);
+			$hostAndPort = explode(':', $this->config['host']);
 			if (count($hostAndPort) >= 2) {
 				$this->config['host'] = $hostAndPort[0];
 				$this->config['port'] = $hostAndPort[1];
