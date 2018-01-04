@@ -469,6 +469,7 @@ function qa_routing_config()
 {
 	return array(
 		new Route('user', 'get', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile'),
+		new Route('user', 'post', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile'),
 		new Route('user-self', 'get', 'user', '\Q2A\Controllers\User\UserProfile', 'index'),
 		new Route('user-wall', 'get', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall'),
 		new Route('user-activity', 'get', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity'),
