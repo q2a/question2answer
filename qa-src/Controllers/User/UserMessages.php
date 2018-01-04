@@ -33,6 +33,12 @@ class UserMessages extends \Q2A\Controllers\BaseController
 		$this->addMiddleware(new InternalUsersOnly());
 	}
 
+	/**
+	 * @param string $handle
+	 *
+	 * @return array
+	 * @throws PageNotFoundException
+	 */
 	public function wall($handle)
 	{
 		$userhtml = qa_html($handle);

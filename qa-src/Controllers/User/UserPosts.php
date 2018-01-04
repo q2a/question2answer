@@ -30,6 +30,12 @@ class UserPosts extends \Q2A\Controllers\BaseController
 	protected $userid;
 	protected $userhtml;
 
+	/**
+	 * @param string $handle
+	 *
+	 * @return array
+	 * @throws PageNotFoundException
+	 */
 	public function activity($handle)
 	{
 		$this->userHtml($handle);
@@ -99,6 +105,12 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		return $qa_content;
 	}
 
+	/**
+	 * @param string $handle
+	 *
+	 * @return array
+	 * @throws PageNotFoundException
+	 */
 	public function questions($handle)
 	{
 		$this->userHtml($handle);
@@ -172,6 +184,12 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		return $qa_content;
 	}
 
+	/**
+	 * @param string $handle
+	 *
+	 * @return array
+	 * @throws PageNotFoundException
+	 */
 	public function answers($handle)
 	{
 		$this->userHtml($handle);
@@ -251,10 +269,14 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		return $qa_content;
 	}
 
+	/**
+	 * Return the HTML to display for the handle, and if we're using external users, determine the userid.
+	 *
+	 * @param string $handle
+	 * @throws PageNotFoundException
+	 */
 	private function userHtml($handle)
 	{
-		// Get the HTML to display for the handle, and if we're using external users, determine the userid
-
 		if (QA_FINAL_EXTERNAL_USERS) {
 			$this->userid = qa_handle_to_userid($handle);
 			if (!isset($this->userid)) { // check the user exists
