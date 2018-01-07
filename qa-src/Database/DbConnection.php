@@ -20,14 +20,24 @@ namespace Q2A\Database;
 
 use PDO;
 use PDOException;
-use Q2A\Database\DbResult;
+use PDOStatement;
+use Q2A_Storage_CacheFactory;
 
 class DbConnection
 {
+	/** @var PDO */
 	protected $pdo;
+
+	/** @var array */
 	protected $config;
+
+	/** @var bool */
 	protected $allowConnect = false;
+
+	/** @var string */
 	protected $failHandler;
+
+	/** @var int */
 	protected $updateCountsSuspended = 0;
 
 	public function __construct()
@@ -71,9 +81,9 @@ class DbConnection
 	}
 
 	/**
-	 * Connect to the Q2A database, optionally install the $failhandler (and call it if necessary). Uses PDO as of Q2A
+	 * Connect to the Q2A database, optionally install the $failHandler (and call it if necessary). Uses PDO as of Q2A
 	 * 1.9.
-	 * @param string $failhandler
+	 * @param string $failHandler
 	 * @return mixed|void
 	 */
 	public function connect($failHandler = null)
@@ -120,7 +130,7 @@ class DbConnection
 
 	/**
 	 * If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately.
-	 * @param $type
+	 * @param string $type
 	 * @param int $errno
 	 * @param string $error
 	 * @param string $query
@@ -424,7 +434,6 @@ class DbConnection
 			}
 
 			qa_sort_by($outresult, $selectspec['sortasc'], '_order_');
-
 		} elseif (isset($selectspec['sortdesc'])) {
 			require_once QA_INCLUDE_DIR . 'util/sort.php';
 
@@ -511,7 +520,6 @@ class DbConnection
 	{
 		$this->updateCountsSuspended += ($suspend ? 1 : -1);
 	}
-
 
 	/**
 	 * Returns whether counts should currently be updated (i.e. if count updating has not been suspended).
