@@ -112,6 +112,16 @@ class DbResult
 	}
 
 	/**
+	 * Return true if the number of rows found (SELECT queries) or rows affected (UPDATE/INSERT/DELETE queries) is 0
+	 * and false otherwise.
+	 * @return int
+	 */
+	public function isEmpty()
+	{
+		return $this->stmt->rowCount() == 0;
+	}
+
+	/**
 	 * Obtain the raw PDOStatement object.
 	 * @return PDO
 	 */
