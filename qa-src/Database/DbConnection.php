@@ -21,6 +21,9 @@ namespace Q2A\Database;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Q2A\Database\Exceptions\DuplicateColumnNameException;
+use Q2A\Database\Exceptions\InvalidDatabaseAccessException;
+use Q2A\Database\Exceptions\InvalidFieldReferenceException;
 use Q2A_Storage_CacheFactory;
 
 class DbConnection
@@ -85,12 +88,12 @@ class DbConnection
 	 * 1.9.
 	 * @param string $failHandler
 	 * @return mixed|void
+	 * @throws InvalidDatabaseAccessException
 	 */
 	public function connect($failHandler = null)
 	{
 		if (!$this->allowConnect) {
-			qa_fatal_error('It appears that a plugin is trying to access the database, but this is not allowed until Q2A initialization is complete.');
-			return;
+			throw new InvalidDatabaseAccessException();
 		}
 		if ($failHandler !== null) {
 			// set this even if connection already opened
@@ -302,6 +305,8 @@ class DbConnection
 	 * returned array match the keys of the supplied $selectspecs array. See long comment above.
 	 * @param array $selectspecs
 	 * @return array
+	 * @throws InvalidFieldReferenceException
+	 * @throws DuplicateColumnNameException
 	 */
 	public function multiSelect($selectspecs)
 	{
@@ -331,17 +336,17 @@ class DbConnection
 				}
 
 				if (isset($selectspecs[$selectkey]['outcolumns'][$columnas])) {
-					qa_fatal_error('Duplicate column name in DbConnection::multiSelect()');
+					throw new DuplicateColumnNameException('Duplicate column name in DbConnection::multiSelect()');
 				}
 
 				$selectspecs[$selectkey]['outcolumns'][$columnas] = $columnfrom;
 			}
 
 			if (isset($selectspec['arraykey']) && !isset($selectspecs[$selectkey]['outcolumns'][$selectspec['arraykey']])) {
-				qa_fatal_error('Used arraykey not in columns in DbConnection::multiSelect()');
+				throw new InvalidFieldReferenceException('Used arraykey not in columns in DbConnection::multiSelect()');
 			}
 			if (isset($selectspec['arrayvalue']) && !isset($selectspecs[$selectkey]['outcolumns'][$selectspec['arrayvalue']])) {
-				qa_fatal_error('Used arrayvalue not in columns in DbConnection::multiSelect()');
+				throw new InvalidFieldReferenceException('Used arrayvalue not in columns in DbConnection::multiSelect()');
 			}
 		}
 
