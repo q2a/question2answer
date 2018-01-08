@@ -24,6 +24,7 @@ use PDOStatement;
 use Q2A\Database\Exceptions\DuplicateColumnNameException;
 use Q2A\Database\Exceptions\InvalidDatabaseAccessException;
 use Q2A\Database\Exceptions\InvalidFieldReferenceException;
+use Q2A\Database\Exceptions\ParametersDontMatchPlaceholdersException;
 use Q2A_Storage_CacheFactory;
 
 class DbConnection
@@ -159,10 +160,13 @@ class DbConnection
 	 * @param string $query
 	 * @param array $params
 	 * @return DbResult
+	 * @throws ParametersDontMatchPlaceholdersException
 	 */
 	public function query($query, $params = array())
 	{
 		$query = $this->applyTableSub($query);
+		$query = $this->applyArraySub($query, $params);
+		$params = $this->flattenArray($params);
 
 		try {
 			if (QA_DEBUG_PERFORMANCE) {
@@ -479,6 +483,47 @@ class DbConnection
 	}
 
 	/**
+	 * Substitute single '?' in a SQL query with multiple '?' for array parameters.
+	 * @param string $query
+	 * @param array $params
+	 * @return string
+	 * @throws ParametersDontMatchPlaceholdersException
+	 */
+	public function applyArraySub($query, $params)
+	{
+		$result = '';
+		$hasArray = false;
+		$paramIndexCount = array();
+		foreach ($params as $param) {
+			if (is_array($param)) {
+				$paramIndexCount[] = count($param);
+				$hasArray = true;
+			} else {
+				$paramIndexCount[] = 1;
+			}
+		}
+
+		if ($hasArray) {
+			$explodedQuery = explode('?', $query);
+			if (count($explodedQuery) != count($paramIndexCount) + 1) {
+				throw new ParametersDontMatchPlaceholdersException();
+			}
+			foreach ($explodedQuery as $index => $explodedQueryPart) {
+				$result .= $explodedQueryPart;
+				if (isset($paramIndexCount[$index])) {
+					$result .= $paramIndexCount[$index] == 1
+						? '?'
+						: str_repeat('?,', $paramIndexCount[$index] - 1) . '?';
+				}
+			}
+
+			return $result;
+		}
+
+		return $query;
+	}
+
+	/**
 	 * Return the full name (with prefix) of a database table identifier.
 	 * @param string $rawName
 	 * @return string
@@ -533,5 +578,23 @@ class DbConnection
 	public function shouldUpdateCounts()
 	{
 		return $this->updateCountsSuspended <= 0;
+	}
+
+	/**
+	 * Flatten a two-level array into a one-level array.
+	 * @param mixed $elements Input elements which can be one-level deep arrays
+	 * @return array
+	 */
+	private function flattenArray($elements)
+	{
+		$result = array();
+		foreach ($elements as $element) {
+			if (is_array($element)) {
+				$result = array_merge($result, $element);
+			} else {
+				$result[] = $element;
+			}
+		}
+		return $result;
 	}
 }

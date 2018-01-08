@@ -16,18 +16,18 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-namespace Q2A\Exceptions;
+namespace Q2A\Database\Exceptions;
 
-use RuntimeException;
+use Q2A\Exceptions\FatalErrorException;
 
-class FatalErrorException extends RuntimeException
+class ParametersDontMatchPlaceholdersException extends FatalErrorException
 {
 	/**
-	 * FatalErrorException constructor.
+	 * ParametersDontMatchPlaceholdersException constructor.
 	 *
 	 * @param string $message
 	 */
-	public function __construct($message = 'Fatal error exception.')
+	public function __construct($message = 'The amount of parameters does not match the amount of placeholders')
 	{
 		parent::__construct($message);
 	}
