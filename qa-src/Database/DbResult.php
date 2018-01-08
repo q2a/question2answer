@@ -29,6 +29,7 @@ class DbResult
 	public function __construct(PDOStatement $stmt)
 	{
 		$this->stmt = $stmt;
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -50,7 +51,7 @@ class DbResult
 	 */
 	public function fetchNextAssocOrFail()
 	{
-		return $this->getResultOrFail($this->stmt->fetch(PDO::FETCH_ASSOC));
+		return $this->getResultOrFail($this->stmt->fetch());
 	}
 
 	/**
@@ -63,7 +64,7 @@ class DbResult
 	{
 		$data = array();
 
-		while (($row = $this->stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
+		while (($row = $this->stmt->fetch()) !== false) {
 			if (isset($key)) {
 				$data[$row[$key]] = isset($value) ? $row[$value] : $row;
 			} else {
