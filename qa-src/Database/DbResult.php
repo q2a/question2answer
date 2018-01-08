@@ -20,6 +20,7 @@ namespace Q2A\Database;
 
 use PDO;
 use PDOStatement;
+use Q2A\Database\Exceptions\ReadingFromEmptyResultException;
 
 class DbResult
 {
@@ -32,12 +33,24 @@ class DbResult
 
 	/**
 	 * Return the first row from the results as an array of [column name] => [column value].
-	 * @param  bool $allowempty If false, throw a fatal error if there is no result.
 	 * @return array|null
 	 */
-	public function fetchNextAssoc($allowempty = false)
+	public function fetchNextAssoc()
 	{
-		return $this->handleResult($this->stmt->fetch(PDO::FETCH_ASSOC), $allowempty, 'Reading one assoc from invalid result');
+		$data = $this->stmt->fetch();
+
+		return $data === false ? null : $data;
+	}
+
+	/**
+	 * Return the first row from the results as an array of [column name] => [column value]. If no value is fetched
+	 * from the database then an exception is thrown.
+	 * @return array|null
+	 * @throws ReadingFromEmptyResultException
+	 */
+	public function fetchNextAssocOrFail()
+	{
+		return $this->getResultOrFail($this->stmt->fetch(PDO::FETCH_ASSOC));
 	}
 
 	/**
@@ -62,14 +75,28 @@ class DbResult
 	}
 
 	/**
-	 * Return a specific cell from the results. Typically used with (single-row, single-column) aggregate queries.
+	 * Return a specific cell from the results. Typically used with (single-row, single-column) aggregate queries. If
+	 * no value is fetched form the database return null.
 	 * @param $col 0-indexed column to select from (defaults to first column).
-	 * @param bool $allowempty If false, throw a fatal error if there is no result.
-	 * @return array|null
+	 * @return string
 	 */
-	public function fetchOneValue($col = 0, $allowempty = false)
+	public function fetchOneValue($col = 0)
 	{
-		return $this->handleResult($this->stmt->fetchColumn($col), $allowempty, 'Reading one value from empty results');
+		$data = $this->stmt->fetchColumn($col);
+
+		return $data === false ? null : $data;
+	}
+
+	/**
+	 * Return a specific cell from the results. Typically used with (single-row, single-column) aggregate queries. If
+	 * no value is fetched from the database then an exception is thrown.
+	 * @param $col 0-indexed column to select from (defaults to first column).
+	 * @return string
+	 * @throws ReadingFromEmptyResultException
+	 */
+	public function fetchOneValueOrFail($col = 0)
+	{
+		return $this->getResultOrFail($this->stmt->fetchColumn($col));
 	}
 
 	/**
@@ -83,23 +110,18 @@ class DbResult
 	}
 
 	/**
-	 * Return data or optionally fail if no more rows.
-	 * @param array $data
-	 * @param bool $allowempty
-	 * @param string $errorMsg
+	 * Return data or optionally throw an exception, if data is false (empty).
+	 * @param mixed $data
 	 * @return mixed
+	 * @throws ReadingFromEmptyResultException
 	 */
-	private function handleResult($data, $allowempty, $errorMsg)
+	private function getResultOrFail($data)
 	{
-		if ($data !== false) {
-			return $data;
+		if ($data === false) {
+			throw new ReadingFromEmptyResultException('Reading one value from empty results');
 		}
 
-		if (!$allowempty) {
-			qa_fatal_error($errorMsg);
-		}
-
-		return null;
+		return $data;
 	}
 
 	/**
@@ -113,7 +135,7 @@ class DbResult
 
 	/**
 	 * Obtain the raw PDOStatement object.
-	 * @return PDO
+	 * @return PDOStatement
 	 */
 	public function getPDOStatement()
 	{
