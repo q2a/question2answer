@@ -491,33 +491,25 @@ class DbConnection
 	 */
 	public function applyArraySub($query, $params)
 	{
-		$result = '';
-		$hasArray = false;
-		$paramIndexCount = array();
-		foreach ($params as $param) {
+		$arrayIndexCount = array();
+		foreach ($params as $index => $param) {
 			if (is_array($param)) {
-				$paramIndexCount[] = count($param);
-				$hasArray = true;
-			} else {
-				$paramIndexCount[] = 1;
+				$arrayIndexCount[$index] = count($param);
 			}
 		}
-
-		if ($hasArray) {
+		if (!empty($arrayIndexCount)) {
 			$explodedQuery = explode('?', $query);
-			if (count($explodedQuery) != count($paramIndexCount) + 1) {
+			if (count($explodedQuery) != count($params) + 1) {
 				throw new ParametersDontMatchPlaceholdersException();
 			}
+
 			foreach ($explodedQuery as $index => $explodedQueryPart) {
-				$result .= $explodedQueryPart;
-				if (isset($paramIndexCount[$index])) {
-					$result .= $paramIndexCount[$index] == 1
-						? '?'
-						: str_repeat('?,', $paramIndexCount[$index] - 1) . '?';
+				if (isset($arrayIndexCount[$index])) {
+					$explodedQuery[$index] .= str_repeat('?,', $arrayIndexCount[$index] - 1);
 				}
 			}
 
-			return $result;
+			return implode('?', $explodedQuery);
 		}
 
 		return $query;
