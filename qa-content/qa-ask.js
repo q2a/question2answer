@@ -221,7 +221,7 @@ function qa_category_select(idprefix, startpath)
 									var addedoption = false;
 
 									if (lines.length > 2) {
-										var subelem = elem.parentNode.insertBefore(document.createElement('span'), elem.nextSibling);
+										subelem = elem.parentNode.insertBefore(document.createElement('span'), elem.nextSibling);
 										subelem.id = idprefix + '_' + l + '_sub';
 										subelem.innerHTML = ' ';
 

@@ -92,7 +92,7 @@ function qa_vote_click(elem)
 				var mess = document.getElementById('errorbox');
 
 				if (!mess) {
-					var mess = document.createElement('div');
+					mess = document.createElement('div');
 					mess.id = 'errorbox';
 					mess.className = 'qa-error';
 					mess.innerHTML = lines[1];

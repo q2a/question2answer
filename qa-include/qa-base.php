@@ -896,7 +896,7 @@ function qa_list_modules($type)
  * Return an array containing information about the module of $type named $name
  * @param $type
  * @param $name
- * @return
+ * @return array
  */
 function qa_get_module_info($type, $name)
 {
