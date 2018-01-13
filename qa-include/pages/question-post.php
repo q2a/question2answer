@@ -841,7 +841,6 @@ function qa_page_q_do_comment($question, $parent, $commentsfollows, $pagestart, 
 	// The other option ('level') prevents the comment button being shown, in qa_page_q_post_rules(...)
 
 	$parentid = $parent['postid'];
-	$answer = ($question['postid'] == $parentid) ? null : $parent;
 
 	switch (qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)) {
 		case 'login':
