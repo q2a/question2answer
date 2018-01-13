@@ -193,11 +193,6 @@ function qa_block_ip_match($ip, $blockipclause)
 		return $ip === $blockipclause;
 	}
 
-	// check if same IP version
-	if (($ipv4 && !$blockipv4) || (!$ipv4 && $blockipv4)) {
-		return false;
-	}
-
 	if (filter_var($ip, FILTER_VALIDATE_IP)) {
 		if (preg_match('/^(.*)\-(.*)$/', $blockipclause, $matches)) {
 			// match IP range
