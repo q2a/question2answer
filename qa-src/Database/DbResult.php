@@ -140,7 +140,7 @@ class DbResult
 	 */
 	public function isEmpty()
 	{
-		return $this->stmt->rowCount() == 0;
+		return $this->stmt->rowCount() === 0;
 	}
 
 	/**

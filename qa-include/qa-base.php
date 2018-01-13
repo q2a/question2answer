@@ -48,7 +48,6 @@ spl_autoload_register('qa_autoload');
 
 use Q2A\App\Application;
 
-
 // Execution section of this file - remainder contains function definitions
 
 qa_initialize_php();
