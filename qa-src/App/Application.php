@@ -28,11 +28,11 @@ class Application
 	/** @var static */
 	protected static $instance;
 
-	public function __construct()
+	protected function __construct()
 	{
 		$this->container = new Container();
 
-		$this->registerCoreBindings();
+		$this->registerCoreServices();
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Application
 	 */
 	public static function getInstance()
 	{
-		if (is_null(static::$instance)) {
+		if (static::$instance === null) {
 			static::$instance = new static();
 		}
 
@@ -49,11 +49,11 @@ class Application
 	}
 
 	/**
-	 * Register the bindings used by the core.
+	 * Register the services used by the core.
 	 */
-	private function registerCoreBindings()
+	private function registerCoreServices()
 	{
-		$this->container->bind('router', new Router());
+		$this->container->set('router', new Router());
 	}
 
 	/**

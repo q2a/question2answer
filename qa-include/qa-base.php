@@ -46,6 +46,8 @@ function qa_autoload($class)
 }
 spl_autoload_register('qa_autoload');
 
+use Q2A\App\Application;
+
 
 // Execution section of this file - remainder contains function definitions
 
@@ -59,11 +61,6 @@ if (defined('QA_WORDPRESS_LOAD_FILE')) {
 	// if relevant, load Joomla JConfig class into global scope
 	require_once QA_JOOMLA_LOAD_FILE;
 }
-
-
-require QA_BASE_DIR . 'qa-src/helpers.php';
-app();
-
 
 qa_initialize_constants_2();
 qa_initialize_modularity();
@@ -1839,6 +1836,36 @@ function qa_retrieve_url($url)
 	}
 
 	return $contents;
+}
+
+
+/**
+ * Helper function to access the Application object.
+ * @return Application
+ */
+function qa_app()
+{
+	return Application::getInstance();
+}
+
+
+/**
+ * Helper function to access services in the Container.
+ * If the $key parameter is set and the $object parameter is null the container is called to resolve the $key.
+ * If the $key and the $object parameters are null the container is called to bind the $object to the $key.
+ * @param mixed $key Identifier for the object to get/set.
+ * @param mixed $object Object to set in the $key (if null, a stored object is returned)
+ * @return mixed
+ */
+function qa_service($key, $object = null)
+{
+	$app = Application::getInstance();
+
+	if ($object === null) {
+		return $app->getContainer()->get($key);
+	}
+
+	$app->getContainer()->set($key, $object);
 }
 
 

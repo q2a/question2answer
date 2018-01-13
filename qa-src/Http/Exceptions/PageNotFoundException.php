@@ -29,7 +29,7 @@ class PageNotFoundException extends ErrorMessageException
 	 */
 	public function __construct($message = null)
 	{
-		if (is_null($message)) {
+		if ($message === null) {
 			$message = qa_lang_html('main/page_not_found');
 		}
 

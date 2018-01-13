@@ -50,16 +50,6 @@ class Route
 	}
 
 	/**
-	 * Bind actual request parameters to the route, replacing any existing ones.
-	 *
-	 * @param array $parameters
-	 */
-	public function bindParameters($parameters)
-	{
-		$this->parameters = $parameters;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getId()
@@ -105,5 +95,15 @@ class Route
 	public function getParameters()
 	{
 		return $this->parameters;
+	}
+
+	/**
+	 * Bind actual request parameters to the route, replacing any existing ones.
+	 *
+	 * @param array $parameters
+	 */
+	public function setParameters($parameters)
+	{
+		$this->parameters = $parameters;
 	}
 }

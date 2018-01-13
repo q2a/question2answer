@@ -181,9 +181,9 @@ function qa_get_request_content()
 	$routing = qa_page_routing();
 
 	qa_routing_config();
-	$route = app('router')->match($requestlower);
+	$route = qa_service('router')->match($requestlower);
 
-	if (isset($route)) {
+	if ($route !== null) {
 		// use new Controller system
 		qa_set_template($route->getId());
 		$controllerClass = $route->getController();
@@ -455,12 +455,13 @@ function qa_page_routing()
 	);
 }
 
+
 /**
- * [qa_routing_config description]
+ * Set up routing.
  */
 function qa_routing_config()
 {
-	$router = app('router');
+	$router = qa_service('router');
 	$router->addRoute('user', 'get', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile');
 	$router->addRoute('user', 'post', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile');
 	$router->addRoute('user-self', 'get', 'user', '\Q2A\Controllers\User\UserProfile', 'index');

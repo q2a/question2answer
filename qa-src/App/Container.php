@@ -23,29 +23,29 @@ use Q2A\Exceptions\FatalErrorException;
 class Container
 {
 	/** @var array */
-	protected $bindings = array();
+	protected $services = array();
 
 	/**
 	 * Bind an object to a key.
-	 * @param mixed $key The key to bind the object to
+	 * @param string $key The key to bind the object to
 	 * @param mixed $object The object to bind to the key
 	 */
-	public function bind($key, $object)
+	public function set($key, $object)
 	{
-		$this->bindings[$key] = $object;
+		$this->services[$key] = $object;
 	}
 
 	/**
-	 * Return an object bound to the given key. If the key is not found an exception is thrown.
-	 * @param mixed $key The key to look for
+	 * Return an object assigned to the given key. If the key is not found an exception is thrown.
+	 * @param string $key The key to look for
 	 * @return mixed
 	 */
-	public function resolve($key)
+	public function get($key)
 	{
-		if (isset($this->bindings[$key])) {
-			return $this->bindings[$key];
+		if (isset($this->services[$key])) {
+			return $this->services[$key];
 		}
 
-		throw new FatalErrorException(sprintf('Key "%s" not bound in container', $key));
+		throw new FatalErrorException(sprintf('Key "%s" not found in container', $key));
 	}
 }

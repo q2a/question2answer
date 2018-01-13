@@ -61,7 +61,7 @@ class Router
 
 			$pathRegex = $this->buildPathRegex($route->getRoutePath());
 			if (preg_match($pathRegex, $request, $matches)) {
-				$route->bindParameters(array_slice($matches, 1));
+				$route->setParameters(array_slice($matches, 1));
 
 				return $route;
 			}
