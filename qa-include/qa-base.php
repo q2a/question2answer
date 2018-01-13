@@ -19,10 +19,8 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-
 define('QA_VERSION', '1.8.0-beta1'); // also used as suffix for .js and .css requests
 define('QA_BUILD_DATE', '2017-09-07');
-
 
 /**
  * Autoloads some Q2A classes so it's possible to use them without adding a require_once first. From version 1.7 onwards.
@@ -61,6 +59,10 @@ if (defined('QA_WORDPRESS_LOAD_FILE')) {
 	// if relevant, load Joomla JConfig class into global scope
 	require_once QA_JOOMLA_LOAD_FILE;
 }
+
+
+require QA_BASE_DIR . 'qa-src/helpers.php';
+app();
 
 
 qa_initialize_constants_2();
