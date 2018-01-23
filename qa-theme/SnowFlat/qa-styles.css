@@ -908,7 +908,8 @@ blockquote p {
 }
 
 .qa-favorite-button, .qa-unfavorite-button {
-	background: url('images/star.png') no-repeat;
+	background-image: url('images/star.png');
+	background-repeat: no-repeat;
 	width: 38px;
 	height: 38px;
 	margin: 0;
@@ -917,15 +918,18 @@ blockquote p {
 	transition: background-position 0s;
 }
 .qa-favorite-button:hover, .qa-unfavorite-button:hover {
-	background: #f39c12 center -38px;
+	background-color: #f39c12;
+	background-position: center -38px;
 }
 
 .qa-favorite-button {
-	background: #ecf0f1 center top;
+	background-color: #ecf0f1;
+	background-position: center top;
 }
 
 .qa-unfavorite-button {
-	background: #f1c40f center bottom;
+	background-color: #f1c40f;
+	background-position: center bottom;
 }
 
 /*------[ q-list ]------*/
@@ -1534,7 +1538,9 @@ blockquote p {
 }
 
 .qa-top-users-label .qa-user-link.qa-user-favorited {
-	background: url('images/icons/fev-star.png') no-repeat 2px center;
+	background-image: url('images/icons/fev-star.png');
+	background-repeat: no-repeat;
+	background-position: 2px center;
 	padding-left: 22px;
 }
 
@@ -2038,7 +2044,8 @@ input[type="submit"], button {
 	color: #fff;
 }
 #level .qa-form-wide-static a:hover:first-child, #level .qa-form-wide-static a:focus:first-child {
-	background: #2ecc71 url('images/icons/mail-white.png');
+	background-color: #2ecc71;
+	background-image: url('images/icons/mail-white.png');
 	border: 1px solid #25a25a;
 	color: #fff;
 	text-decoration: none;
@@ -2111,9 +2118,9 @@ input[type="submit"], button {
 }
 
 .qa-favorite-image {
+	display: inline-block;
 	width: 16px;
 	height: 16px;
-	display: inline-block;
 	background: #ecf0f1 url('images/favorite-icon-15x15.png');
 }
 
@@ -2166,7 +2173,8 @@ input[type="submit"], button {
 	background-image: url('images/icons/flag-white.png');
 }
 .qa-form-light-button-unflag {
-	background: #812b2b url('images/icons/flag-white.png');
+	background-color: #812b2b;
+	background-image: url('images/icons/flag-white.png');
 }
 .qa-form-light-button-clearflags {
 	background-image: url('images/icons/un-flag-white.png');
@@ -2207,7 +2215,8 @@ input[type="submit"], button {
 }
 
 .qa-form-light-button-answer {
-	background: #27ae60 url('images/icons/answer-white.png');
+	background-image: #27ae60;
+	background-image: url('images/icons/answer-white.png');
 	float: left;
 	margin: 0 5px 0 0;
 }
@@ -2729,7 +2738,8 @@ input[type="submit"], button {
 	background-image: url('images/icons/flag.png');
 }
 .qa-c-list-item .qa-form-light-button-unflag {
-	background: #e4afaf url('images/icons/flag.png');
+	background-color: #e4afaf;
+	background-image: url('images/icons/flag.png');
 }
 .qa-c-list-item .qa-form-light-button-clearflags {
 	background-image: url('images/icons/un-flag.png');
@@ -3325,6 +3335,9 @@ input[type="submit"], button {
 		border-left: 1px solid #1dd2af;
 		cursor: pointer;
 	}
+	.qam-search-mobile.active {
+		background-image: url('images/icons/search-mobile-collaps.png');
+	}
 	.qam-search-mobile.orange {
 		background-color: #ea940c;
 		border-left-color: #f4a62a;
@@ -3380,9 +3393,6 @@ input[type="submit"], button {
 	}
 	.qam-search-mobile.wet-asphalt.active {
 		background-color: #34495e;
-	}
-	.qam-search-mobile.active {
-		background: url('images/icons/search-mobile-collaps.png') no-repeat center;
 	}
 }
 
