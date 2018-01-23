@@ -388,7 +388,7 @@ function qa_post_userid_to_handle($userid)
  * Return the textual rendition of $content in $format (used for indexing).
  * @param $content
  * @param $format
- * @return
+ * @return string
  */
 function qa_post_content_to_text($content, $format)
 {

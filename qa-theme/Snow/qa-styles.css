@@ -175,7 +175,6 @@ h1 {
 	margin: 0;
 	color: #444;
 	font-size: 20px;
-	font-weight: 700;
 	font-family: Arial,Helvetica,sans-serif;
 	font-weight: 700;
 	line-height: 1.1em;
@@ -841,7 +840,6 @@ div.header-banner {
 .qa-view-count {
 	float: left;
 	background: #fff;
-	float: left;
 	width: 60px;
 	height: 60px;
 	text-align: center;
@@ -1056,7 +1054,6 @@ div.header-banner {
 	box-shadow: none;
 	font-size: 18px;
 	border: none;
-	box-shadow: none;
 	text-shadow: none;
 }
 
@@ -1198,7 +1195,7 @@ div.header-banner {
 	background-color: #666;
 	color: #ddd !important;
 	-moz-transition: background-color ease-in-out 0.15s;
-	-websit-transition: background-color ease-in-out 0.15s;
+	-webkit-transition: background-color ease-in-out 0.15s;
 	-o-transition: background-color ease-in-out 0.15s;
 	transition: background-color ease-in-out 0.15s;
 }
@@ -2451,8 +2448,7 @@ a.qa-browse-cat-link:visited {
 }
 
 .qa-favorite-image {
-	background: url(images/favorite-heart.png) no-repeat;
-	background-position: 0 -24px;
+	background: url(images/favorite-heart.png) no-repeat 0 -24px;
 	border: 0;
 	height: 24px;
 	width: 24px;
@@ -2487,13 +2483,11 @@ a.qa-browse-cat-link:visited {
 }
 
 .qa-q-favorited .qa-q-item-title a, .qa-tag-favorited, .qa-tag-favorited:hover, .qa-cat-favorited, .qa-user-favorited, .qa-nav-cat-favorited, .qa-browse-cat-favorited {
-	background-image: url(images/favorite-icon-15x15.png);
-	background-repeat: no-repeat;
+	background: url(images/favorite-icon-15x15.png) no-repeat;
 }
 
 .qa-cat-parent-favorited {
-	background-image: url(images/favorite-light-icon-15x15.png);
-	background-repeat: no-repeat;
+	background: url(images/favorite-light-icon-15x15.png) no-repeat;
 }
 
 .qa-q-favorited .qa-q-item-title a, .qa-nav-cat-favorited, .qa-browse-cat-favorited {

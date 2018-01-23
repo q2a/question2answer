@@ -451,6 +451,7 @@ function qa_db_list_tables_lc()
  *
  * @param bool $onlyTablesWithPrefix Determine if the result should only include tables with the
  * QA_MYSQL_TABLE_PREFIX or if it should include all tables in the database.
+ * @return array
  */
 function qa_db_list_tables($onlyTablesWithPrefix = false)
 {

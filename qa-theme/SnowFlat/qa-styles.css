@@ -319,10 +319,7 @@ blockquote p {
 	width: 24px;
 	height: 24px;
 	display: block;
-	background-color: transparent;
-	background-image: url('images/icons/close-black.png');
-	background-repeat: no-repeat;
-	background-position: center;
+	background: transparent url('images/icons/close-black.png') no-repeat center;
 	text-indent: -9999px;
 	border: none;
 	outline: none;
@@ -330,8 +327,7 @@ blockquote p {
 	transition: background-image 0.5s;
 }
 .qa-notice-close-button:hover, .qa-notice-close-button:focus {
-	background-color: transparent; /* override generic input styles */
-	background-image: url('images/icons/close-red.png');
+	background: transparent url('images/icons/close-red.png'); /* override generic input styles */
 	outline: none;
 	border: none;
 }
@@ -912,8 +908,7 @@ blockquote p {
 }
 
 .qa-favorite-button, .qa-unfavorite-button {
-	background-image: url('images/star.png');
-	background-repeat: no-repeat;
+	background: url('images/star.png') no-repeat;
 	width: 38px;
 	height: 38px;
 	margin: 0;
@@ -922,18 +917,15 @@ blockquote p {
 	transition: background-position 0s;
 }
 .qa-favorite-button:hover, .qa-unfavorite-button:hover {
-	background-color: #f39c12;
-	background-position: center -38px;
+	background: #f39c12 center -38px;
 }
 
 .qa-favorite-button {
-	background-color: #ecf0f1;
-	background-position: center top;
+	background: #ecf0f1 center top;
 }
 
 .qa-unfavorite-button {
-	background-color: #f1c40f;
-	background-position: center bottom;
+	background: #f1c40f center bottom;
 }
 
 /*------[ q-list ]------*/
@@ -1065,8 +1057,7 @@ blockquote p {
 
 .qa-vote-up-button, .qa-vote-down-button, .qa-voted-up-button, .qa-voted-down-button, .qa-vote-up-disabled, .qa-vote-down-disabled {
 	text-indent: -9999px;
-	background: url('images/vote-buttons-2.png');
-	background-repeat: no-repeat;
+	background: url('images/vote-buttons-2.png') no-repeat;
 	width: 16px;
 	height: 10px;
 	border: none;
@@ -1543,9 +1534,7 @@ blockquote p {
 }
 
 .qa-top-users-label .qa-user-link.qa-user-favorited {
-	background-image: url('images/icons/fev-star.png');
-	background-repeat: no-repeat;
-	background-position: 2px center;
+	background: url('images/icons/fev-star.png') no-repeat 2px center;
 	padding-left: 22px;
 }
 
@@ -1756,7 +1745,6 @@ blockquote p {
 
 .qa-part-form-message .qam-pm-message {
 	padding: 10px;
-	margin-bottom: 5px;
 	background: #27ae60;
 	color: #fff;
 	margin-bottom: 0;
@@ -2043,18 +2031,14 @@ input[type="submit"], button {
 }
 
 #level .qa-form-wide-static a:first-child {
-	background-color: #27ae60;
-	background-image: url('images/icons/mail-white.png');
-	background-repeat: no-repeat;
-	background-position: 5px center;
+	background: #27ae60 url('images/icons/mail-white.png') no-repeat 5px center;
 	padding: 2px 5px 2px 25px;
 	border: 1px solid #1e8449;
 	display: inline-block;
 	color: #fff;
 }
 #level .qa-form-wide-static a:hover:first-child, #level .qa-form-wide-static a:focus:first-child {
-	background-color: #2ecc71;
-	background-image: url('images/icons/mail-white.png');
+	background: #2ecc71 url('images/icons/mail-white.png');
 	border: 1px solid #25a25a;
 	color: #fff;
 	text-decoration: none;
@@ -2130,8 +2114,7 @@ input[type="submit"], button {
 	width: 16px;
 	height: 16px;
 	display: inline-block;
-	background-color: #ecf0f1;
-	background-image: url('images/favorite-icon-15x15.png');
+	background: #ecf0f1 url('images/favorite-icon-15x15.png');
 }
 
 .qa-suggest-next {
@@ -2183,8 +2166,7 @@ input[type="submit"], button {
 	background-image: url('images/icons/flag-white.png');
 }
 .qa-form-light-button-unflag {
-	background-color: #812b2b;
-	background-image: url('images/icons/flag-white.png');
+	background: #812b2b url('images/icons/flag-white.png');
 }
 .qa-form-light-button-clearflags {
 	background-image: url('images/icons/un-flag-white.png');
@@ -2225,8 +2207,7 @@ input[type="submit"], button {
 }
 
 .qa-form-light-button-answer {
-	background-image: url('images/icons/answer-white.png');
-	background-color: #27ae60;
+	background: #27ae60 url('images/icons/answer-white.png');
 	float: left;
 	margin: 0 5px 0 0;
 }
@@ -2549,9 +2530,7 @@ input[type="submit"], button {
 	display: block;
 	margin: 0;
 	position: relative;
-	background-image: url('images/answer-select.png');
-	background-repeat: no-repeat;
-	background-position: center;
+	background: url('images/answer-select.png') no-repeat center;
 	-webkit-transition: all 0.5s;
 	transition: all 0.5s;
 }
@@ -2750,8 +2729,7 @@ input[type="submit"], button {
 	background-image: url('images/icons/flag.png');
 }
 .qa-c-list-item .qa-form-light-button-unflag {
-	background-color: #e4afaf;
-	background-image: url('images/icons/flag.png');
+	background: #e4afaf url('images/icons/flag.png');
 }
 .qa-c-list-item .qa-form-light-button-clearflags {
 	background-image: url('images/icons/un-flag.png');
@@ -2830,7 +2808,6 @@ input[type="submit"], button {
 
 .qa-widget-main h2:first-of-type {
 	padding: 10px;
-	margin-bottom: 5px;
 	background: #9b59b6;
 	color: #fff;
 	margin: 0 0 5px 0;
@@ -3134,7 +3111,6 @@ input[type="submit"], button {
 /*------[ footer ]------*/
 .qam-footer-box {
 	padding: 0;
-	margin-bottom: 5px;
 	background: #34495e;
 	color: #fff;
 	overflow: hidden;
@@ -3197,7 +3173,6 @@ input[type="submit"], button {
 
 .qa-footer {
 	padding: 10px;
-	margin-bottom: 5px;
 	background: #2c3e50;
 	color: #fff;
 	margin-bottom: 0;
@@ -3296,7 +3271,6 @@ input[type="submit"], button {
 	}
 	.qam-ask-mobile a {
 		padding: 20px;
-		margin-bottom: 5px;
 		background: #1abc9c;
 		color: #fff;
 		text-align: center;
@@ -3345,10 +3319,7 @@ input[type="submit"], button {
 	}
 
 	.qam-search-mobile {
-		background-image: url('images/icons/search-mobile.png');
-		background-repeat: no-repeat;
-		background-position: center;
-		background-color: #1abc9c;
+		background: #1abc9c url('images/icons/search-mobile.png') no-repeat center;
 		width: 64px;
 		display: table-cell;
 		border-left: 1px solid #1dd2af;
@@ -3411,9 +3382,7 @@ input[type="submit"], button {
 		background-color: #34495e;
 	}
 	.qam-search-mobile.active {
-		background-image: url('images/icons/search-mobile-collaps.png');
-		background-repeat: no-repeat;
-		background-position: center;
+		background: url('images/icons/search-mobile-collaps.png') no-repeat center;
 	}
 }
 

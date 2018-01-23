@@ -44,8 +44,8 @@ function qa_db_increment_views($postid)
 /**
  * Recalculate the hotness in the database for one or more posts.
  *
- * @param $firstpostid First post to recalculate (or only post if $lastpostid is null).
- * @param $lastpostid Last post in the range to recalculate.
+ * @param int $firstpostid First post to recalculate (or only post if $lastpostid is null).
+ * @param int $lastpostid Last post in the range to recalculate.
  * @param bool $viewincrement Deprecated - view counter is now incremented separately. Previously, would increment the post's
  *   views and include that in the hotness calculation.
  * @return void
