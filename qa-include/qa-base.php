@@ -1867,9 +1867,9 @@ function qa_opt($name, $value = null)
  */
 function qa_debug($var)
 {
-	echo "\n" . '<pre style="padding: 10px; background-color: #eee; color: #444; font-size: 11px; text-align: left">';
-	echo $var === null ? 'NULL' : print_r($var, true);
-	echo '</pre>' . "\n";
+	echo "\n" . '<div style="margin: 10px 0; padding: 10px; background-color: #eee; color: #333; font-size: 11px; text-align: left; font-family: monospace">';
+	echo $var === null ? 'NULL' : qa_html(print_r($var, true), is_array($var));
+	echo '</div>' . "\n";
 }
 
 
