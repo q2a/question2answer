@@ -650,7 +650,7 @@ switch ($adminsection) {
 		$subtitle = 'admin/caching_title';
 		$formstyle = 'wide';
 
-		$showoptions = array('caching_enabled', 'caching_driver', 'caching_q_start', 'caching_q_time', 'caching_qlist_time', 'caching_catwidget_time');
+		$showoptions = array('caching_enabled', 'caching_driver', 'caching_q_start', 'caching_q_time', 'caching_catwidget_time');
 
 		break;
 
