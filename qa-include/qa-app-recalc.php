@@ -12,4 +12,4 @@ if (defined('QA_DEBUG_PERFORMANCE') && QA_DEBUG_PERFORMANCE) {
 	trigger_error('Included file ' . basename(__FILE__) . ' is deprecated');
 }
 
-require_once QA_INCLUDE_DIR.'app/recalc.php';
+require_once QA_INCLUDE_DIR.'app/recalc/RecalcMain.php';

@@ -78,7 +78,7 @@ function qa_db_table_definitions()
 
 		* In MySQL versions prior to 5.0.3, VARCHAR(x) columns will be silently converted to TEXT where x>255
 
-		* See box at top of /qa-include/app/recalc.php for a list of redundant (non-normal) information in the database
+		* See box at top of /qa-include/app/recalc/RecalcMain.php for a list of redundant (non-normal) information in the database
 
 		* Starting in version 1.2, we explicitly name keys and foreign key constraints, instead of allowing MySQL
 		  to name these by default. Our chosen names match the default names that MySQL would have assigned, and
@@ -769,7 +769,7 @@ function qa_db_default_userfields_sql()
  */
 function qa_db_upgrade_tables()
 {
-	require_once QA_INCLUDE_DIR . 'app/recalc.php';
+	require_once QA_INCLUDE_DIR . 'app/recalc/RecalcMain.php';
 
 	$definitions = qa_db_table_definitions();
 	$keyrecalc = array();
@@ -1611,16 +1611,17 @@ function qa_db_upgrade_tables()
 
 	// Perform any necessary recalculations, as determined by upgrade steps
 
-	foreach ($keyrecalc as $state => $dummy) {
-		while ($state) {
+	foreach (array_keys($keyrecalc) as $state) {
+		$recalc = new Q2A_App_Recalc_Main($state);
+		while ($recalc->getState()) {
 			set_time_limit(60);
 
 			$stoptime = time() + 2;
 
-			while (qa_recalc_perform_step($state) && (time() < $stoptime))
+			while ($recalc->performStep() && (time() < $stoptime))
 				;
 
-			qa_db_upgrade_progress(qa_recalc_get_message($state));
+			qa_db_upgrade_progress($recalc->getMmessage());
 		}
 	}
 }
