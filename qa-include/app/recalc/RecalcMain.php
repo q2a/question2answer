@@ -112,7 +112,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoReindexContent_PageReindex()
 	{
-		$pages = qa_db_pages_get_for_reindexing($this->next, 10);
+		$pages = qa_db_pages_get_for_reindexing($this->state->next, 10);
 
 		if (!count($pages)) {
 			$this->state->transition('doreindexcontent_postcount');
@@ -141,8 +141,8 @@ class Q2A_App_Recalc_Main
 			}
 		}
 
-		$this->next = 1 + $lastpageid;
-		$this->done += count($pages);
+		$this->state->next = 1 + $lastpageid;
+		$this->state->done += count($pages);
 		return true;
 	}
 
@@ -158,10 +158,10 @@ class Q2A_App_Recalc_Main
 
 	private function DoReindexContent_PostReindex()
 	{
-		$posts = qa_db_posts_get_for_reindexing($this->next, 10);
+		$posts = qa_db_posts_get_for_reindexing($this->state->next, 10);
 
 		if (!count($posts)) {
-			qa_db_truncate_indexes($this->next);
+			qa_db_truncate_indexes($this->state->next);
 			$this->state->transition('doreindexposts_wordcount');
 			return false;
 		}
@@ -170,7 +170,7 @@ class Q2A_App_Recalc_Main
 
 		$lastpostid = max(array_keys($posts));
 
-		qa_db_prepare_for_reindexing($this->next, $lastpostid);
+		qa_db_prepare_for_reindexing($this->state->next, $lastpostid);
 		qa_suspend_update_counts();
 
 		foreach ($posts as $postid => $post) {
@@ -179,14 +179,14 @@ class Q2A_App_Recalc_Main
 				$post['format'], qa_viewer_text($post['content'], $post['format']), $post['tags'], $post['categoryid']);
 		}
 
-		$this->next = 1 + $lastpostid;
-		$this->done += count($posts);
+		$this->state->next = 1 + $lastpostid;
+		$this->state->done += count($posts);
 		return true;
 	}
 
 	private function DoReindexPosts_WordCount()
 	{
-		$wordids = qa_db_words_prepare_for_recounting($this->next, 1000);
+		$wordids = qa_db_words_prepare_for_recounting($this->state->next, 1000);
 
 		if (!count($wordids)) {
 			qa_db_tagcount_update(); // this is quick so just do it here
@@ -196,10 +196,10 @@ class Q2A_App_Recalc_Main
 
 		$lastwordid = max($wordids);
 
-		qa_db_words_recount($this->next, $lastwordid);
+		qa_db_words_recount($this->state->next, $lastwordid);
 
-		$this->next = 1 + $lastwordid;
-		$this->done += count($wordids);
+		$this->state->next = 1 + $lastwordid;
+		$this->state->done += count($wordids);
 		return true;
 	}
 
@@ -223,7 +223,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoRecountPosts_VoteCount()
 	{
-		$postids = qa_db_posts_get_for_recounting($this->next, 1000);
+		$postids = qa_db_posts_get_for_recounting($this->state->next, 1000);
 
 		if (!count($postids)) {
 			$this->state->transition('dorecountposts_acount');
@@ -232,16 +232,16 @@ class Q2A_App_Recalc_Main
 
 		$lastpostid = max($postids);
 
-		qa_db_posts_votes_recount($this->next, $lastpostid);
+		qa_db_posts_votes_recount($this->state->next, $lastpostid);
 
-		$this->next = 1 + $lastpostid;
-		$this->done += count($postids);
+		$this->state->next = 1 + $lastpostid;
+		$this->state->done += count($postids);
 		return true;
 	}
 
 	private function DoRecountPosts_Acount()
 	{
-		$postids = qa_db_posts_get_for_recounting($this->next, 1000);
+		$postids = qa_db_posts_get_for_recounting($this->state->next, 1000);
 
 		if (count($postids)) {
 			qa_db_unupaqcount_update();
@@ -251,10 +251,10 @@ class Q2A_App_Recalc_Main
 
 		$lastpostid = max($postids);
 
-		qa_db_posts_answers_recount($this->next, $lastpostid);
+		qa_db_posts_answers_recount($this->state->next, $lastpostid);
 
-		$this->next = 1 + $lastpostid;
-		$this->done += count($postids);
+		$this->state->next = 1 + $lastpostid;
+		$this->state->done += count($postids);
 		return true;
 	}
 
@@ -275,21 +275,21 @@ class Q2A_App_Recalc_Main
 	private function DoRecalcPoints_Recalc()
 	{
 		$default_recalccount = 10;
-		$userids = qa_db_users_get_for_recalc_points($this->next, $default_recalccount + 1); // get one extra so we know where to start from next
+		$userids = qa_db_users_get_for_recalc_points($this->state->next, $default_recalccount + 1); // get one extra so we know where to start from next
 		$gotcount = count($userids);
 		$recalccount = min($default_recalccount, $gotcount); // can't recalc more than we got
 
 		if ($recalccount > 0) {
 			$lastuserid = $userids[$recalccount - 1];
-			qa_db_users_recalc_points($this->next, $lastuserid);
-			$this->done += $recalccount;
+			qa_db_users_recalc_points($this->state->next, $lastuserid);
+			$this->state->done += $recalccount;
 
 		} else {
-			$lastuserid = $this->next; // for truncation
+			$lastuserid = $this->state->next; // for truncation
 		}
 
 		if ($gotcount > $recalccount) { // more left to do
-			$this->next = $userids[$recalccount]; // start next round at first one not recalculated
+			$this->state->next = $userids[$recalccount]; // start next round at first one not recalculated
 			return true;
 		} else {
 			qa_db_truncate_userpoints($lastuserid);
@@ -314,7 +314,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoRefillEvents_Refill()
 	{
-		$questionids = qa_db_qs_get_for_event_refilling($this->next, 1);
+		$questionids = qa_db_qs_get_for_event_refilling($this->state->next, 1);
 
 		if (!count($questionids)) {
 			$this->state->transition('dorefillevents_complete');
@@ -406,8 +406,8 @@ class Q2A_App_Recalc_Main
 			}
 		}
 
-		$this->next = 1 + $lastquestionid;
-		$this->done += count($questionids);
+		$this->state->next = 1 + $lastquestionid;
+		$this->state->done += count($questionids);
 		return true;
 	}
 
@@ -428,7 +428,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoRecalcCategories_PostUpdate()
 	{
-		$postids = qa_db_posts_get_for_recategorizing($this->next, 100);
+		$postids = qa_db_posts_get_for_recategorizing($this->state->next, 100);
 
 		if (!count($postids)) {
 			$this->state->transition('dorecalccategories_recount');
@@ -437,17 +437,17 @@ class Q2A_App_Recalc_Main
 
 		$lastpostid = max($postids);
 
-		qa_db_posts_recalc_categoryid($this->next, $lastpostid);
-		qa_db_posts_calc_category_path($this->next, $lastpostid);
+		qa_db_posts_recalc_categoryid($this->state->next, $lastpostid);
+		qa_db_posts_calc_category_path($this->state->next, $lastpostid);
 
-		$this->next = 1 + $lastpostid;
-		$this->done += count($postids);
+		$this->state->next = 1 + $lastpostid;
+		$this->state->done += count($postids);
 		return true;
 	}
 
 	private function DoRecalcCategories_Recount()
 	{
-		$categoryids = qa_db_categories_get_for_recalcs($this->next, 10);
+		$categoryids = qa_db_categories_get_for_recalcs($this->state->next, 10);
 
 		if (!count($categoryids)) {
 			$this->state->transition('dorecalccategories_backpaths');
@@ -459,14 +459,14 @@ class Q2A_App_Recalc_Main
 			qa_db_ifcategory_qcount_update($categoryid);
 		}
 
-		$this->next = 1 + $lastcategoryid;
-		$this->done += count($categoryids);
+		$this->state->next = 1 + $lastcategoryid;
+		$this->state->done += count($categoryids);
 		return true;
 	}
 
 	private function DoRecalcCategories_BackPaths()
 	{
-		$categoryids = qa_db_categories_get_for_recalcs($this->next, 10);
+		$categoryids = qa_db_categories_get_for_recalcs($this->state->next, 10);
 
 		if (!count($categoryids)) {
 			$this->state->transition('dorecalccategories_complete');
@@ -474,10 +474,10 @@ class Q2A_App_Recalc_Main
 		}
 		$lastcategoryid = max($categoryids);
 
-		qa_db_categories_recalc_backpaths($this->next, $lastcategoryid);
+		qa_db_categories_recalc_backpaths($this->state->next, $lastcategoryid);
 
-		$this->next = 1 + $lastcategoryid;
-		$this->done += count($categoryids);
+		$this->state->next = 1 + $lastcategoryid;
+		$this->state->done += count($categoryids);
 		return true;
 	}
 
@@ -489,7 +489,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoDeleteHidden_Comments()
 	{
-		$posts = qa_db_posts_get_for_deleting('C', $this->next, 1);
+		$posts = qa_db_posts_get_for_deleting('C', $this->state->next, 1);
 
 		if (!count($posts)) {
 			$this->state->transition('dodeletehidden_answers');
@@ -501,14 +501,14 @@ class Q2A_App_Recalc_Main
 		$postid = $posts[0];
 		qa_post_delete($postid);
 
-		$this->next = 1 + $postid;
-		$this->done++;
+		$this->state->next = 1 + $postid;
+		$this->state->done++;
 		return true;
 	}
 
 	private function DoDeleteHidden_Answers()
 	{
-		$posts = qa_db_posts_get_for_deleting('A', $this->next, 1);
+		$posts = qa_db_posts_get_for_deleting('A', $this->state->next, 1);
 
 		if (!count($posts)) {
 			$this->state->transition('dodeletehidden_questions');
@@ -520,14 +520,14 @@ class Q2A_App_Recalc_Main
 		$postid = $posts[0];
 		qa_post_delete($postid);
 
-		$this->next = 1 + $postid;
-		$this->done++;
+		$this->state->next = 1 + $postid;
+		$this->state->done++;
 		return true;
 	}
 
 	private function Dodeletehidden_questions()
 	{
-		$posts = qa_db_posts_get_for_deleting('Q', $this->next, 1);
+		$posts = qa_db_posts_get_for_deleting('Q', $this->state->next, 1);
 
 		if (!count($posts)) {
 			$this->state->transition('dodeletehidden_complete');
@@ -539,8 +539,8 @@ class Q2A_App_Recalc_Main
 		$postid = $posts[0];
 		qa_post_delete($postid);
 
-		$this->next = 1 + $postid;
-		$this->done++;
+		$this->state->next = 1 + $postid;
+		$this->state->done++;
 		return true;
 	}
 
@@ -552,7 +552,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoBlobsToDisk_Move()
 	{
-		$blob = qa_db_get_next_blob_in_db($this->next);
+		$blob = qa_db_get_next_blob_in_db($this->state->next);
 
 		if (!isset($blob)) {
 			$this->state->transition('doblobstodisk_complete');
@@ -566,8 +566,8 @@ class Q2A_App_Recalc_Main
 			qa_db_blob_set_content($blob['blobid'], null);
 		}
 
-		$this->next = 1 + $blob['blobid'];
-		$this->done++;
+		$this->state->next = 1 + $blob['blobid'];
+		$this->state->done++;
 		return true;
 	}
 
@@ -579,7 +579,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoBlobsToDB_Move()
 	{
-		$blob = qa_db_get_next_blob_on_disk($this->next);
+		$blob = qa_db_get_next_blob_on_disk($this->state->next);
 
 		if (!isset($blob)) {
 			$this->state->transition('doblobstodb_complete');
@@ -592,8 +592,8 @@ class Q2A_App_Recalc_Main
 		qa_db_blob_set_content($blob['blobid'], $content);
 		qa_delete_blob_file($blob['blobid'], $blob['format']);
 
-		$this->next = 1 + $blob['blobid'];
-		$this->done++;
+		$this->state->next = 1 + $blob['blobid'];
+		$this->state->done++;
 		return true;
 	}
 
@@ -620,14 +620,14 @@ class Q2A_App_Recalc_Main
 		$cacheStats = $cacheDriver->getStats();
 		$limit = min($cacheStats['files'], 20);
 
-		if (!($cacheStats['files'] > 0 && $this->next <= $this->length)) {
+		if (!($cacheStats['files'] > 0 && $this->state->next <= $this->state->length)) {
 			$this->state->transition('docacheclear_complete');
 			return false;
 		}
 			
-		$deleted = $cacheDriver->clear($limit, $this->next, ($this->state->operation === 'docachetrim_process'));
-		$this->done += $deleted;
-		$this->next += $limit - $deleted; // skip files that weren't deleted on next iteration
+		$deleted = $cacheDriver->clear($limit, $this->state->next, ($this->state->operation === 'docachetrim_process'));
+		$this->state->done += $deleted;
+		$this->state->next += $limit - $deleted; // skip files that weren't deleted on next iteration
 		return true;
 	}
 
@@ -657,8 +657,8 @@ class Q2A_App_Recalc_Main
 	{
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		$this->done = (int) $this->done;
-		$this->length = (int) $this->length;
+		$this->state->done = (int) $this->state->done;
+		$this->state->length = (int) $this->state->length;
 
 		switch ($this->state->operation) {
 			case 'doreindexcontent_postcount':
@@ -669,11 +669,11 @@ class Q2A_App_Recalc_Main
 				break;
 
 			case 'doreindexcontent_pagereindex':
-				$message = $this->progressLang('admin/reindex_pages_reindexed', $this->done, $this->length);
+				$message = $this->progressLang('admin/reindex_pages_reindexed', $this->state->done, $this->state->length);
 				break;
 
 			case 'doreindexcontent_postreindex':
-				$message = $this->progressLang('admin/reindex_posts_reindexed', $this->done, $this->length);
+				$message = $this->progressLang('admin/reindex_posts_reindexed', $this->state->done, $this->state->length);
 				break;
 
 			case 'doreindexposts_complete':
@@ -681,15 +681,15 @@ class Q2A_App_Recalc_Main
 				break;
 
 			case 'doreindexposts_wordcount':
-				$message = $this->progressLang('admin/reindex_posts_wordcounted', $this->done, $this->length);
+				$message = $this->progressLang('admin/reindex_posts_wordcounted', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecountposts_votecount':
-				$message = $this->progressLang('admin/recount_posts_votes_recounted', $this->done, $this->length);
+				$message = $this->progressLang('admin/recount_posts_votes_recounted', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecountposts_acount':
-				$message = $this->progressLang('admin/recount_posts_as_recounted', $this->done, $this->length);
+				$message = $this->progressLang('admin/recount_posts_as_recounted', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecountposts_complete':
@@ -701,7 +701,7 @@ class Q2A_App_Recalc_Main
 				break;
 
 			case 'dorecalcpoints_recalc':
-				$message = $this->progressLang('admin/recalc_points_recalced', $this->done, $this->length);
+				$message = $this->progressLang('admin/recalc_points_recalced', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecalcpoints_complete':
@@ -709,7 +709,7 @@ class Q2A_App_Recalc_Main
 				break;
 
 			case 'dorefillevents_refill':
-				$message = $this->progressLang('admin/refill_events_refilled', $this->done, $this->length);
+				$message = $this->progressLang('admin/refill_events_refilled', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorefillevents_complete':
@@ -717,15 +717,15 @@ class Q2A_App_Recalc_Main
 				break;
 
 			case 'dorecalccategories_postupdate':
-				$message = $this->progressLang('admin/recalc_categories_updated', $this->done, $this->length);
+				$message = $this->progressLang('admin/recalc_categories_updated', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecalccategories_recount':
-				$message = $this->progressLang('admin/recalc_categories_recounting', $this->done, $this->length);
+				$message = $this->progressLang('admin/recalc_categories_recounting', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecalccategories_backpaths':
-				$message = $this->progressLang('admin/recalc_categories_backpaths', $this->done, $this->length);
+				$message = $this->progressLang('admin/recalc_categories_backpaths', $this->state->done, $this->state->length);
 				break;
 
 			case 'dorecalccategories_complete':
@@ -733,15 +733,15 @@ class Q2A_App_Recalc_Main
 				break;
 
 			case 'dodeletehidden_comments':
-				$message = $this->progressLang('admin/hidden_comments_deleted', $this->done, $this->length);
+				$message = $this->progressLang('admin/hidden_comments_deleted', $this->state->done, $this->state->length);
 				break;
 
 			case 'dodeletehidden_answers':
-				$message = $this->progressLang('admin/hidden_answers_deleted', $this->done, $this->length);
+				$message = $this->progressLang('admin/hidden_answers_deleted', $this->state->done, $this->state->length);
 				break;
 
 			case 'dodeletehidden_questions':
-				$message = $this->progressLang('admin/hidden_questions_deleted', $this->done, $this->length);
+				$message = $this->progressLang('admin/hidden_questions_deleted', $this->state->done, $this->state->length);
 				break;
 
 			case 'dodeletehidden_complete':
@@ -750,7 +750,7 @@ class Q2A_App_Recalc_Main
 
 			case 'doblobstodisk_move':
 			case 'doblobstodb_move':
-				$message = $this->progressLang('admin/blobs_move_moved', $this->done, $this->length);
+				$message = $this->progressLang('admin/blobs_move_moved', $this->state->done, $this->state->length);
 				break;
 
 			case 'doblobstodisk_complete':
@@ -760,7 +760,7 @@ class Q2A_App_Recalc_Main
 
 			case 'docachetrim_process':
 			case 'docacheclear_process':
-				$message = $this->progressLang('admin/caching_delete_progress', $this->done, $this->length);
+				$message = $this->progressLang('admin/caching_delete_progress', $this->state->done, $this->state->length);
 				break;
 
 			case 'docacheclear_complete':
