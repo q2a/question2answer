@@ -71,47 +71,43 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
 require_once QA_INCLUDE_DIR . 'app/post-create.php';
 require_once QA_INCLUDE_DIR . 'app/post-update.php';
 
+require_once QA_INCLUDE_DIR . 'app/recalc/RecalcState.php';
+
 class Q2A_App_Recalc_Main
 {
 	protected $state;
-	protected $operation;
-	protected $length;
-	protected $next;
-	protected $done;
 
 	/**
 	 * Initialize the counts of resource usage.
 	 */
 	public function __construct($state)
 	{
-		$this->state = $state;
-
-		list($this->operation, $this->length, $this->next, $this->done) = explode("\t", $state . "\t\t\t\t");
+		$this->state = new Q2A_App_Recalc_State($state);
 	}
 
 	public function getState()
 	{
-		return $this->state;
+		return $this->state->getState();
 	}
 
 	public function performStep()
 	{
-		if (!method_exists($this, $this->operation)) {
-			$this->state = '';
+		if (!$this->state->getOperationClass()) {
+			$this->state->setState();
 			return false;
 		}
 
-		$continue = $this->{$this->operation}();
+		$continue = $this->{$this->state->getOperationClass()}();
 		if ($continue) {
-			$this->state = $this->operation . "\t" . $this->length . "\t" . $this->next . "\t" . $this->done;
+			$this->state->updateState();
 		}
 
-		return $continue && $this->done < $this->length;
+		return $continue && !$this->state->allDone();
 	}
 
 	private function DoReindexContent()
 	{
-		$this->transition('doreindexcontent_pagereindex');
+		$this->state->transition('doreindexcontent_pagereindex');
 	}
 
 	private function DoReindexContent_PageReindex()
@@ -119,7 +115,7 @@ class Q2A_App_Recalc_Main
 		$pages = qa_db_pages_get_for_reindexing($this->next, 10);
 
 		if (!count($pages)) {
-			$this->transition('doreindexcontent_postcount');
+			$this->state->transition('doreindexcontent_postcount');
 			return false;
 		}
 			
@@ -156,7 +152,7 @@ class Q2A_App_Recalc_Main
 		qa_db_acount_update();
 		qa_db_ccount_update();
 
-		$this->transition('doreindexcontent_postreindex');
+		$this->state->transition('doreindexcontent_postreindex');
 		return false;
 	}
 
@@ -166,7 +162,7 @@ class Q2A_App_Recalc_Main
 
 		if (!count($posts)) {
 			qa_db_truncate_indexes($this->next);
-			$this->transition('doreindexposts_wordcount');
+			$this->state->transition('doreindexposts_wordcount');
 			return false;
 		}
 
@@ -194,7 +190,7 @@ class Q2A_App_Recalc_Main
 
 		if (!count($wordids)) {
 			qa_db_tagcount_update(); // this is quick so just do it here
-			$this->transition('doreindexposts_complete');
+			$this->state->transition('doreindexposts_complete');
 			return false;
 		}
 
@@ -209,7 +205,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoRecountPosts()
 	{
-		$this->transition('dorecountposts_postcount');
+		$this->state->transition('dorecountposts_postcount');
 		return false;
 	}
 
@@ -221,7 +217,7 @@ class Q2A_App_Recalc_Main
 		qa_db_unaqcount_update();
 		qa_db_unselqcount_update();
 
-		$this->transition('dorecountposts_votecount');
+		$this->state->transition('dorecountposts_votecount');
 		return false;
 	}
 
@@ -230,7 +226,7 @@ class Q2A_App_Recalc_Main
 		$postids = qa_db_posts_get_for_recounting($this->next, 1000);
 
 		if (!count($postids)) {
-			$this->transition('dorecountposts_acount');
+			$this->state->transition('dorecountposts_acount');
 			return false;
 		}
 
@@ -249,7 +245,7 @@ class Q2A_App_Recalc_Main
 
 		if (count($postids)) {
 			qa_db_unupaqcount_update();
-			$this->transition('dorecountposts_complete');
+			$this->state->transition('dorecountposts_complete');
 			return false;
 		}
 
@@ -264,7 +260,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoRecalcPoints()
 	{
-		$this->transition('dorecalcpoints_usercount');
+		$this->state->transition('dorecalcpoints_usercount');
 		return false;
 	}
 
@@ -272,7 +268,7 @@ class Q2A_App_Recalc_Main
 	{
 		qa_db_userpointscount_update(); // for progress update - not necessarily accurate
 		qa_db_uapprovecount_update(); // needs to be somewhere and this is the most appropriate place
-		$this->transition('dorecalcpoints_recalc');
+		$this->state->transition('dorecalcpoints_recalc');
 		return false;
 	}
 
@@ -298,21 +294,21 @@ class Q2A_App_Recalc_Main
 		} else {
 			qa_db_truncate_userpoints($lastuserid);
 			qa_db_userpointscount_update(); // quick so just do it here
-			$this->transition('dorecalcpoints_complete');
+			$this->state->transition('dorecalcpoints_complete');
 			return false;
 		}
 	}
 
 	private function DoRefillEvents()
 	{
-		$this->transition('dorefillevents_qcount');
+		$this->state->transition('dorefillevents_qcount');
 		return false;
 	}
 
 	private function DoRefillEvents_Qcount()
 	{
 		qa_db_qcount_update();
-		$this->transition('dorefillevents_refill');
+		$this->state->transition('dorefillevents_refill');
 		return false;
 	}
 
@@ -321,7 +317,7 @@ class Q2A_App_Recalc_Main
 		$questionids = qa_db_qs_get_for_event_refilling($this->next, 1);
 
 		if (!count($questionids)) {
-			$this->transition('dorefillevents_complete');
+			$this->state->transition('dorefillevents_complete');
 			return false;
 		}
 
@@ -417,7 +413,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoRecalcCategories()
 	{
-		$this->transition('dorecalccategories_postcount');
+		$this->state->transition('dorecalccategories_postcount');
 		return false;
 	}
 
@@ -426,7 +422,7 @@ class Q2A_App_Recalc_Main
 		qa_db_acount_update();
 		qa_db_ccount_update();
 
-		$this->transition('dorecalccategories_postupdate');
+		$this->state->transition('dorecalccategories_postupdate');
 		return false;
 	}
 
@@ -435,7 +431,7 @@ class Q2A_App_Recalc_Main
 		$postids = qa_db_posts_get_for_recategorizing($this->next, 100);
 
 		if (!count($postids)) {
-			$this->transition('dorecalccategories_recount');
+			$this->state->transition('dorecalccategories_recount');
 			return false;
 		}
 
@@ -454,7 +450,7 @@ class Q2A_App_Recalc_Main
 		$categoryids = qa_db_categories_get_for_recalcs($this->next, 10);
 
 		if (!count($categoryids)) {
-			$this->transition('dorecalccategories_backpaths');
+			$this->state->transition('dorecalccategories_backpaths');
 			return false;
 		}
 		$lastcategoryid = max($categoryids);
@@ -473,7 +469,7 @@ class Q2A_App_Recalc_Main
 		$categoryids = qa_db_categories_get_for_recalcs($this->next, 10);
 
 		if (!count($categoryids)) {
-			$this->transition('dorecalccategories_complete');
+			$this->state->transition('dorecalccategories_complete');
 			return false;
 		}
 		$lastcategoryid = max($categoryids);
@@ -487,7 +483,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoDeleteHidden()
 	{
-		$this->transition('dodeletehidden_comments');
+		$this->state->transition('dodeletehidden_comments');
 		return false;
 	}
 
@@ -496,7 +492,7 @@ class Q2A_App_Recalc_Main
 		$posts = qa_db_posts_get_for_deleting('C', $this->next, 1);
 
 		if (!count($posts)) {
-			$this->transition('dodeletehidden_answers');
+			$this->state->transition('dodeletehidden_answers');
 			return false;
 		}
 
@@ -515,7 +511,7 @@ class Q2A_App_Recalc_Main
 		$posts = qa_db_posts_get_for_deleting('A', $this->next, 1);
 
 		if (!count($posts)) {
-			$this->transition('dodeletehidden_questions');
+			$this->state->transition('dodeletehidden_questions');
 			return false;
 		}
 			
@@ -529,12 +525,12 @@ class Q2A_App_Recalc_Main
 		return true;
 	}
 
-	private function dodeletehidden_questions()
+	private function Dodeletehidden_questions()
 	{
 		$posts = qa_db_posts_get_for_deleting('Q', $this->next, 1);
 
 		if (!count($posts)) {
-			$this->transition('dodeletehidden_complete');
+			$this->state->transition('dodeletehidden_complete');
 			return false;
 		}
 
@@ -550,7 +546,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoBlobsToDisk()
 	{
-		$this->transition('doblobstodisk_move');
+		$this->state->transition('doblobstodisk_move');
 		return false;
 	}
 
@@ -559,7 +555,7 @@ class Q2A_App_Recalc_Main
 		$blob = qa_db_get_next_blob_in_db($this->next);
 
 		if (!isset($blob)) {
-			$this->transition('doblobstodisk_complete');
+			$this->state->transition('doblobstodisk_complete');
 			return false;
 		}
 
@@ -577,7 +573,7 @@ class Q2A_App_Recalc_Main
 
 	private function DoBlobsToDB()
 	{
-		$this->transition('doblobstodb_move');
+		$this->state->transition('doblobstodb_move');
 		return false;
 	}
 
@@ -586,7 +582,7 @@ class Q2A_App_Recalc_Main
 		$blob = qa_db_get_next_blob_on_disk($this->next);
 
 		if (!isset($blob)) {
-			$this->transition('doblobstodb_complete');
+			$this->state->transition('doblobstodb_complete');
 			return false;
 		}
 		require_once QA_INCLUDE_DIR . 'app/blobs.php';
@@ -603,19 +599,19 @@ class Q2A_App_Recalc_Main
 
 	private function DoCacheTrim()
 	{
-		$this->transition('docachetrim_process');
+		$this->state->transition('docachetrim_process');
 		return false;
 	}
 
 	private function DoCacheClear()
 	{
-		$this->transition('docacheclear_process');
+		$this->state->transition('docacheclear_process');
 		return false;
 	}
 
 	private function DoCacheTrim_Process()
 	{
-		return $this->docacheclear_process();
+		return $this->Docacheclear_process();
 	}
 
 	private function DoCacheClear_Process()
@@ -625,86 +621,15 @@ class Q2A_App_Recalc_Main
 		$limit = min($cacheStats['files'], 20);
 
 		if (!($cacheStats['files'] > 0 && $this->next <= $this->length)) {
-			$this->transition('docacheclear_complete');
+			$this->state->transition('docacheclear_complete');
 			return false;
 		}
 			
-		$deleted = $cacheDriver->clear($limit, $this->next, ($this->operation === 'docachetrim_process'));
+		$deleted = $cacheDriver->clear($limit, $this->next, ($this->state->operation === 'docachetrim_process'));
 		$this->done += $deleted;
 		$this->next += $limit - $deleted; // skip files that weren't deleted on next iteration
 		return true;
 	}
-
-	/**
-	 * Change the $state to represent the beginning of a new $operation
-	 * @param $newOoperation
-	 */
-	public function transition($newOperation)
-	{
-		$this->operation = $newOperation;
-		$this->length = $this->stageLength();
-		$this->next = (QA_FINAL_EXTERNAL_USERS && ($newOperation == 'dorecalcpoints_recalc')) ? '' : 0;
-		$this->done = 0;
-
-		$this->state = $newOperation . "\t" . $this->length . "\t" . $this->next . "\t" . $this->done;
-	}
-
-	/**
-	 * Return how many steps there will be in recalculation $operation
-	 * @return int
-	 */
-	private function stageLength()
-	{
-		switch ($this->operation) {
-			case 'doreindexcontent_pagereindex':
-				return qa_db_count_pages();
-
-			case 'doreindexcontent_postreindex':
-				return qa_opt('cache_qcount') + qa_opt('cache_acount') + qa_opt('cache_ccount');
-
-			case 'doreindexposts_wordcount':
-				return qa_db_count_words();
-
-			case 'dorecalcpoints_recalc':
-				return qa_opt('cache_userpointscount');
-
-			case 'dorecountposts_votecount':
-			case 'dorecountposts_acount':
-			case 'dorecalccategories_postupdate':
-				return qa_db_count_posts();
-
-			case 'dorefillevents_refill':
-				return qa_opt('cache_qcount') + qa_db_count_posts('Q_HIDDEN');
-
-			case 'dorecalccategories_recount':
-			case 'dorecalccategories_backpaths':
-				return qa_db_count_categories();
-
-			case 'dodeletehidden_comments':
-				return count(qa_db_posts_get_for_deleting('C'));
-
-			case 'dodeletehidden_answers':
-				return count(qa_db_posts_get_for_deleting('A'));
-
-			case 'dodeletehidden_questions':
-				return count(qa_db_posts_get_for_deleting('Q'));
-
-			case 'doblobstodisk_move':
-				return qa_db_count_blobs_in_db();
-
-			case 'doblobstodb_move':
-				return qa_db_count_blobs_on_disk();
-
-			case 'docachetrim_process':
-			case 'docacheclear_process':
-				$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
-				$cacheStats = $cacheDriver->getStats();
-				return $cacheStats['files'];
-		}
-
-		return 0;
-	}
-
 
 	/**
 	 * Return the translated language ID string replacing the progress and total in it.
@@ -724,7 +649,6 @@ class Q2A_App_Recalc_Main
 		));
 	}
 
-
 	/**
 	 * Return a string which gives a user-viewable version of $state
 	 * @return string
@@ -736,7 +660,7 @@ class Q2A_App_Recalc_Main
 		$this->done = (int) $this->done;
 		$this->length = (int) $this->length;
 
-		switch ($this->operation) {
+		switch ($this->state->operation) {
 			case 'doreindexcontent_postcount':
 			case 'dorecountposts_postcount':
 			case 'dorecalccategories_postcount':
