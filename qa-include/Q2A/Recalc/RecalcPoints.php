@@ -33,5 +33,4 @@ class Q2A_Recalc_RecalcPoints extends Q2A_Recalc_AbstractStep
 		$this->state->transition('dorecalcpoints_usercount');
 		return false;
 	}
-
 }

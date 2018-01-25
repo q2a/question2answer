@@ -33,5 +33,4 @@ class Q2A_Recalc_RecountPosts extends Q2A_Recalc_AbstractStep
 		$this->state->transition('dorecountposts_postcount');
 		return false;
 	}
-
 }

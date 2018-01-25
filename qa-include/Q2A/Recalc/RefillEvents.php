@@ -33,5 +33,4 @@ class Q2A_Recalc_RefillEvents extends Q2A_Recalc_AbstractStep
 		$this->state->transition('dorefillevents_qcount');
 		return false;
 	}
-
 }

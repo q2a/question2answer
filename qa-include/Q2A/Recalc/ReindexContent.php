@@ -33,5 +33,4 @@ class Q2A_Recalc_ReindexContent extends Q2A_Recalc_AbstractStep
 		$this->state->transition('doreindexcontent_pagereindex');
 		return false;
 	}
-
 }

@@ -67,7 +67,7 @@ abstract class Q2A_Recalc_AbstractStep
 		));
 	}
 
-	static public function factory(Q2A_Recalc_State $state)
+	public static function factory(Q2A_Recalc_State $state)
 	{
 		$class = $state->getOperationClass();
 		if (class_exists($class)) {
