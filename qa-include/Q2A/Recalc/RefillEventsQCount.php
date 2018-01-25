@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/RefillEventsQCount.php
+	Description: Recalc processing class for the refill events process.
 
 
 	This program is free software; you can redistribute it and/or
@@ -35,4 +35,8 @@ class Q2A_Recalc_RefillEventsQCount extends Q2A_Recalc_AbstractStep
 		return false;
 	}
 
+	public function getMessage()
+	{
+		return qa_lang('admin/recalc_posts_count');
+	}
 }

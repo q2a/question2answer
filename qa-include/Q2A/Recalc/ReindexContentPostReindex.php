@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/ReindexContentPostReindex.php
+	Description: Recalc processing class for the reindex content process.
 
 
 	This program is free software; you can redistribute it and/or
@@ -56,4 +56,8 @@ class Q2A_Recalc_ReindexContentPostReindex extends Q2A_Recalc_AbstractStep
 		return true;
 	}
 
+	public function getMessage()
+	{
+		return $this->progressLang('admin/reindex_posts_reindexed', $this->state->done, $this->state->length);
+	}
 }

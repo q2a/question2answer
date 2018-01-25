@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/RecalcPoints.php
+	Description: Main recalculation class.
 
 
 	This program is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ class Q2A_Recalc_RecalcMain
 	{
 		$step = Q2A_Recalc_AbstractStep::factory($this->state);
 
-		if (!$step) {
+		if (!$step || $step->isFinalStep()) {
 			$this->state->setState();
 			return false;
 		}
@@ -106,24 +106,6 @@ class Q2A_Recalc_RecalcMain
 	}
 
 	/**
-	 * Return the translated language ID string replacing the progress and total in it.
-	 * @access private
-	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
-	 * @param int $progress Amount of processed elements
-	 * @param int $total Total amount of elements
-	 *
-	 * @return string Returns the language string ID with their placeholders replaced with
-	 * the formatted progress and total numbers
-	 */
-	private function progressLang($langId, $progress, $total)
-	{
-		return strtr(qa_lang($langId), array(
-			'^1' => qa_format_number($progress),
-			'^2' => qa_format_number($total),
-		));
-	}
-
-	/**
 	 * Return a string which gives a user-viewable version of $state
 	 * @return string
 	 */
@@ -131,121 +113,7 @@ class Q2A_Recalc_RecalcMain
 	{
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		$this->state->done = (int) $this->state->done;
-		$this->state->length = (int) $this->state->length;
-
-		switch ($this->state->operation) {
-			case 'doreindexcontent_postcount':
-			case 'dorecountposts_postcount':
-			case 'dorecalccategories_postcount':
-			case 'dorefillevents_qcount':
-				$message = qa_lang('admin/recalc_posts_count');
-				break;
-
-			case 'doreindexcontent_pagereindex':
-				$message = $this->progressLang('admin/reindex_pages_reindexed', $this->state->done, $this->state->length);
-				break;
-
-			case 'doreindexcontent_postreindex':
-				$message = $this->progressLang('admin/reindex_posts_reindexed', $this->state->done, $this->state->length);
-				break;
-
-			case 'doreindexposts_complete':
-				$message = qa_lang('admin/reindex_posts_complete');
-				break;
-
-			case 'doreindexposts_wordcount':
-				$message = $this->progressLang('admin/reindex_posts_wordcounted', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecountposts_votecount':
-				$message = $this->progressLang('admin/recount_posts_votes_recounted', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecountposts_acount':
-				$message = $this->progressLang('admin/recount_posts_as_recounted', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecountposts_complete':
-				$message = qa_lang('admin/recount_posts_complete');
-				break;
-
-			case 'dorecalcpoints_usercount':
-				$message = qa_lang('admin/recalc_points_usercount');
-				break;
-
-			case 'dorecalcpoints_recalc':
-				$message = $this->progressLang('admin/recalc_points_recalced', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecalcpoints_complete':
-				$message = qa_lang('admin/recalc_points_complete');
-				break;
-
-			case 'dorefillevents_refill':
-				$message = $this->progressLang('admin/refill_events_refilled', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorefillevents_complete':
-				$message = qa_lang('admin/refill_events_complete');
-				break;
-
-			case 'dorecalccategories_postupdate':
-				$message = $this->progressLang('admin/recalc_categories_updated', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecalccategories_recount':
-				$message = $this->progressLang('admin/recalc_categories_recounting', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecalccategories_backpaths':
-				$message = $this->progressLang('admin/recalc_categories_backpaths', $this->state->done, $this->state->length);
-				break;
-
-			case 'dorecalccategories_complete':
-				$message = qa_lang('admin/recalc_categories_complete');
-				break;
-
-			case 'dodeletehidden_comments':
-				$message = $this->progressLang('admin/hidden_comments_deleted', $this->state->done, $this->state->length);
-				break;
-
-			case 'dodeletehidden_answers':
-				$message = $this->progressLang('admin/hidden_answers_deleted', $this->state->done, $this->state->length);
-				break;
-
-			case 'dodeletehidden_questions':
-				$message = $this->progressLang('admin/hidden_questions_deleted', $this->state->done, $this->state->length);
-				break;
-
-			case 'dodeletehidden_complete':
-				$message = qa_lang('admin/delete_hidden_complete');
-				break;
-
-			case 'doblobstodisk_move':
-			case 'doblobstodb_move':
-				$message = $this->progressLang('admin/blobs_move_moved', $this->state->done, $this->state->length);
-				break;
-
-			case 'doblobstodisk_complete':
-			case 'doblobstodb_complete':
-				$message = qa_lang('admin/blobs_move_complete');
-				break;
-
-			case 'docachetrim_process':
-			case 'docacheclear_process':
-				$message = $this->progressLang('admin/caching_delete_progress', $this->state->done, $this->state->length);
-				break;
-
-			case 'docacheclear_complete':
-				$message = qa_lang('admin/caching_delete_complete');
-				break;
-
-			default:
-				$message = '';
-				break;
-		}
-
-		return $message;
+		$step = Q2A_Recalc_AbstractStep::factory($this->state);
+		return $step ? $step->getMessage() : '';
 	}
 }

@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/State.php
+	Description: Class holding state of the current recalculation process.
 
 
 	This program is free software; you can redistribute it and/or
@@ -65,7 +65,17 @@ class Q2A_Recalc_State
 		'docachetrim' => 'CacheTrim',
 		'docacheclear' => 'CacheClear',
 		'docachetrim_process' => 'CacheClearProcess',
-		'docacheclear_process' => 'CacheClearProcess'
+		'docacheclear_process' => 'CacheClearProcess',
+
+		'doreindexposts_complete' => 'ReindexPostsComplete',
+		'dorecountposts_complete' => 'RecountPostsComplete',
+		'dorecalcpoints_complete' => 'RecalcPointsComplete',
+		'dorefillevents_complete' => 'RefillEventsComplete',
+		'dorecalccategories_complete' => 'RecalcCategoriesComplete',
+		'dodeletehidden_complete' => 'DeleteHiddenComplete',
+		'doblobstodisk_complete' => 'BlobsToDiskComplete',
+		'doblobstodb_complete' => 'BlobsToDBComplete',
+		'docacheclear_complete' => 'CacheClearComplete',
 	);
 
 	/**

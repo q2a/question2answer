@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/BlobsToDBMove.php
+	Description: Recalc processing class for the blobs to database process.
 
 
 	This program is free software; you can redistribute it and/or
@@ -48,4 +48,8 @@ class Q2A_Recalc_BlobsToDBMove extends Q2A_Recalc_AbstractStep
 		return true;
 	}
 
+	public function getMessage()
+	{
+		return $this->progressLang('admin/blobs_move_moved', $this->state->done, $this->state->length);
+	}
 }

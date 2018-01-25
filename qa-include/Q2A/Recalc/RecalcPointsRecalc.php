@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/RecalcPointsRecalc.php
+	Description: Recalc processing class for the recalc points process.
 
 
 	This program is free software; you can redistribute it and/or
@@ -55,4 +55,8 @@ class Q2A_Recalc_RecalcPointsRecalc extends Q2A_Recalc_AbstractStep
 		}
 	}
 
+	public function getMessage()
+	{
+		return $this->progressLang('admin/recalc_points_recalced', $this->state->done, $this->state->length);
+	}
 }

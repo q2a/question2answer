@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Recalc/DeleteHiddenQuestions.php
-	Description: Recalc processing class for the delete hidden process.
+	File: qa-include/Q2A/Recalc/AbstractFinalStep.php
+	Description: Base class for final step classes in the recal processes.
 
 
 	This program is free software; you can redistribute it and/or
@@ -26,29 +26,8 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-class Q2A_Recalc_DeleteHiddenQuestions extends Q2A_Recalc_AbstractStep
+
+abstract class Q2A_Recalc_AbstractFinalStep extends Q2A_Recalc_AbstractStep
 {
-	public function doStep()
-	{
-		$posts = qa_db_posts_get_for_deleting('Q', $this->state->next, 1);
-
-		if (!count($posts)) {
-			$this->state->transition('dodeletehidden_complete');
-			return false;
-		}
-
-		require_once QA_INCLUDE_DIR . 'app/posts.php';
-
-		$postid = $posts[0];
-		qa_post_delete($postid);
-
-		$this->state->next = 1 + $postid;
-		$this->state->done++;
-		return true;
-	}
-
-	public function getMessage()
-	{
-		return $this->progressLang('admin/hidden_questions_deleted', $this->state->done, $this->state->length);
-	}
+	protected $isFinalStep = true;
 }

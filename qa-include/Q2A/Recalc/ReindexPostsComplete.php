@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Recalc/RecalcCategoriesRecount.php
-	Description: Recalc processing class for the recalc categories process.
+	File: qa-include/Q2A/Recalc/ReindexPostsComplete.php
+	Description: Recalc class for the end of the reindex posts process.
 
 
 	This program is free software; you can redistribute it and/or
@@ -26,29 +26,15 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-class Q2A_Recalc_RecalcCategoriesRecount extends Q2A_Recalc_AbstractStep
+class Q2A_Recalc_ReindexPostsComplete extends Q2A_Recalc_AbstractFinalStep
 {
 	public function doStep()
 	{
-		$categoryids = qa_db_categories_get_for_recalcs($this->state->next, 10);
-
-		if (!count($categoryids)) {
-			$this->state->transition('dorecalccategories_backpaths');
-			return false;
-		}
-		$lastcategoryid = max($categoryids);
-
-		foreach ($categoryids as $categoryid) {
-			qa_db_ifcategory_qcount_update($categoryid);
-		}
-
-		$this->state->next = 1 + $lastcategoryid;
-		$this->state->done += count($categoryids);
-		return true;
+		throw new Exception('Do not process the completion step.');
 	}
 
 	public function getMessage()
 	{
-		return $this->progressLang('admin/recalc_categories_recounting', $this->state->done, $this->state->length);
+		return qa_lang('admin/reindex_posts_complete');
 	}
 }

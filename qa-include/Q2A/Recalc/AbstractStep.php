@@ -3,8 +3,8 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
+	File: qa-include/Q2A/Recalc/AbstractStep.php
+	Description: Base class for step classes in the recal processes.
 
 
 	This program is free software; you can redistribute it and/or
@@ -30,6 +30,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 abstract class Q2A_Recalc_AbstractStep
 {
 	protected $state;
+	protected $isFinalStep = false;
 
 	public function __construct(Q2A_Recalc_State $state)
 	{
@@ -37,6 +38,34 @@ abstract class Q2A_Recalc_AbstractStep
 	}
 
 	abstract public function doStep();
+
+	public function getMessage()
+	{
+		return '';
+	}
+
+	public function isFinalStep()
+	{
+		return $this->isFinalStep;
+	}
+
+	/**
+	 * Return the translated language ID string replacing the progress and total in it.
+	 * @access private
+	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
+	 * @param int $progress Amount of processed elements
+	 * @param int $total Total amount of elements
+	 *
+	 * @return string Returns the language string ID with their placeholders replaced with
+	 * the formatted progress and total numbers
+	 */
+	protected function progressLang($langId, $progress, $total)
+	{
+		return strtr(qa_lang($langId), array(
+			'^1' => qa_format_number((int)$progress),
+			'^2' => qa_format_number((int)$total),
+		));
+	}
 
 	static public function factory(Q2A_Recalc_State $state)
 	{
