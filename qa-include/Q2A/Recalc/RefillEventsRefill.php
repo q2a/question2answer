@@ -26,6 +26,11 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
+require_once QA_INCLUDE_DIR . 'app/events.php';
+require_once QA_INCLUDE_DIR . 'app/updates.php';
+require_once QA_INCLUDE_DIR . 'util/sort.php';
+
+
 class Q2A_Recalc_RefillEventsRefill extends Q2A_Recalc_AbstractStep
 {
 	public function doStep()
@@ -36,10 +41,6 @@ class Q2A_Recalc_RefillEventsRefill extends Q2A_Recalc_AbstractStep
 			$this->state->transition('dorefillevents_complete');
 			return false;
 		}
-
-		require_once QA_INCLUDE_DIR . 'app/events.php';
-		require_once QA_INCLUDE_DIR . 'app/updates.php';
-		require_once QA_INCLUDE_DIR . 'util/sort.php';
 
 		$lastquestionid = max($questionids);
 
