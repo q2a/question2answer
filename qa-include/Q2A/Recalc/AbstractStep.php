@@ -20,12 +20,12 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
 	exit;
 }
 
+require_once QA_INCLUDE_DIR . 'app/format.php';		//required for qa_number_format()
 
 abstract class Q2A_Recalc_AbstractStep
 {

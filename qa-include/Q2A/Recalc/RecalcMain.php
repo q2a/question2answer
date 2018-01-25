@@ -111,8 +111,6 @@ class Q2A_Recalc_RecalcMain
 	 */
 	public function getMessage()
 	{
-		require_once QA_INCLUDE_DIR . 'app/format.php';
-
 		$step = Q2A_Recalc_AbstractStep::factory($this->state);
 		return $step ? $step->getMessage() : '';
 	}
