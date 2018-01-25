@@ -71,9 +71,7 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
 require_once QA_INCLUDE_DIR . 'app/post-create.php';
 require_once QA_INCLUDE_DIR . 'app/post-update.php';
 
-require_once QA_INCLUDE_DIR . 'app/recalc/RecalcState.php';
-
-class Q2A_App_Recalc_Main
+class Q2A_Recalc_RecalcMain
 {
 	protected $state;
 
@@ -82,7 +80,7 @@ class Q2A_App_Recalc_Main
 	 */
 	public function __construct($state)
 	{
-		$this->state = new Q2A_App_Recalc_State($state);
+		$this->state = new Q2A_Recalc_State($state);
 	}
 
 	public function getState()
@@ -92,12 +90,14 @@ class Q2A_App_Recalc_Main
 
 	public function performStep()
 	{
-		if (!$this->state->getOperationClass()) {
+		$step = Q2A_Recalc_AbstractStep::factory($this->state);
+
+		if (!$step) {
 			$this->state->setState();
 			return false;
 		}
 
-		$continue = $this->{$this->state->getOperationClass()}();
+		$continue = $step->doStep();
 		if ($continue) {
 			$this->state->updateState();
 		}

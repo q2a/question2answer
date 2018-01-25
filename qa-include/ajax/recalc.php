@@ -20,7 +20,6 @@
 */
 
 require_once QA_INCLUDE_DIR . 'app/users.php';
-require_once QA_INCLUDE_DIR . 'app/recalc/RecalcMain.php';
 
 
 if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
@@ -29,7 +28,7 @@ if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
 		$message = qa_lang('misc/form_security_reload');
 
 	} else {
-		$recalc = new Q2A_App_Recalc_Main(qa_post_text('state'));
+		$recalc = new Q2A_Recalc_RecalcMain(qa_post_text('state'));
 		$stoptime = time() + 3;
 
 		while ($recalc->performStep() && time() < $stoptime) {

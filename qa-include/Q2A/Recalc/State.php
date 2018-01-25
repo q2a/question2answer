@@ -25,7 +25,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-class Q2A_App_Recalc_State
+class Q2A_Recalc_State
 {
 	public $state;
 	public $operation;
@@ -34,38 +34,38 @@ class Q2A_App_Recalc_State
 	public $done;
 
 	private $classes = array(
-		'doreindexcontent' => 'DoReindexContent',
-		'doreindexcontent_pagereindex' => 'DoReindexContent_PageReindex',
-		'doreindexcontent_postcount' => 'DoReindexContent_PostCount',
-		'doreindexcontent_postreindex' => 'DoReindexContent_PostReindex',
-		'doreindexposts_wordcount' => 'DoReindexPosts_WordCount',
-		'dorecountposts' => 'DoRecountPosts',
-		'dorecountposts_postcount' => 'DoRecountPosts_PostCount',
-		'dorecountposts_votecount' => 'DoRecountPosts_VoteCount',
-		'dorecountposts_acount' => 'DoRecountPosts_Acount',
-		'dorecalcpoints' => 'DoRecalcPoints',
-		'dorecalcpoints_usercount' => 'DoRecalcPoints_UserCount',
-		'dorecalcpoints_recalc' => 'DoRecalcPoints_Recalc',
-		'dorefillevents' => 'DoRefillEvents',
-		'dorefillevents_qcount' => 'DoRefillEvents_Qcount',
-		'dorefillevents_refill' => 'DoRefillEvents_Refill',
-		'dorecalccategories' => 'DoRecalcCategories',
-		'dorecalccategories_postcount' => 'DoRecalcCategories_PostCount',
-		'dorecalccategories_postupdate' => 'DoRecalcCategories_PostUpdate',
-		'dorecalccategories_recount' => 'DoRecalcCategories_Recount',
-		'dorecalccategories_backpaths' => 'DoRecalcCategories_BackPaths',
-		'dodeletehidden' => 'DoDeleteHidden',
-		'dodeletehidden_comments' => 'DoDeleteHidden_Comments',
-		'dodeletehidden_answers' => 'DoDeleteHidden_Answers',
-		'dodeletehidden_questions' => 'Dodeletehidden_questions',
-		'doblobstodisk' => 'DoBlobsToDisk',
-		'doblobstodisk_move' => 'DoBlobsToDisk_Move',
-		'doblobstodb' => 'DoBlobsToDB',
-		'doblobstodb_move' => 'DoBlobsToDB_Move',
-		'docachetrim' => 'DoCacheTrim',
-		'docacheclear' => 'DoCacheClear',
-		'docachetrim_process' => 'DoCacheClear_Process',
-		'docacheclear_process' => 'DoCacheClear_Process'
+		'doreindexcontent' => 'ReindexContent',
+		'doreindexcontent_pagereindex' => 'ReindexContentPageReindex',
+		'doreindexcontent_postcount' => 'ReindexContentPostCount',
+		'doreindexcontent_postreindex' => 'ReindexContentPostReindex',
+		'doreindexposts_wordcount' => 'ReindexPostsWordCount',
+		'dorecountposts' => 'RecountPosts',
+		'dorecountposts_postcount' => 'RecountPostsPostCount',
+		'dorecountposts_votecount' => 'RecountPostsVoteCount',
+		'dorecountposts_acount' => 'RecountPostsAcount',
+		'dorecalcpoints' => 'RecalcPoints',
+		'dorecalcpoints_usercount' => 'RecalcPointsUserCount',
+		'dorecalcpoints_recalc' => 'RecalcPointsRecalc',
+		'dorefillevents' => 'RefillEvents',
+		'dorefillevents_qcount' => 'RefillEventsQcount',
+		'dorefillevents_refill' => 'RefillEventsRefill',
+		'dorecalccategories' => 'RecalcCategories',
+		'dorecalccategories_postcount' => 'RecalcCategoriesPostCount',
+		'dorecalccategories_postupdate' => 'RecalcCategoriesPostUpdate',
+		'dorecalccategories_recount' => 'RecalcCategoriesRecount',
+		'dorecalccategories_backpaths' => 'RecalcCategoriesBackPaths',
+		'dodeletehidden' => 'DeleteHidden',
+		'dodeletehidden_comments' => 'DeleteHiddenComments',
+		'dodeletehidden_answers' => 'DeleteHiddenAnswers',
+		'dodeletehidden_questions' => 'DeletehiddenQuestions',
+		'doblobstodisk' => 'BlobsToDisk',
+		'doblobstodisk_move' => 'BlobsToDiskMove',
+		'doblobstodb' => 'BlobsToDB',
+		'doblobstodb_move' => 'BlobsToDBMove',
+		'docachetrim' => 'CacheTrim',
+		'docacheclear' => 'CacheClear',
+		'docachetrim_process' => 'CacheClearProcess',
+		'docacheclear_process' => 'CacheClearProcess'
 	);
 
 	/**
@@ -94,7 +94,7 @@ class Q2A_App_Recalc_State
 
 	public function getOperationClass()
 	{
-		return isset($this->classes[$this->operation]) ? $this->classes[$this->operation] : null;
+		return isset($this->classes[$this->operation]) ? 'Q2A_Recalc_' . $this->classes[$this->operation] : null;
 	}
 
 	public function allDone()

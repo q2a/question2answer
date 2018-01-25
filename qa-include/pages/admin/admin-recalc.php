@@ -25,8 +25,6 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 require_once QA_INCLUDE_DIR . 'app/admin.php';
-require_once QA_INCLUDE_DIR . 'app/recalc/RecalcMain.php';
-
 
 // Check we have administrative privileges
 
@@ -71,7 +69,7 @@ if ($recalcnow) {
 
 	<?php
 
-	$recalc = new Q2A_App_Recalc_Main($state);
+	$recalc = new Q2A_Recalc_RecalcMain($state);
 	while ($recalc->getState()) {
 		set_time_limit(60);
 
