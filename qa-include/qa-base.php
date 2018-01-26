@@ -896,7 +896,7 @@ function qa_list_modules($type)
  * Return an array containing information about the module of $type named $name
  * @param $type
  * @param $name
- * @return
+ * @return array
  */
 function qa_get_module_info($type, $name)
 {
@@ -1868,7 +1868,7 @@ function qa_opt($name, $value = null)
 function qa_debug($var)
 {
 	echo "\n" . '<pre style="padding: 10px; background-color: #eee; color: #444; font-size: 11px; text-align: left">';
-	echo $var === null ? 'NULL' : print_r($var, true);
+	echo $var === null ? 'NULL' : htmlspecialchars(print_r($var, true), ENT_COMPAT|ENT_SUBSTITUTE);
 	echo '</pre>' . "\n";
 }
 

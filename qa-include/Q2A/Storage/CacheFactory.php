@@ -29,7 +29,7 @@ class Q2A_Storage_CacheFactory
 
 	/**
 	 * Get the appropriate cache handler.
-	 * @return Q2A_Storage_CacheInterface The cache handler.
+	 * @return Q2A_Storage_CacheDriver The cache handler.
 	 */
 	public static function getCacheDriver()
 	{

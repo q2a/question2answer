@@ -566,31 +566,6 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 
 	/**
-	 * Return the URL for the Gravatar corresponding to $email, constrained to $size
-	 *
-	 * @param string $email The email of the Gravatar to return
-	 * @param int|null $size The size of the Gravatar to return. If omitted the default size will be used
-	 * @return string The URL to the Gravatar of the user
-	 */
-	function qa_get_gravatar_url($email, $size = null)
-	{
-		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-		$link = 'https://www.gravatar.com/avatar/%s';
-
-		$params = array(md5(strtolower(trim($email))));
-
-		$size = (int)$size;
-		if ($size > 0) {
-			$link .= '?s=%d';
-			$params[] = $size;
-		}
-
-		return vsprintf($link, $params);
-	}
-
-
-	/**
 	 * Return where the avatar will be fetched from for the given user flags. The possible return values are
 	 * 'gravatar' for an avatar that will be fetched from Gravatar, 'local-user' for an avatar fetched locally from
 	 * the user's profile, 'local-default' for an avatar fetched locally from the default avatar blob ID, and NULL
@@ -653,7 +628,6 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	 * @param string $email The user's email. Only needed to return the Gravatar HTML
 	 * @param string $blobId The blob ID. Only needed to return the locally stored avatar HTML
 	 * @param string $handle The handle of the user that the avatar will link to
-	 * @param string $blobId The blob ID. Only needed to return the locally stored avatar
 	 * @param int $width The width to constrain the image
 	 * @param int $height The height to constrain the image
 	 * @param int $size The size to constrain the final image
@@ -692,7 +666,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	/**
 	 * Return email address for user $userid (if not using single sign-on integration)
 	 * @param $userid
-	 * @return
+	 * @return string
 	 */
 	function qa_get_user_email($userid)
 	{
@@ -1410,4 +1384,29 @@ function qa_check_form_security_code($action, $value)
 	}
 
 	return (empty($silentproblems) && empty($reportproblems));
+}
+
+
+/**
+ * Return the URL for the Gravatar corresponding to $email, constrained to $size
+ *
+ * @param string $email The email of the Gravatar to return
+ * @param int|null $size The size of the Gravatar to return. If omitted the default size will be used
+ * @return string The URL to the Gravatar of the user
+ */
+function qa_get_gravatar_url($email, $size = null)
+{
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	$link = 'https://www.gravatar.com/avatar/%s';
+
+	$params = array(md5(strtolower(trim($email))));
+
+	$size = (int)$size;
+	if ($size > 0) {
+		$link .= '?s=%d';
+		$params[] = $size;
+	}
+
+	return vsprintf($link, $params);
 }
