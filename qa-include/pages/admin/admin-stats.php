@@ -40,6 +40,7 @@ if (!qa_admin_check_privileges($qa_content))
 
 $qcount = (int)qa_opt('cache_qcount');
 $qcount_anon = qa_db_count_posts('Q', false);
+$qcount_unans = (int)qa_opt('cache_unaqcount');
 
 $acount = (int)qa_opt('cache_acount');
 $acount_anon = qa_db_count_posts('A', false);
@@ -111,6 +112,11 @@ $qa_content['form'] = array(
 		'qcount' => array(
 			'label' => qa_lang_html('admin/total_qs'),
 			'value' => qa_html(qa_format_number($qcount)),
+		),
+
+		'qcount_unans' => array(
+			'label' => qa_lang_html('admin/total_qs_unans'),
+			'value' => qa_html(qa_format_number($qcount_unans)),
 		),
 
 		'qcount_users' => array(
