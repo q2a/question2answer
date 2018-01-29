@@ -65,11 +65,15 @@
 
 /*
 	If you wish, you can define QA_MYSQL_USERS_PREFIX separately from QA_MYSQL_TABLE_PREFIX.
-	If so, it is used instead of QA_MYSQL_TABLE_PREFIX as the prefix for tables containing
-	information about user accounts (not including users' activity and points). This allows
-	multiple Q2A sites to have shared logins and users, but separate posts and activity.
-
-	define('QA_MYSQL_USERS_PREFIX', 'qa_users_');
+	If so, tables containing information about user accounts (not including users' activity and points)
+	get the prefix of QA_MYSQL_TABLE_PREFIX. This allows multiple Q2A sites to have shared logins 
+	and users, but separate posts and activity.
+	
+	If you have installed question2answer with default "qa_" prefix and want to setup a second 
+	installation, you define the QA_MYSQL_USERS_PREFIX as "qa_" so this new installation 
+	can access the same database as the first installation.
+	
+	define('QA_MYSQL_USERS_PREFIX', 'sharedusers_');
 */
 
 /*
