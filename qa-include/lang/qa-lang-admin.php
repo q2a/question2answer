@@ -260,6 +260,7 @@ return array(
 	'total_as' => 'Total answers:',
 	'total_cs' => 'Total comments:',
 	'total_qs' => 'Total questions:',
+	'total_qs_unans' => 'Total questions unanswered:',
 	'unnamed_plugin' => 'Unnamed Plugin',
 	'upgrade_db' => 'Your Question2Answer database needs to be ^1upgraded^2 for this version.',
 	'url_format_note' => 'Options with the ^ label are working for your site\'s configuration. For best search engine optimization (SEO), use the first ^ option available.',
