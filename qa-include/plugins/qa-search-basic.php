@@ -90,6 +90,7 @@ class qa_search_basic
 		$wholetagids = qa_db_posttags_get_post_wordids($postid);
 		qa_db_posttags_delete_post($postid);
 		qa_db_word_tagcount_update($wholetagids);
+		qa_db_tagcount_update();
 	}
 
 	public function move_post($postid, $categoryid)
