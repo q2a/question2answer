@@ -124,6 +124,7 @@ function qa_update_counts_for_q($postid)
 	qa_db_unaqcount_update();
 	qa_db_unselqcount_update();
 	qa_db_unupaqcount_update();
+	qa_db_tagcount_update();
 }
 
 
