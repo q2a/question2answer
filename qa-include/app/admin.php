@@ -374,19 +374,19 @@ function qa_admin_sub_navigation()
 	}
 
 	if (!qa_user_maximum_permit_error('permit_moderate')) {
-		$count = qa_user_permit_error('permit_moderate') ? null : qa_opt('cache_queuedcount'); // if only in some categories don't show cached count
+		$count = qa_user_permit_error('permit_moderate') ? 0 : (int)qa_opt('cache_queuedcount'); // if only in some categories don't show cached count
 
 		$navigation['admin/moderate'] = array(
-			'label' => qa_lang_html('admin/moderate_title') . ($count ? (' (' . $count . ')') : ''),
+			'label' => qa_lang_html_sub('admin/moderate_title', '<span class="qa-nav-sub-counter-moderate">' . qa_html(qa_format_number($count)) . '</span>'),
 			'url' => qa_path_html('admin/moderate'),
 		);
 	}
 
 	if (qa_opt('flagging_of_posts') && !qa_user_maximum_permit_error('permit_hide_show')) {
-		$count = qa_user_permit_error('permit_hide_show') ? null : qa_opt('cache_flaggedcount'); // if only in some categories don't show cached count
+		$count = qa_user_permit_error('permit_hide_show') ? 0 : (int)qa_opt('cache_flaggedcount'); // if only in some categories don't show cached count
 
 		$navigation['admin/flagged'] = array(
-			'label' => qa_lang_html('admin/flagged_title') . ($count ? (' (' . $count . ')') : ''),
+			'label' => qa_lang_html_sub('admin/flagged_title', '<span class="qa-nav-sub-counter-flagged">' . qa_html(qa_format_number($count)) . '</span>'),
 			'url' => qa_path_html('admin/flagged'),
 		);
 	}
@@ -399,10 +399,10 @@ function qa_admin_sub_navigation()
 	}
 
 	if (!QA_FINAL_EXTERNAL_USERS && qa_opt('moderate_users') && $level >= QA_USER_LEVEL_MODERATOR) {
-		$count = qa_opt('cache_uapprovecount');
+		$count = (int)qa_opt('cache_uapprovecount');
 
 		$navigation['admin/approve'] = array(
-			'label' => qa_lang_html('admin/approve_users_title') . ($count ? (' (' . $count . ')') : ''),
+			'label' => qa_lang_html_sub('admin/approve_users_title', '<span class="qa-nav-sub-counter-approve">' . qa_html(qa_format_number($count)) . '</span>'),
 			'url' => qa_path_html('admin/approve'),
 		);
 	}
@@ -578,6 +578,152 @@ function qa_admin_single_click($entityid, $action)
 	}
 
 	return false;
+}
+
+
+/**
+ * Returns true if admin (hidden/flagged/approve/moderate) page $action performed on $entityid is permitted by the
+ * logged in user and was processed successfully
+ * @param $entityid
+ * @param $action
+ * @return array
+ */
+function qa_admin_single_click_array($entityid, $action)
+{
+	$userid = qa_get_logged_in_userid();
+
+	$response = array();
+
+	if (!QA_FINAL_EXTERNAL_USERS && ($action === 'userapprove' || $action === 'userblock')) { // approve/block moderated users
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
+
+		$useraccount = qa_db_select_with_pending(qa_db_user_account_selectspec($entityid, true));
+
+		if (isset($useraccount) && qa_get_logged_in_level() >= QA_USER_LEVEL_MODERATOR) {
+			switch ($action) {
+				case 'userapprove':
+					$response['entityCount'] = (int)qa_opt('cache_uapprovecount');
+					if ($useraccount['level'] >= QA_USER_LEVEL_APPROVED) { // don't demote higher level users
+						$response['result'] = 'error';
+						$response['error']['type'] = 'user-already-approved';
+						$response['error']['message'] = qa_lang_html('main/general_error');
+						$response['hideEntitySelector'] = null;
+					} else {
+						require_once QA_INCLUDE_DIR . 'app/users-edit.php';
+						qa_set_user_level($useraccount['userid'], $useraccount['handle'], QA_USER_LEVEL_APPROVED, $useraccount['level']);
+
+						$response['result'] = 'success';
+						$response['entityCount'] = max($response['entityCount'] - 1, 0);
+						$response['hideEntitySelector'] = 'approve';
+					}
+					break;
+
+				case 'userblock':
+					require_once QA_INCLUDE_DIR . 'app/users-edit.php';
+					qa_set_user_blocked($useraccount['userid'], $useraccount['handle'], true);
+
+					$response['result'] = 'success';
+					$response['entityCount'] = max((int)qa_opt('cache_uapprovecount') - 1, 0);
+					$response['hideEntitySelector'] = 'approve';
+					break;
+
+				default:
+			}
+		}
+	} else { // something to do with a post
+		require_once QA_INCLUDE_DIR . 'app/posts.php';
+
+		$post = qa_post_get_full($entityid);
+
+		if (isset($post)) {
+			$queued = (substr($post['type'], 1) == '_QUEUED');
+
+			switch ($action) {
+				case 'approve':
+				case 'reject':
+					$response['entityCount'] = (int)qa_opt('cache_queuedcount');
+					if (!$queued) {
+						$response['result'] = 'error';
+						$response['error']['type'] = 'post-not-queued';
+						$response['error']['message'] = qa_lang_html('main/general_error');
+						$response['entityCount'] = max($response['entityCount'] - 1, 0);
+						$response['hideEntitySelector'] = 'moderate';
+					} elseif (qa_user_post_permit_error('permit_moderate', $post) !== false) {
+						$response['result'] = 'error';
+						$response['error']['type'] = 'no-permission';
+						$response['error']['message'] = qa_lang_html('users/no_permission');
+						$response['hideEntitySelector'] = null;
+					} else {
+						$postStatus = $action === 'approve'
+							? QA_POST_STATUS_NORMAL
+							: QA_POST_STATUS_HIDDEN; // 'reject'
+						qa_post_set_status($entityid, $postStatus, $userid);
+
+						$response['result'] = 'success';
+						$response['entityCount'] = max($response['entityCount'] - 1, 0);
+						$response['hideEntitySelector'] = 'moderate';
+					}
+					break;
+
+				case 'reshow':
+				case 'delete':
+					if (!$post['hidden']) {
+						$response['result'] = 'error';
+						$response['error']['type'] = 'post-not-hidden';
+						$response['error']['message'] = qa_lang_html('main/general_error');
+						$response['hideEntitySelector'] = 'hidden';
+					} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
+						$response['result'] = 'error';
+						$response['error']['type'] = 'no-permission';
+						$response['error']['message'] = qa_lang_html('users/no_permission');
+						$response['hideEntitySelector'] = null;
+					} else {
+						if ($action === 'reshow') {
+							qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
+						} else { // 'delete'
+							qa_post_delete($entityid);
+						}
+
+						$response['result'] = 'success';
+						$response['hideEntitySelector'] = 'hidden';
+					}
+					break;
+
+				case 'hide':
+				case 'clearflags':
+					$response['entityCount'] = (int)qa_opt('cache_flaggedcount');
+					if ($action === 'hide' && $queued) {
+						$response['result'] = 'error';
+						$response['error']['type'] = 'post-queued';
+						$response['error']['message'] = qa_lang_html('main/general_error');
+						$response['entityCount'] = max($response['entityCount'] - 1, 0);
+						$response['hideEntitySelector'] = 'flagged';
+					} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
+						$response['result'] = 'error';
+						$response['error']['type'] = 'no-permission';
+						$response['error']['message'] = qa_lang_html('users/no_permission');
+						$response['hideEntitySelector'] = null;
+					} else {
+						if ($action === 'hide') {
+							qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
+						} else { // 'clearflags'
+							require_once QA_INCLUDE_DIR . 'app/votes.php';
+
+							qa_flags_clear_all($post, $userid, qa_get_logged_in_handle(), null);
+						}
+
+						$response['result'] = 'success';
+						$response['entityCount'] = max($response['entityCount'] - 1, 0);
+						$response['hideEntitySelector'] = 'flagged';
+					}
+					break;
+
+				default:
+			}
+		}
+	}
+
+	return $response;
 }
 
 

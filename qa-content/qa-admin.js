@@ -120,15 +120,18 @@ function qa_admin_click(target)
 	params.code = target.form.elements.code.value;
 
 	qa_ajax_post('click_admin', params,
-		function(lines) {
-			if (lines[0] == '1')
-				qa_conceal(document.getElementById('p' + p[1]), 'admin');
-			else if (lines[0] == '0') {
-				alert(lines[1]);
-				qa_hide_waiting(target);
-			} else
-				qa_ajax_error();
-		}
+		function (response) {
+			if (response.hideEntitySelector !== null) {
+				qa_conceal(document.getElementById('p' + params.entityid), 'admin');
+				$('.qa-nav-sub-counter-' + response.hideEntitySelector).text(response.entityCount);
+			}
+
+			if (response.result !== 'success') {
+				alert(response.error.message);
+			}
+
+			qa_hide_waiting(target);
+		}, 1
 	);
 
 	qa_show_waiting_after(target, false);
