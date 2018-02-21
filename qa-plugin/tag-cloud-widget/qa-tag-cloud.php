@@ -116,9 +116,7 @@ class qa_tag_cloud
 
 		$populartags = qa_db_single_select(qa_db_popular_tags_selectspec(0, (int) qa_opt('tag_cloud_count_tags')));
 
-		$populartagslog = array_map(function($e) {
-			return log($e) + 1;
-		}, $populartags);
+		$populartagslog = array_map(array($this, 'log_callback'), $populartags);
 
 		$maxcount = reset($populartagslog);
 
@@ -150,5 +148,10 @@ class qa_tag_cloud
 		}
 
 		$themeobject->output('</div>');
+	}
+
+	private function log_callback($e)
+	{
+		return log($e) + 1;
 	}
 }
