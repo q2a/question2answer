@@ -28,11 +28,6 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 class Q2A_Recalc_ReindexPostsComplete extends Q2A_Recalc_AbstractFinalStep
 {
-	public function doStep()
-	{
-		throw new Exception('Do not process the completion step.');
-	}
-
 	public function getMessage()
 	{
 		return qa_lang('admin/reindex_posts_complete');

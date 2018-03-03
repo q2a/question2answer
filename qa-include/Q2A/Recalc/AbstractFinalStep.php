@@ -4,7 +4,7 @@
 	http://www.question2answer.org/
 
 	File: qa-include/Q2A/Recalc/AbstractFinalStep.php
-	Description: Base class for final step classes in the recal processes.
+	Description: Base class for final step classes in the recalc processes.
 
 
 	This program is free software; you can redistribute it and/or
@@ -26,8 +26,12 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-
 abstract class Q2A_Recalc_AbstractFinalStep extends Q2A_Recalc_AbstractStep
 {
 	protected $isFinalStep = true;
+
+	public function doStep()
+	{
+		throw new Exception('Do not process the completion step.');
+	}
 }

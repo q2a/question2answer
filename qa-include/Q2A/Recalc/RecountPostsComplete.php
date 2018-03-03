@@ -26,7 +26,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-class Q2A_Recalc_RecountPostsComplete extends Q2A_Recalc_ReindexPostsComplete
+class Q2A_Recalc_RecountPostsComplete extends Q2A_Recalc_AbstractFinalStep
 {
 	public function getMessage()
 	{

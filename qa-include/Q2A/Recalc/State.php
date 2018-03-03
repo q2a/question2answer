@@ -73,8 +73,8 @@ class Q2A_Recalc_State
 		'dorefillevents_complete' => 'RefillEventsComplete',
 		'dorecalccategories_complete' => 'RecalcCategoriesComplete',
 		'dodeletehidden_complete' => 'DeleteHiddenComplete',
-		'doblobstodisk_complete' => 'BlobsToDiskComplete',
-		'doblobstodb_complete' => 'BlobsToDBComplete',
+		'doblobstodisk_complete' => 'BlobsMoveComplete',
+		'doblobstodb_complete' => 'BlobsMoveComplete',
 		'docacheclear_complete' => 'CacheClearComplete',
 	);
 
