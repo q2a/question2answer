@@ -36,7 +36,7 @@ class Q2A_Recalc_ReindexContentPageReindex extends Q2A_Recalc_AbstractStep
 			$this->state->transition('doreindexcontent_postcount');
 			return false;
 		}
-			
+
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
 		$lastpageid = max(array_keys($pages));

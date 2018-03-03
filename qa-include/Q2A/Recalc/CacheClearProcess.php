@@ -38,7 +38,7 @@ class Q2A_Recalc_CacheClearProcess extends Q2A_Recalc_AbstractStep
 			$this->state->transition('docacheclear_complete');
 			return false;
 		}
-			
+
 		$deleted = $cacheDriver->clear($limit, $this->state->next, ($this->state->operation === 'docachetrim_process'));
 		$this->state->done += $deleted;
 		$this->state->next += $limit - $deleted; // skip files that weren't deleted on next iteration

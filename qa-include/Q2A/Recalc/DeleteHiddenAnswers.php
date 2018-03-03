@@ -36,7 +36,7 @@ class Q2A_Recalc_DeleteHiddenAnswers extends Q2A_Recalc_AbstractStep
 			$this->state->transition('dodeletehidden_questions');
 			return false;
 		}
-			
+
 		require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 		$postid = $posts[0];
