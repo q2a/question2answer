@@ -32,7 +32,7 @@ class Q2A_Recalc_RecountPostsACount extends Q2A_Recalc_AbstractStep
 	{
 		$postids = qa_db_posts_get_for_recounting($this->state->next, 1000);
 
-		if (count($postids)) {
+		if (!count($postids)) {
 			qa_db_unupaqcount_update();
 			$this->state->transition('dorecountposts_complete');
 			return false;
