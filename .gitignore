@@ -11,3 +11,4 @@ qa-cache/*/
 ehthumbs.db
 Thumbs.db
 .idea/
+/nbproject/private/

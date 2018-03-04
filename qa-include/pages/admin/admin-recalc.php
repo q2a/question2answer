@@ -25,8 +25,6 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 require_once QA_INCLUDE_DIR . 'app/admin.php';
-require_once QA_INCLUDE_DIR . 'app/recalc.php';
-
 
 // Check we have administrative privileges
 
@@ -71,15 +69,16 @@ if ($recalcnow) {
 
 	<?php
 
-	while ($state) {
+	$recalc = new Q2A_Recalc_RecalcMain($state);
+	while ($recalc->getState()) {
 		set_time_limit(60);
 
 		$stoptime = time() + 2; // run in lumps of two seconds...
 
-		while (qa_recalc_perform_step($state) && time() < $stoptime)
+		while ($recalc->performStep() && time() < $stoptime)
 			;
 
-		echo qa_html(qa_recalc_get_message($state)) . str_repeat('    ', 1024) . "<br>\n";
+		echo qa_html($recalc->getMessage) . str_repeat('    ', 1024) . "<br>\n";
 
 		flush();
 		sleep(1); // ... then rest for one

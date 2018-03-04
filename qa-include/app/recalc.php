@@ -60,6 +60,10 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
+if (defined('QA_DEBUG_PERFORMANCE') && QA_DEBUG_PERFORMANCE) {
+	trigger_error('Included file ' . basename(__FILE__) . ' is deprecated');
+}
+
 require_once QA_INCLUDE_DIR . 'db/recalc.php';
 require_once QA_INCLUDE_DIR . 'db/post-create.php';
 require_once QA_INCLUDE_DIR . 'db/points.php';
