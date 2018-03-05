@@ -1570,7 +1570,7 @@ function qa_db_newest_users_selectspec($start, $count = null)
 function qa_db_users_from_level_selectspec($level)
 {
 	return array(
-		'columns' => array('^users.userid', 'handle', 'level'),
+		'columns' => array('^users.userid', 'handle', 'flags', 'level', 'email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
 		'source' => '^users WHERE level>=# ORDER BY level DESC',
 		'arguments' => array($level),
 		'sortdesc' => 'level',
@@ -1597,7 +1597,7 @@ function qa_db_users_with_flag_selectspec($flag, $start = 0, $limit = null)
 	}
 
 	return array(
-		'columns' => array('^users.userid', 'handle', 'flags', 'level'),
+		'columns' => array('^users.userid', 'handle', 'flags', 'level', 'email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
 		'source' => $source,
 		'arguments' => $arguments,
 	);
