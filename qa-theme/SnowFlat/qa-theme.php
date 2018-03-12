@@ -742,4 +742,14 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
+	
+	/**
+	 * Adds placeholder "Search..." for search box
+	 *
+	 * @since Snow 1.4
+	 */
+	public function search_field($search)
+	{
+		$this->output('<input type="text" ' .'placeholder="' . $search['button_label'] . '..." ' . $search['field_tags'] . ' value="' . @$search['value'] . '" class="qa-search-field"/>');
+	}
 }
