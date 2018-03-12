@@ -742,4 +742,9 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
+	
+	public function search_field($search)
+	{
+		$this->output('<input type="text" ' .'placeholder="Search..."'. $search['field_tags'] . ' value="' . @$search['value'] . '" class="qa-search-field"/>');
+	}  
 }
