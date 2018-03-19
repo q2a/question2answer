@@ -112,6 +112,27 @@ function qa_mailing_start(noteid, pauseid)
 	);
 }
 
+function qa_update_dom(response)
+{
+	if (!response.hasOwnProperty('domUpdates')) {
+		return;
+	}
+
+	for (var i = 0; i < response.domUpdates.length; i++) {
+		var domUpdate = response.domUpdates[i];
+		switch (domUpdate.action) {
+			case 'conceal':
+				qa_conceal(document.querySelector(domUpdate.selector));
+				break;
+			case 'reveal':
+				qa_reveal(document.querySelector(domUpdate.selector));
+				break;
+			default: // replace
+				$(domUpdate.selector).html(domUpdate.html);
+		}
+	}
+}
+
 function qa_admin_click(target)
 {
 	var p = target.name.split('_');
@@ -121,12 +142,9 @@ function qa_admin_click(target)
 
 	qa_ajax_post('click_admin', params,
 		function (response) {
-			if (response.hideEntitySelector !== null) {
-				qa_conceal(document.getElementById('p' + params.entityid), 'admin');
-				$('.qa-nav-sub-counter-' + response.hideEntitySelector).text(response.entityCount);
-			}
+			qa_update_dom(response);
 
-			if (response.result !== 'success') {
+			if (response.result === 'error' && response.error.severity === 'fatal') {
 				alert(response.error.message);
 			}
 

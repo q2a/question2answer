@@ -52,4 +52,3 @@ switch ($version) {
 		else
 			echo "QA_AJAX_RESPONSE\n0\n" . qa_lang('main/general_error');
 }
-

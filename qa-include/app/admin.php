@@ -602,19 +602,25 @@ function qa_admin_single_click_array($entityid, $action)
 		if (isset($useraccount) && qa_get_logged_in_level() >= QA_USER_LEVEL_MODERATOR) {
 			switch ($action) {
 				case 'userapprove':
-					$response['entityCount'] = (int)qa_opt('cache_uapprovecount');
 					if ($useraccount['level'] >= QA_USER_LEVEL_APPROVED) { // don't demote higher level users
 						$response['result'] = 'error';
 						$response['error']['type'] = 'user-already-approved';
 						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['hideEntitySelector'] = null;
 					} else {
 						require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 						qa_set_user_level($useraccount['userid'], $useraccount['handle'], QA_USER_LEVEL_APPROVED, $useraccount['level']);
 
 						$response['result'] = 'success';
-						$response['entityCount'] = max($response['entityCount'] - 1, 0);
-						$response['hideEntitySelector'] = 'approve';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '.qa-nav-sub-counter-approve',
+								'html' => max((int)qa_opt('cache_uapprovecount') - 1, 0),
+							),
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					}
 					break;
 
@@ -623,8 +629,16 @@ function qa_admin_single_click_array($entityid, $action)
 					qa_set_user_blocked($useraccount['userid'], $useraccount['handle'], true);
 
 					$response['result'] = 'success';
-					$response['entityCount'] = max((int)qa_opt('cache_uapprovecount') - 1, 0);
-					$response['hideEntitySelector'] = 'approve';
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-approve',
+							'html' => max((int)qa_opt('cache_uapprovecount') - 1, 0),
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
 					break;
 
 				default:
@@ -641,18 +655,26 @@ function qa_admin_single_click_array($entityid, $action)
 			switch ($action) {
 				case 'approve':
 				case 'reject':
-					$response['entityCount'] = (int)qa_opt('cache_queuedcount');
+					$entityCount = (int)qa_opt('cache_queuedcount');
 					if (!$queued) {
 						$response['result'] = 'error';
 						$response['error']['type'] = 'post-not-queued';
 						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['entityCount'] = max($response['entityCount'] - 1, 0);
-						$response['hideEntitySelector'] = 'moderate';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '.qa-nav-sub-counter-moderate',
+								'html' => max($entityCount - 1, 0),
+							),
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					} elseif (qa_user_post_permit_error('permit_moderate', $post) !== false) {
 						$response['result'] = 'error';
 						$response['error']['type'] = 'no-permission';
 						$response['error']['message'] = qa_lang_html('users/no_permission');
-						$response['hideEntitySelector'] = null;
+						$response['error']['severity'] = 'fatal';
 					} else {
 						$postStatus = $action === 'approve'
 							? QA_POST_STATUS_NORMAL
@@ -660,8 +682,16 @@ function qa_admin_single_click_array($entityid, $action)
 						qa_post_set_status($entityid, $postStatus, $userid);
 
 						$response['result'] = 'success';
-						$response['entityCount'] = max($response['entityCount'] - 1, 0);
-						$response['hideEntitySelector'] = 'moderate';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '.qa-nav-sub-counter-moderate',
+								'html' => max($entityCount - 1, 0),
+							),
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					}
 					break;
 
@@ -671,12 +701,17 @@ function qa_admin_single_click_array($entityid, $action)
 						$response['result'] = 'error';
 						$response['error']['type'] = 'post-not-hidden';
 						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['hideEntitySelector'] = 'hidden';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
 						$response['result'] = 'error';
 						$response['error']['type'] = 'no-permission';
 						$response['error']['message'] = qa_lang_html('users/no_permission');
-						$response['hideEntitySelector'] = null;
+						$response['error']['severity'] = 'fatal';
 					} else {
 						if ($action === 'reshow') {
 							qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
@@ -685,24 +720,37 @@ function qa_admin_single_click_array($entityid, $action)
 						}
 
 						$response['result'] = 'success';
-						$response['hideEntitySelector'] = 'hidden';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					}
 					break;
 
 				case 'hide':
 				case 'clearflags':
-					$response['entityCount'] = (int)qa_opt('cache_flaggedcount');
+					$entityCount = (int)qa_opt('cache_flaggedcount');
 					if ($action === 'hide' && $queued) {
 						$response['result'] = 'error';
 						$response['error']['type'] = 'post-queued';
 						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['entityCount'] = max($response['entityCount'] - 1, 0);
-						$response['hideEntitySelector'] = 'flagged';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '.qa-nav-sub-counter-flagged',
+								'html' => max($entityCount - 1, 0),
+							),
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
 						$response['result'] = 'error';
 						$response['error']['type'] = 'no-permission';
 						$response['error']['message'] = qa_lang_html('users/no_permission');
-						$response['hideEntitySelector'] = null;
+						$response['error']['severity'] = 'fatal';
 					} else {
 						if ($action === 'hide') {
 							qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
@@ -713,8 +761,16 @@ function qa_admin_single_click_array($entityid, $action)
 						}
 
 						$response['result'] = 'success';
-						$response['entityCount'] = max($response['entityCount'] - 1, 0);
-						$response['hideEntitySelector'] = 'flagged';
+						$response['domUpdates'] = array(
+							array(
+								'selector' => '.qa-nav-sub-counter-flagged',
+								'html' => max($entityCount - 1, 0),
+							),
+							array(
+								'selector' => '#p' . $entityid,
+								'action' => 'conceal',
+							),
+						);
 					}
 					break;
 
