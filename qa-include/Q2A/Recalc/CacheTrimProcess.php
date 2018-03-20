@@ -26,6 +26,6 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-class Q2A_Recalc_CacheTrimProcess extends Q2A_Recalc_CacheClear_Process
+class Q2A_Recalc_CacheTrimProcess extends Q2A_Recalc_CacheClearProcess
 {
 }
