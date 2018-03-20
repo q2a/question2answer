@@ -1803,7 +1803,7 @@ switch ($adminsection) {
 		break;
 
 	case 'caching':
-		$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+		$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
 		$qa_content['error'] = $cacheDriver->getError();
 		$cacheStats = $cacheDriver->getStats();
 

@@ -21,7 +21,6 @@ namespace Q2A\Database;
 use PDO;
 use PDOException;
 use PDOStatement;
-use Q2A_Storage_CacheFactory;
 
 class DbConnection
 {
@@ -260,7 +259,7 @@ class DbConnection
 	{
 		// check for cached results
 		if (isset($selectspec['caching'])) {
-			$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+			$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
 			$cacheKey = 'q2a.query:' . $selectspec['caching']['key'];
 
 			if ($cacheDriver->isEnabled()) {

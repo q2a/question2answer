@@ -69,7 +69,7 @@ if ($recalcnow) {
 
 	<?php
 
-	$recalc = new Q2A_Recalc_RecalcMain($state);
+	$recalc = new \Q2A\Recalc\RecalcMain($state);
 	while ($recalc->getState()) {
 		set_time_limit(60);
 
@@ -78,7 +78,7 @@ if ($recalcnow) {
 		while ($recalc->performStep() && time() < $stoptime)
 			;
 
-		echo qa_html($recalc->getMessage) . str_repeat('    ', 1024) . "<br>\n";
+		echo qa_html($recalc->getMessage()) . str_repeat('    ', 1024) . "<br>\n";
 
 		flush();
 		sleep(1); // ... then rest for one
