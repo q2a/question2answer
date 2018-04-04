@@ -30,7 +30,7 @@ class Q2A_Notifications_Mailer extends PHPMailer
 {
 	public function __construct($params = array())
 	{
-		parent::construct();
+		parent::__construct();
 
 		$this->CharSet = 'utf-8';
 
