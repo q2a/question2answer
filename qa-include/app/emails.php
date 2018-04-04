@@ -32,9 +32,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  */
 function qa_suspend_notifications($suspend = true)
 {
-	global $qa_notifications_suspended;
-
-	$qa_notifications_suspended += ($suspend ? 1 : -1);
+	Q2A_Notifications_Status::suspend($suspend);
 }
 
 
