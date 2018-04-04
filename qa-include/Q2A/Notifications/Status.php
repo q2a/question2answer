@@ -41,5 +41,4 @@ class Q2A_Notifications_Status
 	{
 		return self::$notifications_suspended > 0;
 	}
-	
 }

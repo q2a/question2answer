@@ -115,7 +115,7 @@ class Q2A_Notifications_Email
 				'body' => $bodyPrefix . strtr($body, $fullsubs),
 				'html' => $html,
 			));
-			
+
 			$send_status = $mailer->send();
 			if (!$send_status) {
 				error_log('PHP Question2Answer email send error: ' . $mailer->ErrorInfo);
