@@ -106,7 +106,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		// Get information on user questions
 
 		$pageSize = qa_opt('page_size_qs');
-		$count = (int)@$userPoints['qposts'];
+		$count = isset($userPoints['qposts']) ? (int)$userPoints['qposts'] : 0;
 		$questions = array_slice($questions, 0, $pageSize);
 		$usersHtml = qa_userids_handles_html($questions, false);
 
@@ -165,7 +165,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		// Get information on user questions
 
 		$pagesize = qa_opt('page_size_activity');
-		$count = (int)@$userPoints['aposts'];
+		$count = isset($userPoints['aposts']) ? (int)$userPoints['aposts'] : 0;
 		$questions = array_slice($questions, 0, $pagesize);
 		$usersHtml = qa_userids_handles_html($questions, false);
 
