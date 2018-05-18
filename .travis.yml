@@ -34,3 +34,6 @@ script:
   - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
   # PHPUnit
   - php phpunit.phar --bootstrap qa-tests/autoload.php qa-tests
+
+git:
+  depth: 5
