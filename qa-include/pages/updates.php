@@ -74,7 +74,7 @@ $qa_content = qa_q_list_page_content(
 	null, // total count (null to hide page links)
 	$sometitle, // title if some questions
 	$nonetitle, // title if no questions
-	null, // categories for navigation
+	array(), // categories for navigation
 	null, // selected category id
 	null, // show question counts in category navigation
 	null, // prefix for links in category navigation
