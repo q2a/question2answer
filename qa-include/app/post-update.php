@@ -106,6 +106,9 @@ function qa_question_set_content($oldquestion, $title, $content, $format, $text,
 
 	} elseif ($oldquestion['type'] == 'Q') { // not hidden or queued
 		qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $title, $content, $format, $text, $tagstring, $oldquestion['categoryid']);
+		if ($tagschanged) {
+			qa_db_tagcount_update();
+		}
 	}
 
 	$eventparams = array(

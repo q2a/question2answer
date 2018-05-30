@@ -381,7 +381,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		if (@$options['categoryview'] && isset($post['categoryname']) && isset($post['categorybackpath'])) {
 			$favoriteclass = '';
 
-			if (count(@$favoritemap['category'])) {
+			if (!empty($favoritemap['category']) && count($favoritemap['category'])) {
 				if (@$favoritemap['category'][$post['categorybackpath']]) {
 					$favoriteclass = ' qa-cat-favorited';
 				} else {

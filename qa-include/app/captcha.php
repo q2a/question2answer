@@ -47,7 +47,7 @@ function qa_captcha_reason_note($captchareason)
 
 	switch ($captchareason) {
 		case 'login':
-			$notehtml = qa_insert_login_links(qa_lang_html('misc/captcha_login_fix'));
+			$notehtml = qa_insert_login_links(qa_lang_html(qa_opt('suspend_register_users') ? 'misc/captcha_login_fix_no_register' : 'misc/captcha_login_fix'));
 			break;
 
 		case 'confirm':

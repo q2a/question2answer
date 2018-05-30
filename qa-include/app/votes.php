@@ -36,7 +36,10 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  */
 function qa_vote_error_html($post, $vote, $userid, $topage)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	// The 'login', 'confirm', 'limit', 'userblock' and 'ipblock' permission errors are reported to the user here.
 	// Others ('approve', 'level') prevent the buttons being clickable in the first place, in qa_get_vote_view(...)
@@ -51,8 +54,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 		return qa_lang_html('main/vote_disabled_queued');
 	}
 
-	switch($post['basetype'])
-	{
+	switch ($post['basetype']) {
 		case 'Q':
 			$allowVoting = qa_opt('voting_on_qs');
 			break;
@@ -85,7 +87,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 			break;
 
 		case 'login':
-			return qa_insert_login_links(qa_lang_html('main/vote_must_login'), $topage);
+			return qa_insert_login_links(qa_lang_html(qa_opt('suspend_register_users') ? 'main/vote_must_login_no_register' : 'main/vote_must_login'), $topage);
 			break;
 
 		case 'confirm':
@@ -115,7 +117,10 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
  */
 function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	require_once QA_INCLUDE_DIR . 'db/points.php';
 	require_once QA_INCLUDE_DIR . 'db/hotness.php';
@@ -185,7 +190,10 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
  */
 function qa_flag_error_html($post, $userid, $topage)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	// The 'login', 'confirm', 'limit', 'userblock' and 'ipblock' permission errors are reported to the user here.
 	// Others ('approve', 'level') prevent the flag button being shown, in qa_page_q_post_rules(...)
@@ -200,7 +208,10 @@ function qa_flag_error_html($post, $userid, $topage)
 	) {
 		switch (qa_user_post_permit_error('permit_flag', $post, QA_LIMIT_FLAGS)) {
 			case 'login':
-				return qa_insert_login_links(qa_lang_html('question/flag_must_login'), $topage);
+				return qa_insert_login_links(
+					qa_lang_html(qa_opt('suspend_register_users') ? 'question/flag_must_login_no_register' : 'question/flag_must_login'),
+					$topage
+				);
 				break;
 
 			case 'confirm':
@@ -237,7 +248,10 @@ function qa_flag_error_html($post, $userid, $topage)
  */
 function qa_flag_set_tohide($oldpost, $userid, $handle, $cookieid, $question)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	require_once QA_INCLUDE_DIR . 'db/votes.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
@@ -286,7 +300,10 @@ function qa_flag_set_tohide($oldpost, $userid, $handle, $cookieid, $question)
  */
 function qa_flag_clear($oldpost, $userid, $handle, $cookieid)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	require_once QA_INCLUDE_DIR . 'db/votes.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
@@ -328,7 +345,10 @@ function qa_flag_clear($oldpost, $userid, $handle, $cookieid)
  */
 function qa_flags_clear_all($oldpost, $userid, $handle, $cookieid)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	require_once QA_INCLUDE_DIR . 'db/votes.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';

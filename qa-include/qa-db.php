@@ -458,7 +458,7 @@ function qa_db_list_tables($onlyTablesWithPrefix = false)
 	$query = 'SHOW TABLES';
 
 	if ($onlyTablesWithPrefix) {
-		$col = 'Tables_in_' . QA_MYSQL_DATABASE;
+		$col = 'Tables_in_' . QA_FINAL_MYSQL_DATABASE;
 		$query .= ' WHERE `' . $col . '` LIKE "' . str_replace('_', '\\_', QA_MYSQL_TABLE_PREFIX) . '%"';
 		if (defined('QA_MYSQL_USERS_PREFIX')) {
 			$query .= ' OR `' . $col . '` LIKE "' . str_replace('_', '\\_', QA_MYSQL_USERS_PREFIX) . '%"';
