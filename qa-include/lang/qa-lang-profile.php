@@ -69,6 +69,7 @@ return array(
 	'post_wall_must_be_approved' => 'Your account must be approved to post on this wall. Please wait or ^1add more information^2.',
 	'post_wall_must_confirm' => 'Please ^5confirm your email address^6 to post on this wall.',
 	'post_wall_must_login' => 'Please ^1log in^2 or ^3register^4 to post on this wall.',
+    'post_wall_must_login_no_register' => 'Please ^1log in^2 to post on this wall.',
 	'questions' => 'Questions:',
 	'questions_by_x' => 'Questions by ^',
 	'ranked_x' => ' (ranked #^)',

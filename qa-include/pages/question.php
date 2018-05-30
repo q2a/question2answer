@@ -132,7 +132,10 @@ if ($permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots'))) {
 
 	switch ($permiterror) {
 		case 'login':
-			$qa_content['error'] = qa_insert_login_links(qa_lang_html('main/view_q_must_login'), $topage);
+			$qa_content['error'] = qa_insert_login_links(
+			    qa_lang_html(qa_opt('suspend_register_users') ? 'main/view_q_must_login_no_register' : 'main/view_q_must_login'),
+                $topage
+            );
 			break;
 
 		case 'confirm':

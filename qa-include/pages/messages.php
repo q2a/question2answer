@@ -48,7 +48,10 @@ if (QA_FINAL_EXTERNAL_USERS)
 
 if (!isset($loginUserId)) {
 	$qa_content = qa_content_prepare();
-	$qa_content['error'] = qa_insert_login_links(qa_lang_html('misc/message_must_login'), qa_request());
+	$qa_content['error'] = qa_insert_login_links(
+	    qa_lang_html(qa_opt('suspend_register_users') ? 'misc/message_must_login_no_register' : 'misc/message_must_login'),
+        qa_request()
+    );
 	return $qa_content;
 }
 

@@ -85,7 +85,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 			break;
 
 		case 'login':
-			return qa_insert_login_links(qa_lang_html('main/vote_must_login'), $topage);
+			return qa_insert_login_links(qa_lang_html(qa_opt('suspend_register_users') ? 'main/vote_must_login_no_register' : 'main/vote_must_login'), $topage);
 			break;
 
 		case 'confirm':
@@ -200,7 +200,10 @@ function qa_flag_error_html($post, $userid, $topage)
 	) {
 		switch (qa_user_post_permit_error('permit_flag', $post, QA_LIMIT_FLAGS)) {
 			case 'login':
-				return qa_insert_login_links(qa_lang_html('question/flag_must_login'), $topage);
+				return qa_insert_login_links(
+				    qa_lang_html(qa_opt('suspend_register_users') ? 'question/flag_must_login_no_register' : 'question/flag_must_login'),
+                    $topage
+                );
 				break;
 
 			case 'confirm':

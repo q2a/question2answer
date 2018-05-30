@@ -66,7 +66,11 @@ if ($permiterror) {
 
 	switch ($permiterror) {
 		case 'login':
-			$qa_content['error'] = qa_insert_login_links(qa_lang_html('question/ask_must_login'), qa_request(), isset($followpostid) ? array('follow' => $followpostid) : null);
+			$qa_content['error'] = qa_insert_login_links(
+			    qa_lang_html(qa_opt('suspend_register_users') ? 'question/ask_must_login_no_register' : 'question/ask_must_login'),
+                qa_request(),
+                isset($followpostid) ? array('follow' => $followpostid) : null
+            );
 			break;
 
 		case 'confirm':

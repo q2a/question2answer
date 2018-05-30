@@ -882,7 +882,10 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 	switch (qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
 		case 'login':
 			$form = array(
-				'title' => qa_insert_login_links(qa_lang_html('question/answer_must_login'), qa_request()),
+				'title' => qa_insert_login_links(
+				    qa_lang_html(qa_opt('suspend_register_users') ? 'question/answer_must_login_no_register' : 'question/answer_must_login'),
+                    qa_request()
+                ),
 			);
 			break;
 
@@ -1031,7 +1034,10 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 	switch (qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)) {
 		case 'login':
 			$form = array(
-				'title' => qa_insert_login_links(qa_lang_html('question/comment_must_login'), qa_request()),
+				'title' => qa_insert_login_links(
+                    qa_lang_html(qa_opt('suspend_register_users') ? 'question/comment_must_login_no_register' : 'question/comment_must_login'),
+                    qa_request()
+                ),
 			);
 			break;
 

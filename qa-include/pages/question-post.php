@@ -49,7 +49,10 @@ if ($question['answerbutton']) {
 	if (qa_clicked('a_doadd') || $pagestate == 'answer') {
 		switch (qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
 			case 'login':
-				$pageerror = qa_insert_login_links(qa_lang_html('question/answer_must_login'), qa_request());
+				$pageerror = qa_insert_login_links(
+				    qa_lang_html(qa_opt('suspend_register_users') ? 'question/answer_must_login_no_register' : 'question/answer_must_login'),
+                    qa_request()
+                );
 				break;
 
 			case 'confirm':
@@ -276,7 +279,10 @@ function qa_page_q_permit_edit($post, $permitoption, &$error, $permitoption2 = n
 
 	switch ($permiterror) {
 		case 'login':
-			$error = qa_insert_login_links(qa_lang_html('question/edit_must_login'), qa_request());
+			$error = qa_insert_login_links(
+			    qa_lang_html(qa_opt('suspend_register_users') ? 'question/edit_must_login_no_register' : 'question/edit_must_login'),
+                qa_request()
+            );
 			break;
 
 		case 'confirm':
@@ -844,7 +850,10 @@ function qa_page_q_do_comment($question, $parent, $commentsfollows, $pagestart, 
 
 	switch (qa_user_post_permit_error('permit_post_c', $parent, QA_LIMIT_COMMENTS)) {
 		case 'login':
-			$error = qa_insert_login_links(qa_lang_html('question/comment_must_login'), qa_request());
+			$error = qa_insert_login_links(
+			    qa_lang_html(qa_opt('suspend_register_users') ? 'question/comment_must_login_no_register' : 'question/comment_must_login'),
+                qa_request()
+            );
 			break;
 
 		case 'confirm':

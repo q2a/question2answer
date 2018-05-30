@@ -50,7 +50,10 @@ function qa_wall_error_html($fromuserid, $touserid, $touserflags)
 					break;
 
 				case 'login':
-					return qa_insert_login_links(qa_lang_html('profile/post_wall_must_login'), qa_request());
+					return qa_insert_login_links(qa_lang_html(
+					    qa_opt('suspend_register_users') ? 'profile/post_wall_must_login_no_register' : 'profile/post_wall_must_login'),
+                        qa_request()
+                    );
 					break;
 
 				case 'confirm':
