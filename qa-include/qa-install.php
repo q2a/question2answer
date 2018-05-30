@@ -59,6 +59,8 @@ if (!function_exists('qa_install_db_fail_handler')) {
 if (ob_get_level() > 0) {
 	// clears any current theme output to prevent broken design
 	ob_end_clean();
+	// prevents browser content encoding error
+	header('Content-Encoding: none');
 }
 
 $success = '';

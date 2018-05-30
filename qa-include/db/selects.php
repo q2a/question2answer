@@ -1523,9 +1523,17 @@ function qa_db_top_users_selectspec($start, $count = null)
 		);
 	}
 
+	// If the site is configured to share the ^users table then there might not be a record in the ^userpoints table
+	if (defined('QA_MYSQL_USERS_PREFIX')) {
+		$basePoints = (int)qa_opt('points_base');
+		$source = '^users JOIN (SELECT ^users.userid, COALESCE(points,' . $basePoints . ') AS points FROM ^users LEFT JOIN ^userpoints ON ^users.userid=^userpoints.userid ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid';
+	} else {
+		$source = '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid';;
+	}
+
 	return array(
 		'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
-		'source' => '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid',
+		'source' => $source,
 		'arguments' => array($start, $count),
 		'arraykey' => 'userid',
 		'sortdesc' => 'points',

@@ -68,7 +68,6 @@ class qa_search_basic
 		qa_db_word_contentcount_update(array_keys($contentwordidcounts));
 		qa_db_word_tagwordcount_update($tagwordids);
 		qa_db_word_tagcount_update($wholetagids);
-		qa_db_tagcount_update();
 	}
 
 	public function unindex_post($postid)
