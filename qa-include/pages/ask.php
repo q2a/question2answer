@@ -25,10 +25,10 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 
-require_once QA_INCLUDE_DIR.'app/format.php';
-require_once QA_INCLUDE_DIR.'app/limits.php';
-require_once QA_INCLUDE_DIR.'db/selects.php';
-require_once QA_INCLUDE_DIR.'util/sort.php';
+require_once QA_INCLUDE_DIR . 'app/format.php';
+require_once QA_INCLUDE_DIR . 'app/limits.php';
+require_once QA_INCLUDE_DIR . 'db/selects.php';
+require_once QA_INCLUDE_DIR . 'util/sort.php';
 
 
 // Check whether this is a follow-on question and get some info we need from the database
@@ -67,10 +67,10 @@ if ($permiterror) {
 	switch ($permiterror) {
 		case 'login':
 			$qa_content['error'] = qa_insert_login_links(
-			    qa_lang_html(qa_opt('suspend_register_users') ? 'question/ask_must_login_no_register' : 'question/ask_must_login'),
-                qa_request(),
-                isset($followpostid) ? array('follow' => $followpostid) : null
-            );
+				qa_lang_html(qa_opt('suspend_register_users') ? 'question/ask_must_login_no_register' : 'question/ask_must_login'),
+				qa_request(),
+				isset($followpostid) ? array('follow' => $followpostid) : null
+			);
 			break;
 
 		case 'confirm':
@@ -109,8 +109,8 @@ if (qa_using_tags()) {
 }
 
 if (qa_clicked('doask')) {
-	require_once QA_INCLUDE_DIR.'app/post-create.php';
-	require_once QA_INCLUDE_DIR.'util/string.php';
+	require_once QA_INCLUDE_DIR . 'app/post-create.php';
+	require_once QA_INCLUDE_DIR . 'util/string.php';
 
 	$categoryids = array_keys(qa_category_path($categories, @$in['categoryid']));
 	$userlevel = qa_user_level_for_categories($categoryids);
@@ -126,8 +126,7 @@ if (qa_clicked('doask')) {
 
 	if (!qa_check_form_security_code('ask', qa_post_text('code'))) {
 		$errors['page'] = qa_lang_html('misc/form_security_again');
-	}
-	else {
+	} else {
 		$filtermodules = qa_load_modules_with('filter', 'filter_question');
 		foreach ($filtermodules as $filtermodule) {
 			$oldin = $in;
@@ -138,13 +137,12 @@ if (qa_clicked('doask')) {
 		if (qa_using_categories() && count($categories) && (!qa_opt('allow_no_category')) && !isset($in['categoryid'])) {
 			// check this here because we need to know count($categories)
 			$errors['categoryid'] = qa_lang_html('question/category_required');
-		}
-		elseif (qa_user_permit_error('permit_post_q', null, $userlevel)) {
+		} elseif (qa_user_permit_error('permit_post_q', null, $userlevel)) {
 			$errors['categoryid'] = qa_lang_html('question/category_ask_not_allowed');
 		}
 
 		if ($captchareason) {
-			require_once QA_INCLUDE_DIR.'app/captcha.php';
+			require_once QA_INCLUDE_DIR . 'app/captcha.php';
 			qa_captcha_validate_post($errors);
 		}
 
@@ -197,7 +195,7 @@ $field['error'] = qa_html(@$errors['content']);
 $custom = qa_opt('show_custom_ask') ? trim(qa_opt('custom_ask')) : '';
 
 $qa_content['form'] = array(
-	'tags' => 'name="ask" method="post" action="'.qa_self_html().'"',
+	'tags' => 'name="ask" method="post" action="' . qa_self_html() . '"',
 
 	'style' => 'tall',
 
@@ -224,8 +222,8 @@ $qa_content['form'] = array(
 
 	'buttons' => array(
 		'ask' => array(
-			'tags' => 'onclick="qa_show_waiting_after(this, false); '.
-				(method_exists($editor, 'update_script') ? $editor->update_script('content') : '').'"',
+			'tags' => 'onclick="qa_show_waiting_after(this, false); ' .
+				(method_exists($editor, 'update_script') ? $editor->update_script('content') : '') . '"',
 			'label' => qa_lang_html('question/ask_button'),
 		),
 	),
@@ -245,7 +243,7 @@ if (qa_opt('do_ask_check_qs') || qa_opt('do_example_tags')) {
 	$qa_content['form']['fields']['title']['tags'] .= ' onchange="qa_title_change(this.value);"';
 
 	if (strlen(@$in['title'])) {
-		$qa_content['script_onloads'][] = 'qa_title_change('.qa_js($in['title']).');';
+		$qa_content['script_onloads'][] = 'qa_title_change(' . qa_js($in['title']) . ');';
 	}
 }
 
@@ -305,7 +303,7 @@ qa_set_up_notify_fields($qa_content, $qa_content['form']['fields'], 'Q', qa_get_
 	isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email']);
 
 if ($captchareason) {
-	require_once QA_INCLUDE_DIR.'app/captcha.php';
+	require_once QA_INCLUDE_DIR . 'app/captcha.php';
 	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors, qa_captcha_reason_note($captchareason));
 }
 

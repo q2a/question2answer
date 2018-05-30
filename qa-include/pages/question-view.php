@@ -102,7 +102,10 @@ function qa_page_q_load_c_follows($question, $childposts, $achildposts, $duplica
  */
 function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $childposts = null)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	$userid = qa_get_logged_in_userid();
 	$cookieid = qa_cookie_get();
@@ -883,9 +886,9 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 		case 'login':
 			$form = array(
 				'title' => qa_insert_login_links(
-				    qa_lang_html(qa_opt('suspend_register_users') ? 'question/answer_must_login_no_register' : 'question/answer_must_login'),
-                    qa_request()
-                ),
+					qa_lang_html(qa_opt('suspend_register_users') ? 'question/answer_must_login_no_register' : 'question/answer_must_login'),
+					qa_request()
+				),
 			);
 			break;
 
@@ -1035,9 +1038,9 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 		case 'login':
 			$form = array(
 				'title' => qa_insert_login_links(
-                    qa_lang_html(qa_opt('suspend_register_users') ? 'question/comment_must_login_no_register' : 'question/comment_must_login'),
-                    qa_request()
-                ),
+					qa_lang_html(qa_opt('suspend_register_users') ? 'question/comment_must_login_no_register' : 'question/comment_must_login'),
+					qa_request()
+				),
 			);
 			break;
 

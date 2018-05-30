@@ -37,7 +37,10 @@ function qa_wall_error_html($fromuserid, $touserid, $touserflags)
 {
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	if (!QA_FINAL_EXTERNAL_USERS && qa_opt('allow_user_walls')) {
 		if (($touserflags & QA_USER_FLAGS_NO_WALL_POSTS) && !(isset($fromuserid) && $fromuserid == $touserid))
@@ -51,9 +54,9 @@ function qa_wall_error_html($fromuserid, $touserid, $touserflags)
 
 				case 'login':
 					return qa_insert_login_links(qa_lang_html(
-					    qa_opt('suspend_register_users') ? 'profile/post_wall_must_login_no_register' : 'profile/post_wall_must_login'),
-                        qa_request()
-                    );
+						qa_opt('suspend_register_users') ? 'profile/post_wall_must_login_no_register' : 'profile/post_wall_must_login'),
+						qa_request()
+					);
 					break;
 
 				case 'confirm':
@@ -92,7 +95,10 @@ function qa_wall_error_html($fromuserid, $touserid, $touserflags)
  */
 function qa_wall_add_post($userid, $handle, $cookieid, $touserid, $tohandle, $content, $format)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	require_once QA_INCLUDE_DIR . 'app/format.php';
 	require_once QA_INCLUDE_DIR . 'db/messages.php';
@@ -145,7 +151,10 @@ function qa_wall_delete_post($userid, $handle, $cookieid, $message)
  */
 function qa_wall_posts_add_rules($usermessages, $start)
 {
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+	if (qa_to_override(__FUNCTION__)) {
+		$args = func_get_args();
+		return qa_call_override(__FUNCTION__, $args);
+	}
 
 	$userid = qa_get_logged_in_userid();
 	// reuse "Hiding or showing any post" and "Deleting hidden posts" permissions
