@@ -9,7 +9,7 @@ If you find a bug (error) with Question2Answer, please [submit an issue here](ht
 
 If you think you've found a security issue, you can responsibly disclose it to us using the [contact form here](http://www.question2answer.org/feedback.php).
 
-Note that general troubleshooting issues such as installation or how to use a feature should continue to be asked on the [Question2Answer Q&A](http://www.question2answer.org/qa/).
+Note that general troubleshooting issues such as installation or how to use a feature should continue to be asked on the [Question2Answer Q&A][QA].
 
 
 ## Pull requests
@@ -39,3 +39,5 @@ If in doubt, follow the style of the surrounding code. Code examples can be foun
 ## Documentation
 
 Please see the repository [q2a.github.io](https://github.com/q2a/q2a.github.io/) which automatically produces the documentation website [docs.question2answer.org](http://docs.question2answer.org/).
+
+[QA]: http://www.question2answer.org/qa/
