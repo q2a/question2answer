@@ -36,5 +36,10 @@ script:
   # PHPUnit
   - php phpunit.phar --bootstrap qa-tests/autoload.php qa-tests
 
+cache:
+  directories:
+    - "$HOME/.composer/cache/files"
+
 git:
   depth: 5
+
