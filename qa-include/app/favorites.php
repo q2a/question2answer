@@ -165,6 +165,7 @@ function qa_favorite_tags_view($tags)
 		'items' => array(),
 		'rows' => ceil(count($tags) / qa_opt('columns_tags')),
 		'type' => 'tags',
+		'sort' => 'count',
 	);
 
 	foreach ($tags as $tag) {
