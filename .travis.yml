@@ -10,6 +10,7 @@ php:
   - '5.6'
   - '7.0'
   - '7.1'
+  - '7.2'
 
 matrix:
   include:
@@ -38,3 +39,7 @@ script:
 cache:
   directories:
     - "$HOME/.composer/cache/files"
+
+git:
+  depth: 5
+
