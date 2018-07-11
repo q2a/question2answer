@@ -545,7 +545,7 @@ function qa_recalc_perform_step(&$state)
 
 		case 'docachetrim_process':
 		case 'docacheclear_process':
-			$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+			$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
 			$cacheStats = $cacheDriver->getStats();
 			$limit = min($cacheStats['files'], 20);
 
@@ -648,7 +648,7 @@ function qa_recalc_stage_length($operation)
 
 		case 'docachetrim_process':
 		case 'docacheclear_process':
-			$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+			$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
 			$cacheStats = $cacheDriver->getStats();
 			$length = $cacheStats['files'];
 			break;

@@ -1612,7 +1612,7 @@ function qa_db_upgrade_tables()
 	// Perform any necessary recalculations, as determined by upgrade steps
 
 	foreach (array_keys($keyrecalc) as $state) {
-		$recalc = new Q2A_Recalc_RecalcMain($state);
+		$recalc = new \Q2A\Recalc\RecalcMain($state);
 		while ($recalc->getState()) {
 			set_time_limit(60);
 
