@@ -132,7 +132,10 @@ if ($permiterror && (qa_is_human_probably() || !qa_opt('allow_view_q_bots'))) {
 
 	switch ($permiterror) {
 		case 'login':
-			$qa_content['error'] = qa_insert_login_links(qa_lang_html('main/view_q_must_login'), $topage);
+			$qa_content['error'] = qa_insert_login_links(
+				qa_lang_html(qa_opt('suspend_register_users') ? 'main/view_q_must_login_no_register' : 'main/view_q_must_login'),
+				$topage
+			);
 			break;
 
 		case 'confirm':
@@ -460,11 +463,11 @@ if (isset($jumptoanchor)) {
 
 if (qa_opt('do_count_q_views') && !$formrequested && !qa_is_http_post() && qa_is_human_probably() &&
 	(!$question['views'] || (
-		// if it has more than zero views, then it must be different IP & user & cookieid from the creator
-		(@inet_ntop($question['createip']) != qa_remote_ip_address() || !isset($question['createip'])) &&
-		($question['userid'] != $userid || !isset($question['userid'])) &&
-		($question['cookieid'] != $cookieid || !isset($question['cookieid']))
-	))
+			// if it has more than zero views, then it must be different IP & user & cookieid from the creator
+			(@inet_ntop($question['createip']) != qa_remote_ip_address() || !isset($question['createip'])) &&
+			($question['userid'] != $userid || !isset($question['userid'])) &&
+			($question['cookieid'] != $cookieid || !isset($question['cookieid']))
+		))
 ) {
 	$qa_content['inc_views_postid'] = $questionid;
 }

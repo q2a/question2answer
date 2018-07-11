@@ -777,7 +777,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 			);
 		}
 
-		if (!empty($userlinks['register'])) {
+		if (!empty($userlinks['register']) && !qa_opt('suspend_register_users')) {
 			$qa_content['navigation']['user']['register'] = array(
 				'url' => qa_html(@$userlinks['register']),
 				'label' => qa_lang_html('main/nav_register'),

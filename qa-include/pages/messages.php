@@ -48,7 +48,10 @@ if (QA_FINAL_EXTERNAL_USERS)
 
 if (!isset($loginUserId)) {
 	$qa_content = qa_content_prepare();
-	$qa_content['error'] = qa_insert_login_links(qa_lang_html('misc/message_must_login'), qa_request());
+	$qa_content['error'] = qa_insert_login_links(
+		qa_lang_html(qa_opt('suspend_register_users') ? 'misc/message_must_login_no_register' : 'misc/message_must_login'),
+		qa_request()
+	);
 	return $qa_content;
 }
 
@@ -77,9 +80,9 @@ $qa_content['title'] = qa_lang_html($showOutbox ? 'misc/pm_outbox_title' : 'misc
 
 $qa_content['custom'] =
 	'<div style="text-align:center">' .
-		($showOutbox ? '<a href="' . qa_path_html('messages') . '">' . qa_lang_html('misc/inbox') . '</a>' : qa_lang_html('misc/inbox')) .
-		' - ' .
-		($showOutbox ? qa_lang_html('misc/outbox') : '<a href="' . qa_path_html('messages/sent') . '">' . qa_lang_html('misc/outbox') . '</a>') .
+	($showOutbox ? '<a href="' . qa_path_html('messages') . '">' . qa_lang_html('misc/inbox') . '</a>' : qa_lang_html('misc/inbox')) .
+	' - ' .
+	($showOutbox ? qa_lang_html('misc/outbox') : '<a href="' . qa_path_html('messages/sent') . '">' . qa_lang_html('misc/outbox') . '</a>') .
 	'</div>';
 
 $qa_content['message_list'] = array(
