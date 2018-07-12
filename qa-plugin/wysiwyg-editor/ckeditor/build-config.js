@@ -1,5 +1,5 @@
 ﻿/**
- * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
@@ -13,10 +13,10 @@
  * (1) http://ckeditor.com/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) http://ckeditor.com/builder/ca1529b267e51f7f1eec6edcb62ad316
+ * (2) http://ckeditor.com/builder/df437b64bdb17eec3e10a2cc8f29feb8
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) http://ckeditor.com/builder/download/ca1529b267e51f7f1eec6edcb62ad316
+ * (3) http://ckeditor.com/builder/download/df437b64bdb17eec3e10a2cc8f29feb8
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
