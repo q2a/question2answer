@@ -27,6 +27,9 @@ CKEDITOR.editorConfig = function( config ) {
 	// Make dialogs simpler
 	config.removeDialogTabs = 'image:advanced;link:advanced;table:advanced';
 
+	// Use form upload instead of XHR
+	config.filebrowserUploadMethod = 'form';
+
 	// Use native spell checking (note: Ctrl+right-click is required for native context menu)
 	config.disableNativeSpellChecker = false;
 
