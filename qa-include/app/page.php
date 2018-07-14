@@ -360,7 +360,7 @@ function qa_output_content($qa_content)
 		$qa_content['script'] = array();
 	}
 
-	$qa_content['script'] = array_merge($qa_content['script'], $script);
+	$qa_content['script'] = array_merge($script, $qa_content['script']);
 
 	// Load the appropriate theme class and output the page
 
