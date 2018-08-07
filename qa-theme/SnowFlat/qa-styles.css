@@ -76,6 +76,8 @@ html {
 html, body {
 	margin: 0;
 	padding: 0;
+	height: 100%;
+	position: relative;
 }
 
 body {
@@ -820,6 +822,11 @@ blockquote p {
 	margin: 10px auto;
 	padding: 0 10px;
 	*zoom: 1;
+	min-height: 100vh;
+	overflow: hidden;
+	display: block;
+	position: relative;
+	padding-bottom: 33px;
 }
 
 @media (min-width: 980px) {
@@ -3188,6 +3195,9 @@ input[type="submit"], button {
 	margin-bottom: 0;
 	font-size: 12px;
 	line-height: 12px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
 }
 .qa-footer a {
 	color: #fff;
