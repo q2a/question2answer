@@ -59,6 +59,7 @@ function qa_mailing_stop()
 function qa_mailing_perform_step()
 {
 	require_once QA_INCLUDE_DIR . 'db/users.php';
+	require_once QA_INCLUDE_DIR . 'app/users.php';
 
 	$lastuserid = qa_opt('mailing_last_userid');
 
@@ -89,11 +90,17 @@ function qa_mailing_perform_step()
 				qa_opt('mailing_last_userid', $lastuserid);
 				qa_opt('mailing_done_users', qa_opt('mailing_done_users') + count($users));
 
+				$isModeratingUsers = qa_opt('moderate_users');
+
 				foreach ($users as $user) {
-					if (!($user['flags'] & QA_USER_FLAGS_NO_MAILINGS)) {
-						qa_mailing_send_one($user['userid'], $user['handle'], $user['email'], $user['emailcode']);
-						$sentusers++;
+					if (($user['flags'] & QA_USER_FLAGS_NO_MAILINGS) || // exclude users who don't want to get the mailings
+						($user['flags'] & QA_USER_FLAGS_USER_BLOCKED) || // exclude blocked users
+						($isModeratingUsers && ($user['level'] < QA_USER_LEVEL_APPROVED))) { // if moderating users exclude unapproved users
+						continue;
 					}
+
+					qa_mailing_send_one($user['userid'], $user['handle'], $user['email'], $user['emailcode']);
+					$sentusers++;
 				}
 
 				qa_opt('mailing_last_timestamp', $lasttime + $sentusers * 60 / $perminute); // can be floating point result, based on number of mails actually sent
