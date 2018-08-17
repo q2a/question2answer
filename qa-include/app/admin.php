@@ -392,8 +392,10 @@ function qa_admin_sub_navigation()
 	}
 
 	if (!qa_user_maximum_permit_error('permit_hide_show') || !qa_user_maximum_permit_error('permit_delete_hidden')) {
+		$count = qa_user_permit_error('permit_hide_show') ? 0 : (int)qa_opt('cache_hiddencount');
+
 		$navigation['admin/hidden'] = array(
-			'label' => qa_lang_html('admin/hidden_title'),
+			'label' => qa_lang_html_sub('admin/hidden_title', '<span class="qa-nav-sub-counter-hidden">' . qa_html(qa_format_number($count)) . '</span>'),
 			'url' => qa_path_html('admin/hidden'),
 		);
 	}
@@ -663,7 +665,7 @@ function qa_admin_single_click_array($entityid, $action)
 						$response['domUpdates'] = array(
 							array(
 								'selector' => '.qa-nav-sub-counter-moderate',
-								'html' => max($entityCount - 1, 0),
+								'html' => max($entityCount, 0),
 							),
 							array(
 								'selector' => '#p' . $entityid,
@@ -697,11 +699,16 @@ function qa_admin_single_click_array($entityid, $action)
 
 				case 'reshow':
 				case 'delete':
+					$entityCount = (int)qa_opt('cache_hiddencount');
 					if (!$post['hidden']) {
 						$response['result'] = 'error';
 						$response['error']['type'] = 'post-not-hidden';
 						$response['error']['message'] = qa_lang_html('main/general_error');
 						$response['domUpdates'] = array(
+							array(
+								'selector' => '.qa-nav-sub-counter-hidden',
+								'html' => max($entityCount, 0),
+							),
 							array(
 								'selector' => '#p' . $entityid,
 								'action' => 'conceal',
@@ -722,6 +729,10 @@ function qa_admin_single_click_array($entityid, $action)
 						$response['result'] = 'success';
 						$response['domUpdates'] = array(
 							array(
+								'selector' => '.qa-nav-sub-counter-hidden',
+								'html' => max($entityCount - 1, 0),
+							),
+							array(
 								'selector' => '#p' . $entityid,
 								'action' => 'conceal',
 							),
@@ -739,7 +750,7 @@ function qa_admin_single_click_array($entityid, $action)
 						$response['domUpdates'] = array(
 							array(
 								'selector' => '.qa-nav-sub-counter-flagged',
-								'html' => max($entityCount - 1, 0),
+								'html' => max($entityCount, 0),
 							),
 							array(
 								'selector' => '#p' . $entityid,

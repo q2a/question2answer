@@ -129,7 +129,7 @@ return array(
 	'hidden_answers_deleted' => 'Deleted ^1 of ^2 hidden answers without dependents...',
 	'hidden_comments_deleted' => 'Deleted ^1 of ^2 hidden comments...',
 	'hidden_questions_deleted' => 'Deleted ^1 of ^2 hidden questions without dependents...',
-	'hidden_title' => 'Hidden',
+	'hidden_title' => 'Hidden (^)',
 	'hotness_factors' => 'Relative importance for question hotness:',
 	'ip_address_pages' => 'IP address pages',
 	'layout_title' => 'Layout',
