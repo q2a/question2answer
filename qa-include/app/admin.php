@@ -649,144 +649,184 @@ function qa_admin_single_click_array($entityid, $action)
 	} else { // something to do with a post
 		require_once QA_INCLUDE_DIR . 'app/posts.php';
 
-		$post = qa_post_get_full($entityid);
+		$post = qa_db_single_select(qa_db_full_post_selectspec(null, $entityid));
 
-		if (isset($post)) {
-			$queued = (substr($post['type'], 1) == '_QUEUED');
-
+		// Handle non-existent posts
+		if ($post === null) {
 			switch ($action) {
 				case 'approve':
 				case 'reject':
 					$entityCount = (int)qa_opt('cache_queuedcount');
-					if (!$queued) {
-						$response['result'] = 'error';
-						$response['error']['type'] = 'post-not-queued';
-						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['domUpdates'] = array(
-							array(
-								'selector' => '.qa-nav-sub-counter-moderate',
-								'html' => max($entityCount, 0),
-							),
-							array(
-								'selector' => '#p' . $entityid,
-								'action' => 'conceal',
-							),
-						);
-					} elseif (qa_user_post_permit_error('permit_moderate', $post) !== false) {
-						$response['result'] = 'error';
-						$response['error']['type'] = 'no-permission';
-						$response['error']['message'] = qa_lang_html('users/no_permission');
-						$response['error']['severity'] = 'fatal';
-					} else {
-						$postStatus = $action === 'approve'
-							? QA_POST_STATUS_NORMAL
-							: QA_POST_STATUS_HIDDEN; // 'reject'
-						qa_post_set_status($entityid, $postStatus, $userid);
-
-						$response['result'] = 'success';
-						$response['domUpdates'] = array(
-							array(
-								'selector' => '.qa-nav-sub-counter-moderate',
-								'html' => max($entityCount - 1, 0),
-							),
-							array(
-								'selector' => '#p' . $entityid,
-								'action' => 'conceal',
-							),
-						);
-					}
+					$selector = '.qa-nav-sub-counter-moderate';
 					break;
-
 				case 'reshow':
 				case 'delete':
 					$entityCount = (int)qa_opt('cache_hiddencount');
-					if (!$post['hidden']) {
-						$response['result'] = 'error';
-						$response['error']['type'] = 'post-not-hidden';
-						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['domUpdates'] = array(
-							array(
-								'selector' => '.qa-nav-sub-counter-hidden',
-								'html' => max($entityCount, 0),
-							),
-							array(
-								'selector' => '#p' . $entityid,
-								'action' => 'conceal',
-							),
-						);
-					} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
-						$response['result'] = 'error';
-						$response['error']['type'] = 'no-permission';
-						$response['error']['message'] = qa_lang_html('users/no_permission');
-						$response['error']['severity'] = 'fatal';
-					} else {
-						if ($action === 'reshow') {
-							qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
-						} else { // 'delete'
-							qa_post_delete($entityid);
-						}
-
-						$response['result'] = 'success';
-						$response['domUpdates'] = array(
-							array(
-								'selector' => '.qa-nav-sub-counter-hidden',
-								'html' => max($entityCount - 1, 0),
-							),
-							array(
-								'selector' => '#p' . $entityid,
-								'action' => 'conceal',
-							),
-						);
-					}
+					$selector = '.qa-nav-sub-counter-hidden';
 					break;
-
 				case 'hide':
 				case 'clearflags':
 					$entityCount = (int)qa_opt('cache_flaggedcount');
-					if ($action === 'hide' && $queued) {
-						$response['result'] = 'error';
-						$response['error']['type'] = 'post-queued';
-						$response['error']['message'] = qa_lang_html('main/general_error');
-						$response['domUpdates'] = array(
-							array(
-								'selector' => '.qa-nav-sub-counter-flagged',
-								'html' => max($entityCount, 0),
-							),
-							array(
-								'selector' => '#p' . $entityid,
-								'action' => 'conceal',
-							),
-						);
-					} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
-						$response['result'] = 'error';
-						$response['error']['type'] = 'no-permission';
-						$response['error']['message'] = qa_lang_html('users/no_permission');
-						$response['error']['severity'] = 'fatal';
-					} else {
-						if ($action === 'hide') {
-							qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
-						} else { // 'clearflags'
-							require_once QA_INCLUDE_DIR . 'app/votes.php';
-
-							qa_flags_clear_all($post, $userid, qa_get_logged_in_handle(), null);
-						}
-
-						$response['result'] = 'success';
-						$response['domUpdates'] = array(
-							array(
-								'selector' => '.qa-nav-sub-counter-flagged',
-								'html' => max($entityCount - 1, 0),
-							),
-							array(
-								'selector' => '#p' . $entityid,
-								'action' => 'conceal',
-							),
-						);
-					}
+					$selector = '.qa-nav-sub-counter-flagged';
 					break;
-
 				default:
+					$selector = '';
+					$entityCount = 0;
 			}
+
+			return array(
+				'result' => 'error',
+				'error' => array(
+					'type' => 'post-not-found',
+					'message' => qa_lang_html('main/general_error'),
+				),
+				'domUpdates' => array(
+					array(
+						'selector' => $selector,
+						'html' => $entityCount,
+					),
+					array(
+						'selector' => '#p' . $entityid,
+						'action' => 'conceal',
+					),
+				),
+			);
+		}
+
+		$queued = (substr($post['type'], 1) == '_QUEUED');
+
+		switch ($action) {
+			case 'approve':
+			case 'reject':
+				$entityCount = (int)qa_opt('cache_queuedcount');
+				if (!$queued) {
+					$response['result'] = 'error';
+					$response['error']['type'] = 'post-not-queued';
+					$response['error']['message'] = qa_lang_html('main/general_error');
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-moderate',
+							'html' => $entityCount,
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
+				} elseif (qa_user_post_permit_error('permit_moderate', $post) !== false) {
+					$response['result'] = 'error';
+					$response['error']['type'] = 'no-permission';
+					$response['error']['message'] = qa_lang_html('users/no_permission');
+					$response['error']['severity'] = 'fatal';
+				} else {
+					$postStatus = $action === 'approve'
+						? QA_POST_STATUS_NORMAL
+						: QA_POST_STATUS_HIDDEN; // 'reject'
+					qa_post_set_status($entityid, $postStatus, $userid);
+
+					$response['result'] = 'success';
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-moderate',
+							'html' => max($entityCount - 1, 0),
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
+				}
+				break;
+
+			case 'reshow':
+			case 'delete':
+				$entityCount = (int)qa_opt('cache_hiddencount');
+				if (!$post['hidden']) {
+					$response['result'] = 'error';
+					$response['error']['type'] = 'post-not-hidden';
+					$response['error']['message'] = qa_lang_html('main/general_error');
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-hidden',
+							'html' => $entityCount,
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
+				} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
+					$response['result'] = 'error';
+					$response['error']['type'] = 'no-permission';
+					$response['error']['message'] = qa_lang_html('users/no_permission');
+					$response['error']['severity'] = 'fatal';
+				} else {
+					if ($action === 'reshow') {
+						qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
+					} else { // 'delete'
+						qa_post_delete($entityid);
+					}
+
+					$response['result'] = 'success';
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-hidden',
+							'html' => max($entityCount - 1, 0),
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
+				}
+				break;
+
+			case 'hide':
+			case 'clearflags':
+				$entityCount = (int)qa_opt('cache_flaggedcount');
+				if ($action === 'hide' && $queued) {
+					$response['result'] = 'error';
+					$response['error']['type'] = 'post-queued';
+					$response['error']['message'] = qa_lang_html('main/general_error');
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-flagged',
+							'html' => $entityCount,
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
+				} elseif (qa_user_post_permit_error('permit_hide_show', $post) !== false) {
+					$response['result'] = 'error';
+					$response['error']['type'] = 'no-permission';
+					$response['error']['message'] = qa_lang_html('users/no_permission');
+					$response['error']['severity'] = 'fatal';
+				} else {
+					if ($action === 'hide') {
+						qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
+					} else { // 'clearflags'
+						require_once QA_INCLUDE_DIR . 'app/votes.php';
+
+						qa_flags_clear_all($post, $userid, qa_get_logged_in_handle(), null);
+					}
+
+					$response['result'] = 'success';
+					$response['domUpdates'] = array(
+						array(
+							'selector' => '.qa-nav-sub-counter-flagged',
+							'html' => max($entityCount - 1, 0),
+						),
+						array(
+							'selector' => '#p' . $entityid,
+							'action' => 'conceal',
+						),
+					);
+				}
+				break;
+
+			default:
 		}
 	}
 
