@@ -396,8 +396,7 @@ class qa_html_theme_base
 
 	public function body_hidden()
 	{
-		$indent = $this->isRTL ? '9999px' : '-9999px';
-		$this->output('<div style="position:absolute; left:' . $indent . '; top:-9999px;">');
+		$this->output('<div style="position:absolute;overflow:hidden;clip:rect(0 0 0 0);height:0;width:0;margin:0;padding:0;border:0;">');
 		$this->waiting_template();
 		$this->output('</div>');
 	}

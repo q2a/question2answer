@@ -10,6 +10,7 @@ php:
   - '5.6'
   - '7.0'
   - '7.1'
+  - '7.2'
 
 matrix:
   include:
@@ -34,3 +35,11 @@ script:
   - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
   # PHPUnit
   - php phpunit.phar --bootstrap qa-tests/autoload.php qa-tests
+
+cache:
+  directories:
+    - "$HOME/.composer/cache/files"
+
+git:
+  depth: 5
+

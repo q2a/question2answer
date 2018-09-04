@@ -3,10 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Storage/FileCache.php
-	Description: Interface for drivers of caching system.
-
-
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -20,10 +16,12 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+namespace Q2A\Storage;
+
 /**
  * Interface for caching drivers.
  */
-interface Q2A_Storage_CacheDriver
+interface CacheDriver
 {
 	/**
 	 * Get the cached data for the supplied key. Data can be any format but is usually an array.

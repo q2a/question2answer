@@ -3,10 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Storage/CacheManager.php
-	Description: Handler for caching system.
-
-
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -20,16 +16,18 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+namespace Q2A\Storage;
+
 /**
  * Caches data (typically from database queries) to the filesystem.
  */
-class Q2A_Storage_CacheFactory
+class CacheFactory
 {
 	private static $cacheDriver = null;
 
 	/**
 	 * Get the appropriate cache handler.
-	 * @return Q2A_Storage_CacheDriver The cache handler.
+	 * @return CacheDriver The cache handler.
 	 */
 	public static function getCacheDriver()
 	{
@@ -45,12 +43,12 @@ class Q2A_Storage_CacheFactory
 			switch($driver)
 			{
 				case 'memcached':
-					self::$cacheDriver = new Q2A_Storage_MemcachedDriver($config);
+					self::$cacheDriver = new MemcachedDriver($config);
 					break;
 
 				case 'filesystem':
 				default:
-					self::$cacheDriver = new Q2A_Storage_FileCacheDriver($config);
+					self::$cacheDriver = new FileCacheDriver($config);
 					break;
 			}
 

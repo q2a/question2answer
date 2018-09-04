@@ -19,6 +19,8 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+use Q2A\Exceptions\ExceptionHandler;
+
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
 	exit;
@@ -178,7 +180,20 @@ function qa_get_request_content()
 	$firstlower = strtolower($requestparts[0]);
 	$routing = qa_page_routing();
 
-	if (isset($routing[$requestlower])) {
+	qa_routing_config();
+	$route = qa_service('router')->match($requestlower);
+
+	if ($route !== null) {
+		// use new Controller system
+		qa_set_template($route->getId());
+		$controllerClass = $route->getController();
+		$ctrl = new $controllerClass();
+		try {
+			$qa_content = $ctrl->executeAction($route->getAction(), $route->getParameters());
+		} catch (Exception $e) {
+			$qa_content = (new ExceptionHandler())->handle($e);
+		}
+	} elseif (isset($routing[$requestlower])) {
 		qa_set_template($firstlower);
 		$qa_content = require QA_INCLUDE_DIR . $routing[$requestlower];
 
@@ -437,12 +452,28 @@ function qa_page_routing()
 		'unanswered/' => 'pages/unanswered.php',
 		'unsubscribe' => 'pages/unsubscribe.php',
 		'updates' => 'pages/updates.php',
-		'user/' => 'pages/user.php',
-		'users' => 'pages/users.php',
-		'users/blocked' => 'pages/users-blocked.php',
-		'users/new' => 'pages/users-newest.php',
-		'users/special' => 'pages/users-special.php',
 	);
+}
+
+
+/**
+ * Set up routing.
+ */
+function qa_routing_config()
+{
+	$router = qa_service('router');
+	$router->addRoute('user', 'get', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile');
+	$router->addRoute('user', 'post', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile');
+	$router->addRoute('user-self', 'get', 'user', '\Q2A\Controllers\User\UserProfile', 'index');
+	$router->addRoute('user-wall', 'get', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall');
+	$router->addRoute('user-activity', 'get', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity');
+	$router->addRoute('user-questions', 'get', 'user/{str}/questions', '\Q2A\Controllers\User\UserPosts', 'questions');
+	$router->addRoute('user-answers', 'get', 'user/{str}/answers', '\Q2A\Controllers\User\UserPosts', 'answers');
+
+	$router->addRoute('user-top', 'get', 'users', '\Q2A\Controllers\User\UsersList', 'top');
+	$router->addRoute('user-blocked', 'get', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked');
+	$router->addRoute('user-new', 'get', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest');
+	$router->addRoute('user-special', 'get', 'users/special', '\Q2A\Controllers\User\UsersList', 'special');
 }
 
 

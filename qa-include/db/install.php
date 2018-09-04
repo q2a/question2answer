@@ -78,7 +78,7 @@ function qa_db_table_definitions()
 
 		* In MySQL versions prior to 5.0.3, VARCHAR(x) columns will be silently converted to TEXT where x>255
 
-		* See box at top of /qa-include/app/recalc.php for a list of redundant (non-normal) information in the database
+		* See box at top of /qa-include/Q2A/Recalc/RecalcMain.php for a list of redundant (non-normal) information in the database
 
 		* Starting in version 1.2, we explicitly name keys and foreign key constraints, instead of allowing MySQL
 		  to name these by default. Our chosen names match the default names that MySQL would have assigned, and
@@ -769,8 +769,6 @@ function qa_db_default_userfields_sql()
  */
 function qa_db_upgrade_tables()
 {
-	require_once QA_INCLUDE_DIR . 'app/recalc.php';
-
 	$definitions = qa_db_table_definitions();
 	$keyrecalc = array();
 
@@ -1587,18 +1585,20 @@ function qa_db_upgrade_tables()
 
 			case 67:
 				// ensure we don't have old userids lying around
-				qa_db_upgrade_query('ALTER TABLE ^messages MODIFY fromuserid ' . $definitions['messages']['fromuserid']);
-				qa_db_upgrade_query('ALTER TABLE ^messages MODIFY touserid ' . $definitions['messages']['touserid']);
-				qa_db_upgrade_query('UPDATE ^messages SET fromuserid=NULL WHERE fromuserid NOT IN (SELECT userid FROM ^users)');
-				qa_db_upgrade_query('UPDATE ^messages SET touserid=NULL WHERE touserid NOT IN (SELECT userid FROM ^users)');
-				// set up foreign key on messages table
-				qa_db_upgrade_query('ALTER TABLE ^messages ADD CONSTRAINT ^messages_ibfk_1 FOREIGN KEY (fromuserid) REFERENCES ^users(userid) ON DELETE SET NULL');
-				qa_db_upgrade_query('ALTER TABLE ^messages ADD CONSTRAINT ^messages_ibfk_2 FOREIGN KEY (touserid) REFERENCES ^users(userid) ON DELETE SET NULL');
+				if (!QA_FINAL_EXTERNAL_USERS) {
+					qa_db_upgrade_query('ALTER TABLE ^messages MODIFY fromuserid ' . $definitions['messages']['fromuserid']);
+					qa_db_upgrade_query('ALTER TABLE ^messages MODIFY touserid ' . $definitions['messages']['touserid']);
+					qa_db_upgrade_query('UPDATE ^messages SET fromuserid=NULL WHERE fromuserid NOT IN (SELECT userid FROM ^users)');
+					qa_db_upgrade_query('UPDATE ^messages SET touserid=NULL WHERE touserid NOT IN (SELECT userid FROM ^users)');
+					// set up foreign key on messages table
+					qa_db_upgrade_query('ALTER TABLE ^messages ADD CONSTRAINT ^messages_ibfk_1 FOREIGN KEY (fromuserid) REFERENCES ^users(userid) ON DELETE SET NULL');
+					qa_db_upgrade_query('ALTER TABLE ^messages ADD CONSTRAINT ^messages_ibfk_2 FOREIGN KEY (touserid) REFERENCES ^users(userid) ON DELETE SET NULL');
+				}
 
 				qa_db_upgrade_query($locktablesquery);
 				break;
 
-			// Up to here: Version 1.8 beta1
+			// Up to here: Version 1.8
 		}
 
 		qa_db_set_db_version($newversion);
@@ -1611,16 +1611,17 @@ function qa_db_upgrade_tables()
 
 	// Perform any necessary recalculations, as determined by upgrade steps
 
-	foreach ($keyrecalc as $state => $dummy) {
-		while ($state) {
+	foreach (array_keys($keyrecalc) as $state) {
+		$recalc = new \Q2A\Recalc\RecalcMain($state);
+		while ($recalc->getState()) {
 			set_time_limit(60);
 
 			$stoptime = time() + 2;
 
-			while (qa_recalc_perform_step($state) && (time() < $stoptime))
+			while ($recalc->performStep() && (time() < $stoptime))
 				;
 
-			qa_db_upgrade_progress(qa_recalc_get_message($state));
+			qa_db_upgrade_progress($recalc->getMmessage());
 		}
 	}
 }

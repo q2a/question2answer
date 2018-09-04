@@ -3,10 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Storage/MemcachedDriver.php
-	Description: Memcached-based driver for caching system.
-
-
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -20,10 +16,12 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+namespace Q2A\Storage;
+
 /**
  * Caches data (typically from database queries) in memory using Memcached.
  */
-class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
+class MemcachedDriver implements CacheDriver
 {
 	private $memcached;
 	private $enabled = false;
