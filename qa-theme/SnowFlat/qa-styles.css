@@ -869,7 +869,6 @@ blockquote p {
 .qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
 	padding: 10px;
 	border: 1px solid #e0e0e0;
-	text-align: left;
 }
 .qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th {
 	background-color: #eaeaea;
