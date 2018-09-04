@@ -454,3 +454,7 @@ h1 {
 		float: right;
 	}
 }
+.qa-q-view-content ul, .qa-a-item-content ul, .qa-c-item-content ul, .qa-q-view-content ol, .qa-a-item-content ol, .qa-c-item-content ol {
+    margin-right: 20px;
+    margin-left:0;
+}
