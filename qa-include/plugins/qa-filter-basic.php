@@ -170,11 +170,8 @@ class qa_filter_basic
 
 	/**
 	 * Wrapper function for validating a post's email address.
-	 *
-	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
-	 * should not be used by outside code.
 	 */
-	public function validate_post_email(&$errors, $post)
+	private function validate_post_email(&$errors, $post)
 	{
 		if (@$post['notify'] && strlen(@$post['email'])) {
 			$error = $this->filter_email($post['email'], null);

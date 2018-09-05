@@ -108,15 +108,6 @@ function qa_opt_if_loaded($name)
 
 
 /**
- * @deprecated Deprecated since Q2A 1.3 now that all options are retrieved together.
- * @param $names
- */
-function qa_options_set_pending($names)
-{
-}
-
-
-/**
  * Load all of the Q2A options from the database.
  * From Q2A 1.8 we always load the options in a separate query regardless of QA_OPTIMIZE_DISTANT_DB.
  */
