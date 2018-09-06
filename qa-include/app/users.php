@@ -289,8 +289,10 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 			if (empty($userinfo['sessioncode']) || ($source !== $userinfo['sessionsource'])) {
 				$sessioncode = qa_db_user_rand_sessioncode();
-				qa_db_user_set($userid, 'sessioncode', $sessioncode);
-				qa_db_user_set($userid, 'sessionsource', $source);
+				qa_db_user_set($userid, array(
+					'sessioncode' => $sessioncode,
+					'sessionsource' => $source,
+				));
 			} else
 				$sessioncode = $userinfo['sessioncode'];
 

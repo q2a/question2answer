@@ -164,17 +164,30 @@ function qa_db_user_get_handle_userids($handles)
 
 
 /**
- * Set $field of $userid to $value in the database users table
- * @param $userid
- * @param $field
- * @param $value
+ * Set $field of $userid to $value in the database users table. If the $fields parameter is an array, the $value
+ * parameter is ignored and each element of the array is treated as a key-value pair of user fields and values.
+ * @param mixed $userid
+ * @param string|array $fields
+ * @param string|null $value
  */
-function qa_db_user_set($userid, $field, $value)
+function qa_db_user_set($userid, $fields, $value = null)
 {
-	qa_db_query_sub(
-		'UPDATE ^users SET ' . qa_db_escape_string($field) . '=$ WHERE userid=$',
-		$value, $userid
-	);
+	if (!is_array($fields)) {
+		$fields = array(
+			$fields => $value,
+		);
+	}
+
+	$sql = 'UPDATE ^users SET ';
+	foreach ($fields as $field => $fieldValue) {
+		$sql .= qa_db_escape_string($field) . ' = $, ';
+	}
+	$sql = substr($sql, 0, -2) . ' WHERE userid = $';
+
+	$params = array_values($fields);
+	$params[] = $userid;
+
+	qa_db_query_sub_params($sql, $params);
 }
 
 
