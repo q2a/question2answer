@@ -337,7 +337,7 @@ foreach ($questions as $question) {
 				break;
 
 			case 'Q-' . QA_UPDATE_CLOSED:
-				$langstring = isset($question['closedbyid']) ? 'misc/feed_closed_prefix' : 'misc/feed_reopened_prefix';
+				$langstring = isset($question['closedbyid']) || ($question['selchildid'] && qa_opt('do_close_on_select')) ? 'misc/feed_closed_prefix' : 'misc/feed_reopened_prefix';
 				break;
 
 			case 'Q-' . QA_UPDATE_TAGS:

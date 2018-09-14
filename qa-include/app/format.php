@@ -320,7 +320,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	$fields['tags'] = 'id="' . qa_html($elementid) . '"';
 
 	$fields['classes'] = ($isquestion && $favoritedview && @$post['userfavoriteq']) ? 'qa-q-favorited' : '';
-	if ($isquestion && isset($post['closedbyid']))
+	if ($isquestion && (isset($post['closedbyid']) || (qa_opt('do_close_on_select') && isset($post['selchildid']))))
 		$fields['classes'] = ltrim($fields['classes'] . ' qa-q-closed');
 
 	if ($microdata) {
@@ -617,7 +617,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		( // otherwise check if one of these conditions is fulfilled...
 			(!isset($post['created'])) || // ... we didn't show the created time (should never happen in practice)
 			($post['hidden'] && ($post['updatetype'] == QA_UPDATE_VISIBLE)) || // ... the post was hidden as the last action
-			(isset($post['closedbyid']) && ($post['updatetype'] == QA_UPDATE_CLOSED)) || // ... the post was closed as the last action
+			((isset($post['closedbyid']) || (qa_opt('do_close_on_select') && isset($post['selchildid']))) && $post['updatetype'] == QA_UPDATE_CLOSED) || // ... the post was closed as the last action
 			(abs($post['updated'] - $post['created']) > 300) || // ... or over 5 minutes passed between create and update times
 			($post['lastuserid'] != $post['userid']) // ... or it was updated by a different user
 		)
@@ -637,7 +637,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 				break;
 
 			case QA_UPDATE_CLOSED:
-				$langstring = isset($post['closedbyid']) ? 'main/closed' : 'main/reopened';
+				$langstring = isset($post['closedbyid']) || (qa_opt('do_close_on_select') && isset($post['selchildid'])) ? 'main/closed' : 'main/reopened';
 				break;
 
 			case QA_UPDATE_TAGS:
@@ -838,10 +838,11 @@ function qa_other_to_q_html_fields($question, $userid, $cookieid, $usershtml, $d
 			break;
 
 		case 'Q-' . QA_UPDATE_CLOSED:
+			$isClosed = isset($question['closedbyid']) || (qa_opt('do_close_on_select') && isset($question['selchildid']));
 			if (@$question['opersonal'])
-				$langstring = isset($question['closedbyid']) ? 'misc/your_q_closed' : 'misc/your_q_reopened';
+				$langstring = $isClosed ? 'misc/your_q_closed' : 'misc/your_q_reopened';
 			else
-				$langstring = isset($question['closedbyid']) ? 'main/closed' : 'main/reopened';
+				$langstring = $isClosed ? 'main/closed' : 'main/reopened';
 			break;
 
 		case 'Q-' . QA_UPDATE_TAGS:

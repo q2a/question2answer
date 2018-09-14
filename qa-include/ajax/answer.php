@@ -37,7 +37,7 @@ list($question, $childposts) = qa_db_select_with_pending(
 
 // Check if the question exists, is not closed, and whether the user has permission to do this
 
-if (@$question['basetype'] == 'Q' && !isset($question['closedbyid']) && !qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
+if (@$question['basetype'] == 'Q' && !isset($question['closedbyid']) && (!qa_opt('do_close_on_select') || !isset($question['selchildid'])) && !qa_user_post_permit_error('permit_post_a', $question, QA_LIMIT_ANSWERS)) {
 	require_once QA_INCLUDE_DIR . 'app/captcha.php';
 	require_once QA_INCLUDE_DIR . 'app/format.php';
 	require_once QA_INCLUDE_DIR . 'app/post-create.php';

@@ -89,7 +89,7 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 
 	$qa_content['q_list']['qs'] = array();
 
-	if (count($questions)) {
+	if (!empty($questions)) {
 		$qa_content['title'] = $sometitle;
 
 		$defaults = qa_post_html_defaults('Q');
@@ -97,10 +97,11 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 			$defaults['categorypathprefix'] = $categorypathprefix;
 		}
 
+		$closeOnSelect = qa_opt('do_close_on_select');
 		foreach ($questions as $question) {
 			$fields = qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, qa_post_html_options($question, $defaults));
 
-			if (!empty($fields['raw']['closedbyid'])) {
+			if (!empty($fields['raw']['closedbyid']) || (!empty($fields['raw']['selchildid']) && $closeOnSelect)) {
 				$fields['closed'] = array(
 					'state' => qa_lang_html('main/closed'),
 				);
