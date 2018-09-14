@@ -279,7 +279,7 @@ $qa_content['form_profile'] = array(
 			'value' => qa_html(isset($inemail) ? $inemail : $useraccount['email']),
 			'error' => isset($errors['email']) ? qa_html($errors['email']) :
 				($pending_confirmation ? qa_insert_login_links(qa_lang_html('users/email_please_confirm')) : null),
-			'type' => $pending_confirmation ? 'text' : ($isblocked ? 'static' : 'text'),
+			'type' => $pending_confirmation ? 'email' : ($isblocked ? 'static' : 'email'),
 		),
 
 		'messages' => array(

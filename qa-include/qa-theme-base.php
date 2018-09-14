@@ -1181,6 +1181,10 @@ class qa_html_theme_base
 				$this->form_image($field, $style);
 				break;
 
+			case 'email':
+				$this->form_email($field, $style);
+				break;
+
 			case 'custom':
 				$this->output_raw(@$field['html']);
 				break;
@@ -1373,6 +1377,11 @@ class qa_html_theme_base
 	public function form_image($field, $style)
 	{
 		$this->output('<div class="qa-form-' . $style . '-image">' . @$field['html'] . '</div>');
+	}
+
+	public function form_email($field, $style)
+	{
+		$this->output('<input ' . @$field['tags'] . ' type="email" value="' . @$field['value'] . '" class="qa-form-' . $style . '-email"/>');
 	}
 
 	public function form_text_single_row($field, $style)
