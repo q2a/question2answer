@@ -56,28 +56,21 @@ function qa_recalc_update(elem, state, noteid)
 {
 	if (state) {
 		var recalcCode = elem.form.elements.code_recalc ? elem.form.elements.code_recalc.value : elem.form.elements.code.value;
+
 		qa_ajax_post(
 			'recalc',
 			{state: state, code: recalcCode},
-			function(lines) {
-				if (lines[0] == '1') {
-					if (lines[2])
-						document.getElementById(noteid).innerHTML = lines[2];
-
-					if (elem.qa_recalc_stopped)
-						qa_recalc_cleanup(elem);
-					else
-						qa_recalc_update(elem, lines[1], noteid);
-
-				} else if (lines[0] == '0') {
-					document.getElementById(noteid).innerHTML = lines[1];
-					qa_recalc_cleanup(elem);
-
-				} else {
-					qa_ajax_error();
-					qa_recalc_cleanup(elem);
+			function (response) {
+				if (response.message) {
+					document.getElementById(noteid).innerHTML = response.message;
 				}
-			}
+
+				if (elem.qa_recalc_stopped) {
+					qa_recalc_cleanup(elem);
+				} else {
+					qa_recalc_update(elem, response.state, noteid);
+				}
+			}, 1
 		);
 	} else {
 		qa_recalc_cleanup(elem);
