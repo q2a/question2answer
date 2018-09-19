@@ -30,18 +30,24 @@ if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN) {
 
 	qa_mailing_perform_step();
 
-	if ($starttime == time())
+	if ($starttime == time()) {
 		sleep(1); // make sure at least one second has passed
+	}
 
 	$message = qa_mailing_progress_message();
 
-	if (isset($message))
+	if (isset($message)) {
 		$continue = true;
-	else
+	} else {
 		$message = qa_lang('admin/mailing_complete');
-
-} else
+	}
+} else {
 	$message = qa_lang('admin/no_privileges');
+}
 
+$response = array(
+	'continue' => $continue,
+	'message' => qa_html($message),
+);
 
-echo "QA_AJAX_RESPONSE\n" . (int)$continue . "\n" . qa_html($message);
+echo json_encode($response);

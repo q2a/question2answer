@@ -86,22 +86,19 @@ function qa_recalc_cleanup(elem)
 
 function qa_mailing_start(noteid, pauseid)
 {
-	qa_ajax_post('mailing', {},
-		function(lines) {
-			if (lines[0] == '1') {
-				document.getElementById(noteid).innerHTML = lines[1];
-				window.setTimeout(function() {
+	qa_ajax_post(
+		'mailing',
+		{},
+		function (response) {
+			document.getElementById(noteid).innerHTML = response.message;
+			if (response.continue) {
+				window.setTimeout(function () {
 					qa_mailing_start(noteid, pauseid);
 				}, 1); // don't recurse
-
-			} else if (lines[0] == '0') {
-				document.getElementById(noteid).innerHTML = lines[1];
-				document.getElementById(pauseid).style.display = 'none';
-
 			} else {
-				qa_ajax_error();
+				document.getElementById(pauseid).style.display = 'none';
 			}
-		}
+		}, 1
 	);
 }
 
