@@ -1621,7 +1621,7 @@ function qa_db_upgrade_tables()
 			while ($recalc->performStep() && (time() < $stoptime))
 				;
 
-			qa_db_upgrade_progress($recalc->getMmessage());
+			qa_db_upgrade_progress($recalc->getMessage());
 		}
 	}
 }
