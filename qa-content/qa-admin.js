@@ -149,13 +149,18 @@ function qa_admin_click(target)
 
 function qa_version_check(uri, version, elem, isCore)
 {
-	var params = {uri: uri, version: version, isCore: isCore};
+	qa_ajax_post(
+		'version',
+		{uri: uri, version: version, isCore: isCore},
+		function (response) {
+			if (response.result === 'error') {
+				alert(response.error.message);
 
-	qa_ajax_post('version', params,
-		function(lines) {
-			if (lines[0] == '1')
-				document.getElementById(elem).innerHTML = lines[1];
-		}
+				return;
+			}
+
+			document.getElementById(elem).innerHTML = response.html;
+		}, 1
 	);
 }
 
