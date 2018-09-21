@@ -100,7 +100,6 @@ elseif (qa_clicked('dosavefield')) {
 				}
 
 			} elseif (empty($errors)) { // creating a new user field
-
 				for ($attempt = 0; $attempt < 1000; $attempt++) {
 					$suffix = $attempt ? ('-' . (1 + $attempt)) : '';
 					$newtag = qa_substr(implode('-', qa_string_to_words($inname)), 0, QA_DB_MAX_PROFILE_TITLE_LENGTH - strlen($suffix)) . $suffix;

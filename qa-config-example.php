@@ -66,13 +66,13 @@
 /*
 	If you wish, you can define QA_MYSQL_USERS_PREFIX separately from QA_MYSQL_TABLE_PREFIX.
 	If so, tables containing information about user accounts (not including users' activity and points)
-	get the prefix of QA_MYSQL_TABLE_PREFIX. This allows multiple Q2A sites to have shared logins 
+	get the prefix of QA_MYSQL_TABLE_PREFIX. This allows multiple Q2A sites to have shared logins
 	and users, but separate posts and activity.
-	
-	If you have installed question2answer with default "qa_" prefix and want to setup a second 
-	installation, you define the QA_MYSQL_USERS_PREFIX as "qa_" so this new installation 
+
+	If you have installed question2answer with default "qa_" prefix and want to setup a second
+	installation, you define the QA_MYSQL_USERS_PREFIX as "qa_" so this new installation
 	can access the same database as the first installation.
-	
+
 	define('QA_MYSQL_USERS_PREFIX', 'sharedusers_');
 */
 
@@ -143,8 +143,8 @@
 /*
 	Out-of-the-box Joomla! 3.x integration - to integrate with your Joomla! site, define
 	QA_JOOMLA_INTEGRATE_PATH. as the full path to the Joomla! directory. If your Q2A
-    site is a subdirectory of your main Joomla site (recommended), you can specify
-    dirname(__DIR__) rather than the full path.
+	site is a subdirectory of your main Joomla site (recommended), you can specify
+	dirname(__DIR__) rather than the full path.
 	With this set, you do not need to set the QA_MYSQL_* constants above since these
 	will be taken from Joomla automatically. See online documentation for more details.
 
