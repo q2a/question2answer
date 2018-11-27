@@ -1608,9 +1608,12 @@ function qa_path($request, $params = null, $rooturl = null, $neaturls = null, $a
 			break;
 	}
 
-	if (isset($params))
-		foreach ($params as $key => $value)
-			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . urlencode($key) . '=' . urlencode((string)$value);
+	if (is_array($params)) {
+		foreach ($params as $key => $value) {
+			$value = is_array($value) ? '' : (string) $value;
+			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . urlencode($key) . '=' . urlencode($value);
+		}
+	}
 
 	return $url . $paramsextra . (empty($anchor) ? '' : '#' . urlencode($anchor));
 }
