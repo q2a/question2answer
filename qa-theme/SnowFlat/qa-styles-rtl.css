@@ -458,3 +458,6 @@ h1 {
     margin-right: 20px;
     margin-left:0;
 }
+.qa-q-view-avatar, .qa-a-item-avatar {
+    float: left;
+}
