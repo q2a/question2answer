@@ -278,7 +278,7 @@ if (qa_db_connection(false) !== null && !@$pass_failure_from_install) {
 				$fields = array(
 					'handle' => array('label' => 'Username:', 'type' => 'text'),
 					'password' => array('label' => 'Password:', 'type' => 'password'),
-					'email' => array('label' => 'Email address:', 'type' => 'text'),
+					'email' => array('label' => 'Email address:', 'type' => 'email'),
 				);
 				$buttons = array('super' => 'Set up the Super Administrator');
 			}

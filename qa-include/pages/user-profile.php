@@ -550,7 +550,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 		$htmlemail = qa_html(isset($inemail) ? $inemail : $useraccount['email']);
 
 		$qa_content['form_profile']['fields']['email'] = array(
-			'type' => $userediting ? 'text' : 'static',
+			'type' => $userediting ? 'email' : 'static',
 			'label' => qa_lang_html('users/email_label'),
 			'tags' => 'name="email"',
 			'value' => $userediting ? $htmlemail : ('<a href="mailto:' . $htmlemail . '">' . $htmlemail . '</a>'),

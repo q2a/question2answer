@@ -152,8 +152,8 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-form-tall-ok {color:#090; font-size:18px; padding:6px; text-align:center;}
 .qa-form-tall-label {background:url(form-cell-bg.png) repeat-y scroll left top transparent; border-top:6px solid #fff; color:#253845; padding:8px; font-size:14px;}
 .qa-form-tall-data {background:url(form-cell-bg.png) repeat-y scroll left top transparent; padding:8px; width:480px;}
-.qa-form-tall-text,.qa-form-tall-number {padding:3px;}
-.qa-form-tall-text {width:480px; border:1px solid #999; font-size:16px;}
+.qa-form-tall-text,.qa-form-tall-number,.qa-form-tall-email {padding:3px;}
+.qa-form-tall-text,.qa-form-tall-email {width:480px; border:1px solid #999; font-size:16px;}
 .qa-form-tall-number {width:48px; border:1px solid #999;}
 .qa-form-tall-checkbox {float:left; margin-right:4px;}
 .qa-form-tall-image {text-align:center; margin-top:12px;}
@@ -174,8 +174,8 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-form-wide-ok {color:#090; font-size:18px; padding:6px; text-align:center;}
 .qa-form-wide-label {border-bottom:2px solid #FFF; color:#253845; padding:10px; font-size:14px; font-weight:normal; white-space: nowrap;}
 .qa-form-wide-data {border-bottom:2px solid #FFF; padding:6px 10px;}
-.qa-form-wide-text,.qa-form-wide-number {padding:3px;}
-.qa-form-wide-text {width:320px; border:1px solid #999;}
+.qa-form-wide-text,.qa-form-wide-number,.qa-form-wide-email {padding:3px;}
+.qa-form-wide-text,.qa-form-wide-email {width:320px; border:1px solid #999;}
 .qa-form-wide-number {width:48px; border:1px solid #999; vertical-align:middle;}
 .qa-form-wide-error {display:inline-block; color:#c00; font-size:11px; margin-left:6px;}
 .qa-form-wide-note {font-size:10px; margin-left:4px; color:#666;}

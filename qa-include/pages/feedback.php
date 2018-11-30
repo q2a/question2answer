@@ -132,7 +132,7 @@ $qa_content['form'] = array(
 
 	'fields' => array(
 		'message' => array(
-			'type' => $feedbacksent ? 'static' : '',
+			'type' => $feedbacksent ? 'static' : 'text',
 			'label' => qa_lang_html_sub('misc/feedback_message', qa_opt('site_title')),
 			'tags' => 'name="message" id="message"',
 			'value' => qa_html(@$inmessage),
@@ -141,14 +141,14 @@ $qa_content['form'] = array(
 		),
 
 		'name' => array(
-			'type' => $feedbacksent ? 'static' : '',
+			'type' => $feedbacksent ? 'static' : 'text',
 			'label' => qa_lang_html('misc/feedback_name'),
 			'tags' => 'name="name"',
 			'value' => qa_html(isset($inname) ? $inname : @$userprofile['name']),
 		),
 
 		'email' => array(
-			'type' => $feedbacksent ? 'static' : '',
+			'type' => $feedbacksent ? 'static' : 'email',
 			'label' => qa_lang_html('misc/feedback_email'),
 			'tags' => 'name="email"',
 			'value' => qa_html(isset($inemail) ? $inemail : qa_get_logged_in_email()),

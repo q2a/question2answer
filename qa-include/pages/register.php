@@ -169,6 +169,7 @@ $qa_content['form'] = array(
 		),
 
 		'email' => array(
+			'type' => 'email',
 			'label' => qa_lang_html('users/email_label'),
 			'tags' => 'name="email" id="email" dir="auto"',
 			'value' => qa_html(@$inemail),

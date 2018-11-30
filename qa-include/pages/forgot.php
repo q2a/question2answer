@@ -89,6 +89,7 @@ $qa_content['form'] = array(
 
 	'fields' => array(
 		'email_handle' => array(
+			'type' => qa_opt('allow_login_email_only') ? 'email' : 'text',
 			'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
 			'tags' => 'name="emailhandle" id="emailhandle"',
 			'value' => qa_html(@$inemailhandle),

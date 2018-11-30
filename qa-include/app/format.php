@@ -1917,6 +1917,7 @@ function qa_set_up_notify_fields(&$qa_content, &$fields, $basetype, $login_email
 		$fields['notify']['tight'] = true;
 
 		$fields['email'] = array(
+			'type' => 'email',
 			'id' => $fieldprefix . 'email_display',
 			'tags' => 'name="' . $fieldprefix . 'email" id="' . $fieldprefix . 'email"',
 			'value' => qa_html($inemail),
