@@ -376,7 +376,7 @@ function qa_db_user_levels_set($userid, $userlevels)
 function qa_db_users_get_mailing_next($lastuserid, $count)
 {
 	return qa_db_read_all_assoc(qa_db_query_sub(
-		'SELECT userid, email, handle, emailcode, flags FROM ^users WHERE userid># ORDER BY userid LIMIT #',
+		'SELECT userid, email, handle, emailcode, flags, level FROM ^users WHERE userid># ORDER BY userid LIMIT #',
 		$lastuserid, $count
 	));
 }
