@@ -170,6 +170,7 @@ class qa_wysiwyg_editor
 				// File uploads
 				($uploadimages ? "	filebrowserImageUploadUrl: $imageUploadUrl," : ""),
 				($uploadall ? "	filebrowserUploadUrl: $fileUploadUrl," : ""),
+				"	filebrowserUploadMethod: 'form',", // Use form upload instead of XHR
 
 				// Set language to Q2A site language, falling back to English if not available.
 				"	defaultLanguage: 'en',",
