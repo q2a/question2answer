@@ -57,7 +57,7 @@ class qa_facebook_login
 		else
 			$size = 'medium';
 
-?>
+		?>
 	<span id="fb-root" style="display:inline;"></span>
 	<script>
 	window.fbAsyncInit = function() {
@@ -82,7 +82,7 @@ class qa_facebook_login
 	</script>
 	<span class="fb-login-button" style="display:inline; vertical-align:middle;" size="<?php echo $size?>" <?php echo $logout ? 'autologoutlink="true"' : 'scope="email,user_about_me,user_location,user_website"'?>>
 	</span>
-<?php
+		<?php
 	}
 
 

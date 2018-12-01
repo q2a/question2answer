@@ -42,7 +42,7 @@ class qa_ask_box
 		else
 			$params = null;
 
-?>
+		?>
 <div class="qa-ask-box">
 	<form method="post" action="<?php echo qa_path_html('ask', $params); ?>">
 		<table class="qa-form-tall-table" style="width:100%">
@@ -50,10 +50,10 @@ class qa_ask_box
 				<td class="qa-form-tall-label" style="width: 1px; padding:8px; white-space:nowrap; <?php echo ($region=='side') ? 'padding-bottom:0;' : 'text-align:right;'?>">
 					<?php echo strtr(qa_lang_html('question/ask_title'), array(' ' => '&nbsp;'))?>:
 				</td>
-<?php if ($region=='side') : ?>
+		<?php if ($region=='side') : ?>
 			</tr>
 			<tr>
-<?php endif; ?>
+		<?php endif; ?>
 				<td class="qa-form-tall-data" style="padding:8px;">
 					<input name="title" type="text" class="qa-form-tall-text" style="width:95%;">
 				</td>
@@ -62,6 +62,6 @@ class qa_ask_box
 		<input type="hidden" name="doask1" value="1">
 	</form>
 </div>
-<?php
+		<?php
 	}
 }

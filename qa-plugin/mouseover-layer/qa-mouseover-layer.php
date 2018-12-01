@@ -25,7 +25,6 @@ class qa_html_theme_layer extends qa_html_theme_base
 	public function q_list($q_list)
 	{
 		if (!empty($q_list['qs']) && qa_opt('mouseover_content_on')) { // first check it is not an empty list and the feature is turned on
-
 			// Collect the question ids of all items in the question list (so we can do this in one DB query)
 
 			$postids = array();
