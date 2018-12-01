@@ -389,7 +389,13 @@ function qa_default_option($name)
 
 	switch ($name) {
 		case 'site_url':
-			$value = 'http://' . @$_SERVER['HTTP_HOST'] . strtr(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'), '\\', '/') . '/';
+			$protocol =
+				(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+				(!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+				(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+					? 'https'
+					: 'http';
+			$value = $protocol . '://' . @$_SERVER['HTTP_HOST'] . strtr(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'), '\\', '/') . '/';
 			break;
 
 		case 'site_title':
