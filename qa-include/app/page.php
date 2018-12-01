@@ -798,7 +798,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 		}
 	}
 
-	$qa_content['script_rel'] = array('qa-content/jquery-3.2.1.min.js');
+	$qa_content['script_rel'] = array('qa-content/jquery-3.3.1.min.js');
 	$qa_content['script_rel'][] = 'qa-content/qa-global.js?' . QA_VERSION;
 
 	if ($voting)
