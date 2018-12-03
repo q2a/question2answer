@@ -856,29 +856,26 @@ blockquote p {
 	word-wrap: break-word;
 }
 
-.qa-q-view-content table, .qa-a-item-content table, .qa-c-item-content table {
+.qa-post-content table {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 14px;
 	margin-bottom: 20px;
 }
-.qa-q-view-content tr:hover, .qa-a-item-content tr:hover, .qa-c-item-content tr:hover {
+.qa-post-content tr:hover {
 	background-color: #f4f4f4;
 }
-.qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th,
-.qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
-	padding: 10px;
+.qa-post-content th, .qa-post-content td {
+	padding: 6px 10px;
 	border: 1px solid #e0e0e0;
 	text-align: left;
 }
-.qa-q-view-content th, .qa-a-item-content th, .qa-c-item-content th {
+.qa-post-content th {
 	background-color: #eaeaea;
 	font-weight: 700;
 }
-.qa-q-view-content td, .qa-a-item-content td, .qa-c-item-content td {
-}
-.qa-q-view-content ul, .qa-a-item-content ul, .qa-c-item-content ul,
-.qa-q-view-content ol, .qa-a-item-content ol, .qa-c-item-content ol {
+.qa-post-content ul,
+.qa-post-content ol {
 	margin-left: 20px;
 	padding: 0;
 }
@@ -1821,7 +1818,7 @@ input[type="submit"], button {
 	margin-top: 0;
 }
 
-.qa-form-tall-text,.qa-form-tall-email {
+.qa-form-tall-text {
 	width: 100%;
 }
 
@@ -1909,7 +1906,7 @@ input[type="submit"], button {
 .qa-form-wide-data {
 	padding-left: 5px;
 }
-.qa-form-wide-text,.qa-form-wide-email {
+.qa-form-wide-text {
 	width: 100%;
 }
 
