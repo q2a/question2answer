@@ -384,6 +384,10 @@ h1 {
 	float: right;
 }
 
+.qa-nav-cat-list .qa-nav-cat-list {
+	margin-left: 0;
+	margin-right: 20px;
+}
 .qa-nav-cat-link.qa-nav-cat-favorited {
 	padding-right: 20px;
 }
