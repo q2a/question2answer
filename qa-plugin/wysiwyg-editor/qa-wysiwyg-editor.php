@@ -170,6 +170,7 @@ class qa_wysiwyg_editor
 				// File uploads
 				($uploadimages ? "	filebrowserImageUploadUrl: $imageUploadUrl," : ""),
 				($uploadall ? "	filebrowserUploadUrl: $fileUploadUrl," : ""),
+				"	filebrowserUploadMethod: 'form',", // Use form upload instead of XHR
 
 				// Set language to Q2A site language, falling back to English if not available.
 				"	defaultLanguage: 'en',",
@@ -251,21 +252,13 @@ class qa_wysiwyg_editor
 	}
 
 
-	/**
-	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
-	 * should not be used by outside code.
-	 */
-	public function html_to_text($html)
+	private function html_to_text($html)
 	{
 		$viewer = qa_load_module('viewer', '');
 		return $viewer->get_text($html, 'html', array());
 	}
 
-	/**
-	 * @deprecated This function will become private in Q2A 1.8. It is specific to this plugin and
-	 * should not be used by outside code.
-	 */
-	public function bytes_to_mega($bytes)
+	private function bytes_to_mega($bytes)
 	{
 		return $bytes / 1048576;
 	}

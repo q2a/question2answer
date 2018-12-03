@@ -809,7 +809,6 @@ function qa_page_q_edit_a_submit($answer, $question, $answers, $commentsfollows,
 					(($in['commenton'] != $answerid) && @$answers[$in['commenton']]['commentable'])
 				)
 			) { // convert to a comment
-
 				if (qa_user_limits_remaining(QA_LIMIT_COMMENTS)) { // already checked 'permit_post_c'
 					qa_answer_to_comment($answer, $in['commenton'], $in['content'], $in['format'], $in['text'], $setnotify,
 						$userid, $handle, $cookieid, $question, $answers, $commentsfollows, @$in['name'], $in['queued'], $in['silent']);

@@ -650,9 +650,6 @@ if (QA_FINAL_EXTERNAL_USERS) {
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 		require_once QA_INCLUDE_DIR . 'app/format.php';
-		if (strlen($handle) == 0) {
-			return null;
-		}
 
 		$avatarSource = qa_get_user_avatar_source($flags, $email, $blobId);
 
@@ -665,6 +662,9 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				break;
 			case 'local-default':
 				$html = qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), $size, $padding);
+				if (strlen($handle) == 0) {
+					return $html;
+				}
 				break;
 			default: // NULL
 				return null;

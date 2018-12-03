@@ -109,7 +109,7 @@ class Q2A_Util_Usage
 		$totaldelta = $this->delta($this->startUsage, $this->getCurrent());
 		$stages = $this->stages;
 		$stages['total'] = $totaldelta;
-?>
+		?>
 		<style>
 		.debug-table { border-collapse: collapse; width: auto; margin: 20px auto; }
 		.debug-table th, .debug-table td { border: 1px solid #aaa; background-color: #ddd; padding: 5px 10px; }
@@ -155,7 +155,7 @@ class Q2A_Util_Usage
 				</tr>
 			</thead>
 		<tbody>
-<?php foreach ($stages as $stage => $stagedelta) : ?>
+		<?php foreach ($stages as $stage => $stagedelta) : ?>
 			<tr>
 				<td class="row-heading"><?php echo ucfirst($stage); ?></td>
 				<td><?php echo sprintf('%.1f', $stagedelta['clock'] * 1000); ?></td>
@@ -171,7 +171,7 @@ class Q2A_Util_Usage
 				<td><?php echo sprintf('%dk', $stagedelta['ram'] / 1024); ?></td>
 				<td><?php echo sprintf('%d%%', $stagedelta['ram'] ? ($stagedelta['ram'] * 100 / $totaldelta['ram']) : 0); ?></td>
 			</tr>
-<?php endforeach; ?>
+		<?php endforeach; ?>
 		</tbody>
 		</table>
 
@@ -190,7 +190,7 @@ class Q2A_Util_Usage
 			</tr>
 		</tbody>
 		</table>
-<?php
+		<?php
 	}
 
 

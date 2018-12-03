@@ -108,15 +108,6 @@ function qa_opt_if_loaded($name)
 
 
 /**
- * @deprecated Deprecated since Q2A 1.3 now that all options are retrieved together.
- * @param $names
- */
-function qa_options_set_pending($names)
-{
-}
-
-
-/**
  * Load all of the Q2A options from the database.
  * From Q2A 1.8 we always load the options in a separate query regardless of QA_OPTIMIZE_DISTANT_DB.
  */
@@ -398,7 +389,13 @@ function qa_default_option($name)
 
 	switch ($name) {
 		case 'site_url':
-			$value = 'http://' . @$_SERVER['HTTP_HOST'] . strtr(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'), '\\', '/') . '/';
+			$protocol =
+				(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+				(!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') ||
+				(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+					? 'https'
+					: 'http';
+			$value = $protocol . '://' . @$_SERVER['HTTP_HOST'] . strtr(rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'), '\\', '/') . '/';
 			break;
 
 		case 'site_title':

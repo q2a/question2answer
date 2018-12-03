@@ -32,4 +32,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Prevent blank paragraphs
 	config.fillEmptyBlocks = false;
+
+	// Add custom CSS
+	config.contentsCss = [CKEDITOR.getUrl('contents.css'), CKEDITOR.getUrl('contents-custom.css')];
 };

@@ -20,8 +20,8 @@
 */
 
 
-define('QA_VERSION', '1.8.0'); // also used as suffix for .js and .css requests
-define('QA_BUILD_DATE', '2018-01-30');
+define('QA_VERSION', '1.8.1'); // also used as suffix for .js and .css requests
+define('QA_BUILD_DATE', '2018-12-01');
 
 
 /**
@@ -1612,9 +1612,12 @@ function qa_path($request, $params = null, $rooturl = null, $neaturls = null, $a
 			break;
 	}
 
-	if (isset($params))
-		foreach ($params as $key => $value)
-			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . urlencode($key) . '=' . urlencode((string)$value);
+	if (is_array($params)) {
+		foreach ($params as $key => $value) {
+			$value = is_array($value) ? '' : (string) $value;
+			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . urlencode($key) . '=' . urlencode($value);
+		}
+	}
 
 	return $url . $paramsextra . (empty($anchor) ? '' : '#' . urlencode($anchor));
 }

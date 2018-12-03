@@ -63,7 +63,7 @@ if (QA_PASSWORD_HASH) {
 }
 $permit_error = qa_user_permit_error();
 $isblocked = $permit_error !== false;
-$pending_confirmation = $doconfirms && $permit_error == 'confirm';
+$pending_confirmation = $doconfirms && !$isconfirmed;
 
 // Process profile if saved
 

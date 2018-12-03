@@ -89,7 +89,6 @@ if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we
 		($loginlevel >= QA_USER_LEVEL_SUPER || $loginlevel > $maxuserlevel) &&
 		!qa_user_permit_error()
 	) { // can't change self - or someone on your level (or higher, obviously) unless you're a super admin
-
 		if ($loginlevel >= QA_USER_LEVEL_SUPER)
 			$maxlevelassign = QA_USER_LEVEL_SUPER;
 		elseif ($loginlevel >= QA_USER_LEVEL_ADMIN)
