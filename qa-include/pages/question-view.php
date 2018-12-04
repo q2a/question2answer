@@ -220,6 +220,11 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 
 	if (isset($childposts)) {
 		foreach ($childposts as $childpost) {
+			// Skip the child post if it is a note
+			if ($childpost['basetype'] === 'N') {
+				continue;
+			}
+
 			if ($childpost['parentid'] == $post['postid']) {
 				// this post has comments
 				$rules['deleteable'] = false;
