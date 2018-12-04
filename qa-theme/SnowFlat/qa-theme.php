@@ -744,7 +744,7 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
-	
+
 	/**
 	 * Adds placeholder "Search..." for search box
 	 *
@@ -752,6 +752,12 @@ class qa_html_theme extends qa_html_theme_base
 	 */
 	public function search_field($search)
 	{
-		$this->output('<input type="text" ' .'placeholder="' . $search['button_label'] . '..." ' . $search['field_tags'] . ' value="' . @$search['value'] . '" class="qa-search-field"/>');
+		$this->output(
+			sprintf('<input type="text" placeholder="%s..." %s value="%s" class="qa-search-field"/>',
+				$search['button_label'],
+				$search['field_tags'],
+				isset($search['value']) ? $search['value'] : ''
+			)
+		);
 	}
 }
