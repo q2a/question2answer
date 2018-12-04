@@ -1818,7 +1818,7 @@ input[type="submit"], button {
 	margin-top: 0;
 }
 
-.qa-form-tall-text {
+.qa-form-tall-text, .qa-form-tall-email {
 	width: 100%;
 }
 
@@ -1906,7 +1906,7 @@ input[type="submit"], button {
 .qa-form-wide-data {
 	padding-left: 5px;
 }
-.qa-form-wide-text {
+.qa-form-wide-text, .qa-form-wide-email {
 	width: 100%;
 }
 
