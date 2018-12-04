@@ -572,8 +572,12 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		$fields['what'] = qa_lang_html($isquestion ? 'main/asked' : ($isanswer ? 'main/answered' : 'main/commented'));
 
 		if (@$options['whatlink'] && strlen(@$options['q_request'])) {
-			$fields['what_url'] = ($post['basetype'] == 'Q') ? qa_path_html($options['q_request'])
+			$fields['what_url'] = $post['basetype'] == 'Q'
+				? qa_path_html($options['q_request'])
 				: qa_path_html($options['q_request'], array('show' => $postid), null, null, qa_anchor($post['basetype'], $postid));
+			if ($microdata) {
+				$fields['what_url_tags'] = ' itemprop="url"';
+			}
 		}
 	}
 
@@ -737,7 +741,7 @@ function qa_message_html_fields($message, $options = array())
  * @param int $postuserid The post user's ID.
  * @param array $usershtml Array of HTML representing usernames.
  * @param string $ip The post user's IP.
- * @param bool|string $microdata Whether to include microdata (no longer used).
+ * @param bool|string $microdata Whether to include microdata.
  * @param string $name The author's username.
  * @return array The HTML.
  */
