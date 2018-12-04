@@ -44,7 +44,7 @@ abstract class AbstractStep
 
 	/**
 	 * Return the translated language ID string replacing the progress and total in it.
-	 * @access private
+	 *
 	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
 	 * @param int $progress Amount of processed elements
 	 * @param int $total Total amount of elements

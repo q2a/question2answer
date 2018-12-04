@@ -65,7 +65,6 @@ class qa_html_theme_layer extends qa_html_theme_base
 	 * Returns the needed HTML to display the tip. Depending on the theme in use, this might need to be
 	 * tuned in order for the tip to be displayed properly
 	 *
-	 * @access private
 	 * @param string $mouseOverText Text of the tip
 	 * @param string $questionTitle Question title
 	 * @return string HTML needed to display the tip and the question title
