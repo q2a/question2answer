@@ -237,6 +237,7 @@ function qa_post_set_closed($questionid, $closed = true, $originalpostid = null,
 /**
  * Return whether the given question is closed. This check takes into account the do_close_on_select option which
  * considers questions with a selected answer as closed.
+ * @since 1.8.2
  * @param array $question
  * @return bool
  */

@@ -2361,6 +2361,7 @@ function qa_favorite_form($entitytype, $entityid, $favorite, $title)
  * Format a number using the decimal point and thousand separator specified in the language files.
  * If the number is compacted it is turned into a string such as 1.3k or 2.5m.
  *
+ * @since 1.8.0
  * @param integer $number Number to be formatted
  * @param integer $decimals Amount of decimals to use (ignored if number gets shortened)
  * @param bool $compact Whether the number can be shown as compact or not
