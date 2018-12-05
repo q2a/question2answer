@@ -49,7 +49,7 @@ class MemcachedDriver implements CacheDriver
 		}
 
 		if (extension_loaded('memcached')) {
-			$this->memcached = new Memcached;
+			$this->memcached = new \Memcached;
 			$this->memcached->addServer(self::HOST, self::PORT);
 			if ($this->memcached->set($this->keyPrefix . 'test', 'TEST')) {
 				$this->enabled = true;
