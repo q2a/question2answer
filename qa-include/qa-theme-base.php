@@ -435,7 +435,8 @@ class qa_html_theme_base
 		$this->body_prefix();
 		$this->notices();
 
-		$this->output('<div class="qa-body-wrapper">', '');
+		$extratags = isset($this->content['main_tags']) ? $this->content['main_tags'] : '';
+		$this->output('<div class="qa-body-wrapper"' . $extratags . '>', '');
 
 		$this->widgets('full', 'top');
 		$this->header();
@@ -713,9 +714,8 @@ class qa_html_theme_base
 	{
 		$content = $this->content;
 		$hidden = !empty($content['hidden']) ? ' qa-main-hidden' : '';
-		$extratags = isset($this->content['main_tags']) ? $this->content['main_tags'] : '';
 
-		$this->output('<div class="qa-main' . $hidden . '"' . $extratags . '>');
+		$this->output('<div class="qa-main' . $hidden . '">');
 
 		$this->widgets('main', 'top');
 
