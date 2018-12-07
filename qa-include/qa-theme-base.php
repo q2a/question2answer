@@ -435,7 +435,7 @@ class qa_html_theme_base
 		$this->body_prefix();
 		$this->notices();
 
-		$extratags = isset($this->content['main_tags']) ? $this->content['main_tags'] : '';
+		$extratags = isset($this->content['wrapper_tags']) ? $this->content['wrapper_tags'] : '';
 		$this->output('<div class="qa-body-wrapper"' . $extratags . '>', '');
 
 		$this->widgets('full', 'top');

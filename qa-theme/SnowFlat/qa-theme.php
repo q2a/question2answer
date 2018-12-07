@@ -252,7 +252,8 @@ class qa_html_theme extends qa_html_theme_base
 		$this->widgets('full', 'top');
 		$this->header();
 
-		$this->output('<div class="qa-body-wrapper">', '');
+		$extratags = isset($this->content['wrapper_tags']) ? $this->content['wrapper_tags'] : '';
+		$this->output('<div class="qa-body-wrapper"' . $extratags . '>', '');
 		$this->widgets('full', 'high');
 
 		$this->output('<div class="qa-main-wrapper">', '');
@@ -742,7 +743,7 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
-	
+
 	/**
 	 * Adds placeholder "Search..." for search box
 	 *
