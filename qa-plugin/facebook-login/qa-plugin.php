@@ -46,4 +46,5 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	qa_register_plugin_module('login', 'qa-facebook-login.php', 'qa_facebook_login', 'Facebook Login');
 	qa_register_plugin_module('page', 'qa-facebook-login-page.php', 'qa_facebook_login_page', 'Facebook Login Page');
 	qa_register_plugin_layer('qa-facebook-layer.php', 'Facebook Login Layer');
+	qa_register_plugin_phrases('qa-facebook-login-lang-*.php', 'facebook_login');
 }

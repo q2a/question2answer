@@ -49,35 +49,35 @@ class qa_tag_cloud
 		}
 
 		return array(
-			'ok' => $saved ? 'Tag cloud settings saved' : null,
+			'ok' => $saved ? qa_lang_html('admin/options_saved') : null,
 
 			'fields' => array(
 				array(
-					'label' => 'Maximum tags to show:',
+					'label' => qa_lang_html('tag_cloud/maximum_tags_to_show'),
 					'type' => 'number',
 					'value' => (int) qa_opt('tag_cloud_count_tags'),
-					'suffix' => 'tags',
+					'suffix' => qa_lang_html('tag_cloud/tags'),
 					'tags' => 'name="tag_cloud_count_tags_field"',
 				),
 
 				array(
-					'label' => 'Biggest font size:',
-					'suffix' => 'pixels',
+					'label' => qa_lang_html('tag_cloud/biggest_font_size'),
+					'suffix' => qa_lang_html('tag_cloud/pixels'),
 					'type' => 'number',
 					'value' => (int) qa_opt('tag_cloud_font_size'),
 					'tags' => 'name="tag_cloud_font_size_field"',
 				),
 
 				array(
-					'label' => 'Smallest allowed font size:',
-					'suffix' => 'pixels',
+					'label' => qa_lang_html('tag_cloud/smallest_allowed_font_size'),
+					'suffix' => qa_lang_html('tag_cloud/pixels'),
 					'type' => 'number',
 					'value' => (int) qa_opt('tag_cloud_minimal_font_size'),
 					'tags' => 'name="tag_cloud_minimal_font_size_field"',
 				),
 
 				array(
-					'label' => 'Font size represents tag popularity',
+					'label' => qa_lang_html('tag_cloud/font_size_tag_popularity'),
 					'type' => 'checkbox',
 					'value' => qa_opt('tag_cloud_size_popular'),
 					'tags' => 'name="tag_cloud_size_popular_field"',
@@ -86,7 +86,7 @@ class qa_tag_cloud
 
 			'buttons' => array(
 				array(
-					'label' => 'Save Changes',
+					'label' => qa_lang_html('main/save_button'),
 					'tags' => 'name="tag_cloud_save_button"',
 				),
 			),

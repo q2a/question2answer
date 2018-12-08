@@ -42,3 +42,4 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 qa_register_plugin_layer('qa-mouseover-layer.php', 'Mouseover Layer');
 qa_register_plugin_module('module', 'qa-mouseover-admin-form.php', 'qa_mouseover_admin_form', 'Mouseover Layer');
+qa_register_plugin_phrases('qa-mouseover-lang-*.php', 'mouseover');

@@ -41,3 +41,4 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 
 qa_register_plugin_module('page', 'qa-xml-sitemap.php', 'qa_xml_sitemap', 'XML Sitemap');
+qa_register_plugin_phrases('qa-xml-sitemap-lang-*.php', 'xml_sitemap');
