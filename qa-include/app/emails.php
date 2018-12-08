@@ -43,7 +43,7 @@ function qa_suspend_notifications($suspend = true)
 /**
  * Send email to person with $userid and/or $email and/or $handle (null/invalid values are ignored or retrieved from
  * user database as appropriate). Email uses $subject and $body, after substituting each key in $subs with its
- * corresponding value, plus applying some standard substitutions such as ^site_title, ^handle and ^email.
+ * corresponding value, plus applying some standard substitutions such as ^site_title, ^site_url, ^handle and ^email.
  * @param $userid
  * @param $email
  * @param $handle
@@ -100,6 +100,7 @@ function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, 
 
 	if (isset($email) && qa_email_validate($email)) {
 		$subs['^site_title'] = qa_opt('site_title');
+		$subs['^site_url'] = qa_opt('site_url');
 		$subs['^handle'] = $handle;
 		$subs['^email'] = $email;
 		$subs['^open'] = "\n";
