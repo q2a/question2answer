@@ -520,9 +520,12 @@ function qa_set_user_avatar($userid, $imagedata, $oldblobid = null)
 		$newblobid = qa_create_blob($imagedata, 'jpeg', null, $userid, null, qa_remote_ip_address());
 
 		if (isset($newblobid)) {
-			qa_db_user_set($userid, 'avatarblobid', $newblobid);
-			qa_db_user_set($userid, 'avatarwidth', $width);
-			qa_db_user_set($userid, 'avatarheight', $height);
+			qa_db_user_set($userid, array(
+				'avatarblobid' => $newblobid,
+				'avatarwidth' => $width,
+				'avatarheight' => $height,
+			));
+
 			qa_db_user_set_flag($userid, QA_USER_FLAGS_SHOW_AVATAR, true);
 			qa_db_user_set_flag($userid, QA_USER_FLAGS_SHOW_GRAVATAR, false);
 

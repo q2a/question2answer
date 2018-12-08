@@ -162,9 +162,12 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 					if (isset($useraccount['avatarblobid'])) {
 						require_once QA_INCLUDE_DIR . 'app/blobs.php';
 
-						qa_db_user_set($userid, 'avatarblobid', null);
-						qa_db_user_set($userid, 'avatarwidth', null);
-						qa_db_user_set($userid, 'avatarheight', null);
+						qa_db_user_set($userid, array(
+							'avatarblobid' => null,
+							'avatarwidth' => null,
+							'avatarheight' => null,
+						));
+
 						qa_delete_blob($useraccount['avatarblobid']);
 					}
 				}

@@ -372,14 +372,26 @@ function qa_db_apply_sub($query, $arguments)
 
 /**
  * Run $query after substituting ^, # and $ symbols, and return the result resource (or call fail handler).
- * @param $query
+ * @param string $query
  * @return mixed
  */
 function qa_db_query_sub($query) // arguments for substitution retrieved using func_get_args()
 {
 	$funcargs = func_get_args();
 
-	return qa_db_query_raw(qa_db_apply_sub($query, array_slice($funcargs, 1)));
+	return qa_db_query_sub_params($query, array_slice($funcargs, 1));
+}
+
+/**
+ * Run $query after substituting ^, # and $ symbols, and return the result resource (or call fail handler).
+ * Query parameters are passed as an array.
+ * @param string $query
+ * @param array $params
+ * @return mixed
+ */
+function qa_db_query_sub_params($query, $params)
+{
+	return qa_db_query_raw(qa_db_apply_sub($query, $params));
 }
 
 
