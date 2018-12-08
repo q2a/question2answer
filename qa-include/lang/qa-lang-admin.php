@@ -41,7 +41,7 @@ return array(
 	'basic_editor' => 'Basic Editor',
 	'before_main_menu' => 'Before tabs at top',
 	'blobs_directory_error' => 'The directory ^ defined as QA_BLOBS_DIRECTORY is not writable by the web server.',
-	'blobs_move_complete' => 'Migration of uploaded images and documents completed.',
+	'blobs_move_complete' => '✓ Migration of uploaded images and documents completed.',
 	'blobs_move_moved' => 'Migration ^1 of ^2 uploaded images and documents',
 	'blobs_stop' => 'Stop migrating',
 	'blobs_to_db' => 'Blobs to database',
