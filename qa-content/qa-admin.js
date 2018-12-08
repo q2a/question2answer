@@ -56,28 +56,21 @@ function qa_recalc_update(elem, state, noteid)
 {
 	if (state) {
 		var recalcCode = elem.form.elements.code_recalc ? elem.form.elements.code_recalc.value : elem.form.elements.code.value;
+
 		qa_ajax_post(
 			'recalc',
 			{state: state, code: recalcCode},
-			function(lines) {
-				if (lines[0] == '1') {
-					if (lines[2])
-						document.getElementById(noteid).innerHTML = lines[2];
-
-					if (elem.qa_recalc_stopped)
-						qa_recalc_cleanup(elem);
-					else
-						qa_recalc_update(elem, lines[1], noteid);
-
-				} else if (lines[0] == '0') {
-					document.getElementById(noteid).innerHTML = lines[1];
-					qa_recalc_cleanup(elem);
-
-				} else {
-					qa_ajax_error();
-					qa_recalc_cleanup(elem);
+			function (response) {
+				if (response.message) {
+					document.getElementById(noteid).innerHTML = response.message;
 				}
-			}
+
+				if (elem.qa_recalc_stopped) {
+					qa_recalc_cleanup(elem);
+				} else {
+					qa_recalc_update(elem, response.state, noteid);
+				}
+			}, 1
 		);
 	} else {
 		qa_recalc_cleanup(elem);
@@ -93,22 +86,19 @@ function qa_recalc_cleanup(elem)
 
 function qa_mailing_start(noteid, pauseid)
 {
-	qa_ajax_post('mailing', {},
-		function(lines) {
-			if (lines[0] == '1') {
-				document.getElementById(noteid).innerHTML = lines[1];
-				window.setTimeout(function() {
+	qa_ajax_post(
+		'mailing',
+		{},
+		function (response) {
+			document.getElementById(noteid).innerHTML = response.message;
+			if (response.continue) {
+				window.setTimeout(function () {
 					qa_mailing_start(noteid, pauseid);
 				}, 1); // don't recurse
-
-			} else if (lines[0] == '0') {
-				document.getElementById(noteid).innerHTML = lines[1];
-				document.getElementById(pauseid).style.display = 'none';
-
 			} else {
-				qa_ajax_error();
+				document.getElementById(pauseid).style.display = 'none';
 			}
-		}
+		}, 1
 	);
 }
 
@@ -159,13 +149,18 @@ function qa_admin_click(target)
 
 function qa_version_check(uri, version, elem, isCore)
 {
-	var params = {uri: uri, version: version, isCore: isCore};
+	qa_ajax_post(
+		'version',
+		{uri: uri, version: version, isCore: isCore},
+		function (response) {
+			if (response.result === 'error') {
+				alert(response.error.message);
 
-	qa_ajax_post('version', params,
-		function(lines) {
-			if (lines[0] == '1')
-				document.getElementById(elem).innerHTML = lines[1];
-		}
+				return;
+			}
+
+			document.getElementById(elem).innerHTML = response.html;
+		}, 1
 	);
 }
 
