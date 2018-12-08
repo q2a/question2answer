@@ -97,7 +97,7 @@ return array(
 	'delete_category_reassign' => 'Delete this category and reassign its questions to:',
 	'delete_field' => 'Delete this field',
 	'delete_hidden' => 'Delete hidden posts',
-	'delete_hidden_complete' => 'All hidden posts without dependents have been deleted',
+	'delete_hidden_complete' => '✓ All hidden posts without dependents have been deleted',
 	'delete_hidden_note' => ' - all hidden questions, answer and comments without dependents',
 	'delete_link' => 'Delete this link',
 	'delete_page' => 'Delete this page',

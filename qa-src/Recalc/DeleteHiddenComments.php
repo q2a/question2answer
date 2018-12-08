@@ -41,6 +41,6 @@ class DeleteHiddenComments extends AbstractStep
 
 	public function getMessage()
 	{
-		return $this->progressLang('admin/hidden_commenrs_deleted', $this->state->done, $this->state->length);
+		return $this->progressLang('admin/hidden_comments_deleted', $this->state->done, $this->state->length);
 	}
 }
