@@ -60,7 +60,7 @@ $pageerror = qa_admin_check_clicks();
 
 $qa_content = qa_content_prepare();
 
-$qa_content['title'] = qa_lang_html('admin/approve_users_title');
+$qa_content['title'] = qa_lang_html('admin/recent_users_title');
 $qa_content['error'] = isset($pageerror) ? $pageerror : qa_admin_page_error();
 
 $qa_content['message_list'] = array(

@@ -152,22 +152,31 @@ function qa_favorite_click(elem)
 	return false;
 }
 
-function qa_ajax_post(operation, params, callback)
+function qa_ajax_post(operation, params, callback, version)
 {
-	$.extend(params, {qa: 'ajax', qa_operation: operation, qa_root: qa_root, qa_request: qa_request});
+	if (typeof(version) === 'undefined') {
+		version = 0;
+	}
 
-	$.post(qa_root, params, function(response) {
-		var header = 'QA_AJAX_RESPONSE';
-		var headerpos = response.indexOf(header);
+	$.extend(params, {qa: 'ajax', qa_operation: operation, qa_root: qa_root, qa_request: qa_request, version: version});
 
-		if (headerpos >= 0)
-			callback(response.substr(headerpos + header.length).replace(/^\s+/, '').split("\n"));
-		else
-			callback([]);
+	$.post(qa_root, params, function (response) {
+			if (version === 0) {
+				var header = 'QA_AJAX_RESPONSE';
+				var headerpos = response.indexOf(header);
 
-	}, 'text').fail(function(jqXHR) {
+				if (headerpos >= 0)
+					callback(response.substr(headerpos + header.length).replace(/^\s+/, '').split("\n"));
+				else
+					callback([]);
+			} else {
+				callback(response);
+			}
+		},
+		version === 0 ? 'text' : 'json'
+	).fail(function (jqXHR) {
 		if (jqXHR.readyState > 0)
-			callback([])
+			qa_ajax_error();
 	});
 }
 

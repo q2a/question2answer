@@ -374,6 +374,10 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 	if ($wasqueued || ($status == QA_POST_STATUS_QUEUED))
 		qa_db_queuedcount_update();
 
+	if ($event === 'q_hide' || $event === 'q_reshow') {
+		qa_db_hiddencount_update();
+	}
+
 	if ($oldquestion['flagcount'])
 		qa_db_flaggedcount_update();
 
@@ -536,6 +540,7 @@ function qa_question_delete($oldquestion, $userid, $handle, $cookieid, $oldclose
 	qa_db_post_delete($oldquestion['postid']); // also deletes any related voteds due to foreign key cascading
 	qa_update_counts_for_q(null);
 	qa_db_category_path_qcount_update($oldpath); // don't do inside qa_update_counts_for_q() since post no longer exists
+	qa_db_hiddencount_update();
 	qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects', 'qvoteds', 'upvoteds', 'downvoteds'));
 
 	foreach ($useridvotes as $voteruserid => $vote) {
@@ -764,6 +769,10 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 	if ($wasqueued || $status == QA_POST_STATUS_QUEUED)
 		qa_db_queuedcount_update();
 
+	if ($event === 'a_hide' || $event === 'a_reshow') {
+		qa_db_hiddencount_update();
+	}
+
 	if ($oldanswer['flagcount'])
 		qa_db_flaggedcount_update();
 
@@ -846,6 +855,7 @@ function qa_answer_delete($oldanswer, $question, $userid, $handle, $cookieid)
 	}
 
 	qa_update_q_counts_for_a($question['postid']);
+	qa_db_hiddencount_update();
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'avoteds', 'upvoteds', 'downvoteds'));
 
 	foreach ($useridvotes as $voteruserid => $vote) {
@@ -1151,6 +1161,10 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 	if ($wasqueued || $status == QA_POST_STATUS_QUEUED)
 		qa_db_queuedcount_update();
 
+	if ($event === 'c_hide' || $event === 'c_reshow') {
+		qa_db_hiddencount_update();
+	}
+
 	if ($oldcomment['flagcount'])
 		qa_db_flaggedcount_update();
 
@@ -1234,6 +1248,7 @@ function qa_comment_delete($oldcomment, $question, $parent, $userid, $handle, $c
 
 	qa_post_unindex($oldcomment['postid']);
 	qa_db_post_delete($oldcomment['postid']);
+	qa_db_hiddencount_update();
 	qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 	qa_db_ccount_update();
 

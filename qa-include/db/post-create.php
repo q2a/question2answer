@@ -453,3 +453,19 @@ function qa_db_queuedcount_update()
 		);
 	}
 }
+
+
+/**
+ * Update the cached count in the database of the number of posts which are hidden
+ */
+function qa_db_hiddencount_update()
+{
+	if (qa_should_update_counts()) {
+		qa_db_query_sub(
+			"INSERT INTO ^options (title, content) " .
+			"SELECT 'cache_hiddencount', COUNT(*) FROM ^posts " .
+			"WHERE type IN ('Q_HIDDEN', 'A_HIDDEN', 'C_HIDDEN') " .
+			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+		);
+	}
+}

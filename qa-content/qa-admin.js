@@ -112,6 +112,27 @@ function qa_mailing_start(noteid, pauseid)
 	);
 }
 
+function qa_update_dom(response)
+{
+	if (!response.hasOwnProperty('domUpdates')) {
+		return;
+	}
+
+	for (var i = 0; i < response.domUpdates.length; i++) {
+		var domUpdate = response.domUpdates[i];
+		switch (domUpdate.action) {
+			case 'conceal':
+				qa_conceal(document.querySelector(domUpdate.selector));
+				break;
+			case 'reveal':
+				qa_reveal(document.querySelector(domUpdate.selector));
+				break;
+			default: // replace
+				$(domUpdate.selector).html(domUpdate.html);
+		}
+	}
+}
+
 function qa_admin_click(target)
 {
 	var p = target.name.split('_');
@@ -120,15 +141,15 @@ function qa_admin_click(target)
 	params.code = target.form.elements.code.value;
 
 	qa_ajax_post('click_admin', params,
-		function(lines) {
-			if (lines[0] == '1')
-				qa_conceal(document.getElementById('p' + p[1]), 'admin');
-			else if (lines[0] == '0') {
-				alert(lines[1]);
-				qa_hide_waiting(target);
-			} else
-				qa_ajax_error();
-		}
+		function (response) {
+			qa_update_dom(response);
+
+			if (response.result === 'error' && response.error.severity === 'fatal') {
+				alert(response.error.message);
+			}
+
+			qa_hide_waiting(target);
+		}, 1
 	);
 
 	qa_show_waiting_after(target, false);
