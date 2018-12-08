@@ -145,10 +145,12 @@ class qa_event_logger
 
 	public function value_to_text($value)
 	{
+		require_once QA_INCLUDE_DIR . 'util/string.php';
+
 		if (is_array($value))
 			$text = 'array(' . count($value) . ')';
-		elseif (strlen($value) > 40)
-			$text = substr($value, 0, 38) . '...';
+		elseif (qa_strlen($value) > 40)
+			$text = qa_substr($value, 0, 38) . '...';
 		else
 			$text = $value;
 
