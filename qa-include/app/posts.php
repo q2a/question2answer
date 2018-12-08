@@ -207,8 +207,8 @@ function qa_post_set_selchildid($questionid, $answerid, $byuserid = null)
 
 
 /**
- * Closed $questionid if $closed is true, otherwise reopen it. If $closed is true, pass either the $originalpostid of
- * the question that it is a duplicate of, or a $note to explain why it's closed. Pass the identify of the user in
+ * Close $questionid if $closed is true, otherwise reopen it. If $closed is true, pass either the $originalpostid of
+ * the question that it is a duplicate of, or a $note to explain why it's closed. Pass the identifier of the user in
  * $byuserid (or null for an anonymous change).
  * @param $questionid
  * @param bool $closed
@@ -232,6 +232,18 @@ function qa_post_set_closed($questionid, $closed = true, $originalpostid = null,
 
 	} else
 		qa_question_close_clear($oldquestion, $oldclosepost, $byuserid, $byhandle, null);
+}
+
+/**
+ * Return whether the given question is closed. This check takes into account the do_close_on_select option which
+ * considers questions with a selected answer as closed.
+ * @since 1.8.2
+ * @param array $question
+ * @return bool
+ */
+function qa_post_is_closed(array $question)
+{
+	return isset($question['closedbyid']) || (isset($question['selchildid']) && qa_opt('do_close_on_select'));
 }
 
 

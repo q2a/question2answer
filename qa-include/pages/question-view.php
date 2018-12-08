@@ -261,6 +261,8 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
  */
 function qa_page_q_question_view($question, $parentquestion, $closepost, $usershtml, $formrequested)
 {
+	require_once QA_INCLUDE_DIR . 'app/posts.php';
+
 	$questionid = $question['postid'];
 	$userid = qa_get_logged_in_userid();
 	$cookieid = qa_cookie_get();
@@ -428,7 +430,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 
 	// Information about the question that this question is a duplicate of (if appropriate)
 
-	if (isset($closepost) || (!empty($q_view['raw']['selchildid']) && qa_opt('do_close_on_select'))) {
+	if (isset($closepost) || qa_post_is_closed($question)) {
 		if ($closepost['basetype'] == 'Q') {
 			if ($closepost['hidden']) {
 				// don't show link for hidden questions

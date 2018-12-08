@@ -62,6 +62,7 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 
 	require_once QA_INCLUDE_DIR . 'app/format.php';
 	require_once QA_INCLUDE_DIR . 'app/updates.php';
+	require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 	$userid = qa_get_logged_in_userid();
 
@@ -97,11 +98,10 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 			$defaults['categorypathprefix'] = $categorypathprefix;
 		}
 
-		$closeOnSelect = qa_opt('do_close_on_select');
 		foreach ($questions as $question) {
 			$fields = qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, qa_post_html_options($question, $defaults));
 
-			if (!empty($fields['raw']['closedbyid']) || (!empty($fields['raw']['selchildid']) && $closeOnSelect)) {
+			if (qa_post_is_closed($question)) {
 				$fields['closed'] = array(
 					'state' => qa_lang_html('main/closed'),
 				);
