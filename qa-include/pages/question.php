@@ -336,7 +336,7 @@ if (qa_opt('sort_answers_by') == 'votes') {
 
 // further changes to ordering to deal with queued, hidden and selected answers
 
-$countfortitle = $question['acount'];
+$countfortitle = (int) $question['acount'];
 $nextposition = 10000;
 $answerposition = array();
 
@@ -424,17 +424,19 @@ foreach ($answerids as $answerid) {
 if ($question['basetype'] == 'Q') {
 	$qa_content['a_list']['title_tags'] = 'id="a_list_title"';
 
-	if ($countfortitle > 0) {
-		$split = $countfortitle == 1
-			? qa_lang_html_sub_split('question/1_answer_title', '1', '1')
-			: qa_lang_html_sub_split('question/x_answers_title', $countfortitle);
+	$split = $countfortitle == 1
+		? qa_lang_html_sub_split('question/1_answer_title', '1', '1')
+		: qa_lang_html_sub_split('question/x_answers_title', $countfortitle);
 
-		if ($microdata) {
-			$split['data'] = '<span itemprop="answerCount">' . $split['data'] . '</span>';
-		}
-		$qa_content['a_list']['title'] = $split['prefix'] . $split['data'] . $split['suffix'];
-	} else
+	if ($microdata) {
+		$split['data'] = '<span itemprop="answerCount">' . $split['data'] . '</span>';
+	}
+
+	$qa_content['a_list']['title'] = $split['prefix'] . $split['data'] . $split['suffix'];
+
+	if ($countfortitle == 0) {
 		$qa_content['a_list']['title_tags'] .= ' style="display:none;" ';
+	}
 }
 
 if (!$formrequested) {
