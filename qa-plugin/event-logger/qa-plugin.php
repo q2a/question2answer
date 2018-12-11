@@ -41,3 +41,4 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 
 qa_register_plugin_module('event', 'qa-event-logger.php', 'qa_event_logger', 'Event Logger');
+qa_register_plugin_phrases('qa-event-logger-lang-*.php', 'event_logger');

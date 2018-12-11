@@ -41,3 +41,4 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 
 qa_register_plugin_module('widget', 'qa-tag-cloud.php', 'qa_tag_cloud', 'Tag Cloud');
+qa_register_plugin_phrases('qa-tag-cloud-lang-*.php', 'tag_cloud');

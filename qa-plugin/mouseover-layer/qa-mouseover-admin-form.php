@@ -43,11 +43,11 @@ class qa_mouseover_admin_form
 		));
 
 		return array(
-			'ok' => $saved ? 'Mouseover settings saved' : null,
+			'ok' => $saved ? qa_lang_html('admin/options_saved') : null,
 
 			'fields' => array(
 				array(
-					'label' => 'Show content preview on mouseover in question lists',
+					'label' => qa_lang_html('mouseover/show_content_prev_in_ql'),
 					'type' => 'checkbox',
 					'value' => qa_opt('mouseover_content_on'),
 					'tags' => 'name="mouseover_content_on_field" id="mouseover_content_on_field"',
@@ -55,8 +55,8 @@ class qa_mouseover_admin_form
 
 				array(
 					'id' => 'mouseover_content_max_len_display',
-					'label' => 'Maximum length of preview:',
-					'suffix' => 'characters',
+					'label' => qa_lang_html('mouseover/maximum_length'),
+					'suffix' => qa_lang_html('mouseover/characters'),
 					'type' => 'number',
 					'value' => (int) qa_opt('mouseover_content_max_len'),
 					'tags' => 'name="mouseover_content_max_len_field"',
@@ -65,7 +65,7 @@ class qa_mouseover_admin_form
 
 			'buttons' => array(
 				array(
-					'label' => 'Save Changes',
+					'label' => qa_lang_html('main/save_button'),
 					'tags' => 'name="mouseover_save_button"',
 				),
 			),

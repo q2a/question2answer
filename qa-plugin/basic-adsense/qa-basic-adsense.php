@@ -48,26 +48,26 @@ class qa_basic_adsense
 		}
 
 		return array(
-			'ok' => $saved ? 'AdSense settings saved' : null,
+			'ok' => $saved ? qa_lang_html('admin/options_saved') : null,
 
 			'fields' => array(
 				array(
-					'label' => 'AdSense Publisher ID:',
+					'label' => qa_lang_html('basic_adsense/publisher_id'),
 					'value' => qa_html(qa_opt('adsense_publisher_id')),
 					'tags' => 'name="adsense_publisher_id_field"',
-					'note' => 'Example: <i>pub-1234567890123456</i>',
+					'note' => qa_lang_sub('basic_adsense/example_x', 'pub-1234567890123456'),
 				),
 				array(
-					'label' => 'AdSense Ad Unit ID:',
+					'label' => qa_lang_html('basic_adsense/ad_unit_id'),
 					'value' => qa_html(qa_opt('adsense_adunit_id')),
 					'tags' => 'name="adsense_adunit_id_field"',
-					'note' => 'Example: <i>8XXXXX1</i>',
+					'note' => qa_lang_sub('basic_adsense/example_x', '8XXXXX1'),
 				),
 			),
 
 			'buttons' => array(
 				array(
-					'label' => 'Save Changes',
+					'label' => qa_lang_html('main/save_button'),
 					'tags' => 'name="adsense_save_button"',
 				),
 			),

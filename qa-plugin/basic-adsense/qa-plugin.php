@@ -41,3 +41,4 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 
 qa_register_plugin_module('widget', 'qa-basic-adsense.php', 'qa_basic_adsense', 'Basic AdSense');
+qa_register_plugin_phrases('qa-basic-adsense-lang-*.php', 'basic_adsense');

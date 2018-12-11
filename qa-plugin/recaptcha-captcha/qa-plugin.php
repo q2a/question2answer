@@ -41,3 +41,4 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 
 qa_register_plugin_module('captcha', 'qa-recaptcha-captcha.php', 'qa_recaptcha_captcha', 'reCAPTCHA');
+qa_register_plugin_phrases('qa-recaptcha-captcha-lang-*.php', 'recaptcha');
