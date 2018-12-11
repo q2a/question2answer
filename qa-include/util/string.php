@@ -821,9 +821,9 @@ if (!defined('QA_PREG_BLOCK_WORD_SEPARATOR')) {
 	define('QA_PREG_BLOCK_WORD_SEPARATOR', '[\n\r\t\ \!\"\\\'\(\)\+\,\.\/\:\;\<\=\>\?\[\\\\\]\^\`\{\|\}\~\$\&\-\_\#\%\@]');
 }
 
-// Pattern to match Chinese/Japanese/Korean ideographic symbols in UTF-8 encoding
+// Pattern to match Thai/Chinese/Japanese/Korean ideographic symbols in UTF-8 encoding
 if (!defined('QA_PREG_CJK_IDEOGRAPHS_UTF8')) {
-	define('QA_PREG_CJK_IDEOGRAPHS_UTF8', '\xE2[\xBA-\xBF][\x80-\xBF]|\xE3[\x80\x88-\xBF][\x80-\xBF]|[\xE4-\xE9][\x80-\xBF][\x80-\xBF]|\xEF[\xA4-\xAB][\x80-\xBF]|\xF0[\xA0-\xAF][\x80-\xBF][\x80-\xBF]');
+	define('QA_PREG_CJK_IDEOGRAPHS_UTF8', '\xE0[\xB8-\xB9][\x80-\xBF]|\xE2[\xBA-\xBF][\x80-\xBF]|\xE3[\x80\x88-\xBF][\x80-\xBF]|[\xE4-\xE9][\x80-\xBF][\x80-\xBF]|\xEF[\xA4-\xAB][\x80-\xBF]|\xF0[\xA0-\xAF][\x80-\xBF][\x80-\xBF]');
 }
 
 qa_string_initialize();
