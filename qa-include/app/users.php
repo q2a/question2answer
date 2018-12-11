@@ -572,7 +572,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 		$userHtml = '<a href="' . $url . '" class="qa-user-link' . $favclass . '"' . $mfAttr . '>' . $userHandle . '</a>';
 
 		if ($microdata) {
-			$userHtml = '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' . $userHtml . '</span>';
+			$userHtml = '<span itemprop="author" itemscope itemtype="https://schema.org/Person">' . $userHtml . '</span>';
 		}
 
 		return $userHtml;

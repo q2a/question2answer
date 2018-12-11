@@ -327,10 +327,10 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 	if ($microdata) {
 		if ($isanswer) {
-			$fields['tags'] .= ' itemprop="suggestedAnswer' . ($isselected ? ' acceptedAnswer' : '') . '" itemscope itemtype="http://schema.org/Answer"';
+			$fields['tags'] .= ' itemprop="suggestedAnswer' . ($isselected ? ' acceptedAnswer' : '') . '" itemscope itemtype="https://schema.org/Answer"';
 		}
 		if ($iscomment) {
-			$fields['tags'] .= ' itemscope itemtype="http://schema.org/Comment"';
+			$fields['tags'] .= ' itemscope itemtype="https://schema.org/Comment"';
 		}
 	}
 
@@ -763,7 +763,7 @@ function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip = null, $microda
 
 		if ($microdata) {
 			// duplicate HTML from qa_get_one_user_html()
-			$whohtml = '<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">' . $whohtml . '</span></span>';
+			$whohtml = '<span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">' . $whohtml . '</span></span>';
 		}
 
 		if (isset($ip))
