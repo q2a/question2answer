@@ -28,7 +28,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 /**
  * Return true if user is logged in with admin privileges. If not, return false
  * and set up $qa_content with the appropriate title and error message
- * @param $qa_content
+ * @param array $qa_content
  * @return bool
  */
 function qa_admin_check_privileges(&$qa_content)
@@ -58,6 +58,7 @@ function qa_admin_check_privileges(&$qa_content)
 
 /**
  *	Return a sorted array of available languages, [short code] => [long name]
+ *	@return array
  */
 function qa_admin_language_options()
 {
@@ -140,6 +141,7 @@ function qa_admin_language_options()
 
 /**
  * Return a sorted array of available themes, [theme name] => [theme name]
+ * @return array
  */
 function qa_admin_theme_options()
 {
@@ -164,6 +166,7 @@ function qa_admin_theme_options()
 
 /**
  * Return an array of widget placement options, with keys matching the database value
+ * @return array
  */
 function qa_admin_place_options()
 {
@@ -186,7 +189,7 @@ function qa_admin_place_options()
 
 /**
  * Return an array of page size options up to $maximum, [page size] => [page size]
- * @param $maximum
+ * @param int $maximum
  * @return array
  */
 function qa_admin_page_size_options($maximum)
@@ -207,6 +210,7 @@ function qa_admin_page_size_options($maximum)
 
 /**
  * Return an array of options representing matching precision, [value] => [label]
+ * @return array
  */
 function qa_admin_match_options()
 {
@@ -223,8 +227,8 @@ function qa_admin_match_options()
 /**
  * Return an array of options representing permission restrictions, [value] => [label]
  * ranging from $widest to $narrowest. Set $doconfirms to whether email confirmations are on
- * @param $widest
- * @param $narrowest
+ * @param int $widest
+ * @param int $narrowest
  * @param bool $doconfirms
  * @param bool $dopoints
  * @return array
@@ -275,6 +279,7 @@ function qa_admin_permit_options($widest, $narrowest, $doconfirms = true, $dopoi
 
 /**
  * Return the sub navigation structure common to admin pages
+ * @return array
  */
 function qa_admin_sub_navigation()
 {
@@ -415,6 +420,7 @@ function qa_admin_sub_navigation()
 
 /**
  * Return the error that needs to displayed on all admin pages, or null if none
+ * @return string|null
  */
 function qa_admin_page_error()
 {
@@ -441,6 +447,7 @@ function qa_admin_page_error()
 
 /**
  * Return an HTML fragment to display for a URL test which has passed
+ * @return string
  */
 function qa_admin_url_test_html()
 {
@@ -450,7 +457,7 @@ function qa_admin_url_test_html()
 
 /**
  * Returns whether a URL path beginning with $requestpart is reserved by the engine or a plugin page module
- * @param $requestpart
+ * @param string $requestpart
  * @return bool
  */
 function qa_admin_is_slug_reserved($requestpart)
@@ -492,8 +499,8 @@ function qa_admin_is_slug_reserved($requestpart)
 /**
  * Returns true if admin (hidden/flagged/approve/moderate) page $action performed on $entityid is permitted by the
  * logged in user and was processed successfully
- * @param $entityid
- * @param $action
+ * @param int $entityid
+ * @param string $action
  * @return bool
  */
 function qa_admin_single_click($entityid, $action)
@@ -586,8 +593,8 @@ function qa_admin_single_click($entityid, $action)
 /**
  * Returns true if admin (hidden/flagged/approve/moderate) page $action performed on $entityid is permitted by the
  * logged in user and was processed successfully
- * @param $entityid
- * @param $action
+ * @param int $entityid
+ * @param string $action
  * @return array
  */
 function qa_admin_single_click_array($entityid, $action)
@@ -836,6 +843,7 @@ function qa_admin_single_click_array($entityid, $action)
 
 /**
  * Checks for a POSTed click on an admin (hidden/flagged/approve/moderate) page, and refresh the page if processed successfully (non Ajax)
+ * @return string|null
  */
 function qa_admin_check_clicks()
 {
@@ -866,8 +874,8 @@ function qa_admin_check_clicks()
  * Retrieve metadata information from the $contents of a qa-theme.php or qa-plugin.php file, mapping via $fields.
  *
  * @deprecated Deprecated from 1.7; use `qa_addon_metadata($contents, $type)` instead.
- * @param $contents
- * @param $fields
+ * @param string $contents
+ * @param array $fields
  * @return array
  */
 function qa_admin_addon_metadata($contents, $fields)
@@ -885,7 +893,7 @@ function qa_admin_addon_metadata($contents, $fields)
 
 /**
  * Return the hash code for the plugin in $directory (without trailing slash), used for in-page navigation on admin/plugins page
- * @param $directory
+ * @param string $directory
  * @return mixed
  */
 function qa_admin_plugin_directory_hash($directory)
@@ -899,7 +907,7 @@ function qa_admin_plugin_directory_hash($directory)
 
 /**
  * Return the URL (relative to the current page) to navigate to the options panel for the plugin in $directory (without trailing slash)
- * @param $directory
+ * @param string $directory
  * @return mixed|string
  */
 function qa_admin_plugin_options_path($directory)
@@ -911,8 +919,8 @@ function qa_admin_plugin_options_path($directory)
 
 /**
  * Return the URL (relative to the current page) to navigate to the options panel for plugin module $name of $type
- * @param $type
- * @param $name
+ * @param string $type
+ * @param string $name
  * @return mixed|string
  */
 function qa_admin_module_options_path($type, $name)

@@ -42,6 +42,7 @@ class Q2A_Util_Usage
 
 	/**
 	 * Return an array representing the resource usage as of now.
+	 * @return array
 	 */
 	public function getCurrent()
 	{
@@ -68,7 +69,7 @@ class Q2A_Util_Usage
 
 	/**
 	 * Mark the beginning of a new stage of script execution and store usages accordingly.
-	 * @param $stage
+	 * @param string $stage
 	 */
 	public function mark($stage)
 	{
@@ -79,10 +80,10 @@ class Q2A_Util_Usage
 
 	/**
 	 * Logs query and updates database usage stats.
-	 * @param $query
-	 * @param $usedtime
-	 * @param $gotrows
-	 * @param $gotcolumns
+	 * @param string $query
+	 * @param int $usedtime
+	 * @param int $gotrows
+	 * @param int $gotcolumns
 	 */
 	public function logDatabaseQuery($query, $usedtime, $gotrows, $gotcolumns)
 	{
@@ -196,8 +197,8 @@ class Q2A_Util_Usage
 
 	/**
 	 * Return the difference between two resource usage arrays, as an array.
-	 * @param $oldusage
-	 * @param $newusage
+	 * @param array $oldusage
+	 * @param array $newusage
 	 * @return array
 	 */
 	private function delta($oldusage, $newusage)
