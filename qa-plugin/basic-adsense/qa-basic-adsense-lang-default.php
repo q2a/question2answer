@@ -21,6 +21,6 @@
 
 return array(
 	'ad_unit_id' => 'AdSense Ad Unit ID:',
-	'example_x' => 'Example: <i>^</i>',
+	'example_x' => 'Example: ^',
 	'publisher_id' => 'AdSense Publisher ID:',
 );

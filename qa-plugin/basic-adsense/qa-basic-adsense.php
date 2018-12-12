@@ -55,13 +55,13 @@ class qa_basic_adsense
 					'label' => qa_lang_html('basic_adsense/publisher_id'),
 					'value' => qa_html(qa_opt('adsense_publisher_id')),
 					'tags' => 'name="adsense_publisher_id_field"',
-					'note' => qa_lang_sub('basic_adsense/example_x', 'pub-1234567890123456'),
+					'note' => qa_lang_html_sub('basic_adsense/example_x', '<i>pub-1234567890123456</i>'),
 				),
 				array(
 					'label' => qa_lang_html('basic_adsense/ad_unit_id'),
 					'value' => qa_html(qa_opt('adsense_adunit_id')),
 					'tags' => 'name="adsense_adunit_id_field"',
-					'note' => qa_lang_sub('basic_adsense/example_x', '8XXXXX1'),
+					'note' => qa_lang_html_sub('basic_adsense/example_x', '<i>8XXXXX1</i>'),
 				),
 			),
 

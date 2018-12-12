@@ -102,7 +102,7 @@ class qa_event_logger
 
 			'fields' => array(
 				array(
-					'label' => qa_lang_sub('event_logger/log_events_x_table', QA_MYSQL_TABLE_PREFIX . 'eventlog'),
+					'label' => qa_lang_html_sub('event_logger/log_events_x_table', '<code>' . qa_html(QA_MYSQL_TABLE_PREFIX . 'eventlog') . '</code>'),
 					'tags' => 'name="event_logger_to_database_field"',
 					'value' => qa_opt('event_logger_to_database'),
 					'type' => 'checkbox',

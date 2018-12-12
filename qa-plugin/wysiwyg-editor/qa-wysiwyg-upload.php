@@ -35,7 +35,7 @@ class qa_wysiwyg_upload
 
 		if (is_array($_FILES) && count($_FILES)) {
 			if (!qa_opt('wysiwyg_editor_upload_images'))
-				$message = qa_lang('users/no_permission');
+				$message = qa_lang_html('users/no_permission');
 
 			require_once QA_INCLUDE_DIR.'app/upload.php';
 
