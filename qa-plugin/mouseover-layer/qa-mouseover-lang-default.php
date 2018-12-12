@@ -21,6 +21,6 @@
 
 return array(
 	'characters' => 'characters',
-	'maximum_length' => 'Maximum length of preview:',
-	'show_content_prev_in_ql' => 'Show content preview on mouseover in question lists',
+	'max_length' => 'Maximum length of preview:',
+	'show_content_preview' => 'Show content preview on mouseover in question lists',
 );

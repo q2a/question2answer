@@ -47,7 +47,7 @@ class qa_mouseover_admin_form
 
 			'fields' => array(
 				array(
-					'label' => qa_lang_html('mouseover/show_content_prev_in_ql'),
+					'label' => qa_lang_html('mouseover/show_content_preview'),
 					'type' => 'checkbox',
 					'value' => qa_opt('mouseover_content_on'),
 					'tags' => 'name="mouseover_content_on_field" id="mouseover_content_on_field"',
@@ -55,7 +55,7 @@ class qa_mouseover_admin_form
 
 				array(
 					'id' => 'mouseover_content_max_len_display',
-					'label' => qa_lang_html('mouseover/maximum_length'),
+					'label' => qa_lang_html('mouseover/max_length'),
 					'suffix' => qa_lang_html('mouseover/characters'),
 					'type' => 'number',
 					'value' => (int) qa_opt('mouseover_content_max_len'),

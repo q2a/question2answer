@@ -102,14 +102,14 @@ class qa_event_logger
 
 			'fields' => array(
 				array(
-					'label' => qa_lang_sub('event_logger/log_events_to_x_table', QA_MYSQL_TABLE_PREFIX . 'eventlog'),
+					'label' => qa_lang_sub('event_logger/log_events_x_table', QA_MYSQL_TABLE_PREFIX . 'eventlog'),
 					'tags' => 'name="event_logger_to_database_field"',
 					'value' => qa_opt('event_logger_to_database'),
 					'type' => 'checkbox',
 				),
 
 				array(
-					'label' => qa_lang_html('event_logger/log_events_to_daily_log_files'),
+					'label' => qa_lang_html('event_logger/log_events_daily'),
 					'tags' => 'name="event_logger_to_files_field" id="event_logger_to_files_field"',
 					'value' => qa_opt('event_logger_to_files'),
 					'type' => 'checkbox',
@@ -117,7 +117,7 @@ class qa_event_logger
 
 				array(
 					'id' => 'event_logger_directory_display',
-					'label' => qa_lang_html('event_logger/dir_for_log_files'),
+					'label' => qa_lang_html('event_logger/log_files_dir'),
 					'value' => qa_html($directory),
 					'tags' => 'name="event_logger_directory_field"',
 					'note' => $note,
@@ -126,7 +126,7 @@ class qa_event_logger
 
 				array(
 					'id' => 'event_logger_hide_header_display',
-					'label' => qa_lang_html('event_logger/header_lines_top_each_file'),
+					'label' => qa_lang_html('event_logger/header_lines'),
 					'type' => 'checkbox',
 					'tags' => 'name="event_logger_hide_header_field"',
 					'value' => !qa_opt('event_logger_hide_header'),

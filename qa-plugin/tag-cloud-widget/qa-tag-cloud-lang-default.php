@@ -21,9 +21,9 @@
 
 return array(
 	'biggest_font_size' => 'Biggest font size:',
-	'font_size_tag_popularity' => 'Font size represents tag popularity',
-	'maximum_tags_to_show' => 'Maximum tags to show:',
+	'font_size_popularity' => 'Font size represents tag popularity',
+	'max_tags' => 'Maximum tags to show:',
 	'pixels'=> 'pixels',
-	'smallest_allowed_font_size' => 'Smallest allowed font size:',
+	'smallest_font_size' => 'Smallest allowed font size:',
 	'tags' => 'tags',
 );

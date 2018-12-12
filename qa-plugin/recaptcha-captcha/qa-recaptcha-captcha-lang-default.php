@@ -24,7 +24,7 @@ return array(
 	'invalid_secret' => 'The secret parameter is invalid or malformed.',
 	'missing_response' => 'The response parameter is missing.',
 	'missing_secret' => 'The secret parameter is missing.',
+	'must_sign_up' => 'To use reCAPTCHA, you must ^1sign up^2 to get these keys.',
 	'secret_key' => 'reCAPTCHA Secret key:',
-	'sign_up_to_get_keys' => 'To use reCAPTCHA, you must ^1sign up^2 to get these keys.',
 	'site_key' => 'reCAPTCHA Site key:',
 );

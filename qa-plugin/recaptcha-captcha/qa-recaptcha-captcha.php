@@ -55,7 +55,7 @@ class qa_recaptcha_captcha
 		$error = null;
 		if (!strlen($pub) || !strlen($pri)) {
 			require_once $this->directory.'recaptchalib.php';
-			$error = strtr(qa_lang_html('recaptcha/sign_up_to_get_keys'), array(
+			$error = strtr(qa_lang_html('recaptcha/must_sign_up'), array(
 				'^1' => '<a href="'.qa_html(ReCaptcha::getSignupUrl()).'" target="_blank">',
 				'^2' => '</a>'
 			));

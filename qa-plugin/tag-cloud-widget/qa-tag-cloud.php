@@ -53,7 +53,7 @@ class qa_tag_cloud
 
 			'fields' => array(
 				array(
-					'label' => qa_lang_html('tag_cloud/maximum_tags_to_show'),
+					'label' => qa_lang_html('tag_cloud/max_tags'),
 					'type' => 'number',
 					'value' => (int) qa_opt('tag_cloud_count_tags'),
 					'suffix' => qa_lang_html('tag_cloud/tags'),
@@ -69,7 +69,7 @@ class qa_tag_cloud
 				),
 
 				array(
-					'label' => qa_lang_html('tag_cloud/smallest_allowed_font_size'),
+					'label' => qa_lang_html('tag_cloud/smallest_font_size'),
 					'suffix' => qa_lang_html('tag_cloud/pixels'),
 					'type' => 'number',
 					'value' => (int) qa_opt('tag_cloud_minimal_font_size'),
@@ -77,7 +77,7 @@ class qa_tag_cloud
 				),
 
 				array(
-					'label' => qa_lang_html('tag_cloud/font_size_tag_popularity'),
+					'label' => qa_lang_html('tag_cloud/font_size_popularity'),
 					'type' => 'checkbox',
 					'value' => qa_opt('tag_cloud_size_popular'),
 					'tags' => 'name="tag_cloud_size_popular_field"',
