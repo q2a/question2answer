@@ -28,7 +28,7 @@ if (qa_get_logged_in_level() < QA_USER_LEVEL_ADMIN) {
 }
 
 $uri = qa_post_text('uri');
-$version = qa_post_text('version');
+$currentVersion = qa_post_text('version');
 $isCore = qa_post_text('isCore') === "true";
 
 if ($isCore) {
@@ -51,7 +51,7 @@ if ($isCore) {
 	$metadata = $metadataUtil->fetchFromUrl($uri);
 
 	if (strlen(@$metadata['version']) > 0) {
-		if (strcmp($metadata['version'], $version)) {
+		if (version_compare($currentVersion, $metadata['version']) < 0) {
 			if (qa_qa_version_below(@$metadata['min_q2a'])) {
 				$response = strtr(qa_lang_html('admin/version_requires_q2a'), array(
 					'^1' => qa_html('v' . $metadata['version']),
