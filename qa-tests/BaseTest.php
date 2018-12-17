@@ -2,6 +2,13 @@
 
 class BaseTest extends PHPUnit_Framework_TestCase
 {
+	public function test__qa_version_to_float()
+	{
+		$this->assertSame(1.006, qa_version_to_float('1.6'));
+		$this->assertSame(1.007004, qa_version_to_float('1.7.4'));
+		$this->assertSame(1.008, qa_version_to_float('1.8.0-beta1'));
+	}
+
 	public function test__qa_js()
 	{
 		$this->assertSame("'test'", qa_js('test'));
