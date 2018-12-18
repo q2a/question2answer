@@ -30,8 +30,8 @@ define('QA_PAGE_FLAGS_NEW_WINDOW', 2);
 
 /**
  * Return textual representation of $seconds
- * @param $seconds
- * @return mixed|string
+ * @param int $seconds
+ * @return string
  */
 function qa_time_to_string($seconds)
 {
@@ -69,9 +69,9 @@ function qa_time_to_string($seconds)
 /**
  * Check if $post is by user $userid, or if post is anonymous and $userid not specified, then
  * check if $post is by the anonymous user identified by $cookieid
- * @param $post
- * @param $userid
- * @param $cookieid
+ * @param array $post
+ * @param mixed $userid
+ * @param string $cookieid
  * @return bool
  */
 function qa_post_is_by_user($post, $userid, $cookieid)
@@ -92,7 +92,6 @@ function qa_post_is_by_user($post, $userid, $cookieid)
 /**
  * Return array which maps the 'userid' and/or 'lastuserid' of each user to its HTML representation.
  * For internal user management, corresponding 'handle' and/or 'lasthandle' are required in each element.
- *
  * @param array $useridhandles  User IDs or usernames.
  * @param bool $microdata  Whether to include microdata.
  * @return array  The HTML.
@@ -143,6 +142,7 @@ function qa_userids_handles_html($useridhandles, $microdata = false)
  * users tend to favorite many more questions than other things.) The top-level array can contain three keys - 'user' for favorited
  * users, 'tag' for tags, 'category' for categories. The next level down has the identifier for each favorited entity in the *key*
  * of the array, and true for its value. If no user is logged in the empty array is returned. The result is cached for future calls.
+ * @return array
  */
 function qa_get_favorite_non_qs_map()
 {
@@ -182,7 +182,6 @@ function qa_get_favorite_non_qs_map()
 
 /**
  * Convert textual tag to HTML representation, linked to its tag page.
- *
  * @param string $tag  The tag.
  * @param bool $microdata  Whether to include microdata.
  * @param bool $favorited  Show the tag as favorited.
@@ -203,8 +202,8 @@ function qa_tag_html($tag, $microdata = false, $favorited = false)
 /**
  * Given $navcategories retrieved for $categoryid from the database (using qa_db_category_nav_selectspec(...)),
  * return an array of elements from $navcategories for the hierarchy down to $categoryid.
- * @param $navcategories
- * @param $categoryid
+ * @param array $navcategories
+ * @param int $categoryid
  * @return array
  */
 function qa_category_path($navcategories, $categoryid)
@@ -221,8 +220,8 @@ function qa_category_path($navcategories, $categoryid)
 /**
  * Given $navcategories retrieved for $categoryid from the database (using qa_db_category_nav_selectspec(...)),
  * return some HTML that shows the category hierarchy down to $categoryid.
- * @param $navcategories
- * @param $categoryid
+ * @param array $navcategories
+ * @param int $categoryid
  * @return string
  */
 function qa_category_path_html($navcategories, $categoryid)
@@ -240,8 +239,8 @@ function qa_category_path_html($navcategories, $categoryid)
 /**
  * Given $navcategories retrieved for $categoryid from the database (using qa_db_category_nav_selectspec(...)),
  * return a Q2A request string that represents the category hierarchy down to $categoryid.
- * @param $navcategories
- * @param $categoryid
+ * @param array $navcategories
+ * @param int $categoryid
  * @return string
  */
 function qa_category_path_request($navcategories, $categoryid)
@@ -258,8 +257,8 @@ function qa_category_path_request($navcategories, $categoryid)
 
 /**
  * Return HTML to use for $ip address, which links to appropriate page with $anchorhtml
- * @param $ip
- * @param null $anchorhtml
+ * @param string $ip
+ * @param string|null $anchorhtml
  * @return mixed|string
  */
 function qa_ip_anchor_html($ip, $anchorhtml = null)
@@ -280,11 +279,11 @@ function qa_ip_anchor_html($ip, $anchorhtml = null)
  * $dummy is a placeholder (used to be $categories parameter but that's no longer needed)
  * $options is an array which sets what is displayed (see qa_post_html_defaults() in /qa-include/app/options.php)
  * If something is missing from $post (e.g. ['content']), correponding HTML also omitted.
- * @param $post
- * @param $userid
- * @param $cookieid
- * @param $usershtml
- * @param $dummy
+ * @param array $post
+ * @param mixed $userid
+ * @param string $cookieid
+ * @param array $usershtml
+ * @param null $dummy
  * @param array $options
  * @return array
  */
@@ -683,7 +682,6 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 /**
  * Generate array of mostly HTML representing a message, to be passed to theme layer.
- *
  * @param array $message  The message object (as retrieved from database).
  * @param array $options  Viewing options (see qa_message_html_defaults() in /qa-include/app/options.php).
  * @return array  The HTML.
@@ -738,9 +736,8 @@ function qa_message_html_fields($message, $options = array())
 
 /**
  * Generate array of split HTML (prefix, data, suffix) to represent author of post.
- *
  * @param bool $isbyuser True if the current user made the post.
- * @param int $postuserid The post user's ID.
+ * @param int|null $postuserid The post user's ID.
  * @param array $usershtml Array of HTML representing usernames.
  * @param string $ip The post user's IP.
  * @param bool|string $microdata Whether to include microdata.
@@ -776,9 +773,8 @@ function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip = null, $microda
 
 /**
  * Generate array of split HTML (prefix, data, suffix) to represent a timestamp, optionally with the full date.
- *
  * @param int $timestamp  Unix timestamp.
- * @param int $fulldatedays  Number of days after which to show the full date.
+ * @param int|null $fulldatedays  Number of days after which to show the full date.
  * @return array  The HTML.
  */
 function qa_when_to_html($timestamp, $fulldatedays)
@@ -815,12 +811,12 @@ function qa_when_to_html($timestamp, $fulldatedays)
  * $question, as retrieved from database, with fields prefixed 'o' for the answer, comment or edit.
  * $userid, $cookieid, $usershtml, $options are passed through to qa_post_html_fields(). If $question['opersonal']
  * is set and true then the item is displayed with its personal relevance to the user (for user updates page).
- * @param $question
- * @param $userid
- * @param $cookieid
- * @param $usershtml
- * @param $dummy
- * @param $options
+ * @param array $question
+ * @param mixed $userid
+ * @param string $cookieid
+ * @param array $usershtml
+ * @param null $dummy
+ * @param array $options
  * @return array
  */
 function qa_other_to_q_html_fields($question, $userid, $cookieid, $usershtml, $dummy, $options)
@@ -979,12 +975,12 @@ function qa_other_to_q_html_fields($question, $userid, $cookieid, $usershtml, $d
 /**
  * Based on the elements in $question, return HTML to be passed to theme layer to link
  * to the question, or to an associated answer, comment or edit.
- * @param $question
- * @param $userid
- * @param $cookieid
- * @param $usershtml
- * @param $dummy
- * @param $options
+ * @param array $question
+ * @param mixed $userid
+ * @param string $cookieid
+ * @param array $usershtml
+ * @param null $dummy
+ * @param array $options
  * @return array
  */
 function qa_any_to_q_html_fields($question, $userid, $cookieid, $usershtml, $dummy, $options)
@@ -1001,8 +997,8 @@ function qa_any_to_q_html_fields($question, $userid, $cookieid, $usershtml, $dum
 /**
  * Each element in $questions represents a question and optional associated answer, comment or edit, as retrieved from database.
  * Return it sorted by the date appropriate for each element, without removing duplicate references to the same question.
- * @param $questions
- * @return mixed
+ * @param array $questions
+ * @return array
  */
 function qa_any_sort_by_date($questions)
 {
@@ -1022,7 +1018,7 @@ function qa_any_sort_by_date($questions)
 /**
  * Each element in $questions represents a question and optional associated answer, comment or edit, as retrieved from database.
  * Return it sorted by the date appropriate for each element, and keep only the first item related to each question.
- * @param $questions
+ * @param array $questions
  * @return array
  */
 function qa_any_sort_and_dedupe($questions)
@@ -1079,7 +1075,7 @@ function qa_any_sort_and_dedupe($questions)
 /**
  * Each element in $questions represents a question and optional associated answer, comment or edit, as retrieved from database.
  * Return an array of elements (userid,handle) for the appropriate user for each element.
- * @param $questions
+ * @param array $questions
  * @return array
  */
 function qa_any_get_userids_handles($questions)
@@ -1108,7 +1104,7 @@ function qa_any_get_userids_handles($questions)
  * Return $html with any URLs converted into links (with nofollow and in a new window if $newwindow).
  * Closing parentheses/brackets are removed from the link if they don't have a matching opening one. This avoids creating
  * incorrect URLs from (http://www.question2answer.org) but allow URLs such as http://www.wikipedia.org/Computers_(Software)
- * @param $html
+ * @param string $html
  * @param bool $newwindow
  * @return mixed
  */
@@ -1160,7 +1156,7 @@ function qa_html_convert_urls($html, $newwindow = false)
 
 /**
  * Return HTML representation of $url (if it appears to be an URL), linked with nofollow and in a new window if $newwindow
- * @param $url
+ * @param string $url
  * @param bool $newwindow
  * @return mixed|string
  */
@@ -1182,9 +1178,9 @@ function qa_url_to_html_link($url, $newwindow = false)
 
 /**
  * Return $htmlmessage with ^1...^6 substituted for links to log in or register or confirm email and come back to $topage with $params
- * @param $htmlmessage
- * @param null $topage
- * @param null $params
+ * @param string $htmlmessage
+ * @param string|null $topage
+ * @param string|null $params
  * @return string
  */
 function qa_insert_login_links($htmlmessage, $topage = null, $params = null)
@@ -1214,14 +1210,14 @@ function qa_insert_login_links($htmlmessage, $topage = null, $params = null)
  * $start is current offset, there are $pagesize items per page and $count items in total
  * (unless $hasmore is true in which case there are at least $count items).
  * Show links to $prevnext pages before and after this one and include $params in the URLs.
- * @param $request
- * @param $start
- * @param $pagesize
- * @param $count
- * @param $prevnext
+ * @param string $request
+ * @param int $start
+ * @param int $pagesize
+ * @param int $count
+ * @param int $prevnext
  * @param array $params
  * @param bool $hasmore
- * @param null $anchor
+ * @param string|null $anchor
  * @return array|null
  */
 function qa_html_page_links($request, $start, $pagesize, $count, $prevnext, $params = array(), $hasmore = false, $anchor = null)
@@ -1286,8 +1282,8 @@ function qa_html_page_links($request, $start, $pagesize, $count, $prevnext, $par
  * Return HTML that suggests browsing all questions (in the category specified by $categoryrequest, if
  * it's not null) and also popular tags if $usingtags is true
  * @param bool $usingtags
- * @param null $categoryrequest
- * @return mixed|string
+ * @param string|null $categoryrequest
+ * @return string
  */
 function qa_html_suggest_qs_tags($usingtags = false, $categoryrequest = null)
 {
@@ -1313,8 +1309,8 @@ function qa_html_suggest_qs_tags($usingtags = false, $categoryrequest = null)
 
 /**
  * Return HTML that suggest getting things started by asking a question, in $categoryid if not null
- * @param null $categoryid
- * @return mixed|string
+ * @param int|null $categoryid
+ * @return string
  */
 function qa_html_suggest_ask($categoryid = null)
 {
@@ -1336,12 +1332,12 @@ function qa_html_suggest_ask($categoryid = null)
 /**
  * Return the navigation structure for the category hierarchical menu, with $selectedid selected,
  * and links beginning with $pathprefix, and showing question counts if $showqcount
- * @param $categories
- * @param null $selectedid
+ * @param array $categories
+ * @param int|null $selectedid
  * @param string $pathprefix
  * @param bool $showqcount
- * @param null $pathparams
- * @return array|mixed
+ * @param array|null $pathparams
+ * @return array
  */
 function qa_category_navigation($categories, $selectedid = null, $pathprefix = '', $showqcount = true, $pathparams = null)
 {
@@ -1361,14 +1357,14 @@ function qa_category_navigation($categories, $selectedid = null, $pathprefix = '
 
 /**
  * Recursion function used by qa_category_navigation(...) to build hierarchical category menu.
- * @param $parentcategories
- * @param $parentid
- * @param $selecteds
- * @param $pathprefix
- * @param $showqcount
- * @param $pathparams
- * @param null $favoritemap
- * @return array|mixed
+ * @param array $parentcategories
+ * @param int|null $parentid
+ * @param array $selecteds
+ * @param string $pathprefix
+ * @param bool $showqcount
+ * @param array $pathparams
+ * @param array|null $favoritemap
+ * @return array
  */
 function qa_category_navigation_sub($parentcategories, $parentid, $selecteds, $pathprefix, $showqcount, $pathparams, $favoritemap = null)
 {
@@ -1407,6 +1403,7 @@ function qa_category_navigation_sub($parentcategories, $parentid, $selecteds, $p
 
 /**
  * Return the sub navigation structure for user listing pages
+ * @return array|null
  */
 function qa_users_sub_navigation()
 {
@@ -1455,8 +1452,8 @@ function qa_users_sub_navigation()
 
 /**
  * Return the sub navigation structure for navigating between the different pages relating to a user
- * @param $handle
- * @param $selected
+ * @param string $handle
+ * @param string $selected
  * @param bool $ismyuser
  * @return array
  */
@@ -1526,7 +1523,7 @@ function qa_user_sub_navigation($handle, $selected, $ismyuser = false)
 /**
  * Return the sub navigation structure for private message pages
  * @deprecated 1.8.0 This menu is no longer used.
- * @param null $selected
+ * @param string|null $selected
  * @return array
  */
 function qa_messages_sub_navigation($selected = null)
@@ -1552,7 +1549,6 @@ function qa_messages_sub_navigation($selected = null)
 
 /**
  * Return the sub navigation structure for user account pages.
- *
  * @deprecated Deprecated from 1.6.3; use `qa_user_sub_navigation()` instead.
  */
 function qa_account_sub_navigation()
@@ -1573,7 +1569,7 @@ function qa_account_sub_navigation()
 
 /**
  * Return the url for $page retrieved from the database
- * @param $page
+ * @param array $page
  * @return string
  */
 function qa_custom_page_url($page)
@@ -1586,8 +1582,8 @@ function qa_custom_page_url($page)
 
 /**
  * Add an element to the $navigation array corresponding to $page retrieved from the database
- * @param $navigation
- * @param $page
+ * @param array $navigation
+ * @param array $page
  */
 function qa_navigation_add_page(&$navigation, $page)
 {
@@ -1607,7 +1603,7 @@ function qa_navigation_add_page(&$navigation, $page)
 
 /**
  * Convert an admin option for matching into a threshold for the score given by database search
- * @param $match
+ * @param int $match
  * @return int
  */
 function qa_match_to_min_score($match)
@@ -1618,7 +1614,6 @@ function qa_match_to_min_score($match)
 
 /**
  * Adds JavaScript to the page to handle toggling of form fields based on other fields.
- *
  * @param array $qa_content  Page content array.
  * @param array $effects  List of rules for element toggling, with the structure:
  *   array('target1' => 'source1', 'target2' => 'source2', ...)
@@ -1676,13 +1671,13 @@ function qa_set_display_rules(&$qa_content, $effects)
 /**
  * Set up $qa_content and $field (with HTML name $fieldname) for tag auto-completion, where
  * $exampletags are suggestions and $completetags are simply the most popular ones. Show up to $maxtags.
- * @param $qa_content
- * @param $field
- * @param $fieldname
- * @param $tags
- * @param $exampletags
- * @param $completetags
- * @param $maxtags
+ * @param array $qa_content
+ * @param array $field
+ * @param string $fieldname
+ * @param array $tags
+ * @param array $exampletags
+ * @param array $completetags
+ * @param int $maxtags
  */
 function qa_set_up_tag_field(&$qa_content, &$field, $fieldname, $tags, $exampletags, $completetags, $maxtags)
 {
@@ -1716,7 +1711,7 @@ function qa_set_up_tag_field(&$qa_content, &$field, $fieldname, $tags, $examplet
 
 /**
  * Get a list of user-entered tags submitted from a field that was created with qa_set_up_tag_field(...)
- * @param $fieldname
+ * @param string $fieldname
  * @return array
  */
 function qa_get_tags_field_value($fieldname)
@@ -1738,15 +1733,15 @@ function qa_get_tags_field_value($fieldname)
  * If $allownone is true, it will allow selection of no category. If $allownosub is true, it will allow a category to be
  * selected without selecting a subcategory within. Set $maxdepth to the maximum depth of category that can be selected
  * (or null for no maximum) and $excludecategoryid to a category that should not be included.
- * @param $qa_content
- * @param $field
- * @param $fieldname
- * @param $navcategories
- * @param $categoryid
- * @param $allownone
- * @param $allownosub
- * @param null $maxdepth
- * @param null $excludecategoryid
+ * @param array $qa_content
+ * @param array $field
+ * @param string $fieldname
+ * @param array $navcategories
+ * @param int $categoryid
+ * @param int $allownone
+ * @param int $allownosub
+ * @param int|null $maxdepth
+ * @param int|null $excludecategoryid
  */
 function qa_set_up_category_field(&$qa_content, &$field, $fieldname, $navcategories, $categoryid, $allownone, $allownosub, $maxdepth = null, $excludecategoryid = null)
 {
@@ -1834,8 +1829,8 @@ function qa_set_up_category_field(&$qa_content, &$field, $fieldname, $navcategor
 
 /**
  * Get the user-entered category id submitted from a field that was created with qa_set_up_category_field(...)
- * @param $fieldname
- * @return mixed|null
+ * @param string $fieldname
+ * @return string|null
  */
 function qa_get_category_field_value($fieldname)
 {
@@ -1858,9 +1853,9 @@ function qa_get_category_field_value($fieldname)
 /**
  * Set up $qa_content and add to $fields to allow the user to enter their name for a post if they are not logged in
  * $inname is from previous submission/validation. Pass $fieldprefix to add a prefix to the form field name used.
- * @param $qa_content
- * @param $fields
- * @param $inname
+ * @param array $qa_content
+ * @param array $fields
+ * @param string $inname
  * @param string $fieldprefix
  */
 function qa_set_up_name_field(&$qa_content, &$fields, $inname, $fieldprefix = '')
@@ -1878,13 +1873,13 @@ function qa_set_up_name_field(&$qa_content, &$fields, $inname, $fieldprefix = ''
  * $basetype is 'Q', 'A' or 'C' for question, answer or comment. $login_email is the email of logged in user,
  * or null if this is an anonymous post. $innotify, $inemail and $errors_email are from previous submission/validation.
  * Pass $fieldprefix to add a prefix to the form field names and IDs used.
- * @param $qa_content
- * @param $fields
- * @param $basetype
- * @param $login_email
- * @param $innotify
- * @param $inemail
- * @param $errors_email
+ * @param array $qa_content
+ * @param array $fields
+ * @param string $basetype
+ * @param string|null $login_email
+ * @param string $innotify
+ * @param string $inemail
+ * @param string $errors_email
  * @param string $fieldprefix
  */
 function qa_set_up_notify_fields(&$qa_content, &$fields, $basetype, $login_email, $innotify, $inemail, $errors_email, $fieldprefix = '')
@@ -1959,10 +1954,10 @@ function qa_get_site_theme()
 /**
  * Return the initialized class for $theme (or the default if it's gone), passing $template, $content and $request.
  * Also applies any registered plugin layers.
- * @param $theme
- * @param $template
- * @param $content
- * @param $request
+ * @param string $theme
+ * @param string $template
+ * @param array $content
+ * @param string $request
  * @return qa_html_theme_base
  */
 function qa_load_theme_class($theme, $template, $content, $request)
@@ -2055,9 +2050,9 @@ function qa_load_theme_class($theme, $template, $content, $request)
 /**
  * Return an instantiation of the appropriate editor module class, given $content in $format
  * Pass the preferred module name in $editorname, on return it will contain the name of the module used.
- * @param $content string
- * @param $format string
- * @param $editorname string
+ * @param string $content
+ * @param string $format
+ * @param string $editorname
  * @return object
  */
 function qa_load_editor($content, $format, &$editorname)
@@ -2092,7 +2087,7 @@ function qa_load_editor($content, $format, &$editorname)
  * $content, $format, $fieldname, $rows and $focusnow are passed through to the module's get_field() method. ($focusnow
  * is deprecated as a parameter to get_field() but it's still passed through for old editor modules.) Based on
  * $focusnow and $loadnow, also add the editor's load and/or focus scripts to $qa_content's onload handlers.
- * @param $editor object
+ * @param object $editor
  * @param array $qa_content
  * @param string $content
  * @param string $format
@@ -2100,7 +2095,7 @@ function qa_load_editor($content, $format, &$editorname)
  * @param int $rows
  * @param bool $focusnow
  * @param bool $loadnow
- * @return string|array
+ * @return array
  */
 function qa_editor_load_field($editor, &$qa_content, $content, $format, $fieldname, $rows, $focusnow = false, $loadnow = true)
 {
@@ -2192,12 +2187,12 @@ function qa_get_post_title($fieldname)
 /**
  * Retrieve the POST from an editor module's HTML field named $contentfield, where the editor's name was in HTML field $editorfield
  * Assigns the module's output to $incontent and $informat, editor's name in $ineditor, text rendering of content in $intext
- * @param $editorfield
- * @param $contentfield
- * @param $ineditor
- * @param $incontent
- * @param $informat
- * @param $intext
+ * @param string $editorfield
+ * @param string $contentfield
+ * @param string $ineditor
+ * @param string $incontent
+ * @param string $informat
+ * @param string $intext
  */
 function qa_get_post_content($editorfield, $contentfield, &$ineditor, &$incontent, &$informat, &$intext)
 {
@@ -2217,8 +2212,8 @@ function qa_get_post_content($editorfield, $contentfield, &$ineditor, &$inconten
 /**
  * Check if any of the 'content', 'format' or 'text' elements have changed between $oldfields and $fields
  * If so, recalculate $fields['text'] based on $fields['content'] and $fields['format']
- * @param $fields
- * @param $oldfields
+ * @param array $fields
+ * @param array $oldfields
  */
 function qa_update_post_text(&$fields, $oldfields)
 {
@@ -2234,12 +2229,12 @@ function qa_update_post_text(&$fields, $oldfields)
 /**
  * Return the <img...> HTML to display avatar $blobid whose stored size is $width and $height
  * Constrain the image to $size (width AND height) and pad it to that size if $padding is true
- * @param $blobId
- * @param $width
- * @param $height
- * @param $size
+ * @param string $blobId
+ * @param int $width
+ * @param int $height
+ * @param int $size
  * @param bool $padding
- * @return null|string
+ * @return string|null
  */
 function qa_get_avatar_blob_html($blobId, $width, $height, $size, $padding = false)
 {
@@ -2277,9 +2272,9 @@ function qa_get_avatar_blob_html($blobId, $width, $height, $size, $padding = fal
 
 /**
  * Return the <img...> HTML to display the Gravatar for $email, constrained to $size
- * @param $email
- * @param $size
- * @return mixed|null|string
+ * @param string $email
+ * @param int|null $size
+ * @return string|null
  */
 function qa_get_gravatar_html($email, $size)
 {
@@ -2300,9 +2295,9 @@ function qa_get_gravatar_html($email, $size)
 
 /**
  * Retrieve the appropriate user title from $pointstitle for a user with $userpoints points, or null if none
- * @param $userpoints
- * @param $pointstitle
- * @return null
+ * @param int $userpoints
+ * @param array $pointstitle
+ * @return string|null
  */
 function qa_get_points_title_html($userpoints, $pointstitle)
 {
@@ -2318,9 +2313,9 @@ function qa_get_points_title_html($userpoints, $pointstitle)
 /**
  * Return an form to add to the $qa_content['notices'] array for displaying a user notice with id $noticeid
  * and $content. Pass the raw database information for the notice in $rawnotice.
- * @param $noticeid
- * @param $content
- * @param null $rawnotice
+ * @param string $noticeid
+ * @param string $content
+ * @param array|null $rawnotice
  * @return array
  */
 function qa_notice_form($noticeid, $content, $rawnotice = null)
@@ -2341,10 +2336,10 @@ function qa_notice_form($noticeid, $content, $rawnotice = null)
 /**
  * Return a form to set in $qa_content['favorite'] for the favoriting button for entity $entitytype with $entityid.
  * Set $favorite to whether the entity is currently a favorite and a description title for the button in $title.
- * @param $entitytype
- * @param $entityid
- * @param $favorite
- * @param $title
+ * @param string $entitytype
+ * @param mixed $entityid
+ * @param bool $favorite
+ * @param string $title
  * @return array
  */
 function qa_favorite_form($entitytype, $entityid, $favorite, $title)

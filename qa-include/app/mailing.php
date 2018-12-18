@@ -120,10 +120,10 @@ function qa_mailing_perform_step()
 /**
  * Send a single message from the mailing, to $userid with $handle and $email.
  * Pass the user's existing $emailcode if there is one, otherwise a new one will be set up
- * @param $userid
- * @param $handle
- * @param $email
- * @param $emailcode
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $email
+ * @param string $emailcode
  * @return bool
  */
 function qa_mailing_send_one($userid, $handle, $email, $emailcode)
@@ -152,6 +152,7 @@ function qa_mailing_send_one($userid, $handle, $email, $emailcode)
 
 /**
  * Return a message describing current progress in the mailing
+ * @return string|null
  */
 function qa_mailing_progress_message()
 {
