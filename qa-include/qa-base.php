@@ -80,6 +80,7 @@ if (!isset($qa_autoconnect) || $qa_autoconnect !== false) {
 /**
  * Converts the $version string (e.g. 1.6.2.2) to a floating point that can be used for greater/lesser comparisons
  * (PHP's version_compare() function is not quite suitable for our needs)
+ * @deprecated 1.8.2 no longer used
  * @param $version
  * @return float
  */
@@ -102,30 +103,24 @@ function qa_version_to_float($version)
 
 
 /**
- * Returns true if the current Q2A version is lower than $version, if both are valid version strings for qa_version_to_float()
+ * Returns true if the current Q2A version is lower than $version
  * @param $version
  * @return bool
  */
 function qa_qa_version_below($version)
 {
-	$minqa = qa_version_to_float($version);
-	$thisqa = qa_version_to_float(QA_VERSION);
-
-	return $minqa && $thisqa && $thisqa < $minqa;
+	return version_compare(QA_VERSION, $version) < 0;
 }
 
 
 /**
- * Returns true if the current PHP version is lower than $version, if both are valid version strings for qa_version_to_float()
+ * Returns true if the current PHP version is lower than $version
  * @param $version
  * @return bool
  */
 function qa_php_version_below($version)
 {
-	$minphp = qa_version_to_float($version);
-	$thisphp = qa_version_to_float(phpversion());
-
-	return $minphp && $thisphp && $thisphp < $minphp;
+	return version_compare(phpversion(), $version) < 0;
 }
 
 
