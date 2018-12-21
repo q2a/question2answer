@@ -94,7 +94,7 @@ class qa_html_theme extends qa_html_theme_base
 				"  url('{$this->rooturl}fonts/ubuntu-italic.woff2') format('woff2'), url('{$this->rooturl}fonts/ubuntu-italic.woff') format('woff');",
 				"}",
 				"@font-face {",
-				" font-family: 'Ubuntu'; font-weight: normal; font-style: italic;",
+				" font-family: 'Ubuntu'; font-weight: bold; font-style: italic;",
 				" src: local('Ubuntu Bold Italic'), local('Ubuntu-BoldItalic'),",
 				"  url('{$this->rooturl}fonts/ubuntu-bold-italic.woff2') format('woff2'), url('{$this->rooturl}fonts/ubuntu-bold-italic.woff') format('woff');",
 				"}",
