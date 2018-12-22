@@ -1,7 +1,10 @@
 Question2Answer
 -----------------------------
-
+ 
 [![Build Status](https://travis-ci.org/q2a/question2answer.png?branch=dev)](https://travis-ci.org/q2a/question2answer/branches)
+[![Open Issues](http://img.shields.io/github/issues/q2a/question2answer.svg?style=flat)](https://github.com/q2a/question2answer/issues)
+[![Current Release](https://img.shields.io/github/release/q2a/question2answer.svg?style=flat)](https://github.com/q2a/question2answer/releases)
+[![License](https://img.shields.io/badge/License-GPL%20(%3E=v2)-green.svg?style=flat)](https://www.question2answer.org/license.php)
 
 [Question2Answer][Q2A] (Q2A) is a popular free open source Q&A platform for PHP/MySQL, used by over [22,000 sites in 40 languages][3].
 
