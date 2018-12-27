@@ -851,10 +851,10 @@ function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $al
 			$skipfirst--;
 		} elseif ($commentfollow['basetype'] == 'C') {
 			$commentlist['cs'][$commentfollowid] = qa_page_q_comment_view($question, $parent, $commentfollow, $usershtml, $formrequested);
-
 		} elseif ($commentfollow['basetype'] == 'Q') {
 			$htmloptions = qa_post_html_options($commentfollow);
 			$htmloptions['avatarsize'] = qa_opt('avatar_q_page_c_size');
+			$htmloptions['voteview'] = false;
 
 			$commentlist['cs'][$commentfollowid] = qa_post_html_fields($commentfollow, $userid, $cookieid, $usershtml, null, $htmloptions);
 		}
