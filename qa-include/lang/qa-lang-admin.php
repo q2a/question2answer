@@ -59,7 +59,6 @@ return array(
 	'caching_delete_progress' => 'Deleted ^1 of ^2 cache files...',
 	'caching_dir_error' => 'The directory ^ defined as QA_CACHE_DIRECTORY is not writable by the web server.',
 	'caching_dir_missing' => 'Cache directory has not been defined.',
-	'caching_dir_public' => 'The directory ^ defined as QA_CACHE_DIRECTORY must be outside the public root.',
 	'caching_num_items' => 'Number of items in cache',
 	'caching_space_used' => 'Total size of cache',
 	'caching_title' => 'Caching',
