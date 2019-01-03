@@ -191,7 +191,7 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 			'answer' => $answers[$selchildid],
 		));
 
-		if (empty($oldquestion['closed'])) {
+		if (empty($oldquestion['closed']) && qa_opt('do_close_on_select')) {
 			qa_db_post_set_closed($oldquestion['postid'], null, $userid, $lastip);
 
 			qa_report_event('q_close', $userid, $handle, $cookieid, array(
