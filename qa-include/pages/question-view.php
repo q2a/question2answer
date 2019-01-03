@@ -184,7 +184,7 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 
 	$rules['closeable'] = qa_opt('allow_close_questions') && $post['type'] == 'Q' && !$rules['closed'] && $permiterror_close_open === false;
 	// cannot reopen a question if it's been hidden, or if it was closed by someone else and you don't have global closing permissions
-	$rules['reopenable'] = $rules['closed'] && isset($post['closedbyid']) && $permiterror_close_open === false && !$post['hidden']
+	$rules['reopenable'] = $rules['closed'] && $permiterror_close_open === false && !$post['hidden']
 		&& ($notclosedbyother || !qa_user_permit_error('permit_close_q', null, $userlevel, true, $userfields));
 
 	$rules['moderatable'] = $post['queued'] && !$permiterror_moderate;
@@ -266,6 +266,8 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
  */
 function qa_page_q_question_view($question, $parentquestion, $closepost, $usershtml, $formrequested)
 {
+	require_once QA_INCLUDE_DIR . 'app/posts.php';
+
 	$questionid = $question['postid'];
 	$userid = qa_get_logged_in_userid();
 	$cookieid = qa_cookie_get();
@@ -433,7 +435,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 
 	// Information about the question that this question is a duplicate of (if appropriate)
 
-	if (isset($closepost)) {
+	if (isset($closepost) || qa_post_is_closed($question)) {
 		if ($closepost['basetype'] == 'Q') {
 			if ($closepost['hidden']) {
 				// don't show link for hidden questions
@@ -460,6 +462,12 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 				'content' => $viewer->get_html($closepost['content'], $closepost['format'], array(
 					'blockwordspreg' => qa_get_block_words_preg(),
 				)),
+			);
+		} else { // If closed by a selected answer due to the do_close_on_select setting being enabled
+			$q_view['closed'] = array(
+				'state' => qa_lang_html('main/closed'),
+				'label' => qa_lang_html('main/closed'),
+				'content' => '',
 			);
 		}
 	}
@@ -848,10 +856,10 @@ function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $al
 			$skipfirst--;
 		} elseif ($commentfollow['basetype'] == 'C') {
 			$commentlist['cs'][$commentfollowid] = qa_page_q_comment_view($question, $parent, $commentfollow, $usershtml, $formrequested);
-
 		} elseif ($commentfollow['basetype'] == 'Q') {
 			$htmloptions = qa_post_html_options($commentfollow);
 			$htmloptions['avatarsize'] = qa_opt('avatar_q_page_c_size');
+			$htmloptions['voteview'] = false;
 
 			$commentlist['cs'][$commentfollowid] = qa_post_html_fields($commentfollow, $userid, $cookieid, $usershtml, null, $htmloptions);
 		}

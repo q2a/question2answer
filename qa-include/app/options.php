@@ -592,7 +592,6 @@ function qa_post_html_defaults($basetype, $full = false)
 		'blockwordspreg' => qa_get_block_words_preg(),
 		'showurllinks' => qa_opt('show_url_links'),
 		'linksnewwindow' => qa_opt('links_in_new_window'),
-		'microformats' => $full,
 		'fulldatedays' => qa_opt('show_full_date_days'),
 	);
 }

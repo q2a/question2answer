@@ -155,7 +155,9 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 {
 	$oldselchildid = $oldquestion['selchildid'];
 
-	qa_db_post_set_selchildid($oldquestion['postid'], isset($selchildid) ? $selchildid : null, $userid, qa_remote_ip_address());
+	$lastip = qa_remote_ip_address();
+
+	qa_db_post_set_selchildid($oldquestion['postid'], isset($selchildid) ? $selchildid : null, $userid, $lastip);
 	qa_db_points_update_ifuser($oldquestion['userid'], 'aselects');
 	qa_db_unselqcount_update();
 
@@ -168,6 +170,15 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 			'postid' => $oldselchildid,
 			'answer' => $answers[$oldselchildid],
 		));
+
+		if (!empty($oldquestion['closed']) && empty($oldquestion['closedbyid'])) {
+			qa_db_post_set_closed($oldquestion['postid'], null, $userid, $lastip);
+
+			qa_report_event('q_reopen', $userid, $handle, $cookieid, array(
+				'postid' => $oldquestion['postid'],
+				'oldquestion' => $oldquestion,
+			));
+		}
 	}
 
 	if (isset($selchildid)) {
@@ -179,6 +190,17 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 			'postid' => $selchildid,
 			'answer' => $answers[$selchildid],
 		));
+
+		if (empty($oldquestion['closed'])) {
+			qa_db_post_set_closed($oldquestion['postid'], null, $userid, $lastip);
+
+			qa_report_event('q_close', $userid, $handle, $cookieid, array(
+				'postid' => $oldquestion['postid'],
+				'oldquestion' => $oldquestion,
+				'reason' => 'answer-selected',
+				'originalid' => $answers[$selchildid],
+			));
+		}
 	}
 }
 

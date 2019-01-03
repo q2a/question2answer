@@ -452,8 +452,8 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 
 /* Favorited items */
 
-.qa-q-favorited .qa-q-item-title a, .qa-tag-favorited, .qa-cat-favorited, .qa-user-favorited, .qa-nav-cat-favorited, .qa-browse-cat-favorited {background: url(favorite-icon-14x14.gif) no-repeat;}
-.qa-cat-parent-favorited {background: url(favorite-light-icon-14x14.gif) no-repeat;}
+.qa-q-favorited .qa-q-item-title a, .qa-tag-favorited, .qa-cat-favorited, .qa-user-favorited, .qa-nav-cat-favorited, .qa-browse-cat-favorited {background-image: url(favorite-icon-14x14.gif); background-repeat: no-repeat;}
+.qa-cat-parent-favorited {background-image: url(favorite-light-icon-14x14.gif); background-repeat: no-repeat;}
 .qa-q-favorited .qa-q-item-title a, .qa-nav-cat-favorited, .qa-browse-cat-favorited {background-position: left center; padding-left:18px;}
 .qa-tag-favorited {background-position: 3px center; padding-left:20px;}
 .qa-cat-favorited, .qa-cat-parent-favorited, .qa-user-favorited {background-position: left center; padding-left:17px;}

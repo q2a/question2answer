@@ -293,6 +293,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	require_once QA_INCLUDE_DIR . 'app/updates.php';
+	require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 	if (isset($options['blockwordspreg']))
 		require_once QA_INCLUDE_DIR . 'util/string.php';
@@ -320,15 +321,16 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	$fields['tags'] = 'id="' . qa_html($elementid) . '"';
 
 	$fields['classes'] = ($isquestion && $favoritedview && @$post['userfavoriteq']) ? 'qa-q-favorited' : '';
-	if ($isquestion && isset($post['closedbyid']))
+	if ($isquestion && qa_post_is_closed($post)) {
 		$fields['classes'] = ltrim($fields['classes'] . ' qa-q-closed');
+	}
 
 	if ($microdata) {
 		if ($isanswer) {
-			$fields['tags'] .= ' itemprop="suggestedAnswer' . ($isselected ? ' acceptedAnswer' : '') . '" itemscope itemtype="http://schema.org/Answer"';
+			$fields['tags'] .= ' itemprop="suggestedAnswer' . ($isselected ? ' acceptedAnswer' : '') . '" itemscope itemtype="https://schema.org/Answer"';
 		}
 		if ($iscomment) {
-			$fields['tags'] .= ' itemscope itemtype="http://schema.org/Comment"';
+			$fields['tags'] .= ' itemscope itemtype="https://schema.org/Comment"';
 		}
 	}
 
@@ -572,8 +574,12 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		$fields['what'] = qa_lang_html($isquestion ? 'main/asked' : ($isanswer ? 'main/answered' : 'main/commented'));
 
 		if (@$options['whatlink'] && strlen(@$options['q_request'])) {
-			$fields['what_url'] = ($post['basetype'] == 'Q') ? qa_path_html($options['q_request'])
+			$fields['what_url'] = $post['basetype'] == 'Q'
+				? qa_path_html($options['q_request'])
 				: qa_path_html($options['q_request'], array('show' => $postid), null, null, qa_anchor($post['basetype'], $postid));
+			if ($microdata) {
+				$fields['what_url_tags'] = ' itemprop="url"';
+			}
 		}
 	}
 
@@ -617,7 +623,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 		( // otherwise check if one of these conditions is fulfilled...
 			(!isset($post['created'])) || // ... we didn't show the created time (should never happen in practice)
 			($post['hidden'] && ($post['updatetype'] == QA_UPDATE_VISIBLE)) || // ... the post was hidden as the last action
-			(isset($post['closedbyid']) && ($post['updatetype'] == QA_UPDATE_CLOSED)) || // ... the post was closed as the last action
+			(qa_post_is_closed($post) && $post['updatetype'] == QA_UPDATE_CLOSED) || // ... the post was closed as the last action
 			(abs($post['updated'] - $post['created']) > 300) || // ... or over 5 minutes passed between create and update times
 			($post['lastuserid'] != $post['userid']) // ... or it was updated by a different user
 		)
@@ -637,7 +643,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 				break;
 
 			case QA_UPDATE_CLOSED:
-				$langstring = isset($post['closedbyid']) ? 'main/closed' : 'main/reopened';
+				$langstring = qa_post_is_closed($post) ? 'main/closed' : 'main/reopened';
 				break;
 
 			case QA_UPDATE_TAGS:
@@ -737,7 +743,7 @@ function qa_message_html_fields($message, $options = array())
  * @param int $postuserid The post user's ID.
  * @param array $usershtml Array of HTML representing usernames.
  * @param string $ip The post user's IP.
- * @param bool|string $microdata Whether to include microdata (no longer used).
+ * @param bool|string $microdata Whether to include microdata.
  * @param string $name The author's username.
  * @return array The HTML.
  */
@@ -757,7 +763,7 @@ function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip = null, $microda
 
 		if ($microdata) {
 			// duplicate HTML from qa_get_one_user_html()
-			$whohtml = '<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">' . $whohtml . '</span></span>';
+			$whohtml = '<span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">' . $whohtml . '</span></span>';
 		}
 
 		if (isset($ip))
@@ -838,10 +844,11 @@ function qa_other_to_q_html_fields($question, $userid, $cookieid, $usershtml, $d
 			break;
 
 		case 'Q-' . QA_UPDATE_CLOSED:
+			$isClosed = qa_post_is_closed($question);
 			if (@$question['opersonal'])
-				$langstring = isset($question['closedbyid']) ? 'misc/your_q_closed' : 'misc/your_q_reopened';
+				$langstring = $isClosed ? 'misc/your_q_closed' : 'misc/your_q_reopened';
 			else
-				$langstring = isset($question['closedbyid']) ? 'main/closed' : 'main/reopened';
+				$langstring = $isClosed ? 'main/closed' : 'main/reopened';
 			break;
 
 		case 'Q-' . QA_UPDATE_TAGS:
@@ -2355,6 +2362,7 @@ function qa_favorite_form($entitytype, $entityid, $favorite, $title)
  * Format a number using the decimal point and thousand separator specified in the language files.
  * If the number is compacted it is turned into a string such as 1.3k or 2.5m.
  *
+ * @since 1.8.0
  * @param integer $number Number to be formatted
  * @param integer $decimals Amount of decimals to use (ignored if number gets shortened)
  * @param bool $compact Whether the number can be shown as compact or not

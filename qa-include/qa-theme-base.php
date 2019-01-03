@@ -435,7 +435,8 @@ class qa_html_theme_base
 		$this->body_prefix();
 		$this->notices();
 
-		$this->output('<div class="qa-body-wrapper">', '');
+		$extratags = isset($this->content['wrapper_tags']) ? $this->content['wrapper_tags'] : '';
+		$this->output('<div class="qa-body-wrapper"' . $extratags . '>', '');
 
 		$this->widgets('full', 'top');
 		$this->header();
@@ -713,9 +714,8 @@ class qa_html_theme_base
 	{
 		$content = $this->content;
 		$hidden = !empty($content['hidden']) ? ' qa-main-hidden' : '';
-		$extratags = isset($this->content['main_tags']) ? $this->content['main_tags'] : '';
 
-		$this->output('<div class="qa-main' . $hidden . '"' . $extratags . '>');
+		$this->output('<div class="qa-main' . $hidden . '">');
 
 		$this->widgets('main', 'top');
 
@@ -1964,13 +1964,16 @@ class qa_html_theme_base
 	{
 		if (isset($post['what'])) {
 			$classes = $class . '-what';
-			if (@$post['what_your'])
+			if (isset($post['what_your']) && $post['what_your']) {
 				$classes .= ' ' . $class . '-what-your';
+			}
 
-			if (isset($post['what_url']))
-				$this->output('<a href="' . $post['what_url'] . '" class="' . $classes . '">' . $post['what'] . '</a>');
-			else
+			if (isset($post['what_url'])) {
+				$tags = isset($post['what_url_tags']) ? $post['what_url_tags'] : '';
+				$this->output('<a href="' . $post['what_url'] . '" class="' . $classes . '"' . $tags . '>' . $post['what'] . '</a>');
+			} else {
 				$this->output('<span class="' . $classes . '">' . $post['what'] . '</span>');
+			}
 		}
 	}
 

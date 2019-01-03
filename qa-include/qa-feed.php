@@ -280,6 +280,7 @@ switch ($feedtype) {
 
 require_once QA_INCLUDE_DIR . 'app/format.php';
 require_once QA_INCLUDE_DIR . 'app/updates.php';
+require_once QA_INCLUDE_DIR . 'app/posts.php';
 require_once QA_INCLUDE_DIR . 'util/string.php';
 
 if ($feedtype != 'search' && $feedtype != 'hot') // leave search results and hot questions sorted by relevance
@@ -337,7 +338,7 @@ foreach ($questions as $question) {
 				break;
 
 			case 'Q-' . QA_UPDATE_CLOSED:
-				$langstring = isset($question['closedbyid']) ? 'misc/feed_closed_prefix' : 'misc/feed_reopened_prefix';
+				$langstring = qa_post_is_closed($question) ? 'misc/feed_closed_prefix' : 'misc/feed_reopened_prefix';
 				break;
 
 			case 'Q-' . QA_UPDATE_TAGS:

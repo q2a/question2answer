@@ -62,6 +62,7 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 
 	require_once QA_INCLUDE_DIR . 'app/format.php';
 	require_once QA_INCLUDE_DIR . 'app/updates.php';
+	require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 	$userid = qa_get_logged_in_userid();
 
@@ -89,7 +90,7 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 
 	$qa_content['q_list']['qs'] = array();
 
-	if (count($questions)) {
+	if (!empty($questions)) {
 		$qa_content['title'] = $sometitle;
 
 		$defaults = qa_post_html_defaults('Q');
@@ -100,7 +101,7 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
 		foreach ($questions as $question) {
 			$fields = qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, qa_post_html_options($question, $defaults));
 
-			if (!empty($fields['raw']['closedbyid'])) {
+			if (qa_post_is_closed($question)) {
 				$fields['closed'] = array(
 					'state' => qa_lang_html('main/closed'),
 				);

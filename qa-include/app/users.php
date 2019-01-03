@@ -289,8 +289,10 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 			if (empty($userinfo['sessioncode']) || ($source !== $userinfo['sessionsource'])) {
 				$sessioncode = qa_db_user_rand_sessioncode();
-				qa_db_user_set($userid, 'sessioncode', $sessioncode);
-				qa_db_user_set($userid, 'sessionsource', $source);
+				qa_db_user_set($userid, array(
+					'sessioncode' => $sessioncode,
+					'sessionsource' => $source,
+				));
 			} else
 				$sessioncode = $userinfo['sessioncode'];
 
@@ -518,6 +520,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	 * Return the URL to the $blobId with a stored size of $width and $height.
 	 * Constrain the image to $size (width AND height)
 	 *
+	 * @since 1.8.0
 	 * @param string $blobId The blob ID from the image
 	 * @param int|null $size The resulting image's size. If omitted the original image size will be used. If the
 	 * size is present it must be greater than 0
@@ -569,7 +572,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 		$userHtml = '<a href="' . $url . '" class="qa-user-link' . $favclass . '"' . $mfAttr . '>' . $userHandle . '</a>';
 
 		if ($microdata) {
-			$userHtml = '<span itemprop="author" itemscope itemtype="http://schema.org/Person">' . $userHtml . '</span>';
+			$userHtml = '<span itemprop="author" itemscope itemtype="https://schema.org/Person">' . $userHtml . '</span>';
 		}
 
 		return $userHtml;
@@ -582,6 +585,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	 * the user's profile, 'local-default' for an avatar fetched locally from the default avatar blob ID, and NULL
 	 * if the avatar could not be fetched from any of these sources
 	 *
+	 * @since 1.8.0
 	 * @param int $flags The user's flags
 	 * @param string|null $email The user's email
 	 * @param string|null $blobId The blob ID for a locally stored avatar.
@@ -1401,6 +1405,7 @@ function qa_check_form_security_code($action, $value)
 /**
  * Return the URL for the Gravatar corresponding to $email, constrained to $size
  *
+ * @since 1.8.0
  * @param string $email The email of the Gravatar to return
  * @param int|null $size The size of the Gravatar to return. If omitted the default size will be used
  * @return string The URL to the Gravatar of the user
