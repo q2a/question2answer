@@ -118,6 +118,7 @@ h1 {
 	margin: 0;
 	font-size: 1.4em;
 	line-height: 1.35em;
+	word-wrap: break-word;
 }
 h1 a {
 	color: #fff;
@@ -1191,6 +1192,7 @@ blockquote p {
 	font-size: 1.125em;
 	line-height: 1.35em;
 	display: block;
+	word-wrap: break-word;
 }
 .qa-q-item-title a {
 	color: #1a6a9b;
