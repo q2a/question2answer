@@ -169,9 +169,10 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 				if ($expiredOnly) {
 					if (is_readable($file)) {
 						$fp = fopen($file, 'r');
+						$skipLine = fgets($fp);
 						$key = fgets($fp);
 						$expiry = (int) trim(fgets($fp));
-						if (is_numeric($expiry) && time() > $expiry) {
+						if (time() > $expiry) {
 							$wasDeleted = $this->deleteFile($file);
 						}
 					}
