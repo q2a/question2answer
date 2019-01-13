@@ -1,0 +1,16 @@
+# In order for the web server to process this file it must be renamed to ".htaccess"
+
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    #RewriteBase /
+
+    RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
+    RewriteRule . %1/%2 [R=301,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^.*$ index.php?qa-rewrite=$0&%{QUERY_STRING} [L]
+</IfModule>
