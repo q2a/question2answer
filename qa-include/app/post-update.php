@@ -191,7 +191,7 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 			'answer' => $answers[$selchildid],
 		));
 
-		if (empty($oldquestion['closed'])) {
+		if (empty($oldquestion['closed']) && qa_opt('do_close_on_select')) {
 			qa_db_post_set_closed($oldquestion['postid'], null, $userid, $lastip);
 
 			qa_report_event('q_close', $userid, $handle, $cookieid, array(
@@ -431,6 +431,8 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 		}
 	}
 
+	qa_question_uncache($oldquestion['postid']); // remove hidden posts immediately
+
 	$eventparams = array(
 		'postid' => $oldquestion['postid'],
 		'parentid' => $oldquestion['parentid'],
@@ -623,6 +625,18 @@ function qa_post_unindex($postid)
 
 
 /**
+ * Delete the cache for a question. Used after it or its answers/comments are hidden, to prevent them remaining visible to visitors/search engines.
+ * @param int $questionId Post ID to delete.
+ * @return bool
+ */
+function qa_question_uncache($questionId)
+{
+	$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+	return $cacheDriver->delete("question:$questionId");
+}
+
+
+/**
  * Change the fields of an answer (application level) to $content, $format, $notify and $name, then reindex based on
  * $text. For backwards compatibility if $name is null then the name will not be changed. Pass the answer's database
  * record before changes in $oldanswer, the question's in $question, and details of the user doing this in $userid,
@@ -809,6 +823,8 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 			}
 		}
 	}
+
+	qa_question_uncache($question['postid']); // remove hidden posts immediately
 
 	$eventparams = array(
 		'postid' => $oldanswer['postid'],
@@ -1195,6 +1211,8 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 		qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $oldcomment['content'],
 			$oldcomment['format'], qa_viewer_text($oldcomment['content'], $oldcomment['format']), null, $oldcomment['categoryid']);
 	}
+
+	qa_question_uncache($question['postid']); // remove hidden posts immediately
 
 	$eventparams = array(
 		'postid' => $oldcomment['postid'],

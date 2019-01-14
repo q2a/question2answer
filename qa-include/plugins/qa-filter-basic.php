@@ -66,7 +66,6 @@ class qa_filter_basic
 			$question['title'] = isset($question['title']) ? $question['title'] : '';
 			$question['content'] = isset($question['content']) ? $question['content'] : '';
 			$question['text'] = isset($question['text']) ? $question['text'] : '';
-			$question['tags'] = isset($question['tags']) ? $question['tags'] : array();
 		}
 
 		$qminlength = qa_opt('min_len_q_title');

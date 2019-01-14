@@ -548,8 +548,9 @@ function qa_db_single_select($selectspec)
 
 	$query = 'SELECT ';
 
-	foreach ($selectspec['columns'] as $columnas => $columnfrom)
-		$query .= $columnfrom . (is_int($columnas) ? '' : (' AS ' . $columnas)) . ', ';
+	foreach ($selectspec['columns'] as $columnas => $columnfrom) {
+		$query .= is_int($columnas) ? "$columnfrom, " : "$columnfrom AS `$columnas`, ";
+	}
 
 	$results = qa_db_read_all_assoc(qa_db_query_raw(qa_db_apply_sub(
 			substr($query, 0, -2) . (strlen(@$selectspec['source']) ? (' FROM ' . $selectspec['source']) : ''),
