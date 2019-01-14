@@ -22,10 +22,7 @@ namespace Q2A\Notifications;
 
 use Q2A\Exceptions\FatalErrorException;
 use Q2A\Notifications\Mailer;
-
-require_once QA_INCLUDE_DIR . 'db/selects.php';		//required for qa_db_select_with_pending()
-require_once QA_INCLUDE_DIR . 'app/options.php';	//required for qa_opt()
-require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
+use PHPMailer;
 
 class Email
 {
@@ -36,6 +33,9 @@ class Email
 	{
 		$this->email = $email;
 		$this->handle = $handle;
+
+		require_once QA_INCLUDE_DIR . 'db/selects.php';		//required for qa_db_select_with_pending()
+		require_once QA_INCLUDE_DIR . 'app/options.php';	//required for qa_opt()
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Email
 	 * @return \self
 	 * @throws FatalErrorException
 	 */
-	public static function CreateByUserID($userid, $email = '', $handle = '')
+	public static function createByUserID($userid, $email = '', $handle = '')
 	{
 		if (!(int)$userid) {
 			throw new FatalErrorException('User ID not specified in Notifications/Email/CreateByUserID.');
@@ -92,7 +92,7 @@ class Email
 	 * @param type $handle
 	 * @return \self
 	 */
-	public static function CreateByEmailAddress($email, $handle = '')
+	public static function createByEmailAddress($email, $handle = '')
 	{
 		return new self($email, $handle);
 	}

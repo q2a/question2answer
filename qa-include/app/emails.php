@@ -62,9 +62,9 @@ function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, 
 	}
 
 	if ($userid) {
-		$sender = Email::CreateByUserID($userid, $email, $handle);
+		$sender = Email::createByUserID($userid, $email, $handle);
 	} else {
-		$sender = Email::CreateByEmailAddress($email, $handle);
+		$sender = Email::createByEmailAddress($email, $handle);
 	}
 
 	return $sender->sendMessage($subject, $body, $subs, $html);

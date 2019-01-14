@@ -176,7 +176,7 @@ function qa_initialize_constants_1()
 	define('QA_CATEGORY_DEPTH', 4); // you can't change this number!
 
 	if (!defined('QA_BASE_DIR'))
-		define('QA_BASE_DIR', dirname(dirname(__FILE__)) . '/'); // try out best if not set in index.php or qa-index.php - won't work with symbolic links
+		define('QA_BASE_DIR', dirname(dirname(__FILE__)) . '/'); // try our best if not set in index.php or qa-index.php - won't work with symbolic links
 
 	define('QA_EXTERNAL_DIR', QA_BASE_DIR . 'qa-external/');
 	define('QA_INCLUDE_DIR', QA_BASE_DIR . 'qa-include/');
@@ -206,6 +206,8 @@ function qa_initialize_constants_1()
 			qa_fatal_error('Could not find configuration.php file for Joomla integration - please check QA_JOOMLA_INTEGRATE_PATH in qa-config.php');
 		}
 	}
+
+	require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
 
 	// Polyfills
 

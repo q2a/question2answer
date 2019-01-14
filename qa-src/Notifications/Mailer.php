@@ -20,7 +20,7 @@
 
 namespace Q2A\Notifications;
 
-require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
+use PHPMailer;
 
 class Mailer extends PHPMailer
 {

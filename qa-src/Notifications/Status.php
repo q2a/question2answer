@@ -34,7 +34,7 @@ class Status
 		self::$notifications_suspended += ($suspend ? 1 : -1);
 	}
 
-	public static function IsSuspended()
+	public static function isSuspended()
 	{
 		return self::$notifications_suspended > 0;
 	}
