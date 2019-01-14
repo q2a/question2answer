@@ -25,10 +25,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/class.phpmailer.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';		//required for qa_db_select_with_pending()
 require_once QA_INCLUDE_DIR . 'app/options.php';	//required for qa_opt()
-
+require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
 
 class Q2A_Notifications_Email
 {
