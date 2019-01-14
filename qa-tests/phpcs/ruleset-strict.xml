@@ -17,8 +17,6 @@
 		<exclude name="Generic.ControlStructures.InlineControlStructure"/>
 		<exclude name="Squiz.ControlStructures.ControlSignature"/> <!-- doesn't work without above rule -->
 		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
-		<exclude name="PSR2.Methods.FunctionCallSignature"/>
-		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
 	</rule>
 
 	<arg name="tab-width" value="4"/>

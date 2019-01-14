@@ -44,13 +44,13 @@ class UsersList extends \Q2A\Controllers\BaseController
 	public function top()
 	{
 		// callables to fetch user data
-		$fetchUsers = function($start, $pageSize) {
+		$fetchUsers = function ($start, $pageSize) {
 			return array(
 				qa_opt('cache_userpointscount'),
 				qa_db_select_with_pending(qa_db_top_users_selectspec($start, $pageSize))
 			);
 		};
-		$userScore = function($user) {
+		$userScore = function ($user) {
 			return qa_html(qa_format_number($user['points'], 0, true));
 		};
 
@@ -79,13 +79,13 @@ class UsersList extends \Q2A\Controllers\BaseController
 		}
 
 		// callables to fetch user data
-		$fetchUsers = function($start, $pageSize) {
+		$fetchUsers = function ($start, $pageSize) {
 			return array(
 				qa_opt('cache_userpointscount'),
 				qa_db_select_with_pending(qa_db_newest_users_selectspec($start, $pageSize))
 			);
 		};
-		$userDate = function($user) {
+		$userDate = function ($user) {
 			$when = qa_when_to_html($user['created'], 7);
 			return $when['data'];
 		};
@@ -115,12 +115,12 @@ class UsersList extends \Q2A\Controllers\BaseController
 		}
 
 		// callables to fetch user data
-		$fetchUsers = function($start, $pageSize) {
+		$fetchUsers = function ($start, $pageSize) {
 			// here we fetch *all* users to get the total instead of a separate query; there are unlikely to be many special users
 			$users = qa_db_select_with_pending(qa_db_users_from_level_selectspec(QA_USER_LEVEL_EXPERT));
 			return array(count($users), $users);
 		};
-		$userLevel = function($user) {
+		$userLevel = function ($user) {
 			return qa_html(qa_user_level_string($user['level']));
 		};
 
@@ -140,7 +140,7 @@ class UsersList extends \Q2A\Controllers\BaseController
 	public function blocked()
 	{
 		// callables to fetch user data
-		$fetchUsers = function($start, $pageSize) {
+		$fetchUsers = function ($start, $pageSize) {
 			list($totalUsers, $users) = qa_db_select_with_pending(
 				qa_db_selectspec_count(qa_db_users_with_flag_selectspec(QA_USER_FLAGS_USER_BLOCKED)),
 				qa_db_users_with_flag_selectspec(QA_USER_FLAGS_USER_BLOCKED, $start, $pageSize)
@@ -148,7 +148,7 @@ class UsersList extends \Q2A\Controllers\BaseController
 
 			return array($totalUsers['count'], $users);
 		};
-		$userLevel = function($user) {
+		$userLevel = function ($user) {
 			return qa_html(qa_user_level_string($user['level']));
 		};
 
@@ -197,8 +197,16 @@ class UsersList extends \Q2A\Controllers\BaseController
 			if (QA_FINAL_EXTERNAL_USERS) {
 				$avatarHtml = qa_get_external_avatar_html($user['userid'], qa_opt('avatar_users_size'), true);
 			} else {
-				$avatarHtml = qa_get_user_avatar_html($user['flags'], $user['email'], $user['handle'],
-					$user['avatarblobid'], $user['avatarwidth'], $user['avatarheight'], qa_opt('avatar_users_size'), true);
+				$avatarHtml = qa_get_user_avatar_html(
+					$user['flags'],
+					$user['email'],
+					$user['handle'],
+					$user['avatarblobid'],
+					$user['avatarwidth'],
+					$user['avatarheight'],
+					qa_opt('avatar_users_size'),
+					true
+				);
 			}
 
 			$content['ranking']['items'][] = array(

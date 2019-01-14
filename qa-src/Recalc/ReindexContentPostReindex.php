@@ -39,8 +39,18 @@ class ReindexContentPostReindex extends AbstractStep
 
 		foreach ($posts as $postid => $post) {
 			qa_post_unindex($postid);
-			qa_post_index($postid, $post['type'], $post['questionid'], $post['parentid'], $post['title'], $post['content'],
-				$post['format'], qa_viewer_text($post['content'], $post['format']), $post['tags'], $post['categoryid']);
+			qa_post_index(
+				$postid,
+				$post['type'],
+				$post['questionid'],
+				$post['parentid'],
+				$post['title'],
+				$post['content'],
+				$post['format'],
+				qa_viewer_text($post['content'], $post['format']),
+				$post['tags'],
+				$post['categoryid']
+			);
 		}
 
 		$this->state->next = 1 + $lastpostid;

@@ -94,8 +94,14 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		$htmldefaults['avatarsize'] = 0;
 
 		foreach ($questions as $question) {
-			$qa_content['q_list']['qs'][] = qa_any_to_q_html_fields($question, $loginuserid, qa_cookie_get(),
-				$usershtml, null, array('voteview' => false) + qa_post_html_options($question, $htmldefaults));
+			$qa_content['q_list']['qs'][] = qa_any_to_q_html_fields(
+				$question,
+				$loginuserid,
+				qa_cookie_get(),
+				$usershtml,
+				null,
+				array('voteview' => false) + qa_post_html_options($question, $htmldefaults)
+			);
 		}
 
 
@@ -171,8 +177,14 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		$htmldefaults['avatarsize'] = 0;
 
 		foreach ($questions as $question) {
-			$qa_content['q_list']['qs'][] = qa_post_html_fields($question, $loginuserid, qa_cookie_get(),
-				$usershtml, null, qa_post_html_options($question, $htmldefaults));
+			$qa_content['q_list']['qs'][] = qa_post_html_fields(
+				$question,
+				$loginuserid,
+				qa_cookie_get(),
+				$usershtml,
+				null,
+				qa_post_html_options($question, $htmldefaults)
+			);
 		}
 
 		$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));
@@ -256,8 +268,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 			$options = qa_post_html_options($question, $htmldefaults);
 			$options['voteview'] = qa_get_vote_view('A', false, false);
 
-			$qa_content['q_list']['qs'][] = qa_other_to_q_html_fields($question, $loginuserid, qa_cookie_get(),
-				$usershtml, null, $options);
+			$qa_content['q_list']['qs'][] = qa_other_to_q_html_fields($question, $loginuserid, qa_cookie_get(), $usershtml, null, $options);
 		}
 
 		$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $count, qa_opt('pages_prev_next'));

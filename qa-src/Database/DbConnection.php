@@ -144,7 +144,9 @@ class DbConnection
 		} else {
 			echo sprintf(
 				'<hr><div style="color: red">Database %s<p>%s</p><code>%s</code></div>',
-				htmlspecialchars($type . ' error ' . $errno), nl2br(htmlspecialchars($error)), nl2br(htmlspecialchars($query))
+				htmlspecialchars($type . ' error ' . $errno),
+				nl2br(htmlspecialchars($error)),
+				nl2br(htmlspecialchars($query))
 			);
 			qa_exit('error');
 		}
@@ -467,7 +469,7 @@ class DbConnection
 	 */
 	public function applyTableSub($query)
 	{
-		return preg_replace_callback('/\^([A-Za-z_0-9]+)/', function($matches) {
+		return preg_replace_callback('/\^([A-Za-z_0-9]+)/', function ($matches) {
 			return $this->addTablePrefix($matches[1]);
 		}, $query);
 	}

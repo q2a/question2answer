@@ -363,8 +363,8 @@ class UserProfile extends \Q2A\Controllers\BaseController
 			$favoritemap = qa_get_favorite_non_qs_map();
 			$favorite = @$favoritemap['user'][$useraccount['userid']];
 
-			$qa_content['favorite'] = qa_favorite_form(QA_ENTITY_USER, $useraccount['userid'], $favorite,
-				qa_lang_sub($favorite ? 'main/remove_x_favorites' : 'users/add_user_x_favorites', $handle));
+			$title = qa_lang_sub($favorite ? 'main/remove_x_favorites' : 'users/add_user_x_favorites', $handle);
+			$qa_content['favorite'] = qa_favorite_form(QA_ENTITY_USER, $useraccount['userid'], $favorite, $title);
 		}
 
 
@@ -384,8 +384,15 @@ class UserProfile extends \Q2A\Controllers\BaseController
 						'type' => 'image',
 						'style' => 'tall',
 						'label' => '',
-						'html' => qa_get_user_avatar_html($useraccount['flags'], $useraccount['email'], $useraccount['handle'],
-							$useraccount['avatarblobid'], $useraccount['avatarwidth'], $useraccount['avatarheight'], qa_opt('avatar_profile_size')),
+						'html' => qa_get_user_avatar_html(
+							$useraccount['flags'],
+							$useraccount['email'],
+							$useraccount['handle'],
+							$useraccount['avatarblobid'],
+							$useraccount['avatarwidth'],
+							$useraccount['avatarheight'],
+							qa_opt('avatar_profile_size')
+						),
 						'id' => 'avatar',
 					),
 
@@ -488,8 +495,15 @@ class UserProfile extends \Q2A\Controllers\BaseController
 								else
 									$fieldnavcategories = $navcategories;
 
-								qa_set_up_category_field($qa_content, $qa_content['form_profile']['fields']['uc_' . $index . '_cat'],
-									'uc_' . $index . '_cat', $fieldnavcategories, @$userlevel['entityid'], true, true);
+								qa_set_up_category_field(
+									$qa_content,
+									$qa_content['form_profile']['fields']['uc_' . $index . '_cat'],
+									'uc_' . $index . '_cat',
+									$fieldnavcategories,
+									@$userlevel['entityid'],
+									true,
+									true
+								);
 
 								unset($qa_content['form_profile']['fields']['uc_' . $index . '_cat']['note']);
 							}
