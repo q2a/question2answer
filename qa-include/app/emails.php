@@ -24,15 +24,19 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
+use Q2A\Notifications\Email;
+use Q2A\Notifications\Mailer;
+use Q2A\Notifications\Status as NotifyStatus;
+
 /**
- * @deprecated: Use Q2A_Notifications_Status::suspend() instead.
  * Suspend the sending of all email notifications via qa_send_notification(...) if $suspend is true, otherwise
  * reinstate it. A counter is kept to allow multiple calls.
  * @param bool $suspend
+ * @deprecated: Use \Q2A\Notifications\Status::suspend() instead.
  */
 function qa_suspend_notifications($suspend = true)
 {
-	Q2A_Notifications_Status::suspend($suspend);
+	NotifyStatus::suspend($suspend);
 }
 
 
@@ -53,14 +57,14 @@ function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, 
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	if (Q2A_Notifications_Status::isSuspended()) {
+	if (NotifyStatus::isSuspended()) {
 		return;
 	}
 
 	if ($userid) {
-		$sender = Q2A_Notifications_Email::CreateByUserID($userid, $email, $handle);
+		$sender = Email::CreateByUserID($userid, $email, $handle);
 	} else {
-		$sender = Q2A_Notifications_Email::CreateByEmailAddress($email, $handle);
+		$sender = Email::CreateByEmailAddress($email, $handle);
 	}
 
 	return $sender->sendMessage($subject, $body, $subs, $html);
@@ -76,7 +80,7 @@ function qa_send_email($params)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	$mailer = new Q2A_Notifications_Mailer($params);
+	$mailer = new Mailer($params);
 
 	$send_status = $mailer->send();
 	if (!$send_status) {

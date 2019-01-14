@@ -18,18 +18,16 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-use Q2A\Exceptions\FatalErrorException;
+namespace Q2A\Notifications;
 
-if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-	header('Location: ../../');
-	exit;
-}
+use Q2A\Exceptions\FatalErrorException;
+use Q2A\Notifications\Mailer;
 
 require_once QA_INCLUDE_DIR . 'db/selects.php';		//required for qa_db_select_with_pending()
 require_once QA_INCLUDE_DIR . 'app/options.php';	//required for qa_opt()
 require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
 
-class Q2A_Notifications_Email
+class Email
 {
 	private $email;
 	private $handle;
@@ -105,7 +103,7 @@ class Q2A_Notifications_Email
 		$bodyPrefix = (empty($this->handle) ? '' : qa_lang_sub('emails/to_handle_prefix', $this->handle));
 
 		if (PHPMailer::validateAddress($this->email)) {
-			$mailer = new Q2A_Notifications_Mailer(array(
+			$mailer = new Mailer(array(
 				'fromemail' => qa_opt('from_email'),
 				'fromname' => qa_opt('site_title'),
 				'toemail' => $this->email,
