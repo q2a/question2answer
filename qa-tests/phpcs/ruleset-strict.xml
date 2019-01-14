@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<ruleset name="Q2AStandard">
+	<description>Q2A strict coding standard</description>
+
+	<exclude-pattern>qa-include/vendor/*</exclude-pattern>
+	<exclude-pattern>qa-config.php</exclude-pattern>
+	<exclude-pattern>qa-plugin/recaptcha-captcha/recaptchalib.php</exclude-pattern>
+	<exclude-pattern>qa-plugin/facebook-login/facebook.php</exclude-pattern>
+	<exclude-pattern>qa-plugin/facebook-login/base_facebook.php</exclude-pattern>
+
+	<rule ref="PSR1">
+	</rule>
+
+	<rule ref="PSR2">
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+		<exclude name="Generic.Files.LineLength.TooLong"/>
+		<exclude name="Generic.ControlStructures.InlineControlStructure"/>
+		<exclude name="Squiz.ControlStructures.ControlSignature"/> <!-- doesn't work without above rule -->
+		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
+		<exclude name="PSR2.Methods.FunctionCallSignature"/>
+		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration"/>
+	</rule>
+
+	<arg name="tab-width" value="4"/>
+	<rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+	<rule ref="Generic.WhiteSpace.ScopeIndent">
+		<properties>
+			<property name="indent" value="4"/>
+			<property name="tabIndent" value="true"/>
+		</properties>
+	</rule>
+
+	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+		<properties>
+			<property name="ignoreBlankLines" value="false"/>
+		</properties>
+	</rule>
+
+</ruleset>
