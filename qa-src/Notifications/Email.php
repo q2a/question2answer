@@ -63,7 +63,6 @@ class Email
 			if ($needemail) {
 				$email = qa_get_user_email($userid);
 			}
-
 		} elseif ($needemail || $needhandle) {
 			$useraccount = qa_db_select_with_pending(
 				array(

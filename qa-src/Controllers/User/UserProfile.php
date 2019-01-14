@@ -51,7 +51,6 @@ class UserProfile extends \Q2A\Controllers\BaseController
 
 			$usershtml = qa_get_users_html(array($userid), false, qa_path_to_root(), true);
 			$userhtml = @$usershtml[$userid];
-
 		} else
 			$userhtml = qa_html($handle);
 
@@ -266,10 +265,9 @@ class UserProfile extends \Q2A\Controllers\BaseController
 			}
 
 			if (qa_clicked('doapprove') || qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall') || qa_clicked('dodelete')) {
-				if (!qa_check_form_security_code('user-' . $handle, qa_post_text('code')))
+				if (!qa_check_form_security_code('user-' . $handle, qa_post_text('code'))) {
 					$errors['page'] = qa_lang_html('misc/form_security_again');
-
-				else {
+				} else {
 					if ($approvebutton && qa_clicked('doapprove')) {
 						require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 						qa_set_user_level($userid, $useraccount['handle'], QA_USER_LEVEL_APPROVED, $useraccount['level']);
@@ -537,7 +535,6 @@ class UserProfile extends \Q2A\Controllers\BaseController
 						$qa_content['form_profile']['fields']['level']['tags'] .= ' id="level_select" onchange="qa_update_category_levels();"';
 					}
 				}
-
 			} else {
 				foreach ($userlevels as $userlevel) {
 					if ($userlevel['entitytype'] == QA_ENTITY_CATEGORY && $userlevel['level'] > $useraccount['level']) {
@@ -705,7 +702,6 @@ class UserProfile extends \Q2A\Controllers\BaseController
 					'dosave' => '1',
 					'code' => qa_get_form_security_code('user-edit-' . $handle),
 				);
-
 			} elseif ($usereditbutton) {
 				$qa_content['form_profile']['buttons'] = array();
 
@@ -741,7 +737,6 @@ class UserProfile extends \Q2A\Controllers\BaseController
 								'label' => qa_lang_html('users/delete_user_button'),
 							);
 						}
-
 					} else {
 						$qa_content['form_profile']['buttons']['block'] = array(
 							'tags' => 'name="doblock"',
@@ -753,7 +748,6 @@ class UserProfile extends \Q2A\Controllers\BaseController
 						'code' => qa_get_form_security_code('user-' . $handle),
 					);
 				}
-
 			} elseif (isset($loginuserid) && ($loginuserid == $userid)) {
 				$qa_content['form_profile']['buttons'] = array(
 					'account' => array(
@@ -834,7 +828,6 @@ class UserProfile extends \Q2A\Controllers\BaseController
 			$qa_content['form_activity']['hidden'] = array(
 				'code' => qa_get_form_security_code('user-activity-' . $handle),
 			);
-
 		} else {
 			unset($qa_content['form_activity']['fields']['bonus']);
 		}

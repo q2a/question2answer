@@ -8,15 +8,13 @@
 	<exclude-pattern>qa-plugin/facebook-login/facebook.php</exclude-pattern>
 	<exclude-pattern>qa-plugin/facebook-login/base_facebook.php</exclude-pattern>
 
-	<rule ref="PSR1">
-	</rule>
+	<rule ref="PSR1"/>
 
 	<rule ref="PSR2">
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
 		<exclude name="Generic.Files.LineLength.TooLong"/>
 		<exclude name="Generic.ControlStructures.InlineControlStructure"/>
 		<exclude name="Squiz.ControlStructures.ControlSignature"/> <!-- doesn't work without above rule -->
-		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
 	</rule>
 
 	<arg name="tab-width" value="4"/>

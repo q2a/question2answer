@@ -31,7 +31,6 @@ class RecalcPointsRecalc extends AbstractStep
 			$lastuserid = $userids[$recalccount - 1];
 			qa_db_users_recalc_points($this->state->next, $lastuserid);
 			$this->state->done += $recalccount;
-
 		} else {
 			$lastuserid = $this->state->next; // for truncation
 		}

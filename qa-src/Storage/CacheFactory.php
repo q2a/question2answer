@@ -51,7 +51,6 @@ class CacheFactory
 					self::$cacheDriver = new FileCacheDriver($config);
 					break;
 			}
-
 		}
 
 		return self::$cacheDriver;
