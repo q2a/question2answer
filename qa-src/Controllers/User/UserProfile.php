@@ -20,15 +20,18 @@ namespace Q2A\Controllers\User;
 
 use Q2A\Http\Exceptions\PageNotFoundException;
 
-require_once QA_INCLUDE_DIR . 'db/users.php';
-require_once QA_INCLUDE_DIR . 'db/selects.php';
-require_once QA_INCLUDE_DIR . 'app/users.php';
-require_once QA_INCLUDE_DIR . 'app/format.php';
-
 class UserProfile extends \Q2A\Controllers\BaseController
 {
 	private $userid;
 	private $userhtml;
+
+	public function __construct()
+	{
+		require_once QA_INCLUDE_DIR . 'db/users.php';
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
+		require_once QA_INCLUDE_DIR . 'app/users.php';
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+	}
 
 	public function index()
 	{

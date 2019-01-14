@@ -31,11 +31,11 @@ class Email
 
 	private function __construct($email, $handle)
 	{
-		$this->email = $email;
-		$this->handle = $handle;
-
 		require_once QA_INCLUDE_DIR . 'db/selects.php';		//required for qa_db_select_with_pending()
 		require_once QA_INCLUDE_DIR . 'app/options.php';	//required for qa_opt()
+
+		$this->email = $email;
+		$this->handle = $handle;
 	}
 
 	/**

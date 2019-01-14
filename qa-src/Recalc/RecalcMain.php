@@ -54,16 +54,6 @@
 
 namespace Q2A\Recalc;
 
-require_once QA_INCLUDE_DIR . 'db/recalc.php';
-require_once QA_INCLUDE_DIR . 'db/post-create.php';
-require_once QA_INCLUDE_DIR . 'db/points.php';
-require_once QA_INCLUDE_DIR . 'db/selects.php';
-require_once QA_INCLUDE_DIR . 'db/admin.php';
-require_once QA_INCLUDE_DIR . 'db/users.php';
-require_once QA_INCLUDE_DIR . 'app/options.php';
-require_once QA_INCLUDE_DIR . 'app/post-create.php';
-require_once QA_INCLUDE_DIR . 'app/post-update.php';
-
 class RecalcMain
 {
 	protected $state;
@@ -73,6 +63,16 @@ class RecalcMain
 	 */
 	public function __construct($state)
 	{
+		require_once QA_INCLUDE_DIR . 'db/recalc.php';
+		require_once QA_INCLUDE_DIR . 'db/post-create.php';
+		require_once QA_INCLUDE_DIR . 'db/points.php';
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
+		require_once QA_INCLUDE_DIR . 'db/admin.php';
+		require_once QA_INCLUDE_DIR . 'db/users.php';
+		require_once QA_INCLUDE_DIR . 'app/options.php';
+		require_once QA_INCLUDE_DIR . 'app/post-create.php';
+		require_once QA_INCLUDE_DIR . 'app/post-update.php';
+
 		$this->state = new \Q2A\Recalc\State($state);
 	}
 

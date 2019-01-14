@@ -70,6 +70,7 @@ function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, 
 	return $sender->sendMessage($subject, $body, $subs, $html);
 }
 
+
 /**
  * Send the email based on the $params array - the following keys are required (some can be empty): fromemail,
  * fromname, toemail, toname, subject, body, html

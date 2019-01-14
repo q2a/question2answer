@@ -18,13 +18,17 @@
 
 namespace Q2A\Recalc;
 
-require_once QA_INCLUDE_DIR . 'app/events.php';
-require_once QA_INCLUDE_DIR . 'app/updates.php';
-require_once QA_INCLUDE_DIR . 'util/sort.php';
-
-
 class RefillEventsRefill extends AbstractStep
 {
+	public function __construct(State $state)
+	{
+		require_once QA_INCLUDE_DIR . 'app/events.php';
+		require_once QA_INCLUDE_DIR . 'app/updates.php';
+		require_once QA_INCLUDE_DIR . 'util/sort.php';
+
+		parent::__construct($state);
+	}
+
 	public function doStep()
 	{
 		$questionids = qa_db_qs_get_for_event_refilling($this->state->next, 1);

@@ -22,15 +22,15 @@ use Q2A\Auth\NoPermissionException;
 use Q2A\Middleware\Auth\InternalUsersOnly;
 use Q2A\Middleware\Auth\MinimumUserLevel;
 
-require_once QA_INCLUDE_DIR . 'db/users.php';
-require_once QA_INCLUDE_DIR . 'db/selects.php';
-require_once QA_INCLUDE_DIR . 'app/users.php';
-require_once QA_INCLUDE_DIR . 'app/format.php';
-
 class UsersList extends \Q2A\Controllers\BaseController
 {
 	public function __construct()
 	{
+		require_once QA_INCLUDE_DIR . 'db/users.php';
+		require_once QA_INCLUDE_DIR . 'db/selects.php';
+		require_once QA_INCLUDE_DIR . 'app/users.php';
+		require_once QA_INCLUDE_DIR . 'app/format.php';
+
 		parent::__construct();
 
 		$this->addMiddleware(new InternalUsersOnly(), array('newest', 'special', 'blocked'));

@@ -34,6 +34,7 @@ before_script:
 script:
   # PHP_CodeSniffer
   - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
+  - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset-strict.xml qa-src/
   # PHPUnit
   - php phpunit.phar --bootstrap qa-tests/autoload.php qa-tests
 

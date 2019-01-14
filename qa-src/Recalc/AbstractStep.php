@@ -18,8 +18,6 @@
 
 namespace Q2A\Recalc;
 
-require_once QA_INCLUDE_DIR . 'app/format.php';        //required for qa_number_format()
-
 abstract class AbstractStep
 {
 	protected $state;
@@ -27,6 +25,8 @@ abstract class AbstractStep
 
 	public function __construct(State $state)
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php'; // for qa_format_number()
+
 		$this->state = $state;
 	}
 

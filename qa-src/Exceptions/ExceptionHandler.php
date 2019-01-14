@@ -21,12 +21,11 @@ namespace Q2A\Exceptions;
 use Exception;
 use Q2A\Http\Exceptions\PageNotFoundException;
 
-require_once QA_INCLUDE_DIR . 'app/format.php';
-
 class ExceptionHandler
 {
 	public function __construct()
 	{
+		require_once QA_INCLUDE_DIR . 'app/format.php';
 	}
 
 	public function handle(Exception $exception)
