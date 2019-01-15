@@ -190,7 +190,7 @@ class UsersList extends \Q2A\Controllers\BaseController
 			'items' => array(),
 			'rows' => ceil($pageSize / qa_opt('columns_users')),
 			'type' => 'users',
-			// 'sort' => '',
+			// 'sort' is handled by calling code
 		);
 
 		foreach ($users as $user) {
@@ -219,9 +219,7 @@ class UsersList extends \Q2A\Controllers\BaseController
 
 		$content['page_links'] = qa_html_page_links($request, $start, $pageSize, $totalUsers, qa_opt('pages_prev_next'));
 
-		// set the canonical url based on possible pagination
-		$params = $start > 0 ? array('start' => $start) : null;
-		$content['canonical'] = qa_path_html($request, $params, qa_opt('site_url'));
+		$content['canonical'] = qa_get_canonical();
 
 		$content['navigation']['sub'] = qa_users_sub_navigation();
 

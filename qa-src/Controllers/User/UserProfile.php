@@ -115,8 +115,8 @@ class UserProfile extends \Q2A\Controllers\BaseController
 			if (isset($loginuserid) && $loginuserid != $userid &&
 				($loginlevel >= QA_USER_LEVEL_SUPER || $loginlevel > $maxuserlevel) &&
 				!qa_user_permit_error()
-			) { // can't change self - or someone on your level (or higher, obviously) unless you're a super admin
-
+			) {
+				// can't change self - or someone on your level (or higher, obviously) unless you're a super admin
 				if ($loginlevel >= QA_USER_LEVEL_SUPER) {
 					$maxlevelassign = QA_USER_LEVEL_SUPER;
 				} elseif ($loginlevel >= QA_USER_LEVEL_ADMIN) {
@@ -194,9 +194,11 @@ class UserProfile extends \Q2A\Controllers\BaseController
 							if (isset($useraccount['avatarblobid'])) {
 								require_once QA_INCLUDE_DIR . 'app/blobs.php';
 
-								qa_db_user_set($userid, 'avatarblobid', null);
-								qa_db_user_set($userid, 'avatarwidth', null);
-								qa_db_user_set($userid, 'avatarheight', null);
+								qa_db_user_set($userid, array(
+									'avatarblobid' => null,
+									'avatarwidth' => null,
+									'avatarheight' => null,
+								));
 								qa_delete_blob($useraccount['avatarblobid']);
 							}
 						}
@@ -606,7 +608,7 @@ class UserProfile extends \Q2A\Controllers\BaseController
 				$htmlemail = qa_html(isset($inemail) ? $inemail : $useraccount['email']);
 
 				$qa_content['form_profile']['fields']['email'] = array(
-					'type' => $userediting ? 'text' : 'static',
+					'type' => $userediting ? 'email' : 'static',
 					'label' => qa_lang_html('users/email_label'),
 					'tags' => 'name="email"',
 					'value' => $userediting ? $htmlemail : ('<a href="mailto:' . $htmlemail . '">' . $htmlemail . '</a>'),
