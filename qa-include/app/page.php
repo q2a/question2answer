@@ -438,7 +438,6 @@ function qa_page_routing()
 		'feedback' => 'pages/feedback.php',
 		'forgot' => 'pages/forgot.php',
 		'hot/' => 'pages/hot.php',
-		'ip/' => 'pages/ip.php',
 		'login' => 'pages/login.php',
 		'logout' => 'pages/logout.php',
 		'messages/' => 'pages/messages.php',
@@ -474,6 +473,9 @@ function qa_routing_config()
 	$router->addRoute('user-blocked', 'get', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked');
 	$router->addRoute('user-new', 'get', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest');
 	$router->addRoute('user-special', 'get', 'users/special', '\Q2A\Controllers\User\UsersList', 'special');
+
+	$router->addRoute('ip', 'get', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address');
+	$router->addRoute('ip', 'post', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address');
 }
 
 
