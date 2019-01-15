@@ -70,10 +70,11 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		$qa_content = qa_content_prepare(true);
 
-		if (count($questions))
+		if (count($questions)) {
 			$qa_content['title'] = qa_lang_html_sub('profile/recent_activity_by_x', $this->userhtml);
-		else
+		} else {
 			$qa_content['title'] = qa_lang_html_sub('profile/no_posts_by_x', $this->userhtml);
+		}
 
 
 		// Recent activity by this user
@@ -154,10 +155,11 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		$qa_content = qa_content_prepare(true);
 
-		if (count($questions))
+		if (count($questions)) {
 			$qa_content['title'] = qa_lang_html_sub('profile/questions_by_x', $this->userhtml);
-		else
+		} else {
 			$qa_content['title'] = qa_lang_html_sub('profile/no_questions_by_x', $this->userhtml);
+		}
 
 
 		// Recent questions by this user
@@ -240,10 +242,11 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		$qa_content = qa_content_prepare(true);
 
-		if (count($questions))
+		if (count($questions)) {
 			$qa_content['title'] = qa_lang_html_sub('profile/answers_by_x', $this->userhtml);
-		else
+		} else {
 			$qa_content['title'] = qa_lang_html_sub('profile/no_answers_by_x', $this->userhtml);
+		}
 
 
 		// Recent questions by this user
@@ -299,7 +302,8 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 			$usershtml = qa_get_users_html(array($this->userid), false, qa_path_to_root(), true);
 			$this->userhtml = @$usershtml[$this->userid];
-		} else
+		} else {
 			$this->userhtml = qa_html($handle);
+		}
 	}
 }

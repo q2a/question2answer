@@ -266,8 +266,9 @@ class DbConnection
 
 			if ($cacheDriver->isEnabled()) {
 				$queryData = $cacheDriver->get($cacheKey);
-				if ($queryData !== null)
+				if ($queryData !== null) {
 					return $queryData;
+				}
 			}
 		}
 
@@ -311,8 +312,9 @@ class DbConnection
 		if (!QA_OPTIMIZE_DISTANT_DB || count($selectspecs) <= 1) {
 			$outresults = array();
 
-			foreach ($selectspecs as $selectkey => $selectspec)
+			foreach ($selectspecs as $selectkey => $selectspec) {
 				$outresults[$selectkey] = $this->singleSelect($selectspec);
+			}
 
 			return $outresults;
 		}
@@ -390,21 +392,24 @@ class DbConnection
 		$rawresults = $stmt->fetchAllAssoc();
 
 		$outresults = array();
-		foreach ($selectspecs as $selectkey => $selectspec)
+		foreach ($selectspecs as $selectkey => $selectspec) {
 			$outresults[$selectkey] = array();
+		}
 
 		foreach ($rawresults as $rawresult) {
 			$selectkey = $rawresult['selectkey'];
 			$selectspec = $selectspecs[$selectkey];
 
 			$keepresult = array();
-			foreach ($selectspec['outcolumns'] as $columnas => $columnfrom)
+			foreach ($selectspec['outcolumns'] as $columnas => $columnfrom) {
 				$keepresult[$columnas] = $rawresult[$columnas];
+			}
 
-			if (isset($selectspec['arraykey']))
+			if (isset($selectspec['arraykey'])) {
 				$outresults[$selectkey][$keepresult[$selectspec['arraykey']]] = $keepresult;
-			else
+			} else {
 				$outresults[$selectkey][] = $keepresult;
+			}
 		}
 
 		// Post-processing to apply various stuff include sorting request, since we can't rely on ORDER BY due to UNION
@@ -442,8 +447,9 @@ class DbConnection
 				qa_sort_by($outresult, $selectspec['sortdesc'], $selectspec['sortdesc_2']);
 			} else {
 				$index = count($outresult);
-				foreach ($outresult as $key => $value)
+				foreach ($outresult as $key => $value) {
 					$outresult[$key]['_order_'] = $index--;
+				}
 
 				qa_sort_by($outresult, $selectspec['sortdesc'], '_order_');
 			}

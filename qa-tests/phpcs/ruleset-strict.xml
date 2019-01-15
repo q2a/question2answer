@@ -13,8 +13,6 @@
 	<rule ref="PSR2">
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
 		<exclude name="Generic.Files.LineLength.TooLong"/>
-		<exclude name="Generic.ControlStructures.InlineControlStructure"/>
-		<exclude name="Squiz.ControlStructures.ControlSignature"/> <!-- doesn't work without above rule -->
 	</rule>
 
 	<arg name="tab-width" value="4"/>

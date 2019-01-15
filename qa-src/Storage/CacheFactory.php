@@ -40,8 +40,7 @@ class CacheFactory
 
 			$driver = qa_opt('caching_driver');
 
-			switch($driver)
-			{
+			switch ($driver) {
 				case 'memcached':
 					self::$cacheDriver = new MemcachedDriver($config);
 					break;
