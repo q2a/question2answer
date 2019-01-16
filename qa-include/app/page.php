@@ -421,9 +421,7 @@ function qa_page_routing()
 		'admin/moderate' => 'pages/admin/admin-moderate.php',
 		'admin/pages' => 'pages/admin/admin-pages.php',
 		'admin/plugins' => 'pages/admin/admin-plugins.php',
-		'admin/points' => 'pages/admin/admin-points.php',
 		'admin/recalc' => 'pages/admin/admin-recalc.php',
-		'admin/stats' => 'pages/admin/admin-stats.php',
 		'admin/userfields' => 'pages/admin/admin-userfields.php',
 		'admin/usertitles' => 'pages/admin/admin-usertitles.php',
 		'answers/' => 'pages/answers.php',
@@ -476,6 +474,10 @@ function qa_routing_config()
 
 	$router->addRoute('ip', 'get', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address');
 	$router->addRoute('ip', 'post', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address');
+
+	$router->addRoute('admin-stats', 'get', 'admin/stats', '\Q2A\Controllers\Admin\Stats', 'index');
+	$router->addRoute('admin-points', 'get', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index');
+	$router->addRoute('admin-points', 'post', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index');
 }
 
 
