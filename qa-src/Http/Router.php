@@ -21,27 +21,33 @@ namespace Q2A\Http;
 class Router
 {
 	/** @var Route[] */
-	protected $routes = array();
+	protected $routes = [];
 
 	/** @var array */
-	private $paramsConverter;
+	private $paramsConverter = [
+		'{str}' => '([^/]+)',
+		'{int}' => '([0-9]+)',
+	];
 
 	/** @var string */
-	private $httpMethod;
+	private $httpMethod = '';
 
 	public function __construct()
 	{
-		$this->paramsConverter = array(
-			'{str}' => '([^/]+)',
-			'{int}' => '([0-9]+)',
-		);
-
 		$this->httpMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 	}
 
-	public function addRoute($id, $httpMethod, $routePath, $class, $func)
+	/**
+	 * Add a new URI handler to the router.
+	 * @param string $httpMethod
+	 * @param string $routePath
+	 * @param string $class The controller to use.
+	 * @param string $func The class method to call.
+	 * @param array $options Extra parameters e.g. Q2A template the page should use.
+	 */
+	public function addRoute($httpMethod, $routePath, $class, $func, array $options = [])
 	{
-		$this->routes[] = new Route($id, $httpMethod, $routePath, $class, $func);
+		$this->routes[] = new Route($httpMethod, $routePath, $class, $func, $options);
 	}
 
 	/**

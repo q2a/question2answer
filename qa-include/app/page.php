@@ -180,12 +180,12 @@ function qa_get_request_content()
 	$firstlower = strtolower($requestparts[0]);
 	$routing = qa_page_routing();
 
-	qa_routing_config();
+	qa_controller_routing();
 	$route = qa_service('router')->match($requestlower);
 
 	if ($route !== null) {
 		// use new Controller system
-		qa_set_template($route->getId());
+		qa_set_template($route->getOption('template'));
 		$controllerClass = $route->getController();
 		$ctrl = new $controllerClass();
 		try {
@@ -456,28 +456,28 @@ function qa_page_routing()
 /**
  * Set up routing.
  */
-function qa_routing_config()
+function qa_controller_routing()
 {
 	$router = qa_service('router');
-	$router->addRoute('user', 'get', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile');
-	$router->addRoute('user', 'post', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile');
-	$router->addRoute('user-self', 'get', 'user', '\Q2A\Controllers\User\UserProfile', 'index');
-	$router->addRoute('user-wall', 'get', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall');
-	$router->addRoute('user-activity', 'get', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity');
-	$router->addRoute('user-questions', 'get', 'user/{str}/questions', '\Q2A\Controllers\User\UserPosts', 'questions');
-	$router->addRoute('user-answers', 'get', 'user/{str}/answers', '\Q2A\Controllers\User\UserPosts', 'answers');
+	$router->addRoute('GET', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile', ['template' => 'user']);
+	$router->addRoute('POST', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile', ['template' => 'user']);
+	$router->addRoute('GET', 'user', '\Q2A\Controllers\User\UserProfile', 'index');
+	$router->addRoute('GET', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall', ['template' => 'user-wall']);
+	$router->addRoute('GET', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity', ['template' => 'user-activity']);
+	$router->addRoute('GET', 'user/{str}/questions', '\Q2A\Controllers\User\UserPosts', 'questions', ['template' => 'user-questions']);
+	$router->addRoute('GET', 'user/{str}/answers', '\Q2A\Controllers\User\UserPosts', 'answers', ['template' => 'user-answers']);
 
-	$router->addRoute('user-top', 'get', 'users', '\Q2A\Controllers\User\UsersList', 'top');
-	$router->addRoute('user-blocked', 'get', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked');
-	$router->addRoute('user-new', 'get', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest');
-	$router->addRoute('user-special', 'get', 'users/special', '\Q2A\Controllers\User\UsersList', 'special');
+	$router->addRoute('GET', 'users', '\Q2A\Controllers\User\UsersList', 'top', ['template' => 'users']);
+	$router->addRoute('GET', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked', ['template' => 'users']);
+	$router->addRoute('GET', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest', ['template' => 'users']);
+	$router->addRoute('GET', 'users/special', '\Q2A\Controllers\User\UsersList', 'special', ['template' => 'users']);
 
-	$router->addRoute('ip', 'get', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address');
-	$router->addRoute('ip', 'post', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address');
+	$router->addRoute('GET', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address', ['template' => 'ip']);
+	$router->addRoute('POST', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address', ['template' => 'ip']);
 
-	$router->addRoute('admin-stats', 'get', 'admin/stats', '\Q2A\Controllers\Admin\Stats', 'index');
-	$router->addRoute('admin-points', 'get', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index');
-	$router->addRoute('admin-points', 'post', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index');
+	$router->addRoute('GET', 'admin/stats', '\Q2A\Controllers\Admin\Stats', 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index', ['template' => 'admin']);
 }
 
 

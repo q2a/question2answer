@@ -21,9 +21,6 @@ namespace Q2A\Http;
 class Route
 {
 	/** @var string */
-	private $id;
-
-	/** @var string */
 	private $httpMethod;
 
 	/** @var string */
@@ -36,25 +33,18 @@ class Route
 	private $action;
 
 	/** @var array */
-	private $parameters;
+	private $options;
 
-	public function __construct($id = null, $httpMethod = null, $routePath = null, $controller = null, $action = null)
+	/** @var array */
+	private $parameters = [];
+
+	public function __construct($httpMethod, $routePath, $controller = '', $action = '', array $options = [])
 	{
-		$this->id = $id;
 		$this->httpMethod = strtoupper($httpMethod);
 		$this->routePath = $routePath;
 		$this->controller = $controller;
 		$this->action = $action;
-
-		$this->parameters = array();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getId()
-	{
-		return $this->id;
+		$this->options = $options;
 	}
 
 	/**
@@ -87,6 +77,14 @@ class Route
 	public function getAction()
 	{
 		return $this->action;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOption($name)
+	{
+		return isset($this->options[$name]) ? $this->options[$name] : null;
 	}
 
 	/**
