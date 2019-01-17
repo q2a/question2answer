@@ -197,14 +197,16 @@ class Stats extends \Q2A\Controllers\BaseController
 			),
 		);
 
-		if (QA_FINAL_EXTERNAL_USERS)
+		if (QA_FINAL_EXTERNAL_USERS) {
 			unset($qa_content['form']['fields']['users']);
-		else
+		} else {
 			unset($qa_content['form']['fields']['users_active']);
+		}
 
 		foreach ($qa_content['form']['fields'] as $index => $field) {
-			if (empty($field['type']))
+			if (empty($field['type'])) {
 				$qa_content['form']['fields'][$index]['type'] = 'static';
+			}
 		}
 
 		$qa_content['form_2'] = array(
@@ -257,8 +259,9 @@ class Stats extends \Q2A\Controllers\BaseController
 			),
 		);
 
-		if (!qa_using_categories())
+		if (!qa_using_categories()) {
 			unset($qa_content['form_2']['buttons']['recalc_categories']);
+		}
 
 		if (defined('QA_BLOBS_DIRECTORY')) {
 			if (qa_db_has_blobs_in_db()) {

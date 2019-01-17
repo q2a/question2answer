@@ -35,8 +35,9 @@ class Ip extends \Q2A\Controllers\BaseController
 
 	public function address($ip)
 	{
-		if (filter_var($ip, FILTER_VALIDATE_IP) === false)
+		if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
 			return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+		}
 
 
 		// Find recently (hidden, queued or not) questions, answers, comments and edits for this IP
@@ -70,10 +71,9 @@ class Ip extends \Q2A\Controllers\BaseController
 		// Perform blocking or unblocking operations as appropriate
 
 		if (qa_clicked('doblock') || qa_clicked('dounblock') || qa_clicked('dohideall')) {
-			if (!qa_check_form_security_code('ip-' . $ip, qa_post_text('code')))
+			if (!qa_check_form_security_code('ip-' . $ip, qa_post_text('code'))) {
 				$pageerror = qa_lang_html('misc/form_security_again');
-
-			elseif ($blockable) {
+			} elseif ($blockable) {
 				if (qa_clicked('doblock')) {
 					$oldblocked = qa_opt('block_ips_write');
 					qa_set_option('block_ips_write', (strlen($oldblocked) ? ($oldblocked . ' , ') : '') . $ip);
@@ -91,8 +91,9 @@ class Ip extends \Q2A\Controllers\BaseController
 					$blockipclauses = qa_block_ips_explode(qa_opt('block_ips_write'));
 
 					foreach ($blockipclauses as $key => $blockipclause) {
-						if (qa_block_ip_match($ip, $blockipclause))
+						if (qa_block_ip_match($ip, $blockipclause)) {
 							unset($blockipclauses[$key]);
+						}
 					}
 
 					qa_set_option('block_ips_write', implode(' , ', $blockipclauses));
@@ -112,8 +113,9 @@ class Ip extends \Q2A\Controllers\BaseController
 
 					$postids = qa_db_get_ip_visible_postids($ip);
 
-					foreach ($postids as $postid)
+					foreach ($postids as $postid) {
 						qa_post_set_status($postid, QA_POST_STATUS_HIDDEN, $userid);
+					}
 
 					qa_redirect(qa_request());
 				}
@@ -163,8 +165,9 @@ class Ip extends \Q2A\Controllers\BaseController
 			$matchclauses = array();
 
 			foreach ($blockipclauses as $blockipclause) {
-				if (qa_block_ip_match($ip, $blockipclause))
+				if (qa_block_ip_match($ip, $blockipclause)) {
 					$matchclauses[] = $blockipclause;
+				}
 			}
 
 			if (count($matchclauses)) {
@@ -179,12 +182,12 @@ class Ip extends \Q2A\Controllers\BaseController
 					'label' => qa_lang_html('misc/unblock_ip_button'),
 				);
 
-				if (count($questions) && !qa_user_maximum_permit_error('permit_hide_show'))
+				if (count($questions) && !qa_user_maximum_permit_error('permit_hide_show')) {
 					$qa_content['form']['buttons']['hideall'] = array(
 						'tags' => 'name="dohideall" onclick="qa_show_waiting_after(this, false);"',
 						'label' => qa_lang_html('misc/hide_all_ip_button'),
 					);
-
+				}
 			} else {
 				$qa_content['form']['buttons']['block'] = array(
 					'tags' => 'name="doblock"',
@@ -210,8 +213,10 @@ class Ip extends \Q2A\Controllers\BaseController
 
 				$htmlfields = qa_any_to_q_html_fields($question, $userid, qa_cookie_get(), $usershtml, null, $htmloptions);
 
-				if (isset($htmlfields['what_url'])) // link directly to relevant content
+				if (isset($htmlfields['what_url'])) {
+					// link directly to relevant content
 					$htmlfields['url'] = $htmlfields['what_url'];
+				}
 
 				$hasother = isset($question['opostid']);
 
@@ -220,16 +225,17 @@ class Ip extends \Q2A\Controllers\BaseController
 
 					if (@$htmloptions['whenview']) {
 						$updated = @$question[$hasother ? 'oupdated' : 'updated'];
-						if (isset($updated))
+						if (isset($updated)) {
 							$htmlfields['when_2'] = qa_when_to_html($updated, @$htmloptions['fulldatedays']);
+						}
 					}
 				}
 
 				$qa_content['q_list']['qs'][] = $htmlfields;
 			}
-
-		} else
+		} else {
 			$qa_content['q_list']['title'] = qa_lang_html_sub('misc/no_activity_from_x', qa_html($ip));
+		}
 
 
 		return $qa_content;
