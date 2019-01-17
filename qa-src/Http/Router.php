@@ -36,7 +36,13 @@ class Router
 
 	public function __construct()
 	{
-		$this->httpMethod = strtoupper($_SERVER['REQUEST_METHOD']);
+		$method = strtoupper($_SERVER['REQUEST_METHOD']);
+		// implicity support HEAD requests (PHP takes care of removing the response body for us)
+		if ($method === 'HEAD') {
+			$method = 'GET';
+		}
+
+		$this->httpMethod = $method;
 	}
 
 	/**
