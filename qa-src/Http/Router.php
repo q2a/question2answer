@@ -68,16 +68,22 @@ class Router
 	 */
 	public function match($request)
 	{
+		$matchedRoute = false;
+
 		foreach ($this->routes as $route) {
 			$pathRegex = $this->buildPathRegex($route->getRoutePath());
 			if (preg_match($pathRegex, $request, $matches)) {
-				if ($route->getHttpMethod() !== $this->httpMethod) {
-					throw new MethodNotAllowedException;
+				$matchedRoute = true;
+				if ($route->getHttpMethod() === $this->httpMethod) {
+					$route->setParameters(array_slice($matches, 1));
+					return $route;
 				}
-				$route->setParameters(array_slice($matches, 1));
-
-				return $route;
 			}
+		}
+
+		// we matched a route but not the HTTP method
+		if ($matchedRoute) {
+			throw new MethodNotAllowedException;
 		}
 
 		return null;
