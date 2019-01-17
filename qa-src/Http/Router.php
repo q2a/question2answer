@@ -18,6 +18,8 @@
 
 namespace Q2A\Http;
 
+use Q2A\Http\Exceptions\MethodNotAllowedException;
+
 class Router
 {
 	/** @var Route[] */
@@ -61,12 +63,11 @@ class Router
 	public function match($request)
 	{
 		foreach ($this->routes as $route) {
-			if ($route->getHttpMethod() !== $this->httpMethod) {
-				continue;
-			}
-
 			$pathRegex = $this->buildPathRegex($route->getRoutePath());
 			if (preg_match($pathRegex, $request, $matches)) {
+				if ($route->getHttpMethod() !== $this->httpMethod) {
+					throw new MethodNotAllowedException;
+				}
 				$route->setParameters(array_slice($matches, 1));
 
 				return $route;

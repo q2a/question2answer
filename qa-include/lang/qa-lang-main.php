@@ -87,6 +87,7 @@ return array(
 	'highest_users' => 'Top scoring users',
 	'hot_qs_in_x' => 'Hot questions in ^',
 	'hot_qs_title' => 'Hot questions',
+	'http_status_405' => 'Error: 405 Method Not Allowed',
 	'image_not_read' => 'The image could not be read. Please upload one of: ^',
 	'image_too_big_x_pc' => 'This image is too big. Please scale to ^% then try again.',
 	'in_category_x' => 'in ^',

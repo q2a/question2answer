@@ -19,8 +19,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-use Q2A\Exceptions\ExceptionHandler;
-
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../../');
 	exit;
@@ -181,33 +179,39 @@ function qa_get_request_content()
 	$routing = qa_page_routing();
 
 	qa_controller_routing();
-	$route = qa_service('router')->match($requestlower);
+	$qa_content = [];
 
-	if ($route !== null) {
+	try {
 		// use new Controller system
-		qa_set_template($route->getOption('template'));
-		$controllerClass = $route->getController();
-		$ctrl = new $controllerClass();
-		try {
+		$route = qa_service('router')->match($requestlower);
+		if ($route !== null) {
+			qa_set_template($route->getOption('template'));
+			$controllerClass = $route->getController();
+			$ctrl = new $controllerClass();
+
 			$qa_content = $ctrl->executeAction($route->getAction(), $route->getParameters());
-		} catch (Exception $e) {
-			$qa_content = (new ExceptionHandler())->handle($e);
 		}
-	} elseif (isset($routing[$requestlower])) {
-		qa_set_template($firstlower);
-		$qa_content = require QA_INCLUDE_DIR . $routing[$requestlower];
+	} catch (\Exception $e) {
+		$qa_content = (new \Q2A\Exceptions\ExceptionHandler)->handle($e);
+	}
 
-	} elseif (isset($routing[$firstlower . '/'])) {
-		qa_set_template($firstlower);
-		$qa_content = require QA_INCLUDE_DIR . $routing[$firstlower . '/'];
+	if (empty($qa_content)) {
+		if (isset($routing[$requestlower])) {
+			qa_set_template($firstlower);
+			$qa_content = require QA_INCLUDE_DIR . $routing[$requestlower];
 
-	} elseif (is_numeric($requestparts[0])) {
-		qa_set_template('question');
-		$qa_content = require QA_INCLUDE_DIR . 'pages/question.php';
+		} elseif (isset($routing[$firstlower . '/'])) {
+			qa_set_template($firstlower);
+			$qa_content = require QA_INCLUDE_DIR . $routing[$firstlower . '/'];
 
-	} else {
-		qa_set_template(strlen($firstlower) ? $firstlower : 'qa'); // will be changed later
-		$qa_content = require QA_INCLUDE_DIR . 'pages/default.php'; // handles many other pages, including custom pages and page modules
+		} elseif (is_numeric($requestparts[0])) {
+			qa_set_template('question');
+			$qa_content = require QA_INCLUDE_DIR . 'pages/question.php';
+
+		} else {
+			qa_set_template(strlen($firstlower) ? $firstlower : 'qa'); // will be changed later
+			$qa_content = require QA_INCLUDE_DIR . 'pages/default.php'; // handles many other pages, including custom pages and page modules
+		}
 	}
 
 	if ($firstlower == 'admin') {

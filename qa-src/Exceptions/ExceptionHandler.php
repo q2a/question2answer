@@ -20,6 +20,7 @@ namespace Q2A\Exceptions;
 
 use Exception;
 use Q2A\Http\Exceptions\PageNotFoundException;
+use Q2A\Http\Exceptions\MethodNotAllowedException;
 
 class ExceptionHandler
 {
@@ -34,6 +35,8 @@ class ExceptionHandler
 			$this->handleFatalErrorException($exception);
 		} elseif ($exception instanceof PageNotFoundException) {
 			return $this->handlePageNotFoundException($exception);
+		} elseif ($exception instanceof MethodNotAllowedException) {
+			return $this->handleMethodNotAllowedException($exception);
 		} elseif ($exception instanceof ErrorMessageException) {
 			return $this->handleErrorMessageException($exception);
 		} else {
@@ -48,10 +51,19 @@ class ExceptionHandler
 
 	private function handlePageNotFoundException(PageNotFoundException $exception)
 	{
-		header('HTTP/1.0 404 Not Found');
+		header('HTTP/1.1 404 Not Found');
 
 		$qa_content = $this->handleErrorMessageException($exception);
 		$qa_content['suggest_next'] = qa_html_suggest_qs_tags(qa_using_tags());
+
+		return $qa_content;
+	}
+
+	private function handleMethodNotAllowedException(MethodNotAllowedException $exception)
+	{
+		header('HTTP/1.1 405 Method Not Allowed');
+
+		$qa_content = $this->handleErrorMessageException($exception);
 
 		return $qa_content;
 	}

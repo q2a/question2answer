@@ -20,7 +20,7 @@ namespace Q2A\Http\Exceptions;
 
 use Q2A\Exceptions\ErrorMessageException;
 
-class PageNotFoundException extends ErrorMessageException
+class MethodNotAllowedException extends ErrorMessageException
 {
 	/**
 	 * @param string $message
@@ -28,7 +28,7 @@ class PageNotFoundException extends ErrorMessageException
 	public function __construct($message = null)
 	{
 		if ($message === null) {
-			$message = qa_lang_html('main/page_not_found');
+			$message = qa_lang_html('main/http_status_405');
 		}
 
 		parent::__construct($message);
