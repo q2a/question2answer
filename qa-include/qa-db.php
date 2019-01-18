@@ -33,6 +33,10 @@ function qa_db_allow_connect()
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+	qa_service('database')->allowConnect();
+	return;
+
+
 	global $qa_db_allow_connect;
 
 	$qa_db_allow_connect = true;
@@ -48,6 +52,10 @@ function qa_db_allow_connect()
 function qa_db_connect($failhandler = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	qa_service('database')->connect($failhandler);
+	return;
+
 
 	global $qa_db_connection, $qa_db_fail_handler, $qa_db_allow_connect;
 
@@ -112,6 +120,10 @@ function qa_db_fail_error($type, $errno = null, $error = null, $query = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+	qa_service('database')->failError($type, $errno, $error, $query);
+	return;
+
+
 	global $qa_db_fail_handler;
 
 	@error_log('PHP Question2Answer MySQL ' . $type . ' error ' . $errno . ': ' . $error . (isset($query) ? (' - Query: ' . $query) : ''));
@@ -137,6 +149,9 @@ function qa_db_connection($connect = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+	return qa_service('database');
+
+
 	global $qa_db_connection;
 
 	if ($connect && !($qa_db_connection instanceof mysqli)) {
@@ -156,6 +171,10 @@ function qa_db_connection($connect = true)
 function qa_db_disconnect()
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	qa_service('database')->disconnect();
+	return;
+
 
 	global $qa_db_connection;
 
@@ -181,6 +200,9 @@ function qa_db_disconnect()
 function qa_db_query_raw($query)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	return qa_service('database')->query($query);
+
 
 	if (QA_DEBUG_PERFORMANCE) {
 		global $qa_usage;
@@ -221,6 +243,9 @@ function qa_db_query_execute($query)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+	return qa_service('database')->query($query);
+
+
 	$db = qa_db_connection();
 
 	for ($attempt = 0; $attempt < 100; $attempt++) {
@@ -244,6 +269,10 @@ function qa_db_query_execute($query)
 function qa_db_escape_string($string)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	$pdo = qa_service('database')->getPDO();
+	return $pdo->quote($string);
+
 
 	$db = qa_db_connection();
 	return $db->real_escape_string($string);
@@ -272,10 +301,8 @@ function qa_db_argument_to_mysql($argument, $alwaysquote, $arraybrackets = false
 			$result = implode(',', $parts);
 
 	} elseif (isset($argument)) {
-		if ($alwaysquote || !is_numeric($argument))
-			$result = "'" . qa_db_escape_string($argument) . "'";
-		else
-			$result = qa_db_escape_string($argument);
+		// PDO adds quotes so no need here
+		$result = qa_db_escape_string($argument);
 	} else
 		$result = 'NULL';
 
@@ -291,6 +318,9 @@ function qa_db_argument_to_mysql($argument, $alwaysquote, $arraybrackets = false
 function qa_db_add_table_prefix($rawname)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	return qa_service('database')->addTablePrefix($rawname);
+
 
 	$prefix = QA_MYSQL_TABLE_PREFIX;
 
@@ -338,6 +368,8 @@ function qa_db_prefix_callback($matches)
  */
 function qa_db_apply_sub($query, $arguments)
 {
+	// function left intact as it does not use db connection, and DbConnection does not allow #/$ params
+
 	$query = preg_replace_callback('/\^([A-Za-z_0-9]+)/', 'qa_db_prefix_callback', $query);
 
 	if (!is_array($arguments))
@@ -402,6 +434,10 @@ function qa_db_query_sub_params($query, $params)
  */
 function qa_db_num_rows($result)
 {
+	if ($result instanceof \Q2A\Database\DbResult)
+		return $result->rowCount();
+
+
 	if ($result instanceof mysqli_result)
 		return $result->num_rows;
 
@@ -414,6 +450,9 @@ function qa_db_num_rows($result)
  */
 function qa_db_last_insert_id()
 {
+	return qa_service('database')->lastInsertId();
+
+
 	$db = qa_db_connection();
 	return $db->insert_id;
 }
@@ -424,6 +463,9 @@ function qa_db_last_insert_id()
  */
 function qa_db_affected_rows()
 {
+	return \PDOstatement::rowCount();
+
+
 	$db = qa_db_connection();
 	return $db->affected_rows;
 }
@@ -534,6 +576,9 @@ function qa_db_list_tables($onlyTablesWithPrefix = false)
  */
 function qa_db_single_select($selectspec)
 {
+	return qa_service('database')->singleSelect($selectspec);
+
+
 	// check for cached results
 	if (isset($selectspec['caching'])) {
 		$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
@@ -578,6 +623,9 @@ function qa_db_single_select($selectspec)
  */
 function qa_db_multi_select($selectspecs)
 {
+	return qa_service('database')->multiSelect($selectspecs);
+
+
 	if (!count($selectspecs))
 		return array();
 
@@ -690,6 +738,9 @@ function qa_db_multi_select($selectspecs)
  */
 function qa_db_post_select(&$outresult, $selectspec)
 {
+	return; // private method in DbConnection
+
+
 	// PHP's sorting algorithm is not 'stable', so we use '_order_' element to keep stability.
 	// By contrast, MySQL's ORDER BY does seem to give the results in a reliable order.
 
@@ -739,6 +790,11 @@ function qa_db_post_select(&$outresult, $selectspec)
  */
 function qa_db_read_all_assoc($result, $key = null, $value = null)
 {
+	if ($result instanceof \Q2A\Database\DbResult) {
+		return $result->fetchAllAssoc($key, $value);
+	}
+
+
 	if (!($result instanceof mysqli_result))
 		qa_fatal_error('Reading all assoc from invalid result');
 
@@ -764,6 +820,11 @@ function qa_db_read_all_assoc($result, $key = null, $value = null)
  */
 function qa_db_read_one_assoc($result, $allowempty = false)
 {
+	if ($result instanceof \Q2A\Database\DbResult) {
+		return $allowempty ? $result->fetchNextAssoc() : $result->fetchNextAssocOrFail();
+	}
+
+
 	if (!($result instanceof mysqli_result))
 		qa_fatal_error('Reading one assoc from invalid result');
 
@@ -786,6 +847,11 @@ function qa_db_read_one_assoc($result, $allowempty = false)
  */
 function qa_db_read_all_values($result)
 {
+	if ($result instanceof \Q2A\Database\DbResult) {
+		return $result->fetchAllValues(0);
+	}
+
+
 	if (!($result instanceof mysqli_result))
 		qa_fatal_error('Reading column from invalid result');
 
@@ -807,6 +873,11 @@ function qa_db_read_all_values($result)
  */
 function qa_db_read_one_value($result, $allowempty = false)
 {
+	if ($result instanceof \Q2A\Database\DbResult) {
+		return $allowempty ? $result->fetchOneValue(0) : $result->fetchOneValueOrFail(0);
+	}
+
+
 	if (!($result instanceof mysqli_result))
 		qa_fatal_error('Reading one value from invalid result');
 
@@ -829,6 +900,10 @@ function qa_db_read_one_value($result, $allowempty = false)
  */
 function qa_suspend_update_counts($suspend = true)
 {
+	qa_service('database')->suspendUpdateCounts($suspend);
+	return;
+
+
 	global $qa_update_counts_suspended;
 
 	$qa_update_counts_suspended += ($suspend ? 1 : -1);
@@ -841,6 +916,9 @@ function qa_suspend_update_counts($suspend = true)
  */
 function qa_should_update_counts()
 {
+	return qa_service('database')->shouldUpdateCounts();
+
+
 	global $qa_update_counts_suspended;
 
 	return ($qa_update_counts_suspended <= 0);

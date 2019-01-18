@@ -19,6 +19,7 @@
 namespace Q2A\App;
 
 use Q2A\Http\Router;
+use Q2A\Database\DbConnection;
 
 class Application
 {
@@ -31,7 +32,6 @@ class Application
 	protected function __construct()
 	{
 		$this->container = new Container();
-
 		$this->registerCoreServices();
 	}
 
@@ -54,6 +54,7 @@ class Application
 	private function registerCoreServices()
 	{
 		$this->container->set('router', new Router());
+		$this->container->set('database', new DbConnection());
 	}
 
 	/**
