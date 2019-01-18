@@ -32,12 +32,12 @@ class DbResult
 	}
 
 	/**
-	 * Return the first row from the results as an array of [column name] => [column value].
+	 * Return the first row from the results as an array of [column name] => 'column value'.
 	 * @return array|null
 	 */
 	public function fetchNextAssoc()
 	{
-		$data = $this->stmt->fetch();
+		$data = $this->stmt->fetch(PDO::FETCH_ASSOC);
 
 		return $data === false ? null : $data;
 	}

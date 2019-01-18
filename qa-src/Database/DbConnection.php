@@ -104,7 +104,10 @@ class DbConnection
 			$dsn .= ';port=' . $this->config['port'];
 		}
 
-		$options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+		$options = array(
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::ATTR_EMULATE_PREPARES => true, // required for queries like LOCK TABLES (also, slightly faster)
+		);
 		if (QA_PERSISTENT_CONN_DB) {
 			$options[PDO::ATTR_PERSISTENT] = true;
 		}
@@ -140,7 +143,8 @@ class DbConnection
 		@error_log('PHP Question2Answer MySQL ' . $type . ' error ' . $errno . ': ' . $error . (isset($query) ? (' - Query: ' . $query) : ''));
 
 		if (function_exists($this->failHandler)) {
-			$this->failHandler($type, $errno, $error, $query);
+			$failFunc = $this->failHandler;
+			$failFunc($type, $errno, $error, $query);
 		} else {
 			echo sprintf(
 				'<hr><div style="color: red">Database %s<p>%s</p><code>%s</code></div>',
@@ -192,9 +196,14 @@ class DbConnection
 	protected function execute($query, $params = array())
 	{
 		$stmt = $this->pdo->prepare($query);
+		// PDO quotes parameters by default, which breaks LIMIT clauses, so we bind parameters manually
+		foreach (array_values($params) as $i => $param) {
+			$dataType = filter_var($param, FILTER_VALIDATE_INT) !== false ? PDO::PARAM_INT : PDO::PARAM_STR;
+			$stmt->bindParam($i + 1, $param, $dataType);
+		}
 
 		for ($attempt = 0; $attempt < 100; $attempt++) {
-			$success = $stmt->execute($params);
+			$success = $stmt->execute();
 
 			if ($success === true || $stmt->errorCode() !== '1213') {
 				break;
