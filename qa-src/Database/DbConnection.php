@@ -21,6 +21,8 @@ namespace Q2A\Database;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Q2A\Database\DbResult;
+use Q2A\Database\Exceptions\SelectSpecException;
 
 class DbConnection
 {
@@ -165,6 +167,11 @@ class DbConnection
 	public function query($query, $params = array())
 	{
 		$query = $this->applyTableSub($query);
+		// handle old-style placeholders
+		$query = str_replace(['#', '$'], '?', $query);
+		// handle IN queries
+		$query = $this->applyArraySub($query, $params);
+		$params = $this->flattenArray($params);
 
 		try {
 			if (QA_DEBUG_PERFORMANCE) {
@@ -199,7 +206,7 @@ class DbConnection
 		// PDO quotes parameters by default, which breaks LIMIT clauses, so we bind parameters manually
 		foreach (array_values($params) as $i => $param) {
 			$dataType = filter_var($param, FILTER_VALIDATE_INT) !== false ? PDO::PARAM_INT : PDO::PARAM_STR;
-			$stmt->bindParam($i + 1, $param, $dataType);
+			$stmt->bindValue($i + 1, $param, $dataType);
 		}
 
 		for ($attempt = 0; $attempt < 100; $attempt++) {
@@ -490,6 +497,47 @@ class DbConnection
 	}
 
 	/**
+	 * Substitute single '?' in a SQL query with multiple '?' for array parameters.
+	 * @param string $query
+	 * @param array $params
+	 * @return string
+	 * @throws SelectSpecException
+	 */
+	public function applyArraySub($query, $params)
+	{
+		$result = '';
+		$hasArray = false;
+		$paramIndexCount = array();
+
+		foreach ($params as $param) {
+			if (is_array($param)) {
+				$paramIndexCount[] = count($param);
+				$hasArray = true;
+			} else {
+				$paramIndexCount[] = 1;
+			}
+		}
+
+		if ($hasArray) {
+			$explodedQuery = explode('?', $query);
+			if (count($explodedQuery) != count($paramIndexCount) + 1) {
+				throw new SelectSpecException('The number of parameters and placeholders do not match');
+			}
+			foreach ($explodedQuery as $index => $explodedQueryPart) {
+				$result .= $explodedQueryPart;
+				if (isset($paramIndexCount[$index])) {
+					$result .= $paramIndexCount[$index] == 1
+						? '?'
+						: str_repeat('?,', $paramIndexCount[$index] - 1) . '?';
+				}
+			}
+			return $result;
+		}
+
+		return $query;
+	}
+
+	/**
 	 * Return the full name (with prefix) of a database table identifier.
 	 * @param string $rawName
 	 * @return string
@@ -544,5 +592,24 @@ class DbConnection
 	public function shouldUpdateCounts()
 	{
 		return $this->updateCountsSuspended <= 0;
+	}
+
+	/**
+	 * Flatten a two-level array into a one-level array.
+	 * @param mixed $elements Input elements which can be one-level deep arrays
+	 * @return array
+	 */
+	private function flattenArray($elements)
+	{
+		$result = array();
+		foreach ($elements as $element) {
+			if (is_array($element)) {
+				$result = array_merge($result, $element);
+			} else {
+				$result[] = $element;
+			}
+		}
+
+		return $result;
 	}
 }
