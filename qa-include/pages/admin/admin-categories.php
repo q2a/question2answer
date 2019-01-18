@@ -218,15 +218,34 @@ if (qa_clicked('docancel')) {
 					$recalc = $hassubcategory && $inslug !== $editcategory['tags'];
 				}
 
+				qa_report_event('cat_edit', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'categoryid' => $editcategory['categoryid'],
+					'parentid' => @$inparentid,
+					'content' => @$incontent,
+					'position' => @$inposition,
+					'name' => $inname,
+					'slug' => $inslug
+				));
+
 				qa_redirect(qa_request(), array('edit' => $editcategory['categoryid'], 'saved' => true, 'recalc' => (int)$recalc));
 
 			} else { // creating a new one
 				$categoryid = qa_db_category_create($inparentid, $inname, $inslug);
+				
 
 				qa_db_category_set_content($categoryid, $incontent);
 
 				if (isset($inposition))
 					qa_db_category_set_position($categoryid, $inposition);
+
+				qa_report_event('cat_new', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'categoryid' => $categoryid,
+					'parentid' => $inparentid,
+					'content' => @$incontent,
+					'position' => @$inposition,
+					'name' => $inname,
+					'slug' => $inslug
+				));
 
 				qa_redirect(qa_request(), array('edit' => $inparentid, 'added' => true));
 			}
