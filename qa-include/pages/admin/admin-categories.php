@@ -225,7 +225,7 @@ if (qa_clicked('docancel')) {
 					'content' => isset($incontent)?$incontent:null,
 					'position' => isset($inposition)?$inposition:null,
 					'name' => $inname,
-					'slug' => $inslug
+					'slug' => $inslug,
 				));
 
 				qa_redirect(qa_request(), array('edit' => $editcategory['categoryid'], 'saved' => true, 'recalc' => (int)$recalc));
@@ -244,7 +244,7 @@ if (qa_clicked('docancel')) {
 					'content' => isset($incontent)?$incontent:null,
 					'position' => isset($inposition)?$inposition:null,
 					'name' => $inname,
-					'slug' => $inslug
+					'slug' => $inslug,
 				));
 
 				qa_redirect(qa_request(), array('edit' => $inparentid, 'added' => true));
