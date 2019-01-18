@@ -231,7 +231,6 @@ if (qa_clicked('docancel')) {
 
 			} else { // creating a new one
 				$categoryid = qa_db_category_create($inparentid, $inname, $inslug);
-				
 
 				qa_db_category_set_content($categoryid, $incontent);
 
