@@ -136,7 +136,9 @@ function qa_db_escape_string($string)
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	$pdo = qa_service('database')->getPDO();
-	return $pdo->quote($string);
+	// PDO::quote wraps the value in single quotes, so remove them for backwards compatibility
+	$quotedString = $pdo->quote($string);
+	return substr($quotedString, 1, -1);
 }
 
 
@@ -163,8 +165,10 @@ function qa_db_argument_to_mysql($argument, $alwaysquote, $arraybrackets = false
 			$result = implode(',', $parts);
 
 	} elseif (isset($argument)) {
-		// PDO adds quotes so no need here
-		$result = qa_db_escape_string($argument);
+		if ($alwaysquote || !is_numeric($argument))
+			$result = "'" . qa_db_escape_string($argument) . "'";
+		else
+			$result = qa_db_escape_string($argument);
 	} else
 		$result = 'NULL';
 
