@@ -128,7 +128,7 @@ class DbResult
 	 * Number of rows found (SELECT queries) or rows affected (UPDATE/INSERT/DELETE queries).
 	 * @return int
 	 */
-	public function rowCount()
+	public function affectedRows()
 	{
 		return $this->stmt->rowCount();
 	}
@@ -140,7 +140,7 @@ class DbResult
 	 */
 	public function isEmpty()
 	{
-		return $this->stmt->rowCount() === 0;
+		return $this->affectedRows() === 0;
 	}
 
 	/**

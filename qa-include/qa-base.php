@@ -1901,7 +1901,7 @@ function qa_opt($name, $value = null)
  */
 function qa_debug($var)
 {
-	echo "\n" . '<pre style="padding: 10px; background-color: #eee; color: #444; font-size: 11px; text-align: left">';
+	echo "\n" . '<pre style="padding: 10px; background-color: #eee; color: #444; font-size: 12px; text-align: left; white-space: pre-wrap">';
 	echo $var === null ? 'NULL' : htmlspecialchars(print_r($var, true), ENT_COMPAT|ENT_SUBSTITUTE);
 	echo '</pre>' . "\n";
 }

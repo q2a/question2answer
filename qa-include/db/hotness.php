@@ -35,9 +35,9 @@ function qa_db_increment_views($postid)
 	$query = 'UPDATE ^posts SET views=views+1, lastviewip=UNHEX($) WHERE postid=# AND (lastviewip IS NULL OR lastviewip!=UNHEX($))';
 	$ipHex = bin2hex(@inet_pton(qa_remote_ip_address()));
 
-	qa_db_query_sub($query, $ipHex, $postid, $ipHex);
+	$result = qa_db_query_sub($query, $ipHex, $postid, $ipHex);
 
-	return qa_db_affected_rows() > 0;
+	return $result->affectedRows() > 0;
 }
 
 

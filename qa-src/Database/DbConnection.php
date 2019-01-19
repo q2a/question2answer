@@ -302,7 +302,7 @@ class DbConnection
 		$arraykey = isset($selectspec['arraykey']) ? $selectspec['arraykey'] : null;
 
 		$result = $this->query($query, $params);
-		$data = $result->fetchAllAssoc($arraykey); // arrayvalue is applied in qa_db_post_select()
+		$data = $result->fetchAllAssoc($arraykey); // arrayvalue is applied in formatSelect()
 
 		$this->formatSelect($data, $selectspec); // post-processing
 
