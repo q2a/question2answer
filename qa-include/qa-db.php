@@ -220,7 +220,7 @@ function qa_db_prefix_callback($matches)
  */
 function qa_db_apply_sub($query, $arguments)
 {
-	// function left intact as some code calls this (or qa_db_query_sub) directly
+	// function left intact as some code calls this directly
 
 	$query = preg_replace_callback('/\^([A-Za-z_0-9]+)/', 'qa_db_prefix_callback', $query);
 
@@ -262,9 +262,8 @@ function qa_db_apply_sub($query, $arguments)
  */
 function qa_db_query_sub($query) // arguments for substitution retrieved using func_get_args()
 {
-	$funcargs = func_get_args();
-
-	return qa_db_query_sub_params($query, array_slice($funcargs, 1));
+	$params = array_slice(func_get_args(), 1);
+	return qa_service('database')->query($query, $params);
 }
 
 /**
@@ -277,7 +276,7 @@ function qa_db_query_sub($query) // arguments for substitution retrieved using f
  */
 function qa_db_query_sub_params($query, $params)
 {
-	return qa_db_query_raw(qa_db_apply_sub($query, $params));
+	return qa_service('database')->query($query, $params);
 }
 
 
