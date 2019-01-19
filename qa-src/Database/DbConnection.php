@@ -82,6 +82,15 @@ class DbConnection
 	}
 
 	/**
+	 * Indicates whether Q2A is connected to the database.
+	 * @return boolean
+	 */
+	public function isConnected()
+	{
+		return $this->pdo !== null;
+	}
+
+	/**
 	 * Connect to the Q2A database, optionally install the $failHandler (and call it if necessary). Uses PDO as of Q2A
 	 * 1.9.
 	 * @param string $failHandler
@@ -124,7 +133,7 @@ class DbConnection
 	}
 
 	/**
-	 * Disconnect from the Q2A database.
+	 * Disconnect from the Q2A database. This is not strictly required, but we do it in case there is a long Q2A shutdown process.
 	 * @return void
 	 */
 	public function disconnect()
@@ -166,6 +175,10 @@ class DbConnection
 	 */
 	public function query($query, $params = array())
 	{
+		if (!$this->isConnected()) {
+			$this->connect();
+		}
+
 		$query = $this->applyTableSub($query);
 		// handle old-style placeholders
 		$query = str_replace(['#', '$'], '?', $query);

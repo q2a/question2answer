@@ -80,7 +80,12 @@ function qa_db_connection($connect = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return qa_service('database');
+	$db = qa_service('database');
+	if ($connect && !$db->isConnected()) {
+		$db->connect();
+	}
+
+	return $db;
 }
 
 
