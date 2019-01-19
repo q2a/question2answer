@@ -32,7 +32,7 @@ require_once QA_INCLUDE_DIR . 'app/page.php';
 global $qa_usage;
 
 qa_report_process_stage('init_page');
-qa_db_connect('qa_page_db_fail_handler');
+$qa_db->connect('qa_page_db_fail_handler');
 qa_initialize_postdb_plugins();
 
 qa_page_queue_pending();
@@ -62,4 +62,4 @@ if (is_array($qa_content)) {
 		$qa_usage->output();
 }
 
-qa_db_disconnect();
+$qa_db->disconnect();

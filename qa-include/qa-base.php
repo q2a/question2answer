@@ -69,12 +69,13 @@ qa_register_core_modules();
 
 qa_initialize_predb_plugins();
 require_once QA_INCLUDE_DIR . 'qa-db.php';
-qa_db_allow_connect();
+$qa_db = qa_service('database');
+$qa_db->allowConnect();
 
 // $qa_autoconnect defaults to true so that optional plugins will load for external code. Q2A core
 // code sets $qa_autoconnect to false so that we can use custom fail handlers.
 if (!isset($qa_autoconnect) || $qa_autoconnect !== false) {
-	qa_db_connect('qa_page_db_fail_handler');
+	$qa_db->connect('qa_page_db_fail_handler');
 	qa_initialize_postdb_plugins();
 }
 

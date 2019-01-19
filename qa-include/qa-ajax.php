@@ -78,11 +78,11 @@ $routing = array(
 $operation = qa_post_text('qa_operation');
 
 if (isset($routing[$operation])) {
-	qa_db_connect('qa_ajax_db_fail_handler');
+	$qa_db->connect('qa_ajax_db_fail_handler');
 	qa_initialize_postdb_plugins();
 
 	qa_initialize_buffering();
 	require QA_INCLUDE_DIR . 'ajax/' . $routing[$operation];
 
-	qa_db_disconnect();
+	$qa_db->disconnect();
 }

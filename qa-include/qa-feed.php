@@ -102,7 +102,7 @@ function qa_feed_load_ifcategory($categoryslugs, $allkey, $catkey, &$title,
 
 // Connect to database and get the type of feed and category requested (in some cases these are overridden later)
 
-qa_db_connect('qa_feed_db_fail_handler');
+$qa_db->connect('qa_feed_db_fail_handler');
 qa_initialize_postdb_plugins();
 
 $requestlower = strtolower(qa_request());
@@ -422,7 +422,7 @@ $lines[] = '</rss>';
 
 // Disconnect here, once all output is ready to go
 
-qa_db_disconnect();
+$qa_db->disconnect();
 
 
 // Output the XML - and we're done!

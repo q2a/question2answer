@@ -43,7 +43,7 @@ qa_report_process_stage('init_blob');
 
 require_once QA_INCLUDE_DIR . 'app/blobs.php';
 
-qa_db_connect('qa_blob_db_fail_handler');
+$qa_db->connect('qa_blob_db_fail_handler');
 qa_initialize_postdb_plugins();
 
 $blob = qa_read_blob(qa_get('qa_blobid'));
@@ -92,4 +92,4 @@ if (isset($blob) && isset($blob['content'])) {
 	header('HTTP/1.0 404 Not Found');
 }
 
-qa_db_disconnect();
+$qa_db->disconnect();
