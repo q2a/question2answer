@@ -278,7 +278,7 @@ class DbConnection
 		// check for cached results
 		if (isset($selectspec['caching'])) {
 			$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
-			$cacheKey = 'q2a.query:' . $selectspec['caching']['key'];
+			$cacheKey = 'query:' . $selectspec['caching']['key'];
 
 			if ($cacheDriver->isEnabled()) {
 				$queryData = $cacheDriver->get($cacheKey);
@@ -290,8 +290,9 @@ class DbConnection
 
 		$query = 'SELECT ';
 		foreach ($selectspec['columns'] as $columnas => $columnfrom) {
-			$query .= $columnfrom . (is_int($columnas) ? '' : (' AS ' . $columnas)) . ', ';
+			$query .= is_int($columnas) ? "$columnfrom, " : "$columnfrom AS `$columnas`, ";
 		}
+
 		$query = substr($query, 0, -2);
 		if (isset($selectspec['source']) && strlen($selectspec['source']) > 0) {
 			$query .= ' FROM ' . $selectspec['source'];
@@ -497,6 +498,35 @@ class DbConnection
 	}
 
 	/**
+	 * Return the full name (with prefix) of a database table identifier.
+	 * @param string $rawName
+	 * @return string
+	 */
+	public function addTablePrefix($rawName)
+	{
+		$prefix = QA_MYSQL_TABLE_PREFIX;
+
+		if (defined('QA_MYSQL_USERS_PREFIX')) {
+			switch (strtolower($rawName)) {
+				case 'users':
+				case 'userlogins':
+				case 'userprofile':
+				case 'userfields':
+				case 'messages':
+				case 'cookies':
+				case 'blobs':
+				case 'cache':
+				case 'userlogins_ibfk_1': // also special cases for constraint names
+				case 'userprofile_ibfk_1':
+					$prefix = QA_MYSQL_USERS_PREFIX;
+					break;
+			}
+		}
+
+		return $prefix . $rawName;
+	}
+
+	/**
 	 * Substitute single '?' in a SQL query with multiple '?' for array parameters.
 	 * @param string $query
 	 * @param array $params
@@ -535,35 +565,6 @@ class DbConnection
 		}
 
 		return $query;
-	}
-
-	/**
-	 * Return the full name (with prefix) of a database table identifier.
-	 * @param string $rawName
-	 * @return string
-	 */
-	public function addTablePrefix($rawName)
-	{
-		$prefix = QA_MYSQL_TABLE_PREFIX;
-
-		if (defined('QA_MYSQL_USERS_PREFIX')) {
-			switch (strtolower($rawName)) {
-				case 'users':
-				case 'userlogins':
-				case 'userprofile':
-				case 'userfields':
-				case 'messages':
-				case 'cookies':
-				case 'blobs':
-				case 'cache':
-				case 'userlogins_ibfk_1': // also special cases for constraint names
-				case 'userprofile_ibfk_1':
-					$prefix = QA_MYSQL_USERS_PREFIX;
-					break;
-			}
-		}
-
-		return $prefix . $rawName;
 	}
 
 	/**
