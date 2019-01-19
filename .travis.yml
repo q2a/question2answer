@@ -13,11 +13,6 @@ php:
   - '7.2'
   - '7.3'
 
-matrix:
-  include:
-    - php: '5.3'
-      dist: precise
-
 notifications:
   email:
     on_success: change
