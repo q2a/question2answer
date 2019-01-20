@@ -20,14 +20,9 @@
 */
 
 return array(
-	'all_posts_converted' => 'All posts converted.',
 	'allow_images' => 'Allow images to be uploaded',
 	'allow_other_content' => 'Allow other content to be uploaded, e.g. Flash, PDF',
 	'characters' => 'characters',
-	'click_here' => 'click here',
-	'error' => 'ERROR',
 	'maximum_size' => 'Maximum size of uploads:',
 	'mb_max_x' => 'MB (max ^)',
-	'update_broken_images' => 'Update broken images from old CKeditor Smiley plugin:',
-	'updating_posts' => 'Updating posts...',
 );

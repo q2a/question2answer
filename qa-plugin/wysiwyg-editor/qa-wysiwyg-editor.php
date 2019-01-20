@@ -57,40 +57,6 @@ class qa_wysiwyg_editor
 			'wysiwyg_editor_upload_max_size_display' => 'wysiwyg_editor_upload_images_field',
 		));
 
-		// handle AJAX requests to 'wysiwyg-editor-ajax'
-		$js = array(
-			'function wysiwyg_editor_ajax(totalEdited) {',
-			'	$.ajax({',
-			'		url: ' . qa_js(qa_path('wysiwyg-editor-ajax')) . ',',
-			'		success: function(response) {',
-			'			var postsEdited = parseInt(response, 10);',
-			'			var $btn = $("#wysiwyg_editor_ajax");',
-			'			if (isNaN(postsEdited)) {',
-			'				$btn.text(' . qa_js(qa_lang_html('wysiwyg/error')) . ');',
-			'			}',
-			'			else if (postsEdited < 5) {',
-			'				$btn.text(' . qa_js(qa_lang_html('wysiwyg/all_posts_converted')) . ');',
-			'			}',
-			'			else {',
-			'				totalEdited += postsEdited;',
-			'				$btn.text(' . qa_js(qa_lang_html('wysiwyg/updating_posts') . ' ') . ' + totalEdited)',
-			'				window.setTimeout(function() {',
-			'					wysiwyg_editor_ajax(totalEdited);',
-			'				}, 1000);',
-			'			}',
-			'		}',
-			'	});',
-			'}',
-
-			'$("#wysiwyg_editor_ajax").click(function() {',
-			'	wysiwyg_editor_ajax(0);',
-			'	return false;',
-			'});',
-		);
-		$ajaxHtml = qa_lang_html('wysiwyg/update_broken_images') . ' ' .
-			'<button id="wysiwyg_editor_ajax">' . qa_lang_html('wysiwyg/click_here') . '</button> ' .
-			'<script>' . implode("\n", $js) . '</script>';
-
 		return array(
 			'ok' => $saved ? qa_lang_html('admin/options_saved') : null,
 
@@ -117,11 +83,6 @@ class qa_wysiwyg_editor
 					'type' => 'number',
 					'value' => qa_html(number_format($this->bytes_to_mega(qa_opt('wysiwyg_editor_upload_max_size')), 1)),
 					'tags' => 'name="wysiwyg_editor_upload_max_size_field"',
-				),
-
-				array(
-					'type' => 'custom',
-					'html' => $ajaxHtml,
 				),
 			),
 
