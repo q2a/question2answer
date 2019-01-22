@@ -266,11 +266,13 @@ function qa_db_users_get_for_recalc_points($startuserid, $count)
 
 
 /**
- * Recalculate all userpoints columns for users $firstuserid to $lastuserid in the database
+ * Recalculate all userpoints columns for users $firstuserid to $lastuserid in the database. Send a user id to point map containing
+ * the result of applying all plugins point recalculations
  * @param $firstuserid
  * @param $lastuserid
+ * @param $userIdPointsMap
  */
-function qa_db_users_recalc_points($firstuserid, $lastuserid)
+function qa_db_users_recalc_points($firstuserid, $lastuserid, $userIdPointsMap)
 {
 	require_once QA_INCLUDE_DIR . 'db/points.php';
 
@@ -315,8 +317,34 @@ function qa_db_users_recalc_points($firstuserid, $lastuserid)
 		$updatepoints .= '+(' . ((int)$calculation['multiple']) . '*' . $field . ')';
 	}
 
+	$pluginLeftJoin = '';
+	$pluginExtraPoints = '';
+
+	if (!empty($userIdPointsMap)) {
+		// Start the left join
+
+		$pluginLeftJoin = 'LEFT JOIN (';
+
+		// Build the derived table
+
+		reset($userIdPointsMap);
+		$userId = key($userIdPointsMap);
+		$pluginLeftJoin .= sprintf('SELECT %s userid, %d points ', $userId, $userIdPointsMap[$userId]);
+		unset($userIdPointsMap[$userId]);
+
+		foreach ($userIdPointsMap as $userId => $points) {
+			$pluginLeftJoin .= sprintf('UNION SELECT %s, %d ', $userId, $userIdPointsMap[$userId]);
+		}
+
+		// Finish the left join
+
+		$pluginLeftJoin .= ') plugin_points ON up.userid = plugin_points.userid ';
+
+		$pluginExtraPoints = '+ COALESCE(plugin_points.points, 0) ';
+	}
+
 	qa_db_query_sub(
-		'UPDATE ^userpoints SET points=' . $updatepoints . '+bonus WHERE userid>=# AND userid<=#',
+		'UPDATE ^userpoints up ' . $pluginLeftJoin . 'SET up.points=' . $updatepoints . '+ bonus ' . $pluginExtraPoints . 'WHERE up.userid >= # AND up.userid <= #',
 		$firstuserid, $lastuserid
 	);
 }

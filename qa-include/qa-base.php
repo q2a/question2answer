@@ -940,7 +940,7 @@ function qa_load_module($type, $name)
 }
 
 /**
- * Return an array of instantiated clases for modules which have defined $method
+ * Return an array of instantiated classes for modules which have defined $method
  * (all modules are loaded but not included in the returned array)
  * @param $method
  * @return array
@@ -964,7 +964,28 @@ function qa_load_all_modules_with($method)
 }
 
 /**
- * Return an array of instantiated clases for modules of $type which have defined $method
+ * Return an array of instantiated classes for modules of type $type
+ * @param $type
+ * @return array
+ */
+function qa_load_modules_for_type($type)
+{
+	$modules = array();
+
+	$trynames = qa_list_modules($type);
+
+	foreach ($trynames as $tryname) {
+		$module = qa_load_module($type, $tryname);
+		if (isset($module)) {
+			$modules[$tryname] = $module;
+		}
+	}
+
+	return $modules;
+}
+
+/**
+ * Return an array of instantiated classes for modules of $type which have defined $method
  * (other modules of that type are also loaded but not included in the returned array)
  * @param $type
  * @param $method
