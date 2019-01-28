@@ -24,6 +24,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
+use Q2A\Exceptions\FatalErrorException;
 use Q2A\Notifications\Email;
 use Q2A\Notifications\Mailer;
 use Q2A\Notifications\Status as NotifyStatus;
@@ -44,21 +45,22 @@ function qa_suspend_notifications($suspend = true)
  * Send email to person with $userid and/or $email and/or $handle (null/invalid values are ignored or retrieved from
  * user database as appropriate). Email uses $subject and $body, after substituting each key in $subs with its
  * corresponding value, plus applying some standard substitutions such as ^site_title, ^site_url, ^handle and ^email.
- * @param $userid
- * @param $email
- * @param $handle
- * @param $subject
- * @param $body
- * @param $subs
- * @param bool $html
- * @return bool
+ * If notifications are suspended, then a null value is returned.
+ * @param mixed $userid
+ * @param string $email
+ * @param string $handle
+ * @param string $subject
+ * @param string $body
+ * @param array $subs
+ * @param bool|false $html
+ * @return bool|null
  */
 function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, $html = false)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	if (NotifyStatus::isSuspended()) {
-		return;
+		return null;
 	}
 
 	if ($userid) {
@@ -74,8 +76,9 @@ function qa_send_notification($userid, $email, $handle, $subject, $body, $subs, 
 /**
  * Send the email based on the $params array - the following keys are required (some can be empty): fromemail,
  * fromname, toemail, toname, subject, body, html
- * @param $params
+ * @param array $params
  * @return bool
+ * @throws phpmailerException
  */
 function qa_send_email($params)
 {
