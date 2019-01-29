@@ -28,11 +28,11 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 /**
  * Check if $userid can vote on $post, on the page $topage.
  * Return an HTML error to display if there was a problem, or false if it's OK.
- * @param $post
- * @param $vote
- * @param $userid
- * @param $topage
- * @return bool|mixed|string
+ * @param array $post
+ * @param int $vote
+ * @param mixed $userid
+ * @param string $topage
+ * @return bool|string
  */
 function qa_vote_error_html($post, $vote, $userid, $topage)
 {
@@ -106,12 +106,12 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 /**
  * Actually set (application level) the $vote (-1/0/1) by $userid (with $handle and $cookieid) on $postid.
  * Handles user points, recounting and event reports as appropriate.
- * @param $post
- * @param $userid
- * @param $handle
- * @param $cookieid
- * @param $vote
- * @return void
+ * @param array $post
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
+ * @param int $vote
+ * @return mixed
  */
 function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 {
@@ -178,10 +178,10 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 /**
  * Check if $userid can flag $post, on the page $topage.
  * Return an HTML error to display if there was a problem, or false if it's OK.
- * @param $post
- * @param $userid
- * @param $topage
- * @return bool|mixed|string
+ * @param array $post
+ * @param mixed $userid
+ * @param string $topage
+ * @return bool|string|array
  */
 function qa_flag_error_html($post, $userid, $topage)
 {
@@ -228,11 +228,11 @@ function qa_flag_error_html($post, $userid, $topage)
  * Set (application level) a flag by $userid (with $handle and $cookieid) on $oldpost which belongs to $question.
  * Handles recounting, admin notifications and event reports as appropriate.
  * Returns true if the post should now be hidden because it has accumulated enough flags.
- * @param $oldpost
- * @param $userid
- * @param $handle
- * @param $cookieid
- * @param $question
+ * @param array $oldpost
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
+ * @param array $question
  * @return bool
  */
 function qa_flag_set_tohide($oldpost, $userid, $handle, $cookieid, $question)
@@ -278,10 +278,10 @@ function qa_flag_set_tohide($oldpost, $userid, $handle, $cookieid, $question)
 /**
  * Clear (application level) a flag on $oldpost by $userid (with $handle and $cookieid).
  * Handles recounting and event reports as appropriate.
- * @param $oldpost
- * @param $userid
- * @param $handle
- * @param $cookieid
+ * @param array $oldpost
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
  * @return mixed
  */
 function qa_flag_clear($oldpost, $userid, $handle, $cookieid)
@@ -320,10 +320,10 @@ function qa_flag_clear($oldpost, $userid, $handle, $cookieid)
 /**
  * Clear (application level) all flags on $oldpost by $userid (with $handle and $cookieid).
  * Handles recounting and event reports as appropriate.
- * @param $oldpost
- * @param $userid
- * @param $handle
- * @param $cookieid
+ * @param array $oldpost
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
  * @return mixed
  */
 function qa_flags_clear_all($oldpost, $userid, $handle, $cookieid)
