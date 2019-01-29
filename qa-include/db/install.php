@@ -29,6 +29,7 @@ define('QA_DB_VERSION_CURRENT', 67);
 
 /**
  * Return the column type for user ids after verifying it is one of the legal options
+ * @return string
  */
 function qa_db_user_column_type_verify()
 {
@@ -59,6 +60,7 @@ function qa_db_user_column_type_verify()
 /**
  * Return an array of table definitions. For each element of the array, the key is the table name (without prefix)
  * and the value is an array of column definitions, [column name] => [definition]. The column name is omitted for indexes.
+ * @return array
  */
 function qa_db_table_definitions()
 {
@@ -539,7 +541,7 @@ function qa_db_table_definitions()
 
 /**
  * Return array with all values from $array as keys
- * @param $array
+ * @param array $array
  * @return array
  */
 function qa_array_to_keys($array)
@@ -550,7 +552,7 @@ function qa_array_to_keys($array)
 
 /**
  * Return a list of tables missing from the database, [table name] => [column/index definitions]
- * @param $definitions
+ * @param array $definitions
  * @return array
  */
 function qa_db_missing_tables($definitions)
@@ -569,8 +571,8 @@ function qa_db_missing_tables($definitions)
 
 /**
  * Return a list of columns missing from $table in the database, given the full definition set in $definition
- * @param $table
- * @param $definition
+ * @param string $table
+ * @param array $definition
  * @return array
  */
 function qa_db_missing_columns($table, $definition)
@@ -589,6 +591,7 @@ function qa_db_missing_columns($table, $definition)
 
 /**
  * Return the current version of the Q2A database, to determine need for DB upgrades
+ * @return int|null
  */
 function qa_db_get_db_version()
 {
@@ -607,7 +610,7 @@ function qa_db_get_db_version()
 
 /**
  * Set the current version in the database
- * @param $version
+ * @param int $version
  */
 function qa_db_set_db_version($version)
 {
@@ -619,6 +622,7 @@ function qa_db_set_db_version($version)
 
 /**
  * Return a string describing what is wrong with the database, or false if everything is just fine
+ * @return false|string
  */
 function qa_db_check_tables()
 {
@@ -703,8 +707,8 @@ function qa_db_install_tables()
 
 /**
  * Return the SQL command to create a table with $rawname and $definition obtained from qa_db_table_definitions()
- * @param $rawname
- * @param $definition
+ * @param string $rawname
+ * @param array $definition
  * @return string
  */
 function qa_db_create_table_sql($rawname, $definition)
@@ -720,6 +724,7 @@ function qa_db_create_table_sql($rawname, $definition)
 
 /**
  * Return the SQL to create the default entries in the userfields table (before 1.3 these were hard-coded in PHP)
+ * @return string
  */
 function qa_db_default_userfields_sql()
 {
@@ -1629,9 +1634,9 @@ function qa_db_upgrade_tables()
 
 /**
  * Reset the definitions of $columns in $table according to the $definitions array
- * @param $definitions
- * @param $table
- * @param $columns
+ * @param array $definitions
+ * @param string $table
+ * @param array $columns
  */
 function qa_db_upgrade_table_columns($definitions, $table, $columns)
 {
@@ -1646,7 +1651,7 @@ function qa_db_upgrade_table_columns($definitions, $table, $columns)
 
 /**
  * Perform upgrade $query and output progress to the browser
- * @param $query
+ * @param string $query
  */
 function qa_db_upgrade_query($query)
 {
@@ -1657,7 +1662,7 @@ function qa_db_upgrade_query($query)
 
 /**
  * Output $text to the browser (after converting to HTML) and do all we can to get it displayed
- * @param $text
+ * @param string $text
  */
 function qa_db_upgrade_progress($text)
 {

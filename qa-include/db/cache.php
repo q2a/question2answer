@@ -29,9 +29,9 @@ require_once QA_INCLUDE_DIR . 'db/maxima.php';
 
 /**
  * Create (or replace) the item ($type, $cacheid) in the database cache table with $content
- * @param $type
- * @param $cacheid
- * @param $content
+ * @param string $type
+ * @param string $cacheid
+ * @param string $content
  * @return mixed
  */
 function qa_db_cache_set($type, $cacheid, $content)
@@ -53,8 +53,8 @@ function qa_db_cache_set($type, $cacheid, $content)
 
 /**
  * Retrieve the item ($type, $cacheid) from the database cache table
- * @param $type
- * @param $cacheid
+ * @param string $type
+ * @param string $cacheid
  * @return mixed|null
  */
 function qa_db_cache_get($type, $cacheid)
