@@ -38,8 +38,8 @@ function qa_captcha_available()
 
 /**
  * Return an HTML string explaining $captchareason (from qa_user_captcha_reason()) to the user about why they are seeing a captcha
- * @param $captchareason
- * @return mixed|null|string
+ * @param string $captchareason
+ * @return string|null
  */
 function qa_captcha_reason_note($captchareason)
 {
@@ -66,10 +66,10 @@ function qa_captcha_reason_note($captchareason)
 /**
  * Prepare $qa_content for showing a captcha, adding the element to $fields, given previous $errors, and a $note to display.
  * Returns JavaScript required to load CAPTCHA when field is shown by user (e.g. clicking comment button).
- * @param $qa_content
- * @param $fields
- * @param $errors
- * @param $note
+ * @param array $qa_content
+ * @param array $fields
+ * @param array $errors
+ * @param string $note
  * @return string
  */
 function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note = null)
@@ -105,7 +105,7 @@ function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note = null)
 
 /**
  * Check if captcha is submitted correctly, and if not, set $errors['captcha'] to a descriptive string.
- * @param $errors
+ * @param array $errors
  * @return bool
  */
 function qa_captcha_validate_post(&$errors)
