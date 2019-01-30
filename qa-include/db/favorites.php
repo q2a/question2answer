@@ -106,9 +106,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  * Add the entity $entitytype with $entityid to the favorites list of $userid. Handles switching streams across from
  * per-user to per-entity based on how many other users have favorited the entity (see long explanation above). If
  * appropriate, it also adds recent events from that entity to the user's event stream.
- * @param $userid
- * @param $entitytype
- * @param $entityid
+ * @param mixed $userid
+ * @param string $entitytype
+ * @param int $entityid
  */
 function qa_db_favorite_create($userid, $entitytype, $entityid)
 {
@@ -186,9 +186,9 @@ function qa_db_favorite_create($userid, $entitytype, $entityid)
 /**
  * Delete the entity $entitytype with $entityid from the favorites list of $userid, removing any corresponding events
  * from the user's stream.
- * @param $userid
- * @param $entitytype
- * @param $entityid
+ * @param mixed $userid
+ * @param string $entitytype
+ * @param int $entityid
  */
 function qa_db_favorite_delete($userid, $entitytype, $entityid)
 {

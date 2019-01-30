@@ -35,7 +35,7 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
 
 /**
  * Database failure handler function for RSS feeds - outputs HTTP and text errors
- * @param $type
+ * @param string $type
  * @param int $errno
  * @param string $error
  * @param string $query
@@ -62,8 +62,8 @@ function qa_feed_not_found()
 /**
  * Common function to load appropriate set of questions for requested feed, check category exists, and set up page title
  * @param array $categoryslugs
- * @param string $allkey
- * @param string $catkey
+ * @param string|null $allkey
+ * @param string|null $catkey
  * @param string $title
  * @param array $questionselectspec1
  * @param array $questionselectspec2

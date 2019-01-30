@@ -27,19 +27,19 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Create a new post in the database and return its ID (based on auto-incrementing)
- * @param $type
- * @param $parentid
- * @param $userid
- * @param $cookieid
- * @param $ip
- * @param $title
- * @param $content
- * @param $format
- * @param $tagstring
- * @param $notify
- * @param $categoryid
- * @param $name
- * @return mixed
+ * @param string $type
+ * @param int $parentid
+ * @param mixed $userid
+ * @param string $cookieid
+ * @param string $ip
+ * @param string $title
+ * @param string $content
+ * @param string $format
+ * @param string $tagstring
+ * @param bool $notify
+ * @param int|null $categoryid
+ * @param string|null $name
+ * @return string
  */
 function qa_db_post_create($type, $parentid, $userid, $cookieid, $ip, $title, $content, $format, $tagstring, $notify, $categoryid = null, $name = null)
 {
@@ -55,8 +55,8 @@ function qa_db_post_create($type, $parentid, $userid, $cookieid, $ip, $title, $c
 
 /**
  * Recalculate the full category path (i.e. columns catidpath1/2/3) for posts from $firstpostid to $lastpostid (if specified)
- * @param $firstpostid
- * @param $lastpostid
+ * @param int $firstpostid
+ * @param int|null $lastpostid
  */
 function qa_db_posts_calc_category_path($firstpostid, $lastpostid = null)
 {
@@ -76,8 +76,8 @@ function qa_db_posts_calc_category_path($firstpostid, $lastpostid = null)
 
 /**
  * Get the full category path (including categoryid) for $postid
- * @param $postid
- * @return array|null
+ * @param int $postid
+ * @return array
  */
 function qa_db_post_get_category_path($postid)
 {
@@ -90,7 +90,7 @@ function qa_db_post_get_category_path($postid)
 
 /**
  * Update the cached number of answers for $questionid in the database, along with the highest netvotes of any of its answers
- * @param $questionid
+ * @param int $questionid
  */
 function qa_db_post_acount_update($questionid)
 {
@@ -105,7 +105,7 @@ function qa_db_post_acount_update($questionid)
 
 /**
  * Recalculate the number of questions for each category in $path retrieved via qa_db_post_get_category_path()
- * @param $path
+ * @param array $path
  */
 function qa_db_category_path_qcount_update($path)
 {
@@ -118,7 +118,7 @@ function qa_db_category_path_qcount_update($path)
 
 /**
  * Update the cached number of questions for category $categoryid in the database, including its subcategories
- * @param $categoryid
+ * @param int|null $categoryid
  */
 function qa_db_ifcategory_qcount_update($categoryid)
 {
@@ -136,12 +136,12 @@ function qa_db_ifcategory_qcount_update($categoryid)
 /**
  * Add rows into the database title index, where $postid contains the words $wordids - this does the same sort
  * of thing as qa_db_posttags_add_post_wordids() in a different way, for no particularly good reason.
- * @param $postid
- * @param $wordids
+ * @param int $postid
+ * @param array $wordids
  */
 function qa_db_titlewords_add_post_wordids($postid, $wordids)
 {
-	if (count($wordids)) {
+	if (!empty($wordids)) {
 		$rowstoadd = array();
 		foreach ($wordids as $wordid)
 			$rowstoadd[] = array($postid, $wordid);
@@ -157,14 +157,14 @@ function qa_db_titlewords_add_post_wordids($postid, $wordids)
 /**
  * Add rows into the database content index, where $postid (of $type, with the antecedent $questionid)
  * has words as per the keys of $wordidcounts, and the corresponding number of those words in the values.
- * @param $postid
- * @param $type
- * @param $questionid
- * @param $wordidcounts
+ * @param int $postid
+ * @param string $type
+ * @param int $questionid
+ * @param array $wordidcounts
  */
 function qa_db_contentwords_add_post_wordidcounts($postid, $type, $questionid, $wordidcounts)
 {
-	if (count($wordidcounts)) {
+	if (!empty($wordidcounts)) {
 		$rowstoadd = array();
 		foreach ($wordidcounts as $wordid => $count)
 			$rowstoadd[] = array($postid, $wordid, $count, $type, $questionid);
@@ -179,12 +179,12 @@ function qa_db_contentwords_add_post_wordidcounts($postid, $type, $questionid, $
 
 /**
  * Add rows into the database index of individual tag words, where $postid contains the words $wordids
- * @param $postid
- * @param $wordids
+ * @param int $postid
+ * @param array $wordids
  */
 function qa_db_tagwords_add_post_wordids($postid, $wordids)
 {
-	if (count($wordids)) {
+	if (!empty($wordids)) {
 		$rowstoadd = array();
 		foreach ($wordids as $wordid)
 			$rowstoadd[] = array($postid, $wordid);
@@ -199,12 +199,12 @@ function qa_db_tagwords_add_post_wordids($postid, $wordids)
 
 /**
  * Add rows into the database index of whole tags, where $postid contains the tags $wordids
- * @param $postid
- * @param $wordids
+ * @param int $postid
+ * @param array $wordids
  */
 function qa_db_posttags_add_post_wordids($postid, $wordids)
 {
-	if (count($wordids)) {
+	if (!empty($wordids)) {
 		qa_db_query_sub(
 			'INSERT INTO ^posttags (postid, wordid, postcreated) SELECT postid, wordid, created FROM ^words, ^posts WHERE postid=# AND wordid IN ($)',
 			$postid, $wordids
@@ -215,12 +215,12 @@ function qa_db_posttags_add_post_wordids($postid, $wordids)
 
 /**
  * Return an array mapping each word in $words to its corresponding wordid in the database
- * @param $words
+ * @param array $words
  * @return array
  */
 function qa_db_word_mapto_ids($words)
 {
-	if (count($words)) {
+	if (!empty($words)) {
 		return qa_db_read_all_assoc(qa_db_query_sub(
 			'SELECT wordid, word FROM ^words WHERE word IN ($)', $words
 		), 'word', 'wordid');
@@ -232,7 +232,7 @@ function qa_db_word_mapto_ids($words)
 
 /**
  * Return an array mapping each word in $words to its corresponding wordid in the database, adding any that are missing
- * @param $words
+ * @param array $words
  * @return array
  */
 function qa_db_word_mapto_ids_add($words)
@@ -245,7 +245,7 @@ function qa_db_word_mapto_ids_add($words)
 			$wordstoadd[] = $word;
 	}
 
-	if (count($wordstoadd)) {
+	if (!empty($wordstoadd)) {
 		qa_db_query_sub('LOCK TABLES ^words WRITE'); // to prevent two requests adding the same word
 
 		$wordtoid = qa_db_word_mapto_ids($words); // map it again in case table content changed before it was locked
@@ -269,7 +269,7 @@ function qa_db_word_mapto_ids_add($words)
 
 /**
  * Update the titlecount column in the database for the words in $wordids, based on how many posts they appear in the title of
- * @param $wordids
+ * @param array $wordids
  */
 function qa_db_word_titlecount_update($wordids)
 {
@@ -284,7 +284,7 @@ function qa_db_word_titlecount_update($wordids)
 
 /**
  * Update the contentcount column in the database for the words in $wordids, based on how many posts they appear in the content of
- * @param $wordids
+ * @param array $wordids
  */
 function qa_db_word_contentcount_update($wordids)
 {
@@ -299,7 +299,7 @@ function qa_db_word_contentcount_update($wordids)
 
 /**
  * Update the tagwordcount column in the database for the individual tag words in $wordids, based on how many posts they appear in the tags of
- * @param $wordids
+ * @param array $wordids
  */
 function qa_db_word_tagwordcount_update($wordids)
 {
@@ -314,7 +314,7 @@ function qa_db_word_tagwordcount_update($wordids)
 
 /**
  * Update the tagcount column in the database for the whole tags in $wordids, based on how many posts they appear as tags of
- * @param $wordids
+ * @param array $wordids
  */
 function qa_db_word_tagcount_update($wordids)
 {
