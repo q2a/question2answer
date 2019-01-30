@@ -27,8 +27,8 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Given a $question and its $childposts from the database, return a list of that question's answers
- * @param $question
- * @param $childposts
+ * @param array $question
+ * @param array $childposts
  * @return array
  */
 function qa_page_q_load_as($question, $childposts)
@@ -53,9 +53,9 @@ function qa_page_q_load_as($question, $childposts)
  * Given a $question, its $childposts and its answers $achildposts from the database,
  * return a list of comments or follow-on questions for that question or its answers.
  * Follow-on and duplicate questions are now returned, with their visibility determined in qa_page_q_comment_follow_list()
- * @param $question
- * @param $childposts
- * @param $achildposts
+ * @param array $question
+ * @param array $childposts
+ * @param array $achildposts
  * @param array $duplicateposts
  * @return array
  */
@@ -93,11 +93,10 @@ function qa_page_q_load_c_follows($question, $childposts, $achildposts, $duplica
  * Calculates which operations the current user may perform on a post. This function is a key part of Q2A's logic
  * and is ripe for overriding by plugins. The latter two arrays can contain additional posts retrieved from the
  * database, and these will be ignored.
- *
  * @param array $post The question/answer/comment to check.
- * @param array $parentpost The post's parent if there is one.
- * @param array $siblingposts The post's siblings (i.e. those with the same type and parent as the post).
- * @param array $childposts The post's children (e.g. comments on answers).
+ * @param array|null $parentpost The post's parent if there is one.
+ * @param array|null $siblingposts The post's siblings (i.e. those with the same type and parent as the post).
+ * @param array|null $childposts The post's children (e.g. comments on answers).
  * @return array List of elements that can be added to the post.
  */
 function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $childposts = null)
@@ -257,11 +256,11 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
  * is closed, pass the post used to close this question in $closepost, otherwise null. $usershtml should be an array
  * which maps userids to HTML user representations, including the question's author and (if present) last editor. If a
  * form has been explicitly requested for the page, set $formrequested to true - this will hide the buttons.
- * @param $question
- * @param $parentquestion
- * @param $closepost
- * @param $usershtml
- * @param $formrequested
+ * @param array $question
+ * @param array|null $parentquestion
+ * @param int|null $closepost
+ * @param array $usershtml
+ * @param bool $formrequested
  * @return array
  */
 function qa_page_q_question_view($question, $parentquestion, $closepost, $usershtml, $formrequested)
@@ -492,11 +491,11 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
  * answer's $question and whether it $isselected. $usershtml should be an array which maps userids to HTML user
  * representations, including the answer's author and (if present) last editor. If a form has been explicitly requested
  * for the page, set $formrequested to true - this will hide the buttons.
- * @param $question
- * @param $answer
- * @param $isselected
- * @param $usershtml
- * @param $formrequested
+ * @param array $question
+ * @param array $answer
+ * @param bool $isselected
+ * @param array $usershtml
+ * @param bool $formrequested
  * @return array
  */
 function qa_page_q_answer_view($question, $answer, $isselected, $usershtml, $formrequested)
@@ -643,18 +642,17 @@ function qa_page_q_answer_view($question, $answer, $isselected, $usershtml, $for
  * current user. Pass the comment's $parent post and antecedent $question. $usershtml should be an array which maps
  * userids to HTML user representations, including the comments's author and (if present) last editor. If a form has
  * been explicitly requested for the page, set $formrequested to true - this will hide the buttons.
- * @param $question
- * @param $parent
- * @param $comment
- * @param $usershtml
- * @param $formrequested
+ * @param array $question
+ * @param array $parent
+ * @param array $comment
+ * @param array $usershtml
+ * @param bool $formrequested
  * @return array
  */
 function qa_page_q_comment_view($question, $parent, $comment, $usershtml, $formrequested)
 {
 	$commentid = $comment['postid'];
 	$questionid = ($parent['basetype'] == 'Q') ? $parent['postid'] : $parent['parentid'];
-	$answerid = ($parent['basetype'] == 'Q') ? null : $parent['postid'];
 	$userid = qa_get_logged_in_userid();
 	$cookieid = qa_cookie_get();
 
@@ -784,13 +782,13 @@ function qa_page_q_comment_view($question, $parent, $comment, $usershtml, $formr
  * comments' and follow on questions' authors and (if present) last editors. If a form has been explicitly requested
  * for the page, set $formrequested to true and pass the postid of the post for the form in $formpostid - this will
  * hide the buttons and remove the $formpostid comment from the list.
- * @param $question
- * @param $parent
- * @param $commentsfollows
- * @param $alwaysfull
- * @param $usershtml
- * @param $formrequested
- * @param $formpostid
+ * @param array $question
+ * @param array $parent
+ * @param array $commentsfollows
+ * @param bool $alwaysfull
+ * @param array $usershtml
+ * @param bool $formrequested
+ * @param int $formpostid
  * @return array
  */
 function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $alwaysfull, $usershtml, $formrequested, $formpostid)
@@ -865,7 +863,7 @@ function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $al
 		}
 	}
 
-	if (!count($commentlist['cs']))
+	if (empty($commentlist['cs']))
 		$commentlist['hidden'] = true;
 
 	return $commentlist;
@@ -877,14 +875,14 @@ function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $al
  * and the result of qa_user_captcha_reason() in $captchareason. Pass previous inputs from a submitted version of this
  * form in the array $in and resulting errors in $errors. If $loadnow is true, the form will be loaded immediately. Set
  * $formrequested to true if the user explicitly requested it, as opposed being shown automatically.
- * @param $qa_content
- * @param $formid
- * @param $captchareason
- * @param $question
- * @param $in
- * @param $errors
- * @param $loadnow
- * @param $formrequested
+ * @param array $qa_content
+ * @param string $formid
+ * @param string $captchareason
+ * @param array $question
+ * @param array $in
+ * @param array $errors
+ * @param bool $loadnow
+ * @param bool $formrequested
  * @return array
  */
 function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, $in, $errors, $loadnow, $formrequested)
@@ -1026,14 +1024,14 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
  * to use for the form in $formid and the result of qa_user_captcha_reason() in $captchareason. Pass previous inputs
  * from a submitted version of this form in the array $in and resulting errors in $errors. If $loadfocusnow is true,
  * the form will be loaded and focused immediately.
- * @param $qa_content
- * @param $question
- * @param $parent
- * @param $formid
- * @param $captchareason
- * @param $in
- * @param $errors
- * @param $loadfocusnow
+ * @param array $qa_content
+ * @param array $question
+ * @param array $parent
+ * @param string $formid
+ * @param string $captchareason
+ * @param array $in
+ * @param array $errors
+ * @param bool $loadfocusnow
  * @return array
  */
 function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captchareason, $in, $errors, $loadfocusnow)
