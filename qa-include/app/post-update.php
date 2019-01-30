@@ -326,7 +326,7 @@ function qa_question_set_hidden($oldquestion, $hidden, $userid, $handle, $cookie
  * @param string $cookieid
  * @param array $answers
  * @param array $commentsfollows
- * @param int $closepost
+ * @param array|null $closepost
  */
 function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookieid, $answers, $commentsfollows, $closepost = null)
 {

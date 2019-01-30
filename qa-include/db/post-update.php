@@ -30,10 +30,10 @@ require_once QA_INCLUDE_DIR . 'app/updates.php';
 
 /**
  * Update the selected answer in the database for $questionid to $selchildid, and optionally record that $lastuserid did it from $lastip
- * @param $questionid
- * @param $selchildid
- * @param $lastuserid
- * @param $lastip
+ * @param int $questionid
+ * @param int|null $selchildid
+ * @param mixed|null $lastuserid
+ * @param string|null $lastip
  */
 function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid = null, $lastip = null)
 {
@@ -61,10 +61,10 @@ function qa_db_post_set_selchildid($questionid, $selchildid, $lastuserid = null,
 /**
  * Set $questionid to be closed by post $closedbyid (null if not closed) in the database, and optionally record that
  * $lastuserid did it from $lastip
- * @param $questionid
- * @param $closedbyid
- * @param $lastuserid
- * @param $lastip
+ * @param int $questionid
+ * @param int $closedbyid
+ * @param mixed|null $lastuserid
+ * @param string|null $lastip
  */
 function qa_db_post_set_closed($questionid, $closedbyid, $lastuserid = null, $lastip = null)
 {
@@ -84,10 +84,10 @@ function qa_db_post_set_closed($questionid, $closedbyid, $lastuserid = null, $la
 
 /**
  * Set the type in the database of $postid to $type, and optionally record that $lastuserid did it from $lastip
- * @param $postid
- * @param $type
- * @param $lastuserid
- * @param $lastip
+ * @param int $postid
+ * @param string $type
+ * @param mixed|null $lastuserid
+ * @param string|null $lastip
  * @param string $updatetype
  */
 function qa_db_post_set_type($postid, $type, $lastuserid = null, $lastip = null, $updatetype = QA_UPDATE_TYPE)
@@ -109,10 +109,10 @@ function qa_db_post_set_type($postid, $type, $lastuserid = null, $lastip = null,
 /**
  * Set the parent in the database of $postid to $parentid, and optionally record that $lastuserid did it from $lastip
  * (if at least one is specified)
- * @param $postid
- * @param $parentid
- * @param $lastuserid
- * @param $lastip
+ * @param int $postid
+ * @param int $parentid
+ * @param mixed|null $lastuserid
+ * @param string|null $lastip
  */
 function qa_db_post_set_parent($postid, $parentid, $lastuserid = null, $lastip = null)
 {
@@ -134,16 +134,16 @@ function qa_db_post_set_parent($postid, $parentid, $lastuserid = null, $lastip =
  * Set the text fields in the database of $postid to $title, $content, $tagstring, $notify and $name, and record that
  * $lastuserid did it from $lastip (if at least one is specified) with $updatetype. For backwards compatibility if $name
  * is null then the name will not be changed.
- * @param $postid
- * @param $title
- * @param $content
- * @param $format
- * @param $tagstring
- * @param $notify
- * @param $lastuserid
- * @param $lastip
+ * @param int $postid
+ * @param string $title
+ * @param string $content
+ * @param string $format
+ * @param string $tagstring
+ * @param bool $notify
+ * @param mixed|null $lastuserid
+ * @param string|null $lastip
  * @param string $updatetype
- * @param $name
+ * @param string|null $name
  */
 function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, $notify, $lastuserid = null, $lastip = null, $updatetype = QA_UPDATE_CONTENT, $name = null)
 {
@@ -164,8 +164,8 @@ function qa_db_post_set_content($postid, $title, $content, $format, $tagstring, 
 
 /**
  * Set the author in the database of $postid to $userid, and set the lastuserid to $userid as well if appropriate
- * @param $postid
- * @param $userid
+ * @param int $postid
+ * @param mixed $userid
  */
 function qa_db_post_set_userid($postid, $userid)
 {
@@ -179,10 +179,10 @@ function qa_db_post_set_userid($postid, $userid)
 /**
  * Set the (exact) category in the database of $postid to $categoryid, and optionally record that $lastuserid did it from
  * $lastip (if at least one is specified)
- * @param $postid
- * @param $categoryid
- * @param $lastuserid
- * @param $lastip
+ * @param int $postid
+ * @param int $categoryid
+ * @param mixed|null $lastuserid
+ * @param string|null $lastip
  */
 function qa_db_post_set_category($postid, $categoryid, $lastuserid = null, $lastip = null)
 {
@@ -202,12 +202,12 @@ function qa_db_post_set_category($postid, $categoryid, $lastuserid = null, $last
 
 /**
  * Set the category path in the database of each of $postids to $path retrieved via qa_db_post_get_category_path()
- * @param $postids
- * @param $path
+ * @param array $postids
+ * @param array $path
  */
 function qa_db_posts_set_category_path($postids, $path)
 {
-	if (count($postids)) {
+	if (!empty($postids)) {
 		// requires QA_CATEGORY_DEPTH=4
 		qa_db_query_sub(
 			'UPDATE ^posts SET categoryid=#, catidpath1=#, catidpath2=#, catidpath3=# WHERE postid IN (#)',
@@ -219,8 +219,8 @@ function qa_db_posts_set_category_path($postids, $path)
 
 /**
  * Set the created date of $postid to $created, which is a unix timestamp. If created is null, set to now.
- * @param $postid
- * @param $created
+ * @param int $postid
+ * @param int|null $created
  */
 function qa_db_post_set_created($postid, $created)
 {
@@ -240,8 +240,8 @@ function qa_db_post_set_created($postid, $created)
 
 /**
  * Set the last updated date of $postid to $updated, which is a unix timestamp. If updated is null, set to now.
- * @param $postid
- * @param $updated
+ * @param int $postid
+ * @param int|null $updated
  */
 function qa_db_post_set_updated($postid, $updated)
 {
@@ -261,7 +261,7 @@ function qa_db_post_set_updated($postid, $updated)
 
 /**
  * Deletes post $postid from the database (will also delete any votes on the post due to foreign key cascading)
- * @param $postid
+ * @param int $postid
  */
 function qa_db_post_delete($postid)
 {
@@ -274,7 +274,7 @@ function qa_db_post_delete($postid)
 
 /**
  * Return an array of wordids that were indexed in the database for the title of $postid
- * @param $postid
+ * @param int $postid
  * @return array
  */
 function qa_db_titlewords_get_post_wordids($postid)
@@ -288,7 +288,7 @@ function qa_db_titlewords_get_post_wordids($postid)
 
 /**
  * Remove all entries in the database index of title words for $postid
- * @param $postid
+ * @param int $postid
  */
 function qa_db_titlewords_delete_post($postid)
 {
@@ -301,7 +301,7 @@ function qa_db_titlewords_delete_post($postid)
 
 /**
  * Return an array of wordids that were indexed in the database for the content of $postid
- * @param $postid
+ * @param int $postid
  * @return array
  */
 function qa_db_contentwords_get_post_wordids($postid)
@@ -315,7 +315,7 @@ function qa_db_contentwords_get_post_wordids($postid)
 
 /**
  * Remove all entries in the database index of content words for $postid
- * @param $postid
+ * @param int $postid
  */
 function qa_db_contentwords_delete_post($postid)
 {
@@ -328,7 +328,7 @@ function qa_db_contentwords_delete_post($postid)
 
 /**
  * Return an array of wordids that were indexed in the database for the individual words in tags of $postid
- * @param $postid
+ * @param int $postid
  * @return array
  */
 function qa_db_tagwords_get_post_wordids($postid)
@@ -342,7 +342,7 @@ function qa_db_tagwords_get_post_wordids($postid)
 
 /**
  * Remove all entries in the database index of individual words in tags of $postid
- * @param $postid
+ * @param int $postid
  */
 function qa_db_tagwords_delete_post($postid)
 {
@@ -355,7 +355,7 @@ function qa_db_tagwords_delete_post($postid)
 
 /**
  * Return an array of wordids that were indexed in the database for the whole tags of $postid
- * @param $postid
+ * @param int $postid
  * @return array
  */
 function qa_db_posttags_get_post_wordids($postid)
@@ -369,7 +369,7 @@ function qa_db_posttags_get_post_wordids($postid)
 
 /**
  * Remove all entries in the database index of whole tags for $postid
- * @param $postid
+ * @param int $postid
  */
 function qa_db_posttags_delete_post($postid)
 {
@@ -382,12 +382,12 @@ function qa_db_posttags_delete_post($postid)
 
 /**
  * Return the array $postids containing only those elements which are the postid of a question in the database
- * @param $postids
+ * @param array $postids
  * @return array
  */
 function qa_db_posts_filter_q_postids($postids)
 {
-	if (count($postids)) {
+	if (!empty($postids)) {
 		return qa_db_read_all_values(qa_db_query_sub(
 			"SELECT postid FROM ^posts WHERE type='Q' AND postid IN (#)",
 			$postids
@@ -400,12 +400,12 @@ function qa_db_posts_filter_q_postids($postids)
 
 /**
  * Return an array of all the userids of authors of posts in the array $postids
- * @param $postids
+ * @param array $postids
  * @return array
  */
 function qa_db_posts_get_userids($postids)
 {
-	if (count($postids)) {
+	if (!empty($postids)) {
 		return qa_db_read_all_values(qa_db_query_sub(
 			"SELECT DISTINCT userid FROM ^posts WHERE postid IN (#) AND userid IS NOT NULL",
 			$postids
