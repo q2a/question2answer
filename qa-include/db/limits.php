@@ -28,9 +28,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 /**
  * Get rate limit information for $action from the database for user $userid and/or IP address $ip, if they're set.
  * Return as an array with the limit type in the key, and a labelled array of the period and count.
- * @param $userid
- * @param $ip
- * @param $action
+ * @param mixed $userid
+ * @param string|null $ip
+ * @param string $action
  * @return array
  */
 function qa_db_limits_get($userid, $ip, $action)
@@ -50,7 +50,7 @@ function qa_db_limits_get($userid, $ip, $action)
 		$arguments[] = $action;
 	}
 
-	if (count($selects)) {
+	if (!empty($selects)) {
 		$query = qa_db_apply_sub(implode(' UNION ALL ', $selects), $arguments);
 		return qa_db_read_all_assoc(qa_db_query_raw($query), 'limitkey');
 
@@ -61,10 +61,10 @@ function qa_db_limits_get($userid, $ip, $action)
 
 /**
  * Increment the database rate limit count for user $userid and $action by $count within $period
- * @param $userid
- * @param $action
- * @param $period
- * @param $count
+ * @param mixed $userid
+ * @param string $action
+ * @param int $period
+ * @param int $count
  */
 function qa_db_limits_user_add($userid, $action, $period, $count)
 {
@@ -78,10 +78,10 @@ function qa_db_limits_user_add($userid, $action, $period, $count)
 
 /**
  * Increment the database rate limit count for IP address $ip and $action by $count within $period
- * @param $ip
- * @param $action
- * @param $period
- * @param $count
+ * @param string $ip
+ * @param string $action
+ * @param int $period
+ * @param int $count
  */
 function qa_db_limits_ip_add($ip, $action, $period, $count)
 {
