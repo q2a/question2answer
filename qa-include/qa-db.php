@@ -19,6 +19,8 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
+use Q2A\Database\DbResult;
+
 if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
 	header('Location: ../');
 	exit;
@@ -42,8 +44,8 @@ function qa_db_allow_connect()
  * Connect to the Q2A database, select the right database, optionally install the $failhandler (and call it if necessary).
  * Uses mysqli as of Q2A 1.7.
  * @deprecated 1.9.0 Use DbConnection->connect() instead.
- * @param null $failhandler
- * @return mixed|void
+ * @param string|null $failhandler
+ * @return mixed
  */
 function qa_db_connect($failhandler = null)
 {
@@ -56,7 +58,7 @@ function qa_db_connect($failhandler = null)
 /**
  * If a DB error occurs, call the installed fail handler (if any) otherwise report error and exit immediately.
  * @deprecated 1.9.0 Use DbConnection->failError() instead.
- * @param $type
+ * @param string $type
  * @param int $errno
  * @param string $error
  * @param string $query
@@ -105,8 +107,8 @@ function qa_db_disconnect()
  * Run the raw $query, call the global failure handler if necessary, otherwise return the result resource.
  * If appropriate, also track the resources used by database queries, and the queries themselves, for performance debugging.
  * @deprecated 1.9.0 Use DbConnection->query() instead.
- * @param $query
- * @return mixed
+ * @param string $query
+ * @return DbResult
  */
 function qa_db_query_raw($query)
 {
@@ -119,8 +121,8 @@ function qa_db_query_raw($query)
 /**
  * Lower-level function to execute a query, which automatically retries if there is a MySQL deadlock error.
  * @deprecated 1.9.0 Use DbConnection->query() instead.
- * @param $query
- * @return mixed
+ * @param string $query
+ * @return DbResult
  */
 function qa_db_query_execute($query)
 {
@@ -133,8 +135,8 @@ function qa_db_query_execute($query)
 /**
  * Return $string escaped for use in queries to the Q2A database (to which a connection must have been made).
  * @deprecated 1.9.0 No longer needed: parameters passed to DbConnection->query() are automatically escaped.
- * @param $string
- * @return mixed
+ * @param string $string
+ * @return string
  */
 function qa_db_escape_string($string)
 {
@@ -151,8 +153,8 @@ function qa_db_escape_string($string)
  * Return $argument escaped for MySQL. Add quotes around it if $alwaysquote is true or it's not numeric.
  * If $argument is an array, return a comma-separated list of escaped elements, with or without $arraybrackets.
  * @deprecated 1.9.0
- * @param $argument
- * @param $alwaysquote
+ * @param mixed|null $argument
+ * @param bool $alwaysquote
  * @param bool $arraybrackets
  * @return mixed|string
  */
@@ -184,7 +186,7 @@ function qa_db_argument_to_mysql($argument, $alwaysquote, $arraybrackets = false
 /**
  * Return the full name (with prefix) of database table $rawname, usually if it used after a ^ symbol.
  * @deprecated 1.9.0 Use DbConnection->addTablePrefix() instead.
- * @param $rawname
+ * @param string $rawname
  * @return string
  */
 function qa_db_add_table_prefix($rawname)
@@ -198,7 +200,7 @@ function qa_db_add_table_prefix($rawname)
 /**
  * Callback function to add table prefixes, as used in qa_db_apply_sub().
  * @deprecated 1.9.0 No longer needed.
- * @param $matches
+ * @param array $matches
  * @return string
  */
 function qa_db_prefix_callback($matches)
@@ -214,8 +216,8 @@ function qa_db_prefix_callback($matches)
  * $ is replaced by the argument in quotes (even if it's a number), # only adds quotes if the argument is non-numeric.
  * It's important to use $ when matching a textual column since MySQL won't use indexes to compare text against numbers.
  * @deprecated 1.9.0 Use DbConnection->applyTableSub() instead.
- * @param $query
- * @param $arguments
+ * @param string $query
+ * @param array $arguments
  * @return mixed
  */
 function qa_db_apply_sub($query, $arguments)
@@ -258,7 +260,7 @@ function qa_db_apply_sub($query, $arguments)
  * Run $query after substituting ^, # and $ symbols, and return the result resource (or call fail handler).
  * @deprecated 1.9.0 Use DbConnection->query() instead.
  * @param string $query
- * @return mixed
+ * @return DbResult
  */
 function qa_db_query_sub($query) // arguments for substitution retrieved using func_get_args()
 {
@@ -266,13 +268,14 @@ function qa_db_query_sub($query) // arguments for substitution retrieved using f
 	return qa_service('database')->query($query, $params);
 }
 
+
 /**
  * Run $query after substituting ^, # and $ symbols, and return the result resource (or call fail handler).
  * Query parameters are passed as an array.
  * @deprecated 1.9.0 Use DbConnection->query() instead.
  * @param string $query
  * @param array $params
- * @return mixed
+ * @return DbResult
  */
 function qa_db_query_sub_params($query, $params)
 {
@@ -283,7 +286,7 @@ function qa_db_query_sub_params($query, $params)
 /**
  * Return the number of rows in $result. (Simple wrapper for mysqli_result::num_rows.)
  * @deprecated 1.9.0 Use DbResult->affectedRows() instead.
- * @param $result
+ * @param DbResult|mysqli_result $result
  * @return int
  */
 function qa_db_num_rows($result)
@@ -303,6 +306,7 @@ function qa_db_num_rows($result)
 /**
  * Return the value of the auto-increment column for the last inserted row.
  * @deprecated 1.9.0 Use DbConnection->lastInsertId() instead.
+ * @return string
  */
 function qa_db_last_insert_id()
 {
@@ -313,6 +317,7 @@ function qa_db_last_insert_id()
 /**
  * Return the number of rows affected by the last query.
  * @deprecated 1.9.0 Use DbResult->affectedRows() instead.
+ * @return int
  */
 function qa_db_affected_rows()
 {
@@ -324,16 +329,18 @@ function qa_db_affected_rows()
 /**
  * For the previous INSERT ... ON DUPLICATE KEY UPDATE query, return whether an insert operation took place.
  * @deprecated 1.9.0 Use DbResult->affectedRows() instead.
+ * @return bool
  */
 function qa_db_insert_on_duplicate_inserted()
 {
-	return (qa_db_affected_rows() == 1);
+	return false;
 }
 
 
 /**
  * Return a random integer (as a string) for use in a BIGINT column.
  * Actual limit is 18,446,744,073,709,551,615 - we aim for 18,446,743,999,999,999,999.
+ * @return string
  */
 function qa_db_random_bigint()
 {
@@ -344,6 +351,7 @@ function qa_db_random_bigint()
 /**
  * Return an array of the names of all tables in the Q2A database, converted to lower case.
  * No longer used by Q2A and shouldn't be needed.
+ * @return array
  */
 function qa_db_list_tables_lc()
 {
@@ -423,8 +431,8 @@ function qa_db_list_tables($onlyTablesWithPrefix = false)
 /**
  * Return the data specified by a single $selectspec - see long comment above.
  * @deprecated 1.9.0 Use DbConnection->singleSelect() instead.
- * @param $selectspec
- * @return array|mixed
+ * @param array $selectspec
+ * @return mixed
  */
 function qa_db_single_select($selectspec)
 {
@@ -496,9 +504,9 @@ function qa_db_post_select(&$outresult, $selectspec)
  * is from column $key if specified, otherwise it's integer. The value of each element in the returned array
  * is from column $value if specified, otherwise it's a named array of all columns, given an array of arrays.
  * @deprecated 1.9.0 Use DbResult->fetchAllAssoc() instead.
- * @param $result
- * @param string $key
- * @param mixed $value
+ * @param DbResult|mysqli_result $result
+ * @param string|null $key
+ * @param int|string|null $value
  * @return array
  */
 function qa_db_read_all_assoc($result, $key = null, $value = null)
@@ -529,7 +537,7 @@ function qa_db_read_all_assoc($result, $key = null, $value = null)
  * Return the first row from the $result resource as an array of [column name] => [column value].
  * If there's no first row, throw a fatal error unless $allowempty is true.
  * @deprecated 1.9.0 Use DbResult->fetchNextAssoc() instead.
- * @param $result
+ * @param DbResult|mysqli_result $result
  * @param bool $allowempty
  * @return array|null
  */
@@ -538,7 +546,6 @@ function qa_db_read_one_assoc($result, $allowempty = false)
 	if ($result instanceof \Q2A\Database\DbResult) {
 		return $allowempty ? $result->fetchNextAssoc() : $result->fetchNextAssocOrFail();
 	}
-
 
 	// backwards compatibility
 	if (!($result instanceof mysqli_result))
@@ -559,7 +566,7 @@ function qa_db_read_one_assoc($result, $allowempty = false)
 /**
  * Return a numbered array containing the first (and presumably only) column from the $result resource.
  * @deprecated 1.9.0 Use DbResult->fetchAllValues() instead.
- * @param $result
+ * @param DbResult|mysqli_result $result
  * @return array
  */
 function qa_db_read_all_values($result)
@@ -567,7 +574,6 @@ function qa_db_read_all_values($result)
 	if ($result instanceof \Q2A\Database\DbResult) {
 		return $result->fetchAllValues(0);
 	}
-
 
 	// backwards compatibility
 	if (!($result instanceof mysqli_result))
@@ -586,16 +592,15 @@ function qa_db_read_all_values($result)
  * Return the first column of the first row (and presumably only cell) from the $result resource.
  * If there's no first row, throw a fatal error unless $allowempty is true.
  * @deprecated 1.9.0 Use DbResult->fetchOneValue() instead.
- * @param $result
+ * @param DbResult|mysqli_result $result
  * @param bool $allowempty
- * @return mixed|null
+ * @return string|null
  */
 function qa_db_read_one_value($result, $allowempty = false)
 {
 	if ($result instanceof \Q2A\Database\DbResult) {
 		return $allowempty ? $result->fetchOneValue(0) : $result->fetchOneValueOrFail(0);
 	}
-
 
 	// backwards compatibility
 	if (!($result instanceof mysqli_result))
