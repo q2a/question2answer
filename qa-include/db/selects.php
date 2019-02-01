@@ -347,7 +347,7 @@ function qa_db_qs_selectspec($voteuserid, $sort, $start, $categoryslugs = null, 
 		$type = $specialtype ? 'Q_HIDDEN' : 'Q'; // for backwards compatibility
 	}
 
-	$count = isset($count) ? min($count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
+	$count = isset($count) ? min((int)$count, QA_DB_RETRIEVE_QS_AS) : QA_DB_RETRIEVE_QS_AS;
 
 	switch ($sort) {
 		case 'acount':
