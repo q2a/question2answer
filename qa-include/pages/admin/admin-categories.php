@@ -204,6 +204,7 @@ if (qa_clicked('docancel')) {
 		// Perform appropriate database action
 
 		if (empty($errors)) {
+			require_once QA_INCLUDE_DIR . 'app/cookies.php';
 			if (isset($editcategory['categoryid'])) { // changing existing category
 				qa_db_category_rename($editcategory['categoryid'], $inname, $inslug);
 
@@ -218,6 +219,15 @@ if (qa_clicked('docancel')) {
 					$recalc = $hassubcategory && $inslug !== $editcategory['tags'];
 				}
 
+				qa_report_event('cat_edit', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'categoryid' => $editcategory['categoryid'],
+					'parentid' => isset($inparentid)?$inparentid:null,
+					'content' => isset($incontent)?$incontent:null,
+					'position' => isset($inposition)?$inposition:null,
+					'name' => $inname,
+					'slug' => $inslug,
+				));
+
 				qa_redirect(qa_request(), array('edit' => $editcategory['categoryid'], 'saved' => true, 'recalc' => (int)$recalc));
 
 			} else { // creating a new one
@@ -227,6 +237,15 @@ if (qa_clicked('docancel')) {
 
 				if (isset($inposition))
 					qa_db_category_set_position($categoryid, $inposition);
+
+				qa_report_event('cat_new', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
+					'categoryid' => $categoryid,
+					'parentid' => $inparentid,
+					'content' => isset($incontent)?$incontent:null,
+					'position' => isset($inposition)?$inposition:null,
+					'name' => $inname,
+					'slug' => $inslug,
+				));
 
 				qa_redirect(qa_request(), array('edit' => $inparentid, 'added' => true));
 			}
