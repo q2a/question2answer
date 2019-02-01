@@ -560,6 +560,16 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+        /**
+         * TODO: Q2A Market Fix: Check $handle and return at the very beginning if it is null.
+         * Currently in some scenario if handle is null than
+         * the function is rendering `Anonymous` text.
+         * This will prevent to render `anonymous` in many cases.
+         */
+		if (is_null($handle)) {
+            return;
+        } // end of Q2A Market Fix
+
 		if (strlen($handle) === 0) {
 			return qa_lang('main/anonymous');
 		}
