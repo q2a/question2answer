@@ -28,12 +28,12 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 /**
  * Record a message sent from $fromuserid to $touserid with $content in $format in the database. $public sets whether
  * public (on wall) or private. Return the messageid of the row created.
- * @param $fromuserid
- * @param $touserid
- * @param $content
- * @param $format
+ * @param mixed $fromuserid
+ * @param mixed $touserid
+ * @param string $content
+ * @param string $format
  * @param bool $public
- * @return mixed
+ * @return string
  */
 function qa_db_message_create($fromuserid, $touserid, $content, $format, $public = false)
 {
@@ -48,8 +48,8 @@ function qa_db_message_create($fromuserid, $touserid, $content, $format, $public
 
 /**
  * Hide the message with $messageid, in $box (inbox|outbox) from the user.
- * @param $messageid
- * @param $box
+ * @param int $messageid
+ * @param string $box
  */
 function qa_db_message_user_hide($messageid, $box)
 {
@@ -64,7 +64,7 @@ function qa_db_message_user_hide($messageid, $box)
 
 /**
  * Delete the message with $messageid from the database.
- * @param $messageid
+ * @param int $messageid
  * @param bool $public
  */
 function qa_db_message_delete($messageid, $public = true)
@@ -81,7 +81,7 @@ function qa_db_message_delete($messageid, $public = true)
 
 /**
  * Recalculate the cached count of wall posts for user $userid in the database
- * @param $userid
+ * @param mixed $userid
  */
 function qa_db_user_recount_posts($userid)
 {

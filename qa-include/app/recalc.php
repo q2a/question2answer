@@ -78,7 +78,7 @@ require_once QA_INCLUDE_DIR . 'app/post-update.php';
 /**
  * Advance the recalculation operation represented by $state by a single step.
  * $state can also be the name of a recalculation operation on its own.
- * @param $state
+ * @param string $state
  * @return bool
  */
 function qa_recalc_perform_step(&$state)
@@ -574,8 +574,8 @@ function qa_recalc_perform_step(&$state)
 
 /**
  * Change the $state to represent the beginning of a new $operation
- * @param $state
- * @param $operation
+ * @param string $state
+ * @param string $operation
  */
 function qa_recalc_transition(&$state, $operation)
 {
@@ -589,7 +589,7 @@ function qa_recalc_transition(&$state, $operation)
 
 /**
  * Return how many steps there will be in recalculation $operation
- * @param $operation
+ * @param string $operation
  * @return int
  */
 function qa_recalc_stage_length($operation)
@@ -664,11 +664,9 @@ function qa_recalc_stage_length($operation)
 
 /**
  * Return the translated language ID string replacing the progress and total in it.
- * @access private
  * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
  * @param int $progress Amount of processed elements
  * @param int $total Total amount of elements
- *
  * @return string Returns the language string ID with their placeholders replaced with
  * the formatted progress and total numbers
  */
@@ -683,7 +681,7 @@ function qa_recalc_progress_lang($langId, $progress, $total)
 
 /**
  * Return a string which gives a user-viewable version of $state
- * @param $state
+ * @param string $state
  * @return string
  */
 function qa_recalc_get_message($state)

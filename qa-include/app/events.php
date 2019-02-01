@@ -33,12 +33,12 @@ require_once QA_INCLUDE_DIR . 'app/updates.php';
  * to $lastpostid whose antecedent question is $questionid, and was caused by $lastuserid. Pass a unix $timestamp for
  * the event time or leave as null to use now. This will add an event to $questionid's and $lastuserid's streams. If
  * $otheruserid is set, it will also add an notification-style event for that user, unless they are the one who did it.
- * @param $questionid
- * @param $lastpostid
- * @param $updatetype
- * @param $lastuserid
- * @param $otheruserid
- * @param $timestamp
+ * @param int $questionid
+ * @param int $lastpostid
+ * @param string $updatetype
+ * @param mixed $lastuserid
+ * @param mixed|null $otheruserid
+ * @param int|null $timestamp
  */
 function qa_create_event_for_q_user($questionid, $lastpostid, $updatetype, $lastuserid, $otheruserid = null, $timestamp = null)
 {
@@ -57,11 +57,11 @@ function qa_create_event_for_q_user($questionid, $lastpostid, $updatetype, $last
  * being created with those tags or having one of those tags added afterwards). The event of type $updatetype relates
  * to the question $questionid, and was caused by $lastuserid. Pass a unix $timestamp for the event time or leave as
  * null to use now.
- * @param $tagstring
- * @param $questionid
- * @param $updatetype
- * @param $lastuserid
- * @param $timestamp
+ * @param string $tagstring
+ * @param int $questionid
+ * @param string $updatetype
+ * @param mixed $lastuserid
+ * @param int $timestamp
  */
 function qa_create_event_for_tags($tagstring, $questionid, $updatetype, $lastuserid, $timestamp = null)
 {
@@ -80,11 +80,11 @@ function qa_create_event_for_tags($tagstring, $questionid, $updatetype, $lastuse
  * that category or being moved to it later on), along with all of its ancestor categories. The event of type
  * $updatetype relates to the question $questionid, and was caused by $lastuserid. Pass a unix $timestamp for the event
  * time or leave as null to use now.
- * @param $categoryid
- * @param $questionid
- * @param $updatetype
- * @param $lastuserid
- * @param $timestamp
+ * @param int|null $categoryid
+ * @param int $questionid
+ * @param string $updatetype
+ * @param mixed $lastuserid
+ * @param int|null $timestamp
  */
 function qa_create_event_for_category($categoryid, $questionid, $updatetype, $lastuserid, $timestamp = null)
 {

@@ -33,10 +33,10 @@ require_once QA_INCLUDE_DIR . 'util/string.php';
 
 /**
  * Return value to store in database combining $notify and $email values entered by user $userid (or null for anonymous)
- * @param $userid
- * @param $notify
- * @param $email
- * @return null|string
+ * @param mixed $userid
+ * @param bool $notify
+ * @param string $email
+ * @return string|null
  */
 function qa_combine_notify_email($userid, $notify, $email)
 {
@@ -48,22 +48,22 @@ function qa_combine_notify_email($userid, $notify, $email)
  * Add a question (application level) - create record, update appropriate counts, index it, send notifications.
  * If question is follow-on from an answer, $followanswer should contain answer database record, otherwise null.
  * See /qa-include/app/posts.php for a higher-level function which is easier to use.
- * @param $followanswer
- * @param $userid
- * @param $handle
- * @param $cookieid
- * @param $title
- * @param $content
- * @param $format
- * @param $text
- * @param $tagstring
- * @param $notify
- * @param $email
- * @param $categoryid
- * @param $extravalue
+ * @param array $followanswer
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
+ * @param string $title
+ * @param string $content
+ * @param string $format
+ * @param string $text
+ * @param string $tagstring
+ * @param bool $notify
+ * @param string $email
+ * @param int|null $categoryid
+ * @param string|null $extravalue
  * @param bool $queued
- * @param $name
- * @return mixed
+ * @param string|null $name
+ * @return int
  */
 function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, $content, $format, $text, $tagstring, $notify, $email,
 	$categoryid = null, $extravalue = null, $queued = false, $name = null)
@@ -113,7 +113,7 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 
 /**
  * Perform various common cached count updating operations to reflect changes in the question whose id is $postid
- * @param $postid
+ * @param int|null $postid
  */
 function qa_update_counts_for_q($postid)
 {
@@ -130,8 +130,8 @@ function qa_update_counts_for_q($postid)
 
 /**
  * Return an array containing the elements of $inarray whose key is in $keys
- * @param $inarray
- * @param $keys
+ * @param array $inarray
+ * @param array $keys
  * @return array
  */
 function qa_array_filter_by_keys($inarray, $keys)
@@ -163,16 +163,16 @@ function qa_suspend_post_indexing($suspend = true)
 /**
  * Add post $postid (which comes under $questionid) of $type (Q/A/C) to the database index, with $title, $text,
  * $tagstring and $categoryid. Calls through to all installed search modules.
- * @param $postid
- * @param $type
- * @param $questionid
- * @param $parentid
- * @param $title
- * @param $content
- * @param $format
- * @param $text
- * @param $tagstring
- * @param $categoryid
+ * @param int $postid
+ * @param string $type
+ * @param int $questionid
+ * @param int $parentid
+ * @param string $title
+ * @param string $content
+ * @param string $format
+ * @param string $text
+ * @param string $tagstring
+ * @param int $categoryid
  */
 function qa_post_index($postid, $type, $questionid, $parentid, $title, $content, $format, $text, $tagstring, $categoryid)
 {
@@ -193,18 +193,18 @@ function qa_post_index($postid, $type, $questionid, $parentid, $title, $content,
  * Add an answer (application level) - create record, update appropriate counts, index it, send notifications.
  * $question should contain database record for the question this is an answer to.
  * See /qa-include/app/posts.php for a higher-level function which is easier to use.
- * @param $userid
- * @param $handle
- * @param $cookieid
- * @param $content
- * @param $format
- * @param $text
- * @param $notify
- * @param $email
- * @param $question
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
+ * @param string $content
+ * @param string $format
+ * @param string $text
+ * @param bool $notify
+ * @param string $email
+ * @param array $question
  * @param bool $queued
- * @param $name
- * @return mixed
+ * @param string|null $name
+ * @return int
  */
 function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $queued = false, $name = null)
 {
@@ -244,7 +244,7 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 
 /**
  * Perform various common cached count updating operations to reflect changes in an answer of question $questionid
- * @param $questionid
+ * @param int $questionid
  */
 function qa_update_q_counts_for_a($questionid)
 {
@@ -263,20 +263,20 @@ function qa_update_q_counts_for_a($questionid)
  * $commentsfollows should contain database records for all previous comments on the same question or answer,
  * but it can also contain other records that are ignored.
  * See /qa-include/app/posts.php for a higher-level function which is easier to use.
- * @param $userid
- * @param $handle
- * @param $cookieid
- * @param $content
- * @param $format
- * @param $text
- * @param $notify
- * @param $email
- * @param $question
- * @param $parent
- * @param $commentsfollows
+ * @param mixed $userid
+ * @param string $handle
+ * @param string $cookieid
+ * @param string $content
+ * @param string $format
+ * @param string $text
+ * @param bool $notify
+ * @param string $email
+ * @param array $question
+ * @param array $parent
+ * @param array $commentsfollows
  * @param bool $queued
- * @param $name
- * @return mixed
+ * @param string|null $name
+ * @return int
  */
 function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $parent, $commentsfollows, $queued = false, $name = null)
 {

@@ -33,11 +33,11 @@ require_once QA_INCLUDE_DIR . 'app/post-update.php';
  * Checks for a POSTed click on $question by the current user and returns true if it was permitted and processed. Pass
  * in the question's $answers, all $commentsfollows from it or its answers, and its closing $closepost (or null if
  * none). If there is an error to display, it will be passed out in $error.
- * @param $question
- * @param $answers
- * @param $commentsfollows
- * @param $closepost
- * @param $error
+ * @param array $question
+ * @param array $answers
+ * @param array $commentsfollows
+ * @param array $closepost
+ * @param string $error
  * @return bool
  */
 function qa_page_q_single_click_q($question, $answers, $commentsfollows, $closepost, &$error)
@@ -127,12 +127,12 @@ function qa_page_q_single_click_q($question, $answers, $commentsfollows, $closep
  * the $question, all of its $answers, and all $commentsfollows from it or its answers. Set $allowselectmove to whether
  * it is legitimate to change the selected answer for the question from one to another (this can't be done via Ajax).
  * If there is an error to display, it will be passed out in $error.
- * @param $answer
- * @param $question
- * @param $answers
- * @param $commentsfollows
- * @param $allowselectmove
- * @param $error
+ * @param array $answer
+ * @param array $question
+ * @param array $answers
+ * @param array $commentsfollows
+ * @param bool $allowselectmove
+ * @param string $error
  * @return bool
  */
 function qa_page_q_single_click_a($answer, $question, $answers, $commentsfollows, $allowselectmove, &$error)
@@ -231,10 +231,10 @@ function qa_page_q_single_click_a($answer, $question, $answers, $commentsfollows
  * Checks for a POSTed click on $comment by the current user and returns true if it was permitted and processed. Pass
  * in the antecedent $question and the comment's $parent post. If there is an error to display, it will be passed out
  * in $error.
- * @param $comment
- * @param $question
- * @param $parent
- * @param $error
+ * @param array $comment
+ * @param array $question
+ * @param array $parent
+ * @param string $error
  * @return bool
  */
 function qa_page_q_single_click_c($comment, $question, $parent, &$error)
@@ -322,8 +322,8 @@ function qa_page_q_single_click_c($comment, $question, $parent, &$error)
 /**
  * Check the form security (anti-CSRF protection) for one of the buttons shown for post $post. Return true if the
  * security passed, otherwise return false and set an error message in $error
- * @param $post
- * @param $error
+ * @param array $post
+ * @param string $error
  * @return bool
  */
 function qa_page_q_click_check_form_code($post, &$error)
@@ -341,12 +341,12 @@ function qa_page_q_click_check_form_code($post, &$error)
  * Processes a POSTed form to add an answer to $question, returning the postid if successful, otherwise null. Pass in
  * other $answers to the question and whether a $usecaptcha is required. The form fields submitted will be passed out
  * as an array in $in, as well as any $errors on those fields.
- * @param $question
- * @param $answers
- * @param $usecaptcha
- * @param $in
- * @param $errors
- * @return mixed|null
+ * @param array $question
+ * @param array $answers
+ * @param bool $usecaptcha
+ * @param array $in
+ * @param array $errors
+ * @return int|null
  */
 function qa_page_q_add_a_submit($question, $answers, $usecaptcha, &$in, &$errors)
 {
@@ -424,13 +424,13 @@ function qa_page_q_add_a_submit($question, $answers, $usecaptcha, &$in, &$errors
  * $question and the comment's $parent post. Set $usecaptcha to whether a captcha is required. Pass an array which
  * includes the other comments with the same parent in $commentsfollows (it can contain other posts which are ignored).
  * The form fields submitted will be passed out as an array in $in, as well as any $errors on those fields.
- * @param $question
- * @param $parent
- * @param $commentsfollows
- * @param $usecaptcha
- * @param $in
- * @param $errors
- * @return mixed|null
+ * @param array $question
+ * @param array $parent
+ * @param array $commentsfollows
+ * @param bool $usecaptcha
+ * @param array $in
+ * @param array $errors
+ * @return int|null
  */
 function qa_page_q_add_c_submit($question, $parent, $commentsfollows, $usecaptcha, &$in, &$errors)
 {
@@ -494,7 +494,7 @@ function qa_page_q_add_c_submit($question, $parent, $commentsfollows, $usecaptch
 
 /**
  * Return the array of information to be passed to filter modules for the post in $post (from the database)
- * @param $post
+ * @param array $post
  * @return array
  */
 function qa_page_q_prepare_post_for_filters($post)

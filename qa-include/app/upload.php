@@ -55,12 +55,12 @@ function qa_get_max_upload_size()
  * 'height' => if an image, the height in pixels of the blob created (after possible scaling)
  * 'blobid' => the blobid that was created (if there was no error)
  * 'bloburl' => the url that can be used to view/download the created blob (if there was no error)
- * @param $localfilename
- * @param $sourcefilename
- * @param $maxfilesize
+ * @param string $localfilename
+ * @param string $sourcefilename
+ * @param int|null $maxfilesize
  * @param bool $onlyimage
- * @param $imagemaxwidth
- * @param $imagemaxheight
+ * @param int|null $imagemaxwidth
+ * @param int|null $imagemaxheight
  * @return array
  */
 function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $onlyimage = false, $imagemaxwidth = null, $imagemaxheight = null)
@@ -197,10 +197,10 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 
 /**
  * In response to a file upload, move the first uploaded file into blob storage. Other parameters are as for qa_upload_file(...)
- * @param $maxfilesize
+ * @param int|null $maxfilesize
  * @param bool $onlyimage
- * @param $imagemaxwidth
- * @param $imagemaxheight
+ * @param int|null $imagemaxwidth
+ * @param int|null $imagemaxheight
  * @return array
  */
 function qa_upload_file_one($maxfilesize = null, $onlyimage = false, $imagemaxwidth = null, $imagemaxheight = null)

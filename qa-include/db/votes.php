@@ -27,9 +27,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Set the vote for $userid on $postid to $vote in the database
- * @param $postid
- * @param $userid
- * @param $vote
+ * @param int $postid
+ * @param mixed $userid
+ * @param int $vote
  */
 function qa_db_uservote_set($postid, $userid, $vote)
 {
@@ -44,9 +44,9 @@ function qa_db_uservote_set($postid, $userid, $vote)
 
 /**
  * Get the vote for $userid on $postid from the database (or NULL if none)
- * @param $postid
- * @param $userid
- * @return mixed|null
+ * @param int $postid
+ * @param mixed $userid
+ * @return string|null
  */
 function qa_db_uservote_get($postid, $userid)
 {
@@ -59,13 +59,13 @@ function qa_db_uservote_get($postid, $userid)
 
 /**
  * Set the flag for $userid on $postid to $flag (true or false) in the database
- * @param $postid
- * @param $userid
- * @param $flag
+ * @param int $postid
+ * @param mixed $userid
+ * @param bool $flag
  */
 function qa_db_userflag_set($postid, $userid, $flag)
 {
-	$flag = $flag ? 1 : 0;
+	$flag = (int)$flag;
 
 	qa_db_query_sub(
 		'INSERT INTO ^uservotes (postid, userid, vote, flag) VALUES (#, #, 0, #) ON DUPLICATE KEY UPDATE flag=#',
@@ -76,7 +76,7 @@ function qa_db_userflag_set($postid, $userid, $flag)
 
 /**
  * Clear all flags for $postid in the database
- * @param $postid
+ * @param int $postid
  */
 function qa_db_userflags_clear_all($postid)
 {
@@ -89,7 +89,7 @@ function qa_db_userflags_clear_all($postid)
 
 /**
  * Recalculate the cached count of upvotes, downvotes and netvotes for $postid in the database
- * @param $postid
+ * @param int $postid
  */
 function qa_db_post_recount_votes($postid)
 {
@@ -104,7 +104,7 @@ function qa_db_post_recount_votes($postid)
 
 /**
  * Recalculate the cached count of flags for $postid in the database
- * @param $postid
+ * @param int $postid
  */
 function qa_db_post_recount_flags($postid)
 {
@@ -119,7 +119,7 @@ function qa_db_post_recount_flags($postid)
 
 /**
  * Returns all non-zero votes on post $postid from the database as an array of [userid] => [vote]
- * @param $postid
+ * @param int $postid
  * @return array
  */
 function qa_db_uservote_post_get($postid)
@@ -133,7 +133,7 @@ function qa_db_uservote_post_get($postid)
 
 /**
  * Returns all the postids from the database for posts that $userid has voted on or flagged
- * @param $userid
+ * @param mixed $userid
  * @return array
  */
 function qa_db_uservoteflag_user_get($userid)
@@ -147,7 +147,7 @@ function qa_db_uservoteflag_user_get($userid)
 
 /**
  * Return information about all the non-zero votes and/or flags on the posts in postids, including user handles for internal user management
- * @param $postids
+ * @param array $postids
  * @return array
  */
 function qa_db_uservoteflag_posts_get($postids)
@@ -168,7 +168,6 @@ function qa_db_uservoteflag_posts_get($postids)
 
 /**
  * Remove all votes assigned to a post that had been cast by the owner of the post.
- *
  * @param int $postid The post ID from which the owner's votes will be removed.
  */
 function qa_db_uservote_remove_own($postid)

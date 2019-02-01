@@ -84,8 +84,8 @@ function qa_user_favorite_set($userid, $handle, $cookieid, $entitytype, $entityi
 /**
  * Returns content to set in $qa_content['q_list'] for a user's favorite $questions. Pre-generated
  * user HTML in $usershtml.
- * @param $questions
- * @param $usershtml
+ * @param array $questions
+ * @param array $usershtml
  * @return array
  */
 function qa_favorite_q_list_view($questions, $usershtml)
@@ -118,8 +118,8 @@ function qa_favorite_q_list_view($questions, $usershtml)
 /**
  * Returns content to set in $qa_content['ranking_users'] for a user's favorite $users. Pre-generated
  * user HTML in $usershtml.
- * @param $users
- * @param $usershtml
+ * @param array $users
+ * @param array $usershtml
  * @return array|null
  */
 function qa_favorite_users_view($users, $usershtml)
@@ -154,7 +154,7 @@ function qa_favorite_users_view($users, $usershtml)
 
 /**
  * Returns content to set in $qa_content['ranking_tags'] for a user's favorite $tags.
- * @param $tags
+ * @param array $tags
  * @return array
  */
 function qa_favorite_tags_view($tags)
@@ -181,7 +181,7 @@ function qa_favorite_tags_view($tags)
 
 /**
  * Returns content to set in $qa_content['nav_list_categories'] for a user's favorite $categories.
- * @param $categories
+ * @param array $categories
  * @return array
  */
 function qa_favorite_categories_view($categories)

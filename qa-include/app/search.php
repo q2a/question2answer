@@ -30,13 +30,13 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  * to get absolute URLs for the results and $fullcontent if the results should include full post content. This calls
  * through to the chosen search module, and performs all the necessary post-processing to supplement the results for
  * display online or in an RSS feed.
- * @param $query
- * @param $start
- * @param $count
- * @param $userid
- * @param $absoluteurls
- * @param $fullcontent
- * @return
+ * @param string $query
+ * @param int $start
+ * @param int $count
+ * @param mixed $userid
+ * @param bool $absoluteurls
+ * @param bool $fullcontent
+ * @return array
  */
 function qa_get_search_results($query, $start, $count, $userid, $absoluteurls, $fullcontent)
 {

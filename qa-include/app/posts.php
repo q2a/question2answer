@@ -49,18 +49,18 @@ require_once QA_INCLUDE_DIR . 'util/string.php';
  * post - either to $email if it is specified and valid, or to the current email address of $userid if $email is '@'.
  * If you're creating a question, the $extravalue parameter will be set as the custom extra field, if not null. For all
  * post types you can specify the $name of the post's author, which is relevant if the $userid is null.
- * @param $type
- * @param $parentid
- * @param $title
- * @param $content
+ * @param string $type
+ * @param int|null $parentid
+ * @param string $title
+ * @param string $content
  * @param string $format
- * @param $categoryid
- * @param $tags
- * @param $userid
- * @param $notify
- * @param $email
- * @param $extravalue
- * @param $name
+ * @param int|null $categoryid
+ * @param array|null $tags
+ * @param mixed|null $userid
+ * @param string|null $notify
+ * @param string|null $email
+ * @param string|null $extravalue
+ * @param string|null $name
  * @return mixed
  */
 function qa_post_create($type, $parentid, $title, $content, $format = '', $categoryid = null, $tags = null, $userid = null,
@@ -105,16 +105,16 @@ function qa_post_create($type, $parentid, $title, $content, $format = '', $categ
  * Change the data stored for post $postid based on any of the $title, $content, $format, $tags, $notify, $email,
  * $extravalue and $name parameters passed which are not null. The meaning of these parameters is the same as for
  * qa_post_create() above. Pass the identify of the user making this change in $byuserid (or null for silent).
- * @param $postid
- * @param $title
- * @param $content
- * @param $format
- * @param $tags
- * @param $notify
- * @param $email
- * @param $byuserid
- * @param $extravalue
- * @param $name
+ * @param int $postid
+ * @param string|null $title
+ * @param string|null $content
+ * @param string $format
+ * @param array|null $tags
+ * @param string|null $notify
+ * @param string|null $email
+ * @param mixed|null $byuserid
+ * @param string|null $extravalue
+ * @param string $name
  */
 function qa_post_set_content($postid, $title, $content, $format = null, $tags = null, $notify = null, $email = null, $byuserid = null, $extravalue = null, $name = null)
 {
@@ -166,9 +166,9 @@ function qa_post_set_content($postid, $title, $content, $format = null, $tags = 
  * Change the category of $postid to $categoryid. The category of all related posts (shown together on the same
  * question page) will also be changed. Pass the identify of the user making this change in $byuserid (or null for an
  * anonymous change).
- * @param $postid
- * @param $categoryid
- * @param $byuserid
+ * @param int $postid
+ * @param int $categoryid
+ * @param mixed|null $byuserid
  */
 function qa_post_set_category($postid, $categoryid, $byuserid = null)
 {
@@ -189,9 +189,9 @@ function qa_post_set_category($postid, $categoryid, $byuserid = null)
 /**
  * Set the selected best answer of $questionid to $answerid (or to none if $answerid is null). Pass the identify of the
  * user in $byuserid (or null for an anonymous change).
- * @param $questionid
- * @param $answerid
- * @param $byuserid
+ * @param int $questionid
+ * @param int|null $answerid
+ * @param mixed|null $byuserid
  */
 function qa_post_set_selchildid($questionid, $answerid, $byuserid = null)
 {
@@ -210,11 +210,11 @@ function qa_post_set_selchildid($questionid, $answerid, $byuserid = null)
  * Close $questionid if $closed is true, otherwise reopen it. If $closed is true, pass either the $originalpostid of
  * the question that it is a duplicate of, or a $note to explain why it's closed. Pass the identifier of the user in
  * $byuserid (or null for an anonymous change).
- * @param $questionid
+ * @param int $questionid
  * @param bool $closed
- * @param $originalpostid
- * @param $note
- * @param $byuserid
+ * @param int|null $originalpostid
+ * @param string|null $note
+ * @param mixed|null $byuserid
  */
 function qa_post_set_closed($questionid, $closed = true, $originalpostid = null, $note = null, $byuserid = null)
 {
@@ -251,9 +251,9 @@ function qa_post_is_closed(array $question)
  * Hide $postid if $hidden is true, otherwise show the post. Pass the identify of the user making this change in
  * $byuserid (or null for a silent change).
  * @deprecated Replaced by qa_post_set_status.
- * @param $postid
+ * @param int $postid
  * @param bool $hidden
- * @param $byuserid
+ * @param mixed|null $byuserid
  */
 function qa_post_set_hidden($postid, $hidden = true, $byuserid = null)
 {
@@ -264,9 +264,9 @@ function qa_post_set_hidden($postid, $hidden = true, $byuserid = null)
 /**
  * Change the status of $postid to $status, which should be one of the QA_POST_STATUS_* constants defined in
  * /qa-include/app/post-update.php. Pass the identify of the user making this change in $byuserid (or null for a silent change).
- * @param $postid
- * @param $status
- * @param $byuserid
+ * @param int $postid
+ * @param int $status
+ * @param mixed|null $byuserid
  */
 function qa_post_set_status($postid, $status, $byuserid = null)
 {
@@ -298,8 +298,8 @@ function qa_post_set_status($postid, $status, $byuserid = null)
 
 /**
  * Set the created date of $postid to $created, which is a unix timestamp.
- * @param $postid
- * @param $created
+ * @param int $postid
+ * @param int $created
  */
 function qa_post_set_created($postid, $created)
 {
@@ -321,7 +321,7 @@ function qa_post_set_created($postid, $created)
 
 /**
  * Delete $postid from the database, hiding it first if appropriate.
- * @param $postid
+ * @param int $postid
  */
 function qa_post_delete($postid)
 {
@@ -365,9 +365,9 @@ function qa_post_delete($postid)
 
 /**
  * Return the full information from the database for $postid in an array.
- * @param $postid
- * @param $requiredbasetypes
- * @return array|mixed
+ * @param int $postid
+ * @param string|null $requiredbasetypes
+ * @return array
  */
 function qa_post_get_full($postid, $requiredbasetypes = null)
 {
@@ -387,8 +387,8 @@ function qa_post_get_full($postid, $requiredbasetypes = null)
  * Return the handle corresponding to $userid, unless it is null in which case return null.
  *
  * @deprecated Deprecated from 1.7; use `qa_userid_to_handle($userid)` instead.
- * @param $userid
- * @return mixed|null
+ * @param mixed $userid
+ * @return string|null
  */
 function qa_post_userid_to_handle($userid)
 {
@@ -398,8 +398,8 @@ function qa_post_userid_to_handle($userid)
 
 /**
  * Return the textual rendition of $content in $format (used for indexing).
- * @param $content
- * @param $format
+ * @param string $content
+ * @param string $format
  * @return string
  */
 function qa_post_content_to_text($content, $format)
@@ -415,8 +415,8 @@ function qa_post_content_to_text($content, $format)
 
 /**
  * Return tagstring to store in the database based on $tags as an array or a comma-separated string.
- * @param $tags
- * @return mixed|string
+ * @param array|string $tags
+ * @return string
  */
 function qa_post_tags_to_tagstring($tags)
 {
@@ -429,7 +429,7 @@ function qa_post_tags_to_tagstring($tags)
 
 /**
  * Return the full database records for all answers to question $questionid
- * @param $questionid
+ * @param int $questionid
  * @return array
  */
 function qa_post_get_question_answers($questionid)
@@ -449,7 +449,7 @@ function qa_post_get_question_answers($questionid)
 
 /**
  * Return the full database records for all comments or follow-on questions for question $questionid or its answers
- * @param $questionid
+ * @param int $questionid
  * @return array
  */
 function qa_post_get_question_commentsfollows($questionid)
@@ -477,8 +477,8 @@ function qa_post_get_question_commentsfollows($questionid)
 
 /**
  * Return the full database record for the post which closed $questionid, if there is any
- * @param $questionid
- * @return array|mixed
+ * @param int $questionid
+ * @return array|null
  */
 function qa_post_get_question_closepost($questionid)
 {
@@ -488,7 +488,7 @@ function qa_post_get_question_closepost($questionid)
 
 /**
  * Return the full database records for all comments or follow-on questions for answer $answerid
- * @param $answerid
+ * @param int $answerid
  * @return array
  */
 function qa_post_get_answer_commentsfollows($answerid)
@@ -508,8 +508,8 @@ function qa_post_get_answer_commentsfollows($answerid)
 
 /**
  * Return $parent if it's the database record for a question, otherwise return the database record for its parent
- * @param $parent
- * @return array|mixed
+ * @param array $parent
+ * @return array
  */
 function qa_post_parent_to_question($parent)
 {

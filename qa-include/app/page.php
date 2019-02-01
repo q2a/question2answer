@@ -227,8 +227,8 @@ function qa_get_request_content()
 
 
 /**
- *    Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
- * @param $qa_content
+ * Output the $qa_content via the theme class after doing some pre-processing, mainly relating to Javascript
+ * @param array $qa_content
  * @return mixed
  */
 function qa_output_content($qa_content)
@@ -382,7 +382,7 @@ function qa_output_content($qa_content)
 
 /**
  * Update any statistics required by the fields in $qa_content, and return true if something was done
- * @param $qa_content
+ * @param array $qa_content
  * @return bool
  */
 function qa_do_content_stats($qa_content)
@@ -487,7 +487,7 @@ function qa_controller_routing()
 
 /**
  * Sets the template which should be passed to the theme class, telling it which type of page it's displaying
- * @param $template
+ * @param string $template
  */
 function qa_set_template($template)
 {

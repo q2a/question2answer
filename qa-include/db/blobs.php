@@ -27,13 +27,13 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Create a new blob in the database with $content and $format, other fields as provided
- * @param $content
- * @param $format
- * @param $sourcefilename
- * @param $userid
- * @param $cookieid
- * @param $ip
- * @return mixed|null|string
+ * @param string $content
+ * @param string $format
+ * @param string|null $sourcefilename
+ * @param mixed|null $userid
+ * @param string|null $cookieid
+ * @param string|null $ip
+ * @return mixed|string|null
  */
 function qa_db_blob_create($content, $format, $sourcefilename = null, $userid = null, $cookieid = null, $ip = null)
 {
@@ -59,8 +59,8 @@ function qa_db_blob_create($content, $format, $sourcefilename = null, $userid = 
 
 /**
  * Get the information about blob $blobid from the database
- * @param $blobid
- * @return array|mixed|null
+ * @param string $blobid
+ * @return array|null
  */
 function qa_db_blob_read($blobid)
 {
@@ -75,8 +75,8 @@ function qa_db_blob_read($blobid)
 
 /**
  * Change the content of blob $blobid in the database to $content (can also be null)
- * @param $blobid
- * @param $content
+ * @param string $blobid
+ * @param string $content
  */
 function qa_db_blob_set_content($blobid, $content)
 {
@@ -89,7 +89,7 @@ function qa_db_blob_set_content($blobid, $content)
 
 /**
  * Delete blob $blobid in the database
- * @param $blobid
+ * @param string $blobid
  * @return mixed
  */
 function qa_db_blob_delete($blobid)
@@ -105,8 +105,8 @@ function qa_db_blob_delete($blobid)
 
 /**
  * Check if blob $blobid exists in the database
- * @param $blobid
- * @return bool|mixed
+ * @param string $blobid
+ * @return bool
  */
 function qa_db_blob_exists($blobid)
 {

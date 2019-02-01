@@ -27,6 +27,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Return the current version of MySQL
+ * @return string
  */
 function qa_db_mysql_version()
 {
@@ -36,6 +37,7 @@ function qa_db_mysql_version()
 
 /**
  * Return the total size in bytes of all relevant tables in the Q2A database
+ * @return float
  */
 function qa_db_table_size()
 {
@@ -67,9 +69,9 @@ function qa_db_table_size()
 /**
  * Return a count of the number of posts of $type in database.
  * Set $fromuser to true to only count non-anonymous posts, false to only count anonymous posts
- * @param $type
- * @param $fromuser
- * @return mixed|null
+ * @param string|null $type
+ * @param mixed|null $fromuser
+ * @return string
  */
 function qa_db_count_posts($type = null, $fromuser = null)
 {
@@ -89,6 +91,7 @@ function qa_db_count_posts($type = null, $fromuser = null)
 
 /**
  * Return number of registered users in database.
+ * @return string
  */
 function qa_db_count_users()
 {
@@ -100,8 +103,8 @@ function qa_db_count_users()
 
 /**
  * Return number of active users in database $table
- * @param $table
- * @return mixed|null
+ * @param string $table
+ * @return string
  */
 function qa_db_count_active_users($table)
 {
@@ -124,6 +127,7 @@ function qa_db_count_active_users($table)
 
 /**
  * Return number of categories in the database
+ * @return string
  */
 function qa_db_count_categories()
 {
@@ -135,8 +139,8 @@ function qa_db_count_categories()
 
 /**
  * Return number of questions in the database in $categoryid exactly, and not one of its subcategories
- * @param $categoryid
- * @return mixed|null
+ * @param int $categoryid
+ * @return string
  */
 function qa_db_count_categoryid_qs($categoryid)
 {
@@ -149,7 +153,7 @@ function qa_db_count_categoryid_qs($categoryid)
 
 /**
  * Return list of postids of visible or queued posts by $userid
- * @param $userid
+ * @param mixed $userid
  * @return array
  */
 function qa_db_get_user_visible_postids($userid)
@@ -163,7 +167,7 @@ function qa_db_get_user_visible_postids($userid)
 
 /**
  * Return list of postids of visible or queued posts from $ip address
- * @param $ip
+ * @param string $ip
  * @return array
  */
 function qa_db_get_ip_visible_postids($ip)
@@ -177,12 +181,12 @@ function qa_db_get_ip_visible_postids($ip)
 
 /**
  * Return an array whose keys contain the $postids which exist, and whose elements contain the number of other posts depending on each one
- * @param $postids
+ * @param array $postids
  * @return array
  */
 function qa_db_postids_count_dependents($postids)
 {
-	if (count($postids))
+	if (!empty($postids))
 		return qa_db_read_all_assoc(qa_db_query_sub(
 			"SELECT postid, COALESCE(childcount, 0) AS count FROM ^posts LEFT JOIN (SELECT parentid, COUNT(*) AS childcount FROM ^posts WHERE parentid IN (#) AND LEFT(type, 1) IN ('A', 'C') GROUP BY parentid) x ON postid=x.parentid WHERE postid IN (#)",
 			$postids, $postids
@@ -195,7 +199,7 @@ function qa_db_postids_count_dependents($postids)
 /**
  * Return an array of the (up to) $count most recently created users who are awaiting approval and have not been blocked.
  * The array element for each user includes a 'profile' key whose value is an array of non-empty profile fields of the user.
- * @param $count
+ * @param int $count
  * @return array
  */
 function qa_db_get_unapproved_users($count)
@@ -227,6 +231,7 @@ function qa_db_get_unapproved_users($count)
 
 /**
  * Return whether there are any blobs whose content has been stored as a file on disk
+ * @return bool
  */
 function qa_db_has_blobs_on_disk()
 {
@@ -236,6 +241,7 @@ function qa_db_has_blobs_on_disk()
 
 /**
  * Return whether there are any blobs whose content has been stored in the database
+ * @return bool
  */
 function qa_db_has_blobs_in_db()
 {
@@ -245,8 +251,8 @@ function qa_db_has_blobs_in_db()
 
 /**
  * Return the maximum position of the categories with $parentid
- * @param $parentid
- * @return mixed|null
+ * @param int $parentid
+ * @return string
  */
 function qa_db_category_last_pos($parentid)
 {
@@ -259,7 +265,7 @@ function qa_db_category_last_pos($parentid)
 
 /**
  * Return how many levels of subcategory there are below $categoryid
- * @param $categoryid
+ * @param int $categoryid
  * @return int
  */
 function qa_db_category_child_depth($categoryid)
@@ -283,18 +289,18 @@ function qa_db_category_child_depth($categoryid)
 
 /**
  * Create a new category with $parentid, $title (=name) and $tags (=slug) in the database
- * @param $parentid
- * @param $title
- * @param $tags
- * @return mixed
+ * @param int $parentid
+ * @param string $title
+ * @param string $tags
+ * @return int
  */
 function qa_db_category_create($parentid, $title, $tags)
 {
-	$lastpos = qa_db_category_last_pos($parentid);
+	$lastpos = (int)qa_db_category_last_pos($parentid);
 
 	qa_db_query_sub(
 		'INSERT INTO ^categories (parentid, title, tags, position) VALUES (#, $, $, #)',
-		$parentid, $title, $tags, 1 + $lastpos
+		$parentid, $title, $tags, $lastpos + 1
 	);
 
 	$categoryid = qa_db_last_insert_id();
@@ -307,8 +313,8 @@ function qa_db_category_create($parentid, $title, $tags)
 
 /**
  * Recalculate the backpath columns for all categories from $firstcategoryid to $lastcategoryid (if specified)
- * @param $firstcategoryid
- * @param $lastcategoryid
+ * @param int $firstcategoryid
+ * @param int|null $lastcategoryid
  */
 function qa_db_categories_recalc_backpaths($firstcategoryid, $lastcategoryid = null)
 {
@@ -324,9 +330,9 @@ function qa_db_categories_recalc_backpaths($firstcategoryid, $lastcategoryid = n
 
 /**
  * Set the name of $categoryid to $title and its slug to $tags in the database
- * @param $categoryid
- * @param $title
- * @param $tags
+ * @param int $categoryid
+ * @param string $title
+ * @param string $tags
  */
 function qa_db_category_rename($categoryid, $title, $tags)
 {
@@ -341,8 +347,8 @@ function qa_db_category_rename($categoryid, $title, $tags)
 
 /**
  * Set the content (=description) of $categoryid to $content
- * @param $categoryid
- * @param $content
+ * @param int $categoryid
+ * @param string $content
  */
 function qa_db_category_set_content($categoryid, $content)
 {
@@ -355,8 +361,8 @@ function qa_db_category_set_content($categoryid, $content)
 
 /**
  * Return the parentid of $categoryid
- * @param $categoryid
- * @return mixed|null
+ * @param int $categoryid
+ * @return string
  */
 function qa_db_category_get_parent($categoryid)
 {
@@ -369,8 +375,8 @@ function qa_db_category_get_parent($categoryid)
 
 /**
  * Move the category $categoryid into position $newposition under its parent
- * @param $categoryid
- * @param $newposition
+ * @param int $categoryid
+ * @param int $newposition
  */
 function qa_db_category_set_position($categoryid, $newposition)
 {
@@ -381,8 +387,8 @@ function qa_db_category_set_position($categoryid, $newposition)
 
 /**
  * Set the parent of $categoryid to $newparentid, placing it in last position (doesn't do necessary recalculations)
- * @param $categoryid
- * @param $newparentid
+ * @param int $categoryid
+ * @param string $newparentid
  */
 function qa_db_category_set_parent($categoryid, $newparentid)
 {
@@ -393,11 +399,11 @@ function qa_db_category_set_parent($categoryid, $newparentid)
 
 		qa_db_ordered_move('categories', 'categoryid', $categoryid, $lastpos, qa_db_apply_sub('parentid<=>#', array($oldparentid)));
 
-		$lastpos = qa_db_category_last_pos($newparentid);
+		$lastpos = (int)qa_db_category_last_pos($newparentid);
 
 		qa_db_query_sub(
 			'UPDATE ^categories SET parentid=#, position=# WHERE categoryid=#',
-			$newparentid, 1 + $lastpos, $categoryid
+			$newparentid, $lastpos + 1, $categoryid
 		);
 	}
 }
@@ -405,8 +411,8 @@ function qa_db_category_set_parent($categoryid, $newparentid)
 
 /**
  * Change the categoryid of any posts with (exact) $categoryid to $reassignid
- * @param $categoryid
- * @param $reassignid
+ * @param int $categoryid
+ * @param int $reassignid
  */
 function qa_db_category_reassign($categoryid, $reassignid)
 {
@@ -416,7 +422,7 @@ function qa_db_category_reassign($categoryid, $reassignid)
 
 /**
  * Delete the category $categoryid in the database
- * @param $categoryid
+ * @param int $categoryid
  */
 function qa_db_category_delete($categoryid)
 {
@@ -427,9 +433,9 @@ function qa_db_category_delete($categoryid)
 
 /**
  * Return the categoryid for the category with parent $parentid and $slug
- * @param $parentid
- * @param $slug
- * @return mixed|null
+ * @param int $parentid
+ * @param string $slug
+ * @return string|null
  */
 function qa_db_category_slug_to_id($parentid, $slug)
 {
@@ -442,13 +448,13 @@ function qa_db_category_slug_to_id($parentid, $slug)
 
 /**
  * Create a new custom page (or link) in the database
- * @param $title
- * @param $flags
- * @param $tags
- * @param $heading
- * @param $content
- * @param $permit
- * @return mixed
+ * @param string $title
+ * @param int $flags
+ * @param string $tags
+ * @param string $heading
+ * @param string $content
+ * @param int|null $permit
+ * @return string
  */
 function qa_db_page_create($title, $flags, $tags, $heading, $content, $permit = null)
 {
@@ -465,13 +471,13 @@ function qa_db_page_create($title, $flags, $tags, $heading, $content, $permit = 
 
 /**
  * Set the fields of $pageid to the values provided in the database
- * @param $pageid
- * @param $title
- * @param $flags
- * @param $tags
- * @param $heading
- * @param $content
- * @param $permit
+ * @param int $pageid
+ * @param string $title
+ * @param int $flags
+ * @param string $tags
+ * @param string $heading
+ * @param string $content
+ * @param int|null $permit
  */
 function qa_db_page_set_fields($pageid, $title, $flags, $tags, $heading, $content, $permit = null)
 {
@@ -484,9 +490,9 @@ function qa_db_page_set_fields($pageid, $title, $flags, $tags, $heading, $conten
 
 /**
  * Move the page $pageid into navigation menu $nav and position $newposition in the database
- * @param $pageid
- * @param $nav
- * @param $newposition
+ * @param int $pageid
+ * @param string $nav
+ * @param int $newposition
  */
 function qa_db_page_move($pageid, $nav, $newposition)
 {
@@ -501,7 +507,7 @@ function qa_db_page_move($pageid, $nav, $newposition)
 
 /**
  * Delete the page $pageid in the database
- * @param $pageid
+ * @param int $pageid
  */
 function qa_db_page_delete($pageid)
 {
@@ -511,11 +517,11 @@ function qa_db_page_delete($pageid)
 
 /**
  * Move the entity identified by $idcolumn=$id into position $newposition (within optional $conditionsql) in $table in the database
- * @param $table
- * @param $idcolumn
- * @param $id
- * @param $newposition
- * @param $conditionsql
+ * @param string $table
+ * @param string $idcolumn
+ * @param string $id
+ * @param int $newposition
+ * @param string|null $conditionsql
  */
 function qa_db_ordered_move($table, $idcolumn, $id, $newposition, $conditionsql = null)
 {
@@ -547,10 +553,10 @@ function qa_db_ordered_move($table, $idcolumn, $id, $newposition, $conditionsql 
 
 /**
  * Delete the entity identified by $idcolumn=$id (and optional $conditionsql) in $table in the database
- * @param $table
- * @param $idcolumn
- * @param $id
- * @param $conditionsql
+ * @param string $table
+ * @param string $idcolumn
+ * @param string $id
+ * @param string|null $conditionsql
  */
 function qa_db_ordered_delete($table, $idcolumn, $id, $conditionsql = null)
 {
@@ -570,11 +576,11 @@ function qa_db_ordered_delete($table, $idcolumn, $id, $conditionsql = null)
 
 /**
  * Create a new user field with (internal) tag $title, label $content, $flags and $permit in the database.
- * @param $title
- * @param $content
- * @param $flags
- * @param $permit
- * @return mixed
+ * @param string $title
+ * @param string $content
+ * @param int $flags
+ * @param int|null $permit
+ * @return string
  */
 function qa_db_userfield_create($title, $content, $flags, $permit = null)
 {
@@ -591,10 +597,10 @@ function qa_db_userfield_create($title, $content, $flags, $permit = null)
 
 /**
  * Change the user field $fieldid to have label $content, $flags and $permit in the database (the title column cannot be changed once set)
- * @param $fieldid
- * @param $content
- * @param $flags
- * @param $permit
+ * @param string $fieldid
+ * @param string $content
+ * @param int $flags
+ * @param int|null $permit
  */
 function qa_db_userfield_set_fields($fieldid, $content, $flags, $permit = null)
 {
@@ -607,8 +613,8 @@ function qa_db_userfield_set_fields($fieldid, $content, $flags, $permit = null)
 
 /**
  * Move the user field $fieldid into position $newposition in the database
- * @param $fieldid
- * @param $newposition
+ * @param string $fieldid
+ * @param int $newposition
  */
 function qa_db_userfield_move($fieldid, $newposition)
 {
@@ -618,7 +624,7 @@ function qa_db_userfield_move($fieldid, $newposition)
 
 /**
  * Delete the user field $fieldid in the database
- * @param $fieldid
+ * @param string $fieldid
  */
 function qa_db_userfield_delete($fieldid)
 {
@@ -628,9 +634,9 @@ function qa_db_userfield_delete($fieldid)
 
 /**
  * Return the ID of a new widget, to be displayed by the widget module named $title on templates within $tags (comma-separated list)
- * @param $title
- * @param $tags
- * @return mixed
+ * @param string $title
+ * @param string $tags
+ * @return string
  */
 function qa_db_widget_create($title, $tags)
 {
@@ -647,8 +653,8 @@ function qa_db_widget_create($title, $tags)
 
 /**
  * Set the comma-separated list of templates for $widgetid to $tags
- * @param $widgetid
- * @param $tags
+ * @param int $widgetid
+ * @param string $tags
  */
 function qa_db_widget_set_fields($widgetid, $tags)
 {
@@ -661,9 +667,9 @@ function qa_db_widget_set_fields($widgetid, $tags)
 
 /**
  * Move the widget $widgetit into position $position in the database's order, and show it in $place on the page
- * @param $widgetid
- * @param $place
- * @param $newposition
+ * @param int $widgetid
+ * @param string $place
+ * @param int $newposition
  */
 function qa_db_widget_move($widgetid, $place, $newposition)
 {
@@ -678,7 +684,7 @@ function qa_db_widget_move($widgetid, $place, $newposition)
 
 /**
  * Delete the widget $widgetid in the database
- * @param $widgetid
+ * @param int $widgetid
  */
 function qa_db_widget_delete($widgetid)
 {

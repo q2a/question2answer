@@ -27,6 +27,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Return the user identification cookie sent by the browser for this page request, or null if none
+ * @return string|null
  */
 function qa_cookie_get()
 {
@@ -39,6 +40,7 @@ function qa_cookie_get()
 /**
  * Return user identification cookie sent by browser if valid, or create a new one if not.
  * Either way, extend for another year (this is used when an anonymous post is created)
+ * @return string
  */
 function qa_cookie_get_create()
 {
@@ -63,8 +65,8 @@ function qa_cookie_get_create()
 /**
  * Called after a database write $action performed by a user identified by $cookieid,
  * relating to $questionid, $answerid and/or $commentid
- * @param $cookieid
- * @param $action
+ * @param string $cookieid
+ * @param string $action
  */
 function qa_cookie_report_action($cookieid, $action)
 {

@@ -27,9 +27,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Return the URL which will output $blobid from the database when requested, $absolute or relative
- * @param $blobid
+ * @param string $blobid
  * @param bool $absolute
- * @return mixed|string
+ * @return string
  */
 function qa_get_blob_url($blobid, $absolute = false)
 {
@@ -41,8 +41,8 @@ function qa_get_blob_url($blobid, $absolute = false)
 
 /**
  * Return the full path to the on-disk directory for blob $blobid (subdirectories are named by the first 3 digits of $blobid)
- * @param $blobid
- * @return mixed|string
+ * @param string $blobid
+ * @return string
  */
 function qa_get_blob_directory($blobid)
 {
@@ -54,9 +54,9 @@ function qa_get_blob_directory($blobid)
 
 /**
  * Return the full page and filename of blob $blobid which is in $format ($format is used as the file name suffix e.g. .jpg)
- * @param $blobid
- * @param $format
- * @return mixed|string
+ * @param string $blobid
+ * @param string $format
+ * @return string
  */
 function qa_get_blob_filename($blobid, $format)
 {
@@ -69,13 +69,13 @@ function qa_get_blob_filename($blobid, $format)
 /**
  * Create a new blob (storing the content in the database or on disk as appropriate) with $content and $format, returning its blobid.
  * Pass the original name of the file uploaded in $sourcefilename and the $userid, $cookieid and $ip of the user creating it
- * @param $content
- * @param $format
- * @param $sourcefilename
- * @param $userid
- * @param $cookieid
- * @param $ip
- * @return mixed|null|string
+ * @param string $content
+ * @param string $format
+ * @param string|null $sourcefilename
+ * @param mixed|null $userid
+ * @param string|null $cookieid
+ * @param string $ip
+ * @return string
  */
 function qa_create_blob($content, $format, $sourcefilename = null, $userid = null, $cookieid = null, $ip = null)
 {
@@ -97,10 +97,10 @@ function qa_create_blob($content, $format, $sourcefilename = null, $userid = nul
 
 /**
  * Write the on-disk file for blob $blobid with $content and $format. Returns true if the write succeeded, false otherwise.
- * @param $blobid
- * @param $content
- * @param $format
- * @return bool|mixed
+ * @param string $blobid
+ * @param string $content
+ * @param string $format
+ * @return bool
  */
 function qa_write_blob_file($blobid, $content, $format)
 {
@@ -130,8 +130,8 @@ function qa_write_blob_file($blobid, $content, $format)
 
 /**
  * Retrieve blob $blobid from the database, reading the content from disk if appropriate
- * @param $blobid
- * @return array|mixed|null
+ * @param string $blobid
+ * @return array
  */
 function qa_read_blob($blobid)
 {
@@ -150,9 +150,9 @@ function qa_read_blob($blobid)
 
 /**
  * Read the content of blob $blobid in $format from disk. On failure, it will return false.
- * @param $blobid
- * @param $format
- * @return mixed|null|string
+ * @param string $blobid
+ * @param string $format
+ * @return false|string|null
  */
 function qa_read_blob_file($blobid, $format)
 {
@@ -168,7 +168,7 @@ function qa_read_blob_file($blobid, $format)
 
 /**
  * Delete blob $blobid from the database, and remove the on-disk file if appropriate
- * @param $blobid
+ * @param string $blobid
  * @return mixed
  */
 function qa_delete_blob($blobid)
@@ -190,8 +190,8 @@ function qa_delete_blob($blobid)
 
 /**
  * Delete the on-disk file for blob $blobid in $format
- * @param $blobid
- * @param $format
+ * @param string $blobid
+ * @param string $format
  * @return mixed
  */
 function qa_delete_blob_file($blobid, $format)
@@ -204,8 +204,8 @@ function qa_delete_blob_file($blobid, $format)
 
 /**
  * Check if blob $blobid exists
- * @param $blobid
- * @return bool|mixed
+ * @param string $blobid
+ * @return bool
  */
 function qa_blob_exists($blobid)
 {

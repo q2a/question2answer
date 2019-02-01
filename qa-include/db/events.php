@@ -31,13 +31,13 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  * event time or leave as null to use now. This will add the event both to the entity's shared stream, and the
  * individual user streams for any users following the entity not via its shared stream (See long comment in
  * /qa-include/db/favorites.php). Also handles truncation.
- * @param $entitytype
- * @param $entityid
- * @param $questionid
- * @param $lastpostid
- * @param $updatetype
- * @param $lastuserid
- * @param $timestamp
+ * @param string $entitytype
+ * @param int $entityid
+ * @param int $questionid
+ * @param int $lastpostid
+ * @param string $updatetype
+ * @param mixed $lastuserid
+ * @param int|null $timestamp
  */
 function qa_db_event_create_for_entity($entitytype, $entityid, $questionid, $lastpostid, $updatetype, $lastuserid, $timestamp = null)
 {
@@ -116,12 +116,12 @@ function qa_db_event_create_for_entity($entitytype, $entityid, $questionid, $las
  * notification which is relevant for them, e.g. if someone answers their question). The event of type $updatetype
  * relates to $lastpostid whose antecedent question is $questionid, and was caused by $lastuserid. Pass a unix
  * $timestamp for the event time or leave as null to use now. Also handles truncation of event streams.
- * @param $userid
- * @param $questionid
- * @param $lastpostid
- * @param $updatetype
- * @param $lastuserid
- * @param $timestamp
+ * @param mixed $userid
+ * @param int $questionid
+ * @param int $lastpostid
+ * @param string $updatetype
+ * @param mixed $lastuserid
+ * @param int|null $timestamp
  */
 function qa_db_event_create_not_entity($userid, $questionid, $lastpostid, $updatetype, $lastuserid, $timestamp = null)
 {
@@ -142,8 +142,8 @@ function qa_db_event_create_not_entity($userid, $questionid, $lastpostid, $updat
 /**
  * Trim the number of events in the event stream for $userid. If an event was just added for a particular question,
  * pass the question's id in $questionid (to help focus the truncation).
- * @param $userid
- * @param $questionid
+ * @param mixed $userid
+ * @param int|null $questionid
  */
 function qa_db_user_events_truncate($userid, $questionid = null)
 {

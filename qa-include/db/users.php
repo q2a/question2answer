@@ -27,9 +27,9 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 /**
  * Return the expected value for the passcheck column given the $password and password $salt
- * @param $password
- * @param $salt
- * @return mixed|string
+ * @param string $password
+ * @param string $salt
+ * @return string
  */
 function qa_db_calc_passcheck($password, $salt)
 {
@@ -41,12 +41,12 @@ function qa_db_calc_passcheck($password, $salt)
 
 /**
  * Create a new user in the database with $email, $password, $handle, privilege $level, and $ip address
- * @param $email
- * @param $password
- * @param $handle
- * @param $level
- * @param $ip
- * @return mixed
+ * @param string $email
+ * @param string|null $password
+ * @param string $handle
+ * @param int $level
+ * @param string $ip
+ * @return string
  */
 function qa_db_user_create($email, $password, $handle, $level, $ip)
 {
@@ -77,7 +77,7 @@ function qa_db_user_create($email, $password, $handle, $level, $ip)
 
 /**
  * Delete user $userid from the database, along with everything they have ever done (to the extent that it's possible)
- * @param $userid
+ * @param mixed $userid
  */
 function qa_db_user_delete($userid)
 {
@@ -101,7 +101,7 @@ function qa_db_user_delete($userid)
 
 /**
  * Return the ids of all users in the database which match $email (should be one or none)
- * @param $email
+ * @param string $email
  * @return array
  */
 function qa_db_user_find_by_email($email)
@@ -115,7 +115,7 @@ function qa_db_user_find_by_email($email)
 
 /**
  * Return the ids of all users in the database which match $handle (=username), should be one or none
- * @param $handle
+ * @param string $handle
  * @return array
  */
 function qa_db_user_find_by_handle($handle)
@@ -129,12 +129,12 @@ function qa_db_user_find_by_handle($handle)
 
 /**
  * Return an array mapping each userid in $userids that can be found to that user's handle
- * @param $userids
+ * @param array $userids
  * @return array
  */
 function qa_db_user_get_userid_handles($userids)
 {
-	if (count($userids)) {
+	if (!empty($userids)) {
 		return qa_db_read_all_assoc(qa_db_query_sub(
 			'SELECT userid, handle FROM ^users WHERE userid IN (#)',
 			$userids
@@ -147,12 +147,12 @@ function qa_db_user_get_userid_handles($userids)
 
 /**
  * Return an array mapping mapping each handle in $handle that can be found to that user's userid
- * @param $handles
+ * @param array $handles
  * @return array
  */
 function qa_db_user_get_handle_userids($handles)
 {
-	if (count($handles)) {
+	if (!empty($handles)) {
 		return qa_db_read_all_assoc(qa_db_query_sub(
 			'SELECT handle, userid FROM ^users WHERE handle IN ($)',
 			$handles
@@ -193,8 +193,8 @@ function qa_db_user_set($userid, $fields, $value = null)
 
 /**
  * Set the password of $userid to $password, and reset their salt at the same time
- * @param $userid
- * @param $password
+ * @param mixed $userid
+ * @param string $password
  * @return mixed
  */
 function qa_db_user_set_password($userid, $password)
@@ -221,9 +221,9 @@ function qa_db_user_set_password($userid, $password)
 
 /**
  * Switch on the $flag bit of the flags column for $userid if $set is true, or switch off otherwise
- * @param $userid
- * @param $flag
- * @param $set
+ * @param mixed $userid
+ * @param int $flag
+ * @param bool $set
  */
 function qa_db_user_set_flag($userid, $flag, $set)
 {
@@ -236,6 +236,7 @@ function qa_db_user_set_flag($userid, $flag, $set)
 
 /**
  * Return a random string to be used for a user's emailcode column
+ * @return string
  */
 function qa_db_user_rand_emailcode()
 {
@@ -249,6 +250,7 @@ function qa_db_user_rand_emailcode()
 
 /**
  * Return a random string to be used for a user's sessioncode column (for browser session cookies)
+ * @return string
  */
 function qa_db_user_rand_sessioncode()
 {
@@ -262,9 +264,9 @@ function qa_db_user_rand_sessioncode()
 
 /**
  * Set a row in the database user profile table to store $value for $field for $userid
- * @param $userid
- * @param $field
- * @param $value
+ * @param mixed $userid
+ * @param string $field
+ * @param string $value
  */
 function qa_db_user_profile_set($userid, $field, $value)
 {
@@ -278,8 +280,8 @@ function qa_db_user_profile_set($userid, $field, $value)
 
 /**
  * Note in the database that $userid just logged in from $ip address
- * @param $userid
- * @param $ip
+ * @param mixed $userid
+ * @param string $ip
  */
 function qa_db_user_logged_in($userid, $ip)
 {
@@ -292,8 +294,8 @@ function qa_db_user_logged_in($userid, $ip)
 
 /**
  * Note in the database that $userid just performed a write operation from $ip address
- * @param $userid
- * @param $ip
+ * @param mixed $userid
+ * @param string $ip
  */
 function qa_db_user_written($userid, $ip)
 {
@@ -306,9 +308,9 @@ function qa_db_user_written($userid, $ip)
 
 /**
  * Add an external login in the database for $source and $identifier for user $userid
- * @param $userid
- * @param $source
- * @param $identifier
+ * @param mixed $userid
+ * @param string $source
+ * @param string $identifier
  */
 function qa_db_user_login_add($userid, $source, $identifier)
 {
@@ -322,8 +324,8 @@ function qa_db_user_login_add($userid, $source, $identifier)
 
 /**
  * Return some information about the user with external login $source and $identifier in the database, if a match is found
- * @param $source
- * @param $identifier
+ * @param string $source
+ * @param string $identifier
  * @return array
  */
 function qa_db_user_login_find($source, $identifier)
@@ -338,7 +340,7 @@ function qa_db_user_login_find($source, $identifier)
 
 /**
  * Lock all tables if $sync is true, otherwise unlock them. Used to synchronize creation of external login mappings.
- * @param $sync
+ * @param bool $sync
  */
 function qa_db_user_login_sync($sync)
 {
@@ -360,8 +362,8 @@ function qa_db_user_login_sync($sync)
 /**
  * Reset the full set of context-specific (currently, per category) user levels for user $userid to $userlevels, where
  * $userlevels is an array of arrays, the inner arrays containing items 'entitytype', 'entityid' and 'level'.
- * @param $userid
- * @param $userlevels
+ * @param mixed $userid
+ * @param array $userlevels
  */
 function qa_db_user_levels_set($userid, $userlevels)
 {
@@ -382,8 +384,8 @@ function qa_db_user_levels_set($userid, $userlevels)
 
 /**
  * Get the information required for sending a mailing to the next $count users with userids greater than $lastuserid
- * @param $lastuserid
- * @param $count
+ * @param mixed $lastuserid
+ * @param int $count
  * @return array
  */
 function qa_db_users_get_mailing_next($lastuserid, $count)

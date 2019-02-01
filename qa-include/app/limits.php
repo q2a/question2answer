@@ -167,7 +167,7 @@ function qa_is_ip_blocked()
 
 /**
  * Return an array of the clauses within $blockipstring, each of which can contain hyphens or asterisks
- * @param $blockipstring
+ * @param string $blockipstring
  * @return array
  */
 function qa_block_ips_explode($blockipstring)
@@ -216,9 +216,9 @@ function qa_block_ip_match($ip, $blockipclause)
 
 /**
  * Check if IP falls between two others.
- * @param $ip
- * @param $startip
- * @param $endip
+ * @param string $ip
+ * @param string $startip
+ * @param string $endip
  * @return bool
  */
 function qa_ip_between($ip, $startip, $endip)
@@ -294,7 +294,7 @@ function qa_report_write_action($userid, $cookieid, $action, $questionid, $answe
 
 /**
  * Take note for rate limits that a user and/or the requesting IP just performed an action.
- * @param int $userid User performing the action.
+ * @param int|null $userid User performing the action.
  * @param string $action One of the QA_LIMIT_* constants defined above.
  * @return mixed
  */

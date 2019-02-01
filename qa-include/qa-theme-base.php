@@ -38,29 +38,60 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 class qa_html_theme_base
 {
+	/** @var string */
 	public $template;
-	public $content;
-	public $rooturl;
-	public $request;
-	public $isRTL; // (boolean) whether text direction is Right-To-Left
 
-	protected $minifyHtml; // (boolean) whether to indent the HTML
+	/** @var array */
+	public $content;
+
+	/** @var string */
+	public $rooturl;
+
+	/** @var string */
+	public $request;
+
+	/**
+	 * Whether text direction is Right-To-Left
+	 *
+	 * @var bool
+	 */
+	public $isRTL;
+
+	/**
+	 * Whether to indent the HTML
+	 *
+	 * @var bool
+	 */
+	protected $minifyHtml;
+
+	/** @var int */
 	protected $indent = 0;
+
+	/** @var int */
 	protected $lines = 0;
+
+	/** @var array */
 	protected $context = array();
 
-	// whether to use new block layout in rankings (true) or fall back to tables (false)
+	/**
+	 * Whether to use new block layout in rankings (true) or fall back to tables (false)
+	 * @var bool
+	 */
 	protected $ranking_block_layout = false;
-	// theme 'slug' to use as CSS class
+
+	/**
+	 * Theme 'slug' to use as CSS class
+	 * @var string
+	 */
 	protected $theme;
 
 
 	/**
 	 * Initialize the object and assign local variables.
-	 * @param $template
-	 * @param $content
-	 * @param $rooturl
-	 * @param $request
+	 * @param string $template
+	 * @param string $content
+	 * @param string $rooturl
+	 * @param string $request
 	 */
 	public function __construct($template, $content, $rooturl, $request)
 	{
@@ -75,10 +106,10 @@ class qa_html_theme_base
 	/**
 	 * @deprecated PHP4-style constructor deprecated from 1.7; please use proper `__construct`
 	 * function instead.
-	 * @param $template
-	 * @param $content
-	 * @param $rooturl
-	 * @param $request
+	 * @param string $template
+	 * @param string $content
+	 * @param string $rooturl
+	 * @param string $request
 	 */
 	public function qa_html_theme_base($template, $content, $rooturl, $request)
 	{
@@ -90,7 +121,7 @@ class qa_html_theme_base
 	 * Output each element in $elements on a separate line, with automatic HTML indenting.
 	 * This should be passed markup which uses the <tag/> form for unpaired tags, to help keep
 	 * track of indenting, although its actual output converts these to <tag> for W3C validation.
-	 * @param $elements
+	 * @param array $elements
 	 */
 	public function output_array($elements)
 	{
@@ -132,7 +163,7 @@ class qa_html_theme_base
 	/**
 	 * Output $html at the current indent level, but don't change indent level based on the markup within.
 	 * Useful for user-entered HTML which is unlikely to follow the rules we need to track indenting.
-	 * @param $html
+	 * @param string $html
 	 */
 	public function output_raw($html)
 	{
@@ -144,8 +175,8 @@ class qa_html_theme_base
 	/**
 	 * Output the three elements ['prefix'], ['data'] and ['suffix'] of $parts (if they're defined),
 	 * with appropriate CSS classes based on $class, using $outertag and $innertag in the markup.
-	 * @param $parts
-	 * @param $class
+	 * @param array $parts
+	 * @param string $class
 	 * @param string $outertag
 	 * @param string $innertag
 	 * @param string $extraclass
@@ -167,8 +198,8 @@ class qa_html_theme_base
 
 	/**
 	 * Set some context, which be accessed via $this->context for a function to know where it's being used on the page.
-	 * @param $key
-	 * @param $value
+	 * @param string $key
+	 * @param string $value
 	 */
 	public function set_context($key, $value)
 	{
@@ -178,7 +209,7 @@ class qa_html_theme_base
 
 	/**
 	 * Clear some context (used at the end of the appropriate loop).
-	 * @param $key
+	 * @param string $key
 	 */
 	public function clear_context($key)
 	{
@@ -189,8 +220,8 @@ class qa_html_theme_base
 	/**
 	 * Reorder the parts of the page according to the $parts array which contains part keys in their new order. Call this
 	 * before main_parts(). See the docs for qa_array_reorder() in util/sort.php for the other parameters.
-	 * @param $parts
-	 * @param string $beforekey
+	 * @param array $parts
+	 * @param string|null $beforekey
 	 * @param bool $reorderrelative
 	 */
 	public function reorder_parts($parts, $beforekey = null, $reorderrelative = true)
@@ -203,8 +234,8 @@ class qa_html_theme_base
 
 	/**
 	 * Output the widgets (as provided in $this->content['widgets']) for $region and $place.
-	 * @param $region
-	 * @param $place
+	 * @param string $region
+	 * @param string $place
 	 */
 	public function widgets($region, $place)
 	{
@@ -1017,8 +1048,8 @@ class qa_html_theme_base
 	/**
 	 * Reorder the fields of $form according to the $keys array which contains the field keys in their new order. Call
 	 * before any fields are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
-	 * @param $form
-	 * @param $keys
+	 * @param array
+	 * @param array $keys
 	 * @param mixed $beforekey
 	 * @param bool $reorderrelative
 	 */
@@ -1205,8 +1236,8 @@ class qa_html_theme_base
 	/**
 	 * Reorder the buttons of $form according to the $keys array which contains the button keys in their new order. Call
 	 * before any buttons are output. See the docs for qa_array_reorder() in util/sort.php for the other parameters.
-	 * @param $form
-	 * @param $keys
+	 * @param array $form
+	 * @param array $keys
 	 * @param mixed $beforekey
 	 * @param bool $reorderrelative
 	 */
@@ -1477,7 +1508,7 @@ class qa_html_theme_base
 	 * removed in a future version. Themes can switch to the new layout by setting the member
 	 * variable $ranking_block_layout to false.
 	 * @param $ranking
-	 * @param $class
+	 * @param string $class
 	 */
 	public function ranking_table($ranking, $class)
 	{
@@ -1507,7 +1538,7 @@ class qa_html_theme_base
 	/**
 	 * @deprecated See ranking_table above.
 	 * @param $item
-	 * @param $class
+	 * @param string $class
 	 * @param $spacer
 	 */
 	public function ranking_table_item($item, $class, $spacer)
@@ -1535,7 +1566,7 @@ class qa_html_theme_base
 
 	/**
 	 * @deprecated See ranking_table above.
-	 * @param $class
+	 * @param string $class
 	 */
 	public function ranking_spacer($class)
 	{
@@ -1897,8 +1928,8 @@ class qa_html_theme_base
 
 	/**
 	 * @deprecated Deprecated from 1.7; please use avatar() instead.
-	 * @param $post
-	 * @param $class
+	 * @param array $post
+	 * @param string $class
 	 * @param string $prefix
 	 */
 	public function post_avatar($post, $class, $prefix = null)
