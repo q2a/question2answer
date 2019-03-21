@@ -1812,6 +1812,16 @@ input[type="submit"], button {
 	cursor: pointer;
 	text-align: center;
 }
+@media (max-width: 479px) {
+	input[type="file"] {
+		max-width: 220px;
+	}
+}
+@media (max-width: 359px) {
+	input[type="file"] {
+		max-width: 180px;
+	}
+}
 
 [class^="qa-part-form"],
 [class^="qa-part-custom"] {
