@@ -1,0 +1,67 @@
+# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+#
+User-agent: *
+Disallow: /login
+Disallow: /forgot
+Disallow: /search?
+
+# add Crawl delay
+Crawl-delay: 4
+
+User-agent: Yandex
+Crawl-delay: 30
+
+User-agent: SindiceBot
+Crawl-delay: 30
+
+User-agent: CCBot
+Crawl-Delay: 30
+
+User-agent: bingbot
+Crawl-delay: 30
+
+# Block user agent
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: Mozilla/5.0 (compatible; Ezooms/1.0; ezooms.bot@gmail.com)
+Disallow: /
+
+User-agent: wget
+Disallow: /
+
+User-agent: WebReaper
+Disallow: /
+
+User-agent: ahrefsbot
+Disallow: /
+
+User-agent: Yahoo Pipes 1.0
+Disallow: /
+
+User-agent: mauibot
+Disallow: /
+
+User-agent: semrushbot
+Disallow: /
+
+User-agent: blexbot
+Disallow: /
+
+User-agent: 008
+Disallow: /
+
+User-agent: voltron
+Disallow: /
+
+User-agent: Spinn3r
+Disallow: /
+
+User-agent: KSCrawler
+Disallow: /
+
+# Update your site name on below line and remove comment.
+# Sitemap: https://yourq2asite.com/sitemap.xml
