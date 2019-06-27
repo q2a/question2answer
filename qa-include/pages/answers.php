@@ -60,7 +60,7 @@ if ($countslugs) {
 
 return qa_q_list_page_content(
 	qa_any_sort_and_dedupe($questions), // questions
-	qa_opt('page_size_activity'), // questions per page
+	(int)qa_opt('page_size_activity'), // questions per page
 	0, // start offset
 	null, // total count (null to hide page links)
 	$sometitle, // title if some questions

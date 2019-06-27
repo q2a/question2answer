@@ -114,7 +114,7 @@ switch ($sort) {
 
 $qa_content = qa_q_list_page_content(
 	$questions, // questions
-	qa_opt('page_size_qs'), // questions per page
+	(int)qa_opt('page_size_qs'), // questions per page
 	$start, // start offset
 	$countslugs ? $categories[$categoryid]['qcount'] : qa_opt('cache_qcount'), // total count
 	$sometitle, // title if some questions

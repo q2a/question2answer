@@ -175,7 +175,7 @@ class UsersList extends \Q2A\Controllers\BaseController
 
 		$request = qa_request();
 		$start = qa_get_start();
-		$pageSize = qa_opt('page_size_users');
+		$pageSize = (int)qa_opt('page_size_users');
 
 		list($totalUsers, $users) = $fnUsersAndCount($start, $pageSize);
 

@@ -37,7 +37,7 @@ $userid = qa_get_logged_in_userid();
 // Get lists of recent activity in all its forms, plus category information
 
 list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid) = qa_db_select_with_pending(
-	qa_db_qs_selectspec($userid, 'created', 0, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_activity')),
+	qa_db_qs_selectspec($userid, 'created', 0, $categoryslugs, null, false, false, (int)qa_opt_if_loaded('page_size_activity')),
 	qa_db_recent_a_qs_selectspec($userid, 0, $categoryslugs),
 	qa_db_recent_c_qs_selectspec($userid, 0, $categoryslugs),
 	qa_db_recent_edit_qs_selectspec($userid, 0, $categoryslugs),
@@ -63,7 +63,7 @@ if ($countslugs) {
 
 return qa_q_list_page_content(
 	qa_any_sort_and_dedupe(array_merge($questions1, $questions2, $questions3, $questions4)), // questions
-	qa_opt('page_size_activity'), // questions per page
+	(int)qa_opt('page_size_activity'), // questions per page
 	0, // start offset
 	null, // total count (null to hide page links)
 	$sometitle, // title if some questions

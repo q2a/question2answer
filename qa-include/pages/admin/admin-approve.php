@@ -38,7 +38,7 @@ if (QA_FINAL_EXTERNAL_USERS)
 
 $userid = qa_get_logged_in_userid();
 
-$users = qa_db_get_unapproved_users(qa_opt('page_size_users'));
+$users = qa_db_get_unapproved_users((int)qa_opt('page_size_users'));
 $userfields = qa_db_select_with_pending(qa_db_userfields_selectspec());
 
 

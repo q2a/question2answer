@@ -364,7 +364,7 @@ asort($answerposition, SORT_NUMERIC);
 
 $answerids = array_keys($answerposition);
 $countforpages = count($answerids);
-$pagesize = qa_opt('page_size_q_as');
+$pagesize = (int)qa_opt('page_size_q_as');
 
 // see if we need to display a particular answer
 

@@ -49,7 +49,7 @@ class UserMessages extends \Q2A\Controllers\BaseController
 
 		list($useraccount, $usermessages) = qa_db_select_with_pending(
 			qa_db_user_account_selectspec($handle, false),
-			qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall'), $start)
+			qa_db_recent_messages_selectspec(null, null, $handle, false, (int)qa_opt_if_loaded('page_size_wall'), $start)
 		);
 		if (!is_array($useraccount)) { // check the user exists
 			throw new PageNotFoundException();
@@ -57,7 +57,7 @@ class UserMessages extends \Q2A\Controllers\BaseController
 
 		// Perform pagination
 
-		$pagesize = qa_opt('page_size_wall');
+		$pagesize = (int)qa_opt('page_size_wall');
 		$count = $useraccount['wallposts'];
 		$loginuserid = qa_get_logged_in_userid();
 

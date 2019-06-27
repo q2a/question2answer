@@ -386,7 +386,7 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 
 	if (qa_using_tags() && $question['retagcatable']) {
 		qa_set_up_tag_field($qa_content, $form['fields']['tags'], 'q_tags', isset($in['tags']) ? $in['tags'] : qa_tagstring_to_tags($question['tags']),
-			array(), $completetags, qa_opt('page_size_ask_tags'));
+			array(), $completetags, (int)qa_opt('page_size_ask_tags'));
 	} else {
 		unset($form['fields']['tags']);
 	}

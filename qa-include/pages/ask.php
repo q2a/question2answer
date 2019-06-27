@@ -288,7 +288,7 @@ if (qa_using_tags()) {
 	);
 
 	qa_set_up_tag_field($qa_content, $field, 'tags', isset($in['tags']) ? $in['tags'] : array(), array(),
-		qa_opt('do_complete_tags') ? array_keys($completetags) : array(), qa_opt('page_size_ask_tags'));
+		qa_opt('do_complete_tags') ? array_keys($completetags) : array(), (int)qa_opt('page_size_ask_tags'));
 
 	qa_array_insert($qa_content['form']['fields'], null, array('tags' => $field));
 }

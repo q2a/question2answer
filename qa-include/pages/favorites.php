@@ -39,10 +39,9 @@ if (!isset($userid))
 
 // Get lists of favorites for this user
 
-$pagesize_qs = qa_opt('page_size_qs');
-$pagesize_users = qa_opt('page_size_users');
-$pagesize_tags = qa_opt('page_size_tags');
-
+$pagesize_qs = (int)qa_opt('page_size_qs');
+$pagesize_users = (int)qa_opt('page_size_users');
+$pagesize_tags = (int)qa_opt('page_size_tags');
 list($numQs, $questions, $numUsers, $users, $numTags, $tags, $categories) = qa_db_select_with_pending(
 	qa_db_selectspec_count(qa_db_user_favorite_qs_selectspec($userid)),
 	qa_db_user_favorite_qs_selectspec($userid, $pagesize_qs),

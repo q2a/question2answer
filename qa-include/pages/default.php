@@ -49,7 +49,7 @@ $countslugs = count($slugs);
 $userid = qa_get_logged_in_userid();
 
 list($questions1, $questions2, $categories, $categoryid, $custompage) = qa_db_select_with_pending(
-	qa_db_qs_selectspec($userid, 'created', 0, $slugs, null, false, false, qa_opt_if_loaded('page_size_activity')),
+	qa_db_qs_selectspec($userid, 'created', 0, $slugs, null, false, false, (int)qa_opt_if_loaded('page_size_activity')),
 	qa_db_recent_a_qs_selectspec($userid, 0, $slugs),
 	qa_db_category_nav_selectspec($slugs, false, false, true),
 	$countslugs ? qa_db_slugs_to_category_id_selectspec($slugs) : null,
@@ -127,7 +127,7 @@ require_once QA_INCLUDE_DIR . 'app/q-list.php';
 
 qa_set_template('qa');
 $questions = qa_any_sort_and_dedupe(array_merge($questions1, $questions2));
-$pagesize = qa_opt('page_size_home');
+$pagesize = (int)qa_opt('page_size_home');
 
 if ($countslugs) {
 	if (!isset($categoryid)) {

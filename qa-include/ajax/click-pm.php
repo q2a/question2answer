@@ -31,7 +31,7 @@ $loginUserHandle = qa_get_logged_in_handle();
 $fromhandle = qa_post_text('handle');
 $start = (int)qa_post_text('start');
 $box = qa_post_text('box');
-$pagesize = qa_opt('page_size_pms');
+$pagesize = (int)qa_opt('page_size_pms');
 
 if (!isset($loginUserId) || $loginUserHandle !== $fromhandle || !in_array($box, array('inbox', 'outbox'))) {
 	echo "QA_AJAX_RESPONSE\n0\n";

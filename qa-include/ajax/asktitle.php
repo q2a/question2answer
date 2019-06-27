@@ -32,7 +32,7 @@ $doaskcheck = qa_opt('do_ask_check_qs');
 $doexampletags = qa_using_tags() && qa_opt('do_example_tags');
 
 if ($doaskcheck || $doexampletags) {
-	$countqs = max($doexampletags ? QA_DB_RETRIEVE_ASK_TAG_QS : 0, $doaskcheck ? qa_opt('page_size_ask_check_qs') : 0);
+	$countqs = max($doexampletags ? QA_DB_RETRIEVE_ASK_TAG_QS : 0, $doaskcheck ? (int)qa_opt('page_size_ask_check_qs') : 0);
 
 	$relatedquestions = qa_db_select_with_pending(
 		qa_db_search_posts_selectspec(null, qa_string_to_words($intitle), null, null, null, null, 0, false, $countqs)
@@ -56,7 +56,7 @@ if ($doexampletags) {
 	$exampletags = array();
 
 	$minweight = exp(qa_match_to_min_score(qa_opt('match_example_tags')));
-	$maxcount = qa_opt('page_size_ask_tags');
+	$maxcount = (int)qa_opt('page_size_ask_tags');
 
 	foreach ($tagweight as $tag => $weight) {
 		if ($weight < $minweight)
@@ -82,7 +82,7 @@ echo strtr(qa_html(implode(',', $exampletags)), "\r\n", '  ') . "\n";
 
 if ($doaskcheck) {
 	$minscore = qa_match_to_min_score(qa_opt('match_ask_check_qs'));
-	$maxcount = qa_opt('page_size_ask_check_qs');
+	$maxcount = (int)qa_opt('page_size_ask_check_qs');
 
 	$relatedquestions = array_slice($relatedquestions, 0, $maxcount);
 	$limitedquestions = array();

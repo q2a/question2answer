@@ -44,7 +44,7 @@ list($questions, $tagword) = qa_db_select_with_pending(
 	qa_db_tag_word_selectspec($tag)
 );
 
-$pagesize = qa_opt('page_size_tag_qs');
+$pagesize = (int)qa_opt('page_size_tag_qs');
 $questions = array_slice($questions, 0, $pagesize);
 $usershtml = qa_userids_handles_html($questions);
 

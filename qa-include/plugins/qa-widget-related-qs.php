@@ -43,7 +43,7 @@ class qa_related_qs
 		$userid = qa_get_logged_in_userid();
 		$cookieid = qa_cookie_get();
 
-		$questions = qa_db_single_select(qa_db_related_qs_selectspec($userid, $questionid, qa_opt('page_size_related_qs')));
+		$questions = qa_db_single_select(qa_db_related_qs_selectspec($userid, $questionid, (int)qa_opt('page_size_related_qs')));
 
 		$minscore = qa_match_to_min_score(qa_opt('match_related_qs'));
 

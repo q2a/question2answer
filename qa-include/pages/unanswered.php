@@ -56,7 +56,7 @@ switch ($by) {
 }
 
 list($questions, $categories, $categoryid) = qa_db_select_with_pending(
-	qa_db_unanswered_qs_selectspec($userid, $selectby, $start, $categoryslugs, false, false, qa_opt_if_loaded('page_size_una_qs')),
+	qa_db_unanswered_qs_selectspec($userid, $selectby, $start, $categoryslugs, false, false, (int)qa_opt_if_loaded('page_size_una_qs')),
 	QA_ALLOW_UNINDEXED_QUERIES ? qa_db_category_nav_selectspec($categoryslugs, false, false, true) : null,
 	$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
 );
@@ -117,7 +117,7 @@ switch ($by) {
 
 $qa_content = qa_q_list_page_content(
 	$questions, // questions
-	qa_opt('page_size_una_qs'), // questions per page
+	(int)qa_opt('page_size_una_qs'), // questions per page
 	$start, // start offset
 	@$count, // total count
 	$sometitle, // title if some questions

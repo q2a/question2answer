@@ -59,7 +59,7 @@ if (!qa_opt('allow_private_messages') || !qa_opt('show_message_history'))
 // Find the messages for this user
 
 $start = qa_get_start();
-$pagesize = qa_opt('page_size_pms');
+$pagesize = (int)qa_opt('page_size_pms');
 
 // get number of messages then actual messages for this page
 $func = $showOutbox ? 'qa_db_messages_outbox_selectspec' : 'qa_db_messages_inbox_selectspec';

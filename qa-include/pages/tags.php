@@ -33,11 +33,11 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
 $populartags = qa_db_select_with_pending(
-	qa_db_popular_tags_selectspec($start, qa_opt_if_loaded('page_size_tags'))
+	qa_db_popular_tags_selectspec($start, (int)qa_opt_if_loaded('page_size_tags'))
 );
 
-$tagcount = qa_opt('cache_tagcount');
-$pagesize = qa_opt('page_size_tags');
+$tagcount = (int)qa_opt('cache_tagcount');
+$pagesize = (int)qa_opt('page_size_tags');
 
 
 // Prepare content for theme

@@ -37,7 +37,7 @@ if (strlen(qa_get('q'))) {
 	$userid = qa_get_logged_in_userid();
 	$start = qa_get_start();
 
-	$display = qa_opt_if_loaded('page_size_search');
+	$display = (int)qa_opt_if_loaded('page_size_search');
 	$count = 2 * (isset($display) ? $display : QA_DB_RETRIEVE_QS_AS) + 1;
 	// get enough results to be able to give some idea of how many pages of search results there are
 
@@ -47,7 +47,7 @@ if (strlen(qa_get('q'))) {
 
 	// Count and truncate results
 
-	$pagesize = qa_opt('page_size_search');
+	$pagesize = (int)qa_opt('page_size_search');
 	$gotcount = count($results);
 	$results = array_slice($results, 0, $pagesize);
 

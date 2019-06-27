@@ -37,7 +37,7 @@ $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
 
 list($questions, $categories, $categoryid) = qa_db_select_with_pending(
-	qa_db_qs_selectspec($userid, 'hotness', $start, $categoryslugs, null, false, false, qa_opt_if_loaded('page_size_hot_qs')),
+	qa_db_qs_selectspec($userid, 'hotness', $start, $categoryslugs, null, false, false, (int)qa_opt_if_loaded('page_size_hot_qs')),
 	qa_db_category_nav_selectspec($categoryslugs, false, false, true),
 	$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
 );
@@ -60,7 +60,7 @@ if ($countslugs) {
 
 return qa_q_list_page_content(
 	$questions, // questions
-	qa_opt('page_size_hot_qs'), // questions per page
+	(int)qa_opt('page_size_hot_qs'), // questions per page
 	$start, // start offset
 	$countslugs ? $categories[$categoryid]['qcount'] : qa_opt('cache_qcount'), // total count
 	$sometitle, // title if some questions

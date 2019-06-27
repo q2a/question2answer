@@ -73,7 +73,7 @@ class UserProfile extends \Q2A\Controllers\BaseController
 				QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
 				QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_profile_selectspec($handle, false),
 				QA_FINAL_EXTERNAL_USERS ? null : qa_db_userfields_selectspec(),
-				QA_FINAL_EXTERNAL_USERS ? null : qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall')),
+				QA_FINAL_EXTERNAL_USERS ? null : qa_db_recent_messages_selectspec(null, null, $handle, false, (int)qa_opt_if_loaded('page_size_wall')),
 				qa_db_user_points_selectspec($identifier),
 				qa_db_user_levels_selectspec($identifier, QA_FINAL_EXTERNAL_USERS, true),
 				qa_db_category_nav_selectspec(null, true),
@@ -146,7 +146,7 @@ class UserProfile extends \Q2A\Controllers\BaseController
 
 			// This code is similar but not identical to that in to qq-page-user-wall.php
 
-			$usermessages = array_slice($usermessages, 0, qa_opt('page_size_wall'));
+			$usermessages = array_slice($usermessages, 0, (int)qa_opt('page_size_wall'));
 			$usermessages = qa_wall_posts_add_rules($usermessages, 0);
 
 			foreach ($usermessages as $message) {

@@ -50,7 +50,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		list($useraccount, $questions, $answerqs, $commentqs, $editqs) = qa_db_select_with_pending(
 			QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
-			qa_db_user_recent_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_activity')),
+			qa_db_user_recent_qs_selectspec($loginuserid, $identifier, (int)qa_opt_if_loaded('page_size_activity')),
 			qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier),
 			qa_db_user_recent_c_qs_selectspec($loginuserid, $identifier),
 			qa_db_user_recent_edit_qs_selectspec($loginuserid, $identifier)
@@ -62,7 +62,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		// Get information on user references
 
 		$questions = qa_any_sort_and_dedupe(array_merge($questions, $answerqs, $commentqs, $editqs));
-		$questions = array_slice($questions, 0, qa_opt('page_size_activity'));
+		$questions = array_slice($questions, 0, (int)qa_opt('page_size_activity'));
 		$usershtml = qa_userids_handles_html(qa_any_get_userids_handles($questions), false);
 
 
@@ -135,7 +135,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		list($useraccount, $userpoints, $questions) = qa_db_select_with_pending(
 			QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
 			qa_db_user_points_selectspec($identifier),
-			qa_db_user_recent_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_qs'), $start)
+			qa_db_user_recent_qs_selectspec($loginuserid, $identifier, (int)qa_opt_if_loaded('page_size_qs'), $start)
 		);
 
 		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) { // check the user exists
@@ -145,7 +145,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		// Get information on user questions
 
-		$pagesize = qa_opt('page_size_qs');
+		$pagesize = (int)qa_opt('page_size_qs');
 		$count = (int)@$userpoints['qposts'];
 		$questions = array_slice($questions, 0, $pagesize);
 		$usershtml = qa_userids_handles_html($questions, false);
@@ -222,7 +222,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 		list($useraccount, $userpoints, $questions) = qa_db_select_with_pending(
 			QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
 			qa_db_user_points_selectspec($identifier),
-			qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_activity'), $start)
+			qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier, (int)qa_opt_if_loaded('page_size_activity'), $start)
 		);
 
 		if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) { // check the user exists
@@ -232,7 +232,7 @@ class UserPosts extends \Q2A\Controllers\BaseController
 
 		// Get information on user questions
 
-		$pagesize = qa_opt('page_size_activity');
+		$pagesize = (int)qa_opt('page_size_activity');
 		$count = (int)@$userpoints['aposts'];
 		$questions = array_slice($questions, 0, $pagesize);
 		$usershtml = qa_userids_handles_html($questions, false);
