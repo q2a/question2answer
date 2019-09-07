@@ -135,6 +135,7 @@ function qa_send_email($params)
 
 	require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
 
+	PHPMailer::$validator = 'php';
 	$mailer = new PHPMailer();
 	$mailer->CharSet = 'utf-8';
 
