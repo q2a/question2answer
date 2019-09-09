@@ -1260,13 +1260,13 @@ function qa_clicked($name)
 function qa_remote_ip_address()
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-	
+
 	if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
 		$parsedUrl = parse_url($_SERVER["HTTP_X_FORWARDED_FOR"]);
 		return $parsedUrl['host'];
-	} else if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+	} elseif (array_key_exists('REMOTE_ADDR', $_SERVER)) {
 		return $_SERVER["REMOTE_ADDR"];
-	} else if (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
+	} elseif (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
 		return $_SERVER["HTTP_CLIENT_IP"];
 	} else {
 		return null;
