@@ -74,3 +74,15 @@ Official releases can be found either on the [Q2A website][Q2A] or via the Relea
 [6]: https://docs.question2answer.org/themes/
 [7]: https://docs.question2answer.org/translate/
 [8]: https://docs.question2answer.org/addons/
+
+## Deployment
+
+Docker, Docker Stack and Kubernetes
+-----------------------------------
+
+For instructions look at the deployment folder [README.md](deployment/README.md).
+
+In an already running server
+----------------------------
+
+Look at https://docs.question2answer.org/install/ for instructions.

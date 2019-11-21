@@ -1,0 +1,49 @@
+version: '3'
+services:
+
+  q2a:
+    image: q2a:latest
+    deploy:
+      restart_policy:
+        delay: 10s
+        max_attempts: 12
+    environment:
+      - QA_DB_HOSTNAME=mysql
+      - QA_DB_USER=__change_me__
+      - QA_DB_PASS=__change_me__
+      - QA_DB_NAME=__change_me__
+    volumes:
+      - &html html:/var/www/html
+      - ./provisioning/q2a/:/docker-entrypoint-init.d
+
+  mysql:
+    image: mysql:8.0.18
+    deploy:
+      restart_policy:
+        delay: 5s
+        max_attempts: 4
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=__change_me__
+      - MYSQL_USER=__change_me__
+      - MYSQL_PASSWORD=__change_me__
+      - MYSQL_DATABASE=__change_me__
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./provisioning/mysql/:/docker-entrypoint-initdb.d
+
+  nginx:
+    image: nginx:1.17.5-alpine
+    deploy:
+      restart_policy:
+        delay: 10s
+        max_attempts: 4
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - *html
+    ports:
+      - 8000:80
+
+volumes:
+  db_data:
+  html:

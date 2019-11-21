@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "q2a.fullname" . }}-mysql
+  labels:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-mysql
+    helm.sh/chart: {{ include "q2a.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: q2a
+    app.kubernetes.io/component: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "q2a.name" . }}-mysql
+      app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "q2a.name" . }}-mysql
+        app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-mysql
+          image: "{{ .Values.mysql.image.address }}"
+          args: ["--default-authentication-plugin=mysql_native_password"]
+          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+            - name: mysql-init
+              mountPath: /docker-entrypoint-initdb.d
+          ports:
+            - name: mysql
+              containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.mysql.auth.root_password }}
+            - name: MYSQL_USER
+              value: {{ .Values.mysql.auth.user }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.mysql.auth.user_password }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mysql.database_name }}
+            {{ if .Values.mysql.env -}}
+            {{- toYaml .Values.mysql.env | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: {{ include "q2a.fullname" . }}-mysql
+        - name: mysql-init
+          configMap:
+            name: {{ include "q2a.fullname" . }}-mysql-init
+            defaultMode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Release.Namespace}}
+  name: {{ include "q2a.mysql-service-name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-mysql
+    helm.sh/chart: {{ include "q2a.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: q2a
+    app.kubernetes.io/component: database
+spec:
+  ports:
+    - name: mysql
+      port: {{ .Values.mysql.service.port }}
+      targetPort: mysql
+  selector:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-mysql
+    app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "q2a.fullname" . }}-mysql
+  labels:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-mysql
+    helm.sh/chart: {{ include "q2a.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-mysql
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: q2a
+    app.kubernetes.io/component: database
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.mysql.volume.size }}
+  {{- if .Values.mysql.volume.storage_class }}
+  storageClassName: {{ .Values.mysql.volume.storage_class }}
+  {{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace}}
+  name: {{ include "q2a.fullname" . }}-mysql-init
+data:
+  {{- ($.Files.Glob "provisioning/mysql/*").AsConfig | nindent 2 }}

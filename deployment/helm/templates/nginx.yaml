@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "q2a.fullname" . }}-nginx
+  labels:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-nginx
+    helm.sh/chart: {{ include "q2a.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.nginx.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "q2a.name" . }}-nginx
+      app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "q2a.name" . }}-nginx
+        app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-nginx
+          image: "{{ .Values.nginx.image.address }}"
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          volumeMounts:
+            {{ include "q2a.shared-volume-mounts" . | nindent 12 }}
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/
+          ports:
+            - name: http
+              containerPort: {{ .Values.nginx.port }}
+              protocol: TCP
+          env:
+            {{ if .Values.nginx.env -}}
+            {{- toYaml .Values.nginx.env | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{ include "q2a.q2a-shared-volumes" . | nindent 8 }}
+        - name: nginx-conf
+          configMap:
+            name: {{ include "q2a.fullname" . }}-nginx-conf
+            defaultMode: 0755
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Release.Namespace}}
+  name: {{ include "q2a.nginx-service-name" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-nginx
+    helm.sh/chart: {{ include "q2a.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/part-of: q2a
+    app.kubernetes.io/component: reverse-proxy
+spec:
+  ports:
+    - name: http
+      port: {{ .Values.nginx.service.port }}
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: {{ include "q2a.name" . }}-nginx
+    app.kubernetes.io/instance: {{ .Release.Name }}-nginx
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace}}
+  name: {{ include "q2a.fullname" . }}-nginx-conf
+data:
+  nginx.conf: |
+    server {
+        listen {{ .Values.nginx.port }};
+        server_name localhost;
+        root {{ include "q2a.q2a-dir" . }};
+        index index.php;
+        autoindex off;
+
+        location ~* \.php$ {
+            fastcgi_pass    {{ include "q2a.q2a-service-name" . }}:{{ .Values.q2a.php_fpm_port }};
+            include         fastcgi_params;
+            fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+            fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+            fastcgi_index   index.php;
+        }
+    }

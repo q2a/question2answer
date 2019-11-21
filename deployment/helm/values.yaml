@@ -1,0 +1,97 @@
+# Default values for q2a.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+q2a:
+  replicas: 1
+  image:
+    address: # for now, you need to build and publish your own image
+    pullPolicy: Always
+  # php_fpm_port is the port where the php-fpm service is listening in the
+  # container
+  php_fpm_port: 9000
+  service:
+    # the port where the service will listen
+    port: 9000
+  volume:
+    size: 1Gi
+    storage_class:
+  env:
+    # declare env variables with the kubernetes format, i.e.:
+    # - name: http_proxy
+    #   value:
+
+nginx:
+  replicas: 1
+  image:
+    address: nginx:1.17.5-alpine
+    pullPolicy: IfNotPresent
+  # root is the directory from where nginx will serve the data
+  root: /var/www/html/
+  # the port where nginx will be listening. Don't confuse this port with the
+  # ingress port. This is for an internal reverse proxy used to serve the files
+  # and connect with the php server.
+  port: 80
+  service:
+    # the port where the service will listen
+    port: 80
+  env:
+    # declare env variables with the kubernetes format, i.e.:
+    # - name: http_proxy
+    #   value:
+
+mysql:
+  image:
+    address: mysql:8.0.18
+    pullPolicy: IfNotPresent
+  service:
+    # the port where the service will listen
+    port: 3306
+  database_name: __change_me__
+  auth:
+    root_password: __change_me__
+    user: __change_me__
+    user_password: __change_me__
+  volume:
+    size: 1Gi
+    storage_class:
+  env:
+    # declare env variables with the kubernetes format, i.e.:
+    # - name: http_proxy
+    #   value:
+
+ingress:
+  enabled: false
+  # this annotations will be added to the ingress file
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  path: /
+  host: <your.host.url>
+  tls:
+    enabled: false
+    host: <your.host.url>
+    crt: |
+      -----BEGIN CERTIFICATE-----
+      -----END CERTIFICATE-----
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      -----END RSA PRIVATE KEY-----
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
