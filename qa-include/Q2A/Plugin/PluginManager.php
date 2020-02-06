@@ -136,7 +136,12 @@ class Q2A_Plugin_PluginManager
 	{
 		$result = array();
 
-		$fileSystemPluginFiles = glob(QA_PLUGIN_DIR . '*/qa-plugin.php');
+		$plugins = glob(QA_PLUGIN_DIR . '*');
+		foreach ($plugins as $aPlugin)
+		{
+			if (file_exists($aPlugin . '/qa-plugin.php'))
+				$fileSystemPluginFiles[] = $aPlugin . '/qa-plugin.php' . "\n";
+		}
 
 		foreach ($fileSystemPluginFiles as $pluginFile) {
 			$directory = dirname($pluginFile) . '/';

@@ -148,7 +148,11 @@ function qa_admin_theme_options()
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	$metadataUtil = new Q2A_Util_Metadata();
-	foreach (glob(QA_THEME_DIR . '*', GLOB_ONLYDIR) as $directory) {
+	foreach (glob(QA_THEME_DIR . '*') as $directory) {
+
+		if (!file_exists($directory . '/qa-theme.php'))
+			continue;
+
 		$theme = basename($directory);
 		$metadata = $metadataUtil->fetchFromAddonPath($directory);
 		if (empty($metadata)) {
