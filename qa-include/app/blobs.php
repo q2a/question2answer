@@ -213,5 +213,18 @@ function qa_blob_exists($blobid)
 
 	require_once QA_INCLUDE_DIR . 'db/blobs.php';
 
-	return qa_db_blob_exists($blobid);
+	$db_blob_exists = qa_db_blob_exists($blobid);
+
+	if (!$db_blob_exists)
+		return false;
+
+	if (!defined('QA_BLOBS_DIRECTORY'))
+		return true;
+	else
+	{
+		$blob = qa_db_blob_read($blobid);
+
+		$filename = qa_get_blob_filename($blobid, $blob['format']);
+		return is_readable($filename);
+	}
 }
