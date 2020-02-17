@@ -16,3 +16,15 @@ Thumbs.db
 .idea/
 /nbproject/private/
 data_files/
+qa-plugin/ajax-images
+qa-plugin/api
+qa-plugin/Donut-admin
+qa-lang/fr
+qa-plugin/neayi
+qa-plugin/q2a-ask-with-tags-list
+qa-plugin/q2a-breadcrumbs
+qa-plugin/q2a-email-notification
+qa-plugin/q2a-markdown-editor
+qa-plugin/q2a-open-login
+qa-plugin/q2a-social-share
+qa-theme/Donut-theme
