@@ -87,7 +87,7 @@ function qa_db_user_delete($userid)
 	// Delete blobs including the files:
 	require_once QA_INCLUDE_DIR . 'app/blobs.php';
 
-	$blobIds = qa_db_read_all_values(qa_db_query_sub('SELECT avatarblobid FROM ^users WHERE userid=$',	$userid));
+	$blobIds = qa_db_read_all_values(qa_db_query_sub('SELECT avatarblobid FROM ^users WHERE userid=$', $userid));
 	foreach ($blobIds as $blobid)
 		qa_delete_blob($blobid);
 
