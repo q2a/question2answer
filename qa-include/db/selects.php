@@ -1216,8 +1216,13 @@ function qa_db_tag_recent_qs_selectspec($voteuserid, $tag, $start, $full = false
 
 	$selectspec = qa_db_posts_basic_selectspec($voteuserid, $full);
 
+	if (defined('QA_USE_UTF8MB4') && QA_USE_UTF8MB4)
+		$collation = 'utf8mb4_bin';
+	else
+		$collation = 'utf8_bin';
+
 	// use two tests here - one which can use the index, and the other which narrows it down exactly - then limit to 1 just in case
-	$selectspec['source'] .= " JOIN (SELECT postid FROM ^posttags WHERE wordid=(SELECT wordid FROM ^words WHERE word=$ AND word=$ COLLATE utf8_bin LIMIT 1) ORDER BY postcreated DESC LIMIT #,#) y ON ^posts.postid=y.postid";
+	$selectspec['source'] .= " JOIN (SELECT postid FROM ^posttags WHERE wordid=(SELECT wordid FROM ^words WHERE word=$ AND word=$ COLLATE $collation LIMIT 1) ORDER BY postcreated DESC LIMIT #,#) y ON ^posts.postid=y.postid";
 	array_push($selectspec['arguments'], $tag, qa_strtolower($tag), $start, $count);
 	$selectspec['sortdesc'] = 'created';
 
@@ -1232,9 +1237,14 @@ function qa_db_tag_recent_qs_selectspec($voteuserid, $tag, $start, $full = false
  */
 function qa_db_tag_word_selectspec($tag)
 {
+	if (defined('QA_USE_UTF8MB4') && QA_USE_UTF8MB4)
+		$collation = 'utf8mb4_bin';
+	else
+		$collation = 'utf8_bin';
+
 	return array(
 		'columns' => array('wordid', 'word', 'tagcount'),
-		'source' => '^words WHERE word=$ AND word=$ COLLATE utf8_bin',
+		'source' => '^words WHERE word=$ AND word=$ COLLATE ' . $collation,
 		'arguments' => array($tag, qa_strtolower($tag)),
 		'single' => true,
 	);

@@ -91,7 +91,12 @@ function qa_db_connect($failhandler = null)
 	// From Q2A 1.5, we explicitly set the character encoding of the MySQL connection, instead of using lots of "SELECT BINARY col"-style queries.
 	// Testing showed that overhead is minimal, so this seems worth trading off against the benefit of more straightforward queries, especially
 	// for plugin developers.
-	if (!$db->set_charset('utf8'))
+	if (defined('QA_USE_UTF8MB4') && QA_USE_UTF8MB4)
+		$collation = 'utf8mb4';
+	else
+		$collation = 'utf8';
+
+	if (!$db->set_charset($collation))
 		qa_db_fail_error('set_charset', $db->errno, $db->error);
 
 	qa_report_process_stage('db_connected');
