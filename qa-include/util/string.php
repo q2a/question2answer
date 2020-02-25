@@ -601,6 +601,9 @@ function qa_shorten_string_line($string, $length, $ellipsis = ' ... ')
  */
 function qa_remove_utf8mb4($string)
 {
+	if (defined('QA_USE_UTF8MB4') && QA_USE_UTF8MB4)
+		return $string;
+
 	return preg_replace('%(?:
 		  \xF0[\x90-\xBF][\x80-\xBF]{2}  # planes 1-3
 		| [\xF1-\xF3][\x80-\xBF]{3}      # planes 4-15

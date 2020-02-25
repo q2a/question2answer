@@ -64,6 +64,15 @@
 	define('QA_MYSQL_TABLE_PREFIX', 'qa_');
 
 /*
+	QA_USE_UTF8MB4 allows to use utf8mb4 instead of utf8 - this mainly allows compatibility with emojis.
+	Note that if you enable this setting after your database has been created, you need to change the
+	charset of all the tables in your database (using an export and reimport). See this discussion for
+	more info: https://www.question2answer.org/qa/62412/unicode-10-characters-filtered-out
+*/
+
+	define('QA_USE_UTF8MB4', 'false');
+
+/*
 	If you wish, you can define QA_MYSQL_USERS_PREFIX separately from QA_MYSQL_TABLE_PREFIX.
 	If so, tables containing information about user accounts (not including users' activity and points)
 	get the prefix of QA_MYSQL_TABLE_PREFIX. This allows multiple Q2A sites to have shared logins
