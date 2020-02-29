@@ -1856,7 +1856,6 @@ function qa_retrieve_url($url)
             $contents = @file_get_contents($url);
         }
 
-
 	return $contents;
 }
 
