@@ -1167,7 +1167,11 @@ function qa_gpc_to_string($string)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return get_magic_quotes_gpc() ? stripslashes($string) : $string;
+	// get_magic_quotes_gpc always returns false from PHP 5.4; this avoids deprecation notice on PHP 7.4+
+	if (qa_php_version_below('5.4.0'))
+		return get_magic_quotes_gpc() ? stripslashes($string) : $string;
+	else
+		return $string;
 }
 
 
@@ -1180,7 +1184,11 @@ function qa_string_to_gpc($string)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return get_magic_quotes_gpc() ? addslashes($string) : $string;
+	// get_magic_quotes_gpc always returns false from PHP 5.4; this avoids deprecation notice on PHP 7.4+
+	if (qa_php_version_below('5.4.0'))
+		return get_magic_quotes_gpc() ? addslashes($string) : $string;
+	else
+		return $string;
 }
 
 
