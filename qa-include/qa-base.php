@@ -20,8 +20,8 @@
 */
 
 
-define('QA_VERSION', '1.8.3'); // also used as suffix for .js and .css requests
-define('QA_BUILD_DATE', '2019-01-12');
+define('QA_VERSION', '1.8.4'); // also used as suffix for .js and .css requests
+define('QA_BUILD_DATE', '2020-05-07');
 
 
 /**
