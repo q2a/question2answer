@@ -151,25 +151,28 @@ $qa_content['form'] = array(
 	'fields' => array(
 		'email_handle' => array(
 			'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
-			'tags' => 'name="emailhandle" id="emailhandle" dir="auto"',
+			'tags' => 'name="emailhandle" id="emailhandle" dir="auto" autocomplete="username"',
 			'value' => qa_html(@$inemailhandle),
 			'error' => qa_html(@$errors['emailhandle']),
+            'id' => 'emailhandle'
 		),
 
 		'password' => array(
 			'type' => 'password',
 			'label' => qa_lang_html('users/password_label'),
-			'tags' => 'name="password" id="password" dir="auto"',
+			'tags' => 'name="password" id="password" dir="auto" autocomplete="current-password"',
 			'value' => qa_html(@$inpassword),
 			'error' => empty($errors['password']) ? '' : (qa_html(@$errors['password']) . ' - ' . $forgothtml),
 			'note' => $passwordsent ? qa_lang_html('users/password_sent') : $forgothtml,
+            'id' => 'password'
 		),
 
 		'remember' => array(
 			'type' => 'checkbox',
 			'label' => qa_lang_html('users/remember_label'),
-			'tags' => 'name="remember"',
+			'tags' => 'name="remember" id="rememberInput"',
 			'value' => !empty($inremember),
+            'id' => 'rememberInput'
 		),
 	),
 

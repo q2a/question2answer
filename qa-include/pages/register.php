@@ -158,6 +158,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="handle" id="handle" dir="auto"',
 			'value' => qa_html(@$inhandle),
 			'error' => qa_html(@$errors['handle']),
+            'id' => 'handle'
 		),
 
 		'password' => array(
@@ -166,6 +167,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="password" id="password" dir="auto"',
 			'value' => qa_html(@$inpassword),
 			'error' => qa_html(@$errors['password']),
+            'id' => 'password'
 		),
 
 		'email' => array(
@@ -174,6 +176,7 @@ $qa_content['form'] = array(
 			'value' => qa_html(@$inemail),
 			'note' => qa_opt('email_privacy'),
 			'error' => qa_html(@$errors['email']),
+            'id' => 'email'
 		),
 	),
 

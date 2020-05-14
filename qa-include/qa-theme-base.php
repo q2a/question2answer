@@ -156,7 +156,7 @@ class qa_html_theme_base
 			return;
 
 		$this->output(
-			'<' . $outertag . ' class="' . $class . (isset($extraclass) ? (' ' . $extraclass) : '') . '">',
+			'<' . $outertag . ' class="' . $class . (isset($extraclass) ? (' ' . $extraclass) : '') . '"' . (isset($parts['aria-hidden']) ? 'aria-hidden="true"' : '') . '>',
 			(strlen(@$parts['prefix']) ? ('<' . $innertag . ' class="' . $class . '-pad">' . $parts['prefix'] . '</' . $innertag . '>') : '') .
 			(strlen(@$parts['data']) ? ('<' . $innertag . ' class="' . $class . '-data">' . $parts['data'] . '</' . $innertag . '>') : '') .
 			(strlen(@$parts['suffix']) ? ('<' . $innertag . ' class="' . $class . '-pad">' . $parts['suffix'] . '</' . $innertag . '>') : ''),
@@ -566,12 +566,12 @@ class qa_html_theme_base
 		$this->output('<input type="submit" value="' . $search['button_label'] . '" class="qa-search-button"/>');
 	}
 
-	public function nav($navtype, $level = null)
+	public function nav($navtype, $level = null, $ariaLabel = "")
 	{
 		$navigation = @$this->content['navigation'][$navtype];
 
 		if ($navtype == 'user' || isset($navigation)) {
-			$this->output('<div class="qa-nav-' . $navtype . '">');
+			$this->output('<nav class="qa-nav-' . $navtype . '" aria-label="' . $ariaLabel . '">');
 
 			if ($navtype == 'user')
 				$this->logged_in();
@@ -589,13 +589,17 @@ class qa_html_theme_base
 			$this->nav_clear($navtype);
 			$this->clear_context('nav_type');
 
-			$this->output('</div>');
+			$this->output('</nav>');
 		}
 	}
 
 	public function nav_list($navigation, $class, $level = null)
 	{
-		$this->output('<ul class="qa-' . $class . '-list' . (isset($level) ? (' qa-' . $class . '-list-' . $level) : '') . '">');
+        $role = 'role="tablist"';
+	    foreach ($navigation as $key => $navlink) {
+            $role = isset($navlink['role']) ? 'role="presentation"' : $role;
+        }
+	    $this->output('<ul ' . $role . ' class="qa-' . $class . '-list' . (isset($level) ? (' qa-' . $class . '-list-' . $level) : '') . '">');
 
 		$index = 0;
 
@@ -626,8 +630,9 @@ class qa_html_theme_base
 			'/' => '-',
 		));
 
-		$this->output('<li class="qa-' . $class . '-item' . (@$navlink['opposite'] ? '-opp' : '') .
-			(@$navlink['state'] ? (' qa-' . $class . '-' . $navlink['state']) : '') . ' qa-' . $class . '-' . $suffix . '">');
+        $role = isset($navlink['role']) ? $navlink['role'] : 'tab';
+		$this->output('<li role="' . $role . '" class="qa-' . $class . '-item' . (@$navlink['opposite'] ? '-opp' : '') .
+			(@$navlink['state'] ? (' qa-' . $class . '-' . $navlink['state']) : '') . ' qa-' . $class . '-' . $suffix . '" ' . ((@$navlink['selected'] && $role == 'tab') ? (' aria-selected="true"') : '') . '>');
 		$this->nav_link($navlink, $class);
 
 		$subnav = isset($navlink['subnav']) ? $navlink['subnav'] : array();
@@ -715,7 +720,7 @@ class qa_html_theme_base
 		$content = $this->content;
 		$hidden = !empty($content['hidden']) ? ' qa-main-hidden' : '';
 
-		$this->output('<div class="qa-main' . $hidden . '">');
+		$this->output('<main class="qa-main' . $hidden . '">');
 
 		$this->widgets('main', 'top');
 
@@ -732,7 +737,7 @@ class qa_html_theme_base
 
 		$this->widgets('main', 'bottom');
 
-		$this->output('</div> <!-- END qa-main -->', '');
+		$this->output('</main> <!-- END qa-main -->', '');
 	}
 
 	public function page_title_error()
@@ -911,7 +916,7 @@ class qa_html_theme_base
 		// Hi there. I'd really appreciate you displaying this link on your Q2A site. Thank you - Gideon
 
 		$this->output(
-			'<div class="qa-attribution">',
+			'<div class="qa-attribution" lang="en">',
 			'Powered by <a href="http://www.question2answer.org/">Question2Answer</a>',
 			'</div>'
 		);
@@ -986,7 +991,7 @@ class qa_html_theme_base
 		$columns = $this->form_columns($form);
 
 		if ($columns)
-			$this->output('<table class="qa-form-' . $form['style'] . '-table">');
+			$this->output('<table role="presentation" class="qa-form-' . $form['style'] . '-table">');
 
 		$this->form_ok($form, $columns);
 		$this->form_fields($form, $columns);
@@ -1065,9 +1070,9 @@ class qa_html_theme_base
 
 		if (isset($field['id'])) {
 			if ($columns == 1)
-				$this->output('<tbody id="' . $field['id'] . '">', '<tr>');
+				$this->output('<tbody id="' . $field['id'] . '-tbody">', '<tr>');
 			else
-				$this->output('<tr id="' . $field['id'] . '">');
+				$this->output('<tr id="' . $field['id'] . '-tr">');
 		} else
 			$this->output('<tr>');
 
@@ -1102,15 +1107,13 @@ class qa_html_theme_base
 
 		$this->output('<td class="qa-form-' . $style . '-label"' . $extratags . '>');
 
-		if ($prefixed) {
-			$this->output('<label>');
+        $this->output('<label for="' . @$field['id'] . '">');
+        if ($prefixed) {
 			$this->form_field($field, $style);
 		}
 
 		$this->output(@$field['label']);
-
-		if ($prefixed)
-			$this->output('</label>');
+        $this->output('</label>');
 
 		if ($suffixed) {
 			$this->output('&nbsp;');

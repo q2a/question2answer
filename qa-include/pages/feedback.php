@@ -138,21 +138,24 @@ $qa_content['form'] = array(
 			'value' => qa_html(@$inmessage),
 			'rows' => 8,
 			'error' => qa_html(@$errors['message']),
+            'id' => 'message'
 		),
 
 		'name' => array(
 			'type' => $feedbacksent ? 'static' : '',
 			'label' => qa_lang_html('misc/feedback_name'),
-			'tags' => 'name="name"',
+			'tags' => 'name="name" id="nameInput"',
 			'value' => qa_html(isset($inname) ? $inname : @$userprofile['name']),
+            'id' => 'nameInput'
 		),
 
 		'email' => array(
 			'type' => $feedbacksent ? 'static' : '',
 			'label' => qa_lang_html('misc/feedback_email'),
-			'tags' => 'name="email"',
+			'tags' => 'name="email" id="emailInput"',
 			'value' => qa_html(isset($inemail) ? $inemail : qa_get_logged_in_email()),
 			'note' => $feedbacksent ? null : qa_opt('email_privacy'),
+            'id' => 'emailInput'
 		),
 	),
 

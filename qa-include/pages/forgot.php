@@ -94,6 +94,7 @@ $qa_content['form'] = array(
 			'value' => qa_html(@$inemailhandle),
 			'error' => qa_html(@$errors['emailhandle']),
 			'note' => qa_lang_html('users/send_reset_note'),
+            'id' => 'emailhandle'
 		),
 	),
 

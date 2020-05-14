@@ -189,6 +189,7 @@ $editor = qa_load_editor(@$in['content'], @$in['format'], $editorname);
 $field = qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'content', 12, false);
 $field['label'] = qa_lang_html('question/q_content_label');
 $field['error'] = qa_html(@$errors['content']);
+$field['id'] = 'content';
 
 $custom = qa_opt('show_custom_ask') ? trim(qa_opt('custom_ask')) : '';
 
@@ -208,6 +209,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="title" id="title" autocomplete="off"',
 			'value' => qa_html(@$in['title']),
 			'error' => qa_html(@$errors['title']),
+            'id' => 'title'
 		),
 
 		'similar' => array(

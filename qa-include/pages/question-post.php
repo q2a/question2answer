@@ -309,9 +309,10 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 			'title' => array(
 				'type' => $question['editable'] ? 'text' : 'static',
 				'label' => qa_lang_html('question/q_title_label'),
-				'tags' => 'name="q_title"',
+				'tags' => 'name="q_title" id="q_title"',
 				'value' => qa_html(($question['editable'] && isset($in['title'])) ? $in['title'] : $question['title']),
 				'error' => qa_html(@$errors['title']),
+                'id' => 'q_title'
 			),
 
 			'category' => array(
@@ -322,6 +323,8 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 			'content' => array(
 				'label' => qa_lang_html('question/q_content_label'),
 				'error' => qa_html(@$errors['content']),
+                'tags' => 'name="q_content" id="q_content"',
+                'id' => 'q_content'
 			),
 
 			'extra' => array(
@@ -404,8 +407,9 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 		$form['fields']['silent'] = array(
 			'type' => 'checkbox',
 			'label' => qa_lang_html('question/save_silent_label'),
-			'tags' => 'name="q_silent"',
+			'tags' => 'name="q_silent" id="q_silent"',
 			'value' => qa_html(@$in['silent']),
+            'id' => 'q_silent'
 		);
 	}
 
@@ -711,10 +715,11 @@ function qa_page_q_edit_a_form(&$qa_content, $id, $answer, $question, $answers, 
 				'<span id="' . $prefix . 'tohidden" style="display:none;">' . qa_lang_html('question/a_convert_to_c') . '</span>',
 			'type' => 'checkbox',
 			'tight' => true,
+            'id' => $prefix . 'dotoc'
 		);
 
 		$form['fields']['commenton'] = array(
-			'tags' => 'name="' . $prefix . 'commenton"',
+			'tags' => 'name="' . $prefix . 'commenton" id="' . $prefix . 'commenton"',
 			'id' => $prefix . 'commenton',
 			'type' => 'select',
 			'note' => qa_lang_html($hascomments ? 'question/a_convert_warn_cs' : 'question/a_convert_warn'),
@@ -744,8 +749,9 @@ function qa_page_q_edit_a_form(&$qa_content, $id, $answer, $question, $answers, 
 		$form['fields']['silent'] = array(
 			'type' => 'checkbox',
 			'label' => qa_lang_html('question/save_silent_label'),
-			'tags' => 'name="' . $prefix . 'silent"',
+			'tags' => 'name="' . $prefix . 'silent" id="' . $prefix . '_silent"',
 			'value' => qa_html(@$in['silent']),
+            'id' => $prefix . '_silent'
 		);
 	}
 
@@ -951,8 +957,9 @@ function qa_page_q_edit_c_form(&$qa_content, $id, $comment, $in, $errors)
 		$form['fields']['silent'] = array(
 			'type' => 'checkbox',
 			'label' => qa_lang_html('question/save_silent_label'),
-			'tags' => 'name="' . $prefix . 'silent"',
+			'tags' => 'name="' . $prefix . 'silent" id="' . $prefix . '_silent"',
 			'value' => qa_html(@$in['silent']),
+            'id' => $prefix . '_silent'
 		);
 	}
 

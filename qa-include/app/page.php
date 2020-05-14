@@ -517,6 +517,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 				'feedback' => array(
 					'url' => qa_path_html('feedback'),
 					'label' => qa_lang_html('main/nav_feedback'),
+                    'role' => 'link'
 				),
 			),
 

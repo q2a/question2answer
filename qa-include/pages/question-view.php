@@ -395,7 +395,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 		if ($question['answerbutton']) {
 			// don't show if shown by default
 			$buttons['answer'] = array(
-				'tags' => 'name="q_doanswer" id="q_doanswer" onclick="return qa_toggle_element(\'anew\')"',
+				'tags' => 'name="q_doanswer" id="q_doanswer" onclick="return qa_toggle_element(\'anew\', true)"',
 				'label' => qa_lang_html('question/answer_button'),
 				'popup' => qa_lang_html('question/answer_q_popup'),
 			);
@@ -403,7 +403,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 
 		if ($question['commentbutton']) {
 			$buttons['comment'] = array(
-				'tags' => 'name="q_docomment" onclick="return qa_toggle_element(\'c' . $questionid . '\')"',
+				'tags' => 'name="q_docomment" onclick="return qa_toggle_element(\'c' . $questionid . '\', true)"',
 				'label' => qa_lang_html('question/comment_button'),
 				'popup' => qa_lang_html('question/comment_q_popup'),
 			);
@@ -617,7 +617,7 @@ function qa_page_q_answer_view($question, $answer, $isselected, $usershtml, $for
 
 		if ($answer['commentbutton']) {
 			$buttons['comment'] = array(
-				'tags' => 'name="' . $prefix . 'docomment" onclick="return qa_toggle_element(\'c' . $answerid . '\')"',
+				'tags' => 'name="' . $prefix . 'docomment" onclick="return qa_toggle_element(\'c' . $answerid . '\', true)"',
 				'label' => qa_lang_html('question/comment_button'),
 				'popup' => qa_lang_html('question/comment_a_popup'),
 			);
@@ -755,7 +755,7 @@ function qa_page_q_comment_view($question, $parent, $comment, $usershtml, $formr
 		if ($parent['commentbutton'] && qa_opt('show_c_reply_buttons') && $comment['type'] == 'C') {
 			$buttons['comment'] = array(
 				'tags' => 'name="' . (($parent['basetype'] == 'Q') ? 'q' : ('a' . qa_html($parent['postid']))) .
-					'_docomment" onclick="return qa_toggle_element(\'c' . qa_html($parent['postid']) . '\')"',
+					'_docomment" onclick="return qa_toggle_element(\'c' . qa_html($parent['postid']) . '\', true)"',
 				'label' => qa_lang_html('question/reply_button'),
 				'popup' => qa_lang_html('question/reply_c_popup'),
 			);
@@ -935,8 +935,6 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 			$form = array(
 				'tags' => 'method="post" action="' . qa_self_html() . '" name="a_form"',
 
-				'title' => qa_lang_html('question/your_answer_title'),
-
 				'fields' => array(
 					'custom' => array(
 						'type' => 'custom',
@@ -947,7 +945,11 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 						qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'a_content', 12, $formrequested, $loadnow),
 						array(
 							'error' => qa_html(@$errors['content']),
-						)
+						),
+                        [
+                            'label' => qa_lang_html('question/your_answer_title'),
+                            'id' => 'a_content'
+                        ]
 					),
 				),
 
@@ -1083,10 +1085,11 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 
 			$custom = qa_opt('show_custom_comment') ? trim(qa_opt('custom_comment')) : '';
 
+            $label = qa_lang_html(($question['postid'] == $parent['postid']) ? 'question/your_comment_q' : 'question/your_comment_a');
 			$form = array(
 				'tags' => 'method="post" action="' . qa_self_html() . '" name="c_form_' . qa_html($parent['postid']) . '"',
 
-				'title' => qa_lang_html(($question['postid'] == $parent['postid']) ? 'question/your_comment_q' : 'question/your_comment_a'),
+
 
 				'fields' => array(
 					'custom' => array(
@@ -1098,7 +1101,11 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 						qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], $prefix . 'content', 4, $loadfocusnow, $loadfocusnow),
 						array(
 							'error' => qa_html(@$errors['content']),
-						)
+						),
+                        [
+                            'label' => $label,
+                            'id' => $prefix . 'content'
+                        ]
 					),
 				),
 

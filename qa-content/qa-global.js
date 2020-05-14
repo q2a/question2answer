@@ -95,9 +95,12 @@ function qa_vote_click(elem)
 					mess = document.createElement('div');
 					mess.id = 'errorbox';
 					mess.className = 'qa-error';
-					mess.innerHTML = lines[1];
 					mess.style.display = 'none';
+					mess.role = 'alert';
+					mess.innerHTML = lines[1];
 				}
+				mess.setAttribute('role', 'alert');
+				elem.setAttribute('aria-describedby', mess.id);
 
 				var postelem = document.getElementById(anchor);
 				var e = postelem.parentNode.insertBefore(mess, postelem);
@@ -194,19 +197,19 @@ function qa_display_rule_show(target, show, first)
 
 var qa_element_revealed = null;
 
-function qa_toggle_element(elem)
+function qa_toggle_element(elem, dontClose)
 {
 	var e = elem ? document.getElementById(elem) : null;
 
 	if (e && e.qa_disabled)
 		e = null;
 
-	if (e && (qa_element_revealed == e)) {
+	if (e && (qa_element_revealed === e) && !dontClose) {
 		qa_conceal(qa_element_revealed, 'form');
 		qa_element_revealed = null;
 
 	} else {
-		if (qa_element_revealed)
+		if (qa_element_revealed !== e)
 			qa_conceal(qa_element_revealed, 'form');
 
 		if (e) {
@@ -431,7 +434,7 @@ function qa_form_params(formname)
 		var e = es[i];
 		var t = (e.type || '').toLowerCase();
 
-		if (((t != 'checkbox') && (t != 'radio')) || e.checked)
+		if (((t != 'checkbox') && (t != 'radio')) || (e && e.checked))
 			params[e.name] = e.value;
 	}
 
