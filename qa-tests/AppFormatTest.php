@@ -53,15 +53,15 @@ class AppFormatTest extends PHPUnit_Framework_TestCase
 		$qa_phrases_full['main']['_thousands_suffix'] = 'k';
 		$qa_phrases_full['main']['_millions_suffix'] = 'm';
 
-		// $decimal parameter ignored when 'show_compact_numbers' is true
-		$this->assertSame('5.5', qa_format_number(5.452, 0, true));
+		$this->assertSame('5', qa_format_number(5.452, 0, true));
 		$this->assertSame('5.5', qa_format_number(5.452, 1, true));
-		$this->assertSame('5', qa_format_number(5, 1, true));
+		$this->assertSame('5.0', qa_format_number(5, 1, true));
 
+		// $decimal parameter ignored when numbers are compacted
 		$this->assertSame('9.1k', qa_format_number(9123, 0, true));
 		$this->assertSame('9.1k', qa_format_number(9123, 1, true));
-		$this->assertSame('9k', qa_format_number(9040, 0, true));
-		$this->assertSame('9k', qa_format_number(9040, 1, true));
+		$this->assertSame('9.0k', qa_format_number(9040, 0, true));
+		$this->assertSame('9.0k', qa_format_number(9040, 1, true));
 		$this->assertSame('9.1k', qa_format_number(9050, 0, true));
 
 		$this->assertSame('123m', qa_format_number(123456789, 0, true));
