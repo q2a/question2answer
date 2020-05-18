@@ -3547,6 +3547,17 @@ input[type="submit"], button {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0,0,0,0);
+	border: 0;
+}
+
 .icon-chat:before { content: '\e800'; }
 .icon-help:before { content: '\e801'; }
 .icon-comment:before { content: '\e802'; }
