@@ -1,7 +1,7 @@
 <?php
 
 /*
-htmLawed 1.2.4.1, 12 September 2017
+htmLawed 1.2.5, 24 September 2019
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility - www.bioinformatics.org/phplabware/internal_utilities/htmLawed
@@ -43,7 +43,7 @@ $C['deny_attribute'] = $x;
 // config URLs
 $x = (isset($C['schemes'][2]) && strpos($C['schemes'], ':')) ? strtolower($C['schemes']) : 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, tel, telnet'. (empty($C['safe']) ? ', app, javascript; *: data, javascript, ' : '; *:'). 'file, http, https';
 $C['schemes'] = array();
-foreach(explode(';', str_replace(array(' ', "\t", "\r", "\n"), '', $x)) as $v){
+foreach(explode(';', trim(str_replace(array(' ', "\t", "\r", "\n"), '', $x), ';')) as $v){
  $x = $x2 = null; list($x, $x2) = explode(':', $v, 2);
  if($x2){$C['schemes'][$x] = array_flip(explode(',', $x2));}
 }
@@ -390,7 +390,7 @@ $s = array();
 if(!function_exists('hl_aux1')){function hl_aux1($m){
  return substr(str_replace(array(";", "|", "~", " ", ",", "/", "(", ")", '`"'), array("\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", '"'), $m[0]), 1, -1);
 }}
-$t = str_replace(array("\t", "\r", "\n", ' '), '', preg_replace_callback('/"(?>(`.|[^"])*)"/sm', 'hl_aux1', trim($t))); 
+$t = str_replace(array("\t", "\r", "\n", ' '), '', preg_replace_callback('/"(?>(`.|[^"])*)"/sm', 'hl_aux1', trim($t)));
 for($i = count(($t = explode(';', $t))); --$i>=0;){
  $w = $t[$i];
  if(empty($w) or ($e = strpos($w, '=')) === false or !strlen(($a =  substr($w, $e+1)))){continue;}
@@ -652,11 +652,11 @@ if($e == 'font'){
  $a2 = '';
  while(preg_match('`(^|\s)(color|size)\s*=\s*(\'|")?(.+?)(\\3|\s|$)`i', $a, $m)){
   $a = str_replace($m[0], ' ', $a);
-  $a2 .= strtolower($m[2]) == 'color' ? (' color: '. str_replace('"', '\'', trim($m[4])). ';') : (isset($fs[($m = trim($m[4]))]) ? ($a2 .= ' font-size: '. str_replace('"', '\'', $fs[$m]). ';') : '');
+  $a2 .= strtolower($m[2]) == 'color' ? (' color: '. str_replace(array('"', ';', ':'), '\'', trim($m[4])). ';') : (isset($fs[($m = trim($m[4]))]) ? (' font-size: '. $fs[$m]. ';') : '');
  }
  while(preg_match('`(^|\s)face\s*=\s*(\'|")?([^=]+?)\\2`i', $a, $m) or preg_match('`(^|\s)face\s*=(\s*)(\S+)`i', $a, $m)){
   $a = str_replace($m[0], ' ', $a);
-  $a2 .= ' font-family: '. str_replace('"', '\'', trim($m[3])). ';';
+  $a2 .= ' font-family: '. str_replace(array('"', ';', ':'), '\'', trim($m[3])). ';';
  }
  $e = 'span'; return ltrim(str_replace('<', '', $a2));
 }
@@ -725,5 +725,5 @@ return str_replace(array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), array(
 
 function hl_version(){
 // version
-return '1.2.4.1';
+return '1.2.5';
 }
