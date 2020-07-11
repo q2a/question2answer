@@ -126,6 +126,10 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 	$vote = (int)min(1, max(-1, $vote));
 	$oldvote = (int)qa_db_uservote_get($post['postid'], $userid);
 
+	if ($oldvote === $vote) {
+		return;
+	}
+
 	qa_db_uservote_set($post['postid'], $userid, $vote);
 	qa_db_post_recount_votes($post['postid']);
 

@@ -495,7 +495,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 
 		// schema.org microdata - vote display might be formatted (e.g. '2k') so we use meta tag for true count
 		if ($microdata) {
-			$fields['netvotes_view']['suffix'] .= ' <meta itemprop="upvoteCount" content="' . qa_html($netvotes) . '"/>';
+			$fields['netvotes_view']['suffix'] .= ' <meta itemprop="upvoteCount" content="' . qa_html($upvotes - $downvotes) . '"/>';
 			$fields['upvotes_view']['suffix'] .= ' <meta itemprop="upvoteCount" content="' . qa_html($upvotes) . '"/>';
 		}
 
@@ -2359,7 +2359,8 @@ function qa_favorite_form($entitytype, $entityid, $favorite, $title)
 
 /**
  * Format a number using the decimal point and thousand separator specified in the language files.
- * If the number is compacted it is turned into a string such as 1.3k or 2.5m.
+ * If the number is compacted it is turned into a string such as 17.3k (only the thousand/million
+ * cases are currently supported).
  *
  * @since 1.8.0
  * @param integer $number Number to be formatted
@@ -2374,20 +2375,15 @@ function qa_format_number($number, $decimals = 0, $compact = false)
 	$suffix = '';
 
 	if ($compact && qa_opt('show_compact_numbers')) {
-		$decimals = 0;
-		// only the k/m cases are currently supported (i.e. no billions)
+		// when compacting we keep 2-3 significant figures (e.g. 9.1k, 234k)
 		if ($number >= 1000000) {
 			$number /= 1000000;
 			$suffix = qa_lang_html('main/_millions_suffix');
+			$decimals = $number < 100 ? 1 : 0;
 		} elseif ($number >= 1000) {
 			$number /= 1000;
 			$suffix = qa_lang_html('main/_thousands_suffix');
-		}
-
-		// keep decimal part if not 0 and number is short (e.g. 9.1k)
-		$rounded = round($number, 1);
-		if ($number < 100 && ($rounded != (int)$rounded)) {
-			$decimals = 1;
+			$decimals = $number < 100 ? 1 : 0;
 		}
 	}
 

@@ -20,8 +20,8 @@
 */
 
 
-define('QA_VERSION', '1.8.3'); // also used as suffix for .js and .css requests
-define('QA_BUILD_DATE', '2019-01-12');
+define('QA_VERSION', '1.8.4'); // also used as suffix for .js and .css requests
+define('QA_BUILD_DATE', '2020-05-07');
 
 
 /**
@@ -1024,7 +1024,7 @@ function qa_sanitize_html($html, $linksnewwindow = false, $storage = false)
 
 	$safe = htmLawed($html, array(
 		'safe' => 1,
-		'elements' => '*+embed+object-form-style',
+		'elements' => '*-form-style',
 		'schemes' => 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, telnet; *:file, http, https; style: !; classid:clsid',
 		'keep_bad' => 0,
 		'anti_link_spam' => array('/.*/', ''),
@@ -1167,7 +1167,11 @@ function qa_gpc_to_string($string)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return get_magic_quotes_gpc() ? stripslashes($string) : $string;
+	// get_magic_quotes_gpc always returns false from PHP 5.4; this avoids deprecation notice on PHP 7.4+
+	if (qa_php_version_below('5.4.0'))
+		return get_magic_quotes_gpc() ? stripslashes($string) : $string;
+	else
+		return $string;
 }
 
 
@@ -1180,7 +1184,11 @@ function qa_string_to_gpc($string)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return get_magic_quotes_gpc() ? addslashes($string) : $string;
+	// get_magic_quotes_gpc always returns false from PHP 5.4; this avoids deprecation notice on PHP 7.4+
+	if (qa_php_version_below('5.4.0'))
+		return get_magic_quotes_gpc() ? addslashes($string) : $string;
+	else
+		return $string;
 }
 
 
