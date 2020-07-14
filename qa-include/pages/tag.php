@@ -53,7 +53,12 @@ $usershtml = qa_userids_handles_html($questions);
 
 $qa_content = qa_content_prepare(true);
 
-$qa_content['title'] = qa_lang_html_sub('main/questions_tagged_x', qa_html($tag));
+if (count($questions) > 0) {
+	$qa_content['title'] = qa_lang_html_sub('main/questions_tagged_x', qa_html($tag));
+} else {
+	$qa_content['title'] = qa_lang_html('main/no_questions_found');
+	header('HTTP/1.0 404 Not Found');
+}
 
 if (isset($userid) && isset($tagword)) {
 	$favoritemap = qa_get_favorite_non_qs_map();
@@ -62,9 +67,6 @@ if (isset($userid) && isset($tagword)) {
 	$qa_content['favorite'] = qa_favorite_form(QA_ENTITY_TAG, $tagword['wordid'], $favorite,
 		qa_lang_sub($favorite ? 'main/remove_x_favorites' : 'main/add_tag_x_favorites', $tagword['word']));
 }
-
-if (!count($questions))
-	$qa_content['q_list']['title'] = qa_lang_html('main/no_questions_found');
 
 $qa_content['q_list']['form'] = array(
 	'tags' => 'method="post" action="' . qa_self_html() . '"',
