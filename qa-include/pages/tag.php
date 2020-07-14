@@ -82,7 +82,7 @@ foreach ($questions as $postid => $question) {
 
 $qa_content['canonical'] = qa_get_canonical();
 
-$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $tagword['tagcount'], qa_opt('pages_prev_next'));
+$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, isset($tagword['tagcount']) ? $tagword['tagcount'] : 0, qa_opt('pages_prev_next'));
 
 if (empty($qa_content['page_links']))
 	$qa_content['suggest_next'] = qa_html_suggest_qs_tags(true);
