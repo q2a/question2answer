@@ -431,7 +431,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 	// Information about the question that this question is a duplicate of (if appropriate)
 
 	if (isset($closepost) || qa_post_is_closed($question)) {
-		if ($closepost['basetype'] == 'Q') {
+		if (isset($closepost['basetype']) && $closepost['basetype'] == 'Q') {
 			if ($closepost['hidden']) {
 				// don't show link for hidden questions
 				$q_view['closed'] = array(
@@ -448,7 +448,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 				);
 			}
 
-		} elseif ($closepost['type'] == 'NOTE') {
+		} elseif (isset($closepost['type']) && $closepost['type'] == 'NOTE') {
 			$viewer = qa_load_viewer($closepost['content'], $closepost['format']);
 
 			$q_view['closed'] = array(
