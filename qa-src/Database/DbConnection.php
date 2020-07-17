@@ -565,7 +565,7 @@ class DbConnection
 			if (is_array($param)) {
 				// If the first subparam is an array, the rest of the parameter groups should have the same
 				// amount of elements. E.G.: the output should be '(?, ?), (?, ?)' rather than '(?), (?, ?)'
-				$subArrayCount = is_array($param[0]) ? count($param[0]) : 0;
+				$subArrayCount = isset($param[0]) && is_array($param[0]) ? count($param[0]) : 0;
 
 				$paramInfo[] = array(
 					'count' => count($param),

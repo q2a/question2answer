@@ -632,7 +632,7 @@ function qa_post_unindex($postid)
  */
 function qa_question_uncache($questionId)
 {
-	$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
+	$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
 	return $cacheDriver->delete("question:$questionId");
 }
 
