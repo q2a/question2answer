@@ -1563,7 +1563,7 @@ function qa_db_upgrade_tables()
 				break;
 
 			case 64:
-				$pluginManager = new Q2A_Plugin_PluginManager();
+				$pluginManager = new \Q2A\Plugin\PluginManager();
 				$allPlugins = $pluginManager->getFilesystemPlugins();
 				$pluginManager->setEnabledPlugins($allPlugins);
 				break;

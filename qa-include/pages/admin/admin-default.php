@@ -1037,7 +1037,7 @@ foreach ($showoptions as $optionname) {
 
 				qa_optionfield_make_select($optionfield, $themeoptions, $value, 'Classic');
 
-				$metadataUtil = new Q2A_Util_Metadata();
+				$metadataUtil = new \Q2A\Util\Metadata();
 				$themedirectory = QA_THEME_DIR . $value;
 				$metadata = $metadataUtil->fetchFromAddonPath($themedirectory);
 				if (empty($metadata)) {

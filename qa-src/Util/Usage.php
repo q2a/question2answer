@@ -3,10 +3,6 @@
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
 
-	File: qa-include/Q2A/Util/Usage.php
-	Description: Debugging stuff, currently used for tracking resource usage
-
-
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
@@ -20,7 +16,12 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class Q2A_Util_Usage
+namespace Q2A\Util;
+
+/**
+ * Debugging stuff, currently used for tracking resource usage.
+ */
+class Usage
 {
 	private $stages;
 	private $startUsage;

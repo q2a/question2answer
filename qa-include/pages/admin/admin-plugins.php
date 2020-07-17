@@ -43,7 +43,7 @@ $qa_content['error'] = qa_admin_page_error();
 $qa_content['script_rel'][] = 'qa-content/qa-admin.js?' . QA_VERSION;
 
 
-$pluginManager = new Q2A_Plugin_PluginManager();
+$pluginManager = new \Q2A\Plugin\PluginManager();
 $pluginManager->cleanRemovedPlugins();
 
 $enabledPlugins = $pluginManager->getEnabledPlugins();
@@ -116,7 +116,7 @@ foreach ($moduletypes as $type) {
 
 
 if (!empty($fileSystemPlugins)) {
-	$metadataUtil = new Q2A_Util_Metadata();
+	$metadataUtil = new \Q2A\Util\Metadata();
 	$sortedPluginFiles = array();
 
 	foreach ($fileSystemPlugins as $pluginDirectory) {

@@ -1,12 +1,7 @@
 <?php
-
 /*
 	Question2Answer by Gideon Greenspan and contributors
 	http://www.question2answer.org/
-
-	File: qa-include/Q2A/Plugin/PluginManager.php
-	Description: Keeps track of the installed plugins
-
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -21,7 +16,12 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-class Q2A_Plugin_PluginManager
+namespace Q2A\Plugin;
+
+/**
+ * Keeps track of the installed plugins.
+ */
+class PluginManager
 {
 	const PLUGIN_DELIMITER = ';';
 	const OPT_ENABLED_PLUGINS = 'enabled_plugins';
@@ -40,7 +40,7 @@ class Q2A_Plugin_PluginManager
 				continue;
 			}
 
-			$metadataUtil = new Q2A_Util_Metadata();
+			$metadataUtil = new \Q2A\Util\Metadata();
 			$metadata = $metadataUtil->fetchFromAddonPath($pluginDirectory);
 			if (empty($metadata)) {
 				// limit plugin parsing to first 8kB

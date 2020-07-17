@@ -122,7 +122,7 @@ function qa_admin_language_options()
 	$options = array('' => 'English (US)');
 
 	// find all language folders
-	$metadataUtil = new Q2A_Util_Metadata();
+	$metadataUtil = new \Q2A\Util\Metadata();
 	foreach (glob(QA_LANG_DIR . '*', GLOB_ONLYDIR) as $directory) {
 		$code = basename($directory);
 		$metadata = $metadataUtil->fetchFromAddonPath($directory);
@@ -147,7 +147,7 @@ function qa_admin_theme_options()
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	$metadataUtil = new Q2A_Util_Metadata();
+	$metadataUtil = new \Q2A\Util\Metadata();
 	foreach (glob(QA_THEME_DIR . '*', GLOB_ONLYDIR) as $directory) {
 		$theme = basename($directory);
 		$metadata = $metadataUtil->fetchFromAddonPath($directory);
@@ -898,7 +898,7 @@ function qa_admin_addon_metadata($contents, $fields)
  */
 function qa_admin_plugin_directory_hash($directory)
 {
-	$pluginManager = new Q2A_Plugin_PluginManager();
+	$pluginManager = new \Q2A\Plugin\PluginManager();
 	$hashes = $pluginManager->getHashesForPlugins(array($directory));
 
 	return reset($hashes);

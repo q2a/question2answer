@@ -28,15 +28,11 @@ define('QA_BUILD_DATE', '2019-01-12');
  * Autoloads some Q2A classes so it's possible to use them without adding a require_once first. From
  * version 1.9 onwards we follow PSR-4. Classes are stored in qa-src/ which maps to the 'Q2A' namespace.
  * So for example \Q2A\Storage\CacheFactory maps to qa-src/Storage/CacheFactory.php.
- * In version 1.7-1.8 we used PSR-0 so Q2A_Storage_CacheFactory would map to qa-include/Q2A/Storage/CacheFactory.php.
  *
  * @param string $class
  */
 function qa_autoload($class)
 {
-	if (strpos($class, 'Q2A_') === 0)
-		require QA_INCLUDE_DIR . strtr($class, '_', '/') . '.php';
-
 	if (strpos($class, 'Q2A\\') === 0) {
 		require QA_BASE_DIR . 'qa-src/' . strtr(substr($class, 4), '\\', '/') . '.php';
 	}
@@ -260,7 +256,7 @@ function qa_initialize_constants_2()
 
 	if (QA_DEBUG_PERFORMANCE) {
 		global $qa_usage;
-		$qa_usage = new Q2A_Util_Usage;
+		$qa_usage = new \Q2A\Util\Usage;
 		// ensure errors are displayed
 		@ini_set('display_errors', 'On');
 	}
@@ -386,7 +382,7 @@ function qa_register_core_modules()
 function qa_initialize_predb_plugins()
 {
 	global $qa_pluginManager;
-	$qa_pluginManager = new Q2A_Plugin_PluginManager();
+	$qa_pluginManager = new \Q2A\Plugin\PluginManager();
 	$qa_pluginManager->readAllPluginMetadatas();
 
 	$qa_pluginManager->loadPluginsBeforeDbInit();
@@ -439,7 +435,7 @@ function qa_page_db_fail_handler($type, $errno = null, $error = null, $query = n
  * If $versiononly is true, only min version metadata is parsed.
  * Name, Description, Min Q2A & Min PHP are not currently used by themes.
  *
- * @deprecated Deprecated from 1.7; Q2A_Util_Metadata class and metadata.json files should be used instead
+ * @deprecated Deprecated from 1.7; \Q2A\Util\Metadata class and metadata.json files should be used instead
  * @param string $contents
  * @param string $type
  * @param bool|null $versiononly
