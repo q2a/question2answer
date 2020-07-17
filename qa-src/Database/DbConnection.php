@@ -222,7 +222,12 @@ class DbConnection
 		$stmt = $this->pdo->prepare($query);
 		// PDO quotes parameters by default, which breaks LIMIT clauses, so we bind parameters manually
 		foreach (array_values($params) as $i => $param) {
-			$dataType = filter_var($param, FILTER_VALIDATE_INT) !== false ? PDO::PARAM_INT : PDO::PARAM_STR;
+			if (filter_var($param, FILTER_VALIDATE_INT) !== false) {
+				$dataType = PDO::PARAM_INT;
+				$param = (int) $param;
+			} else {
+				$dataType = PDO::PARAM_STR;
+			}
 			$stmt->bindValue($i + 1, $param, $dataType);
 		}
 
