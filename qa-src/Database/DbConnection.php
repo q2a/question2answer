@@ -21,7 +21,6 @@ namespace Q2A\Database;
 use PDO;
 use PDOException;
 use PDOStatement;
-use Q2A\Database\DbResult;
 use Q2A\Database\Exceptions\SelectSpecException;
 
 class DbConnection
@@ -184,7 +183,12 @@ class DbConnection
 		$query = str_replace(['#', '$'], '?', $query);
 		// handle IN queries
 		$query = $this->applyArraySub($query, $params);
+
 		$params = $this->flattenArray($params);
+
+		if (substr_count($query, '?') != count($params)) {
+			throw new SelectSpecException('The number of parameters and placeholders do not match');
+		}
 
 		try {
 			if (QA_DEBUG_PERFORMANCE) {
@@ -550,34 +554,78 @@ class DbConnection
 	{
 		$result = '';
 		$hasArray = false;
-		$paramIndexCount = array();
+		$paramInfo = array();
 
 		foreach ($params as $param) {
 			if (is_array($param)) {
-				$paramIndexCount[] = count($param);
+				// If the first subparam is an array, the rest of the parameter groups should have the same
+				// amount of elements. E.G.: the output should be '(?, ?), (?, ?)' rather than '(?), (?, ?)'
+				$subArrayCount = is_array($param[0]) ? count($param[0]) : 0;
+
+				$paramInfo[] = array(
+					'count' => count($param),
+					'sub_array_count' => $subArrayCount,
+				);
+
+				if ($subArrayCount > 0) {
+					foreach ($param as $subParam) {
+						$subParamCount = count($subParam);
+						if ($subParamCount != $subArrayCount) {
+							throw new SelectSpecException('All parameter groups must have the same amount of parameters');
+						}
+					}
+				}
+
 				$hasArray = true;
 			} else {
-				$paramIndexCount[] = 1;
+				$paramInfo[] = array(
+					'count' => 1,
+					'sub_array_count' => 0,
+				);
 			}
 		}
 
-		if ($hasArray) {
-			$explodedQuery = explode('?', $query);
-			if (count($explodedQuery) != count($paramIndexCount) + 1) {
-				throw new SelectSpecException('The number of parameters and placeholders do not match');
-			}
-			foreach ($explodedQuery as $index => $explodedQueryPart) {
-				$result .= $explodedQueryPart;
-				if (isset($paramIndexCount[$index])) {
-					$result .= $paramIndexCount[$index] == 1
-						? '?'
-						: str_repeat('?,', $paramIndexCount[$index] - 1) . '?';
-				}
-			}
-			return $result;
+		if (!$hasArray) {
+			return $query;
 		}
 
-		return $query;
+		$explodedQuery = explode('?', $query);
+		foreach ($explodedQuery as $index => $explodedQueryPart) {
+			$result .= $explodedQueryPart;
+
+			// Ignore the last part of the $explodedQueryPart
+			if (!isset($paramInfo[$index])) {
+				continue;
+			}
+
+			// If the parameter is not an array with sub arrays
+			if ($paramInfo[$index]['sub_array_count'] == 0) {
+				// Turn this SQL 'IN (?)' into 'IN (?, ?, ?)' for arrays with no sub arrays
+				$result .= $this->repeatStringWithSeparators('?', $paramInfo[$index]['count']);
+			} else {
+				// Turn this SQL 'IN ?' into 'IN (?, ?), (?, ?)' for arrays with sub arrays
+				$result .=
+					$this->repeatStringWithSeparators(
+						'(' . $this->repeatStringWithSeparators('?', $paramInfo[$index]['sub_array_count']) . ')',
+						$paramInfo[$index]['count']
+					);
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Repeat a string a given amount of times separating each of the instances with ', '.
+	 * @param string $string
+	 * @param int $amount
+	 * @return string
+	 */
+	private function repeatStringWithSeparators($string, $amount)
+	{
+		return $amount == 1
+			? $string
+			: str_repeat($string . ', ', $amount - 1) . $string;
 	}
 
 	/**
@@ -609,7 +657,7 @@ class DbConnection
 	}
 
 	/**
-	 * Flatten a two-level array into a one-level array.
+	 * Flatten a two-level or three-level array into a one-level array.
 	 * @param mixed $elements Input elements which can be one-level deep arrays
 	 * @return array
 	 */
@@ -618,7 +666,7 @@ class DbConnection
 		$result = array();
 		foreach ($elements as $element) {
 			if (is_array($element)) {
-				$result = array_merge($result, $element);
+				$result = array_merge($result, $this->flattenArray($element));
 			} else {
 				$result[] = $element;
 			}
