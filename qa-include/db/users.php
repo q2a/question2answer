@@ -83,6 +83,14 @@ function qa_db_user_delete($userid)
 {
 	qa_db_query_sub('UPDATE ^posts SET lastuserid=NULL WHERE lastuserid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userpoints WHERE userid=$', $userid);
+
+	// Delete blobs including the files:
+	require_once QA_INCLUDE_DIR . 'app/blobs.php';
+
+	$blobIds = qa_db_read_all_values(qa_db_query_sub('SELECT avatarblobid FROM ^users WHERE userid=$', $userid));
+	foreach ($blobIds as $blobid)
+		qa_delete_blob($blobid);
+
 	qa_db_query_sub('DELETE FROM ^blobs WHERE blobid=(SELECT avatarblobid FROM ^users WHERE userid=$)', $userid);
 	qa_db_query_sub('DELETE FROM ^users WHERE userid=$', $userid);
 
@@ -92,6 +100,7 @@ function qa_db_user_delete($userid)
 	qa_db_query_sub('UPDATE ^posts SET userid=NULL WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userlogins WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userprofile WHERE userid=$', $userid);
+	qa_db_query_sub('DELETE FROM ^usermetas WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userfavorites WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userevents WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^uservotes WHERE userid=$', $userid);
