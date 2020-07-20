@@ -435,7 +435,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 	// Information about the question that this question is a duplicate of (if appropriate)
 
 	if (isset($closepost) || qa_post_is_closed($question)) {
-		if ($closepost['basetype'] == 'Q') {
+		if (isset($closepost['basetype']) && $closepost['basetype'] == 'Q') {
 			if ($closepost['hidden']) {
 				// don't show link for hidden questions
 				$q_view['closed'] = array(
@@ -452,7 +452,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 				);
 			}
 
-		} elseif ($closepost['type'] == 'NOTE') {
+		} elseif (isset($closepost['type']) && $closepost['type'] == 'NOTE') {
 			$viewer = qa_load_viewer($closepost['content'], $closepost['format']);
 
 			$q_view['closed'] = array(
@@ -1131,7 +1131,7 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 				qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], $prefix);
 
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),
-				isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), $in['email'], @$errors['email'], $prefix);
+				isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email'], $prefix);
 
 			$onloads = array();
 

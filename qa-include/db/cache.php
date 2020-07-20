@@ -44,7 +44,7 @@ function qa_db_cache_set($type, $cacheid, $content)
 	);
 
 	qa_db_query_sub(
-		'INSERT INTO ^cache (type, cacheid, content, created, lastread) VALUES ($, #, $, NOW(), NOW()) ' .
+		'INSERT INTO ^cache (type, cacheid, content, created, lastread) VALUES ($, $, $, NOW(), NOW()) ' .
 		'ON DUPLICATE KEY UPDATE content = VALUES(content), created = VALUES(created), lastread = VALUES(lastread)',
 		$type, $cacheid, $content
 	);

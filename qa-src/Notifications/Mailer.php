@@ -28,6 +28,7 @@ class Mailer extends PHPMailer
 	{
 		parent::__construct();
 
+		self::$validator = 'php';
 		$this->CharSet = 'utf-8';
 
 		$this->From = $params['fromemail'];

@@ -48,6 +48,7 @@ $maximaDefaults = array(
 	'QA_DB_MAX_BLOB_FILE_NAME_LENGTH' => 255,
 	'QA_DB_MAX_META_TITLE_LENGTH' => 40,
 	'QA_DB_MAX_META_CONTENT_LENGTH' => 8000,
+	'QA_DB_MAX_WORD_COUNT' => 255, // The field is currently a TINYINT so it shouldn't exceed this value
 
 	// How many records to retrieve for different circumstances. In many cases we retrieve more records than we
 	// end up needing to display once we know the value of an option. Wasteful, but allows one query per page.

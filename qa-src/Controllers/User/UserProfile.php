@@ -322,6 +322,11 @@ class UserProfile extends \Q2A\Controllers\BaseController
 						if (qa_clicked('dodelete') && ($loginlevel >= QA_USER_LEVEL_ADMIN)) {
 							require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 
+							qa_report_event('u_delete_before', $loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), array(
+								'userid' => $userid,
+								'handle' => $useraccount['handle'],
+							));
+
 							qa_delete_user($userid);
 
 							qa_report_event('u_delete', $loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), array(

@@ -91,7 +91,7 @@ class qa_viewer_basic
 			if (@$options['showurllinks']) { // we need to ensure here that we don't put new links inside existing ones
 				require_once QA_INCLUDE_DIR . 'util/string.php';
 
-				$htmlunlinkeds = array_reverse(preg_split('|<[Aa]\s+[^>]+>.*</[Aa]\s*>|', $html, -1, PREG_SPLIT_OFFSET_CAPTURE)); // start from end so we substitute correctly
+				$htmlunlinkeds = array_reverse(preg_split('#<(a|code|pre)[^>]*>.*</(a|code|pre)\s*>#ims', $html, -1, PREG_SPLIT_OFFSET_CAPTURE)); // start from end so we substitute correctly
 
 				foreach ($htmlunlinkeds as $htmlunlinked) { // and that we don't detect links inside HTML, e.g. <img src="http://...">
 					$thishtmluntaggeds = array_reverse(preg_split('/<[^>]*>/', $htmlunlinked[0], -1, PREG_SPLIT_OFFSET_CAPTURE)); // again, start from end

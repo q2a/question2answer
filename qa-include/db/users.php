@@ -92,7 +92,7 @@ function qa_db_user_delete($userid)
 	qa_db_query_sub('UPDATE ^posts SET userid=NULL WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userlogins WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userprofile WHERE userid=$', $userid);
-	qa_db_query_sub('DELETE FROM ^userfavorites WHERE userid=$', $userid);
+	qa_db_query_sub('DELETE FROM ^userfavorites WHERE userid=$ OR entitytype=$ AND entityid=$', $userid, QA_ENTITY_USER, $userid);
 	qa_db_query_sub('DELETE FROM ^userevents WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^uservotes WHERE userid=$', $userid);
 	qa_db_query_sub('DELETE FROM ^userlimits WHERE userid=$', $userid);

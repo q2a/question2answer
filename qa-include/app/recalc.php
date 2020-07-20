@@ -547,7 +547,7 @@ function qa_recalc_perform_step(&$state)
 		case 'docacheclear_process':
 			$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
 			$cacheStats = $cacheDriver->getStats();
-			$limit = min($cacheStats['files'], 20);
+			$limit = min($cacheStats['files'], 500);
 
 			if ($cacheStats['files'] > 0 && $next <= $length) {
 				$deleted = $cacheDriver->clear($limit, $next, ($operation === 'docachetrim_process'));

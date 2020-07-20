@@ -324,7 +324,6 @@ blockquote p {
 	text-indent: -9999px;
 	border: none;
 	outline: none;
-	-webkit-transition: background-image 0.5s;
 	transition: background-image 0.5s;
 }
 .qa-notice-close-button:hover, .qa-notice-close-button:focus {
@@ -912,8 +911,6 @@ blockquote p {
 	height: 38px;
 	margin: 0;
 	border: none;
-	-webkit-transition: background-position 0s;
-	transition: background-position 0s;
 }
 .qa-favorite-button:hover, .qa-unfavorite-button:hover {
 	background-color: #f39c12;
@@ -1057,9 +1054,10 @@ blockquote p {
 	position: relative;
 }
 
-.qa-vote-up-button, .qa-vote-down-button, .qa-voted-up-button, .qa-voted-down-button, .qa-vote-up-disabled, .qa-vote-down-disabled {
+.qa-vote-up-button, .qa-vote-down-button, .qa-voted-up-button,
+.qa-voted-down-button, .qa-vote-up-disabled, .qa-vote-down-disabled {
 	text-indent: -9999px;
-	background: url('images/vote-buttons-2.png') no-repeat;
+	background: transparent url('images/vote-buttons-3.png') no-repeat;
 	width: 16px;
 	height: 10px;
 	border: none;
@@ -1067,59 +1065,68 @@ blockquote p {
 	padding: 0;
 	position: absolute;
 	left: 4px;
-	-webkit-transition: all 0s;
-	transition: all 0s;
 }
-.qa-vote-up-button:hover, .qa-vote-up-button:focus, .qa-vote-up-button:active,.qa-vote-down-button:hover, .qa-vote-down-button:focus, .qa-vote-down-button:active,
-.qa-voted-up-button:hover, .qa-voted-up-button:focus, .qa-voted-up-button:active,.qa-voted-down-button:hover, .qa-voted-down-button:focus, .qa-voted-down-button:active,
-.qa-vote-up-disabled:hover, .qa-vote-up-disabled:focus, .qa-vote-up-disabled:active,.qa-vote-down-disabled:hover, .qa-vote-down-disabled:focus, .qa-vote-down-disabled:active {
+.qa-vote-up-button:hover, .qa-vote-up-button:focus, .qa-vote-up-button:active,
+.qa-vote-down-button:hover, .qa-vote-down-button:focus, .qa-vote-down-button:active,
+.qa-voted-up-button:hover, .qa-voted-up-button:focus, .qa-voted-up-button:active,
+.qa-voted-down-button:hover, .qa-voted-down-button:focus, .qa-voted-down-button:active,
+.qa-vote-up-disabled:hover, .qa-vote-up-disabled:focus, .qa-vote-up-disabled:active,
+.qa-vote-down-disabled:hover, .qa-vote-down-disabled:focus, .qa-vote-down-disabled:active {
 	border: none;
+	background-color: transparent;
 	cursor: pointer;
 }
 
 .qa-vote-up-button {
 	background-position: 0 0;
-	top: 10px;
+	top: 12px;
 }
-.qa-vote-up-button:hover, .qa-vote-up-button:focus, .qa-vote-up-button:active {
+.qa-vote-up-button:hover,
+.qa-vote-up-button:focus,
+.qa-vote-up-button:active {
 	background-position: 0 -10px;
 }
-
 .qa-vote-down-button {
 	background-position: -16px 0;
-	bottom: 10px;
+	bottom: 12px;
 }
-.qa-vote-down-button:hover, .qa-vote-down-button:focus, .qa-vote-down-button:active {
+.qa-vote-down-button:hover,
+.qa-vote-down-button:focus,
+.qa-vote-down-button:active {
 	background-position: -16px -10px;
 }
-
 .qa-vote-up-disabled {
-	background-position: 0 -40px;
-	top: 10px;
+	background-position: 0 -20px;
+	top: 12px;
 }
-.qa-vote-up-disabled:hover, .qa-vote-up-disabled:focus, .qa-vote-up-disabled:active {
-	background-position: 0 -40px;
+.qa-vote-up-disabled:hover,
+.qa-vote-up-disabled:focus,
+.qa-vote-up-disabled:active {
+	background-position: 0 -20px;
 }
-
 .qa-vote-down-disabled {
-	background-position: -16px -40px;
-	bottom: 10px;
+	background-position: -16px -20px;
+	bottom: 12px;
 }
-.qa-vote-down-disabled:hover, .qa-vote-down-disabled:focus, .qa-vote-down-disabled:active {
-	background-position: -16px -40px;
+.qa-vote-down-disabled:hover,
+.qa-vote-down-disabled:focus,
+.qa-vote-down-disabled:active {
+	background-position: -16px -20px;
 }
-
 .qa-voted-up-button {
 	background-position: 0 -10px;
 }
-.qa-voted-up-button:hover, .qa-voted-up-button:focus, .qa-voted-up-button:active {
+.qa-voted-up-button:hover,
+.qa-voted-up-button:focus,
+.qa-voted-up-button:active {
 	background-position: 0 0;
 }
-
 .qa-voted-down-button {
 	background-position: -16px -10px;
 }
-.qa-voted-down-button:hover, .qa-voted-down-button:focus, .qa-voted-down-button:active {
+.qa-voted-down-button:hover,
+.qa-voted-down-button:focus,
+.qa-voted-down-button:active {
 	background-position: -16px 0;
 }
 
@@ -1298,13 +1305,12 @@ blockquote p {
 	padding: 2px 8px;
 	margin-bottom: 2px;
 	text-decoration: none !important;
-	transition: all 0.75s ease-in-out 0s;
+	transition: background 0.25s ease-in-out;
 }
 .qa-tag-link:hover,
 .qa-widget-side .qa-q-view-tag-item:hover {
 	background: #f39c12;
 	color: #fff !important;
-	transition: all 0.25s ease-in-out 0s;
 }
 .qa-tag-link.qa-tag-favorited,
 .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited {
@@ -1511,8 +1517,6 @@ blockquote p {
 @media (min-width: 980px) {
 	.qa-top-users-label .qa-user-link:hover:after,
 	.qa-top-users-label .qa-user-link:focus:after {
-		-ms-transform: translate(80px, 0);
-		-webkit-transform: translate(80px, 0);
 		transform: translate(80px, 0);
 	}
 
@@ -1528,11 +1532,8 @@ blockquote p {
 		border-top: 7px solid transparent;
 		border-bottom: 7px solid transparent;
 		border-left: 7px solid #e74c3c;
-		-ms-transform: translate(0, 0);
-		-webkit-transform: translate(0, 0);
 		transform: translate(0, 0);
-		-webkit-transition: all 0.5s ease;
-		transition: all 0.5s ease;
+		transition: transform 0.5s ease;
 	}
 }
 
@@ -1786,8 +1787,6 @@ input, textarea, select {
 	border: 1px solid #bdc3c7;
 	background-color: #fff;
 	font-family: "Ubuntu", "Helvetica", "Arial", "FreeSans", sans-serif;
-	-webkit-transition: all 0.3s;
-	transition: all 0.3s;
 }
 input:focus, textarea:focus, select:focus {
 	background-color: #fff;
@@ -1808,6 +1807,16 @@ select:-moz-focusring {
 input[type="submit"], button {
 	cursor: pointer;
 	text-align: center;
+}
+@media (max-width: 479px) {
+	input[type="file"] {
+		max-width: 220px;
+	}
+}
+@media (max-width: 359px) {
+	input[type="file"] {
+		max-width: 180px;
+	}
 }
 
 [class^="qa-part-form"],
@@ -1841,8 +1850,6 @@ input[type="submit"], button {
 	padding: 10px 15px;
 	border: 0;
 	font-size: 14px;
-	-webkit-transition-duration: 0s;
-	transition-duration: 0s;
 	background: #3498db none;
 	color: #fff;
 }
@@ -2147,8 +2154,6 @@ input[type="submit"], button {
 	padding: 10px 15px;
 	border: 0;
 	font-size: 14px;
-	-webkit-transition-duration: 0s;
-	transition-duration: 0s;
 	background: #2c3e50 none center no-repeat;
 	color: #fff;
 	width: 32px;
@@ -2539,8 +2544,7 @@ input[type="submit"], button {
 	margin: 0;
 	position: relative;
 	background: url('images/answer-select.png') no-repeat center;
-	-webkit-transition: all 0.5s;
-	transition: all 0.5s;
+	transition: background-color 0.5s;
 }
 
 .qa-a-select-button {
@@ -2634,7 +2638,6 @@ input[type="submit"], button {
 	font-weight: normal;
 }
 
-
 .qa-c-list-item .qa-vote-up-button,
 .qa-c-list-item .qa-vote-down-button,
 .qa-c-list-item .qa-voted-up-button,
@@ -2663,7 +2666,6 @@ input[type="submit"], button {
 .qa-c-list-item .qa-vote-up-button:active {
 	background-position: -32px -8px;
 }
-
 .qa-c-list-item .qa-vote-down-button {
 	background-position: -44px 0;
 }
@@ -2672,25 +2674,22 @@ input[type="submit"], button {
 .qa-c-list-item .qa-vote-down-button:active {
 	background-position: -44px -8px;
 }
-
 .qa-c-list-item .qa-vote-up-disabled {
-	background-position: -32px -32px;
+	background-position: -32px -16px;
 }
 .qa-c-list-item .qa-vote-up-disabled:hover,
 .qa-c-list-item .qa-vote-up-disabled:focus,
 .qa-c-list-item .qa-vote-up-disabled:active {
-	background-position: -32px -32px;
+	background-position: -32px -16px;
 }
-
 .qa-c-list-item .qa-vote-down-disabled {
-	background-position: -44px -32px;
+	background-position: -44px -16px;
 }
 .qa-c-list-item .qa-vote-down-disabled:hover,
 .qa-c-list-item .qa-vote-down-disabled:focus,
 .qa-c-list-item .qa-vote-down-disabled:active {
-	background-position: -44px -32px;
+	background-position: -44px -16px;
 }
-
 .qa-c-list-item .qa-voted-up-button {
 	background-position: -32px -8px;
 }
@@ -2699,7 +2698,6 @@ input[type="submit"], button {
 .qa-c-list-item .qa-voted-up-button:active {
 	background-position: -32px 0;
 }
-
 .qa-c-list-item .qa-voted-down-button {
 	background-position: -44px -8px;
 }
@@ -2999,8 +2997,6 @@ input[type="submit"], button {
 .qa-activity-count-item:hover:before {
 	opacity: 1;
 	-webkit-animation: shake 0.25s;
-	-moz-animation: shake 0.25s;
-	-o-animation: shake 0.25s;
 	animation: shake 0.25s;
 }
 .qa-activity-count-item:nth-child(1) {
@@ -3402,96 +3398,22 @@ input[type="submit"], button {
 }
 
 @-webkit-keyframes shake {
-	0% {
-		transform: scale(1);
-	}
-	17% {
-		transform: scale(1.5);
-	}
-	34% {
-		transform: scale(0.8);
-	}
-	51% {
-		transform: scale(1.1);
-	}
-	68% {
-		transform: scale(0.9);
-	}
-	85% {
-		transform: scale(1.05);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-@-moz-keyframes shake {
-	0% {
-		transform: scale(1);
-	}
-	17% {
-		transform: scale(1.5);
-	}
-	34% {
-		transform: scale(0.8);
-	}
-	51% {
-		transform: scale(1.1);
-	}
-	68% {
-		transform: scale(0.9);
-	}
-	85% {
-		transform: scale(1.05);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-@-ms-keyframes shake {
-	0% {
-		transform: scale(1);
-	}
-	17% {
-		transform: scale(1.5);
-	}
-	34% {
-		transform: scale(0.8);
-	}
-	51% {
-		transform: scale(1.1);
-	}
-	68% {
-		transform: scale(0.9);
-	}
-	85% {
-		transform: scale(1.05);
-	}
-	100% {
-		transform: scale(1);
-	}
+	0% { transform: scale(1); }
+	17% { transform: scale(1.5); }
+	34% { transform: scale(0.8); }
+	51% { transform: scale(1.1); }
+	68% { transform: scale(0.9); }
+	85% { transform: scale(1.05); }
+	100% { transform: scale(1); }
 }
 @keyframes shake {
-	0% {
-		transform: scale(1);
-	}
-	17% {
-		transform: scale(1.5);
-	}
-	34% {
-		transform: scale(0.8);
-	}
-	51% {
-		transform: scale(1.1);
-	}
-	68% {
-		transform: scale(0.9);
-	}
-	85% {
-		transform: scale(1.05);
-	}
-	100% {
-		transform: scale(1);
-	}
+	0% { transform: scale(1); }
+	17% { transform: scale(1.5); }
+	34% { transform: scale(0.8); }
+	51% { transform: scale(1.1); }
+	68% { transform: scale(0.9); }
+	85% { transform: scale(1.05); }
+	100% { transform: scale(1); }
 }
 
 @-webkit-keyframes answer-highlight {

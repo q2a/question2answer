@@ -268,7 +268,7 @@ if (qa_using_categories() && count($categories)) {
 	if (!qa_opt('allow_no_category')) // don't auto-select a category even though one is required
 		$field['options'][''] = '';
 
-	qa_array_insert($qa_content['form']['fields'], 'content', array('category' => $field));
+	qa_array_insert($qa_content['form']['fields'], 'similar', array('category' => $field));
 }
 
 if (qa_opt('extra_field_active')) {

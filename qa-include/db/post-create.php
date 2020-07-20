@@ -166,8 +166,12 @@ function qa_db_contentwords_add_post_wordidcounts($postid, $type, $questionid, $
 {
 	if (!empty($wordidcounts)) {
 		$rowstoadd = array();
-		foreach ($wordidcounts as $wordid => $count)
+		foreach ($wordidcounts as $wordid => $count) {
+			if ($count > QA_DB_MAX_WORD_COUNT) {
+				$count = QA_DB_MAX_WORD_COUNT;
+			}
 			$rowstoadd[] = array($postid, $wordid, $count, $type, $questionid);
+		}
 
 		qa_db_query_sub(
 			'INSERT INTO ^contentwords (postid, wordid, count, type, questionid) VALUES #',

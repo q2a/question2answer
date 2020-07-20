@@ -53,8 +53,9 @@ function qa_handle_email_filter(&$handle, &$email, $olduser = null)
 
 	$errors = array();
 
-	// sanitise 4-byte Unicode
+	// sanitize 4-byte Unicode and invisible characters
 	$handle = qa_remove_utf8mb4($handle);
+	$handle = preg_replace('/\p{C}+/u', '', $handle);
 
 	$filtermodules = qa_load_modules_with('filter', 'filter_handle');
 

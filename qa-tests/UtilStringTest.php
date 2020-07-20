@@ -126,13 +126,14 @@ class UtilStringTest extends PHPUnit_Framework_TestCase
 		$goodEmails = array(
 			'hello@example.com',
 			'q.a@question2answer.org',
-			'example@newdomain.app'
+			'example@newdomain.app',
 		);
 		$badEmails = array(
 			'nobody@nowhere',
 			'pokémon@example.com',
 			'email @ with spaces',
 			'some random string',
+			'dotbeforeat.@email.com',
 		);
 
 		foreach ($goodEmails as $email) {

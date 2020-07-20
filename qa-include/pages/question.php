@@ -70,7 +70,7 @@ if (!isset($questionData)) {
 list($question, $childposts, $achildposts, $parentquestion, $closepost, $duplicateposts, $extravalue, $categories, $favorite) = $questionData;
 
 
-if ($question['basetype'] != 'Q') // don't allow direct viewing of other types of post
+if (isset($question['basetype']) && $question['basetype'] != 'Q') // don't allow direct viewing of other types of post
 	$question = null;
 
 if (isset($question)) {
