@@ -14,12 +14,16 @@ class DbQueryHelperTest extends PHPUnit_Framework_TestCase
 
 	public function test__expandParameters_success()
 	{
-		$result = $this->helper->expandParameters('SELECT * FROM table WHERE field = 1', []);
-		$expected = ['SELECT * FROM table WHERE field = 1', []];
+		$result = $this->helper->expandParameters('SELECT * FROM table WHERE field=1', []);
+		$expected = ['SELECT * FROM table WHERE field=1', []];
 		$this->assertSame($expected, $result);
 
-		$result = $this->helper->expandParameters('SELECT * FROM table WHERE field = ?', [1]);
-		$expected = ['SELECT * FROM table WHERE field = ?', [1]];
+		$result = $this->helper->expandParameters('SELECT * FROM table WHERE field=?', [1]);
+		$expected = ['SELECT * FROM table WHERE field=?', [1]];
+		$this->assertSame($expected, $result);
+
+		$result = $this->helper->expandParameters('SELECT * FROM table WHERE field=#', [1]);
+		$expected = ['SELECT * FROM table WHERE field=?', [1]];
 		$this->assertSame($expected, $result);
 
 		$result = $this->helper->expandParameters('SELECT * FROM table WHERE field IN (?)', [[1]]);
@@ -51,5 +55,25 @@ class DbQueryHelperTest extends PHPUnit_Framework_TestCase
 	{
 		$this->setExpectedException('Q2A\Database\Exceptions\SelectSpecException');
 		$this->helper->expandParameters('INSERT INTO table(field1, field2) VALUES ?', [[ [1, 2], [3] ]]);
+	}
+
+	public function test__applyTableSub()
+	{
+		$result = $this->helper->applyTableSub('SELECT * FROM ^options');
+		$this->assertSame('SELECT * FROM qa_options', $result);
+
+		$result = $this->helper->applyTableSub('SELECT * FROM ^users WHERE userid=?');
+		$this->assertSame('SELECT * FROM qa_users WHERE userid=?', $result);
+	}
+
+	public function test__applyTableSub_users_prefix()
+	{
+		define('QA_MYSQL_USERS_PREFIX', 'base_');
+
+		$result = $this->helper->applyTableSub('SELECT * FROM ^options');
+		$this->assertSame('SELECT * FROM qa_options', $result);
+
+		$result = $this->helper->applyTableSub('SELECT * FROM ^users WHERE userid=?');
+		$this->assertSame('SELECT * FROM base_users WHERE userid=?', $result);
 	}
 }
