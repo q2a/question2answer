@@ -22,6 +22,9 @@ use PDO;
 use PDOStatement;
 use Q2A\Database\Exceptions\ReadingFromEmptyResultException;
 
+/**
+ * Thin wrapper around the PDOStatement class which returns results in a variety of formats.
+ */
 class DbResult
 {
 	private $stmt;

@@ -152,7 +152,7 @@ function qa_db_escape_string($string)
 /**
  * Return $argument escaped for MySQL. Add quotes around it if $alwaysquote is true or it's not numeric.
  * If $argument is an array, return a comma-separated list of escaped elements, with or without $arraybrackets.
- * @deprecated 1.9.0
+ * @deprecated 1.9.0 Use DbQueryHelper->expandParameters() instead.
  * @param mixed|null $argument
  * @param bool $alwaysquote
  * @param bool $arraybrackets
@@ -185,7 +185,7 @@ function qa_db_argument_to_mysql($argument, $alwaysquote, $arraybrackets = false
 
 /**
  * Return the full name (with prefix) of database table $rawname, usually if it used after a ^ symbol.
- * @deprecated 1.9.0 Use DbConnection->addTablePrefix() instead.
+ * @deprecated 1.9.0 Use DbQueryHelper->addTablePrefix() instead.
  * @param string $rawname
  * @return string
  */
@@ -215,7 +215,7 @@ function qa_db_prefix_callback($matches)
  * it is converted recursively into comma-separated list). Each element in $arguments is escaped.
  * $ is replaced by the argument in quotes (even if it's a number), # only adds quotes if the argument is non-numeric.
  * It's important to use $ when matching a textual column since MySQL won't use indexes to compare text against numbers.
- * @deprecated 1.9.0 Use DbConnection->applyTableSub() instead.
+ * @deprecated 1.9.0 Use DbQueryHelper->expandParameters() instead.
  * @param string $query
  * @param array $arguments
  * @return mixed
@@ -293,7 +293,6 @@ function qa_db_num_rows($result)
 {
 	if ($result instanceof \Q2A\Database\DbResult)
 		return $result->affectedRows();
-
 
 	// backwards compatibility
 	if ($result instanceof mysqli_result)

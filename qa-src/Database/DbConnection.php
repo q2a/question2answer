@@ -22,7 +22,11 @@ use PDO;
 use PDOException;
 use PDOStatement;
 use Q2A\Database\Exceptions\SelectSpecException;
+use Q2A\Storage\CacheFactory;
 
+/**
+ * Core database class. Handles all SQL queries within Q2A.
+ */
 class DbConnection
 {
 	/** @var PDO */
@@ -74,6 +78,7 @@ class DbConnection
 	/**
 	 * Indicates to the Q2A database layer that database connections are permitted from this point forwards (before
 	 * this point, some plugins may not have had a chance to override some database access functions).
+	 * @return void
 	 */
 	public function allowConnect()
 	{
@@ -90,8 +95,8 @@ class DbConnection
 	}
 
 	/**
-	 * Connect to the Q2A database, optionally install the $failHandler (and call it if necessary). Uses PDO as of Q2A
-	 * 1.9.
+	 * Connect to the Q2A database, optionally install the $failHandler (and call it if necessary).
+	 * Uses PDO as of Q2A 1.9.
 	 * @param string $failHandler
 	 * @return mixed|void
 	 */
@@ -178,11 +183,10 @@ class DbConnection
 			$this->connect();
 		}
 
-		$query = $this->applyTableSub($query);
-		// handle old-style placeholders
-		$query = str_replace(['#', '$'], '?', $query);
-		// handle IN queries
-		list($query, $params) = $this->expandQueryParameters($query, $params);
+		$helper = new DbQueryHelper;
+		$query = $helper->applyTableSub($query);
+		// handle WHERE..IN and INSERT..VALUES queries
+		list($query, $params) = $helper->expandParameters($query, $params);
 
 		if (substr_count($query, '?') != count($params)) {
 			throw new SelectSpecException('The number of parameters and placeholders do not match');
@@ -297,7 +301,7 @@ class DbConnection
 	{
 		// check for cached results
 		if (isset($selectspec['caching'])) {
-			$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
+			$cacheDriver = CacheFactory::getCacheDriver();
 			$cacheKey = 'query:' . $selectspec['caching']['key'];
 
 			if ($cacheDriver->isEnabled()) {
@@ -506,121 +510,6 @@ class DbConnection
 	}
 
 	/**
-	 * Substitute ^ in a SQL query with the configured table prefix.
-	 * @param string $query
-	 * @return string
-	 */
-	public function applyTableSub($query)
-	{
-		return preg_replace_callback('/\^([A-Za-z_0-9]+)/', function ($matches) {
-			return $this->addTablePrefix($matches[1]);
-		}, $query);
-	}
-
-	/**
-	 * Return the full name (with prefix) of a database table identifier.
-	 * @param string $rawName
-	 * @return string
-	 */
-	public function addTablePrefix($rawName)
-	{
-		$prefix = QA_MYSQL_TABLE_PREFIX;
-
-		if (defined('QA_MYSQL_USERS_PREFIX')) {
-			switch (strtolower($rawName)) {
-				case 'users':
-				case 'userlogins':
-				case 'userprofile':
-				case 'userfields':
-				case 'messages':
-				case 'cookies':
-				case 'blobs':
-				case 'cache':
-				case 'userlogins_ibfk_1': // also special cases for constraint names
-				case 'userprofile_ibfk_1':
-					$prefix = QA_MYSQL_USERS_PREFIX;
-					break;
-			}
-		}
-
-		return $prefix . $rawName;
-	}
-
-	/**
-	 * Substitute single '?' in a SQL query with multiple '?' for array parameters, and flatten parameter list accordingly.
-	 * @param string $query
-	 * @param array $params
-	 * @return array Query and flattened parameter list
-	 * @throws SelectSpecException
-	 */
-	public function expandQueryParameters($query, array $params = [])
-	{
-		$numParams = count($params);
-		$explodedQuery = explode('?', $query);
-
-		if ($numParams !== count($explodedQuery) - 1) {
-			throw new SelectSpecException('The number of parameters and placeholders do not match');
-		}
-		if (empty($params)) {
-			return [$query, $params];
-		}
-
-		$outQuery = '';
-		$outParams = [];
-		// use array_values to ensure consistent indexing
-		foreach (array_values($params) as $i => $param) {
-			$outQuery .= $explodedQuery[$i];
-			if (is_array($param)) {
-				$subArray = array_values($param);
-
-				if (is_array($subArray[0])) {
-					// INSERT..VALUES query for inserting multiple rows
-					$subArrayCount = count($subArray[0]);
-					foreach ($subArray as $subArrayParam) {
-						// If the first subparam is an array, the rest of the parameter groups should have the same
-						// amount of elements, i.e. the output should be '(?, ?), (?, ?)' rather than '(?), (?, ?)'
-						if (!is_array($subArrayParam) || count($subArrayParam) !== $subArrayCount) {
-							throw new SelectSpecException('All parameter groups must have the same amount of parameters');
-						}
-
-						$outParams = array_merge($outParams, $subArrayParam);
-					}
-
-					$outQuery .= $this->repeatStringWithSeparators(
-						'(' . $this->repeatStringWithSeparators('?', $subArrayCount) . ')',
-						count($subArray)
-					);
-				} else {
-					// WHERE..IN query
-					$outQuery .= $this->repeatStringWithSeparators('?', count($subArray));
-					$outParams = array_merge($outParams, $subArray);
-				}
-			} else {
-				// standard query
-				$outQuery .= '?';
-				$outParams[] = $param;
-			}
-		}
-
-		$outQuery .= $explodedQuery[$numParams];
-
-		return [$outQuery, $outParams];
-	}
-
-	/**
-	 * Repeat a string a given amount of times separating each of the instances with ', '.
-	 * @param string $string
-	 * @param int $amount
-	 * @return string
-	 */
-	private function repeatStringWithSeparators($string, $amount)
-	{
-		return $amount == 1
-			? $string
-			: str_repeat($string . ', ', $amount - 1) . $string;
-	}
-
-	/**
 	 * Return the value of the auto-increment column for the last inserted row.
 	 * @return string
 	 */
@@ -646,24 +535,5 @@ class DbConnection
 	public function shouldUpdateCounts()
 	{
 		return $this->updateCountsSuspended <= 0;
-	}
-
-	/**
-	 * Flatten a two-level or three-level array into a one-level array.
-	 * @param mixed $elements Input elements which can be one-level deep arrays
-	 * @return array
-	 */
-	private function flattenArray($elements)
-	{
-		$result = array();
-		foreach ($elements as $element) {
-			if (is_array($element)) {
-				$result = array_merge($result, $this->flattenArray($element));
-			} else {
-				$result[] = $element;
-			}
-		}
-
-		return $result;
 	}
 }
