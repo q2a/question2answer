@@ -59,9 +59,9 @@ class Usage
 			$rusage = getrusage();
 			$usage['cpu'] = $rusage["ru_utime.tv_sec"] + $rusage["ru_stime.tv_sec"]
 				+ ($rusage["ru_utime.tv_usec"] + $rusage["ru_stime.tv_usec"]) / 1000000;
-		}
-		else
+		} else {
 			$usage['cpu'] = 0;
+		}
 
 		$usage['other'] = $usage['clock'] - $usage['cpu'] - $usage['mysql'];
 
@@ -92,10 +92,12 @@ class Usage
 
 		if (strlen($this->databaseQueryLog) < 1048576) { // don't keep track of big tests
 			$rowcolstring = '';
-			if (is_numeric($gotrows))
+			if (is_numeric($gotrows)) {
 				$rowcolstring .= ' - ' . $gotrows . ($gotrows == 1 ? ' row' : ' rows');
-			if (is_numeric($gotcolumns))
+			}
+			if (is_numeric($gotcolumns)) {
 				$rowcolstring .= ' - ' . $gotcolumns . ($gotcolumns == 1 ? ' column' : ' columns');
+			}
 
 			$this->databaseQueryLog .= $query . "\n\n" . sprintf('%.2f ms', $usedtime*1000) . $rowcolstring . "\n\n";
 		}
@@ -182,8 +184,9 @@ class Usage
 			<tr>
 				<td class="debug-cell-files">
 					<textarea class="debug-output" cols="40" rows="20"><?php
-						foreach (get_included_files() as $file)
-							echo qa_html(implode('/', array_slice(explode('/', $file), -3)))."\n";
+					foreach (get_included_files() as $file) {
+						echo qa_html(implode('/', array_slice(explode('/', $file), -3)))."\n";
+					}
 					?></textarea>
 				</td>
 				<td class="debug-cell-queries">
@@ -206,8 +209,9 @@ class Usage
 	{
 		$delta = array();
 
-		foreach ($newusage as $key => $value)
+		foreach ($newusage as $key => $value) {
 			$delta[$key] = max(0, $value-@$oldusage[$key]);
+		}
 
 		return $delta;
 	}
