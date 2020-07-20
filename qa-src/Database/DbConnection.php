@@ -172,7 +172,7 @@ class DbConnection
 	 * @param array $params
 	 * @return DbResult
 	 */
-	public function query($query, $params = array())
+	public function query($query, $params = [])
 	{
 		if (!$this->isConnected()) {
 			$this->connect();
@@ -182,9 +182,7 @@ class DbConnection
 		// handle old-style placeholders
 		$query = str_replace(['#', '$'], '?', $query);
 		// handle IN queries
-		$query = $this->applyArraySub($query, $params);
-
-		$params = $this->flattenArray($params);
+		list($query, $params) = $this->expandQueryParameters($query, $params);
 
 		if (substr_count($query, '?') != count($params)) {
 			throw new SelectSpecException('The number of parameters and placeholders do not match');
@@ -549,75 +547,64 @@ class DbConnection
 	}
 
 	/**
-	 * Substitute single '?' in a SQL query with multiple '?' for array parameters.
+	 * Substitute single '?' in a SQL query with multiple '?' for array parameters, and flatten parameter list accordingly.
 	 * @param string $query
 	 * @param array $params
-	 * @return string
+	 * @return array Query and flattened parameter list
 	 * @throws SelectSpecException
 	 */
-	public function applyArraySub($query, $params)
+	public function expandQueryParameters($query, array $params = [])
 	{
-		$result = '';
-		$hasArray = false;
-		$paramInfo = array();
+		$numParams = count($params);
+		$explodedQuery = explode('?', $query);
 
-		foreach ($params as $param) {
+		if ($numParams !== count($explodedQuery) - 1) {
+			throw new SelectSpecException('The number of parameters and placeholders do not match');
+		}
+		if (empty($params)) {
+			return [$query, $params];
+		}
+
+		$outQuery = '';
+		$outParams = [];
+		// use array_values to ensure consistent indexing
+		foreach (array_values($params) as $i => $param) {
+			$outQuery .= $explodedQuery[$i];
 			if (is_array($param)) {
-				// If the first subparam is an array, the rest of the parameter groups should have the same
-				// amount of elements. E.G.: the output should be '(?, ?), (?, ?)' rather than '(?), (?, ?)'
-				$subArrayCount = isset($param[0]) && is_array($param[0]) ? count($param[0]) : 0;
+				$subArray = array_values($param);
 
-				$paramInfo[] = array(
-					'count' => count($param),
-					'sub_array_count' => $subArrayCount,
-				);
-
-				if ($subArrayCount > 0) {
-					foreach ($param as $subParam) {
-						$subParamCount = count($subParam);
-						if ($subParamCount != $subArrayCount) {
+				if (is_array($subArray[0])) {
+					// INSERT..VALUES query for inserting multiple rows
+					$subArrayCount = count($subArray[0]);
+					foreach ($subArray as $subArrayParam) {
+						// If the first subparam is an array, the rest of the parameter groups should have the same
+						// amount of elements, i.e. the output should be '(?, ?), (?, ?)' rather than '(?), (?, ?)'
+						if (!is_array($subArrayParam) || count($subArrayParam) !== $subArrayCount) {
 							throw new SelectSpecException('All parameter groups must have the same amount of parameters');
 						}
+
+						$outParams = array_merge($outParams, $subArrayParam);
 					}
-				}
 
-				$hasArray = true;
-			} else {
-				$paramInfo[] = array(
-					'count' => 1,
-					'sub_array_count' => 0,
-				);
-			}
-		}
-
-		if (!$hasArray) {
-			return $query;
-		}
-
-		$explodedQuery = explode('?', $query);
-		foreach ($explodedQuery as $index => $explodedQueryPart) {
-			$result .= $explodedQueryPart;
-
-			// Ignore the last part of the $explodedQueryPart
-			if (!isset($paramInfo[$index])) {
-				continue;
-			}
-
-			// If the parameter is not an array with sub arrays
-			if ($paramInfo[$index]['sub_array_count'] == 0) {
-				// Turn this SQL 'IN (?)' into 'IN (?, ?, ?)' for arrays with no sub arrays
-				$result .= $this->repeatStringWithSeparators('?', $paramInfo[$index]['count']);
-			} else {
-				// Turn this SQL 'IN ?' into 'IN (?, ?), (?, ?)' for arrays with sub arrays
-				$result .=
-					$this->repeatStringWithSeparators(
-						'(' . $this->repeatStringWithSeparators('?', $paramInfo[$index]['sub_array_count']) . ')',
-						$paramInfo[$index]['count']
+					$outQuery .= $this->repeatStringWithSeparators(
+						'(' . $this->repeatStringWithSeparators('?', $subArrayCount) . ')',
+						count($subArray)
 					);
+				} else {
+					// WHERE..IN query
+					$outQuery .= $this->repeatStringWithSeparators('?', count($subArray));
+					$outParams = array_merge($outParams, $subArray);
+				}
+			} else {
+				// standard query
+				$outQuery .= '?';
+				$outParams[] = $param;
 			}
 		}
 
-		return $result;
+		$outQuery .= $explodedQuery[$numParams];
+
+		return [$outQuery, $outParams];
 	}
 
 	/**
