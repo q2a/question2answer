@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecountPostsVoteCount extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$postids = qa_db_posts_get_for_recounting($this->state->next, 1000);
@@ -38,6 +42,10 @@ class RecountPostsVoteCount extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/recount_posts_votes_recounted', $this->state->done, $this->state->length);

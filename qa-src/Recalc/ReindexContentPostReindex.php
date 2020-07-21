@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class ReindexContentPostReindex extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$posts = qa_db_posts_get_for_reindexing($this->state->next, 10);
@@ -58,6 +62,10 @@ class ReindexContentPostReindex extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/reindex_posts_reindexed', $this->state->done, $this->state->length);

@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class ReindexPostsComplete extends AbstractFinalStep
 {
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return qa_lang('admin/reindex_posts_complete');

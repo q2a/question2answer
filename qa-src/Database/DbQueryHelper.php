@@ -68,10 +68,10 @@ class DbQueryHelper
 
 	/**
 	 * Substitute single '?' in a SQL query with multiple '?' for array parameters, and flatten parameter list accordingly.
+	 * @throws SelectSpecException
 	 * @param string $query
 	 * @param array $params
 	 * @return array Query and flattened parameter list
-	 * @throws SelectSpecException
 	 */
 	public function expandParameters($query, array $params = [])
 	{
@@ -139,6 +139,7 @@ class DbQueryHelper
 	 * INSERT INTO..VALUES query for inserting multiple rows.
 	 * If the first subparam is an array, the rest of the parameter groups should have the same
 	 * amount of elements, i.e. the output should be '(?, ?), (?, ?)' rather than '(?), (?, ?)'.
+	 * @throws SelectSpecException
 	 * @param array $subArray
 	 * @param string $outQuery
 	 * @param array $outParams

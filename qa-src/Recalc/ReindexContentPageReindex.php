@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class ReindexContentPageReindex extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$pages = qa_db_pages_get_for_reindexing($this->state->next, 10);
@@ -56,6 +60,10 @@ class ReindexContentPageReindex extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/reindex_pages_reindexed', $this->state->done, $this->state->length);

@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class CacheClearProcess extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$cacheDriver = \Q2A\Storage\CacheFactory::getCacheDriver();
@@ -37,6 +41,10 @@ class CacheClearProcess extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/caching_delete_progress', $this->state->done, $this->state->length);

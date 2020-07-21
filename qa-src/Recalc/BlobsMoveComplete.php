@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class BlobsMoveComplete extends AbstractFinalStep
 {
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return qa_lang('admin/blobs_move_complete');

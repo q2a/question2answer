@@ -73,41 +73,64 @@ class State
 
 	/**
 	 * Initialize the counts of resource usage.
+	 * @param string $state
 	 */
 	public function __construct($state)
 	{
 		$this->setState($state);
 	}
 
+	/**
+	 * Get the state.
+	 * @return string
+	 */
 	public function getState()
 	{
 		return $this->state;
 	}
 
+	/**
+	 * Set the state.
+	 * @param string $state
+	 * @return void
+	 */
 	public function setState($state = '')
 	{
 		$this->state = $state;
 		list($this->operation, $this->length, $this->next, $this->done) = explode("\t", $state . "\t\t\t\t");
 	}
 
+	/**
+	 * Update the state.
+	 * @return void
+	 */
 	public function updateState()
 	{
 		$this->state = $this->operation . "\t" . $this->length . "\t" . $this->next . "\t" . $this->done;
 	}
 
+	/**
+	 * Get the class that will handle this operation.
+	 * @return string|null
+	 */
 	public function getOperationClass()
 	{
 		return isset($this->classes[$this->operation]) ? $this->classes[$this->operation] : null;
 	}
 
+	/**
+	 * Whether all steps are completed.
+	 * @return bool
+	 */
 	public function allDone()
 	{
 		return $this->done >= $this->length;
 	}
 
 	/**
-	 * Change the $state to represent the beginning of a new $operation
-	 * @param $newOperation
+	 * Change the $state to represent the beginning of a new $operation.
+	 * @param string $newOperation
+	 * @return void
 	 */
 	public function transition($newOperation)
 	{
@@ -120,7 +143,7 @@ class State
 	}
 
 	/**
-	 * Return how many steps there will be in recalculation $operation
+	 * Return how many steps there will be in recalculation operation.
 	 * @return int
 	 */
 	private function stageLength()

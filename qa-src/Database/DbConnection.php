@@ -173,6 +173,7 @@ class DbConnection
 
 	/**
 	 * Prepare and execute a SQL query, handling any failures. In debugging mode, track the queries and resources used.
+	 * @throws SelectSpecException
 	 * @param string $query
 	 * @param array $params
 	 * @return DbResult

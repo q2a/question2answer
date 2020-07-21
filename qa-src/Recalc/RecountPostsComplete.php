@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecountPostsComplete extends AbstractFinalStep
 {
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return qa_lang('admin/recount_posts_complete');

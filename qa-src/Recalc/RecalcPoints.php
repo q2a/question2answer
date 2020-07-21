@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecalcPoints extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$this->state->transition('dorecalcpoints_usercount');

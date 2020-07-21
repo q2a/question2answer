@@ -20,9 +20,16 @@ namespace Q2A\Recalc;
 
 abstract class AbstractStep
 {
+	/** @var string */
 	protected $state;
+
+	/** @var bool */
 	protected $isFinalStep = false;
 
+	/**
+	 * Initialize a step.
+	 * @param State $state
+	 */
 	public function __construct(State $state)
 	{
 		require_once QA_INCLUDE_DIR . 'app/format.php'; // for qa_format_number()
@@ -30,13 +37,25 @@ abstract class AbstractStep
 		$this->state = $state;
 	}
 
+	/**
+	 * Execute the step.
+	 * @return bool
+	 */
 	abstract public function doStep();
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return '';
 	}
 
+	/**
+	 * Whether to stop processing.
+	 * @return bool
+	 */
 	public function isFinalStep()
 	{
 		return $this->isFinalStep;
@@ -45,12 +64,12 @@ abstract class AbstractStep
 	/**
 	 * Return the translated language ID string replacing the progress and total in it.
 	 *
-	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2)
-	 * @param int $progress Amount of processed elements
-	 * @param int $total Total amount of elements
+	 * @param string $langId Language string ID that contains 2 placeholders (^1 and ^2).
+	 * @param int $progress Amount of processed elements.
+	 * @param int $total Total amount of elements.
 	 *
 	 * @return string Returns the language string ID with their placeholders replaced with
-	 * the formatted progress and total numbers
+	 * the formatted progress and total numbers.
 	 */
 	protected function progressLang($langId, $progress, $total)
 	{
@@ -60,6 +79,11 @@ abstract class AbstractStep
 		));
 	}
 
+	/**
+	 * Factory method to instantiate the State.
+	 * @param State $state
+	 * @return AbstractStep|null
+	 */
 	public static function factory(State $state)
 	{
 		$class = $state->getOperationClass();

@@ -25,10 +25,13 @@ abstract class AbstractFinalStep extends AbstractStep
 	protected $isFinalStep = true;
 
 	/**
+	 * Should not be called.
 	 * @throws Exception
+	 * @return bool
 	 */
 	public function doStep()
 	{
 		throw new Exception('Do not process the completion step.');
+		return false;
 	}
 }

@@ -37,6 +37,7 @@ class Container
 
 	/**
 	 * Return an object assigned to the given key. If the key is not found an exception is thrown.
+	 * @throws FatalErrorException
 	 * @param string $key The key to look for
 	 * @return mixed
 	 */

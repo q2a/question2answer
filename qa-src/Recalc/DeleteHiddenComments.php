@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class DeleteHiddenComments extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$posts = qa_db_posts_get_for_deleting('C', $this->state->next, 1);
@@ -39,6 +43,10 @@ class DeleteHiddenComments extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/hidden_comments_deleted', $this->state->done, $this->state->length);

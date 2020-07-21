@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecalcCategoriesPostCount extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		qa_db_acount_update();

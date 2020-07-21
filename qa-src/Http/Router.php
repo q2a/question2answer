@@ -57,9 +57,8 @@ class Router
 	/**
 	 * Return the route definition that matches the given request. If none is found then null is
 	 * returned.
-	 *
+	 * @throws MethodNotAllowedException
 	 * @param string $request Request that will be looked for a match
-	 *
 	 * @return Route|null
 	 */
 	public function match($request)
@@ -88,9 +87,7 @@ class Router
 	/**
 	 * Build the final regular expression to match the request. This method replaces all the
 	 * parameters' placeholders with the given regular expression.
-	 *
 	 * @param string $routePath Route that might have placeholders
-	 *
 	 * @return string
 	 */
 	private function buildPathRegex($routePath)
@@ -100,7 +97,6 @@ class Router
 
 	/**
 	 * Return the HTTP method of the current request.
-	 *
 	 * @return string
 	 */
 	public function getHttpMethod()

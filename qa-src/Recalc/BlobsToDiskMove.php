@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class BlobsToDiskMove extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$blob = qa_db_get_next_blob_in_db($this->state->next);
@@ -41,6 +45,10 @@ class BlobsToDiskMove extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/blobs_move_moved', $this->state->done, $this->state->length);

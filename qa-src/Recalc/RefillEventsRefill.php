@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RefillEventsRefill extends AbstractStep
 {
+	/**
+	 * Include some extra files.
+	 * @param State $state
+	 */
 	public function __construct(State $state)
 	{
 		require_once QA_INCLUDE_DIR . 'app/events.php';
@@ -29,6 +33,10 @@ class RefillEventsRefill extends AbstractStep
 		parent::__construct($state);
 	}
 
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$questionids = qa_db_qs_get_for_event_refilling($this->state->next, 1);
@@ -124,6 +132,10 @@ class RefillEventsRefill extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/refill_events_refilled', $this->state->done, $this->state->length);

@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecalcCategoriesRecount extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$categoryids = qa_db_categories_get_for_recalcs($this->state->next, 10);
@@ -39,6 +43,10 @@ class RecalcCategoriesRecount extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/recalc_categories_recounting', $this->state->done, $this->state->length);

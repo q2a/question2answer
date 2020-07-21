@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class ReindexContentPostCount extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		qa_db_qcount_update();
@@ -30,6 +34,10 @@ class ReindexContentPostCount extends AbstractStep
 		return false;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return qa_lang('admin/recalc_posts_count');

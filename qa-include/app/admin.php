@@ -57,8 +57,8 @@ function qa_admin_check_privileges(&$qa_content)
 
 
 /**
- *	Return a sorted array of available languages, [short code] => [long name]
- *	@return array
+ * Return a sorted array of available languages, [short code] => [long name]
+ * @return array
  */
 function qa_admin_language_options()
 {

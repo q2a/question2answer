@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecalcCategoriesPostUpdate extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$postids = qa_db_posts_get_for_recategorizing($this->state->next, 100);
@@ -39,6 +43,10 @@ class RecalcCategoriesPostUpdate extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/recalc_categories_updated', $this->state->done, $this->state->length);

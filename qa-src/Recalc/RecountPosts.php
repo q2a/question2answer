@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecountPosts extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$this->state->transition('dorecountposts_postcount');

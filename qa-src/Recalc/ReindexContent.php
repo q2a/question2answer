@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class ReindexContent extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$this->state->transition('doreindexcontent_pagereindex');

@@ -30,4 +30,16 @@
 		</properties>
 	</rule>
 
+	<!-- Not part of normal usage, but kept for testing (default severity = 5) -->
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<severity>0</severity>
+		<exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+		<exclude name="Squiz.Commenting.FunctionComment.IncorrectParamVarName"/>
+		<exclude name="Squiz.Commenting.FunctionComment.InvalidReturn"/>
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+		<exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+		<exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName"/>
+		<exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType"/>
+	</rule>
+
 </ruleset>

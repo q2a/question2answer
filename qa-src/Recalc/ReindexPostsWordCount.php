@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class ReindexPostsWordCount extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$wordids = qa_db_words_prepare_for_recounting($this->state->next, 1000);
@@ -39,6 +43,10 @@ class ReindexPostsWordCount extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/reindex_posts_wordcounted', $this->state->done, $this->state->length);

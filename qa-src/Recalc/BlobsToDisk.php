@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class BlobsToDisk extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$this->state->transition('doblobstodisk_move');

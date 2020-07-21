@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class DeleteHiddenComplete extends AbstractFinalStep
 {
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return qa_lang('admin/delete_hidden_complete');

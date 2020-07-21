@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecalcPointsRecalc extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$default_recalccount = 10;
@@ -46,6 +50,10 @@ class RecalcPointsRecalc extends AbstractStep
 		}
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/recalc_points_recalced', $this->state->done, $this->state->length);

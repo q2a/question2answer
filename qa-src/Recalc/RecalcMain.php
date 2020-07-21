@@ -60,6 +60,7 @@ class RecalcMain
 
 	/**
 	 * Initialize the counts of resource usage.
+	 * @param string $state
 	 */
 	public function __construct($state)
 	{
@@ -76,11 +77,19 @@ class RecalcMain
 		$this->state = new \Q2A\Recalc\State($state);
 	}
 
+	/**
+	 * Get the state.
+	 * @return string
+	 */
 	public function getState()
 	{
 		return $this->state->getState();
 	}
 
+	/**
+	 * Do the recalculation.
+	 * @return bool
+	 */
 	public function performStep()
 	{
 		$step = AbstractStep::factory($this->state);
@@ -99,7 +108,7 @@ class RecalcMain
 	}
 
 	/**
-	 * Return a string which gives a user-viewable version of $state
+	 * Return a string which gives a user-viewable version of $state.
 	 * @return string
 	 */
 	public function getMessage()

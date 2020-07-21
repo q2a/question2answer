@@ -1289,12 +1289,12 @@ function qa_post_limit_exceeded()
 
 
 /**
-* Turns a numeric value and a unit (g/m/k) into bytes
-* @param string $unit One of 'g', 'm', 'k'. It is case insensitive
-* @param int $value The value to turn into bytes
-* @return int The amount of bytes the unit and the value represent. If the unit is not one of 'g', 'm' or 'k' then the
-* original value is returned
-*/
+ * Turns a numeric value and a unit (g/m/k) into bytes
+ * @param string $unit One of 'g', 'm', 'k'. It is case insensitive
+ * @param int $value The value to turn into bytes
+ * @return int The amount of bytes the unit and the value represent. If the unit is not one of 'g', 'm' or 'k' then the
+ * original value is returned
+ */
 function convert_to_bytes($unit, $value)
 {
 	$value = (int) $value;

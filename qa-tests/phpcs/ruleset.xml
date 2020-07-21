@@ -43,4 +43,6 @@
 		</properties>
 	</rule>
 
+	<rule ref="Squiz.Commenting.DocCommentAlignment"></rule>
+
 </ruleset>

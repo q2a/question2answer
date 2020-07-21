@@ -20,6 +20,10 @@ namespace Q2A\Recalc;
 
 class RecalcCategoriesBackPaths extends AbstractStep
 {
+	/**
+	 * Perform the recalculation.
+	 * @return bool
+	 */
 	public function doStep()
 	{
 		$categoryids = qa_db_categories_get_for_recalcs($this->state->next, 10);
@@ -37,6 +41,10 @@ class RecalcCategoriesBackPaths extends AbstractStep
 		return true;
 	}
 
+	/**
+	 * Get the current progress.
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->progressLang('admin/recalc_categories_backpaths', $this->state->done, $this->state->length);
