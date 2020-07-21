@@ -193,7 +193,7 @@ function qa_db_add_table_prefix($rawname)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return qa_service('database')->addTablePrefix($rawname);
+	return (new \Q2A\Database\DbQueryHelper)->addTablePrefix($rawname);
 }
 
 
