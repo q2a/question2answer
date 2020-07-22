@@ -180,14 +180,14 @@ function qa_db_user_set($userid, $fields, $value = null)
 
 	$sql = 'UPDATE ^users SET ';
 	foreach ($fields as $field => $fieldValue) {
-		$sql .= qa_db_escape_string($field) . ' = $, ';
+		$sql .= qa_db_escape_string($field) . ' = ?, ';
 	}
-	$sql = substr($sql, 0, -2) . ' WHERE userid = $';
+	$sql = substr($sql, 0, -2) . ' WHERE userid = ?';
 
 	$params = array_values($fields);
 	$params[] = $userid;
 
-	qa_db_query_sub_params($sql, $params);
+	qa_service('database')->query($sql, $params);
 }
 
 

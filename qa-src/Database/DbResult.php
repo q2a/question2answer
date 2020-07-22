@@ -35,7 +35,8 @@ class DbResult
 	}
 
 	/**
-	 * Return the first row from the results as an array of [column name] => 'column value'.
+	 * Return the first row from the results as an array of [column name] => 'column value'. If no value is fetched
+	 * from the database, return null.
 	 * @return array|null
 	 */
 	public function fetchNextAssoc()
@@ -47,7 +48,7 @@ class DbResult
 
 	/**
 	 * Return the first row from the results as an array of [column name] => [column value]. If no value is fetched
-	 * from the database then an exception is thrown.
+	 * from the database, throw an exception.
 	 * @return array|null
 	 * @throws ReadingFromEmptyResultException
 	 */
@@ -79,7 +80,7 @@ class DbResult
 
 	/**
 	 * Return a specific cell from the results. Typically used with (single-row, single-column) aggregate queries. If
-	 * no value is fetched form the database return null.
+	 * no value is fetched from the database, return null.
 	 * @param $col 0-indexed column to select from (defaults to first column).
 	 * @return string
 	 */
@@ -92,7 +93,7 @@ class DbResult
 
 	/**
 	 * Return a specific cell from the results. Typically used with (single-row, single-column) aggregate queries. If
-	 * no value is fetched from the database then an exception is thrown.
+	 * no value is fetched from the database, throw an exception.
 	 * @param $col 0-indexed column to select from (defaults to first column).
 	 * @return string
 	 * @throws ReadingFromEmptyResultException

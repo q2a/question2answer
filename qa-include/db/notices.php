@@ -35,12 +35,13 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  */
 function qa_db_usernotice_create($userid, $content, $format = '', $tags = null)
 {
-	qa_db_query_sub(
-		'INSERT INTO ^usernotices (userid, content, format, tags, created) VALUES ($, $, $, $, NOW())',
-		$userid, $content, $format, $tags
+	$db = qa_service('database');
+	$db->query(
+		'INSERT INTO ^usernotices (userid, content, format, tags, created) VALUES (?, ?, ?, ?, NOW())',
+		[$userid, $content, $format, $tags]
 	);
 
-	return qa_db_last_insert_id();
+	return $db->lastInsertId();
 }
 
 
@@ -51,7 +52,7 @@ function qa_db_usernotice_create($userid, $content, $format = '', $tags = null)
  */
 function qa_db_usernotice_delete($userid, $noticeid)
 {
-	qa_db_query_sub(
+	qa_service('database')->query(
 		'DELETE FROM ^usernotices WHERE userid=$ AND noticeid=#',
 		$userid, $noticeid
 	);
@@ -65,8 +66,8 @@ function qa_db_usernotice_delete($userid, $noticeid)
  */
 function qa_db_usernotices_list($userid)
 {
-	return qa_db_read_all_assoc(qa_db_query_sub(
-		'SELECT noticeid, tags, UNIX_TIMESTAMP(created) AS created FROM ^usernotices WHERE userid=$ ORDER BY created',
-		$userid
-	));
+	return qa_service('database')->query(
+		'SELECT noticeid, tags, UNIX_TIMESTAMP(created) AS created FROM ^usernotices WHERE userid=? ORDER BY created',
+		[$userid]
+	)->fetchAllAssoc();
 }

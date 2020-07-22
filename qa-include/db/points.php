@@ -224,9 +224,9 @@ function qa_db_points_update_ifuser($userid, $columns)
  */
 function qa_db_points_set_bonus($userid, $bonus)
 {
-	qa_db_query_sub(
-		"INSERT INTO ^userpoints (userid, bonus) VALUES ($, #) ON DUPLICATE KEY UPDATE bonus=#",
-		$userid, $bonus, $bonus
+	qa_service('database')->query(
+		'INSERT INTO ^userpoints (userid, bonus) VALUES (?, ?) ON DUPLICATE KEY UPDATE bonus=?',
+		[$userid, $bonus, $bonus]
 	);
 }
 
@@ -236,8 +236,9 @@ function qa_db_points_set_bonus($userid, $bonus)
  */
 function qa_db_userpointscount_update()
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
+	$db = qa_service('database');
+	if ($db->shouldUpdateCounts()) {
+		$db->query(
 			"INSERT INTO ^options (title, content) " .
 			"SELECT 'cache_userpointscount', COUNT(*) FROM ^userpoints " .
 			"ON DUPLICATE KEY UPDATE content = VALUES(content)"

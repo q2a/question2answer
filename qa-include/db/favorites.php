@@ -112,29 +112,30 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  */
 function qa_db_favorite_create($userid, $entitytype, $entityid)
 {
+	$db = qa_service('database');
 	$threshold = qa_opt('max_copy_user_updates'); // if this many users subscribe to it, create a shared stream
 
 	// Add in the favorite for this user, unshared events at first (will be switched later if appropriate)
 
-	qa_db_query_sub(
-		'INSERT IGNORE INTO ^userfavorites (userid, entitytype, entityid, nouserevents) VALUES ($, $, #, 0)',
-		$userid, $entitytype, $entityid
+	$db->query(
+		'INSERT IGNORE INTO ^userfavorites (userid, entitytype, entityid, nouserevents) VALUES (?, ?, ?, 0)',
+		[$userid, $entitytype, $entityid]
 	);
 
 	// See whether this entity already has another favoriter who uses its shared event stream
 
-	$useshared = qa_db_read_one_value(qa_db_query_sub(
-		'SELECT COUNT(*) FROM ^userfavorites WHERE entitytype=$ AND entityid=# AND nouserevents>0 LIMIT 1',
-		$entitytype, $entityid
-	));
+	$useshared = $db->query(
+		'SELECT COUNT(*) FROM ^userfavorites WHERE entitytype=? AND entityid=? AND nouserevents>0 LIMIT 1',
+		[$entitytype, $entityid]
+	)->fetchOneValueOrFail();
 
 	// If not, check whether it's time to switch it over to a shared stream
 
 	if (!$useshared) {
-		$favoriters = qa_db_read_one_value(qa_db_query_sub(
-			'SELECT COUNT(*) FROM ^userfavorites WHERE entitytype=$ AND entityid=# LIMIT #',
-			$entitytype, $entityid, $threshold
-		));
+		$favoriters = $db->query(
+			'SELECT COUNT(*) FROM ^userfavorites WHERE entitytype=? AND entityid=? LIMIT ?',
+			[$entitytype, $entityid, $threshold]
+		)->fetchOneValueOrFail();
 
 		$useshared = ($favoriters >= $threshold);
 	}
@@ -144,11 +145,11 @@ function qa_db_favorite_create($userid, $entitytype, $entityid)
 	if ($useshared) {
 		// ... for all the people for whom we're switching this to a shared stream, find the highest number of other shared streams they have
 
-		$maxshared = qa_db_read_one_value(qa_db_query_sub(
+		$maxshared = $db->query(
 			'SELECT MAX(c) FROM (SELECT COUNT(*) AS c FROM ^userfavorites AS shared JOIN ^userfavorites AS unshared ' .
-			'WHERE shared.userid=unshared.userid AND shared.nouserevents>0 AND unshared.entitytype=$ AND unshared.entityid=# AND unshared.nouserevents=0 GROUP BY shared.userid) y',
-			$entitytype, $entityid
-		));
+			'WHERE shared.userid=unshared.userid AND shared.nouserevents>0 AND unshared.entitytype=? AND unshared.entityid=? AND unshared.nouserevents=0 GROUP BY shared.userid) y',
+			[$entitytype, $entityid]
+		)->fetchOneValueOrFail();
 
 		// ... if this number is greater than our current 'max_copy_user_updates' threshold, increase that threshold (see long comment above)
 
@@ -157,9 +158,9 @@ function qa_db_favorite_create($userid, $entitytype, $entityid)
 
 		// ... now switch all unshared favoriters (including this new one) over to be shared
 
-		qa_db_query_sub(
-			'UPDATE ^userfavorites SET nouserevents=1 WHERE entitytype=$ AND entityid=# AND nouserevents=0',
-			$entitytype, $entityid
+		$db->query(
+			'UPDATE ^userfavorites SET nouserevents=1 WHERE entitytype=? AND entityid=? AND nouserevents=0',
+			[$entitytype, $entityid]
 		);
 
 	} else {
@@ -169,11 +170,11 @@ function qa_db_favorite_create($userid, $entitytype, $entityid)
 
 		// ... copy across recent events from the shared stream
 
-		qa_db_query_sub(
+		$db->query(
 			'INSERT INTO ^userevents (userid, entitytype, entityid, questionid, lastpostid, updatetype, lastuserid, updated) ' .
-			'SELECT #, entitytype, entityid, questionid, lastpostid, updatetype, lastuserid, updated FROM ' .
-			'^sharedevents WHERE entitytype=$ AND entityid=#',
-			$userid, $entitytype, $entityid
+			'SELECT ?, entitytype, entityid, questionid, lastpostid, updatetype, lastuserid, updated FROM ' .
+			'^sharedevents WHERE entitytype=? AND entityid=?',
+			[$userid, $entitytype, $entityid]
 		);
 
 		// ... and truncate the user's stream as appropriate
@@ -192,13 +193,15 @@ function qa_db_favorite_create($userid, $entitytype, $entityid)
  */
 function qa_db_favorite_delete($userid, $entitytype, $entityid)
 {
-	qa_db_query_sub(
-		'DELETE FROM ^userfavorites WHERE userid=$ AND entitytype=$ AND entityid=#',
-		$userid, $entitytype, $entityid
+	$db = qa_service('database');
+
+	$db->query(
+		'DELETE FROM ^userfavorites WHERE userid=? AND entitytype=? AND entityid=?',
+		[$userid, $entitytype, $entityid]
 	);
 
-	qa_db_query_sub(
-		'DELETE FROM ^userevents WHERE userid=$ AND entitytype=$ AND entityid=#',
-		$userid, $entitytype, $entityid
+	$db->query(
+		'DELETE FROM ^userevents WHERE userid=? AND entitytype=? AND entityid=?',
+		[$userid, $entitytype, $entityid]
 	);
 }

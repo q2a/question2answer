@@ -32,10 +32,10 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  */
 function qa_db_increment_views($postid)
 {
-	$query = 'UPDATE ^posts SET views=views+1, lastviewip=UNHEX($) WHERE postid=# AND (lastviewip IS NULL OR lastviewip!=UNHEX($))';
+	$query = 'UPDATE ^posts SET views=views+1, lastviewip=UNHEX(?) WHERE postid=? AND (lastviewip IS NULL OR lastviewip!=UNHEX(?))';
 	$ipHex = bin2hex(@inet_pton(qa_remote_ip_address()));
 
-	$result = qa_db_query_sub($query, $ipHex, $postid, $ipHex);
+	$result = qa_service('database')->query($query, [$ipHex, $postid, $ipHex]);
 
 	return $result->affectedRows() > 0;
 }

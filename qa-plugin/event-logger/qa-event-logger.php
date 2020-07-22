@@ -25,7 +25,7 @@ class qa_event_logger
 	public function init_queries($table_list)
 	{
 		if (qa_opt('event_logger_to_database')) {
-			$tablename = qa_db_add_table_prefix('eventlog');
+			$tablename = (new \Q2A\Database\DbQueryHelper)->addTablePrefix('eventlog');
 
 			if (!in_array($tablename, $table_list)) {
 				// table does not exist, so create it
@@ -47,7 +47,7 @@ class qa_event_logger
 					') ENGINE=MyISAM DEFAULT CHARSET=utf8';
 			} else {
 				// table exists: check it has the correct schema
-				$column = qa_db_read_one_assoc(qa_db_query_sub('SHOW COLUMNS FROM ^eventlog WHERE Field="ipaddress"'));
+				$column = qa_service('database')->query('SHOW COLUMNS FROM ^eventlog WHERE Field="ipaddress"')->fetchNextAssocOrFail();
 				if (strtolower($column['Type']) !== 'varchar(45)') {
 					// upgrade to handle IPv6
 					return 'ALTER TABLE ^eventlog MODIFY ipaddress VARCHAR(45) CHARACTER SET ascii';
@@ -167,10 +167,10 @@ class qa_event_logger
 				$paramstring .= (strlen($paramstring) ? "\t" : '') . $key . '=' . $this->value_to_text($value);
 			}
 
-			qa_db_query_sub(
+			qa_service('database')->query(
 				'INSERT INTO ^eventlog (datetime, ipaddress, userid, handle, cookieid, event, params) ' .
-				'VALUES (NOW(), $, $, $, #, $, $)',
-				qa_remote_ip_address(), $userid, $handle, $cookieid, $event, $paramstring
+				'VALUES (NOW(), ?, ?, ?, ?, ?, ?)',
+				[qa_remote_ip_address(), $userid, $handle, $cookieid, $event, $paramstring]
 			);
 		}
 
