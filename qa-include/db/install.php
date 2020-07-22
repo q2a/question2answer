@@ -67,6 +67,11 @@ function qa_db_table_definitions()
 	require_once QA_INCLUDE_DIR . 'db/maxima.php';
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 
+	if (defined('QA_USE_UTF8MB4') && QA_USE_UTF8MB4)
+		$collation = 'utf8mb4_bin';
+	else
+		$collation = 'utf_bin';
+
 	/*
 		Important note on character encoding in database and PHP connection to MySQL
 
@@ -107,7 +112,7 @@ function qa_db_table_definitions()
 			'avatarheight' => 'SMALLINT UNSIGNED', // pixel height of stored avatar
 			'passsalt' => 'BINARY(16)', // salt used to calculate passcheck - null if no password set for direct login
 			'passcheck' => 'BINARY(20)', // checksum from password and passsalt - null if no password set for direct login
-			'passhash' => 'VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL', // password_hash
+			'passhash' => 'VARCHAR(255) CHARACTER SET utf8 COLLATE '.$collation.' DEFAULT NULL', // password_hash
 			'level' => 'TINYINT UNSIGNED NOT NULL', // basic, editor, admin, etc...
 			'loggedin' => 'DATETIME NOT NULL', // time of last login
 			'loginip' => 'VARBINARY(16) NOT NULL', // INET6_ATON of IP address of last login
@@ -714,7 +719,10 @@ function qa_db_create_table_sql($rawname, $definition)
 		if (isset($coldef))
 			$querycols .= (strlen($querycols) ? ', ' : '') . (is_int($colname) ? $coldef : ($colname . ' ' . $coldef));
 
-	return 'CREATE TABLE ^' . $rawname . ' (' . $querycols . ') ENGINE=InnoDB CHARSET=utf8';
+	if (defined('QA_USE_UTF8MB4') && QA_USE_UTF8MB4)
+		return 'CREATE TABLE ^' . $rawname . ' (' . $querycols . ') ENGINE=InnoDB CHARSET=utf8mb4';
+	else
+		return 'CREATE TABLE ^' . $rawname . ' (' . $querycols . ') ENGINE=InnoDB CHARSET=utf8';
 }
 
 
