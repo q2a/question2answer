@@ -51,7 +51,7 @@ class ExceptionHandler
 
 	private function handlePageNotFoundException(PageNotFoundException $exception)
 	{
-		header('HTTP/1.1 404 Not Found');
+		qa_404();
 
 		$qa_content = $this->handleErrorMessageException($exception);
 		$qa_content['suggest_next'] = qa_html_suggest_qs_tags(qa_using_tags());
@@ -61,7 +61,7 @@ class ExceptionHandler
 
 	private function handleMethodNotAllowedException(MethodNotAllowedException $exception)
 	{
-		header('HTTP/1.1 405 Method Not Allowed');
+		qa_http_error('405', 'Method Not Allowed');
 
 		$qa_content = $this->handleErrorMessageException($exception);
 

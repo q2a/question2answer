@@ -57,7 +57,7 @@ if (count($questions) > 0) {
 	$qa_content['title'] = qa_lang_html_sub('main/questions_tagged_x', qa_html($tag));
 } else {
 	$qa_content['title'] = qa_lang_html('main/no_questions_found');
-	header('HTTP/1.0 404 Not Found');
+	qa_404();
 }
 
 if (isset($userid) && isset($tagword)) {

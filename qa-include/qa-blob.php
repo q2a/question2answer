@@ -26,7 +26,7 @@
 
 function qa_blob_db_fail_handler()
 {
-	header('HTTP/1.1 500 Internal Server Error');
+	qa_500();
 	qa_exit('error');
 }
 
@@ -89,7 +89,7 @@ if (isset($blob) && isset($blob['content'])) {
 	echo $blob['content'];
 
 } else {
-	header('HTTP/1.0 404 Not Found');
+	qa_404();
 }
 
 $qa_db->disconnect();

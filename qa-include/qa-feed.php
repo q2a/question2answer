@@ -42,7 +42,7 @@ require_once QA_INCLUDE_DIR . 'app/options.php';
  */
 function qa_feed_db_fail_handler($type, $errno = null, $error = null, $query = null)
 {
-	header('HTTP/1.1 500 Internal Server Error');
+	qa_500();
 	echo qa_lang_html('main/general_error');
 	qa_exit('error');
 }
@@ -53,7 +53,7 @@ function qa_feed_db_fail_handler($type, $errno = null, $error = null, $query = n
  */
 function qa_feed_not_found()
 {
-	header('HTTP/1.0 404 Not Found');
+	qa_404();
 	echo qa_lang_html('misc/feed_not_found');
 	qa_exit();
 }

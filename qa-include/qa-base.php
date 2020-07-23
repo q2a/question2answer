@@ -1313,6 +1313,41 @@ function convert_to_bytes($unit, $value)
 
 
 /**
+ * Issue a HTTP status code header.
+ * @param int $code
+ * @param string $message
+ * @return void
+ */
+function qa_http_error($code, $message)
+{
+	$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
+	$code = (int) $code;
+
+	header("$protocol $code $message");
+}
+
+
+/**
+ * Issue a HTTP 404 header.
+ * @return void
+ */
+function qa_404()
+{
+	qa_http_error('404', 'Not Found');
+}
+
+
+/**
+ * Issue a HTTP 500 header.
+ * @return void
+ */
+function qa_500()
+{
+	qa_http_error('500', 'Internal Server Error');
+}
+
+
+/**
  * Return true if we are responding to an HTTP GET request
  * @return bool True if the request is GET
  */

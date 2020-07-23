@@ -26,7 +26,7 @@
 
 function qa_image_db_fail_handler()
 {
-	header('HTTP/1.1 500 Internal Server Error');
+	qa_500();
 	qa_exit('error');
 }
 
