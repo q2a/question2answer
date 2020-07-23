@@ -108,7 +108,7 @@ function qa_opt_if_loaded($name)
 
 
 /**
- * Load all of the Q2A options from the database.
+ * Load all of the Q2A options from the database, plus the current time according to MySQL.
  * From Q2A 1.8 we always load the options in a separate query regardless of QA_OPTIMIZE_DISTANT_DB.
  */
 function qa_preload_options()
@@ -116,23 +116,12 @@ function qa_preload_options()
 	global $qa_options_loaded;
 
 	if (!@$qa_options_loaded) {
-		$selectspecs = array(
-			'options' => array(
-				'columns' => array('title', 'content'),
-				'source' => '^options',
-				'arraykey' => 'title',
-				'arrayvalue' => 'content',
-			),
-
-			'time' => array(
-				'columns' => array('title' => "'db_time'", 'content' => 'UNIX_TIMESTAMP(NOW())'),
-				'arraykey' => 'title',
-				'arrayvalue' => 'content',
-			),
-		);
-
-		// fetch options in a separate query before everything else
-		qa_load_options_results(qa_db_multi_select($selectspecs));
+		$sql =
+			"(SELECT title, content FROM ^options)" .
+			" UNION ALL " .
+			"(SELECT 'db_time' AS title, UNIX_TIMESTAMP(NOW()) AS content)";
+		$result = qa_service('database')->query($sql)->fetchAllAssoc('title', 'content');
+		qa_load_options_results([$result]);
 	}
 }
 
