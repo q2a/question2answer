@@ -286,6 +286,11 @@ require_once QA_INCLUDE_DIR . 'util/string.php';
 if ($feedtype != 'search' && $feedtype != 'hot') // leave search results and hot questions sorted by relevance
 	$questions = qa_any_sort_and_dedupe($questions);
 
+// If there are no questions, raise a 404 error but show the feed so users can still subscribe if wanted
+if (count($questions) === 0) {
+	qa_404();
+}
+
 $questions = array_slice($questions, 0, $count);
 $blockwordspreg = qa_get_block_words_preg();
 
