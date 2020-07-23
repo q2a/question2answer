@@ -169,18 +169,21 @@ function qa_db_user_get_handle_userids($handles)
  * @param mixed $userid
  * @param string|array $fields
  * @param string|null $value
+ * @throws \Q2A\Database\Exceptions\QueryException
  */
 function qa_db_user_set($userid, $fields, $value = null)
 {
 	if (!is_array($fields)) {
-		$fields = array(
-			$fields => $value,
-		);
+		$fields = [$fields => $value];
 	}
 
+	$columnRegex = '/^[A-Za-z0-9_]+$/'; // simple and secure way to ensure only valid fields are used
 	$sql = 'UPDATE ^users SET ';
 	foreach ($fields as $field => $fieldValue) {
-		$sql .= qa_db_escape_string($field) . ' = ?, ';
+		if (!preg_match($columnRegex, $field)) {
+			throw new \Q2A\Database\Exceptions\QueryException('Invalid field supplied to qa_db_user_set');
+		}
+		$sql .= "`$field` = ?, ";
 	}
 	$sql = substr($sql, 0, -2) . ' WHERE userid = ?';
 

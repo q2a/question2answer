@@ -760,7 +760,7 @@ function qa_db_default_userfields_sql()
 	$sql = 'INSERT INTO ^userfields (title, position, flags, permit) VALUES'; // content column will be NULL, meaning use default from lang files
 
 	foreach ($profileFields as $field) {
-		$sql .= sprintf('("%s", %d, %d, %d), ', qa_db_escape_string($field['title']), $field['position'], $field['flags'], $field['permit']);
+		$sql .= sprintf('("%s", %d, %d, %d), ', $field['title'], $field['position'], $field['flags'], $field['permit']);
 	}
 
 	$sql = substr($sql, 0, -2);
