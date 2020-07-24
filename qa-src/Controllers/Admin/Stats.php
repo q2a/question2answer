@@ -18,22 +18,23 @@
 
 namespace Q2A\Controllers\Admin;
 
-use Q2A\Auth\NoPermissionException;
+use Q2A\Controllers\BaseController;
+use Q2A\Database\DbConnection;
 use Q2A\Middleware\Auth\MinimumUserLevel;
 
 /**
  * Controller for admin page showing usage statistics and clean-up buttons
  */
-class Stats extends \Q2A\Controllers\BaseController
+class Stats extends BaseController
 {
-	public function __construct()
+	public function __construct(DbConnection $db)
 	{
 		require_once QA_INCLUDE_DIR . 'db/recalc.php';
 		require_once QA_INCLUDE_DIR . 'app/admin.php';
 		require_once QA_INCLUDE_DIR . 'db/admin.php';
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		parent::__construct();
+		parent::__construct($db);
 
 		$this->addMiddleware(new MinimumUserLevel(QA_USER_LEVEL_ADMIN));
 	}

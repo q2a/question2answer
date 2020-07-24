@@ -18,17 +18,19 @@
 
 namespace Q2A\Controllers\User;
 
+use Q2A\Controllers\BaseController;
+use Q2A\Database\DbConnection;
 use Q2A\Http\Exceptions\PageNotFoundException;
 use Q2A\Middleware\Auth\InternalUsersOnly;
 
-class UserMessages extends \Q2A\Controllers\BaseController
+class UserMessages extends BaseController
 {
-	public function __construct()
+	public function __construct(DbConnection $db)
 	{
 		require_once QA_INCLUDE_DIR . 'db/selects.php';
 		require_once QA_INCLUDE_DIR . 'app/messages.php';
 
-		parent::__construct();
+		parent::__construct($db);
 
 		$this->addMiddleware(new InternalUsersOnly());
 	}

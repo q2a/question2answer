@@ -18,17 +18,18 @@
 
 namespace Q2A\Controllers;
 
+use Q2A\Database\DbConnection;
 use Q2A\Middleware\BaseMiddleware;
 
 abstract class BaseController
 {
 	/** @var BaseMiddleware[string] */
-	private $middleware;
+	protected $middleware = [];
+	protected $db;
 
-	public function __construct()
+	public function __construct(DbConnection $db)
 	{
-		// TODO: constructor taking Database class parameter
-		$this->middleware = array();
+		$this->db = $db;
 	}
 
 	/**

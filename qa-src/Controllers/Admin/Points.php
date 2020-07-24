@@ -18,15 +18,16 @@
 
 namespace Q2A\Controllers\Admin;
 
-use Q2A\Auth\NoPermissionException;
+use Q2A\Database\DbConnection;
+use Q2A\Controllers\BaseController;
 use Q2A\Middleware\Auth\MinimumUserLevel;
 
 /**
  * Controller for admin page for settings about user points
  */
-class Points extends \Q2A\Controllers\BaseController
+class Points extends BaseController
 {
-	public function __construct()
+	public function __construct(DbConnection $db)
 	{
 		require_once QA_INCLUDE_DIR . 'db/recalc.php';
 		require_once QA_INCLUDE_DIR . 'db/points.php';
@@ -34,7 +35,7 @@ class Points extends \Q2A\Controllers\BaseController
 		require_once QA_INCLUDE_DIR . 'app/admin.php';
 		require_once QA_INCLUDE_DIR . 'util/sort.php';
 
-		parent::__construct();
+		parent::__construct($db);
 
 		$this->addMiddleware(new MinimumUserLevel(QA_USER_LEVEL_ADMIN));
 	}

@@ -19,19 +19,21 @@
 namespace Q2A\Controllers\User;
 
 use Q2A\Auth\NoPermissionException;
+use Q2A\Controllers\BaseController;
+use Q2A\Database\DbConnection;
 use Q2A\Middleware\Auth\InternalUsersOnly;
 use Q2A\Middleware\Auth\MinimumUserLevel;
 
-class UsersList extends \Q2A\Controllers\BaseController
+class UsersList extends BaseController
 {
-	public function __construct()
+	public function __construct(DbConnection $db)
 	{
 		require_once QA_INCLUDE_DIR . 'db/users.php';
 		require_once QA_INCLUDE_DIR . 'db/selects.php';
 		require_once QA_INCLUDE_DIR . 'app/users.php';
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		parent::__construct();
+		parent::__construct($db);
 
 		$this->addMiddleware(new InternalUsersOnly(), array('newest', 'special', 'blocked'));
 		$this->addMiddleware(new MinimumUserLevel(QA_USER_LEVEL_MODERATOR), array('blocked'));

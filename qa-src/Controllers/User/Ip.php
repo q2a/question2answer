@@ -19,18 +19,20 @@
 namespace Q2A\Controllers\User;
 
 use Q2A\Auth\NoPermissionException;
+use Q2A\Controllers\BaseController;
+use Q2A\Database\DbConnection;
 
 /**
  * Controller for page showing recent activity for an IP address
  */
-class Ip extends \Q2A\Controllers\BaseController
+class Ip extends BaseController
 {
-	public function __construct()
+	public function __construct(DbConnection $db)
 	{
 		require_once QA_INCLUDE_DIR . 'db/selects.php';
 		require_once QA_INCLUDE_DIR . 'app/format.php';
 
-		parent::__construct();
+		parent::__construct($db);
 	}
 
 	public function address($ip)

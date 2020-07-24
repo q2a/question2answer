@@ -187,7 +187,7 @@ function qa_get_request_content()
 		if ($route !== null) {
 			qa_set_template($route->getOption('template'));
 			$controllerClass = $route->getController();
-			$ctrl = new $controllerClass();
+			$ctrl = new $controllerClass(qa_service('database'));
 
 			$qa_content = $ctrl->executeAction($route->getAction(), $route->getParameters());
 		}
