@@ -254,26 +254,26 @@ function qa_ipv6_expand($ip)
 		$ipv6_wildcard = true;
 	}
 	if ($ipv6_wildcard) {
-		$wildcards = explode(":", $ip);
+		$wildcards = explode(':', $ip);
 		foreach ($wildcards as $index => $value) {
 			if ($value == "*") {
 				$wildcards_matched[] = count($wildcards) - 1 - $index;
 				$wildcards[$index] = "0";
 			}
 		}
-		$ip = implode($wildcards, ":");
+		$ip = implode(':', $wildcards);
 	}
 
 	$hex = unpack("H*hex", @inet_pton($ip));
 	$ip = substr(preg_replace("/([0-9A-Fa-f]{4})/", "$1:", $hex['hex']), 0, -1);
 
 	if ($ipv6_wildcard) {
-		$wildcards = explode(":", $ip);
+		$wildcards = explode(':', $ip);
 		foreach ($wildcards_matched as $value) {
 			$i = count($wildcards) - 1 - $value;
 			$wildcards[$i] = "*";
 		}
-		$ip = implode($wildcards, ":");
+		$ip = implode(':', $wildcards);
 	}
 
 	return $ip;
