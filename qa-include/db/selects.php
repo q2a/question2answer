@@ -31,45 +31,15 @@ require_once QA_INCLUDE_DIR.'db/maxima.php';
  * Return the results of all the SELECT operations specified by the supplied selectspec parameters, while also
  * performing all pending selects that have not yet been executed. If only one parameter is supplied, return its
  * result, otherwise return an array of results indexed as per the parameters.
+ * @deprecated 1.9.0 Use DbSelect->selectWithPending() instead.
  * @return mixed
  */
 function qa_db_select_with_pending() // any number of parameters read via func_get_args()
 {
-	require_once QA_INCLUDE_DIR . 'app/options.php';
-
-	global $qa_db_pending_selectspecs, $qa_db_pending_results;
-
 	$selectspecs = func_get_args();
-	$singleresult = (count($selectspecs) == 1);
-	$outresults = array();
+	$dbSelect = new \Q2A\Database\DbSelect(qa_service('database'));
 
-	foreach ($selectspecs as $key => $selectspec) { // can pass null parameters
-		if (empty($selectspec)) {
-			unset($selectspecs[$key]);
-			$outresults[$key] = null;
-		}
-	}
-
-	if (is_array($qa_db_pending_selectspecs)) {
-		foreach ($qa_db_pending_selectspecs as $pendingid => $selectspec) {
-			if (!isset($qa_db_pending_results[$pendingid])) {
-				$selectspecs['pending_' . $pendingid] = $selectspec;
-			}
-		}
-	}
-
-	$outresults = $outresults + qa_db_multi_select($selectspecs);
-
-	if (is_array($qa_db_pending_selectspecs)) {
-		foreach ($qa_db_pending_selectspecs as $pendingid => $selectspec) {
-			if (!isset($qa_db_pending_results[$pendingid])) {
-				$qa_db_pending_results[$pendingid] = $outresults['pending_' . $pendingid];
-				unset($outresults['pending_' . $pendingid]);
-			}
-		}
-	}
-
-	return $singleresult ? $outresults[0] : $outresults;
+	return qa_call([$dbSelect, 'selectWithPending'], $selectspecs);
 }
 
 

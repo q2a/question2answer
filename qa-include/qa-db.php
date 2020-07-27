@@ -429,26 +429,30 @@ function qa_db_list_tables($onlyTablesWithPrefix = false)
 
 /**
  * Return the data specified by a single $selectspec - see long comment above.
- * @deprecated 1.9.0 Use DbConnection->singleSelect() instead.
+ * @deprecated 1.9.0 Use DbSelect->singleSelect() instead.
  * @param array $selectspec
  * @return mixed
  */
 function qa_db_single_select($selectspec)
 {
-	return qa_service('database')->singleSelect($selectspec);
+	$dbSelect = new \Q2A\Database\DbSelect(qa_service('database'));
+
+	return $dbSelect->singleSelect($selectspec);
 }
 
 
 /**
  * Return the data specified by each element of $selectspecs, where the keys of the
  * returned array match the keys of the supplied $selectspecs array. See long comment above.
- * @deprecated 1.9.0 Use DbConnection->multiSelect() instead.
+ * @deprecated 1.9.0 Use DbSelect->multiSelect() instead.
  * @param array $selectspecs
  * @return array
  */
 function qa_db_multi_select($selectspecs)
 {
-	return qa_service('database')->multiSelect($selectspecs);
+	$dbSelect = new \Q2A\Database\DbSelect(qa_service('database'));
+
+	return $dbSelect->multiSelect($selectspecs);
 }
 
 
