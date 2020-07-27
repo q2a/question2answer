@@ -93,7 +93,7 @@ function qa_question_set_content($oldquestion, $title, $content, $format, $text,
 				qa_post_unindex($comment['postid']);
 		}
 
-		if (@$closepost['parentid'] == $oldquestion['postid'])
+		if (isset($closepost) && $closepost['parentid'] == $oldquestion['postid'])
 			qa_post_unindex($closepost['postid']);
 
 		qa_db_post_set_type($oldquestion['postid'], 'Q_QUEUED');
@@ -348,7 +348,7 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 			qa_post_unindex($comment['postid']);
 	}
 
-	if (@$closepost['parentid'] == $oldquestion['postid'])
+	if (isset($closepost) && $closepost['parentid'] == $oldquestion['postid'])
 		qa_post_unindex($closepost['postid']);
 
 	$setupdated = false;
@@ -426,7 +426,7 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 			}
 		}
 
-		if ($closepost['parentid'] == $oldquestion['postid']) {
+		if (isset($closepost) && $closepost['parentid'] == $oldquestion['postid']) {
 			qa_post_index($closepost['postid'], $closepost['type'], $oldquestion['postid'], $closepost['parentid'], null,
 				$closepost['content'], $closepost['format'], qa_viewer_text($closepost['content'], $closepost['format']), null, $closepost['categoryid']);
 		}
@@ -505,7 +505,7 @@ function qa_question_set_category($oldquestion, $categoryid, $userid, $handle, $
 			$otherpostids[] = $comment['postid'];
 	}
 
-	if (@$closepost['parentid'] == $oldquestion['postid'])
+	if (isset($closepost) && $closepost['parentid'] == $oldquestion['postid'])
 		$otherpostids[] = $closepost['postid'];
 
 	qa_db_posts_set_category_path($otherpostids, $newpath);
