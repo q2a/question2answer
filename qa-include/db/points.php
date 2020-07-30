@@ -188,6 +188,7 @@ function qa_db_points_update_ifuser($userid, $columns)
 
 		$insertfields = 'userid, ';
 		$insertvalues = '?, ';
+		$insertparams = [$userid];
 		$insertpoints = (int)qa_opt('points_base');
 
 		$updates = '';
@@ -199,6 +200,7 @@ function qa_db_points_update_ifuser($userid, $columns)
 			if (isset($keycolumns[$field])) {
 				$insertfields .= $field . ', ';
 				$insertvalues .= '@_' . $field . ':=(SELECT ' . $calculation['formula'] . '), ';
+				$insertparams[] = $userid;
 				$updates .= $field . '=@_' . $field . ', ';
 				$insertpoints .= '+(' . (int)$multiple . '*@_' . $field . ')';
 			}
@@ -209,7 +211,7 @@ function qa_db_points_update_ifuser($userid, $columns)
 		$query = 'INSERT INTO ^userpoints (' . $insertfields . 'points) VALUES (' . $insertvalues . $insertpoints . ') ' .
 			'ON DUPLICATE KEY UPDATE ' . $updates . 'points=' . $updatepoints . '+bonus';
 
-		$result = $db->query($query, array($userid, $userid));
+		$result = $db->query($query, $insertparams);
 
 		if ($result->affectedRows() > 0) {
 			qa_db_userpointscount_update();
