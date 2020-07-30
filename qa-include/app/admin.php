@@ -706,6 +706,7 @@ function qa_admin_single_click_array($entityid, $action)
 			case 'approve':
 			case 'reject':
 				$entityCount = (int)qa_opt('cache_queuedcount');
+				$hiddenCount = (int)qa_opt('cache_hiddencount');
 				if (!$queued) {
 					$response['result'] = 'error';
 					$response['error']['type'] = 'post-not-queued';
@@ -726,16 +727,22 @@ function qa_admin_single_click_array($entityid, $action)
 					$response['error']['message'] = qa_lang_html('users/no_permission');
 					$response['error']['severity'] = 'fatal';
 				} else {
-					$postStatus = $action === 'approve'
-						? QA_POST_STATUS_NORMAL
-						: QA_POST_STATUS_HIDDEN; // 'reject'
-					qa_post_set_status($entityid, $postStatus, $userid);
+					if ($action === 'approve') {
+						qa_post_set_status($entityid, QA_POST_STATUS_NORMAL, $userid);
+					} else { // 'reject'
+						qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
+						$hiddenCount++;
+					}
 
 					$response['result'] = 'success';
 					$response['domUpdates'] = array(
 						array(
 							'selector' => '.qa-nav-sub-counter-moderate',
 							'html' => max($entityCount - 1, 0),
+						),
+						array(
+							'selector' => '.qa-nav-sub-counter-hidden',
+							'html' => $hiddenCount,
 						),
 						array(
 							'selector' => '#p' . $entityid,
@@ -791,6 +798,7 @@ function qa_admin_single_click_array($entityid, $action)
 			case 'hide':
 			case 'clearflags':
 				$entityCount = (int)qa_opt('cache_flaggedcount');
+				$hiddenCount = (int)qa_opt('cache_hiddencount');
 				if ($action === 'hide' && $queued) {
 					$response['result'] = 'error';
 					$response['error']['type'] = 'post-queued';
@@ -813,9 +821,9 @@ function qa_admin_single_click_array($entityid, $action)
 				} else {
 					if ($action === 'hide') {
 						qa_post_set_status($entityid, QA_POST_STATUS_HIDDEN, $userid);
+						$hiddenCount++;
 					} else { // 'clearflags'
 						require_once QA_INCLUDE_DIR . 'app/votes.php';
-
 						qa_flags_clear_all($post, $userid, qa_get_logged_in_handle(), null);
 					}
 
@@ -824,6 +832,10 @@ function qa_admin_single_click_array($entityid, $action)
 						array(
 							'selector' => '.qa-nav-sub-counter-flagged',
 							'html' => max($entityCount - 1, 0),
+						),
+						array(
+							'selector' => '.qa-nav-sub-counter-hidden',
+							'html' => $hiddenCount,
 						),
 						array(
 							'selector' => '#p' . $entityid,
