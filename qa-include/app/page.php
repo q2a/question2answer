@@ -24,6 +24,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
+require_once QA_INCLUDE_DIR . 'app/routing.php';
 require_once QA_INCLUDE_DIR . 'app/cookies.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
 require_once QA_INCLUDE_DIR . 'app/users.php';
@@ -177,14 +178,16 @@ function qa_get_request_content()
 	$requestlower = strtolower(qa_request());
 	$requestparts = qa_request_parts();
 	$firstlower = strtolower($requestparts[0]);
-	$routing = qa_page_routing();
-
-	qa_controller_routing();
 	$qa_content = [];
+	// old router
+	$routing = qa_page_routing();
+	// new router
+	$router = qa_service('router');
+	qa_controller_routing($router);
 
 	try {
 		// use new Controller system
-		$route = qa_service('router')->match($requestlower);
+		$route = $router->match($requestlower);
 		if ($route !== null) {
 			qa_set_template($route->getOption('template'));
 			$controllerClass = $route->getController();
@@ -405,86 +408,6 @@ function qa_do_content_stats($qa_content)
 
 
 // Other functions which might be called from anywhere
-
-/**
- * Return an array of the default Q2A requests and which /qa-include/pages/*.php file implements them
- * If the key of an element ends in /, it should be used for any request with that key as its prefix
- */
-function qa_page_routing()
-{
-	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-	return array(
-		'account' => 'pages/account.php',
-		'activity/' => 'pages/activity.php',
-		'admin/' => 'pages/admin/admin-default.php',
-		'admin/approve' => 'pages/admin/admin-approve.php',
-		'admin/categories' => 'pages/admin/admin-categories.php',
-		'admin/flagged' => 'pages/admin/admin-flagged.php',
-		'admin/hidden' => 'pages/admin/admin-hidden.php',
-		'admin/layoutwidgets' => 'pages/admin/admin-widgets.php',
-		'admin/moderate' => 'pages/admin/admin-moderate.php',
-		'admin/pages' => 'pages/admin/admin-pages.php',
-		'admin/plugins' => 'pages/admin/admin-plugins.php',
-		'admin/recalc' => 'pages/admin/admin-recalc.php',
-		'admin/userfields' => 'pages/admin/admin-userfields.php',
-		'admin/usertitles' => 'pages/admin/admin-usertitles.php',
-		'answers/' => 'pages/answers.php',
-		'ask' => 'pages/ask.php',
-		'categories/' => 'pages/categories.php',
-		'comments/' => 'pages/comments.php',
-		'confirm' => 'pages/confirm.php',
-		'favorites' => 'pages/favorites.php',
-		'favorites/questions' => 'pages/favorites-list.php',
-		'favorites/users' => 'pages/favorites-list.php',
-		'favorites/tags' => 'pages/favorites-list.php',
-		'feedback' => 'pages/feedback.php',
-		'forgot' => 'pages/forgot.php',
-		'hot/' => 'pages/hot.php',
-		'login' => 'pages/login.php',
-		'logout' => 'pages/logout.php',
-		'messages/' => 'pages/messages.php',
-		'message/' => 'pages/message.php',
-		'questions/' => 'pages/questions.php',
-		'register' => 'pages/register.php',
-		'reset' => 'pages/reset.php',
-		'search' => 'pages/search.php',
-		'tag/' => 'pages/tag.php',
-		'tags' => 'pages/tags.php',
-		'unanswered/' => 'pages/unanswered.php',
-		'unsubscribe' => 'pages/unsubscribe.php',
-		'updates' => 'pages/updates.php',
-	);
-}
-
-
-/**
- * Set up routing.
- */
-function qa_controller_routing()
-{
-	$router = qa_service('router');
-	$router->addRoute('GET', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile', ['template' => 'user']);
-	$router->addRoute('POST', 'user/{str}', '\Q2A\Controllers\User\UserProfile', 'profile', ['template' => 'user']);
-	$router->addRoute('GET', 'user', '\Q2A\Controllers\User\UserProfile', 'index');
-	$router->addRoute('GET', 'user/{str}/wall', '\Q2A\Controllers\User\UserMessages', 'wall', ['template' => 'user-wall']);
-	$router->addRoute('GET', 'user/{str}/activity', '\Q2A\Controllers\User\UserPosts', 'activity', ['template' => 'user-activity']);
-	$router->addRoute('GET', 'user/{str}/questions', '\Q2A\Controllers\User\UserPosts', 'questions', ['template' => 'user-questions']);
-	$router->addRoute('GET', 'user/{str}/answers', '\Q2A\Controllers\User\UserPosts', 'answers', ['template' => 'user-answers']);
-
-	$router->addRoute('GET', 'users', '\Q2A\Controllers\User\UsersList', 'top', ['template' => 'users']);
-	$router->addRoute('GET', 'users/blocked', '\Q2A\Controllers\User\UsersList', 'blocked', ['template' => 'users']);
-	$router->addRoute('GET', 'users/new', '\Q2A\Controllers\User\UsersList', 'newest', ['template' => 'users']);
-	$router->addRoute('GET', 'users/special', '\Q2A\Controllers\User\UsersList', 'special', ['template' => 'users']);
-
-	$router->addRoute('GET', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address', ['template' => 'ip']);
-	$router->addRoute('POST', 'ip/{str}', '\Q2A\Controllers\User\Ip', 'address', ['template' => 'ip']);
-
-	$router->addRoute('GET', 'admin/stats', '\Q2A\Controllers\Admin\Stats', 'index', ['template' => 'admin']);
-	$router->addRoute('GET', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index', ['template' => 'admin']);
-	$router->addRoute('POST', 'admin/points', '\Q2A\Controllers\Admin\Points', 'index', ['template' => 'admin']);
-}
-
 
 /**
  * Sets the template which should be passed to the theme class, telling it which type of page it's displaying
