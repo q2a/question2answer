@@ -397,7 +397,7 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 	if ($wasqueued || ($status == QA_POST_STATUS_QUEUED))
 		qa_db_queuedcount_update();
 
-	if ($event === 'q_hide' || $event === 'q_reshow') {
+	if ($event !== 'q_approve') { // all other events change visibility
 		qa_db_hiddencount_update();
 	}
 
