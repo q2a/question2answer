@@ -46,9 +46,31 @@ function qa_controller_routing(Router $router)
 	$router->addRoute('GET', 'ip/{str}', "$ns\User\Ip", 'address', ['template' => 'ip']);
 	$router->addRoute('POST', 'ip/{str}', "$ns\User\Ip", 'address', ['template' => 'ip']);
 
-	$router->addRoute('GET', 'admin/stats', "$ns\Admin\Stats", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/userfields', "$ns\Admin\UserFields", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/userfields', "$ns\Admin\UserFields", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/usertitles', "$ns\Admin\UserTitles", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/usertitles', "$ns\Admin\UserTitles", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/layoutwidgets', "$ns\Admin\Widgets", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/layoutwidgets', "$ns\Admin\Widgets", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/categories', "$ns\Admin\Categories", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/categories', "$ns\Admin\Categories", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/pages', "$ns\Admin\Pages", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/pages', "$ns\Admin\Pages", 'index', ['template' => 'admin']);
+
 	$router->addRoute('GET', 'admin/points', "$ns\Admin\Points", 'index', ['template' => 'admin']);
 	$router->addRoute('POST', 'admin/points', "$ns\Admin\Points", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/stats', "$ns\Admin\Stats", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/plugins', "$ns\Admin\Plugins", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/plugins', "$ns\Admin\Plugins", 'index', ['template' => 'admin']);
+
+	$router->addRoute('GET', 'admin/moderate', "$ns\Admin\Moderate", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/moderate', "$ns\Admin\Moderate", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/flagged', "$ns\Admin\Flagged", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/flagged', "$ns\Admin\Flagged", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/hidden', "$ns\Admin\Hidden", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/hidden', "$ns\Admin\Hidden", 'index', ['template' => 'admin']);
+	$router->addRoute('GET', 'admin/approve', "$ns\Admin\Approve", 'index', ['template' => 'admin']);
+	$router->addRoute('POST', 'admin/approve', "$ns\Admin\Approve", 'index', ['template' => 'admin']);
 }
 
 /**
@@ -63,17 +85,7 @@ function qa_page_routing()
 		'account' => 'pages/account.php',
 		'activity/' => 'pages/activity.php',
 		'admin/' => 'pages/admin/admin-default.php',
-		'admin/approve' => 'pages/admin/admin-approve.php',
-		'admin/categories' => 'pages/admin/admin-categories.php',
-		'admin/flagged' => 'pages/admin/admin-flagged.php',
-		'admin/hidden' => 'pages/admin/admin-hidden.php',
-		'admin/layoutwidgets' => 'pages/admin/admin-widgets.php',
-		'admin/moderate' => 'pages/admin/admin-moderate.php',
-		'admin/pages' => 'pages/admin/admin-pages.php',
-		'admin/plugins' => 'pages/admin/admin-plugins.php',
 		'admin/recalc' => 'pages/admin/admin-recalc.php',
-		'admin/userfields' => 'pages/admin/admin-userfields.php',
-		'admin/usertitles' => 'pages/admin/admin-usertitles.php',
 		'answers/' => 'pages/answers.php',
 		'ask' => 'pages/ask.php',
 		'categories/' => 'pages/categories.php',
