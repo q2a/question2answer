@@ -1899,7 +1899,7 @@ function qa_app()
 
 
 /**
- * Helper function to access services in the Container.
+ * Helper function to get/set services.
  * If the $key parameter is set and the $object parameter is null the container is called to resolve the $key.
  * If the $key and the $object parameters are null the container is called to bind the $object to the $key.
  * @param mixed $key Identifier for the object to get/set.
@@ -1911,10 +1911,10 @@ function qa_service($key, $object = null)
 	$app = Application::getInstance();
 
 	if ($object === null) {
-		return $app->getContainer()->get($key);
+		return $app->getService($key);
 	}
 
-	$app->getContainer()->set($key, $object);
+	$app->registerService($key, $object);
 }
 
 

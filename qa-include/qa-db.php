@@ -435,7 +435,7 @@ function qa_db_list_tables($onlyTablesWithPrefix = false)
  */
 function qa_db_single_select($selectspec)
 {
-	$dbSelect = new \Q2A\Database\DbSelect(qa_service('database'));
+	$dbSelect = qa_service('dbselect');
 
 	return $dbSelect->singleSelect($selectspec);
 }
@@ -450,7 +450,7 @@ function qa_db_single_select($selectspec)
  */
 function qa_db_multi_select($selectspecs)
 {
-	$dbSelect = new \Q2A\Database\DbSelect(qa_service('database'));
+	$dbSelect = qa_service('dbselect');
 
 	return $dbSelect->multiSelect($selectspecs);
 }

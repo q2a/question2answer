@@ -19,6 +19,7 @@
 namespace Q2A\Database;
 
 use Q2A\Storage\CacheFactory;
+use Q2A\Util\Set;
 
 /*
 	The selectspec array can contain the elements below. See db/selects.php for lots of examples.
@@ -67,7 +68,14 @@ use Q2A\Storage\CacheFactory;
 
 class DbSelect
 {
+	/** @var DbConnection */
 	protected $db;
+
+	/** @var array */
+	protected $pendingSelects = [];
+
+	/** @var array */
+	protected $pendingResults = [];
 
 	public function __construct(DbConnection $db)
 	{
@@ -254,8 +262,6 @@ class DbSelect
 	{
 		require_once QA_INCLUDE_DIR . 'app/options.php';
 
-		global $qa_db_pending_selectspecs, $qa_db_pending_results;
-
 		$selectspecs = func_get_args();
 		$singleresult = (count($selectspecs) == 1);
 		$outresults = array();
@@ -267,27 +273,81 @@ class DbSelect
 			}
 		}
 
-		if (is_array($qa_db_pending_selectspecs)) {
-			foreach ($qa_db_pending_selectspecs as $pendingid => $selectspec) {
-				if (!isset($qa_db_pending_results[$pendingid])) {
-					$selectspecs['pending_' . $pendingid] = $selectspec;
-				}
+		foreach ($this->pendingSelects as $pendingid => $selectspec) {
+			if (!isset($this->pendingResults[$pendingid])) {
+				$selectspecs['pending_' . $pendingid] = $selectspec;
 			}
 		}
 
 		$outresults = $outresults + $this->multiSelect($selectspecs);
 
-		if (is_array($qa_db_pending_selectspecs)) {
-			foreach ($qa_db_pending_selectspecs as $pendingid => $selectspec) {
-				if (!isset($qa_db_pending_results[$pendingid])) {
-					$qa_db_pending_results[$pendingid] = $outresults['pending_' . $pendingid];
-					unset($outresults['pending_' . $pendingid]);
-				}
+		foreach ($this->pendingSelects as $pendingid => $selectspec) {
+			if (!isset($this->pendingResults[$pendingid])) {
+				$this->pendingResults[$pendingid] = $outresults['pending_' . $pendingid];
+				unset($outresults['pending_' . $pendingid]);
 			}
 		}
 
 		return $singleresult ? $outresults[0] : $outresults;
 	}
+
+	/**
+	 * Queue a $selectspec for running later, with $pendingid (used for retrieval)
+	 * @param string $pendingid
+	 * @param array $selectspec
+	 */
+	public function queuePending($pendingid, $selectspec)
+	{
+		$this->pendingSelects[$pendingid] = $selectspec;
+	}
+
+	/**
+	 * Get the result of the queued SELECT query identified by $pendingid. Run the query if it hasn't run already. If
+	 * $selectspec is supplied, it doesn't matter if this hasn't been queued before - it will be queued and run now.
+	 * @param string $pendingid
+	 * @param array|null $selectspec
+	 * @return mixed
+	 */
+	public function getPendingResult($pendingid, $selectspec = null)
+	{
+		if (isset($selectspec)) {
+			$this->queuePending($pendingid, $selectspec);
+		} elseif (!isset($this->pendingSelects[$pendingid])) {
+			qa_fatal_error('Pending query was never set up: ' . $pendingid);
+		}
+
+		if (!isset($this->pendingResults[$pendingid])) {
+			$this->selectWithPending();
+		}
+
+		return $this->pendingResults[$pendingid];
+	}
+
+	/**
+	 * Remove the results of queued SELECT query identified by $pendingid if it has already been run. This means it will
+	 * run again if its results are requested via qa_db_get_pending_result()
+	 * @param string $pendingid
+	 */
+	public function flushPendingResult($pendingid)
+	{
+		unset($this->pendingResults[$pendingid]);
+	}
+
+	/**
+	 * Modify a selectspec to count the number of items. This assumes the original selectspec does not have a LIMIT clause.
+	 * Currently works with message inbox/outbox functions and user-flags function.
+	 * @param array $selectspec
+	 * @return array
+	 */
+	public function selectspecWithCount($selectspec)
+	{
+		$selectspec['columns'] = array('count' => 'COUNT(*)');
+		$selectspec['single'] = true;
+		unset($selectspec['arraykey']);
+
+		return $selectspec;
+	}
+
 
 	/**
 	 * Post-process $outresult according to $selectspec, applying 'sortasc', 'sortdesc', 'arrayvalue' and 'single'.

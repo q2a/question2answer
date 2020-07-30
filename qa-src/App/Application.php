@@ -18,20 +18,27 @@
 
 namespace Q2A\App;
 
-use Q2A\Http\Router;
 use Q2A\Database\DbConnection;
+use Q2A\Database\DbSelect;
+use Q2A\Exceptions\FatalErrorException;
+use Q2A\Http\Router;
+use Q2A\Util\Set;
 
 class Application
 {
-	/** @var Container */
-	private $container;
+	/** @var Set */
+	protected $services;
+
+	/** @var Set */
+	protected $dataStore;
 
 	/** @var static */
 	protected static $instance;
 
 	protected function __construct()
 	{
-		$this->container = new Container();
+		$this->services = new Set();
+		$this->dataStore = new Set();
 		$this->registerCoreServices();
 	}
 
@@ -49,20 +56,56 @@ class Application
 	}
 
 	/**
+	 * Return the specified service.
+	 * @throws FatalErrorException
+	 * @param string $key The key to look for
+	 * @return mixed
+	 */
+	public function getService($key)
+	{
+		$obj = $this->services->get($key);
+		if ($obj === null) {
+			throw new FatalErrorException(sprintf('Key "%s" not found in container', $key));
+		}
+
+		return $obj;
+	}
+
+	/**
+	 * Adds a new service to the container.
+	 * @param string $key The key to look for
+	 * @param mixed $value The object to add
+	 * @return void
+	 */
+	public function registerService($key, $value)
+	{
+		$this->services->set($key, $value);
+	}
+
+	/**
+	 * Retrieve data from the global storage.
+	 */
+	public function getData($key)
+	{
+		return $this->dataStore->get($key);
+	}
+
+	/**
+	 * Store some data in the global storage.
+	 */
+	public function setData($key, $value)
+	{
+		return $this->dataStore->set($key, $value);
+	}
+
+	/**
 	 * Register the services used by the core.
 	 */
 	private function registerCoreServices()
 	{
-		$this->container->set('router', new Router());
-		$this->container->set('database', new DbConnection());
-	}
-
-	/**
-	 * Return the container instance.
-	 * @return Container
-	 */
-	public function getContainer()
-	{
-		return $this->container;
+		$db = new DbConnection();
+		$this->services->set('router', new Router());
+		$this->services->set('database', $db);
+		$this->services->set('dbselect', new DbSelect($db));
 	}
 }

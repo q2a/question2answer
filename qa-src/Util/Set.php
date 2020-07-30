@@ -16,14 +16,15 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-namespace Q2A\App;
+namespace Q2A\Util;
 
-use Q2A\Exceptions\FatalErrorException;
-
-class Container
+/**
+ * Simple object store.
+ */
+class Set
 {
 	/** @var array */
-	protected $services = array();
+	protected $items = [];
 
 	/**
 	 * Bind an object to a key.
@@ -32,21 +33,20 @@ class Container
 	 */
 	public function set($key, $object)
 	{
-		$this->services[$key] = $object;
+		$this->items[$key] = $object;
 	}
 
 	/**
-	 * Return an object assigned to the given key. If the key is not found an exception is thrown.
-	 * @throws FatalErrorException
+	 * Return an object assigned to the given key, otherwise null.
 	 * @param string $key The key to look for
 	 * @return mixed
 	 */
 	public function get($key)
 	{
-		if (isset($this->services[$key])) {
-			return $this->services[$key];
+		if (isset($this->items[$key])) {
+			return $this->items[$key];
 		}
 
-		throw new FatalErrorException(sprintf('Key "%s" not found in container', $key));
+		return null;
 	}
 }

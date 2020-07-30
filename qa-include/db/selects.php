@@ -37,7 +37,7 @@ require_once QA_INCLUDE_DIR.'db/maxima.php';
 function qa_db_select_with_pending() // any number of parameters read via func_get_args()
 {
 	$selectspecs = func_get_args();
-	$dbSelect = new \Q2A\Database\DbSelect(qa_service('database'));
+	$dbSelect = qa_service('dbselect');
 
 	return qa_call([$dbSelect, 'selectWithPending'], $selectspecs);
 }
@@ -45,67 +45,52 @@ function qa_db_select_with_pending() // any number of parameters read via func_g
 
 /**
  * Queue a $selectspec for running later, with $pendingid (used for retrieval)
+ * @deprecated 1.9.0 Use DbSelect->queuePending() instead.
  * @param string $pendingid
  * @param array $selectspec
  */
 function qa_db_queue_pending_select($pendingid, $selectspec)
 {
-	global $qa_db_pending_selectspecs;
-
-	$qa_db_pending_selectspecs[$pendingid] = $selectspec;
+	qa_service('dbselect')->queuePending($pendingid, $selectspec);
 }
 
 
 /**
  * Get the result of the queued SELECT query identified by $pendingid. Run the query if it hasn't run already. If
  * $selectspec is supplied, it doesn't matter if this hasn't been queued before - it will be queued and run now.
+ * @deprecated 1.9.0 Use DbSelect->getPendingResult() instead.
  * @param string $pendingid
  * @param array|null $selectspec
  * @return mixed
  */
 function qa_db_get_pending_result($pendingid, $selectspec = null)
 {
-	global $qa_db_pending_selectspecs, $qa_db_pending_results;
-
-	if (isset($selectspec)) {
-		qa_db_queue_pending_select($pendingid, $selectspec);
-	} elseif (!isset($qa_db_pending_selectspecs[$pendingid])) {
-		qa_fatal_error('Pending query was never set up: ' . $pendingid);
-	}
-
-	if (!isset($qa_db_pending_results[$pendingid])) {
-		qa_db_select_with_pending();
-	}
-
-	return $qa_db_pending_results[$pendingid];
+	return qa_service('dbselect')->getPendingResult($pendingid, $selectspec);
 }
 
 
 /**
  * Remove the results of queued SELECT query identified by $pendingid if it has already been run. This means it will
  * run again if its results are requested via qa_db_get_pending_result()
+ * @deprecated 1.9.0 Use DbSelect->flushPendingResult() instead.
  * @param string $pendingid
  */
 function qa_db_flush_pending_result($pendingid)
 {
-	global $qa_db_pending_results;
-	unset($qa_db_pending_results[$pendingid]);
+	qa_service('dbselect')->flushPendingResult($pendingid);
 }
 
 
 /**
  * Modify a selectspec to count the number of items. This assumes the original selectspec does not have a LIMIT clause.
  * Currently works with message inbox/outbox functions and user-flags function.
+ * @deprecated 1.9.0 Use DbSelect->selectspecWithCount() instead.
  * @param array $selectspec
  * @return array
  */
 function qa_db_selectspec_count($selectspec)
 {
-	$selectspec['columns'] = array('count' => 'COUNT(*)');
-	$selectspec['single'] = true;
-	unset($selectspec['arraykey']);
-
-	return $selectspec;
+	return qa_service('dbselect')->selectspecWithCount($selectspec);
 }
 
 
