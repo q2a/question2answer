@@ -58,9 +58,10 @@ function qa_get_options($names)
 	if (!$qa_options_loaded) {
 		require_once QA_INCLUDE_DIR . 'db/selects.php';
 
+		$dbSelect = qa_service('dbselect');
 		qa_load_options_results(array(
-			qa_db_get_pending_result('options'),
-			qa_db_get_pending_result('time'),
+			$dbSelect->getPendingResult('options'),
+			$dbSelect->getPendingResult('time'),
 		));
 	}
 

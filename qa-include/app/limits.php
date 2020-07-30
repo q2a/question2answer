@@ -44,8 +44,9 @@ define('QA_LIMIT_WALL_POSTS', 'W');
  */
 function qa_user_limits_remaining($action)
 {
-	$userlimits = qa_db_get_pending_result('userlimits', qa_db_user_limits_selectspec(qa_get_logged_in_userid()));
-	$iplimits = qa_db_get_pending_result('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
+	$dbSelect = qa_service('dbselect');
+	$userlimits = $dbSelect->getPendingResult('userlimits', qa_db_user_limits_selectspec(qa_get_logged_in_userid()));
+	$iplimits = $dbSelect->getPendingResult('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
 
 	return qa_limits_calc_remaining($action, @$userlimits[$action], @$iplimits[$action]);
 }

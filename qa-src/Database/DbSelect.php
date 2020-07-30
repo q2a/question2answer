@@ -19,7 +19,6 @@
 namespace Q2A\Database;
 
 use Q2A\Storage\CacheFactory;
-use Q2A\Util\Set;
 
 /*
 	The selectspec array can contain the elements below. See db/selects.php for lots of examples.
@@ -41,7 +40,7 @@ use Q2A\Util\Set;
 
 	'source' => Any SQL after FROM, including table names, JOINs, GROUP BY, ORDER BY, WHERE, etc... (required)
 
-	'arguments' => Substitutions in order for $s and #s in the query, applied in qa_db_apply_sub() above (required)
+	'arguments' => Substitutions in order for ?s in the query, applied in DbConnection->query()
 
 	'arraykey' => Name of column to use for keys of the outer-level returned array, instead of numbers by default
 
@@ -325,7 +324,7 @@ class DbSelect
 
 	/**
 	 * Remove the results of queued SELECT query identified by $pendingid if it has already been run. This means it will
-	 * run again if its results are requested via qa_db_get_pending_result()
+	 * run again if its results are requested via getPendingResult()
 	 * @param string $pendingid
 	 */
 	public function flushPendingResult($pendingid)

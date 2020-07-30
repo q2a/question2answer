@@ -456,7 +456,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 			if (isset($userid)) {
 				require_once QA_INCLUDE_DIR . 'db/selects.php';
-				$qa_cached_logged_in_user = qa_db_get_pending_result('loggedinuser', qa_db_user_account_selectspec($userid, true));
+				$qa_cached_logged_in_user = qa_service('dbselect')->getPendingResult('loggedinuser', qa_db_user_account_selectspec($userid, true));
 
 				// If the site is configured to share the ^users table then there might not be a record in the
 				// ^userpoints table so this creates it
@@ -813,7 +813,7 @@ function qa_get_logged_in_levels()
 {
 	require_once QA_INCLUDE_DIR . 'db/selects.php';
 
-	return qa_db_get_pending_result('userlevels', qa_db_user_levels_selectspec(qa_get_logged_in_userid(), true));
+	return qa_service('dbselect')->getPendingResult('userlevels', qa_db_user_levels_selectspec(qa_get_logged_in_userid(), true));
 }
 
 

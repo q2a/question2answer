@@ -40,20 +40,21 @@ function qa_page_queue_pending()
 
 	qa_preload_options();
 	$loginuserid = qa_get_logged_in_userid();
+	$dbSelect = qa_service('dbselect');
 
 	if (isset($loginuserid)) {
 		if (!QA_FINAL_EXTERNAL_USERS)
-			qa_db_queue_pending_select('loggedinuser', qa_db_user_account_selectspec($loginuserid, true));
+			$dbSelect->queuePending('loggedinuser', qa_db_user_account_selectspec($loginuserid, true));
 
-		qa_db_queue_pending_select('notices', qa_db_user_notices_selectspec($loginuserid));
-		qa_db_queue_pending_select('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));
-		qa_db_queue_pending_select('userlimits', qa_db_user_limits_selectspec($loginuserid));
-		qa_db_queue_pending_select('userlevels', qa_db_user_levels_selectspec($loginuserid, true));
+		$dbSelect->queuePending('notices', qa_db_user_notices_selectspec($loginuserid));
+		$dbSelect->queuePending('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));
+		$dbSelect->queuePending('userlimits', qa_db_user_limits_selectspec($loginuserid));
+		$dbSelect->queuePending('userlevels', qa_db_user_levels_selectspec($loginuserid, true));
 	}
 
-	qa_db_queue_pending_select('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
-	qa_db_queue_pending_select('navpages', qa_db_pages_selectspec(array('B', 'M', 'O', 'F')));
-	qa_db_queue_pending_select('widgets', qa_db_widgets_selectspec());
+	$dbSelect->queuePending('iplimits', qa_db_ip_limits_selectspec(qa_remote_ip_address()));
+	$dbSelect->queuePending('navpages', qa_db_pages_selectspec(array('B', 'M', 'O', 'F')));
+	$dbSelect->queuePending('widgets', qa_db_widgets_selectspec());
 }
 
 
@@ -516,8 +517,9 @@ function qa_content_prepare($voting = false, $categoryids = array())
 
 	$request = qa_request();
 	$requestlower = qa_request();
-	$navpages = qa_db_get_pending_result('navpages');
-	$widgets = qa_db_get_pending_result('widgets');
+	$dbSelect = qa_service('dbselect');
+	$navpages = $dbSelect->getPendingResult('navpages');
+	$widgets = $dbSelect->getPendingResult('widgets');
 
 	if (!is_array($categoryids)) {
 		// accept old-style parameter
@@ -789,7 +791,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 			}
 		}
 
-		$notices = qa_db_get_pending_result('notices');
+		$notices = $dbSelect->getPendingResult('notices');
 		foreach ($notices as $notice)
 			$qa_content['notices'][] = qa_notice_form($notice['noticeid'], qa_viewer_html($notice['content'], $notice['format']), $notice);
 

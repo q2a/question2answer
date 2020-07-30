@@ -156,7 +156,7 @@ function qa_get_favorite_non_qs_map()
 			require_once QA_INCLUDE_DIR . 'db/selects.php';
 			require_once QA_INCLUDE_DIR . 'util/string.php';
 
-			$favoritenonqs = qa_db_get_pending_result('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));
+			$favoritenonqs = qa_service('dbselect')->getPendingResult('favoritenonqs', qa_db_user_favorite_non_qs_selectspec($loginuserid));
 
 			foreach ($favoritenonqs as $favorite) {
 				switch ($favorite['type']) {
