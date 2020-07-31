@@ -18,7 +18,7 @@ notifications:
 
 before_script:
   # PHP_CodeSniffer
-  - curl -L -o phpcs.phar https://github.com/squizlabs/PHP_CodeSniffer/releases/download/2.9.1/phpcs.phar
+  - curl -L -o phpcs.phar https://github.com/squizlabs/PHP_CodeSniffer/releases/download/3.4.2/phpcs.phar
   # PHPUnit - manually download old version so that it works on PHP 7
   - curl -L -o phpunit.phar https://phar.phpunit.de/phpunit-4.8.35.phar
   # Basic config required for PHPUnit

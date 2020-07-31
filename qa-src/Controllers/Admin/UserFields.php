@@ -64,21 +64,18 @@ class UserFields extends BaseController
 
 		$securityexpired = false;
 
-		if (qa_clicked('docancel'))
+		if (qa_clicked('docancel')) {
 			qa_redirect('admin/users');
-
-		elseif (qa_clicked('dosavefield')) {
+		} elseif (qa_clicked('dosavefield')) {
 			require_once QA_INCLUDE_DIR . 'db/admin.php';
 			require_once QA_INCLUDE_DIR . 'util/string.php';
 
 			if (!qa_check_form_security_code('admin/userfields', qa_post_text('code')))
 				$securityexpired = true;
-
 			else {
 				if (qa_post_text('dodelete')) {
 					qa_db_userfield_delete($editfield['fieldid']);
 					qa_redirect('admin/users');
-
 				} else {
 					$inname = qa_post_text('name');
 					$intype = qa_post_text('type');
@@ -100,16 +97,15 @@ class UserFields extends BaseController
 						qa_db_userfield_set_fields($editfield['fieldid'], isset($errors['name']) ? $editfield['content'] : $inname, $inflags, $inpermit);
 						qa_db_userfield_move($editfield['fieldid'], $inposition);
 
-						if (empty($errors))
+						if (empty($errors)) {
 							qa_redirect('admin/users');
-
-						else {
+						} else {
 							$userfields = qa_db_select_with_pending(qa_db_userfields_selectspec()); // reload after changes
-							foreach ($userfields as $userfield)
+							foreach ($userfields as $userfield) {
 								if ($userfield['fieldid'] == $editfield['fieldid'])
 									$editfield = $userfield;
+							}
 						}
-
 					} elseif (empty($errors)) { // creating a new user field
 						for ($attempt = 0; $attempt < 1000; $attempt++) {
 							$suffix = $attempt ? ('-' . (1 + $attempt)) : '';
@@ -160,9 +156,9 @@ class UserFields extends BaseController
 			$previous = $userfield;
 		}
 
-		if (isset($editfield['position']))
+		if (isset($editfield['position'])) {
 			$positionvalue = $positionoptions[$editfield['position']];
-		else {
+		} else {
 			$positionvalue = isset($previous) ? qa_lang_html_sub('admin/after_x', qa_html(qa_user_userfield_label($previous))) : qa_lang_html('admin/first');
 			$positionoptions[1 + @max(array_keys($positionoptions))] = $positionvalue;
 		}

@@ -133,9 +133,9 @@ class Approve extends BaseController
 
 				$qa_content['message_list']['messages'][] = $message;
 			}
-
-		} else
+		} else {
 			$qa_content['title'] = qa_lang_html('admin/no_unapproved_found');
+		}
 
 
 		$qa_content['navigation']['sub'] = qa_admin_sub_navigation();

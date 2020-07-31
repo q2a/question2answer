@@ -168,9 +168,9 @@ class Hidden extends BaseController
 
 				$qa_content['q_list']['qs'][] = $htmlfields;
 			}
-
-		} else
+		} else {
 			$qa_content['title'] = qa_lang_html('admin/no_hidden_found');
+		}
 
 
 		$qa_content['navigation']['sub'] = qa_admin_sub_navigation();

@@ -394,5 +394,4 @@ class DbSelect
 			$outresult = count($outresult) ? reset($outresult) : null;
 		}
 	}
-
 }

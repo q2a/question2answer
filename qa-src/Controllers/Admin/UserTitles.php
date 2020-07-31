@@ -58,19 +58,16 @@ class UserTitles extends BaseController
 
 		$securityexpired = false;
 
-		if (qa_clicked('docancel'))
+		if (qa_clicked('docancel')) {
 			qa_redirect('admin/users');
-
-		elseif (qa_clicked('dosavetitle')) {
+		} elseif (qa_clicked('dosavetitle')) {
 			require_once QA_INCLUDE_DIR . 'util/string.php';
 
-			if (!qa_check_form_security_code('admin/usertitles', qa_post_text('code')))
+			if (!qa_check_form_security_code('admin/usertitles', qa_post_text('code'))) {
 				$securityexpired = true;
-
-			else {
+			} else {
 				if (qa_post_text('dodelete')) {
 					unset($pointstitle[$oldpoints]);
-
 				} else {
 					$intitle = qa_post_text('title');
 					$inpoints = qa_post_text('points');
@@ -82,9 +79,9 @@ class UserTitles extends BaseController
 					if (!strlen($intitle))
 						$errors['title'] = qa_lang('main/field_required');
 
-					if (!is_numeric($inpoints))
+					if (!is_numeric($inpoints)) {
 						$errors['points'] = qa_lang('main/field_required');
-					else {
+					} else {
 						$inpoints = (int)$inpoints;
 
 						if (isset($pointstitle[$inpoints]) && ((!strlen(@$oldpoints)) || ($inpoints != $oldpoints)))
@@ -99,9 +96,9 @@ class UserTitles extends BaseController
 
 						unset($pointstitle[$oldpoints]);
 						$pointstitle[$newpoints] = $newtitle;
-
-					} elseif (empty($errors)) // creating a new user title
+					} elseif (empty($errors)) { // creating a new user title
 						$pointstitle[$inpoints] = $intitle;
+					}
 				}
 
 				// Save the new option value

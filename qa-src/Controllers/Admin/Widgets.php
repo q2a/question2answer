@@ -56,7 +56,6 @@ class Widgets extends BaseController
 				if ($widget['widgetid'] == $widgetid)
 					$editwidget = $widget;
 			}
-
 		} else {
 			$editwidget = array('title' => qa_post_text('title'));
 			if (!isset($editwidget['title']))
@@ -129,7 +128,6 @@ class Widgets extends BaseController
 					if ($isPagePlugin || !($page['flags'] & QA_PAGE_FLAGS_EXTERNAL))
 						$templateoptions['custom-' . $page['pageid']] = qa_html($page['title']);
 				}
-
 			}
 		}
 
@@ -138,20 +136,17 @@ class Widgets extends BaseController
 
 		$securityexpired = false;
 
-		if (qa_clicked('docancel'))
+		if (qa_clicked('docancel')) {
 			qa_redirect('admin/layout');
-
-		elseif (qa_clicked('dosavewidget')) {
+		} elseif (qa_clicked('dosavewidget')) {
 			require_once QA_INCLUDE_DIR . 'db/admin.php';
 
-			if (!qa_check_form_security_code('admin/widgets', qa_post_text('code')))
+			if (!qa_check_form_security_code('admin/widgets', qa_post_text('code'))) {
 				$securityexpired = true;
-
-			else {
+			} else {
 				if (qa_post_text('dodelete')) {
 					qa_db_widget_delete($editwidget['widgetid']);
 					qa_redirect('admin/layout');
-
 				} else {
 					if ($widgetfound) {
 						$intitle = qa_post_text('title');
@@ -173,7 +168,6 @@ class Widgets extends BaseController
 						if (isset($editwidget['widgetid'])) { // changing existing widget
 							$widgetid = $editwidget['widgetid'];
 							qa_db_widget_set_fields($widgetid, $intags);
-
 						} else
 							$widgetid = qa_db_widget_create($intitle, $intags);
 
@@ -325,7 +319,6 @@ class Widgets extends BaseController
 				'templates_display' => '!(dodelete||template_all)',
 				'all_display' => '!dodelete',
 			));
-
 		} else {
 			unset($qa_content['form']['fields']['delete']);
 			qa_set_display_rules($qa_content, array(
@@ -341,7 +334,6 @@ class Widgets extends BaseController
 			unset($qa_content['form']['fields']['templates']);
 			if (!isset($editwidget['widgetid']))
 				unset($qa_content['form']['buttons']['save']);
-
 		} elseif (!count($positionoptions)) {
 			unset($qa_content['form']['fields']['title']['tight']);
 			$qa_content['form']['fields']['title']['error'] = qa_lang_html('admin/widget_no_positions');

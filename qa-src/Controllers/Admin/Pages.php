@@ -54,9 +54,9 @@ class Pages extends BaseController
 		if ((qa_clicked('doaddpage') || qa_clicked('doaddlink') || qa_get('doaddlink') || qa_clicked('dosavepage')) && !isset($editpage)) {
 			$editpage = array('title' => qa_get('text'), 'tags' => qa_get('url'), 'nav' => qa_get('nav'), 'position' => 1);
 			$isexternal = qa_clicked('doaddlink') || qa_get('doaddlink') || qa_post_text('external');
-
-		} elseif (isset($editpage))
+		} elseif (isset($editpage)) {
 			$isexternal = $editpage['flags'] & QA_PAGE_FLAGS_EXTERNAL;
+		}
 
 
 		// Check admin privileges (do late to allow one DB query)
@@ -110,22 +110,20 @@ class Pages extends BaseController
 
 		$securityexpired = false;
 
-		if (qa_clicked('docancel'))
+		if (qa_clicked('docancel')) {
 			$editpage = null;
-
-		elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('doaddlink')) {
+		} elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('doaddlink')) {
 			if (!qa_check_form_security_code('admin/pages', qa_post_text('code')))
 				$securityexpired = true;
 			else foreach ($navoptions as $optionname => $langkey)
 				qa_set_option($optionname, (int)qa_post_text('option_' . $optionname));
-
 		} elseif (qa_clicked('dosavepage')) {
 			require_once QA_INCLUDE_DIR . 'db/admin.php';
 			require_once QA_INCLUDE_DIR . 'util/string.php';
 
-			if (!qa_check_form_security_code('admin/pages', qa_post_text('code')))
+			if (!qa_check_form_security_code('admin/pages', qa_post_text('code'))) {
 				$securityexpired = true;
-			else {
+			} else {
 				$reloadpages = false;
 
 				if (qa_post_text('dodelete')) {
@@ -137,7 +135,6 @@ class Pages extends BaseController
 
 					$editpage = null;
 					$reloadpages = true;
-
 				} else {
 					$inname = qa_post_text('name');
 					$inposition = qa_post_text('position');
@@ -150,7 +147,6 @@ class Pages extends BaseController
 					$errors = array();
 
 					// Verify the name (navigation link) is legitimate
-
 					if (empty($inname))
 						$errors['name'] = qa_lang('main/field_required');
 					elseif (qa_strlen($inname) > QA_DB_MAX_CAT_PAGE_TITLE_LENGTH)
@@ -158,20 +154,16 @@ class Pages extends BaseController
 
 					if ($isexternal) {
 						// Verify the url is legitimate (vaguely)
-
 						if (empty($inurl))
 							$errors['url'] = qa_lang('main/field_required');
 						elseif (qa_strlen($inurl) > QA_DB_MAX_CAT_PAGE_TAGS_LENGTH)
 							$errors['url'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TAGS_LENGTH);
-
 					} else {
 						// Verify the heading is legitimate
-
 						if (qa_strlen($inheading) > QA_DB_MAX_TITLE_LENGTH)
 							$errors['heading'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_TITLE_LENGTH);
 
 						// Verify the slug is legitimate (and try some defaults if we're creating a new page, and it's not)
-
 						for ($attempt = 0; $attempt < 100; $attempt++) {
 							switch ($attempt) {
 								case 0:
@@ -217,22 +209,24 @@ class Pages extends BaseController
 					// Perform appropriate database action
 
 					if (isset($editpage['pageid'])) { // changing existing page
+						$title = isset($errors['name']) ? $editpage['title'] : $inname;
+
 						if ($isexternal) {
-							qa_db_page_set_fields($editpage['pageid'],
-								isset($errors['name']) ? $editpage['title'] : $inname,
+							qa_db_page_set_fields(
+								$editpage['pageid'],
+								$title,
 								QA_PAGE_FLAGS_EXTERNAL | ($innewwindow ? QA_PAGE_FLAGS_NEW_WINDOW : 0),
 								isset($errors['url']) ? $editpage['tags'] : $inurl,
-								null, null, $inpermit);
-
+								null,
+								null,
+								$inpermit
+							);
 						} else {
 							$setheading = isset($errors['heading']) ? $editpage['heading'] : $inheading;
 							$setslug = isset($errors['slug']) ? $editpage['tags'] : $inslug;
 							$setcontent = isset($errors['content']) ? $editpage['content'] : $incontent;
 
-							qa_db_page_set_fields($editpage['pageid'],
-								isset($errors['name']) ? $editpage['title'] : $inname,
-								0,
-								$setslug, $setheading, $setcontent, $inpermit);
+							qa_db_page_set_fields($editpage['pageid'], $title, 0, $setslug, $setheading, $setcontent, $inpermit);
 
 							$searchmodules = qa_load_modules_with('search', 'unindex_page');
 							foreach ($searchmodules as $searchmodule)
@@ -253,7 +247,6 @@ class Pages extends BaseController
 							$editpage = null;
 						else
 							$editpage = @$pages[$editpage['pageid']];
-
 					} else { // creating a new one
 						if (empty($errors)) {
 							if ($isexternal) {
@@ -448,7 +441,6 @@ class Pages extends BaseController
 				unset($qa_content['form']['fields']['slug']);
 				unset($qa_content['form']['fields']['heading']);
 				unset($qa_content['form']['fields']['content']);
-
 			} else {
 				unset($qa_content['form']['fields']['url']);
 				unset($qa_content['form']['fields']['newwindow']);
@@ -462,7 +454,6 @@ class Pages extends BaseController
 					($isexternal ? 'newwindow_display' : 'heading_display') => '!dodelete',
 					'content_display' => '!dodelete',
 				));
-
 			} else {
 				unset($qa_content['form']['fields']['slug']);
 				unset($qa_content['form']['fields']['delete']);
@@ -472,7 +463,6 @@ class Pages extends BaseController
 				unset($qa_content['form']['buttons']['saveview']);
 
 			$qa_content['focusid'] = 'name';
-
 		} else {
 			// List of standard navigation links
 			$qa_content['form'] = array(

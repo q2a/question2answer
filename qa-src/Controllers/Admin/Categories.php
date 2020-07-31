@@ -66,12 +66,10 @@ class Categories extends BaseController
 			$parentid = qa_get('addsub');
 			if (isset($parentid))
 				$editcategory = array('parentid' => $parentid);
-
 		} else {
-			if (qa_clicked('doaddcategory'))
+			if (qa_clicked('doaddcategory')) {
 				$editcategory = array();
-
-			elseif (qa_clicked('dosavecategory')) {
+			} elseif (qa_clicked('dosavecategory')) {
 				$parentid = qa_post_text('parent');
 				$editcategory = array('parentid' => strlen($parentid) ? $parentid : null);
 			}
@@ -94,10 +92,9 @@ class Categories extends BaseController
 		$securityexpired = false;
 
 		if (qa_clicked('dosaveoptions')) {
-			if (!qa_check_form_security_code('admin/categories', qa_post_text('code')))
+			if (!qa_check_form_security_code('admin/categories', qa_post_text('code'))) {
 				$securityexpired = true;
-
-			else {
+			} else {
 				qa_set_option('allow_no_category', (int)qa_post_text('option_allow_no_category'));
 				qa_set_option('allow_no_sub_category', (int)qa_post_text('option_allow_no_sub_category'));
 				$savedoptions = true;
@@ -114,29 +111,24 @@ class Categories extends BaseController
 				qa_redirect(qa_request());
 			else
 				qa_redirect(qa_request(), array('edit' => @$editcategory['parentid']));
-
 		} elseif (qa_clicked('dosetmissing')) {
-			if (!qa_check_form_security_code('admin/categories', qa_post_text('code')))
+			if (!qa_check_form_security_code('admin/categories', qa_post_text('code'))) {
 				$securityexpired = true;
-
-			else {
+			} else {
 				$inreassign = qa_get_category_field_value('reassign');
 				qa_db_category_reassign($editcategory['categoryid'], $inreassign);
 				qa_redirect(qa_request(), array('recalc' => 1, 'edit' => $editcategory['categoryid']));
 			}
-
 		} elseif (qa_clicked('dosavecategory')) {
-			if (!qa_check_form_security_code('admin/categories', qa_post_text('code')))
+			if (!qa_check_form_security_code('admin/categories', qa_post_text('code'))) {
 				$securityexpired = true;
-
-			elseif (qa_post_text('dodelete')) {
+			} elseif (qa_post_text('dodelete')) {
 				if (!$hassubcategory) {
 					$inreassign = qa_get_category_field_value('reassign');
 					qa_db_category_reassign($editcategory['categoryid'], $inreassign);
 					qa_db_category_delete($editcategory['categoryid']);
 					qa_redirect(qa_request(), array('recalc' => 1, 'edit' => $editcategory['parentid']));
 				}
-
 			} else {
 				require_once QA_INCLUDE_DIR . 'util/string.php';
 
@@ -152,11 +144,11 @@ class Categories extends BaseController
 
 				// Verify the name is legitimate for that parent ID
 
-				if (empty($inname))
+				if (empty($inname)) {
 					$errors['name'] = qa_lang('main/field_required');
-				elseif (qa_strlen($inname) > QA_DB_MAX_CAT_PAGE_TITLE_LENGTH)
+				} elseif (qa_strlen($inname) > QA_DB_MAX_CAT_PAGE_TITLE_LENGTH) {
 					$errors['name'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
-				else {
+				} else {
 					foreach ($incategories as $category) {
 						if (!strcmp($category['parentid'], $inparentid) &&
 							strcmp($category['categoryid'], @$editcategory['categoryid']) &&
@@ -240,7 +232,6 @@ class Categories extends BaseController
 						));
 
 						qa_redirect(qa_request(), array('edit' => $editcategory['categoryid'], 'saved' => true, 'recalc' => (int)$recalc));
-
 					} else { // creating a new one
 						$categoryid = qa_db_category_create($inparentid, $inname, $inslug);
 
@@ -307,10 +298,15 @@ class Categories extends BaseController
 				),
 			);
 
-			qa_set_up_category_field($qa_content, $qa_content['form']['fields']['reassign'], 'reassign',
-				$categories, @$editcategory['categoryid'], qa_opt('allow_no_category'), qa_opt('allow_no_sub_category'));
-
-
+			qa_set_up_category_field(
+				$qa_content,
+				$qa_content['form']['fields']['reassign'],
+				'reassign',
+				$categories,
+				@$editcategory['categoryid'],
+				qa_opt('allow_no_category'),
+				qa_opt('allow_no_sub_category')
+			);
 		} elseif (isset($editcategory)) {
 			$qa_content['form'] = array(
 				'tags' => 'method="post" action="' . qa_path_html(qa_request()) . '"',
@@ -386,20 +382,26 @@ class Categories extends BaseController
 
 				$childdepth = qa_db_category_child_depth($editcategory['categoryid']);
 
-				qa_set_up_category_field($qa_content, $qa_content['form']['fields']['parent'], 'parent',
-					isset($incategories) ? $incategories : $categories, isset($inparentid) ? $inparentid : @$editcategory['parentid'],
-					true, true, QA_CATEGORY_DEPTH - 1 - $childdepth, @$editcategory['categoryid']);
+				qa_set_up_category_field(
+					$qa_content,
+					$qa_content['form']['fields']['parent'],
+					'parent',
+					isset($incategories) ? $incategories : $categories,
+					isset($inparentid) ? $inparentid : @$editcategory['parentid'],
+					true,
+					true,
+					QA_CATEGORY_DEPTH - 1 - $childdepth,
+					@$editcategory['categoryid']
+				);
 
 				$qa_content['form']['fields']['parent']['options'][''] = qa_lang_html('admin/category_top_level');
 
 				@$qa_content['form']['fields']['parent']['note'] .= qa_lang_html_sub('admin/category_max_depth_x', QA_CATEGORY_DEPTH);
-
 			} elseif (isset($editcategory['categoryid'])) { // existing category
 				if ($hassubcategory) {
 					$qa_content['form']['fields']['name']['note'] = qa_lang_html('admin/category_no_delete_subs');
 					unset($qa_content['form']['fields']['delete']);
 					unset($qa_content['form']['fields']['reassign']);
-
 				} else {
 					$qa_content['form']['fields']['delete'] = array(
 						'tags' => 'name="dodelete" id="dodelete"',
@@ -415,8 +417,17 @@ class Categories extends BaseController
 						'tags' => 'name="reassign"',
 					);
 
-					qa_set_up_category_field($qa_content, $qa_content['form']['fields']['reassign'], 'reassign',
-						$categories, $editcategory['parentid'], true, true, null, $editcategory['categoryid']);
+					qa_set_up_category_field(
+						$qa_content,
+						$qa_content['form']['fields']['reassign'],
+						'reassign',
+						$categories,
+						$editcategory['parentid'],
+						true,
+						true,
+						null,
+						$editcategory['categoryid']
+					);
 				}
 
 				$qa_content['form']['fields']['questions'] = array(
@@ -452,7 +463,6 @@ class Categories extends BaseController
 					'reassign_shown' => 'dodelete',
 					'reassign_hidden' => '!dodelete',
 				));
-
 			} else { // new category
 				unset($qa_content['form']['fields']['delete']);
 				unset($qa_content['form']['fields']['reassign']);
@@ -505,10 +515,9 @@ class Categories extends BaseController
 					}
 				}
 
-				if (isset($editcategory['position']))
+				if (isset($editcategory['position'])) {
 					$positionvalue = $positionoptions[$editcategory['position']];
-
-				else {
+				} else {
 					$positionvalue = isset($previous) ? qa_lang_html_sub('admin/after_x', qa_html($previous['title'])) : qa_lang_html('admin/first');
 					$positionoptions[1 + @max(array_keys($positionoptions))] = $positionvalue;
 				}
@@ -551,10 +560,8 @@ class Categories extends BaseController
 					} else {
 						$qa_content['form']['fields']['name']['note'] = qa_lang_html_sub('admin/category_no_add_subs_x', QA_CATEGORY_DEPTH);
 					}
-
 				}
 			}
-
 		} else {
 			$qa_content['form'] = array(
 				'tags' => 'method="post" action="' . qa_path_html(qa_request()) . '"',
@@ -637,9 +644,9 @@ class Categories extends BaseController
 					'type' => 'checkbox',
 					'value' => qa_opt('allow_no_sub_category'),
 				);
-
-			} else
+			} else {
 				unset($qa_content['form']['buttons']['save']);
+			}
 		}
 
 		if (qa_get('recalc')) {

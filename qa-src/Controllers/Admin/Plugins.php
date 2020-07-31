@@ -105,10 +105,9 @@ class Plugins extends BaseController
 				$queries = $module->init_queries($tables);
 
 				if (!empty($queries)) {
-					if (qa_is_http_post())
+					if (qa_is_http_post()) {
 						qa_redirect('install');
-
-					else {
+					} else {
 						$qa_content['error'] = strtr(qa_lang_html('admin/module_x_database_init'), array(
 							'^1' => qa_html($name),
 							'^2' => qa_html($type),
@@ -170,7 +169,6 @@ class Plugins extends BaseController
 						$authorhtml = '<a href="' . qa_html($metadata['author_uri']) . '">' . $authorhtml . '</a>';
 
 					$authorhtml = qa_lang_html_sub('main/by_x', $authorhtml);
-
 				} else
 					$authorhtml = '';
 
@@ -182,9 +180,9 @@ class Plugins extends BaseController
 					$qa_content['script_onloads'][] = array(
 						"qa_version_check(" . qa_js($metadata['update_uri']) . ", " . qa_js($metadata['version'], true) . ", " . qa_js($elementid) . ", false);"
 					);
-				}
-				else
+				} else {
 					$updatehtml = '';
+				}
 
 				if (isset($metadata['description']))
 					$deschtml = qa_html($metadata['description']);
@@ -204,13 +202,13 @@ class Plugins extends BaseController
 				$pluginhtml .= $deschtml . (strlen($deschtml) > 0 ? '<br>' : '');
 				$pluginhtml .= '<small style="color:#666">' . qa_html($pluginDirectoryPath) . '/</small>';
 
-				if (qa_qa_version_below(@$metadata['min_q2a']))
+				if (qa_qa_version_below(@$metadata['min_q2a'])) {
 					$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
 						qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</span>';
-
-				elseif (qa_php_version_below(@$metadata['min_php']))
+				} elseif (qa_php_version_below(@$metadata['min_php'])) {
 					$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
 						qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
+				}
 
 				$qa_content['form_plugin_'.$pluginIndex] = array(
 					'tags' => 'id="'.qa_html($hash).'"',

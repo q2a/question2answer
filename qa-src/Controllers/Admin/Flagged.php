@@ -134,9 +134,9 @@ class Flagged extends BaseController
 
 				$qa_content['q_list']['qs'][] = $htmlfields;
 			}
-
-		} else
+		} else {
 			$qa_content['title'] = qa_lang_html('admin/no_flagged_found');
+		}
 
 
 		$qa_content['navigation']['sub'] = qa_admin_sub_navigation();
