@@ -506,7 +506,7 @@ class UserProfile extends BaseController
 						foreach ($userlevels as $userlevel) {
 							if ($userlevel['entitytype'] == QA_ENTITY_CATEGORY) {
 								$index++;
-								$id = 'ls_' . +$index;
+								$id = 'ls_' . (+$index);
 
 								$qa_content['form_profile']['fields']['uc_' . $index . '_level'] = array(
 									'label' => qa_lang_html('users/category_level_label'),

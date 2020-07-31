@@ -51,9 +51,9 @@ class qa_html_theme extends qa_html_theme_base
 		qa_html_theme_base::logged_in();
 
 		if (qa_is_logged_in()) { // adds points count after logged in username
-			$userpoints=qa_get_logged_in_points();
+			$userpoints = qa_get_logged_in_points();
 
-			$pointshtml=($userpoints==1)
+			$pointshtml = ($userpoints == 1)
 				? qa_lang_html_sub('main/1_point', '1', '1')
 				: qa_lang_html_sub('main/x_points', qa_html(qa_format_number($userpoints)));
 
@@ -102,7 +102,7 @@ class qa_html_theme extends qa_html_theme_base
 	// removes sidebar for user profile pages
 	public function sidepanel()
 	{
-		if ($this->template!='user')
+		if ($this->template != 'user')
 			qa_html_theme_base::sidepanel();
 	}
 
@@ -140,7 +140,7 @@ class qa_html_theme extends qa_html_theme_base
 	// prevent display of view count in the usual place
 	public function view_count($q_item)
 	{
-		if ($this->template=='question')
+		if ($this->template == 'question')
 			qa_html_theme_base::view_count($q_item);
 	}
 

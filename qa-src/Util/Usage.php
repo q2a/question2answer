@@ -35,7 +35,7 @@ class Usage
 	public function __construct()
 	{
 		$this->stages = array();
-		$this->databaseUsage = array('queries'=>0, 'clock'=>0);
+		$this->databaseUsage = array('queries' => 0, 'clock' => 0);
 		$this->databaseQueryLog = '';
 
 		$this->prevUsage = $this->startUsage = $this->getCurrent();
@@ -99,7 +99,7 @@ class Usage
 				$rowcolstring .= ' - ' . $gotcolumns . ($gotcolumns == 1 ? ' column' : ' columns');
 			}
 
-			$this->databaseQueryLog .= $query . "\n\n" . sprintf('%.2f ms', $usedtime*1000) . $rowcolstring . "\n\n";
+			$this->databaseQueryLog .= $query . "\n\n" . sprintf('%.2f ms', $usedtime * 1000) . $rowcolstring . "\n\n";
 		}
 
 		$this->databaseUsage['queries']++;
@@ -210,7 +210,7 @@ class Usage
 		$delta = array();
 
 		foreach ($newusage as $key => $value) {
-			$delta[$key] = max(0, $value-@$oldusage[$key]);
+			$delta[$key] = max(0, $value - @$oldusage[$key]);
 		}
 
 		return $delta;

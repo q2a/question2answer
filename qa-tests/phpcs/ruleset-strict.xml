@@ -32,6 +32,12 @@
 		</properties>
 	</rule>
 
+	<rule ref="Squiz.WhiteSpace.OperatorSpacing">
+		<properties>
+			<property name="ignoreNewlines" value="true"/>
+		</properties>
+	</rule>
+
 	<!-- Not part of normal usage, but kept for testing (default severity = 5) -->
 	<rule ref="Squiz.Commenting.FunctionComment">
 		<severity>0</severity>

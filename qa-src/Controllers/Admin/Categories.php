@@ -224,9 +224,9 @@ class Categories extends BaseController
 
 						qa_report_event('cat_edit', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
 							'categoryid' => $editcategory['categoryid'],
-							'parentid' => isset($inparentid)?$inparentid:null,
-							'content' => isset($incontent)?$incontent:null,
-							'position' => isset($inposition)?$inposition:null,
+							'parentid' => isset($inparentid) ? $inparentid : null,
+							'content' => isset($incontent) ? $incontent : null,
+							'position' => isset($inposition) ? $inposition : null,
 							'name' => $inname,
 							'slug' => $inslug,
 						));
@@ -243,8 +243,8 @@ class Categories extends BaseController
 						qa_report_event('cat_new', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
 							'categoryid' => $categoryid,
 							'parentid' => $inparentid,
-							'content' => isset($incontent)?$incontent:null,
-							'position' => isset($inposition)?$inposition:null,
+							'content' => isset($incontent) ? $incontent : null,
+							'position' => isset($inposition) ? $inposition : null,
 							'name' => $inname,
 							'slug' => $inslug,
 						));

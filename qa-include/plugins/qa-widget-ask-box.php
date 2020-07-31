@@ -47,10 +47,10 @@ class qa_ask_box
 	<form method="post" action="<?php echo qa_path_html('ask', $params); ?>">
 		<table class="qa-form-tall-table" style="width:100%">
 			<tr style="vertical-align:middle;">
-				<td class="qa-form-tall-label" style="width: 1px; padding:8px; white-space:nowrap; <?php echo ($region=='side') ? 'padding-bottom:0;' : 'text-align:right;'?>">
+				<td class="qa-form-tall-label" style="width: 1px; padding:8px; white-space:nowrap; <?php echo ($region == 'side') ? 'padding-bottom:0;' : 'text-align:right;'?>">
 					<?php echo strtr(qa_lang_html('question/ask_title'), array(' ' => '&nbsp;'))?>:
 				</td>
-		<?php if ($region=='side') : ?>
+		<?php if ($region == 'side') : ?>
 			</tr>
 			<tr>
 		<?php endif; ?>

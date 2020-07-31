@@ -48,7 +48,7 @@ class qa_wysiwyg_editor
 		if (qa_clicked('wysiwyg_editor_save_button')) {
 			qa_opt('wysiwyg_editor_upload_images', (int)qa_post_text('wysiwyg_editor_upload_images_field'));
 			qa_opt('wysiwyg_editor_upload_all', (int)qa_post_text('wysiwyg_editor_upload_all_field'));
-			qa_opt('wysiwyg_editor_upload_max_size', min(qa_get_max_upload_size(), 1048576*(float)qa_post_text('wysiwyg_editor_upload_max_size_field')));
+			qa_opt('wysiwyg_editor_upload_max_size', min(qa_get_max_upload_size(), 1048576 * (float)qa_post_text('wysiwyg_editor_upload_max_size_field')));
 			$saved = true;
 		}
 
