@@ -273,6 +273,7 @@ return array(
 	'users_registered' => 'Registered users:',
 	'users_title' => 'Users',
 	'users_voted' => 'Users who voted:',
+	'version_check' => 'Check for updates',
 	'version_get_x' => 'get ^',
 	'version_latest' => 'latest',
 	'version_latest_unknown' => 'latest unknown',

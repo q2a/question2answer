@@ -25,6 +25,8 @@ class PluginManager
 {
 	const PLUGIN_DELIMITER = ';';
 	const OPT_ENABLED_PLUGINS = 'enabled_plugins';
+	const OPT_LAST_UPDATE_CHECK = 'last_plugin_update_check';
+	const NUMBER_OF_DAYS_TO_CHECK_FOR_UPDATE = 14;
 
 	private $loadBeforeDbInit = array();
 	private $loadAfterDbInit = array();
@@ -179,5 +181,28 @@ class PluginManager
 		);
 
 		$this->setEnabledPluginsOption($finalEnabledPlugins);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function shouldCheckForUpdate()
+	{
+		$lastUpdateCheck = (int)qa_opt(self::OPT_LAST_UPDATE_CHECK);
+		$currentTime = (int)qa_opt('db_time');
+
+		return $currentTime - $lastUpdateCheck > self::NUMBER_OF_DAYS_TO_CHECK_FOR_UPDATE * 24 * 60 * 60;
+	}
+
+	/**
+	 * @param int|null $time
+	 */
+	public function performUpdateCheck($time = null)
+	{
+		if ($time === null) {
+			$time = time();
+		}
+
+		qa_opt(self::OPT_LAST_UPDATE_CHECK, $time);
 	}
 }

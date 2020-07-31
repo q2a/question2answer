@@ -68,7 +68,9 @@ class Plugins extends BaseController
 					$enabledPluginHashesArray = explode(';', $enabledPluginHashes);
 					$pluginDirectories = array_keys(array_intersect($pluginHashes, $enabledPluginHashesArray));
 					$pluginManager->setEnabledPlugins($pluginDirectories);
-
+					qa_redirect('admin/plugins');
+				} elseif (qa_clicked('doversioncheck')) {
+					$pluginManager->performUpdateCheck(0);
 					qa_redirect('admin/plugins');
 				}
 			}
@@ -143,6 +145,9 @@ class Plugins extends BaseController
 
 			qa_sort_by($sortedPluginFiles, 'name');
 
+			$versionChecks = array();
+			$shouldCheckForUpdate = $pluginManager->shouldCheckForUpdate();
+
 			$pluginIndex = -1;
 			foreach ($sortedPluginFiles as $pluginDirectory => $metadata) {
 				$pluginIndex++;
@@ -169,17 +174,20 @@ class Plugins extends BaseController
 						$authorhtml = '<a href="' . qa_html($metadata['author_uri']) . '">' . $authorhtml . '</a>';
 
 					$authorhtml = qa_lang_html_sub('main/by_x', $authorhtml);
-				} else
+				} else {
 					$authorhtml = '';
+				}
 
-				if ($metaver && isset($metadata['update_uri']) && strlen($metadata['update_uri'])) {
+				if ($shouldCheckForUpdate && $metaver && isset($metadata['update_uri']) && strlen($metadata['update_uri'])) {
 					$elementid = 'version_check_' . md5($pluginDirectory);
 
-					$updatehtml = '(<span id="' . $elementid . '">...</span>)';
-
-					$qa_content['script_onloads'][] = array(
-						"qa_version_check(" . qa_js($metadata['update_uri']) . ", " . qa_js($metadata['version'], true) . ", " . qa_js($elementid) . ", false);"
+					$versionChecks[] = array(
+						'uri' => $metadata['update_uri'],
+						'version' => $metadata['version'],
+						'elem' => $elementid,
 					);
+
+					$updatehtml = '(<span id="' . $elementid . '">...</span>)';
 				} else {
 					$updatehtml = '';
 				}
@@ -250,6 +258,14 @@ class Plugins extends BaseController
 					}
 				}
 			}
+
+			if ($shouldCheckForUpdate) {
+				$pluginManager->performUpdateCheck();
+
+				$qa_content['script_onloads'][] = array(
+					sprintf('qa_version_check_array(%s);', json_encode($versionChecks)),
+				);
+			}
 		}
 
 		$qa_content['navigation']['sub'] = qa_admin_sub_navigation();
@@ -263,6 +279,10 @@ class Plugins extends BaseController
 				'dosave' => array(
 					'tags' => 'name="dosave"',
 					'label' => qa_lang_html('admin/save_options_button'),
+				),
+				'doversioncheck' => array(
+					'tags' => 'name="doversioncheck"',
+					'label' => qa_lang_html('admin/version_check'),
 				),
 			),
 
