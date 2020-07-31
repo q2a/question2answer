@@ -1840,21 +1840,21 @@ function qa_retrieve_url($url)
 		return '';
 	}
 
-        $contents = '';
-	// Due to the design of the file_get_contents function, sometimes getting external content will be very slow.
-	// You should use curl instead if possible. For details, see here: 
-	// https://stackoverflow.com/questions/3629504/php-file-get-contents-very- slow-when-using-full-url
-        if (function_exists('curl_exec')) {
-            $curl = curl_init($url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-            $contents = @curl_exec($curl);
-            curl_close($curl);
-        }
+	$contents = '';
 
-        if (!strlen($contents)) {
-            $contents = @file_get_contents($url);
-        }
+	// Due to the design of the file_get_contents function, sometimes getting external content will be very slow.
+	// So we try curl first, if possible. https://stackoverflow.com/q/3629504
+	if (function_exists('curl_exec')) {
+		$curl = curl_init($url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		$contents = @curl_exec($curl);
+		curl_close($curl);
+	}
+
+	if (!strlen($contents)) {
+		$contents = @file_get_contents($url);
+	}
 
 	return $contents;
 }
