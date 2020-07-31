@@ -157,6 +157,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 		@ini_set('session.gc_maxlifetime', 86400); // worth a try, but won't help in shared hosting environment
 		@ini_set('session.use_trans_sid', false); // sessions need cookies to work, since we redirect after login
 		@ini_set('session.cookie_domain', QA_COOKIE_DOMAIN);
+		@ini_set('session.cookie_httponly', true);
 
 		if (!isset($_SESSION))
 			session_start();
