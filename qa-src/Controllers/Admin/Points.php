@@ -18,8 +18,8 @@
 
 namespace Q2A\Controllers\Admin;
 
-use Q2A\Database\DbConnection;
 use Q2A\Controllers\BaseController;
+use Q2A\Database\DbConnection;
 use Q2A\Middleware\Auth\MinimumUserLevel;
 
 /**

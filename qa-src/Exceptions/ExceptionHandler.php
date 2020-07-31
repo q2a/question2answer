@@ -19,8 +19,8 @@
 namespace Q2A\Exceptions;
 
 use Exception;
-use Q2A\Http\Exceptions\PageNotFoundException;
 use Q2A\Http\Exceptions\MethodNotAllowedException;
+use Q2A\Http\Exceptions\PageNotFoundException;
 
 class ExceptionHandler
 {

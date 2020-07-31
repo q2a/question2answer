@@ -430,14 +430,14 @@ class Categories extends BaseController
 					);
 				}
 
+				$qcountHtml = $editcategory['qcount'] == 1
+					? qa_lang_html_sub('main/1_question', '1', '1')
+					: qa_lang_html_sub('main/x_questions', qa_format_number($editcategory['qcount']));
+
 				$qa_content['form']['fields']['questions'] = array(
 					'label' => qa_lang_html('admin/total_qs'),
 					'type' => 'static',
-					'value' => '<a href="' . qa_path_html('questions/' . qa_category_path_request($categories, $editcategory['categoryid'])) . '">' .
-						($editcategory['qcount'] == 1
-							? qa_lang_html_sub('main/1_question', '1', '1')
-							: qa_lang_html_sub('main/x_questions', qa_format_number($editcategory['qcount']))
-						) . '</a>',
+					'value' => '<a href="' . qa_path_html('questions/' . qa_category_path_request($categories, $editcategory['categoryid'])) . '">' . $qcountHtml . '</a>',
 				);
 
 				if ($hassubcategory && !qa_opt('allow_no_sub_category')) {
@@ -601,14 +601,12 @@ class Categories extends BaseController
 
 				foreach ($categories as $category) {
 					if (!isset($category['parentid'])) {
+						$qcountHtml = $category['qcount'] == 1
+							? qa_lang_html_sub('main/1_question', '1', '1')
+							: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount']));
 						$navcategoryhtml .=
 							'<a href="' . qa_path_html('admin/categories', array('edit' => $category['categoryid'])) . '">' .
-							qa_html($category['title']) .
-							'</a> - ' .
-							($category['qcount'] == 1
-								? qa_lang_html_sub('main/1_question', '1', '1')
-								: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount']))
-							) . '<br/>';
+							qa_html($category['title']) . '</a> - ' . $qcountHtml . '<br/>';
 					}
 				}
 
