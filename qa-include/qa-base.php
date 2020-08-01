@@ -1048,9 +1048,6 @@ function qa_sanitize_html_hook_tag($element, $attributes = null)
 	if ($element == 'param' && trim(strtolower(@$attributes['name'])) == 'allowscriptaccess')
 		$attributes['name'] = 'allowscriptaccess_denied';
 
-	if ($element == 'embed')
-		unset($attributes['allowscriptaccess']);
-
 	if ($element == 'a' && isset($attributes['href']) && $qa_sanitize_html_newwindow)
 		$attributes['target'] = '_blank';
 
