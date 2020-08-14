@@ -24,7 +24,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-define('QA_DB_VERSION_CURRENT', 67);
+define('QA_DB_VERSION_CURRENT', 68);
 
 
 /**
@@ -1589,8 +1589,8 @@ function qa_db_upgrade_tables()
 				break;
 
 			case 67:
-				// ensure we don't have old userids lying around
 				if (!QA_FINAL_EXTERNAL_USERS) {
+					// ensure we don't have old userids lying around
 					qa_db_upgrade_query('ALTER TABLE ^messages MODIFY fromuserid ' . $definitions['messages']['fromuserid']);
 					qa_db_upgrade_query('ALTER TABLE ^messages MODIFY touserid ' . $definitions['messages']['touserid']);
 					qa_db_upgrade_query('UPDATE ^messages SET fromuserid=NULL WHERE fromuserid NOT IN (SELECT userid FROM ^users)');
@@ -1604,6 +1604,13 @@ function qa_db_upgrade_tables()
 				break;
 
 			// Up to here: Version 1.8
+
+			case 68:
+				// remove favorites of deleted users
+				qa_db_upgrade_query('DELETE FROM ^userfavorites WHERE entitytype="U" AND entityid NOT IN (SELECT userid FROM ^users)');
+				break;
+
+			// Up to here: Version 1.9
 		}
 
 		qa_db_set_db_version($newversion);
