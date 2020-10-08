@@ -197,6 +197,6 @@
 	define('QA_DEBUG_PERFORMANCE', false);
 
 /*
-	And lastly... if you want to, you can predefine any constant from qa-db-maxima.php in this
+	And lastly... if you want to, you can predefine any constant from qa-include/db/maxima.php in this
 	file to override the default setting. Just make sure you know what you're doing!
 */
