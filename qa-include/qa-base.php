@@ -1881,7 +1881,6 @@ function qa_retrieve_url($url)
 	if (function_exists('curl_exec')) {
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		$contents = @curl_exec($curl);
 		curl_close($curl);
 	}
