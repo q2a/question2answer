@@ -51,6 +51,7 @@ class Plugins extends BaseController
 
 		$pluginManager = new \Q2A\Plugin\PluginManager();
 		$pluginManager->cleanRemovedPlugins();
+		$cachedUpdates = $pluginManager->getCachedUpdates(true);
 
 		$enabledPlugins = $pluginManager->getEnabledPlugins();
 		$fileSystemPlugins = $pluginManager->getFilesystemPlugins();
@@ -178,18 +179,27 @@ class Plugins extends BaseController
 					$authorhtml = '';
 				}
 
+				$pluginId = md5($pluginDirectory);
+				$elementId = 'version_check_' . $pluginId;
 				if ($shouldCheckForUpdate && $metaver && isset($metadata['update_uri']) && strlen($metadata['update_uri'])) {
-					$elementid = 'version_check_' . md5($pluginDirectory);
-
 					$versionChecks[] = array(
 						'uri' => $metadata['update_uri'],
 						'version' => $metadata['version'],
-						'elem' => $elementid,
+						'elem' => $elementId,
+						'componentId' => $pluginId,
 					);
 
-					$updatehtml = '(<span id="' . $elementid . '">...</span>)';
+					$updatehtml = sprintf('(<span id="%s">...</span>)', $elementId);
 				} else {
-					$updatehtml = '';
+					if (isset($cachedUpdates[$pluginId]) && isset($metadata['uri']) && $metadata['version'] !== $cachedUpdates[$pluginId]) {
+						$updatehtml = sprintf(
+							'(<a href="%s" style="color:#d00;">%s</a>)',
+							qa_html($metadata['uri']),
+							qa_lang_html_sub('admin/version_get_x', qa_html('v' . $cachedUpdates[$pluginId]))
+						);
+					} else {
+						$updatehtml = '';
+					}
 				}
 
 				if (isset($metadata['description']))
