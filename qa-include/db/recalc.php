@@ -277,7 +277,7 @@ function qa_db_users_recalc_points($firstuserid, $lastuserid)
 {
 	require_once QA_INCLUDE_DIR . 'db/points.php';
 
-	$qa_userpoints_calculations = qa_db_points_calculations();
+	$qa_userpoints_calculations = qa_db_points_calculations(false);
 
 	qa_db_query_sub(
 		'DELETE FROM ^userpoints WHERE userid>=# AND userid<=# AND bonus=0', // delete those with no bonus
