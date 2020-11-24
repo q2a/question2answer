@@ -149,6 +149,33 @@ function qa_load_options_results($results)
 
 
 /**
+ * Get option $name from the database
+ * @param string $name
+ * @return string
+ */
+function qa_db_get_option($name)
+{
+	global $qa_options_cache, $qa_options_loaded;
+
+	$selectSpec = [
+		'columns' => array('content'),
+		'source' => '^options WHERE title = #',
+		'arrayvalue' => 'content',
+		'single' => true,
+		'arguments' => [$name],
+	];
+
+	$value = qa_db_single_select($selectSpec);
+
+	if (isset($qa_options_loaded)) {
+		$qa_options_cache[$name] = $value;
+	}
+
+	return $value;
+}
+
+
+/**
  * Set an option $name to $value (application level) in both cache and database, unless
  * $todatabase=false, in which case set it in the cache only
  * @param string $name

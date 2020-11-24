@@ -21,12 +21,16 @@ namespace Q2A\Controllers\Admin;
 use Q2A\Controllers\BaseController;
 use Q2A\Database\DbConnection;
 use Q2A\Middleware\Auth\MinimumUserLevel;
+use Q2A\Update\CoreUpdateManager;
 
 /**
  * Controller for admin page showing usage statistics and clean-up buttons
  */
 class Stats extends BaseController
 {
+	/** @var CoreUpdateManager */
+	private $coreUpdateManager;
+
 	public function __construct(DbConnection $db)
 	{
 		require_once QA_INCLUDE_DIR . 'db/recalc.php';
@@ -37,6 +41,8 @@ class Stats extends BaseController
 		parent::__construct($db);
 
 		$this->addMiddleware(new MinimumUserLevel(QA_USER_LEVEL_ADMIN));
+
+		$this->coreUpdateManager = new CoreUpdateManager();
 	}
 
 	public function index()
@@ -79,7 +85,7 @@ class Stats extends BaseController
 				'q2a_latest' => array(
 					'label' => qa_lang_html('admin/q2a_latest_version'),
 					'type' => 'custom',
-					'html' => '<span id="q2a-version">...</span>',
+					'html' => $this->getUpdateVersionText(),
 				),
 
 				'break0' => array(
@@ -282,17 +288,39 @@ class Stats extends BaseController
 			}
 		}
 
-
 		$qa_content['script_rel'][] = 'qa-content/qa-admin.js?' . QA_VERSION;
 		$qa_content['script_var']['qa_warning_recalc'] = qa_lang('admin/stop_recalc_warning');
 
-		$qa_content['script_onloads'][] = array(
-			"qa_version_check('https://raw.githubusercontent.com/q2a/question2answer/master/VERSION.txt', " . qa_js(qa_html(QA_VERSION), true) . ", 'q2a-version', true);"
-		);
+		if ($this->coreUpdateManager->shouldCheckForUpdate()) {
+			$qa_content['script_onloads'][] = array(
+				sprintf("qa_version_check('https://raw.githubusercontent.com/q2a/question2answer/master/VERSION.txt', '%s', 'q2a-version', 'core');", QA_VERSION),
+			);
+		}
 
 		$qa_content['navigation']['sub'] = qa_admin_sub_navigation();
 
 
 		return $qa_content;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getUpdateVersionText()
+	{
+		if ($this->coreUpdateManager->shouldCheckForUpdate()) {
+			return '<span id="q2a-version">...</span>';
+		}
+
+		$version = $this->coreUpdateManager->getCachedVersion();
+
+		if (!isset($version) || $version === QA_VERSION) {
+			return QA_VERSION;
+		}
+
+		return
+			'<a href="https://github.com/q2a/question2answer/releases" style="color:#d00;">' .
+			qa_lang_html_sub('admin/version_get_x', qa_html('v' . $version)) .
+			'</a>';
 	}
 }

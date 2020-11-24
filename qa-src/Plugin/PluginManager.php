@@ -25,7 +25,8 @@ class PluginManager
 {
 	const PLUGIN_DELIMITER = ';';
 	const OPT_ENABLED_PLUGINS = 'enabled_plugins';
-	const OPT_LAST_UPDATE_CHECK = 'last_plugin_update_check';
+	const OPT_LAST_UPDATE_CHECK = 'plugin_update_last_check';
+	const OPT_PLUGIN_UPDATES_CACHE = 'plugin_update_cache';
 	const NUMBER_OF_DAYS_TO_CHECK_FOR_UPDATE = 14;
 
 	private $loadBeforeDbInit = array();
@@ -200,9 +201,42 @@ class PluginManager
 	public function performUpdateCheck($time = null)
 	{
 		if ($time === null) {
-			$time = time();
+			$time = (int)qa_opt('db_time');
 		}
 
 		qa_opt(self::OPT_LAST_UPDATE_CHECK, $time);
+		$this->setCachedUpdates([]);
+	}
+
+	/**
+	 * @param bool $fromDatabase
+	 * @return array
+	 */
+	public function getCachedUpdates($fromDatabase = false)
+	{
+		$option = $fromDatabase
+			? qa_db_get_option(self::OPT_PLUGIN_UPDATES_CACHE)
+			: qa_opt(self::OPT_PLUGIN_UPDATES_CACHE);
+
+		return json_decode($option, true);
+	}
+
+	/**
+	 * @param array $pluginUpdates Key-value array relating MD5 plugin IDs and versions
+	 */
+	public function setCachedUpdates($pluginUpdates)
+	{
+		qa_opt(self::OPT_PLUGIN_UPDATES_CACHE, json_encode($pluginUpdates));
+	}
+
+	/**
+	 * @param string $componentId
+	 * @param string $version
+	 */
+	public function addCachedUpdate($componentId, $version)
+	{
+		$pluginUpdates = $this->getCachedUpdates(true);
+		$pluginUpdates[$componentId] = $version;
+		$this->setCachedUpdates($pluginUpdates);
 	}
 }

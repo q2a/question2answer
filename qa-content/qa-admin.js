@@ -21,8 +21,7 @@
 
 var qa_recalc_running = 0;
 
-window.onbeforeunload = function(event)
-{
+window.onbeforeunload = function (event) {
 	if (qa_recalc_running > 0) {
 		event = event || window.event;
 		var message = qa_warning_recalc;
@@ -43,8 +42,9 @@ function qa_recalc_click(state, elem, value, noteid)
 
 		document.getElementById(noteid).innerHTML = '';
 		elem.qa_original_value = elem.value;
-		if (value)
+		if (value) {
 			elem.value = value;
+		}
 
 		qa_recalc_update(elem, state, noteid);
 	}
@@ -147,27 +147,24 @@ function qa_admin_click(target)
 	return false;
 }
 
-function qa_version_check(uri, version, elem, isCore)
+function qa_version_check(uri, version, elem, componentId)
 {
-	qa_ajax_post(
-		'version',
-		{uri: uri, version: version, isCore: isCore},
-		function (response) {
-			if (response.result === 'error') {
-				alert(response.error.message);
+	var params = {uri: uri, version: version, componentId: componentId};
+	qa_ajax_post('version', params, function (response) {
+		if (response.result === 'error') {
+			alert(response.error.message);
 
-				return;
-			}
+			return;
+		}
 
-			document.getElementById(elem).innerHTML = response.html;
-		}, 1
-	);
+		document.getElementById(elem).innerHTML = response.html;
+	}, 1);
 }
 
 function qa_version_check_array(versionChecks)
 {
 	for (var i = 0; i < versionChecks.length; i++) {
-		qa_version_check(versionChecks[i].uri, versionChecks[i].version, versionChecks[i].elem, false)
+		qa_version_check(versionChecks[i].uri, versionChecks[i].version, versionChecks[i].elem, versionChecks[i].componentId);
 	}
 }
 
@@ -175,8 +172,8 @@ function qa_get_enabled_plugins_hashes()
 {
 	var hashes = [];
 	$('[id^=plugin_enabled]:checked').each(
-		function(idx, elem) {
-			hashes.push(elem.id.replace("plugin_enabled_", ""));
+		function (idx, elem) {
+			hashes.push(elem.id.replace('plugin_enabled_', ''));
 		}
 	);
 

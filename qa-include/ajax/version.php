@@ -36,13 +36,13 @@ if (qa_get_logged_in_level() < QA_USER_LEVEL_ADMIN) {
 
 $uri = qa_post_text('uri');
 $currentVersion = qa_post_text('version');
-$isCore = qa_post_text('isCore') === "true";
+$componentId = qa_post_text('componentId');
 
-if ($isCore) {
+if ($componentId === 'core') {
 	$contents = qa_retrieve_url($uri);
 
 	if (strlen($contents) > 0) {
-		if (qa_qa_version_below($contents)) {
+		if (version_compare($currentVersion, $contents) < 0) {
 			$versionResponse =
 				'<a href="https://github.com/q2a/question2answer/releases" style="color:#d00;">' .
 				qa_lang_html_sub('admin/version_get_x', qa_html('v' . $contents)) .
@@ -50,12 +50,13 @@ if ($isCore) {
 		} else {
 			$versionResponse = qa_html($contents); // Output the current version number
 		}
+
+		(new \Q2A\Update\CoreUpdateManager())->setCachedVersion($contents);
 	} else {
 		$versionResponse = qa_lang_html('admin/version_latest_unknown');
 	}
 } else {
-	$metadataUtil = new \Q2A\Util\Metadata();
-	$metadata = $metadataUtil->fetchFromUrl($uri);
+	$metadata = (new \Q2A\Util\Metadata())->fetchFromUrl($uri);
 
 	if (strlen(@$metadata['version']) > 0) {
 		if (version_compare($currentVersion, $metadata['version']) < 0) {
@@ -71,6 +72,10 @@ if ($isCore) {
 				));
 			} else {
 				$versionResponse = qa_lang_html_sub('admin/version_get_x', qa_html('v' . $metadata['version']));
+
+				if ($componentId !== null) {
+					(new \Q2A\Plugin\PluginManager())->addCachedUpdate($componentId, $metadata['version']);
+				}
 
 				if (strlen(@$metadata['uri'])) {
 					$versionResponse = '<a href="' . qa_html($metadata['uri']) . '" style="color:#d00;">' . $versionResponse . '</a>';
