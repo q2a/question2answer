@@ -43,12 +43,12 @@
 @font-face {
 	font-family: "fontello";
 	src: url("fonts/fontello.eot?70015067") format("embedded-opentype"),
-		url("fonts/fontello.eot?70015067#iefix") format("embedded-opentype"),
-		url("fonts/fontello.woff?70015067") format("woff"),
-		url("fonts/fontello.ttf?70015067") format("truetype"),
-		url("fonts/fontello.svg?70015067#fontello") format("svg");
-  font-weight: normal;
-  font-style: normal;
+	url("fonts/fontello.eot?70015067#iefix") format("embedded-opentype"),
+	url("fonts/fontello.woff?70015067") format("woff"),
+	url("fonts/fontello.ttf?70015067") format("truetype"),
+	url("fonts/fontello.svg?70015067#fontello") format("svg");
+	font-weight: normal;
+	font-style: normal;
 }
 
 /*------[ base css ]------*/
@@ -207,7 +207,7 @@ pre code {
 
 code, samp, kbd {
 	color: #34495e;
-	font-family: "Courier New",Courier,monospace,sans-serif;
+	font-family: "Courier New", Courier, monospace, sans-serif;
 	text-align: left;
 }
 
@@ -1747,8 +1747,6 @@ blockquote p {
 }
 
 
-
-
 .qa-part-form-message .qam-pm-message {
 	padding: 10px;
 	background: #27ae60;
@@ -2454,9 +2452,9 @@ input[type="submit"], button {
 	min-height: 190px;
 }
 /* highlight selected answer */
-.qa-a-list-item:target{
-    -webkit-animation: answer-highlight 2s ease-in-out;
-    animation: answer-highlight 2s ease-in-out;
+.qa-a-list-item:target {
+	-webkit-animation: answer-highlight 2s ease-in-out;
+	animation: answer-highlight 2s ease-in-out;
 }
 
 .qa-a-item-avatar-meta {
@@ -2598,8 +2596,8 @@ input[type="submit"], button {
 }
 /* highlight selected comment */
 .qa-c-list-item:target {
-    -webkit-animation: comment-highlight 2s ease-in-out;
-    animation: comment-highlight 2s ease-in-out;
+	-webkit-animation: comment-highlight 2s ease-in-out;
+	animation: comment-highlight 2s ease-in-out;
 }
 
 /* voting styles for comments */
@@ -3417,21 +3415,21 @@ input[type="submit"], button {
 }
 
 @-webkit-keyframes answer-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #fff; }
+	0% { background-color: #ffa; }
+	100% { background-color: #fff; }
 }
 @keyframes answer-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #fff; }
+	0% { background-color: #ffa; }
+	100% { background-color: #fff; }
 }
 
 @-webkit-keyframes comment-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #f4f4f4; }
+	0% { background-color: #ffa; }
+	100% { background-color: #f4f4f4; }
 }
 @keyframes comment-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #f4f4f4; }
+	0% { background-color: #ffa; }
+	100% { background-color: #f4f4f4; }
 }
 
 
