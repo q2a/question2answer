@@ -113,6 +113,7 @@ function qa_admin_language_options()
 		'tr' => 'Turkish - Türkçe',
 		'ug' => 'Uyghur - ئۇيغۇرچە',
 		'uk' => 'Ukrainian - Українська',
+		'ur' => 'Urdu - اردو',
 		'uz' => 'Uzbek - ўзбек',
 		'vi' => 'Vietnamese - Tiếng Việt',
 		'zh-TW' => 'Chinese Traditional - 繁體中文',
