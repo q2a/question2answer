@@ -74,3 +74,4 @@ Official releases can be found either on the [Q2A website][Q2A] or via the Relea
 [6]: https://docs.question2answer.org/themes/
 [7]: https://docs.question2answer.org/translate/
 [8]: https://docs.question2answer.org/addons/
+H
