@@ -36,7 +36,7 @@ if (QA_ALLOW_UNINDEXED_QUERIES)
 else
 	$categoryslugs = null;
 
-$countslugs = @count($categoryslugs);
+$countslugs = $categoryslugs === null ? null : count($categoryslugs);
 $by = qa_get('by');
 $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
