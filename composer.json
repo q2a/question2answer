@@ -9,5 +9,10 @@
             "name": "Gideon Greenspan",
             "homepage": "http://www.gidgreen.com/"
         }
-    ]
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^5.2",
+        "ircmaxell/password-compat": "^1.0",
+        "htmlawed/htmlawed": "^1.1"
+    }
 }
