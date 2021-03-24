@@ -27,7 +27,7 @@ define('QA_BUILD_DATE', '2020-07-15');
 /**
  * Load the Composer autoloader
  */
-include(QA_BASE_DIR . 'vendor/autoload.php');
+include(dirname(__FILE__) . '/../vendor/autoload.php');
 
 /**
  * Autoloads some Q2A classes so it's possible to use them without adding a require_once first. From
