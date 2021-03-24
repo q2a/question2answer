@@ -27,5 +27,11 @@
         "phpunit": "phpunit --bootstrap qa-tests/autoload.php ./qa-tests/",
         "phpcs": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset.xml ./index.php ./qa-src/ ./qa-include/ ./qa-external-example/qa-external-users.php",
         "phpcs-strict": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset-strict.xml ./index.php ./qa-src/ ./qa-include/ ./qa-external-example/qa-external-users.php"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all the tests",
+        "phpcs": "Checks that the code conforms to the Q2A coding standard",
+        "phpcs-strict": "Checks that the code conforms to the Q2A strict coding standard",
+        "phpunit": "Runs the PHPUnit tests"
     }
 }
