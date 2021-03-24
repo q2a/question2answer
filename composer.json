@@ -18,5 +18,10 @@
     "require-dev": {
         "phpunit/phpunit": "^5.7",
         "squizlabs/php_codesniffer": "^3.5"
+    },
+    "scripts": {
+        "phpunit": "phpunit --bootstrap qa-tests/autoload.php ./qa-tests/",
+        "phpcs": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset.xml ./",
+        "phpcs-strict": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset-strict.xml ./"
     }
 }
