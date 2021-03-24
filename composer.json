@@ -1,0 +1,13 @@
+{
+    "name": "q2a/question2answer",
+    "description": "Question2Answer is a free and open source platform for Q&A sites, running on PHP/MySQL.",
+    "type": "project",
+    "license": "GPL-2.0",
+    "homepage": "https://www.question2answer.org/",
+    "authors": [
+        {
+            "name": "Gideon Greenspan",
+            "homepage": "http://www.gidgreen.com/"
+        }
+    ]
+}
