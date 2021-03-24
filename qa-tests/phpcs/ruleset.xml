@@ -2,12 +2,6 @@
 <ruleset name="Q2AStandard">
 	<description>Q2A coding standard</description>
 
-	<exclude-pattern>qa-include/vendor/*</exclude-pattern>
-	<exclude-pattern>qa-config.php</exclude-pattern>
-	<exclude-pattern>qa-plugin/recaptcha-captcha/recaptchalib.php</exclude-pattern>
-	<exclude-pattern>qa-plugin/facebook-login/facebook.php</exclude-pattern>
-	<exclude-pattern>qa-plugin/facebook-login/base_facebook.php</exclude-pattern>
-
 	<rule ref="PSR1">
 		<exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
 		<exclude name="Generic.Formatting.DisallowMultipleStatements.SameLine"/>

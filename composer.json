@@ -21,7 +21,7 @@
     },
     "scripts": {
         "phpunit": "phpunit --bootstrap qa-tests/autoload.php ./qa-tests/",
-        "phpcs": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset.xml ./",
-        "phpcs-strict": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset-strict.xml ./"
+        "phpcs": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset.xml ./index.php ./qa-src/ ./qa-include/ ./qa-external-example/qa-external-users.php",
+        "phpcs-strict": "phpcs -p --report=summary --standard=./qa-tests/phpcs/ruleset-strict.xml ./index.php ./qa-src/ ./qa-include/ ./qa-external-example/qa-external-users.php"
     }
 }
