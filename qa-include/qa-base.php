@@ -25,6 +25,11 @@ define('QA_BUILD_DATE', '2020-07-15');
 
 
 /**
+ * Load the Composer autoloader
+ */
+include(dirname(__FILE__) . '/../vendor/autoload.php');
+
+/**
  * Autoloads some Q2A classes so it's possible to use them without adding a require_once first. From
  * version 1.9 onwards we follow PSR-4. Classes are stored in qa-src/ which maps to the 'Q2A' namespace.
  * So for example \Q2A\Storage\CacheFactory maps to qa-src/Storage/CacheFactory.php.
@@ -199,15 +204,10 @@ function qa_initialize_constants_1()
 		}
 	}
 
-	require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
-
 	// Polyfills
 
 	// password_hash compatibility for 5.3-5.4
 	define('QA_PASSWORD_HASH', !qa_php_version_below('5.3.7'));
-	if (QA_PASSWORD_HASH) {
-		require_once QA_INCLUDE_DIR . 'vendor/password_compat.php';
-	}
 
 	// http://php.net/manual/en/function.hash-equals.php#115635
 	if (!function_exists('hash_equals')) {
@@ -1012,8 +1012,6 @@ function qa_html($string, $multiline = false)
 function qa_sanitize_html($html, $linksnewwindow = false, $storage = false)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
-
-	require_once 'vendor/htmLawed.php';
 
 	global $qa_sanitize_html_newwindow;
 
