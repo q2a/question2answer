@@ -29,8 +29,8 @@
             "@phpcs-strict"
         ],
         "phpunit": "phpunit --bootstrap qa-tests/autoload.php ./qa-tests/",
-        "phpcs-loose": "phpcs -p --report=emacs --extensions=php --standard=./qa-tests/phpcs/ruleset.xml ./index.php ./qa-src/ ./qa-include/ ./qa-external-example/qa-external-users.php",
-        "phpcs-strict": "phpcs -p --report=emacs --extensions=php --standard=./qa-tests/phpcs/ruleset-strict.xml ./qa-src/"
+        "phpcs-loose": "phpcs -p --report=emacs --extensions=php --standard=./qa-tests/phpcs/ruleset.xml index.php qa-src/ qa-include/ qa-external-example/qa-external-users.php",
+        "phpcs-strict": "phpcs -p --report=emacs --extensions=php --standard=./qa-tests/phpcs/ruleset-strict.xml qa-src/"
     },
     "scripts-descriptions": {
         "test": "Runs all the tests",

@@ -26,7 +26,7 @@ before_script:
 
 script:
   # PHP_CodeSniffer
-  - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml .
+  - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset.xml index.php qa-src/ qa-include/ qa-external-example/qa-external-users.php
   - php phpcs.phar --report=emacs --extensions=php --standard=qa-tests/phpcs/ruleset-strict.xml qa-src/
   # PHPUnit
   - php phpunit.phar --bootstrap qa-tests/autoload.php qa-tests
@@ -37,4 +37,3 @@ cache:
 
 git:
   depth: 5
-
