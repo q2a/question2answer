@@ -150,15 +150,16 @@ class DbConnection
 	 * @param int $errno
 	 * @param string $error
 	 * @param string $query
+     * @param array|null
 	 * @return mixed
 	 */
-	public function failError($type, $errno = null, $error = null, $query = null)
+	public function failError($type, $errno = null, $error = null, $query = null, $params = null)
 	{
 		@error_log('PHP Question2Answer MySQL ' . $type . ' error ' . $errno . ': ' . $error . (isset($query) ? (' - Query: ' . $query) : ''));
 
 		if (function_exists($this->failHandler)) {
 			$failFunc = $this->failHandler;
-			$failFunc($type, $errno, $error, $query);
+			$failFunc($type, $errno, $error, $query, $params);
 		} else {
 			echo sprintf(
 				'<hr><div style="color: red">Database %s<p>%s</p><code>%s</code></div>',
@@ -208,7 +209,7 @@ class DbConnection
 
 			return new DbResult($stmt);
 		} catch (PDOException $ex) {
-			$this->failError('query', $ex->getCode(), $ex->getMessage(), $query);
+			$this->failError('query', $ex->getCode(), $ex->getMessage(), $query, $params);
 		}
 	}
 
