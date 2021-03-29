@@ -150,7 +150,7 @@ class DbConnection
 	 * @param int $errno
 	 * @param string $error
 	 * @param string $query
-    * @param array|null $params
+     * @param array|null $params
 	 * @return mixed
 	 */
 	public function failError($type, $errno = null, $error = null, $query = null, $params = null)
