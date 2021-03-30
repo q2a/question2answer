@@ -76,6 +76,8 @@ if (qa_user_permit_error()) {
 
 // Process submitted form
 
+$errors = array();
+
 if (qa_clicked('doregister')) {
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
