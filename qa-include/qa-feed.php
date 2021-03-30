@@ -74,7 +74,7 @@ function qa_feed_not_found()
 function qa_feed_load_ifcategory($categoryslugs, $allkey, $catkey, &$title,
 	$questionselectspec1 = null, $questionselectspec2 = null, $questionselectspec3 = null, $questionselectspec4 = null)
 {
-	$countslugs = @count($categoryslugs);
+	$countslugs = $categoryslugs === null ? null : count($categoryslugs);
 
 	list($questions1, $questions2, $questions3, $questions4, $categories, $categoryid) = qa_db_select_with_pending(
 		$questionselectspec1,
@@ -165,7 +165,7 @@ switch ($feedtype) {
 		break;
 }
 
-$countslugs = @count($categoryslugs);
+$countslugs = $categoryslugs === null ? null : count($categoryslugs);
 
 if (!isset($feedoption))
 	qa_feed_not_found();
