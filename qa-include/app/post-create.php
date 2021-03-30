@@ -63,16 +63,17 @@ function qa_combine_notify_email($userid, $notify, $email)
  * @param string|null $extravalue
  * @param bool $queued
  * @param string|null $name
+ * @param \DateTime|null $date
  * @return int
  */
 function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, $content, $format, $text, $tagstring, $notify, $email,
-	$categoryid = null, $extravalue = null, $queued = false, $name = null)
+	$categoryid = null, $extravalue = null, $queued = false, $name = null, \DateTime $date = null)
 {
 	require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 	$postid = qa_db_post_create($queued ? 'Q_QUEUED' : 'Q', @$followanswer['postid'], $userid, isset($userid) ? null : $cookieid,
 		qa_remote_ip_address(), $title, $content, $format, $tagstring, qa_combine_notify_email($userid, $notify, $email),
-		$categoryid, isset($userid) ? null : $name);
+		$categoryid, isset($userid) ? null : $name, $date);
 
 	if (isset($extravalue)) {
 		require_once QA_INCLUDE_DIR . 'db/metas.php';
@@ -204,13 +205,14 @@ function qa_post_index($postid, $type, $questionid, $parentid, $title, $content,
  * @param array $question
  * @param bool $queued
  * @param string|null $name
+ * @param \DateTime|null $date
  * @return int
  */
-function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $queued = false, $name = null)
+function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text, $notify, $email, $question, $queued = false, $name = null, \DateTime $date = null)
 {
 	$postid = qa_db_post_create($queued ? 'A_QUEUED' : 'A', $question['postid'], $userid, isset($userid) ? null : $cookieid,
 		qa_remote_ip_address(), null, $content, $format, null, qa_combine_notify_email($userid, $notify, $email),
-		$question['categoryid'], isset($userid) ? null : $name);
+		$question['categoryid'], isset($userid) ? null : $name, $date);
 
 	qa_db_posts_calc_category_path($postid);
 
