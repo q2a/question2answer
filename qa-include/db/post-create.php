@@ -39,14 +39,15 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
  * @param bool $notify
  * @param int|null $categoryid
  * @param string|null $name
+ * @param \DateTime|null $date
  * @return string
  */
-function qa_db_post_create($type, $parentid, $userid, $cookieid, $ip, $title, $content, $format, $tagstring, $notify, $categoryid = null, $name = null)
+function qa_db_post_create($type, $parentid, $userid, $cookieid, $ip, $title, $content, $format, $tagstring, $notify, $categoryid = null, $name = null, \DateTime $date = null)
 {
 	qa_db_query_sub(
 		'INSERT INTO ^posts (categoryid, type, parentid, userid, cookieid, createip, title, content, format, tags, notify, name, created) ' .
-		'VALUES (#, $, #, $, #, UNHEX($), $, $, $, $, $, $, NOW())',
-		$categoryid, $type, $parentid, $userid, $cookieid, bin2hex(@inet_pton($ip)), $title, $content, $format, $tagstring, $notify, $name
+		'VALUES (#, $, #, $, #, UNHEX($), $, $, $, $, $, $, $)',
+		$categoryid, $type, $parentid, $userid, $cookieid, bin2hex(@inet_pton($ip)), $title, $content, $format, $tagstring, $notify, $name, $date ? $date->format('Y-m-d H:i:s') : \date('Y-m-d H:i:s')
 	);
 
 	return qa_db_last_insert_id();
