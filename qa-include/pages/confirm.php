@@ -72,7 +72,7 @@ if (isset($loggedInUserId) && qa_clicked('dosendconfirm')) { // A logged in user
 	if (strlen($handle) > 0) { // If there is a handle present in the URL
 		$userInfo = qa_db_select_with_pending(qa_db_user_account_selectspec($handle, false));
 
-		if (strtolower(trim($userInfo['emailcode'])) == strtolower($code)) {
+		if ($userInfo !== null && strtolower(trim($userInfo['emailcode'])) == strtolower($code)) {
 			qa_complete_confirm($userInfo['userid'], $userInfo['email'], $userInfo['handle']);
 			$userConfirmed = true;
 		}
