@@ -1254,7 +1254,7 @@ function qa_user_userfield_label($userfield)
 			'website' => 'users/website',
 		);
 
-		if (isset($defaultlabels[$userfield['title']]))
+		if (isset($userfield['title']) && isset($defaultlabels[$userfield['title']]))
 			return qa_lang($defaultlabels[$userfield['title']]);
 	}
 
