@@ -31,7 +31,7 @@ class qa_wysiwyg_ajax
 	// Fix path to WYSIWYG editor smileys
 	public function process_request($request)
 	{
-		require_once QA_INCLUDE_DIR.'qa-app-posts.php';
+		require_once QA_INCLUDE_DIR . 'app/posts.php';
 
 		// smiley replacement regexes
 		$rxSearch = '<(img|a)([^>]+)(src|href)="([^"]+)/wysiwyg-editor/plugins/smiley/images/([^"]+)"';
