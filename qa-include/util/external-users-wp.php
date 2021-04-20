@@ -58,6 +58,9 @@ function qa_get_logged_in_user()
 		else
 			$level = QA_USER_LEVEL_BASIC;
 
+		// flush WP email cache (for displaying avatars)
+		qa_get_public_from_userids([$wordpressuser->ID]);
+
 		return array(
 			'userid' => $wordpressuser->ID,
 			'publicusername' => $wordpressuser->user_nicename,
