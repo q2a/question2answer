@@ -38,8 +38,11 @@ $qa_content = qa_content_prepare();
 
 // Check we have a handle, we're not using Q2A's single-sign on integration and that we're logged in
 
-if (QA_FINAL_EXTERNAL_USERS)
-	qa_fatal_error('User accounts are handled by external code');
+if (QA_FINAL_EXTERNAL_USERS) {
+	header('HTTP/1.1 404 Not Found');
+	echo qa_lang_html('main/page_not_found');
+	qa_exit();
+}
 
 if (!strlen($handle))
 	qa_redirect('users');

@@ -30,8 +30,11 @@ require_once QA_INCLUDE_DIR . 'app/messages.php';
 
 // Check we're not using single-sign on integration, which doesn't allow walls
 
-if (QA_FINAL_EXTERNAL_USERS)
-	qa_fatal_error('User accounts are handled by external code');
+if (QA_FINAL_EXTERNAL_USERS) {
+	header('HTTP/1.1 404 Not Found');
+	echo qa_lang_html('main/page_not_found');
+	qa_exit();
+}
 
 
 // $handle, $userhtml are already set by /qa-include/page/user.php

@@ -43,8 +43,11 @@ elseif ($req === 'sent')
 else
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
-if (QA_FINAL_EXTERNAL_USERS)
-	qa_fatal_error('User accounts are handled by external code');
+if (QA_FINAL_EXTERNAL_USERS) {
+	header('HTTP/1.1 404 Not Found');
+	echo qa_lang_html('main/page_not_found');
+	qa_exit();
+}
 
 if (!isset($loginUserId)) {
 	$qa_content = qa_content_prepare();
