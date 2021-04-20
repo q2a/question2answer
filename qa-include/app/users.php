@@ -125,7 +125,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 			$qa_cached_logged_in_points = qa_db_select_with_pending(qa_db_user_points_selectspec(qa_get_logged_in_userid(), true));
 		}
 
-		return $qa_cached_logged_in_points['points'];
+		return isset($qa_cached_logged_in_points['points']) ? $qa_cached_logged_in_points['points'] : null;
 	}
 
 

@@ -343,7 +343,7 @@ $qa_content = qa_content_prepare();
 $qa_content['title'] = qa_lang_html_sub('profile/user_x', $userhtml);
 $qa_content['error'] = @$errors['page'];
 
-if (isset($loginuserid) && $loginuserid != $useraccount['userid'] && !QA_FINAL_EXTERNAL_USERS) {
+if (!QA_FINAL_EXTERNAL_USERS && isset($loginuserid) && $loginuserid != $useraccount['userid']) {
 	$favoritemap = qa_get_favorite_non_qs_map();
 	$favorite = @$favoritemap['user'][$useraccount['userid']];
 
@@ -753,7 +753,7 @@ $qa_content['form_activity'] = array(
 		'bonus' => array(
 			'label' => qa_lang_html('profile/bonus_points'),
 			'tags' => 'name="bonus"',
-			'value' => qa_html(isset($inbonus) ? $inbonus : $userpoints['bonus']),
+			'value' => qa_html(isset($inbonus) ? $inbonus : @$userpoints['bonus']),
 			'type' => 'number',
 			'note' => qa_lang_html('users/only_shown_admins'),
 			'id' => 'bonus',
