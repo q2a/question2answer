@@ -159,7 +159,7 @@ $qa_content['form'] = array(
 			'label' => qa_lang_html('users/handle_label'),
 			'tags' => 'name="handle" id="handle" dir="auto"',
 			'value' => qa_html(@$inhandle),
-			'error' => qa_html(@$errors['handle']),
+			'error' => qa_html(isset($errors['handle']) ? $errors['handle'] : null),
 		),
 
 		'password' => array(
@@ -167,7 +167,7 @@ $qa_content['form'] = array(
 			'label' => qa_lang_html('users/password_label'),
 			'tags' => 'name="password" id="password" dir="auto"',
 			'value' => qa_html(@$inpassword),
-			'error' => qa_html(@$errors['password']),
+			'error' => qa_html(isset($errors['password']) ? $errors['password'] : null),
 		),
 
 		'email' => array(
@@ -175,7 +175,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="email" id="email" dir="auto"',
 			'value' => qa_html(@$inemail),
 			'note' => qa_opt('email_privacy'),
-			'error' => qa_html(@$errors['email']),
+			'error' => qa_html(isset($errors['email']) ? $errors['email'] : null),
 		),
 	),
 
@@ -212,13 +212,13 @@ foreach ($userfields as $userfield) {
 		'label' => qa_html($label),
 		'tags' => 'name="field_' . $userfield['fieldid'] . '"',
 		'value' => qa_html($value),
-		'error' => qa_html(@$errors[$userfield['fieldid']]),
+		'error' => qa_html(isset($errors[$userfield['fieldid']]) ? $errors[$userfield['fieldid']] : null),
 		'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
 	);
 }
 
 if (qa_opt('captcha_on_register'))
-	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
+	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], $errors);
 
 // show T&Cs checkbox
 if ($show_terms) {
@@ -227,7 +227,7 @@ if ($show_terms) {
 		'label' => trim(qa_opt('register_terms')),
 		'tags' => 'name="terms" id="terms"',
 		'value' => qa_html(@$interms),
-		'error' => qa_html(@$errors['terms']),
+		'error' => qa_html(isset($errors['terms']) ? $errors['terms'] : null),
 	);
 }
 

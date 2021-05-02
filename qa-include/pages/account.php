@@ -70,6 +70,8 @@ $pending_confirmation = $doconfirms && !$isconfirmed;
 
 // Process profile if saved
 
+$errors = array();
+
 // If the post_max_size is exceeded then the $_POST array is empty so no field processing can be done
 if (qa_post_limit_exceeded())
 	$errors['avatar'] = qa_lang('main/file_upload_limit_exceeded');
@@ -247,7 +249,7 @@ else {
 $qa_content = qa_content_prepare();
 
 $qa_content['title'] = qa_lang_html('profile/my_account_title');
-$qa_content['error'] = @$errors['page'];
+$qa_content['error'] = isset($errors['page']) ? $errors['page'] : null;
 
 $qa_content['form_profile'] = array(
 	'tags' => 'enctype="multipart/form-data" method="post" action="' . qa_self_html() . '"',
@@ -272,7 +274,7 @@ $qa_content['form_profile'] = array(
 			'label' => qa_lang_html('users/handle_label'),
 			'tags' => 'name="handle"',
 			'value' => qa_html(isset($inhandle) ? $inhandle : $useraccount['handle']),
-			'error' => qa_html(@$errors['handle']),
+			'error' => qa_html(isset($errors['handle']) ? $errors['handle'] : null),
 			'type' => ($changehandle && !$isblocked) ? 'text' : 'static',
 		),
 
@@ -391,7 +393,7 @@ if (qa_opt('avatar_allow_gravatar') || qa_opt('avatar_allow_upload')) {
 		'tags' => 'name="avatar"',
 		'options' => $avataroptions,
 		'value' => $avatarvalue,
-		'error' => qa_html(@$errors['avatar']),
+		'error' => qa_html(isset($errors['avatar']) ? $errors['avatar'] : null),
 	);
 
 } else {
@@ -414,7 +416,7 @@ foreach ($userfields as $userfield) {
 		'label' => qa_html($label),
 		'tags' => 'name="field_' . $userfield['fieldid'] . '"',
 		'value' => qa_html($value),
-		'error' => qa_html(@$errors[$userfield['fieldid']]),
+		'error' => qa_html(isset($errors[$userfield['fieldid']]) ? $errors[$userfield['fieldid']] : null),
 		'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
 		'type' => $isblocked ? 'static' : 'text',
 	);
@@ -443,21 +445,21 @@ $qa_content['form_password'] = array(
 			'tags' => 'name="oldpassword"',
 			'value' => qa_html(@$inoldpassword),
 			'type' => 'password',
-			'error' => qa_html(@$errors['oldpassword']),
+			'error' => qa_html(isset($errors['oldpassword']) ? $errors['oldpassword'] : null),
 		),
 
 		'new_1' => array(
 			'label' => qa_lang_html('users/new_password_1'),
 			'tags' => 'name="newpassword1"',
 			'type' => 'password',
-			'error' => qa_html(@$errors['password']),
+			'error' => qa_html(isset($errors['password']) ? $errors['password'] : null),
 		),
 
 		'new_2' => array(
 			'label' => qa_lang_html('users/new_password_2'),
 			'tags' => 'name="newpassword2"',
 			'type' => 'password',
-			'error' => qa_html(@$errors['newpassword2']),
+			'error' => qa_html(isset($errors['newpassword2']) ? $errors['newpassword2'] : null),
 		),
 	),
 

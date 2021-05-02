@@ -946,7 +946,7 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 					'content' => array_merge(
 						qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'a_content', 12, $formrequested, $loadnow),
 						array(
-							'error' => qa_html(@$errors['content']),
+							'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 						)
 					),
 				),
@@ -978,7 +978,7 @@ function qa_page_q_add_a_form(&$qa_content, $formid, $captchareason, $question, 
 				qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], 'a_');
 
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'A', qa_get_logged_in_email(),
-				isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email'], 'a_');
+				isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], isset($errors['email']) ? $errors['email'] : null, 'a_');
 
 			$onloads = array();
 
@@ -1097,7 +1097,7 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 					'content' => array_merge(
 						qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], $prefix . 'content', 4, $loadfocusnow, $loadfocusnow),
 						array(
-							'error' => qa_html(@$errors['content']),
+							'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 						)
 					),
 				),
@@ -1128,7 +1128,7 @@ function qa_page_q_add_c_form(&$qa_content, $question, $parent, $formid, $captch
 				qa_set_up_name_field($qa_content, $form['fields'], @$in['name'], $prefix);
 
 			qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),
-				isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email'], $prefix);
+				isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], isset($errors['email']) ? $errors['email'] : null, $prefix);
 
 			$onloads = array();
 

@@ -99,6 +99,8 @@ if (!qa_using_tags())
 
 $securityexpired = false;
 
+$errors = array();
+
 if (qa_clicked('docancel'))
 	$editpage = null;
 
@@ -135,8 +137,6 @@ elseif (qa_clicked('dosaveoptions') || qa_clicked('doaddpage') || qa_clicked('do
 			$innewwindow = qa_post_text('newwindow');
 			$inheading = qa_post_text('heading');
 			$incontent = qa_post_text('content');
-
-			$errors = array();
 
 			// Verify the name (navigation link) is legitimate
 
@@ -339,7 +339,7 @@ if (isset($editpage)) {
 				'tags' => 'name="name" id="name"',
 				'label' => qa_lang_html($isexternal ? 'admin/link_name' : 'admin/page_name'),
 				'value' => qa_html(isset($inname) ? $inname : @$editpage['title']),
-				'error' => qa_html(@$errors['name']),
+				'error' => qa_html(isset($errors['name']) ? $errors['name'] : null),
 			),
 
 			'delete' => array(
@@ -372,7 +372,7 @@ if (isset($editpage)) {
 				'tags' => 'name="slug"',
 				'label' => qa_lang_html('admin/page_slug'),
 				'value' => qa_html(isset($inslug) ? $inslug : @$editpage['tags']),
-				'error' => qa_html(@$errors['slug']),
+				'error' => qa_html(isset($errors['slug']) ? $errors['slug'] : null),
 			),
 
 			'url' => array(
@@ -380,7 +380,7 @@ if (isset($editpage)) {
 				'tags' => 'name="url"',
 				'label' => qa_lang_html('admin/link_url'),
 				'value' => qa_html(isset($inurl) ? $inurl : @$editpage['tags']),
-				'error' => qa_html(@$errors['url']),
+				'error' => qa_html(isset($errors['url']) ? $errors['url'] : null),
 			),
 
 			'newwindow' => array(
@@ -396,7 +396,7 @@ if (isset($editpage)) {
 				'tags' => 'name="heading"',
 				'label' => qa_lang_html('admin/page_heading'),
 				'value' => qa_html(isset($inheading) ? $inheading : @$editpage['heading']),
-				'error' => qa_html(@$errors['heading']),
+				'error' => qa_html(isset($errors['heading']) ? $errors['heading'] : null),
 			),
 
 			'content' => array(
@@ -404,7 +404,7 @@ if (isset($editpage)) {
 				'tags' => 'name="content"',
 				'label' => qa_lang_html('admin/page_content_html'),
 				'value' => qa_html(isset($incontent) ? $incontent : @$editpage['content']),
-				'error' => qa_html(@$errors['content']),
+				'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 				'rows' => 16,
 			),
 		),

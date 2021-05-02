@@ -47,6 +47,8 @@ if (!qa_admin_check_privileges($qa_content))
 
 $securityexpired = false;
 
+$errors = array();
+
 if (qa_clicked('docancel'))
 	qa_redirect('admin/users');
 
@@ -63,8 +65,6 @@ elseif (qa_clicked('dosavetitle')) {
 		} else {
 			$intitle = qa_post_text('title');
 			$inpoints = qa_post_text('points');
-
-			$errors = array();
 
 			// Verify the title and points are legitimate
 
@@ -126,7 +126,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="title" id="title"',
 			'label' => qa_lang_html('admin/user_title'),
 			'value' => qa_html(isset($intitle) ? $intitle : @$pointstitle[$oldpoints]),
-			'error' => qa_html(@$errors['title']),
+			'error' => qa_html(isset($errors['title']) ? $errors['title'] : null),
 		),
 
 		'delete' => array(
@@ -142,7 +142,7 @@ $qa_content['form'] = array(
 			'label' => qa_lang_html('admin/points_required'),
 			'type' => 'number',
 			'value' => qa_html(isset($inpoints) ? $inpoints : @$oldpoints),
-			'error' => qa_html(@$errors['points']),
+			'error' => qa_html(isset($errors['points']) ? $errors['points'] : null),
 		),
 	),
 

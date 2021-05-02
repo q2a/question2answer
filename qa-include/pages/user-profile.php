@@ -341,7 +341,7 @@ if ($loginlevel >= QA_USER_LEVEL_ADMIN && qa_clicked('dosetbonus')) {
 $qa_content = qa_content_prepare();
 
 $qa_content['title'] = qa_lang_html_sub('profile/user_x', $userhtml);
-$qa_content['error'] = @$errors['page'];
+$qa_content['error'] = isset($errors['page']) ? $errors['page'] : null;
 
 if (!QA_FINAL_EXTERNAL_USERS && isset($loginuserid) && $loginuserid != $useraccount['userid']) {
 	$favoritemap = qa_get_favorite_non_qs_map();
@@ -561,7 +561,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 			'label' => qa_lang_html('users/email_label'),
 			'tags' => 'name="email"',
 			'value' => $userediting ? $htmlemail : ('<a href="mailto:' . $htmlemail . '">' . $htmlemail . '</a>'),
-			'error' => qa_html(@$errors['email']),
+			'error' => qa_html(isset($errors['email']) ? $errors['email'] : null),
 			'note' => ($doconfirms ? (qa_lang_html($isconfirmed ? 'users/email_confirmed' : 'users/email_not_confirmed') . ' ') : '') .
 				($userediting ? '' : qa_lang_html('users/only_shown_admins')),
 			'id' => 'email',
@@ -638,7 +638,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 			'label' => qa_html($label),
 			'tags' => 'name="field_' . $userfield['fieldid'] . '"',
 			'value' => $valuehtml,
-			'error' => qa_html(@$errors[$userfield['fieldid']]),
+			'error' => qa_html(isset($errors[$userfield['fieldid']]) ? $errors[$userfield['fieldid']] : null),
 			'note' => $notehtml,
 			'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
 			'id' => 'userfield-' . $userfield['fieldid'],
@@ -936,7 +936,7 @@ if (!QA_FINAL_EXTERNAL_USERS && qa_opt('allow_user_walls')) {
 				'tags' => 'name="message" id="message"',
 				'value' => qa_html(@$inmessage, false),
 				'rows' => 2,
-				'error' => qa_html(@$errors['message']),
+				'error' => qa_html(isset($errors['message']) ? $errors['message'] : null),
 			),
 		);
 

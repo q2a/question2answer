@@ -104,6 +104,8 @@ switch (qa_user_permit_error(null, QA_LIMIT_MESSAGES)) {
 // check for messages or errors
 $state = qa_get_state();
 $messagesent = $state == 'message-sent';
+$errors = array();
+
 if ($state == 'email-error')
 	$pageerror = qa_lang_html('main/email_error');
 
@@ -189,7 +191,7 @@ $qa_content['form_message'] = array(
 			'value' => qa_html(@$inmessage, $messagesent),
 			'rows' => 8,
 			'note' => qa_lang_html_sub('misc/message_explanation', qa_html(qa_opt('site_title'))),
-			'error' => qa_html(@$errors['message']),
+			'error' => qa_html(isset($errors['message']) ? $errors['message'] : null),
 		),
 	),
 
