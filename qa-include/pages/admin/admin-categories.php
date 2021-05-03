@@ -93,6 +93,7 @@ if (qa_clicked('dosaveoptions')) {
 	}
 }
 
+$errors = array();
 
 // Process saving an old or new category
 
@@ -133,7 +134,6 @@ if (qa_clicked('docancel')) {
 		$incontent = qa_post_text('content');
 		$inparentid = $setparent ? qa_get_category_field_value('parent') : $editcategory['parentid'];
 		$inposition = qa_post_text('position');
-		$errors = array();
 
 		// Check the parent ID
 
@@ -295,7 +295,7 @@ if ($setmissing) {
 				'tags' => 'name="name" id="name"',
 				'label' => qa_lang_html(count($categories) ? 'admin/category_name' : 'admin/category_name_first'),
 				'value' => qa_html(isset($inname) ? $inname : @$editcategory['title']),
-				'error' => qa_html(@$errors['name']),
+				'error' => qa_html(isset($errors['name']) ? $errors['name'] : null),
 			),
 
 			'questions' => array(),
@@ -309,7 +309,7 @@ if ($setmissing) {
 				'tags' => 'name="slug"',
 				'label' => qa_lang_html('admin/category_slug'),
 				'value' => qa_html(isset($inslug) ? $inslug : @$editcategory['tags']),
-				'error' => qa_html(@$errors['slug']),
+				'error' => qa_html(isset($errors['slug']) ? $errors['slug'] : null),
 			),
 
 			'content' => array(
@@ -317,7 +317,7 @@ if ($setmissing) {
 				'tags' => 'name="content"',
 				'label' => qa_lang_html('admin/category_description'),
 				'value' => qa_html(isset($incontent) ? $incontent : @$editcategory['content']),
-				'error' => qa_html(@$errors['content']),
+				'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 				'rows' => 2,
 			),
 		),

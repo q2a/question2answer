@@ -311,28 +311,28 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 				'label' => qa_lang_html('question/q_title_label'),
 				'tags' => 'name="q_title"',
 				'value' => qa_html(($question['editable'] && isset($in['title'])) ? $in['title'] : $question['title']),
-				'error' => qa_html(@$errors['title']),
+				'error' => qa_html(isset($errors['title']) ? $errors['title'] : null),
 			),
 
 			'category' => array(
 				'label' => qa_lang_html('question/q_category_label'),
-				'error' => qa_html(@$errors['categoryid']),
+				'error' => qa_html(isset($errors['categoryid']) ? $errors['categoryid'] : null),
 			),
 
 			'content' => array(
 				'label' => qa_lang_html('question/q_content_label'),
-				'error' => qa_html(@$errors['content']),
+				'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 			),
 
 			'extra' => array(
 				'label' => qa_html(qa_opt('extra_field_prompt')),
 				'tags' => 'name="q_extra"',
 				'value' => qa_html(isset($in['extra']) ? $in['extra'] : $question['extra']),
-				'error' => qa_html(@$errors['extra']),
+				'error' => qa_html(isset($errors['extra']) ? $errors['extra'] : null),
 			),
 
 			'tags' => array(
-				'error' => qa_html(@$errors['tags']),
+				'error' => qa_html(isset($errors['tags']) ? $errors['tags'] : null),
 			),
 
 		),
@@ -397,7 +397,7 @@ function qa_page_q_edit_q_form(&$qa_content, $question, $in, $errors, $completet
 
 		qa_set_up_notify_fields($qa_content, $form['fields'], 'Q', qa_get_logged_in_email(),
 			isset($in['notify']) ? $in['notify'] : !empty($question['notify']),
-			isset($in['email']) ? $in['email'] : @$question['notify'], @$errors['email'], 'q_');
+			isset($in['email']) ? $in['email'] : @$question['notify'], isset($errors['email']) ? $errors['email'] : null, 'q_');
 	}
 
 	if (!qa_user_post_permit_error('permit_edit_silent', $question)) {
@@ -538,7 +538,7 @@ function qa_page_q_close_q_form(&$qa_content, $question, $id, $in, $errors)
 				'label' =>
 					'<span id="close_label_other">' . qa_lang_html('question/close_reason_title') . '</span>',
 				'value' => @$in['details'],
-				'error' => qa_html(@$errors['details']),
+				'error' => qa_html(isset($errors['details']) ? $errors['details'] : null),
 			),
 		),
 
@@ -655,7 +655,7 @@ function qa_page_q_edit_a_form(&$qa_content, $id, $answer, $question, $answers, 
 			'content' => array_merge(
 				qa_editor_load_field($editor, $qa_content, $content, $format, $prefix . 'content', 12),
 				array(
-					'error' => qa_html(@$errors['content']),
+					'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 				)
 			),
 		),
@@ -737,7 +737,7 @@ function qa_page_q_edit_a_form(&$qa_content, $id, $answer, $question, $answers, 
 
 		qa_set_up_notify_fields($qa_content, $form['fields'], 'A', qa_get_logged_in_email(),
 			isset($in['notify']) ? $in['notify'] : !empty($answer['notify']),
-			isset($in['email']) ? $in['email'] : @$answer['notify'], @$errors['email'], $prefix);
+			isset($in['email']) ? $in['email'] : @$answer['notify'], isset($errors['email']) ? $errors['email'] : null, $prefix);
 	}
 
 	if (!qa_user_post_permit_error('permit_edit_silent', $answer)) {
@@ -913,7 +913,7 @@ function qa_page_q_edit_c_form(&$qa_content, $id, $comment, $in, $errors)
 			'content' => array_merge(
 				qa_editor_load_field($editor, $qa_content, $content, $format, $prefix . 'content', 4, true),
 				array(
-					'error' => qa_html(@$errors['content']),
+					'error' => qa_html(isset($errors['content']) ? $errors['content'] : null),
 				)
 			),
 		),
@@ -944,7 +944,7 @@ function qa_page_q_edit_c_form(&$qa_content, $id, $comment, $in, $errors)
 
 		qa_set_up_notify_fields($qa_content, $form['fields'], 'C', qa_get_logged_in_email(),
 			isset($in['notify']) ? $in['notify'] : !empty($comment['notify']),
-			isset($in['email']) ? $in['email'] : @$comment['notify'], @$errors['email'], $prefix);
+			isset($in['email']) ? $in['email'] : @$comment['notify'], isset($errors['email']) ? $errors['email'] : null, $prefix);
 	}
 
 	if (!qa_user_post_permit_error('permit_edit_silent', $comment)) {

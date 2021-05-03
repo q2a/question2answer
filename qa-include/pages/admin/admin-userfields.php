@@ -53,6 +53,8 @@ if (!qa_admin_check_privileges($qa_content))
 
 $securityexpired = false;
 
+$errors = array();
+
 if (qa_clicked('docancel'))
 	qa_redirect('admin/users');
 
@@ -75,8 +77,6 @@ elseif (qa_clicked('dosavefield')) {
 			$inflags = $intype | ($inonregister ? QA_FIELD_FLAGS_ON_REGISTER : 0);
 			$inposition = qa_post_text('position');
 			$inpermit = (int)qa_post_text('permit');
-
-			$errors = array();
 
 			// Verify the name is legitimate
 
@@ -175,7 +175,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="name" id="name"',
 			'label' => qa_lang_html('admin/field_name'),
 			'value' => qa_html(isset($inname) ? $inname : qa_user_userfield_label($editfield)),
-			'error' => qa_html(@$errors['name']),
+			'error' => qa_html(isset($errors['name']) ? $errors['name'] : null),
 		),
 
 		'delete' => array(

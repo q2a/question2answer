@@ -104,6 +104,8 @@ if (qa_using_tags()) {
 	$in['tags'] = qa_get_tags_field_value('tags');
 }
 
+$errors = array();
+
 if (qa_clicked('doask')) {
 	require_once QA_INCLUDE_DIR.'app/post-create.php';
 	require_once QA_INCLUDE_DIR.'util/string.php';
@@ -118,7 +120,6 @@ if (qa_clicked('doask')) {
 
 	qa_get_post_content('editor', 'content', $in['editor'], $in['content'], $in['format'], $in['text']);
 
-	$errors = array();
 
 	if (!qa_check_form_security_code('ask', qa_post_text('code'))) {
 		$errors['page'] = qa_lang_html('misc/form_security_again');
@@ -181,14 +182,14 @@ if (qa_clicked('doask')) {
 $qa_content = qa_content_prepare(false, array_keys(qa_category_path($categories, @$in['categoryid'])));
 
 $qa_content['title'] = qa_lang_html(isset($followanswer) ? 'question/ask_follow_title' : 'question/ask_title');
-$qa_content['error'] = @$errors['page'];
+$qa_content['error'] = isset($errors['page']) ? $errors['page'] : null;
 
 $editorname = isset($in['editor']) ? $in['editor'] : qa_opt('editor_for_qs');
 $editor = qa_load_editor(@$in['content'], @$in['format'], $editorname);
 
 $field = qa_editor_load_field($editor, $qa_content, @$in['content'], @$in['format'], 'content', 12, false);
 $field['label'] = qa_lang_html('question/q_content_label');
-$field['error'] = qa_html(@$errors['content']);
+$field['error'] = qa_html(isset($errors['content']) ? $errors['content'] : null);
 
 $custom = qa_opt('show_custom_ask') ? trim(qa_opt('custom_ask')) : '';
 
@@ -207,7 +208,7 @@ $qa_content['form'] = array(
 			'label' => qa_lang_html('question/q_title_label'),
 			'tags' => 'name="title" id="title" autocomplete="off"',
 			'value' => qa_html(@$in['title']),
-			'error' => qa_html(@$errors['title']),
+			'error' => qa_html(isset($errors['title']) ? $errors['title'] : null),
 		),
 
 		'similar' => array(
@@ -260,7 +261,7 @@ if (isset($followanswer)) {
 if (qa_using_categories() && count($categories)) {
 	$field = array(
 		'label' => qa_lang_html('question/q_category_label'),
-		'error' => qa_html(@$errors['categoryid']),
+		'error' => qa_html(isset($errors['categoryid']) ? $errors['categoryid'] : null),
 	);
 
 	qa_set_up_category_field($qa_content, $field, 'category', $categories, $in['categoryid'], true, qa_opt('allow_no_sub_category'));
@@ -276,7 +277,7 @@ if (qa_opt('extra_field_active')) {
 		'label' => qa_html(qa_opt('extra_field_prompt')),
 		'tags' => 'name="extra"',
 		'value' => qa_html(@$in['extra']),
-		'error' => qa_html(@$errors['extra']),
+		'error' => qa_html(isset($errors['extra']) ? $errors['extra'] : null),
 	);
 
 	qa_array_insert($qa_content['form']['fields'], null, array('extra' => $field));
@@ -284,7 +285,7 @@ if (qa_opt('extra_field_active')) {
 
 if (qa_using_tags()) {
 	$field = array(
-		'error' => qa_html(@$errors['tags']),
+		'error' => qa_html(isset($errors['tags']) ? $errors['tags'] : null),
 	);
 
 	qa_set_up_tag_field($qa_content, $field, 'tags', isset($in['tags']) ? $in['tags'] : array(), array(),
@@ -298,11 +299,11 @@ if (!isset($userid) && qa_opt('allow_anonymous_naming')) {
 }
 
 qa_set_up_notify_fields($qa_content, $qa_content['form']['fields'], 'Q', qa_get_logged_in_email(),
-	isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], @$errors['email']);
+	isset($in['notify']) ? $in['notify'] : qa_opt('notify_users_default'), @$in['email'], isset($errors['email']) ? $errors['email'] : null);
 
 if ($captchareason) {
 	require_once QA_INCLUDE_DIR.'app/captcha.php';
-	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors, qa_captcha_reason_note($captchareason));
+	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], $errors, qa_captcha_reason_note($captchareason));
 }
 
 $qa_content['focusid'] = 'title';

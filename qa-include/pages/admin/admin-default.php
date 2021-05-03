@@ -976,7 +976,7 @@ foreach ($showoptions as $optionname) {
 			'tags' => 'name="option_' . $optionname . '" id="option_' . $optionname . '"',
 			'value' => qa_html($value),
 			'type' => $type,
-			'error' => qa_html(@$errors[$optionname]),
+			'error' => qa_html(isset($errors[$optionname]) ? $errors[$optionname] : null),
 		);
 
 		if (isset($optionmaximum[$optionname]))

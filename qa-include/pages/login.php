@@ -51,6 +51,8 @@ $inemailhandle = qa_post_text('emailhandle');
 $inpassword = qa_post_text('password');
 $inremember = qa_post_text('remember');
 
+$errors = array();
+
 if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
@@ -63,8 +65,6 @@ if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 		}
 		else {
 			qa_limits_increment(null, QA_LIMIT_LOGINS);
-
-			$errors = array();
 
 			if (qa_opt('allow_login_email_only') || strpos($inemailhandle, '@') !== false) { // handles can't contain @ symbols
 				$matchusers = qa_db_user_find_by_email($inemailhandle);
@@ -153,7 +153,7 @@ $qa_content['form'] = array(
 			'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
 			'tags' => 'name="emailhandle" id="emailhandle" dir="auto"',
 			'value' => qa_html(@$inemailhandle),
-			'error' => qa_html(@$errors['emailhandle']),
+			'error' => qa_html(isset($errors['emailhandle']) ? $errors['emailhandle'] : null),
 		),
 
 		'password' => array(
@@ -161,7 +161,7 @@ $qa_content['form'] = array(
 			'label' => qa_lang_html('users/password_label'),
 			'tags' => 'name="password" id="password" dir="auto"',
 			'value' => qa_html(@$inpassword),
-			'error' => empty($errors['password']) ? '' : (qa_html(@$errors['password']) . ' - ' . $forgothtml),
+			'error' => empty($errors['password']) ? '' : (qa_html(isset($errors['password']) ? $errors['password'] : null) . ' - ' . $forgothtml),
 			'note' => $passwordsent ? qa_lang_html('users/password_sent') : $forgothtml,
 		),
 

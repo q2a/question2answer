@@ -396,8 +396,9 @@ foreach ($answerids as $answerid) {
 		// Prepare content for comments on this answer, plus add or edit comment forms
 
 		if (($formtype == 'c_add' && $formpostid == $answerid) || ($answer['commentbutton'] && !$formrequested)) { // ...to be added
+			$cnewerrors[$answerid] = isset($cnewerrors[$answerid]) ? $cnewerrors[$answerid] : array();
 			$a_view['c_form'] = qa_page_q_add_c_form($qa_content, $question, $answer, 'c' . $answerid,
-				$captchareason, @$cnewin[$answerid], @$cnewerrors[$answerid], $formtype == 'c_add');
+				$captchareason, @$cnewin[$answerid], $cnewerrors[$answerid], $formtype == 'c_add');
 
 			if ($formtype == 'c_add' && $formpostid == $answerid) {
 				$jumptoanchor = 'c' . $answerid;
@@ -405,6 +406,7 @@ foreach ($answerids as $answerid) {
 			}
 
 		} elseif ($formtype == 'c_edit' && @$commentsfollows[$formpostid]['parentid'] == $answerid) { // ...being edited
+			$cediterrors[$formpostid] = isset($cediterrors[$formpostid]) ? $cediterrors[$formpostid] : array();
 			$a_view['c_form'] = qa_page_q_edit_c_form($qa_content, 'c' . $formpostid, $commentsfollows[$formpostid],
 				@$ceditin[$formpostid], @$cediterrors[$formpostid]);
 
