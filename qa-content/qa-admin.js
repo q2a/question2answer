@@ -148,6 +148,13 @@ function qa_version_check(uri, version, elem, isCore)
 	);
 }
 
+function qa_version_check_array(versionChecks)
+{
+	for (var i = 0; i < versionChecks.length; i++) {
+		qa_version_check(versionChecks[i].uri, versionChecks[i].version, versionChecks[i].elem, false)
+	}
+}
+
 function qa_get_enabled_plugins_hashes()
 {
 	var hashes = [];
