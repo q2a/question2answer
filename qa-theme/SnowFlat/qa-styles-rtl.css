@@ -17,10 +17,10 @@ blockquote {
 	border-right: 11px solid #3498db;
 }
 
-h1 {
-	padding: 8px 20px 8px 52px;
+.qa-main-heading {
+	padding-right: 20px;
+	padding-left: 0;
 }
-
 
 .qa-search-field {
 	margin: 0 0 0 -40px;
@@ -29,10 +29,6 @@ h1 {
 
 .qa-search-button {
 	position: relative;
-}
-
-.qam-title-rss {
-	float: left;
 }
 
 .entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
@@ -53,11 +49,6 @@ h1 {
 }
 .entry-content ol > li > ol, .qa-c-item-content ol > li > ol {
 	margin: 0 20px 0 0;
-}
-
-.qa-favoriting {
-	right: auto;
-	left: 10px;
 }
 
 .qa-logo {
@@ -154,6 +145,11 @@ h1 {
 	border-right: 1px solid #8e44ad;
 }
 
+.qa-favoriting .qa-waiting {
+	margin-left: 0;
+	margin-right: -37px;
+}
+
 .qa-q-item-stats {
 	float: right;
 }
@@ -212,15 +208,7 @@ h1 {
 	right: 0;
 }
 
-.qa-tag-link.qa-tag-favorited, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited {
-	padding-right: 25px;
-}
-.qa-tag-link.qa-tag-favorited:before, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before {
-	left: auto;
-	right: 0;
-}
-
-.qa-top-users-label .qa-avatar-link {
+.qa-top-users-avatar .qa-avatar-link {
 	float: right;
 	margin-left: 1em;
 }
@@ -228,16 +216,23 @@ h1 {
 	float: right;
 }
 
-.qa-top-users-label .qa-user-link:before {
-	left: auto;
-	right: -5px;
-	border-left: 5px solid #e74c3c;
+.qa-ranking-users-points .qa-top-users-score {
+	float: left;
+	padding-left: 6px;
+	padding-right: 1.8em;
 }
+
+.qa-top-users-score:before {
+	left: initial;
+	right: 0;
+}
+
 @media (min-width: 980px) {
 	.qa-top-users-label .qa-user-link:after {
-		right: auto;
+		right: initial;
 		left: 0;
 		border-right: 7px solid #e74c3c;
+		border-left: initial;
 	}
 
 	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after {
@@ -247,7 +242,8 @@ h1 {
 	}
 }
 .qa-top-users-label .qa-user-link.qa-user-favorited {
-	padding-right: 22px;
+	padding-left: 10px;
+	padding-right: 5px;
 }
 
 .qam-user-score-icon {
