@@ -672,7 +672,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				return null;
 		}
 
-		return sprintf('<a href="%s" class="qa-avatar-link">%s</a>', qa_path_html('user/' . $handle), $html);
+		return sprintf('<a href="%s" class="qa-avatar-link" alt="%s\'s avatar">%s</a>', qa_path_html('user/' . $handle), $handle, $html);
 	}
 
 
