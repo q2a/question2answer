@@ -671,6 +671,8 @@ if (QA_FINAL_EXTERNAL_USERS) {
 			default: // NULL
 				return null;
 		}
+		
+		$html = str_replace('alt=""', 'alt="' . $handle . '\'s avatar"', $html);
 
 		return sprintf('<a href="%s" class="qa-avatar-link">%s</a>', qa_path_html('user/' . $handle), $html);
 	}
