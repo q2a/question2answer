@@ -1029,6 +1029,7 @@ function qa_sanitize_html($html, $linksnewwindow = false, $storage = false)
 		'keep_bad' => 0,
 		'anti_link_spam' => array('/.*/', ''),
 		'hook_tag' => 'qa_sanitize_html_hook_tag',
+		'deny_attribute' => 'itemprop, itemscope, itemtype, itemid, itemref',
 	));
 
 	return $safe;
