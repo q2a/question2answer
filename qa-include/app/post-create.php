@@ -84,10 +84,9 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 
 	if ($queued) {
 		qa_db_queuedcount_update();
-
 	} else {
 		qa_post_index($postid, 'Q', $postid, @$followanswer['postid'], $title, $content, $format, $text, $tagstring, $categoryid);
-		qa_update_counts_for_q($postid);
+		qa_update_counts_for_q($postid, 1);
 		qa_db_points_update_ifuser($userid, 'qposts');
 	}
 
@@ -110,20 +109,24 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 	return $postid;
 }
 
-
 /**
- * Perform various common cached count updating operations to reflect changes in the question whose id is $postid
+ * Perform various common cached count updating operations to reflect changes in the question whose id is $postid. The $difference
+ * representes the amount of change (positive or negative) that the cache value will experience. If the $difference is null then a
+ * full recalculation of the cache value is executed.
  * @param $postid
+ * @param int|null $difference
  */
-function qa_update_counts_for_q($postid)
+function qa_update_counts_for_q($postid, $difference)
 {
-	if (isset($postid)) // post might no longer exist
+	if (isset($postid)) { // post might no longer exist
 		qa_db_category_path_qcount_update(qa_db_post_get_category_path($postid));
+	}
 
-	qa_db_qcount_update();
-	qa_db_unaqcount_update();
-	qa_db_unselqcount_update();
-	qa_db_unupaqcount_update();
+	qa_db_qcount_update($difference);
+	qa_db_unaqcount_update($difference);
+	qa_db_unselqcount_update($difference);
+	qa_db_unupaqcount_update($difference);
+
 	qa_db_tagcount_update();
 }
 

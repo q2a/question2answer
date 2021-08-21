@@ -330,20 +330,45 @@ function qa_db_word_tagcount_update($wordids)
 	}
 }
 
+/**
+ * Update the cached count in the database of the number of questions (excluding hidden/queued)
+ *
+ * @param string $cacheKey
+ * @param string $countQuery
+ * @param int|null $increment
+ */
+function qa_db_generic_cache_update($cacheKey, $countQuery, $increment = null)
+{
+	if (!qa_should_update_counts()) {
+		return;
+	}
+
+	$sql =
+		'INSERT INTO ^options (title, content) ' .
+		sprintf('VALUES ("%s", #) ', $cacheKey) .
+		'ON DUPLICATE KEY UPDATE content = VALUES(content)';
+
+	if (isset($increment)) {
+		$sql .= ' + content';
+	} else {
+		$increment = qa_db_read_one_value(qa_db_query_sub($countQuery));
+	}
+
+	qa_db_query_sub($sql, $increment);
+}
 
 /**
  * Update the cached count in the database of the number of questions (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_qcount_update()
+function qa_db_qcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_qcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_qcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q"',
+		$increment
+	);
 }
 
 
@@ -385,61 +410,55 @@ function qa_db_ccount_update()
 function qa_db_tagcount_update()
 {
 	if (qa_should_update_counts()) {
+		$cachedValue = qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^words WHERE tagcount > 0'));
 		qa_db_query_sub(
 			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_tagcount', COUNT(*) FROM ^words " .
-			"WHERE tagcount > 0 " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			"VALUES ('cache_tagcount', #) " .
+			"ON DUPLICATE KEY UPDATE content = VALUES(content)",
+			$cachedValue
 		);
 	}
 }
-
 
 /**
  * Update the cached count in the database of the number of unanswered questions (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_unaqcount_update()
+function qa_db_unaqcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_unaqcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' AND acount = 0 AND closedbyid IS NULL " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_unaqcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q" AND acount = 0 AND closedbyid IS NULL',
+		$increment
+	);
 }
-
 
 /**
  * Update the cached count in the database of the number of questions with no answer selected (excluding hidden/queued)
  */
-function qa_db_unselqcount_update()
+function qa_db_unselqcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_unselqcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' AND selchildid IS NULL AND closedbyid IS NULL " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_unselqcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q" AND selchildid IS NULL AND closedbyid IS NULL',
+		$increment
+	);
 }
-
 
 /**
  * Update the cached count in the database of the number of questions with no upvoted answers (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_unupaqcount_update()
+function qa_db_unupaqcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' AND amaxvote = 0 AND closedbyid IS NULL " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_unupaqcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q" AND amaxvote = 0 AND closedbyid IS NULL',
+		$increment
+	);
 }
 
 

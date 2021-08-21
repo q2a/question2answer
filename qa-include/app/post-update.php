@@ -97,7 +97,24 @@ function qa_question_set_content($oldquestion, $title, $content, $format, $text,
 			qa_post_unindex($closepost['postid']);
 
 		qa_db_post_set_type($oldquestion['postid'], 'Q_QUEUED');
-		qa_update_counts_for_q($oldquestion['postid']);
+
+		// Update caches
+		qa_db_category_path_qcount_update(qa_db_post_get_category_path($oldquestion['postid']));
+
+		qa_db_qcount_update(-1);
+		if ($oldquestion['closedbyid'] === null) {
+			if ((int)$oldquestion['acount'] === 0) {
+				qa_db_unaqcount_update(-1);
+			}
+			if ((int)$oldquestion['amaxvote'] === 0) {
+				qa_db_unupaqcount_update(-1);
+			}
+			if ($oldquestion['selchildid'] === null) {
+				qa_db_unselqcount_update(-1);
+			}
+		}
+		qa_db_tagcount_update();
+
 		qa_db_queuedcount_update();
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 
@@ -390,7 +407,36 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 		}
 	}
 
-	qa_update_counts_for_q($oldquestion['postid']);
+	// Update caches
+	$difference = null;
+	if ($status === QA_POST_STATUS_NORMAL) {
+		if ($oldquestion['type'] !== 'Q') {
+			$difference = 1;
+		}
+	} else {
+		if ($oldquestion['type'] === 'Q') {
+			$difference = -1;
+		}
+	}
+
+	if (isset($difference)) {
+		qa_db_category_path_qcount_update(qa_db_post_get_category_path($oldquestion['postid']));
+
+		qa_db_qcount_update($difference);
+		if ($oldquestion['closedbyid'] === null) {
+			if ((int)$oldquestion['acount'] === 0) {
+				qa_db_unaqcount_update($difference);
+			}
+			if ((int)$oldquestion['amaxvote'] === 0) {
+				qa_db_unupaqcount_update($difference);
+			}
+			if ($oldquestion['selchildid'] === null) {
+				qa_db_unselqcount_update($difference);
+			}
+		}
+		qa_db_tagcount_update();
+	}
+
 	qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 
 	if ($wasqueued || ($status == QA_POST_STATUS_QUEUED))
@@ -558,8 +604,7 @@ function qa_question_delete($oldquestion, $userid, $handle, $cookieid, $oldclose
 
 	qa_post_unindex($oldquestion['postid']);
 	qa_db_post_delete($oldquestion['postid']); // also deletes any related voteds due to foreign key cascading
-	qa_update_counts_for_q(null);
-	qa_db_category_path_qcount_update($oldpath); // don't do inside qa_update_counts_for_q() since post no longer exists
+	qa_db_category_path_qcount_update($oldpath);
 	qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects', 'qvoteds', 'upvoteds', 'downvoteds'));
 
 	foreach ($useridvotes as $voteruserid => $vote) {
