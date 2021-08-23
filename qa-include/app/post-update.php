@@ -175,10 +175,13 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 	$lastip = qa_remote_ip_address();
 
 	qa_db_post_set_selchildid($oldquestion['postid'], isset($selchildid) ? $selchildid : null, $userid, $lastip);
+
 	qa_db_points_update_ifuser($oldquestion['userid'], 'aselects');
-	qa_db_unselqcount_update();
 
 	if (isset($oldselchildid) && isset($answers[$oldselchildid])) {
+		// Update caches
+		qa_db_unselqcount_update(1);
+
 		qa_db_points_update_ifuser($answers[$oldselchildid]['userid'], 'aselecteds');
 
 		qa_report_event('a_unselect', $userid, $handle, $cookieid, array(
@@ -199,6 +202,9 @@ function qa_question_set_selchildid($userid, $handle, $cookieid, $oldquestion, $
 	}
 
 	if (isset($selchildid)) {
+		// Update caches
+		qa_db_unselqcount_update(-1);
+
 		qa_db_points_update_ifuser($answers[$selchildid]['userid'], 'aselecteds');
 
 		qa_report_event('a_select', $userid, $handle, $cookieid, array(
@@ -1033,7 +1039,6 @@ function qa_answer_delete($oldanswer, $question, $userid, $handle, $cookieid)
 	if ($question['selchildid'] == $oldanswer['postid']) {
 		qa_db_post_set_selchildid($question['postid'], null);
 		qa_db_points_update_ifuser($question['userid'], 'aselects');
-		qa_db_unselqcount_update();
 	}
 
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'avoteds', 'upvoteds', 'downvoteds'));
