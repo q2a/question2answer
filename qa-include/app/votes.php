@@ -139,9 +139,41 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 
 	$prefix = strtolower($post['basetype']);
 
+	// If post is an answer
 	if ($prefix === 'a') {
-		qa_db_post_acount_update($post['parentid']);
-		qa_db_unupaqcount_update();
+		// Update caches
+		$questionId = $post['parentid'];
+
+		$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($questionId)))[$questionId];
+		$originalAmaxvote = (int)$tempQuestion['amaxvote'];
+
+		qa_db_post_acount_update($questionId);
+
+		$newNetvotes = (int)$post['netvotes'] + $vote - $oldvote;
+
+		// Try, as efficiently as possible, to detect an `amaxvote` change from 0 to non-0 and vice-versa
+
+		// If the answer being voted has a chance of being the one that defines the `amaxvote`
+		if ($post['type'] === 'A' && $originalAmaxvote === max((int)$post['netvotes'], 0)) {
+			if ($originalAmaxvote === 0) {
+				// If the original `amaxvote` would turn from 0 to non-0
+				if ($newNetvotes > 0) {
+					qa_db_unupaqcount_update(-1);
+				}
+			} elseif ($newNetvotes <= 0) { // If the original `amaxvote` might turn from non-0 to 0
+				// If the amount of answers is only 1 then the `amaxvote` is defined by this same answer
+				if ((int)$tempQuestion['acount'] === 1) {
+					qa_db_unupaqcount_update(1);
+				} else { // If there are 2 or more answers
+					// The answer being voted has a chance of being the one that defines the `amaxvote`
+					// Check if the call to qa_db_post_acount_update() updated the amaxvote. This query is a last resort
+					$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($questionId)))[$questionId];
+					if ((int)$tempQuestion['amaxvote'] === 0) {
+						qa_db_unupaqcount_update(1);
+					}
+				}
+			}
+		}
 	}
 
 	$columns = array();
