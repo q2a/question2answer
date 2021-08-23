@@ -389,16 +389,14 @@ function qa_db_acount_update($increment = null)
 /**
  * Update the cached count in the database of the number of comments (excluding hidden/queued)
  */
-function qa_db_ccount_update()
+function qa_db_ccount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_ccount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'C' " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_ccount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "C"',
+		$increment
+	);
 }
 
 

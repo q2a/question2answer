@@ -315,7 +315,7 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 		}
 
 		qa_db_points_update_ifuser($userid, 'cposts');
-		qa_db_ccount_update();
+		qa_db_ccount_update(1);
 	}
 
 	$thread = array();

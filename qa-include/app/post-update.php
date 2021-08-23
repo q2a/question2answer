@@ -1114,7 +1114,12 @@ function qa_comment_set_content($oldcomment, $content, $format, $text, $notify, 
 
 	if ($setupdated && $remoderate) {
 		qa_db_post_set_type($oldcomment['postid'], 'C_QUEUED');
-		qa_db_ccount_update();
+
+		// Update caches
+		// If comment was in normal state
+		if ($oldcomment['type'] === 'C') {
+			qa_db_ccount_update(-1);
+		}
 		qa_db_queuedcount_update();
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 
@@ -1229,7 +1234,11 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 		}
 	}
 
-	qa_db_ccount_update();
+	// If new comment is in normal state
+	if ($newtype === 'C') {
+		qa_db_ccount_update(1);
+	}
+
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts', 'avoteds', 'cvoteds'));
 
 	$useridvotes = qa_db_uservote_post_get($oldanswer['postid']);
@@ -1359,7 +1368,18 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 			qa_db_post_set_created($oldcomment['postid'], null);
 	}
 
-	qa_db_ccount_update();
+	// Update caches
+	$difference = null;
+	if ($status === QA_POST_STATUS_NORMAL) {
+		if ($oldcomment['type'] !== 'C') {
+			qa_db_ccount_update(1);
+		}
+	} else {
+		if ($oldcomment['type'] === 'C') {
+			qa_db_ccount_update(-1);
+		}
+	}
+
 	qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 
 	if ($wasqueued || $status == QA_POST_STATUS_QUEUED)
@@ -1451,7 +1471,6 @@ function qa_comment_delete($oldcomment, $question, $parent, $userid, $handle, $c
 	qa_post_unindex($oldcomment['postid']);
 	qa_db_post_delete($oldcomment['postid']);
 	qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
-	qa_db_ccount_update();
 
 	qa_report_event('c_delete', $userid, $handle, $cookieid, $params);
 }
