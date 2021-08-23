@@ -224,7 +224,13 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 		if ($question['type'] == 'Q') // don't index answer if parent question is hidden or queued
 			qa_post_index($postid, 'A', $question['postid'], $question['postid'], null, $content, $format, $text, null, $question['categoryid']);
 
-		qa_update_q_counts_for_a($question['postid']);
+		qa_db_post_acount_update($question['postid']);
+		qa_db_hotness_update($question['postid']);
+		qa_db_acount_update(1);
+		if ((int)$question['acount'] === 0) {
+			qa_db_unaqcount_update(-1);
+		}
+
 		qa_db_points_update_ifuser($userid, 'aposts');
 	}
 
@@ -246,16 +252,19 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 
 
 /**
- * Perform various common cached count updating operations to reflect changes in an answer of question $questionid
+ * Perform various common cached count updating operations to reflect changes in an answer of question $questionid. The $difference
+ * representes the amount of change (positive or negative) that the cache value will experience. If the $difference is null then a
+ * full recalculation of the cache value is executed.
  * @param $questionid
+ * @param int|null$difference
  */
-function qa_update_q_counts_for_a($questionid)
+function qa_update_q_counts_for_a($questionid, $difference)
 {
 	qa_db_post_acount_update($questionid);
 	qa_db_hotness_update($questionid);
-	qa_db_acount_update();
-	qa_db_unaqcount_update();
-	qa_db_unupaqcount_update();
+	qa_db_acount_update($difference);
+	qa_db_unaqcount_update($difference);
+	qa_db_unupaqcount_update($difference);
 }
 
 

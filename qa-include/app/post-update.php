@@ -718,7 +718,29 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 		}
 
 		qa_db_post_set_type($oldanswer['postid'], 'A_QUEUED');
-		qa_update_q_counts_for_a($question['postid']);
+
+		// Update caches
+		qa_db_post_acount_update($question['postid']);
+		qa_db_hotness_update($question['postid']);
+		qa_db_acount_update(-1);
+
+		if ($question['closedbyid'] === null) {
+			if ((int)$question['acount'] === 1) {
+				qa_db_unaqcount_update(1);
+			}
+
+			// If the answer being queued is the one that defines the question's `amaxvote`
+			if ((int)$question['amaxvote'] > 0 && (int)$question['amaxvote'] === (int)$oldanswer['netvotes']) {
+				// As qa_db_post_acount_update() has already recalculated `amaxvote` in the DB, it is faster to check for it
+				// and apply the difference, if needed, rather than execute a whole recount with qa_db_unupaqcount_update(null)
+				$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($question['postid'])))[$question['postid']];
+				// If the current `amaxvote` is 0 (which means it has changed after queuing the question)
+				if ((int)$tempQuestion['amaxvote'] === 0) {
+					qa_db_unupaqcount_update(1);
+				}
+			}
+		}
+
 		qa_db_queuedcount_update();
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 
@@ -839,7 +861,60 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 			qa_db_post_set_created($oldanswer['postid'], null);
 	}
 
-	qa_update_q_counts_for_a($question['postid']);
+	// Update caches
+	$difference = null;
+	if ($status === QA_POST_STATUS_NORMAL) {
+		if ($oldanswer['type'] !== 'A') {
+			$difference = 1;
+		}
+	} else {
+		if ($oldanswer['type'] === 'A') {
+			$difference = -1;
+		}
+	}
+
+	if (isset($difference)) {
+		qa_db_post_acount_update($question['postid']);
+		qa_db_hotness_update($question['postid']);
+		qa_db_acount_update($difference);
+
+		if ($question['closedbyid'] === null) {
+			$aCount = (int)$question['acount'];
+			$aMaxVote = (int)$question['amaxvote'];
+
+			// If answer is hidden or queued
+			if ($difference === -1) {
+				// If there was only 1 answer
+				if ($aCount === 1) {
+					qa_db_unaqcount_update(1);
+				}
+
+				// If the answer being hidden or queued is the one that defines the question's `amaxvote`
+				if ($aMaxVote > 0 && $aMaxVote === (int)$oldanswer['netvotes']) {
+					// As qa_db_post_acount_update() has already recalculated `amaxvote` in the DB, it is faster to check for it
+					// and apply the difference, if needed, rather than execute a whole recount with qa_db_unupaqcount_update(null)
+					$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($question['postid'])))[$question['postid']];
+					// If the current `amaxvote` is 0 (which means it has changed after queuing the question)
+					if ((int)$tempQuestion['amaxvote'] === 0) {
+						qa_db_unupaqcount_update(1);
+					}
+				}
+
+				// No need to update qa_db_unselqcount_update as it has been already calculated while deselecting the answer
+			} else { // If answer became visible
+				// If there was no answer
+				if ($aCount === 0) {
+					qa_db_unaqcount_update(-1);
+				}
+
+				// If the question `amaxvote` was 0 and the newly visible answer's `netvotes` are higher than 0
+				if ($aMaxVote === 0 && (int)$oldanswer['netvotes'] > 0) {
+					qa_db_unupaqcount_update(-1);
+				}
+			}
+		}
+	}
+
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 
 	if ($wasqueued || $status == QA_POST_STATUS_QUEUED)
@@ -928,7 +1003,6 @@ function qa_answer_delete($oldanswer, $question, $userid, $handle, $cookieid)
 		qa_db_unselqcount_update();
 	}
 
-	qa_update_q_counts_for_a($question['postid']);
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'avoteds', 'upvoteds', 'downvoteds'));
 
 	foreach ($useridvotes as $voteruserid => $vote) {
@@ -1097,7 +1171,31 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 			qa_db_post_set_parent($commentfollow['postid'], $parentid);
 	}
 
-	qa_update_q_counts_for_a($question['postid']);
+	// Update caches
+	// If answer was hidden or queued
+	if ($oldanswer['type'] === 'A') {
+		qa_db_post_acount_update($question['postid']);
+		qa_db_hotness_update($question['postid']);
+		qa_db_acount_update(-1);
+
+		if ($question['closedbyid'] === null) {
+			if ((int)$question['acount'] === 1) {
+				qa_db_unaqcount_update(1);
+			}
+			// If the answer being removed is the one that defines the question's `amaxvote`
+			if ((int)$question['amaxvote'] > 0 && (int)$question['amaxvote'] === (int)$oldanswer['netvotes']) {
+				// As qa_db_post_acount_update() has already recalculated `amaxvote` in the DB, it is faster to check for it
+				// and apply the difference, if needed, rather than execute a whole recount with qa_db_unupaqcount_update(null)
+				$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($question['postid'])))[$question['postid']];
+				// If the current `amaxvote` is 0 (which means it has changed after removing the question)
+				if ((int)$tempQuestion['amaxvote'] === 0) {
+					qa_db_unupaqcount_update(1);
+				}
+			}
+			// qa_db_unselqcount_update is run later, when unselecting the answer
+		}
+	}
+
 	qa_db_ccount_update();
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts', 'avoteds', 'cvoteds'));
 
