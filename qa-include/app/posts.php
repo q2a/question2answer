@@ -229,9 +229,9 @@ function qa_post_set_closed($questionid, $closed = true, $originalpostid = null,
 			qa_question_close_other($oldquestion, $oldclosepost, $note, $byuserid, $byhandle, null);
 		else
 			qa_fatal_error('Question must be closed as a duplicate or with a note');
-
-	} else
+	} else {
 		qa_question_close_clear($oldquestion, $oldclosepost, $byuserid, $byhandle, null);
+	}
 }
 
 /**

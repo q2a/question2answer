@@ -242,6 +242,17 @@ function qa_question_close_clear($oldquestion, $oldclosepost, $userid, $handle, 
 			qa_db_post_delete($oldclosepost['postid']);
 		}
 
+		// Update caches
+		if ((int)$oldquestion['acount'] === 0) {
+			qa_db_unaqcount_update(1);
+		}
+		if ((int)$oldquestion['amaxvote'] === 0) {
+			qa_db_unupaqcount_update(1);
+		}
+		if (!isset($oldquestion['selchildid'])) {
+			qa_db_unselqcount_update(1);
+		}
+
 		qa_report_event('q_reopen', $userid, $handle, $cookieid, array(
 			'postid' => $oldquestion['postid'],
 			'oldquestion' => $oldquestion,
@@ -266,6 +277,17 @@ function qa_question_close_duplicate($oldquestion, $oldclosepost, $originalposti
 	qa_question_close_clear($oldquestion, $oldclosepost, $userid, $handle, $cookieid);
 
 	qa_db_post_set_closed($oldquestion['postid'], $originalpostid, $userid, qa_remote_ip_address());
+
+	// Update caches
+	if ((int)$oldquestion['acount'] === 0) {
+		qa_db_unaqcount_update(-1);
+	}
+	if ((int)$oldquestion['amaxvote'] === 0) {
+		qa_db_unupaqcount_update(-1);
+	}
+	if (!isset($oldquestion['selchildid'])) {
+		qa_db_unselqcount_update(-1);
+	}
 
 	qa_report_event('q_close', $userid, $handle, $cookieid, array(
 		'postid' => $oldquestion['postid'],
@@ -300,6 +322,17 @@ function qa_question_close_other($oldquestion, $oldclosepost, $note, $userid, $h
 		qa_post_index($postid, 'NOTE', $oldquestion['postid'], $oldquestion['postid'], null, $note, '', $note, null, $oldquestion['categoryid']);
 
 	qa_db_post_set_closed($oldquestion['postid'], $postid, $userid, qa_remote_ip_address());
+
+	// Update caches
+	if ((int)$oldquestion['acount'] === 0) {
+		qa_db_unaqcount_update(-1);
+	}
+	if ((int)$oldquestion['amaxvote'] === 0) {
+		qa_db_unupaqcount_update(-1);
+	}
+	if (!isset($oldquestion['selchildid'])) {
+		qa_db_unselqcount_update(-1);
+	}
 
 	qa_report_event('q_close', $userid, $handle, $cookieid, array(
 		'postid' => $oldquestion['postid'],
