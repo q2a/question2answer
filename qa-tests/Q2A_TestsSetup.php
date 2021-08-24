@@ -4,6 +4,9 @@ class Q2A_TestsSetup
 {
 	public function run()
 	{
+		// currently, all Q2A code depends on qa-base
+		require_once __DIR__ . '/../qa-include/qa-base.php';
+
 		$this->recreateTables();
 		$this->initialConfiguration();
 		$this->createContent();
@@ -33,6 +36,19 @@ class Q2A_TestsSetup
 
 	private function initialConfiguration()
 	{
+		// For qa_suspend_notifications
+		require_once QA_INCLUDE_DIR . 'app/emails.php';
+
+		// Include utils that might be needed by tests
+		require_once __DIR__ . '/Q2A_TestsUtils.php';
+
+		global $qa_options_cache, $qa_autoconnect;
+
+		// Needed in order to avoid accessing the database while including the qa-base.php file
+		$qa_options_cache['enabled_plugins'] = '';
+
+		$qa_autoconnect = false;
+
 		qa_suspend_notifications();
 	}
 
@@ -40,9 +56,6 @@ class Q2A_TestsSetup
 	{
 		// For qa_create_new_user
 		require_once QA_INCLUDE_DIR . 'app/users-edit.php';
-
-		// For qa_suspend_notifications
-		require_once QA_INCLUDE_DIR . 'app/emails.php';
 
 		qa_create_new_user('superadmin@example.com', 'passpass', 'superadmin', QA_USER_LEVEL_SUPER, true);
 	}
