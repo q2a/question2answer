@@ -1,7 +1,7 @@
 <?php
 require_once QA_INCLUDE_DIR.'app/users.php';
 
-class AppUsersTest extends PHPUnit_Framework_TestCase
+class AppUsersTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test logic of permissions function.

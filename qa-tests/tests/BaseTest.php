@@ -1,6 +1,6 @@
 <?php
 
-class BaseTest extends PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit\Framework\TestCase
 {
 	public function test__qa_version_to_float()
 	{

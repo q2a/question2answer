@@ -42,6 +42,7 @@ elseif (isset($_GET['qa']) && $_GET['qa'] == 'blob') {
 
 else {
 	// Otherwise, load the Q2A base file which sets up a bunch of crucial stuff
+	global $qa_autoconnect;
 	$qa_autoconnect = false;
 	require 'qa-base.php';
 

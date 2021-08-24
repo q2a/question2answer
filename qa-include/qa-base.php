@@ -62,13 +62,13 @@ if (defined('QA_WORDPRESS_LOAD_FILE')) {
 qa_initialize_constants_2();
 qa_initialize_modularity();
 qa_register_core_modules();
-
 qa_initialize_predb_plugins();
 require_once QA_INCLUDE_DIR . 'qa-db.php';
 qa_db_allow_connect();
 
 // $qa_autoconnect defaults to true so that optional plugins will load for external code. Q2A core
 // code sets $qa_autoconnect to false so that we can use custom fail handlers.
+global $qa_autoconnect;
 if (!isset($qa_autoconnect) || $qa_autoconnect !== false) {
 	qa_db_connect('qa_page_db_fail_handler');
 	qa_initialize_postdb_plugins();

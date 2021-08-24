@@ -1,7 +1,7 @@
 <?php
 require_once QA_INCLUDE_DIR.'util/string.php';
 
-class UtilStringTest extends PHPUnit_Framework_TestCase
+class UtilStringTest extends \PHPUnit\Framework\TestCase
 {
 	private $strBasic = 'So I tied an onion to my belt, which was the style at the time.';
 	private $strAccents = 'Țĥé qũīçĶ ßřǭŴƞ Ƒöŧ ǰÙƢƥş ØƯĘŕ ƬĦȨ ĿÆƶȳ Ƌơǥ';
