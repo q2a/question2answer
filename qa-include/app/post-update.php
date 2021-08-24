@@ -115,7 +115,7 @@ function qa_question_set_content($oldquestion, $title, $content, $format, $text,
 		}
 		qa_db_tagcount_update();
 
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 
 		if ($oldquestion['flagcount'])
@@ -476,10 +476,17 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 		qa_db_tagcount_update();
 	}
 
-	qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
+	if ($wasqueued) {
+		if ($status !== QA_POST_STATUS_QUEUED) {
+			qa_db_queuedcount_update(-1);
+		}
+	} else {
+		if ($status === QA_POST_STATUS_QUEUED) {
+			qa_db_queuedcount_update(1);
+		}
+	}
 
-	if ($wasqueued || ($status == QA_POST_STATUS_QUEUED))
-		qa_db_queuedcount_update();
+	qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 
 	if ($oldquestion['flagcount'])
 		qa_db_flaggedcount_update();
@@ -780,7 +787,7 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 			}
 		}
 
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 
 		if ($oldanswer['flagcount'])
@@ -954,10 +961,17 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 		}
 	}
 
-	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
+	if ($wasqueued) {
+		if ($status !== QA_POST_STATUS_QUEUED) {
+			qa_db_queuedcount_update(-1);
+		}
+	} else {
+		if ($status === QA_POST_STATUS_QUEUED) {
+			qa_db_queuedcount_update(1);
+		}
+	}
 
-	if ($wasqueued || $status == QA_POST_STATUS_QUEUED)
-		qa_db_queuedcount_update();
+	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 
 	if ($oldanswer['flagcount'])
 		qa_db_flaggedcount_update();
@@ -1125,7 +1139,7 @@ function qa_comment_set_content($oldcomment, $content, $format, $text, $notify, 
 		if ($oldcomment['type'] === 'C') {
 			qa_db_ccount_update(-1);
 		}
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 
 		if ($oldcomment['flagcount'])
@@ -1244,6 +1258,16 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 		qa_db_ccount_update(1);
 	}
 
+	if ($wasqueued) {
+		if ($newtype !== 'C_QUEUED') {
+			qa_db_queuedcount_update(-1);
+		}
+	} else {
+		if ($newtype === 'C_QUEUED') {
+			qa_db_queuedcount_update(1);
+		}
+	}
+
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds', 'cposts', 'avoteds', 'cvoteds'));
 
 	$useridvotes = qa_db_uservote_post_get($oldanswer['postid']);
@@ -1253,8 +1277,6 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 	}
 
 	if ($setupdated && $remoderate) {
-		qa_db_queuedcount_update();
-
 		if ($oldanswer['flagcount'])
 			qa_db_flaggedcount_update();
 
@@ -1374,7 +1396,6 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 	}
 
 	// Update caches
-	$difference = null;
 	if ($status === QA_POST_STATUS_NORMAL) {
 		if ($oldcomment['type'] !== 'C') {
 			qa_db_ccount_update(1);
@@ -1385,10 +1406,17 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 		}
 	}
 
-	qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
+	if ($wasqueued) {
+		if ($status !== QA_POST_STATUS_QUEUED) {
+			qa_db_queuedcount_update(-1);
+		}
+	} else {
+		if ($status === QA_POST_STATUS_QUEUED) {
+			qa_db_queuedcount_update(1);
+		}
+	}
 
-	if ($wasqueued || $status == QA_POST_STATUS_QUEUED)
-		qa_db_queuedcount_update();
+	qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 
 	if ($oldcomment['flagcount'])
 		qa_db_flaggedcount_update();

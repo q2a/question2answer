@@ -83,7 +83,7 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 	qa_db_hotness_update($postid);
 
 	if ($queued) {
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 	} else {
 		qa_post_index($postid, 'Q', $postid, @$followanswer['postid'], $title, $content, $format, $text, $tagstring, $categoryid);
 		qa_update_counts_for_q($postid, 1);
@@ -218,7 +218,7 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 	qa_db_posts_calc_category_path($postid);
 
 	if ($queued) {
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 
 	} else {
 		if ($question['type'] == 'Q') // don't index answer if parent question is hidden or queued
@@ -307,7 +307,7 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 	qa_db_posts_calc_category_path($postid);
 
 	if ($queued) {
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 
 	} else {
 		if ($question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) { // only index if antecedents fully visible

@@ -374,6 +374,7 @@ function qa_db_qcount_update($increment = null)
 
 /**
  * Update the cached count in the database of the number of answers (excluding hidden/queued)
+ * @param int|null $increment
  */
 function qa_db_acount_update($increment = null)
 {
@@ -388,6 +389,7 @@ function qa_db_acount_update($increment = null)
 
 /**
  * Update the cached count in the database of the number of comments (excluding hidden/queued)
+ * @param int|null $increment
  */
 function qa_db_ccount_update($increment = null)
 {
@@ -432,6 +434,7 @@ function qa_db_unaqcount_update($increment = null)
 
 /**
  * Update the cached count in the database of the number of questions with no answer selected (excluding hidden/queued)
+ * @param int|null $increment
  */
 function qa_db_unselqcount_update($increment = null)
 {
@@ -460,15 +463,14 @@ function qa_db_unupaqcount_update($increment = null)
 
 /**
  * Update the cached count in the database of the number of posts which are queued for moderation
+ * @param int|null $increment
  */
-function qa_db_queuedcount_update()
+function qa_db_queuedcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_queuedcount', COUNT(*) FROM ^posts " .
-			"WHERE type IN ('Q_QUEUED', 'A_QUEUED', 'C_QUEUED') " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_queuedcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type IN ("Q_QUEUED", "A_QUEUED", "C_QUEUED")',
+		$increment
+	);
 }
