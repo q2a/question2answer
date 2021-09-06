@@ -116,7 +116,7 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
  * @param $postid
  * @param int|null $difference
  */
-function qa_update_counts_for_q($postid, $difference)
+function qa_update_counts_for_q($postid, $difference = null)
 {
 	if (isset($postid)) { // post might no longer exist
 		qa_db_category_path_qcount_update(qa_db_post_get_category_path($postid));
@@ -258,7 +258,7 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
  * @param $questionid
  * @param int|null$difference
  */
-function qa_update_q_counts_for_a($questionid, $difference)
+function qa_update_q_counts_for_a($questionid, $difference = null)
 {
 	qa_db_post_acount_update($questionid);
 	qa_db_hotness_update($questionid);
