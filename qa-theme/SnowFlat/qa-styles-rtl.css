@@ -298,6 +298,7 @@ h1 {
 
 .qa-form-light-button-comment {
 	float: right;
+	margin: 0;
 }
 
 .qa-q-view-stats {
@@ -310,8 +311,7 @@ h1 {
 }
 
 .qa-q-view-avatar {
-	right: auto;
-	left: 20px;
+	float: left;
 }
 
 @media (max-width: 979px) {
@@ -350,8 +350,7 @@ h1 {
 }
 
 .qa-a-item-avatar {
-	right: auto;
-	left: 20px;
+	float: left;
 }
 
 .qa-a-selection {
@@ -361,6 +360,9 @@ h1 {
 	.qa-a-selection {
 		left: auto;
 		right: 100px;
+	}
+	.qa-a-item-meta {
+		clear: right;
 	}
 }
 @media (min-width: 980px) {
@@ -386,9 +388,25 @@ h1 {
 	float: right;
 }
 
+.qa-c-list-item .qa-vote-buttons {
+	margin-right: initial;
+	margin-left: 4px;
+}
+.qa-c-list-item .qa-vote-count {
+	float: right;
+	margin-left: 8px;
+}
+
 .qa-c-item-avatar {
 	right: auto;
 	left: 10px;
+}
+
+@media (max-width: 767px) {
+	.qa-c-item-meta {
+		padding-left: 24px;
+		padding-right: initial;
+	}
 }
 
 .qa-activity-count-item {
@@ -417,7 +435,6 @@ h1 {
 	.qa-nav-footer {
 		float: right;
 	}
-
 	.qa-attribution {
 		float: left;
 		border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -444,7 +461,6 @@ h1 {
 	.qa-sidepanel {
 		float: left;
 	}
-
 	.qam-footer-col {
 		float: right;
 	}
@@ -453,7 +469,23 @@ h1 {
 .qa-vote-buttons {
 	float: right;
 }
+
 .qa-netvote-count-data {
 	direction: ltr;
-	display: inline-block;
+}
+
+.qa-vote-up-button, .qa-vote-down-button, .qa-voted-up-button,
+.qa-voted-down-button, .qa-vote-up-disabled, .qa-vote-down-disabled {
+	left: initial;
+	right: 4px;
+}
+
+.qa-c-list-item .qa-vote-up-button,
+.qa-c-list-item .qa-vote-down-button,
+.qa-c-list-item .qa-voted-up-button,
+.qa-c-list-item .qa-voted-down-button,
+.qa-c-list-item .qa-vote-up-disabled,
+.qa-c-list-item .qa-vote-down-disabled {
+	left: initial;
+	right: 0;
 }
