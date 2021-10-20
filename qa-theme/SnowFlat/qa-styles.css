@@ -2217,13 +2217,9 @@ input[type="submit"], button {
 }
 
 .qa-form-light-button-answer {
-	background-image: #27ae60;
 	background-image: url('images/icons/answer-white.png');
 	float: left;
 	margin: 0 5px 0 0;
-}
-.qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus {
-	background-color: #2ecc71;
 }
 
 .qa-form-light-button-comment {
