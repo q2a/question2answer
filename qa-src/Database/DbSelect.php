@@ -83,7 +83,7 @@ class DbSelect
 
 	/**
 	 * Return the data specified by a single $selectspec - see long comment above.
-	 * @param $selectspec
+	 * @param array $selectspec
 	 * @return array|mixed
 	 */
 	public function singleSelect(array $selectspec)

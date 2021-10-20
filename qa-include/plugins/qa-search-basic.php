@@ -46,8 +46,9 @@ class qa_search_basic
 
 		$contentwordidcounts = array();
 		foreach ($contentcount as $word => $count) {
-			if (isset($wordtoid[$word]))
+			if (isset($wordtoid[$word])) {
 				$contentwordidcounts[$wordtoid[$word]] = $count;
+			}
 		}
 
 		qa_db_contentwords_add_post_wordidcounts($postid, $type, $questionid, $contentwordidcounts);
@@ -113,7 +114,7 @@ class qa_search_basic
 
 		$words = qa_string_to_words($query);
 
-		$questions = qa_db_select_with_pending(
+		$questions = qa_service('dbselect')->selectWithPending(
 			qa_db_search_posts_selectspec($userid, $words, $words, $words, $words, trim($query), $start, $fullcontent, $count)
 		);
 

@@ -827,10 +827,10 @@ function qa_db_related_qs_selectspec($voteuserid, $questionid, $count = null)
  * a match in its answers, comments, or comments on answers). The 'matchparts' is a comma-separated list of tuples
  * matchtype:matchpostid:matchscore to be used with qa_search_set_max_match().
  * @param mixed $voteuserid
- * @param string $titlewords
- * @param string $contentwords
+ * @param array $titlewords
+ * @param array $contentwords
  * @param array $tagwords
- * @param string $handlewords
+ * @param array $handlewords
  * @param string $handle
  * @param int $start
  * @param bool $full
