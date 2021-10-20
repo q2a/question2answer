@@ -2970,14 +2970,14 @@ input[type="submit"], button {
 	top: 5px;
 	left: 10px;
 	opacity: 0.2;
+	transition: all .2s ease-in-out;
 }
 .qa-activity-count-item:hover {
 	cursor: help;
 }
 .qa-activity-count-item:hover:before {
-	opacity: 1;
-	-webkit-animation: shake 0.25s;
-	animation: shake 0.25s;
+	opacity: .6;
+	transform: scale(1.2);
 }
 .qa-activity-count-item:nth-child(1) {
 	background: #1abc9c;
@@ -3375,25 +3375,6 @@ input[type="submit"], button {
 	.qam-ask-search-box {
 		display: none;
 	}
-}
-
-@-webkit-keyframes shake {
-	0% { transform: scale(1); }
-	17% { transform: scale(1.5); }
-	34% { transform: scale(0.8); }
-	51% { transform: scale(1.1); }
-	68% { transform: scale(0.9); }
-	85% { transform: scale(1.05); }
-	100% { transform: scale(1); }
-}
-@keyframes shake {
-	0% { transform: scale(1); }
-	17% { transform: scale(1.5); }
-	34% { transform: scale(0.8); }
-	51% { transform: scale(1.1); }
-	68% { transform: scale(0.9); }
-	85% { transform: scale(1.05); }
-	100% { transform: scale(1); }
 }
 
 @-webkit-keyframes answer-highlight {
