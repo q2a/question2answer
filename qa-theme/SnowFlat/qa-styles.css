@@ -2827,18 +2827,6 @@ input[type="submit"], button {
 }
 
 /*------[ sidebar ]------*/
-#qam-overlay {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.85);
-	z-index: 9;
-	box-shadow: 0 0 300px 50px rgba(0, 0, 0, 0.3) inset;
-	display: none;
-}
-
 #qam-sidepanel-toggle {
 	display: none;
 }
@@ -2895,16 +2883,10 @@ input[type="submit"], button {
 	}
 	.qa-sidepanel.open {
 		right: 0 !important;
-		transition: all 0.15s ease;
 		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
 	}
 }
 
-
-.stick {
-	top: 10px !important;
-	transition: all 0.15s ease;
-}
 
 .qa-sidepanel {
 	word-wrap: break-word;

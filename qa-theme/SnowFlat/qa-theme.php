@@ -196,7 +196,7 @@ class qa_html_theme extends qa_html_theme_base
 	public function nav_main_sub()
 	{
 		$this->output('<div class="qam-main-nav-wrapper clearfix">');
-		$this->output('<div class="sb-toggle-left qam-menu-toggle"><i class="icon-th-list"></i></div>');
+		$this->output('<div class="qam-menu-toggle"><i class="icon-th-list"></i></div>');
 		$this->nav_user_search();
 		$this->logo();
 		$this->nav('main');
