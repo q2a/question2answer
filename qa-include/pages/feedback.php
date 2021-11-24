@@ -41,7 +41,6 @@ if (isset($userid) && !QA_FINAL_EXTERNAL_USERS) {
 
 $usecaptcha = qa_opt('captcha_on_feedback') && qa_user_use_captcha();
 
-
 // Check feedback is enabled and the person isn't blocked
 
 if (!qa_opt('feedback_enabled'))

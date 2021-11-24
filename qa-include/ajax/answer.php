@@ -49,7 +49,7 @@ if (@$question['basetype'] == 'Q' && !qa_post_is_closed($question) && !qa_user_p
 
 	// Try to create the new answer
 
-	$usecaptcha = qa_user_use_captcha(qa_user_level_for_post($question));
+	$usecaptcha = qa_user_use_captcha(qa_user_level_for_post($question), qa_opt('captcha_on_anon_post'));
 	$answers = qa_page_q_load_as($question, $childposts);
 	$answerid = qa_page_q_add_a_submit($question, $answers, $usecaptcha, $in, $errors);
 
