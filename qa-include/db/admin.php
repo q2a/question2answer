@@ -164,6 +164,21 @@ function qa_db_get_user_visible_postids($userid)
 	));
 }
 
+/**
+ * Checks if $userid has any visible posts
+ * @param $userid
+ * @return boolen
+ */
+function qa_db_has_user_visible_postids($userid)
+{
+	return qa_db_read_one_value(qa_db_query_sub(
+			'SELECT 1 
+			FROM ^posts
+			WHERE userid = $ AND type IN ('Q', 'A', 'C', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED')
+			LIMIT 1',
+			$userid
+		), true);
+}
 
 /**
  * Return list of postids of visible or queued posts from $ip address
