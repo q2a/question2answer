@@ -127,7 +127,7 @@ if (strlen(qa_get('q'))) {
 	}
 
 	$qa_content['page_links'] = qa_html_page_links(qa_request(), $start, $pagesize, $start + $gotcount,
-		qa_opt('pages_prev_next'), array('q' => $inquery), $gotcount >= $count);
+		qa_opt('pages_prev_next'), array('q' => $inquery), $start + $gotcount - ($gotcount < $count ? 0 : 1));
 
 	if (qa_opt('feed_for_search')) {
 		$qa_content['feed'] = array(
