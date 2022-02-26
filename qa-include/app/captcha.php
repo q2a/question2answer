@@ -90,7 +90,7 @@ function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note = null)
 		$qa_content['script_var']['qa_captcha_in'] = 'qa_captcha_div_1';
 		$html = $captcha->form_html($qa_content, @$errors['captcha']);
 	}
-
+	$errors = array();
 	$fields['captcha'] = array(
 		'type' => 'custom',
 		'label' => qa_lang_html('misc/captcha_label'),
