@@ -415,7 +415,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 					$userinfo = qa_db_single_select(qa_db_user_account_selectspec($handle, false)); // don't get any pending
 
-					if (strtolower(trim($userinfo['sessioncode'])) == strtolower($sessioncode))
+					if (!empty($userinfo) && strtolower(trim($userinfo['sessioncode'])) == strtolower($sessioncode))
 						qa_set_session_user($userinfo['userid'], $userinfo['sessionsource']);
 					else
 						qa_clear_session_cookie(); // if cookie not valid, remove it to save future checks
@@ -460,7 +460,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 				// If the site is configured to share the ^users table then there might not be a record in the
 				// ^userpoints table so this creates it
-				if ($qa_cached_logged_in_user['points'] === null) {
+				if (empty($qa_cached_logged_in_user) || $qa_cached_logged_in_user['points'] === null) {
 					require_once QA_INCLUDE_DIR . 'db/points.php';
 					require_once QA_INCLUDE_DIR . 'db/users.php';
 
