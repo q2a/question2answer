@@ -77,6 +77,9 @@ function qa_db_connect($failhandler = null)
 	if (QA_PERSISTENT_CONN_DB)
 		$host = 'p:' . $host;
 
+	// Avoid throwing exceptions (needed as of PHP 8.1)
+	mysqli_report(MYSQLI_REPORT_OFF);
+
 	// in mysqli we connect and select database in constructor
 	if ($port !== null)
 		$db = new mysqli($host, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE, $port);
