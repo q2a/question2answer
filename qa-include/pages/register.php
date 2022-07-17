@@ -236,7 +236,7 @@ $loginmodules = qa_load_modules_with('login', 'login_html');
 foreach ($loginmodules as $module) {
 	ob_start();
 	$module->login_html(qa_opt('site_url') . qa_get('to'), 'register');
-	$html = ob_get_clean();
+	$html = (string)ob_get_clean();
 
 	if (strlen($html))
 		@$qa_content['custom'] .= '<br>' . $html . '<br>';

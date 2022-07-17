@@ -52,13 +52,13 @@ if (qa_clicked('dounsubscribe')) {
 
 		} else {
 			// logged out users require valid code (from email link)
-			$incode = trim(qa_post_text('code'));
+			$incode = trim((string)qa_post_text('code'));
 			$inhandle = qa_post_text('handle');
 
 			if (!empty($inhandle)) {
 				$userinfo = qa_db_select_with_pending(qa_db_user_account_selectspec($inhandle, false));
 
-				if (strtolower(trim(@$userinfo['emailcode'])) == strtolower($incode)) {
+				if ($userinfo !== null && strtolower(trim($userinfo['emailcode'])) == strtolower($incode)) {
 					qa_db_user_set_flag($userinfo['userid'], QA_USER_FLAGS_NO_MAILINGS, true);
 					$unsubscribed = true;
 				}
@@ -118,7 +118,7 @@ if ($unsubscribed) {
 
 	} else {
 		// user is not logged in: show form with email address
-		$incode = trim(qa_get('c'));
+		$incode = trim((string)qa_get('c'));
 		$inhandle = qa_get('u');
 
 		if (empty($incode) || empty($inhandle)) {

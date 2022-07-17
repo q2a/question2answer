@@ -35,7 +35,7 @@ $userid = qa_get_logged_in_userid();
 
 // Find the questions with this tag
 
-if (!strlen($tag)) {
+if (!strlen((string)$tag)) {
 	qa_redirect('tags');
 }
 

@@ -47,8 +47,8 @@ if (QA_FINAL_EXTERNAL_USERS) {
 $passwordsent = qa_get('ps');
 $emailexists = qa_get('ee');
 
-$inemailhandle = qa_post_text('emailhandle');
-$inpassword = qa_post_text('password');
+$inemailhandle = (string)qa_post_text('emailhandle');
+$inpassword = (string)qa_post_text('password');
 $inremember = qa_post_text('remember');
 
 $errors = array();
@@ -190,7 +190,7 @@ $loginmodules = qa_load_modules_with('login', 'login_html');
 foreach ($loginmodules as $module) {
 	ob_start();
 	$module->login_html(qa_opt('site_url') . qa_get('to'), 'login');
-	$html = ob_get_clean();
+	$html = (string)ob_get_clean();
 
 	if (strlen($html))
 		@$qa_content['custom'] .= '<br>' . $html . '<br>';

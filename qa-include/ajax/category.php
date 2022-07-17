@@ -23,7 +23,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
 $categoryid = qa_post_text('categoryid');
-if (!strlen($categoryid))
+if (!strlen((string)$categoryid))
 	$categoryid = null;
 
 list($fullcategory, $categories) = qa_db_select_with_pending(

@@ -182,7 +182,7 @@ $formpostid = null;
 $jumptoanchor = null;
 $commentsall = null;
 
-if (substr($pagestate, 0, 13) == 'showcomments-') {
+if (substr((string)$pagestate, 0, 13) == 'showcomments-') {
 	$commentsall = substr($pagestate, 13);
 	$pagestate = null;
 
@@ -195,7 +195,7 @@ if (substr($pagestate, 0, 13) == 'showcomments-') {
 	}
 }
 
-if (qa_is_http_post() || strlen($pagestate))
+if (qa_is_http_post() || strlen((string)$pagestate))
 	require QA_INCLUDE_DIR . 'pages/question-post.php';
 
 $formrequested = isset($formtype);
@@ -248,7 +248,7 @@ if ($formtype == 'q_edit') { // ...in edit mode
 
 	$qa_content['description'] = qa_html(qa_shorten_string_line(qa_viewer_text($question['content'], $question['format']), 150));
 
-	$categorykeyword = @$categories[$question['categoryid']]['title'];
+	$categorykeyword = $categories[$question['categoryid']]['title'] ?? '';
 
 	$qa_content['keywords'] = qa_html(implode(',', array_merge(
 		(qa_using_categories() && strlen($categorykeyword)) ? array($categorykeyword) : array(),

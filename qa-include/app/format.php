@@ -83,7 +83,7 @@ function qa_post_is_by_user($post, $userid, $cookieid)
 	if (@$post['userid'] || $userid)
 		return @$post['userid'] == $userid;
 	elseif (@$post['cookieid'])
-		return strcmp($post['cookieid'], $cookieid) == 0;
+		return $post['cookieid'] === $cookieid;
 
 	return false;
 }
@@ -209,6 +209,10 @@ function qa_tag_html($tag, $microdata = false, $favorited = false)
  */
 function qa_category_path($navcategories, $categoryid)
 {
+	if ($categoryid === null) {
+		return array();
+	}
+
 	$upcategories = array();
 
 	for ($upcategory = @$navcategories[$categoryid]; isset($upcategory); $upcategory = @$navcategories[$upcategory['parentid']])
@@ -266,7 +270,7 @@ function qa_ip_anchor_html($ip, $anchorhtml = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	if (!strlen($anchorhtml))
+	if (!strlen((string)$anchorhtml))
 		$anchorhtml = qa_html($ip);
 
 	return '<a href="' . qa_path_html('ip/' . $ip) . '" title="' . qa_lang_html_sub('main/ip_address_x', qa_html($ip)) . '" class="qa-ip-link">' . $anchorhtml . '</a>';
@@ -432,7 +436,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	// Voting stuff
 
 	if (@$options['voteview']) {
-		$voteview = $options['voteview'];
+		$voteview = (string)$options['voteview'];
 
 		// Calculate raw values and pass through
 
@@ -573,7 +577,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	if (@$options['whatview']) {
 		$fields['what'] = qa_lang_html($isquestion ? 'main/asked' : ($isanswer ? 'main/answered' : 'main/commented'));
 
-		if (@$options['whatlink'] && strlen(@$options['q_request'])) {
+		if (@$options['whatlink'] && strlen($options['q_request'] ?? '')) {
 			$fields['what_url'] = $post['basetype'] == 'Q'
 				? qa_path_html($options['q_request'])
 				: qa_path_html($options['q_request'], array('show' => $postid), null, null, qa_anchor($post['basetype'], $postid));
@@ -754,7 +758,7 @@ function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip = null, $microda
 	if (isset($postuserid) && isset($usershtml[$postuserid])) {
 		$whohtml = $usershtml[$postuserid];
 	} else {
-		if (strlen($name))
+		if (strlen((string)$name))
 			$whohtml = qa_html($name);
 		elseif ($isbyuser)
 			$whohtml = qa_lang_html('main/me');
@@ -1293,7 +1297,7 @@ function qa_html_suggest_qs_tags($usingtags = false, $categoryrequest = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	$hascategory = strlen($categoryrequest);
+	$hascategory = strlen((string)$categoryrequest);
 
 	$htmlmessage = $hascategory ? qa_lang_html('main/suggest_category_qs') :
 		($usingtags ? qa_lang_html('main/suggest_qs_tags') : qa_lang_html('main/suggest_qs'));
@@ -1326,7 +1330,7 @@ function qa_html_suggest_ask($categoryid = null)
 		$htmlmessage,
 
 		array(
-			'^1' => '<a href="' . qa_path_html('ask', strlen($categoryid) ? array('cat' => $categoryid) : null) . '">',
+			'^1' => '<a href="' . qa_path_html('ask', strlen((string)$categoryid) ? array('cat' => $categoryid) : null) . '">',
 			'^2' => '</a>',
 		)
 	);
@@ -1723,7 +1727,7 @@ function qa_get_tags_field_value($fieldname)
 {
 	require_once QA_INCLUDE_DIR . 'util/string.php';
 
-	$text = qa_remove_utf8mb4(qa_post_text($fieldname));
+	$text = qa_remove_utf8mb4((string)qa_post_text($fieldname));
 
 	if (qa_opt('tag_separator_comma'))
 		return array_unique(preg_split('/\s*,\s*/', trim(qa_strtolower(strtr($text, '/', ' '))), -1, PREG_SPLIT_NO_EMPTY));
@@ -1796,13 +1800,13 @@ function qa_set_up_category_field(&$qa_content, &$field, $fieldname, $navcategor
 			$depth++; // to count category itself
 
 			foreach ($navcategories as $navcategory) // now get siblings and self
-				if (!strcmp($navcategory['parentid'], $category['parentid']))
+				if (!strcmp($navcategory['parentid'] ?? '', $category['parentid'] ?? ''))
 					$keycategoryids[$navcategory['categoryid']] = true;
 		}
 
 		if ($depth < $maxdepth)
 			foreach ($navcategories as $navcategory) // now get children, if not too deep
-				if (!strcmp($navcategory['parentid'], $categoryid))
+				if (!strcmp($navcategory['parentid'] ?? '', $categoryid ?? ''))
 					$keycategoryids[$navcategory['categoryid']] = true;
 
 	} else {
@@ -1810,7 +1814,7 @@ function qa_set_up_category_field(&$qa_content, &$field, $fieldname, $navcategor
 
 		foreach ($navcategories as $navcategory) {
 			// check if it has any children
-			if (!strcmp($navcategory['parentid'], $categoryid)) {
+			if (!strcmp($navcategory['parentid'] ?? '', $categoryid ?? '')) {
 				$haschildren = true;
 				break;
 			}
@@ -1821,7 +1825,7 @@ function qa_set_up_category_field(&$qa_content, &$field, $fieldname, $navcategor
 	}
 
 	foreach ($keycategoryids as $keycategoryid => $dummy)
-		if (strcmp($keycategoryid, $excludecategoryid))
+		if (strcmp($keycategoryid, $excludecategoryid ?? ''))
 			$field['options'][$keycategoryid] = qa_category_path_html($navcategories, $keycategoryid);
 
 	$field['value'] = @$field['options'][$categoryid];
@@ -1841,13 +1845,13 @@ function qa_get_category_field_value($fieldname)
 {
 	for ($level = QA_CATEGORY_DEPTH; $level >= 1; $level--) {
 		$levelid = qa_post_text($fieldname . '_' . $level);
-		if (strlen($levelid))
+		if (strlen((string)$levelid))
 			return $levelid;
 	}
 
 	if (!isset($levelid)) { // no Javascript-generated menu was present so take original menu
 		$levelid = qa_post_text($fieldname . '_0');
-		if (strlen($levelid))
+		if (strlen((string)$levelid))
 			return $levelid;
 	}
 
@@ -2008,7 +2012,7 @@ function qa_load_theme_class($theme, $template, $content, $request)
 
 	foreach ($loadlayers as $layer) {
 		$filename = $layer['directory'] . $layer['include'];
-		$layerphp = file_get_contents($filename);
+		$layerphp = (string)file_get_contents($filename);
 
 		if (strlen($layerphp)) {
 			// include file name in layer class name to make debugging easier if there is an error
@@ -2185,7 +2189,7 @@ function qa_get_post_title($fieldname)
 {
 	require_once QA_INCLUDE_DIR . 'util/string.php';
 
-	return qa_remove_utf8mb4(qa_post_text($fieldname));
+	return qa_remove_utf8mb4((string)qa_post_text($fieldname));
 }
 
 /**
@@ -2247,7 +2251,7 @@ function qa_get_avatar_blob_html($blobId, $width, $height, $size, $padding = fal
 	require_once QA_INCLUDE_DIR . 'util/image.php';
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 
-	if (strlen($blobId) == 0 || (int)$size <= 0) {
+	if (strlen((string)$blobId) == 0 || (int)$size <= 0) {
 		return null;
 	}
 

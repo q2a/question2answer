@@ -219,7 +219,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 
 							$categoryid = qa_get_category_field_value('uc_' . $index . '_cat');
 
-							if (strlen($categoryid) && strlen($inlevel)) {
+							if (strlen((string)$categoryid) && strlen($inlevel)) {
 								$inuserlevels[] = array(
 									'entitytype' => QA_ENTITY_CATEGORY,
 									'entityid' => $categoryid,
@@ -307,7 +307,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	if (qa_clicked('dowallpost')) {
 		$inmessage = qa_post_text('message');
 
-		if (!strlen($inmessage)) {
+		if (!strlen((string)$inmessage)) {
 			$errors['message'] = qa_lang('profile/post_wall_empty');
 		} elseif (!qa_check_form_security_code('wall-' . $useraccount['handle'], qa_post_text('code'))) {
 			$errors['message'] = qa_lang_html('misc/form_security_again');
@@ -436,7 +436,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 			// Category-specific levels
 
 			if (qa_using_categories()) {
-				$catleveladd = strlen(qa_get('catleveladd')) > 0;
+				$catleveladd = strlen((string)qa_get('catleveladd')) > 0;
 
 				if (!$catleveladd && !count($userlevels)) {
 					$qa_content['form_profile']['fields']['level']['suffix'] = strtr(qa_lang_html('users/category_level_add'), array(
@@ -608,7 +608,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 
 	foreach ($userfields as $userfield) {
 		if (($userfield['flags'] & QA_FIELD_FLAGS_LINK_URL) && !$fieldsediting) {
-			$valuehtml = qa_url_to_html_link(@$userprofile[$userfield['title']], qa_opt('links_in_new_window'));
+			$valuehtml = qa_url_to_html_link($userprofile[$userfield['title']] ?? '', qa_opt('links_in_new_window'));
 		} else {
 			$value = @$inprofile[$userfield['fieldid']];
 			if (!isset($value))
