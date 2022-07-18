@@ -29,6 +29,7 @@ require_once QA_INCLUDE_DIR . 'db/post-create.php';
 require_once QA_INCLUDE_DIR . 'db/points.php';
 require_once QA_INCLUDE_DIR . 'db/hotness.php';
 require_once QA_INCLUDE_DIR . 'util/string.php';
+require_once QA_INCLUDE_DIR . 'app/post-update.php';
 
 
 /**
@@ -225,6 +226,8 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 		qa_db_points_update_ifuser($userid, 'aposts');
 	}
 
+	qa_question_uncache($question['postid']);
+
 	qa_report_event($queued ? 'a_queue' : 'a_post', $userid, $handle, $cookieid, array(
 		'postid' => $postid,
 		'parentid' => $question['postid'],
@@ -312,6 +315,8 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 		if ($comment['type'] == 'C' && $comment['parentid'] == $parent['postid']) // find just those for this parent, fully visible
 			$thread[] = $comment;
 	}
+
+	qa_question_uncache($question['postid']);
 
 	qa_report_event($queued ? 'c_queue' : 'c_post', $userid, $handle, $cookieid, array(
 		'postid' => $postid,

@@ -111,6 +111,8 @@ function qa_question_set_content($oldquestion, $title, $content, $format, $text,
 		}
 	}
 
+	qa_question_uncache($oldquestion['postid']);
+
 	$eventparams = array(
 		'postid' => $oldquestion['postid'],
 		'title' => $title,
@@ -684,6 +686,8 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 		qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $content, $format, $text, null, $oldanswer['categoryid']);
 	}
 
+	qa_question_uncache($question['postid']);
+
 	$eventparams = array(
 		'postid' => $oldanswer['postid'],
 		'parentid' => $oldanswer['parentid'],
@@ -972,6 +976,8 @@ function qa_comment_set_content($oldcomment, $content, $format, $text, $notify, 
 	} elseif ($oldcomment['type'] == 'C' && $question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) { // all must be visible
 		qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $content, $format, $text, null, $oldcomment['categoryid']);
 	}
+
+	qa_question_uncache($question['postid']);
 
 	$eventparams = array(
 		'postid' => $oldcomment['postid'],
