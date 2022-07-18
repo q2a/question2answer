@@ -182,6 +182,12 @@ $formpostid = null;
 $jumptoanchor = null;
 $commentsall = null;
 
+// redirect if requested URL params exceed amount of real results
+
+if ($pagestart >= $question['acount'] && $question['acount'] > 0) {
+	qa_redirect($q_request);
+}
+
 if (substr($pagestate, 0, 13) == 'showcomments-') {
 	$commentsall = substr($pagestate, 13);
 	$pagestate = null;
