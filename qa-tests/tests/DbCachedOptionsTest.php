@@ -2,10 +2,7 @@
 
 require_once QA_INCLUDE_DIR . 'db/post-create.php';
 
-// For qa_suspend_notifications()
-require_once QA_INCLUDE_DIR . 'db/post-create.php';
-
-// For qa_create_new_user(), qa_delete_user()
+// For qa_create_new_user(), qa_set_user_blocked(), qa_delete_user()
 require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 
 // For qa_handle_to_userid()
@@ -31,10 +28,18 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 	protected static $user1 = array(
 		'userid' => null,
 		'handle' => 'user1',
+		'email' => 'user1@example.com',
+		'password' => 'passpass',
+		'level' => QA_USER_LEVEL_BASIC,
+		'confirmed' => true,
 	);
 	protected static $user2 = array(
 		'userid' => null,
 		'handle' => 'user2',
+		'email' => 'user2@example.com',
+		'password' => 'passpass',
+		'level' => QA_USER_LEVEL_BASIC,
+		'confirmed' => true,
 	);
 
 	public static function setUpBeforeClass()
@@ -49,8 +54,15 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 			}
 		}
 
-		self::$user1['userid'] = qa_create_new_user('user1@example.com', 'passpass', self::$user1['handle'], QA_USER_LEVEL_BASIC, true);
-		self::$user2['userid'] = qa_create_new_user('user2@example.com', 'passpass', self::$user2['handle'], QA_USER_LEVEL_BASIC, true);
+		self::$user1['userid'] = qa_create_new_user(self::$user1['email'], self::$user1['password'], self::$user1['handle'], self::$user1['level'], self::$user1['confirmed']);
+		self::$user2['userid'] = qa_create_new_user(self::$user2['email'], self::$user2['password'], self::$user2['handle'], self::$user2['level'], self::$user2['confirmed']);
+
+		qa_suspend_event_reports();
+		qa_suspend_notifications();
+
+		// Avoid issues with session_start() being called in qa_set_user_blocked()
+		global $qa_logged_in_userid_checked;
+		$qa_logged_in_userid_checked = true;
 	}
 
 	public function test__qa_question_create()
@@ -2780,4 +2792,737 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 	}
+
+	public function test__qa_create_new_user_basic_user()
+	{
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_create_new_user('new_user_basic@example.com', 'passpass', 'new_user_basic', QA_USER_LEVEL_BASIC, true);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount + 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_create_new_user_approved_user()
+	{
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_create_new_user('new_user_app@example.com', 'passpass', 'new_user_app', QA_USER_LEVEL_APPROVED, true);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_block_basic()
+	{
+		$userId = qa_create_new_user('user_block_basic@example.com', 'passpass', 'user_block_basic', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount - 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_block_approved()
+	{
+		$userId = qa_create_new_user('user_block_app@example.com', 'passpass', 'user_block_app', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_unblock_basic()
+	{
+		$userId = qa_create_new_user('user_unblock_basic@example.com', 'passpass', 'user_unblock_basic', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_blocked($userId, $userAccount, false);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount + 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_unblock_approved()
+	{
+		$userId = qa_create_new_user('user_unblock_app@example.com', 'passpass', 'user_unblock_app', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_blocked($userId, $userAccount, false);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_unblocked_basic_user_with_user_account()
+	{
+		$userId = qa_create_new_user('unb_bas_with_acc@example.com', 'passpass', 'unb_bas_with_acc', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount - 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_unblocked_approved_user_with_user_account()
+	{
+		$userId = qa_create_new_user('unb_app_with_acc@example.com', 'passpass', 'unb_app_with_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_unblocked_basic_user_without_user_account()
+	{
+		$userId = qa_create_new_user('unb_bas_without_acc@example.com', 'passpass', 'unb_bas_without_acc', QA_USER_LEVEL_BASIC, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount - 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_unblocked_approved_user_without_user_account()
+	{
+		$userId = qa_create_new_user('unb_app_without_acc@example.com', 'passpass', 'unb_app_without_acc', QA_USER_LEVEL_APPROVED, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_blocked_basic_user_with_user_account()
+	{
+		$userId = qa_create_new_user('blo_bas_with_acc@example.com', 'passpass', 'blo_bas_with_acc', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_blocked_approved_user_with_user_account()
+	{
+		$userId = qa_create_new_user('blo_app_with_acc@example.com', 'passpass', 'blo_app_with_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_blocked_basic_user_without_user_account()
+	{
+		$userId = qa_create_new_user('blo_bas_without_acc@example.com', 'passpass', 'blo_bas_without_acc', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_blocked_approved_user_without_user_account()
+	{
+		$userId = qa_create_new_user('blo_app_without_acc@example.com', 'passpass', 'blo_app_without_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_delete_user($userId);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_unblocked_basic_to_approved_with_user_account()
+	{
+		$userId = qa_create_new_user('unb_upg_with_acc@example.com', 'passpass', 'unb_upg_with_acc', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $userAccount['handle'], QA_USER_LEVEL_APPROVED, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount - 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_unblocked_approved_to_basic_with_user_account()
+	{
+		$userId = qa_create_new_user('unb_dng_with_acc@example.com', 'passpass', 'unb_dng_with_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $userAccount['handle'], QA_USER_LEVEL_BASIC, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount + 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_unblocked_approved_to_admin_with_user_account()
+	{
+		$userId = qa_create_new_user('unb_upg_with_acc@example.com', 'passpass', 'unb_upg_with_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $userAccount['handle'], QA_USER_LEVEL_ADMIN, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_blocked_basic_to_approved_with_user_account()
+	{
+		$userId = qa_create_new_user('blo_upg_with_acc@example.com', 'passpass', 'blo_upg_with_acc', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $userAccount['handle'], QA_USER_LEVEL_APPROVED, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_blocked_approved_to_basic_with_user_account()
+	{
+		$userId = qa_create_new_user('blo_dng_with_acc@example.com', 'passpass', 'blo_dng_with_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $userAccount['handle'], QA_USER_LEVEL_BASIC, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_blocked_approved_to_admin_with_user_account()
+	{
+		$userId = qa_create_new_user('unb_noc_with_acc@example.com', 'passpass', 'unb_noc_with_acc', QA_USER_LEVEL_APPROVED, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $userAccount['handle'], QA_USER_LEVEL_ADMIN, $userAccount);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_unblocked_basic_to_approved_without_user_account()
+	{
+		$handle = 'unb_upg_without_acc';
+		$level = QA_USER_LEVEL_BASIC;
+
+		$userId = qa_create_new_user('unb_upg_without_acc@example.com', 'passpass', $handle, $level, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $handle, QA_USER_LEVEL_APPROVED, $level);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount - 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_unblocked_approved_to_basic_without_user_account()
+	{
+		$handle = 'unb_dng_without_acc';
+		$level = QA_USER_LEVEL_APPROVED;
+
+		$userId = qa_create_new_user('unb_dng_without_acc@example.com', 'passpass', $handle, $level, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $handle, QA_USER_LEVEL_BASIC, $level);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount + 1, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_unblocked_approved_to_admin_without_user_account()
+	{
+		$handle = 'unb_noc_without_acc';
+		$level = QA_USER_LEVEL_APPROVED;
+
+		$userId = qa_create_new_user('unb_noc_without_acc@example.com', 'passpass', $handle, $level, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $handle, QA_USER_LEVEL_ADMIN, $level);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_blocked_basic_to_approved_without_user_account()
+	{
+		$handle = 'blo_upg_without_acc';
+		$level = QA_USER_LEVEL_BASIC;
+
+		$userId = qa_create_new_user('blo_upg_without_acc@example.com', 'passpass', $handle, $level, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $handle, QA_USER_LEVEL_APPROVED, $level);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_blocked_approved_to_basic_without_user_account()
+	{
+		$handle = 'blo_dng_without_acc';
+		$level = QA_USER_LEVEL_APPROVED;
+
+		$userId = qa_create_new_user('blo_dng_without_acc@example.com', 'passpass', $handle, $level, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $handle, QA_USER_LEVEL_BASIC, $level);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_set_user_level_blocked_approved_to_admin_without_user_account()
+	{
+		$handle = 'unb_noc_without_acc';
+		$level = QA_USER_LEVEL_APPROVED;
+
+		$userId = qa_create_new_user('unb_noc_without_acc@example.com', 'passpass', $handle, $level, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		qa_set_user_blocked($userId, $userAccount, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_uapprovecount');
+
+		qa_set_user_level($userId, $handle, QA_USER_LEVEL_ADMIN, $level);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount, (int)qa_opt('cache_uapprovecount'));
+		};
+
+		$testValues();
+
+		qa_db_uapprovecount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_user_with_userpoints_record()
+	{
+		$userId = qa_create_new_user('del_with_up@example.com', 'passpass', 'del_with_up', QA_USER_LEVEL_BASIC, true);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$userpointscount = (int)qa_opt('cache_userpointscount');
+
+		qa_delete_user($userId, $userAccount);
+
+		$testValues = function () use ($userpointscount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($userpointscount - 1, (int)qa_opt('cache_userpointscount'));
+		};
+
+		$testValues();
+
+		qa_db_userpointscount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_delete_user_without_userpoints_record()
+	{
+		$userId = qa_create_new_user('del_without_up@example.com', 'passpass', 'del_without_up', QA_USER_LEVEL_BASIC, true);
+
+		qa_db_query_sub('DELETE FROM `^userpoints` WHERE userid = $', $userId);
+
+		qa_db_userpointscount_update(-1);
+
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userId, true));
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$userpointscount = (int)qa_opt('cache_userpointscount');
+
+		qa_delete_user($userId, $userAccount);
+
+		$testValues = function () use ($userpointscount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($userpointscount, (int)qa_opt('cache_userpointscount'));
+		};
+
+		$testValues();
+
+		qa_db_userpointscount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_db_points_update_ifuser_user_with_userpoints_record()
+	{
+		$userId = qa_create_new_user('puif_with_up@example.com', 'passpass', 'puif_with_up', QA_USER_LEVEL_BASIC, true);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$userpointscount = (int)qa_opt('cache_userpointscount');
+
+		qa_db_points_update_ifuser($userId, null);
+
+		$testValues = function () use ($userpointscount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($userpointscount, (int)qa_opt('cache_userpointscount'));
+		};
+
+		$testValues();
+
+		qa_db_userpointscount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_db_points_update_ifuser_user_without_userpoints_record()
+	{
+		$userId = qa_create_new_user('puif_without_up@example.com', 'passpass', 'puif_without_up', QA_USER_LEVEL_BASIC, true);
+
+		qa_db_query_sub('DELETE FROM `^userpoints` WHERE userid = $', $userId);
+
+		qa_db_userpointscount_update(-1);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$uapprovecount = (int)qa_opt('cache_userpointscount');
+
+		qa_db_points_update_ifuser($userId, null);
+
+		$testValues = function () use ($uapprovecount) {
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($uapprovecount + 1, (int)qa_opt('cache_userpointscount'));
+		};
+
+		$testValues();
+
+		qa_db_userpointscount_update();
+
+		$testValues();
+	}
+
 }

@@ -394,19 +394,22 @@ function qa_db_users_get_mailing_next($lastuserid, $count)
 	));
 }
 
-
 /**
  * Update the cached count of the number of users who are awaiting approval after registration
  */
-function qa_db_uapprovecount_update()
+function qa_db_uapprovecount_update($increment = null)
 {
-	if (qa_should_update_counts() && !QA_FINAL_EXTERNAL_USERS) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_uapprovecount', COUNT(*) FROM ^users " .
-			"WHERE level < # AND NOT (flags & #) " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)",
-			QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED
-		);
+	if (QA_FINAL_EXTERNAL_USERS) {
+		return;
 	}
+
+	qa_db_generic_cache_update(
+		'cache_uapprovecount',
+		qa_db_apply_sub(
+			'SELECT COUNT(*) FROM ^users ' .
+			'WHERE level < # AND NOT (flags & #)',
+			array(QA_USER_LEVEL_APPROVED, QA_USER_FLAGS_USER_BLOCKED)
+		),
+		$increment
+	);
 }

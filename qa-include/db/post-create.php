@@ -332,33 +332,6 @@ function qa_db_word_tagcount_update($wordids)
 
 /**
  * Update the cached count in the database of the number of questions (excluding hidden/queued)
- *
- * @param string $cacheKey
- * @param string $countQuery
- * @param int|null $increment
- */
-function qa_db_generic_cache_update($cacheKey, $countQuery, $increment = null)
-{
-	if (!qa_should_update_counts()) {
-		return;
-	}
-
-	$sql =
-		'INSERT INTO ^options (title, content) ' .
-		sprintf('VALUES ("%s", #) ', $cacheKey) .
-		'ON DUPLICATE KEY UPDATE content = VALUES(content)';
-
-	if (isset($increment)) {
-		$sql .= ' + content';
-	} else {
-		$increment = qa_db_read_one_value(qa_db_query_sub($countQuery));
-	}
-
-	qa_db_query_sub($sql, $increment);
-}
-
-/**
- * Update the cached count in the database of the number of questions (excluding hidden/queued)
  * @param int|null $increment
  */
 function qa_db_qcount_update($increment = null)
