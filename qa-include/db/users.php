@@ -396,6 +396,7 @@ function qa_db_users_get_mailing_next($lastuserid, $count)
 
 /**
  * Update the cached count of the number of users who are awaiting approval after registration
+ * @param int|null $increment
  */
 function qa_db_uapprovecount_update($increment = null)
 {

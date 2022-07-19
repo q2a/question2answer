@@ -415,9 +415,9 @@ function qa_db_posts_get_userids($postids)
 	return array();
 }
 
-
 /**
  * Update the cached count of the number of flagged posts in the database
+ * @param int|null $increment
  */
 function qa_db_flaggedcount_update($increment = null)
 {

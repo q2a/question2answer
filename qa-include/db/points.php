@@ -228,9 +228,9 @@ function qa_db_points_set_bonus($userid, $bonus)
 	);
 }
 
-
 /**
  * Update the cached count in the database of the number of rows in the userpoints table
+ * @param int|null $increment
  */
 function qa_db_userpointscount_update($increment = null)
 {

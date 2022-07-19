@@ -87,7 +87,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -115,7 +115,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -134,7 +134,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 		$queuedcount = (int)qa_opt('cache_queuedcount');
 
-		qa_question_set_content($question, 'New Question title: question_set_content_without_remoderation', 'New question content', '', 'New question content', '', null, null, null, null, null, null, false, false);
+		qa_question_set_content($question, 'New Question title: question_set_content_without_remoderation', 'New question content', '', 'New question content', '', null, null, null, null);
 
 		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
@@ -147,7 +147,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -168,7 +168,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 		$queuedcount = (int)qa_opt('cache_queuedcount');
 
-		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_closed_question', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true, false);
+		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_closed_question', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true);
 
 		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
@@ -181,7 +181,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -206,7 +206,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 		$queuedcount = (int)qa_opt('cache_queuedcount');
 
-		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_without_recalculating_unaqcount_unupaqcount_unselqcount', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true, false);
+		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_without_recalculating_unaqcount_unupaqcount_unselqcount', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true);
 
 		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
@@ -219,7 +219,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -238,7 +238,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 		$queuedcount = (int)qa_opt('cache_queuedcount');
 
-		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_recalculating_unaqcount_unupaqcount_unselqcount', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true, false);
+		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_recalculating_unaqcount_unupaqcount_unselqcount', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true);
 
 		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
@@ -251,7 +251,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -283,7 +283,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -315,7 +315,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -349,7 +349,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -387,7 +387,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -419,7 +419,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -454,7 +454,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -489,7 +489,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -524,7 +524,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -559,7 +559,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -594,7 +594,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -629,7 +629,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -664,7 +664,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q(null, null);
+		qa_update_counts_for_q(null);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -688,9 +688,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_post_create('A', $questionId, null, 'This is the content of the answer');
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $acount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $acount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount - 1, (int)qa_opt('cache_unaqcount'));
@@ -705,8 +705,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -730,9 +730,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_post_create('A_QUEUED', $questionId, null, 'This is the content of the answer');
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $acount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $acount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -747,8 +747,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -772,11 +772,11 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$questionAcount = (int)$question['acount'];
 		$questionAmaxvote = (int)$question['amaxvote'];
 
-		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, false, false);
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -790,8 +790,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -817,11 +817,11 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$questionAcount = (int)$question['acount'];
 		$questionAmaxvote = (int)$question['amaxvote'];
 
-		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true, false);
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -835,8 +835,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -867,11 +867,11 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$questionAcount = (int)$question['acount'];
 		$questionAmaxvote = (int)$question['amaxvote'];
 
-		qa_answer_set_content($answer2, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true, false);
+		qa_answer_set_content($answer2, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -885,8 +885,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -915,11 +915,11 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$questionAcount = (int)$question['acount'];
 		$questionAmaxvote = (int)$question['amaxvote'];
 
-		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true, false);
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -933,8 +933,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -960,9 +960,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -976,8 +976,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1003,9 +1003,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -1019,8 +1019,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1048,9 +1048,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
-
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1064,8 +1063,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1091,9 +1090,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
-
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -1107,8 +1105,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1140,9 +1138,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer1, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
-
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1156,8 +1153,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1187,9 +1184,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer2, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
-
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1203,8 +1199,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1230,9 +1226,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_QUEUED, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
-
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -1246,8 +1241,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1278,9 +1273,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer1, QA_POST_STATUS_QUEUED, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -1294,8 +1289,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1326,9 +1321,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount - 1, (int)qa_opt('cache_unaqcount'));
@@ -1342,8 +1337,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1378,9 +1373,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer1, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1394,8 +1389,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1426,9 +1421,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1442,8 +1437,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1474,9 +1469,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_set_status($answer, QA_POST_STATUS_QUEUED, self::$user1['userid'], self::$user1['handle'], null, $question, array());
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1490,8 +1485,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1522,7 +1517,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_delete($answer, $question, self::$user1['userid'], self::$user1['handle'], null);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1536,8 +1533,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1570,7 +1567,9 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_delete($answer, $question, self::$user1['userid'], self::$user1['handle'], null);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1584,8 +1583,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1613,12 +1612,12 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer, $question['postid'], $answer['content'], $answer['format'], $answer['content'], $answer['notify'],
-			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], false, false
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name']
 		);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1632,8 +1631,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1659,12 +1658,12 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer, $question['postid'], $answer['content'], $answer['format'], $answer['content'], $answer['notify'],
-			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], false, false
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name']
 		);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -1678,8 +1677,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1711,12 +1710,12 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer1, $question['postid'], $answer1['content'], $answer1['format'], $answer1['content'], $answer1['notify'],
-			$answer1['userid'], $answer1['handle'], $answer1['cookieid'], $question, array(), array(), $answer1['name'], false, false
+			$answer1['userid'], $answer1['handle'], $answer1['cookieid'], $question, array(), array(), $answer1['name']
 		);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1730,8 +1729,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1761,12 +1760,12 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer2, $question['postid'], $answer2['content'], $answer2['format'], $answer2['content'], $answer2['notify'],
-			$answer2['userid'], $answer2['handle'], $answer2['cookieid'], $question, array(), array(), $answer2['name'], false, false
+			$answer2['userid'], $answer2['handle'], $answer2['cookieid'], $question, array(), array(), $answer2['name']
 		);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1780,8 +1779,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1812,12 +1811,12 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer, $question['postid'], $answer['content'], $answer['format'], $answer['content'], $answer['notify'],
-			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], false, false
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name']
 		);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1831,8 +1830,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1858,12 +1857,12 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer, $question['postid'], 'New answer content', $answer['format'], $answer['content'], $answer['notify'],
-			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], true, false
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], true
 		);
 
-		$question = qa_post_get_full($questionId);
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
 
-		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $question) {
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
@@ -1877,8 +1876,8 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
-		qa_update_q_counts_for_a($questionId, null);
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
 		qa_db_queuedcount_update();
 
 		$testValues();
@@ -1944,7 +1943,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$ccount = (int)qa_opt('cache_ccount');
 		$queuedcount = (int)qa_opt('cache_queuedcount');
 
-		qa_comment_set_content($comment, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, $question, null, false, false);
+		qa_comment_set_content($comment, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, $question);
 
 		$testValues = function () use ($ccount, $queuedcount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
@@ -1972,7 +1971,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$ccount = (int)qa_opt('cache_ccount');
 		$queuedcount = (int)qa_opt('cache_queuedcount');
 
-		qa_comment_set_content($comment, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, $question, null, true, false);
+		qa_comment_set_content($comment, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, $question, null, true);
 
 		$testValues = function () use ($ccount, $queuedcount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
@@ -2002,7 +2001,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer, $question['postid'], $answer['content'], $answer['format'], $answer['content'], $answer['notify'],
-			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], false, false
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name']
 		);
 
 		$testValues = function () use ($ccount, $queuedcount) {
@@ -2033,7 +2032,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_answer_to_comment(
 			$answer, $question['postid'], 'New post content', $answer['format'], $answer['content'], $answer['notify'],
-			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], true, false
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], true
 		);
 
 		$testValues = function () use ($ccount, $queuedcount) {
@@ -2388,7 +2387,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2418,7 +2417,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2449,7 +2448,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2479,7 +2478,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2511,7 +2510,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2544,7 +2543,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2567,7 +2566,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2591,7 +2590,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2621,7 +2620,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2645,7 +2644,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2675,7 +2674,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2702,7 +2701,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2729,7 +2728,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2760,7 +2759,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -2788,7 +2787,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues();
 
-		qa_update_counts_for_q($questionId, null);
+		qa_update_counts_for_q($questionId);
 
 		$testValues();
 	}
@@ -3509,13 +3508,13 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		qa_db_userpointscount_update(-1);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
-		$uapprovecount = (int)qa_opt('cache_userpointscount');
+		$userpointscount = (int)qa_opt('cache_userpointscount');
 
 		qa_db_points_update_ifuser($userId, null);
 
-		$testValues = function () use ($uapprovecount) {
+		$testValues = function () use ($userpointscount) {
 			Q2A_TestsUtils::removeAllCachedOptions();
-			$this->assertSame($uapprovecount + 1, (int)qa_opt('cache_userpointscount'));
+			$this->assertSame($userpointscount + 1, (int)qa_opt('cache_userpointscount'));
 		};
 
 		$testValues();

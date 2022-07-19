@@ -99,10 +99,10 @@ function qa_db_post_recount_votes($postid)
 	}
 }
 
-
 /**
  * Recalculate the cached count of flags for $postid in the database
  * @param $postid
+ * @param int|null $increment
  */
 function qa_db_post_recount_flags($postid, $increment = null)
 {
