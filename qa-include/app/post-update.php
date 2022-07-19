@@ -118,9 +118,9 @@ function qa_question_set_content($oldquestion, $title, $content, $format, $text,
 		qa_db_queuedcount_update(1);
 		qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 
-		if ($oldquestion['flagcount'])
-			qa_db_flaggedcount_update();
-
+		if ($oldquestion['flagcount'] > 0) {
+			qa_db_flaggedcount_update(-$oldquestion['flagcount']);
+		}
 	} elseif ($oldquestion['type'] == 'Q') { // not hidden or queued
 		qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $title, $content, $format, $text, $tagstring, $oldquestion['categoryid']);
 		if ($tagschanged) {
@@ -488,8 +488,9 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 
 	qa_db_points_update_ifuser($oldquestion['userid'], array('qposts', 'aselects'));
 
-	if ($oldquestion['flagcount'])
-		qa_db_flaggedcount_update();
+	if ($oldquestion['flagcount'] > 0 && isset($difference)) {
+		qa_db_flaggedcount_update($difference * $oldquestion['flagcount']);
+	}
 
 	if ($status == QA_POST_STATUS_NORMAL) {
 		qa_post_index($oldquestion['postid'], 'Q', $oldquestion['postid'], $oldquestion['parentid'], $oldquestion['title'], $oldquestion['content'],
@@ -790,8 +791,9 @@ function qa_answer_set_content($oldanswer, $content, $format, $text, $notify, $u
 		qa_db_queuedcount_update(1);
 		qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 
-		if ($oldanswer['flagcount'])
-			qa_db_flaggedcount_update();
+		if ($oldanswer['flagcount'] > 0) {
+			qa_db_flaggedcount_update(-$oldanswer['flagcount']);
+		}
 
 	} elseif ($oldanswer['type'] == 'A' && $question['type'] == 'Q') { // don't index if question or answer are hidden/queued
 		qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $content, $format, $text, null, $oldanswer['categoryid']);
@@ -973,8 +975,9 @@ function qa_answer_set_status($oldanswer, $status, $userid, $handle, $cookieid, 
 
 	qa_db_points_update_ifuser($oldanswer['userid'], array('aposts', 'aselecteds'));
 
-	if ($oldanswer['flagcount'])
-		qa_db_flaggedcount_update();
+	if ($oldanswer['flagcount'] > 0 && isset($difference)) {
+		qa_db_flaggedcount_update($difference * $oldanswer['flagcount']);
+	}
 
 	if ($question['type'] == 'Q' && $status == QA_POST_STATUS_NORMAL) { // even if answer visible, don't index if question is hidden or queued
 		qa_post_index($oldanswer['postid'], 'A', $question['postid'], $oldanswer['parentid'], null, $oldanswer['content'],
@@ -1142,8 +1145,9 @@ function qa_comment_set_content($oldcomment, $content, $format, $text, $notify, 
 		qa_db_queuedcount_update(1);
 		qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 
-		if ($oldcomment['flagcount'])
-			qa_db_flaggedcount_update();
+		if ($oldcomment['flagcount'] > 0) {
+			qa_db_flaggedcount_update(-$oldcomment['flagcount']);
+		}
 
 	} elseif ($oldcomment['type'] == 'C' && $question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) { // all must be visible
 		qa_post_index($oldcomment['postid'], 'C', $question['postid'], $oldcomment['parentid'], null, $content, $format, $text, null, $oldcomment['categoryid']);
@@ -1277,9 +1281,9 @@ function qa_answer_to_comment($oldanswer, $parentid, $content, $format, $text, $
 	}
 
 	if ($setupdated && $remoderate) {
-		if ($oldanswer['flagcount'])
-			qa_db_flaggedcount_update();
-
+		if ($oldanswer['flagcount'] > 0) {
+			qa_db_flaggedcount_update(-$oldanswer['flagcount']);
+		}
 	} elseif ($oldanswer['type'] == 'A' && $question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) // only if all fully visible
 		qa_post_index($oldanswer['postid'], 'C', $question['postid'], $parentid, null, $content, $format, $text, null, $oldanswer['categoryid']);
 
@@ -1396,13 +1400,14 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 	}
 
 	// Update caches
+	$difference = null;
 	if ($status === QA_POST_STATUS_NORMAL) {
 		if ($oldcomment['type'] !== 'C') {
-			qa_db_ccount_update(1);
+			$difference = 1;
 		}
 	} else {
 		if ($oldcomment['type'] === 'C') {
-			qa_db_ccount_update(-1);
+			$difference = -1;
 		}
 	}
 
@@ -1418,8 +1423,12 @@ function qa_comment_set_status($oldcomment, $status, $userid, $handle, $cookieid
 
 	qa_db_points_update_ifuser($oldcomment['userid'], array('cposts'));
 
-	if ($oldcomment['flagcount'])
-		qa_db_flaggedcount_update();
+	if (isset($difference)) {
+		qa_db_ccount_update($difference);
+		if ($oldcomment['flagcount'] > 0) {
+			qa_db_flaggedcount_update($difference * $oldcomment['flagcount']);
+		}
+	}
 
 	if ($question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A') && $status == QA_POST_STATUS_NORMAL) {
 		// only index if none of the things it depends on are hidden or queued

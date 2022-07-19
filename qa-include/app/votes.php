@@ -124,7 +124,8 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
 	$vote = (int)min(1, max(-1, $vote));
-	$oldvote = (int)qa_db_uservote_get($post['postid'], $userid);
+	$userVote = qa_db_uservote_get($post['postid'], $userid);
+	$oldvote = isset($userVote['vote']) ? (int)$userVote['vote'] : 0;
 
 	if ($oldvote === $vote) {
 		return;
@@ -279,9 +280,16 @@ function qa_flag_set_tohide($oldpost, $userid, $handle, $cookieid, $question)
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 	require_once QA_INCLUDE_DIR . 'db/post-update.php';
 
+	$userVote = qa_db_uservote_get($oldpost['postid'], $userid);
+	$oldFlag = isset($userVote['flag']) ? (int)$userVote['flag'] : 0;
+
+	if ($oldFlag === 1) {
+		return $oldpost['flagcount'] >= qa_opt('flagging_hide_after') && !$oldpost['hidden'];
+	}
+
 	qa_db_userflag_set($oldpost['postid'], $userid, true);
-	qa_db_post_recount_flags($oldpost['postid']);
-	qa_db_flaggedcount_update();
+	qa_db_post_recount_flags($oldpost['postid'], 1);
+	qa_db_flaggedcount_update(1);
 
 	switch ($oldpost['basetype']) {
 		case 'Q':
@@ -328,9 +336,16 @@ function qa_flag_clear($oldpost, $userid, $handle, $cookieid)
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 	require_once QA_INCLUDE_DIR . 'db/post-update.php';
 
+	$userVote = qa_db_uservote_get($oldpost['postid'], $userid);
+	$oldFlag = isset($userVote['flag']) ? (int)$userVote['flag'] : 0;
+
+	if ($oldFlag === 0) {
+		return;
+	}
+
 	qa_db_userflag_set($oldpost['postid'], $userid, false);
-	qa_db_post_recount_flags($oldpost['postid']);
-	qa_db_flaggedcount_update();
+	qa_db_post_recount_flags($oldpost['postid'], -1);
+	qa_db_flaggedcount_update(-1);
 
 	switch ($oldpost['basetype']) {
 		case 'Q':
@@ -371,8 +386,9 @@ function qa_flags_clear_all($oldpost, $userid, $handle, $cookieid)
 	require_once QA_INCLUDE_DIR . 'db/post-update.php';
 
 	qa_db_userflags_clear_all($oldpost['postid']);
-	qa_db_post_recount_flags($oldpost['postid']);
-	qa_db_flaggedcount_update();
+	$affectedRows = qa_db_affected_rows();
+	qa_db_flaggedcount_update(-$affectedRows);
+	qa_db_post_reset_flags($oldpost['postid']);
 
 	switch ($oldpost['basetype']) {
 		case 'Q':

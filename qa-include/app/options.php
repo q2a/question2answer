@@ -225,6 +225,7 @@ function qa_default_option($name)
 		'avatar_users_size' => 30,
 		'cache_acount' => 0,
 		'cache_ccount' => 0,
+		'cache_flaggedcount' => 0,
 		'cache_qcount' => 0,
 		'cache_queuedcount' => 0,
 		'cache_uapprovecount' => 0,

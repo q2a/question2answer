@@ -3525,4 +3525,1100 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$testValues();
 	}
 
+	public function test__qa_flag_post_for_flaggedcount()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: flag_post_for_flaggedcount', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount + 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount + 1, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_flag_twice_post_for_flaggedcount()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: flag_post_for_flaggedcount', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_unflag_post_for_flaggedcount()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: unflag_post_for_flaggedcount', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_flag_clear($question, self::$user1['userid'], self::$user1['handle'], null);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount - 1, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_unflag_twice_post_for_flaggedcount()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: unflag_post_for_flaggedcount', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_clear($question, self::$user1['userid'], self::$user1['handle'], null);
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_flag_clear($question, self::$user1['userid'], self::$user1['handle'], null);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_content_without_remoderation_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_content_without_remoderation_without_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_content($question, 'New Question title: question_set_content_without_remoderation_without_flags', 'New question content', '', 'New question content', '', null, null, null, null);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_content_without_remoderation_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_content_without_remoderation_with_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_content($question, 'New Question title: question_set_content_without_remoderation_with_flags', 'New question content', '', 'New question content', '', null, null, null, null);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_content_with_remoderation_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_content_with_remoderation_without_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_without_flags', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_content_with_remoderation_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_content_with_remoderation_with_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_content($question, 'New Question title: question_set_content_with_remoderation_with_flags', 'New question content', '', 'New question content', '', null, null, null, null, null, null, true);
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_status_normal_to_hidden_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_status_normal_to_hidden_without_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_status($question, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, array(), array());
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_status_hidden_to_normal_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_status_hidden_to_normal_without_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_question_set_status($question, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, array(), array());
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_status($question, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, array(), array());
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_status_normal_to_hidden_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_status_normal_to_hidden_with_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_status($question, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, array(), array());
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_question_set_status_hidden_to_normal_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: question_set_status_hidden_to_normal_with_flags', 'Dummy post content');
+
+		$question = qa_post_get_full($questionId);
+
+		qa_flag_set_tohide($question, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+
+		qa_question_set_status($question, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, array(), array());
+
+		$question = qa_post_get_full($questionId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$questionFlagcount = (int)$question['flagcount'];
+
+		qa_question_set_status($question, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, array(), array());
+
+		$testValues = function () use ($flaggedcount, $questionFlagcount, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount + 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($questionFlagcount, (int)$question['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_content_without_remoderation_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_content_without_remoderation_without_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question);
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_content_without_remoderation_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_content_without_remoderation_without_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_flag_set_tohide($answer, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question);
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_content_with_remoderation_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_content_with_remoderation_without_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true);
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_status_normal_to_hidden_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_normal_to_hidden_without_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_status_hidden_to_normal_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_hidden_to_normalwithout_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_status($answer, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_status_normal_to_hidden_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_normal_to_hidden_with_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_flag_set_tohide($answer, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_status_hidden_to_normal_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_hidden_to_normal_with_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_flag_set_tohide($answer, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_set_status($answer, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($flaggedcount, $answerFlagcount, $answerId) {
+			$answer = qa_post_get_full($answerId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount + 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($answerFlagcount, (int)$answer['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_content_without_remoderation_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_content_without_remoderation_without_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_content($comment, 'This is the new content of the comment', '', 'This is the new content of the comment', null, null, null, null, $question, $question);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_content_without_remoderation_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_content_without_remoderation_with_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		qa_flag_set_tohide($comment, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_content($comment, 'This is the new content of the comment', '', 'This is the new content of the comment', null, null, null, null, $question, $question);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_content_with_remoderation_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_content_with_remoderation_without_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_content($comment, 'This is the new content of the comment', '', 'This is the new content of the comment', null, null, null, null, $question, $question, null, true);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_content_with_remoderation_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_content_with_remoderation_with_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		qa_flag_set_tohide($comment, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_content($comment, 'This is the new content of the comment', '', 'This is the new content of the comment', null, null, null, null, $question, $question, null, true);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_to_comment_without_remoderation__without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_to_comment_without_remoderation__without_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_to_comment(
+			$answer, $question['postid'], $answer['content'], $answer['format'], $answer['content'], $answer['notify'],
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name']
+		);
+
+		$commentId = $answerId;
+		$commentFlagcount = $answerFlagcount;
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_to_comment_without_remoderation__with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_to_comment_without_remoderation__with_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_flag_set_tohide($answer, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_to_comment(
+			$answer, $question['postid'], $answer['content'], $answer['format'], $answer['content'], $answer['notify'],
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name']
+		);
+
+		$commentId = $answerId;
+		$commentFlagcount = $answerFlagcount;
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_to_comment_with_remoderation__without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_to_comment_with_remoderation__without_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_to_comment(
+			$answer, $question['postid'], 'Content change', $answer['format'], $answer['content'], $answer['notify'],
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], true
+		);
+
+		$commentId = $answerId;
+		$commentFlagcount = $answerFlagcount;
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_answer_to_comment_with_remoderation__with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_to_comment_with_remoderation__with_flags', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_flag_set_tohide($answer, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$answerFlagcount = (int)$answer['flagcount'];
+
+		qa_answer_to_comment(
+			$answer, $question['postid'], 'Content change', $answer['format'], $answer['content'], $answer['notify'],
+			$answer['userid'], $answer['handle'], $answer['cookieid'], $question, array(), array(), $answer['name'], true
+		);
+
+		$commentId = $answerId;
+		$commentFlagcount = $answerFlagcount;
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($answerId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_status_normal_to_hidden_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_status_normal_to_hidden_without_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_status($comment, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, $question);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_status_hidden_to_normal_without_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_status_hidden_to_normalwithout_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		qa_comment_set_status($comment, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, $question);
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_status($comment, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, $question);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_status_normal_to_hidden_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_status_normal_to_hidden_with_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		qa_flag_set_tohide($comment, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_status($comment, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, $question);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount - 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
+
+	public function test__qa_comment_set_status_hidden_to_normal_with_flags()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: comment_set_status_hidden_to_normal_with_flags', 'Dummy post content');
+		$commentId = qa_post_create('C', $questionId, null, 'This is the content of the comment');
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		qa_flag_set_tohide($comment, self::$user1['userid'], self::$user1['handle'], null, $question);
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		qa_comment_set_status($comment, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, $question);
+
+		$question = qa_post_get_full($questionId);
+		$comment = qa_post_get_full($commentId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$flaggedcount = (int)qa_opt('cache_flaggedcount');
+
+		$commentFlagcount = (int)$comment['flagcount'];
+
+		qa_comment_set_status($comment, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, $question);
+
+		$testValues = function () use ($flaggedcount, $commentFlagcount, $commentId) {
+			$comment = qa_post_get_full($commentId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($flaggedcount + 1, (int)qa_opt('cache_flaggedcount'));
+
+			$this->assertSame($commentFlagcount, (int)$comment['flagcount']);
+		};
+
+		$testValues();
+
+		qa_db_flaggedcount_update();
+		qa_db_post_recount_flags($commentId);
+
+		$testValues();
+	}
 }
