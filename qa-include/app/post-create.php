@@ -224,7 +224,7 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 		if ($question['type'] == 'Q') // don't index answer if parent question is hidden or queued
 			qa_post_index($postid, 'A', $question['postid'], $question['postid'], null, $content, $format, $text, null, $question['categoryid']);
 
-		qa_db_post_acount_update($question['postid']);
+		qa_db_acount_update_for_q($question['postid'], 1);
 		qa_db_hotness_update($question['postid']);
 		qa_db_acount_update(1);
 		if ((int)$question['acount'] === 0) {
@@ -260,7 +260,8 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
  */
 function qa_update_q_counts_for_a($questionid, $difference = null)
 {
-	qa_db_post_acount_update($questionid);
+	qa_db_acount_update_for_q($questionid);
+	qa_db_amaxvote_update_for_q($questionid);
 	qa_db_hotness_update($questionid);
 	qa_db_acount_update($difference);
 	qa_db_unaqcount_update($difference);

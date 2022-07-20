@@ -140,36 +140,42 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 
 	$prefix = strtolower($post['basetype']);
 
-	// If post is an answer
-	if ($prefix === 'a') {
+	// If post is a visible answer
+	if ($post['type'] === 'A') {
 		// Update caches
 		$questionId = $post['parentid'];
 
-		$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($questionId)))[$questionId];
-		$originalAmaxvote = (int)$tempQuestion['amaxvote'];
+		// Fetching the question to get the `amaxvote` and `acount` is faster than blindly running recalcs
+		$question = qa_db_single_select(qa_db_posts_selectspec(null, array($questionId)))[$questionId];
+		$originalAmaxvote = (int)$question['amaxvote'];
 
-		qa_db_post_acount_update($questionId);
+		$postNewNetvotes = (int)$post['netvotes'] + $vote - $oldvote;
+		$potentialPostNewAmaxvote = max($postNewNetvotes, 0);
 
-		$newNetvotes = (int)$post['netvotes'] + $vote - $oldvote;
-
-		// Try, as efficiently as possible, to detect an `amaxvote` change from 0 to non-0 and vice-versa
-
-		// If the answer being voted has a chance of being the one that defines the `amaxvote`
-		if ($post['type'] === 'A' && $originalAmaxvote === max((int)$post['netvotes'], 0)) {
-			if ($originalAmaxvote === 0) {
-				// If the original `amaxvote` would turn from 0 to non-0
-				if ($newNetvotes > 0) {
-					qa_db_unupaqcount_update(-1);
-				}
-			} elseif ($newNetvotes <= 0) { // If the original `amaxvote` might turn from non-0 to 0
-				// If the amount of answers is only 1 then the `amaxvote` is defined by this same answer
-				if ((int)$tempQuestion['acount'] === 1) {
-					qa_db_unupaqcount_update(1);
-				} else { // If there are 2 or more answers
-					// The answer being voted has a chance of being the one that defines the `amaxvote`
-					// Check if the call to qa_db_post_acount_update() updated the amaxvote. This query is a last resort
-					$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($questionId)))[$questionId];
-					if ((int)$tempQuestion['amaxvote'] === 0) {
+		// If the `netvotes` of the voted answer exceeds the original `amaxvote`
+		if ($potentialPostNewAmaxvote > $originalAmaxvote) {
+			qa_db_amaxvote_update_for_q($questionId, $potentialPostNewAmaxvote, false);
+			if ($originalAmaxvote === 0 && $question['closedbyid'] === null) {
+				qa_db_unupaqcount_update(-1);
+			}
+		} else {
+			// If the voted answer had the same `netvotes` as the `amaxvote` value but now it was decreased
+			if ($originalAmaxvote == $post['netvotes'] && $potentialPostNewAmaxvote < $originalAmaxvote) {
+				// We need a full recalc of `amaxvote`, as we don't know if there is another child answer that
+				// happens to have the same `netvotes`. But, if the answer is the only answer, then it is the
+				// one that sets the `amaxvote` in the question
+				if ((int)$question['acount'] === 1) {
+					qa_db_amaxvote_update_for_q($questionId, $potentialPostNewAmaxvote, false);
+					if ($potentialPostNewAmaxvote === 0 && $question['closedbyid'] === null) {
+						qa_db_unupaqcount_update(1);
+					}
+				} else {
+					// Unavoidable full `amaxvote` recalc
+					qa_db_amaxvote_update_for_q($questionId);
+					// If the `amaxvote` has actually been updated by the recalc, then this answer was the one
+					// that defined the `amaxvote` value and, if the new `amaxvote` is zero, then it decreased
+					// from non-zero to zero
+					if (qa_db_affected_rows() > 0 && $potentialPostNewAmaxvote === 0 && $question['closedbyid'] === null) {
 						qa_db_unupaqcount_update(1);
 					}
 				}

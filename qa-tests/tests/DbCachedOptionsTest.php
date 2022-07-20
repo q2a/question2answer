@@ -900,6 +900,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		qa_post_set_selchildid($questionId, $answerId);
 
 		$answer = qa_post_get_full($answerId);
+
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
 
 		$question = qa_post_get_full($questionId);
@@ -925,6 +926,105 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 			$this->assertSame($unaqcount + 1, (int)qa_opt('cache_unaqcount'));
 			$this->assertSame($unselqcount, (int)qa_opt('cache_unselqcount'));
 			$this->assertSame($unupaqcount + 1, (int)qa_opt('cache_unupaqcount'));
+			$this->assertSame($queuedcount + 1, (int)qa_opt('cache_queuedcount'));
+
+			$this->assertSame($questionAcount - 1, (int)$question['acount']);
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
+		qa_db_queuedcount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_content_with_remoderation_with_closed_question_and_upvoted_answer()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_content_with_remoderation_with_closed_question_and_upvoted_answer', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$answer = qa_post_get_full($answerId);
+
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$qcount = (int)qa_opt('cache_qcount');
+		$unaqcount = (int)qa_opt('cache_unaqcount');
+		$unselqcount = (int)qa_opt('cache_unselqcount');
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+		$queuedcount = (int)qa_opt('cache_queuedcount');
+
+		$questionAcount = (int)$question['acount'];
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true);
+
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
+			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
+			$this->assertSame($unselqcount, (int)qa_opt('cache_unselqcount'));
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+			$this->assertSame($queuedcount + 1, (int)qa_opt('cache_queuedcount'));
+
+			$this->assertSame($questionAcount - 1, (int)$question['acount']);
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
+		qa_db_queuedcount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_content_with_remoderation_two_answers_with_closed_question_and_upvoted_answer()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_content_with_remoderation_with_selected_and_upvoted_answer', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+		qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$answer = qa_post_get_full($answerId);
+
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$qcount = (int)qa_opt('cache_qcount');
+		$unaqcount = (int)qa_opt('cache_unaqcount');
+		$unselqcount = (int)qa_opt('cache_unselqcount');
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+		$queuedcount = (int)qa_opt('cache_queuedcount');
+
+		$questionAcount = (int)$question['acount'];
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_answer_set_content($answer, 'This is the new content of the answer', '', 'This is the new content of the answer', null, null, null, null, $question, null, true);
+
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
+			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
+			$this->assertSame($unselqcount, (int)qa_opt('cache_unselqcount'));
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
 			$this->assertSame($queuedcount + 1, (int)qa_opt('cache_queuedcount'));
 
 			$this->assertSame($questionAcount - 1, (int)$question['acount']);
@@ -1160,6 +1260,56 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$testValues();
 	}
 
+	public function test__qa_answer_set_status_normal_to_hidden_two_answers_with_two_upvoted_answers()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_normal_to_hidden_two_answers_with_selected_and_upvoted_answer', 'Dummy post content');
+		$answer1Id = qa_post_create('A', $questionId, null, 'This is the content of the first answer');
+		$answer2Id = qa_post_create('A', $questionId, null, 'This is the content of the second answer');
+
+		$answer1 = qa_post_get_full($answer1Id);
+		qa_vote_set($answer1, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$answer2 = qa_post_get_full($answer2Id);
+		qa_vote_set($answer2, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer1 = qa_post_get_full($answer1Id);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$qcount = (int)qa_opt('cache_qcount');
+		$unaqcount = (int)qa_opt('cache_unaqcount');
+		$unselqcount = (int)qa_opt('cache_unselqcount');
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+		$queuedcount = (int)qa_opt('cache_queuedcount');
+
+		$questionAcount = (int)$question['acount'];
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_answer_set_status($answer1, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
+			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
+			$this->assertSame($unselqcount, (int)qa_opt('cache_unselqcount'));
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+			$this->assertSame($queuedcount, (int)qa_opt('cache_queuedcount'));
+
+			$this->assertSame($questionAcount - 1, (int)$question['acount']);
+			$this->assertSame($questionAmaxvote, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
+		qa_db_queuedcount_update();
+
+		$testValues();
+	}
+
 	public function test__qa_answer_set_status_normal_to_hidden_two_answers_with_upvoted_answer_not_hidden()
 	{
 		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_normal_to_hidden_two_answers_with_upvoted_answer_not_hidden', 'Dummy post content');
@@ -1186,6 +1336,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
 			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
 			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
@@ -1385,6 +1536,110 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 			$this->assertSame($questionAcount + 1, (int)$question['acount']);
 			$this->assertSame($questionAmaxvote + 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
+		qa_db_queuedcount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_status_hidden_to_normal_two_answers_with_upvoted_answer_and_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_hidden_to_normal_two_answers_with_upvoted_answer_and_closed_question', 'Dummy post content');
+		$answer1Id = qa_post_create('A', $questionId, null, 'This is the content of the first answer');
+		qa_post_create('A', $questionId, null, 'This is the content of the second answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$answer1 = qa_post_get_full($answer1Id);
+		qa_vote_set($answer1, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer1 = qa_post_get_full($answer1Id);
+
+		qa_answer_set_status($answer1, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$question = qa_post_get_full($questionId);
+		$answer1 = qa_post_get_full($answer1Id);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$qcount = (int)qa_opt('cache_qcount');
+		$unaqcount = (int)qa_opt('cache_unaqcount');
+		$unselqcount = (int)qa_opt('cache_unselqcount');
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+		$queuedcount = (int)qa_opt('cache_queuedcount');
+
+		$questionAcount = (int)$question['acount'];
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_answer_set_status($answer1, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
+			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
+			$this->assertSame($unselqcount, (int)qa_opt('cache_unselqcount'));
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+			$this->assertSame($queuedcount, (int)qa_opt('cache_queuedcount'));
+
+			$this->assertSame($questionAcount + 1, (int)$question['acount']);
+			$this->assertSame($questionAmaxvote + 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_update_q_counts_for_a($questionId);
+		qa_db_queuedcount_update();
+
+		$testValues();
+	}
+
+	public function test__qa_answer_set_status_hidden_to_normal_and_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_hidden_to_normal_and_closed_question', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the first answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		qa_answer_set_status($answer, QA_POST_STATUS_HIDDEN, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$qcount = (int)qa_opt('cache_qcount');
+		$unaqcount = (int)qa_opt('cache_unaqcount');
+		$unselqcount = (int)qa_opt('cache_unselqcount');
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+		$queuedcount = (int)qa_opt('cache_queuedcount');
+
+		$questionAcount = (int)$question['acount'];
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_answer_set_status($answer, QA_POST_STATUS_NORMAL, self::$user1['userid'], self::$user1['handle'], null, $question, array());
+
+		$testValues = function () use ($qcount, $unaqcount, $unselqcount, $unupaqcount, $queuedcount, $questionAcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($qcount, (int)qa_opt('cache_qcount'));
+			$this->assertSame($unaqcount, (int)qa_opt('cache_unaqcount'));
+			$this->assertSame($unselqcount, (int)qa_opt('cache_unselqcount'));
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+			$this->assertSame($queuedcount, (int)qa_opt('cache_queuedcount'));
+
+			$this->assertSame($questionAcount + 1, (int)$question['acount']);
+			$this->assertSame($questionAmaxvote, (int)$question['amaxvote']);
 		};
 
 		$testValues();
@@ -2576,21 +2831,63 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_one_answer_amaxvote_zero_to_one_with_upvote', 'Dummy post content');
 		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
 
+		$question = qa_post_get_full($questionId);
 		$answer = qa_post_get_full($answerId);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount - 1, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote + 1, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_vote_set_answer_one_answer_amaxvote_zero_to_one_with_upvote_and_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_one_answer_amaxvote_zero_to_one_with_upvote_and_closed_question', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote + 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
@@ -2606,21 +2903,29 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$answer = qa_post_get_full($answerId);
 		qa_vote_set($answer, self::$user2['userid'], self::$user2['handle'], null, 1);
 
+		$question = qa_post_get_full($questionId);
 		$answer = qa_post_get_full($answerId);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount - 1, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote + 2, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
@@ -2630,21 +2935,63 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_one_answer_amaxvote_zero_to_zero_with_downvote', 'Dummy post content');
 		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
 
+		$question = qa_post_get_full($questionId);
 		$answer = qa_post_get_full($answerId);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, -1);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_vote_set_answer_one_answer_amaxvote_zero_to_zero_with_downvote_and_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_one_answer_amaxvote_zero_to_zero_with_downvote_and_closed_question', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, -1);
+
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
@@ -2660,21 +3007,69 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$answer = qa_post_get_full($answerId);
 		qa_vote_set($answer, self::$user2['userid'], self::$user2['handle'], null, 1);
 
+		$question = qa_post_get_full($questionId);
 		$answer = qa_post_get_full($answerId);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 0);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_vote_set_answer_one_answer_amaxvote_two_to_one_with_nilvote_with_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_one_answer_amaxvote_zero_to_one_with_upvote_and_closed_question', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$answer = qa_post_get_full($answerId);
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$answer = qa_post_get_full($answerId);
+		qa_vote_set($answer, self::$user2['userid'], self::$user2['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 0);
+
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
@@ -2687,21 +3082,66 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$answer = qa_post_get_full($answerId);
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
 
+		$question = qa_post_get_full($questionId);
 		$answer = qa_post_get_full($answerId);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer, self::$user2['userid'], self::$user2['handle'], null, -1);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount + 1, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_vote_set_answer_one_answer_amaxvote_one_to_zero_with_downvote_and_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_one_answer_amaxvote_one_to_zero_with_downvote_and_closed_question', 'Dummy post content');
+		$answerId = qa_post_create('A', $questionId, null, 'This is the content of the answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$answer = qa_post_get_full($answerId);
+		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer = qa_post_get_full($answerId);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		qa_vote_set($answer, self::$user2['userid'], self::$user2['handle'], null, -1);
+
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
@@ -2714,21 +3154,29 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$answer = qa_post_get_full($answerId);
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 1);
 
+		$question = qa_post_get_full($questionId);
 		$answer = qa_post_get_full($answerId);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer, self::$user1['userid'], self::$user1['handle'], null, 0);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount + 1, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
@@ -2745,34 +3193,43 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		$answer2 = qa_post_get_full($answer2Id);
 		qa_vote_set($answer2, self::$user1['userid'], self::$user1['handle'], null, 1);
 
+		$question = qa_post_get_full($questionId);
 		$answer1 = qa_post_get_full($answer1Id);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
 		$unupaqcount = (int)qa_opt('cache_unupaqcount');
 
+		$questionAmaxvote = (int)$question['amaxvote'];
+
 		qa_vote_set($answer1, self::$user2['userid'], self::$user2['handle'], null, -1);
 
-		$testValues = function () use ($unupaqcount) {
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}
 
-	public function test__qa_vote_set_answer_two_answers_amaxvote_one_to_one_with_downvote_with_recalculation()
+	public function test__qa_vote_set_answer_two_answers_amaxvote_one_to_zero_with_downvote_with_recalculation()
 	{
-		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_two_answers_amaxvote_one_to_one_with_downvote_with_recalculation', 'Dummy post content');
+		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_two_answers_amaxvote_one_to_zero_with_downvote_with_recalculation', 'Dummy post content');
 		$answer1Id = qa_post_create('A', $questionId, null, 'This is the content of the first answer');
 		qa_post_create('A', $questionId, null, 'This is the content of the second answer');
 
 		$answer1 = qa_post_get_full($answer1Id);
 		qa_vote_set($answer1, self::$user1['userid'], self::$user1['handle'], null, 1);
 
+		$question = qa_post_get_full($questionId);
 		$answer1 = qa_post_get_full($answer1Id);
 
 		Q2A_TestsUtils::removeAllCachedOptions();
@@ -2780,14 +3237,59 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 		qa_vote_set($answer1, self::$user2['userid'], self::$user2['handle'], null, -1);
 
-		$testValues = function () use ($unupaqcount) {
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
 			Q2A_TestsUtils::removeAllCachedOptions();
 			$this->assertSame($unupaqcount + 1, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
 		};
 
 		$testValues();
 
 		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
+
+		$testValues();
+	}
+
+	public function test__qa_vote_set_answer_two_answers_amaxvote_one_to_zero_with_downvote_with_recalculation_and_closed_question()
+	{
+		$questionId = qa_post_create('Q', null, 'Question title: vote_set_answer_two_answers_amaxvote_one_to_zero_with_downvote_with_recalculation_and_closed_question', 'Dummy post content');
+		$answer1Id = qa_post_create('A', $questionId, null, 'This is the content of the first answer');
+		qa_post_create('A', $questionId, null, 'This is the content of the second answer');
+
+		qa_post_set_closed($questionId, true, null, 'Irrelevant question', self::$user1['userid']);
+
+		$answer1 = qa_post_get_full($answer1Id);
+		qa_vote_set($answer1, self::$user1['userid'], self::$user1['handle'], null, 1);
+
+		$question = qa_post_get_full($questionId);
+		$answer1 = qa_post_get_full($answer1Id);
+
+		Q2A_TestsUtils::removeAllCachedOptions();
+		$unupaqcount = (int)qa_opt('cache_unupaqcount');
+
+		qa_vote_set($answer1, self::$user2['userid'], self::$user2['handle'], null, -1);
+
+		$questionAmaxvote = (int)$question['amaxvote'];
+
+		$testValues = function () use ($unupaqcount, $questionAmaxvote, $questionId) {
+			$question = qa_post_get_full($questionId);
+
+			Q2A_TestsUtils::removeAllCachedOptions();
+			$this->assertSame($unupaqcount, (int)qa_opt('cache_unupaqcount'));
+
+			$this->assertSame($questionAmaxvote - 1, (int)$question['amaxvote']);
+		};
+
+		$testValues();
+
+		qa_update_counts_for_q($questionId);
+		qa_db_amaxvote_update_for_q($questionId);
 
 		$testValues();
 	}

@@ -91,15 +91,84 @@ function qa_db_post_get_category_path($postid)
 /**
  * Update the cached number of answers for $questionid in the database, along with the highest netvotes of any of its answers
  * @param $questionid
+ * @deprecated Use qa_db_post_acount_update_for_q() or qa_db_post_amaxvote_update_for_q()
  */
 function qa_db_post_acount_update($questionid)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"UPDATE ^posts AS x, (SELECT COUNT(*) AS acount, COALESCE(GREATEST(MAX(netvotes), 0), 0) AS amaxvote FROM ^posts WHERE parentid=# AND type='A') AS a SET x.acount=a.acount, x.amaxvote=a.amaxvote WHERE x.postid=#",
-			$questionid, $questionid
-		);
+	qa_db_acount_update_for_q($questionid);
+	qa_db_amaxvote_update_for_q($questionid);
+}
+
+/**
+ * Update a cached count in the ^posts table for a given $postId and $field, using $countQuery SQL. The $value
+ * is optional and depends on the $relative variable. If $relative is true, $value is interpreted as an increment or
+ * decremnt on the original value. If $relative is false, $value is interpreted as a fixed value to assign to the field
+ *
+ * @param int $postId
+ * @param string $field
+ * @param string $countQuery
+ * @param int|null $value
+ * @param bool $relative
+ */
+function qa_db_generic_cache_update_for_q($postId, $field, $countQuery, $value = null, $relative = true)
+{
+	if (!qa_should_update_counts()) {
+		return;
 	}
+
+	if (isset($value)) {
+		$sqlValue = $relative
+			? sprintf('+ %s ', $field)
+			: '';
+		$newValue = $value;
+	} else {
+		$sqlValue = '';
+		$newValue = qa_db_read_one_value(qa_db_query_sub($countQuery, $postId));
+	}
+
+	$sql = sprintf(
+		'UPDATE ^posts SET %s = # %s' .
+		'WHERE postid = #',
+		$field, $sqlValue
+	);
+
+	qa_db_query_sub($sql, $newValue, $postId);
+}
+
+
+/**
+ * Update the cached number of answers for $questionid in the database
+ * @param int $questionid
+ * @param int|null $increment
+ */
+function qa_db_acount_update_for_q($questionid, $increment = null)
+{
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'acount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$increment
+	);
+}
+
+
+/**
+ * Update the cached number of highest netvotes of $questionid in the database
+ * @param int $questionid
+ * @param int|null $value
+ * @param bool $relative
+ */
+function qa_db_amaxvote_update_for_q($questionid, $value = null, $relative = true)
+{
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'amaxvote',
+		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$value,
+		$relative
+	);
 }
 
 
@@ -113,6 +182,34 @@ function qa_db_category_path_qcount_update($path)
 	qa_db_ifcategory_qcount_update($path['catidpath1']);
 	qa_db_ifcategory_qcount_update($path['catidpath2']);
 	qa_db_ifcategory_qcount_update($path['catidpath3']);
+}
+
+
+/**
+ * Update the cached number of answers for $questionid in the database, along with the highest netvotes of any of its answers
+ * @param $questionid
+ * @param int|null $increment
+ */
+function qa_db_post_update_acount($questionid, $increment = null)
+{
+	if (!qa_should_update_counts()) {
+		return;
+	}
+
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'acount',
+		'SELECT COUNT(*) acount FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$increment
+	);
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'amaxvote',
+		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) amaxvote FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$increment
+	);
 }
 
 
