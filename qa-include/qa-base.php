@@ -1818,10 +1818,11 @@ function qa_redirect_raw($url)
 
 /**
  * Return the contents of remote $url, using file_get_contents() if possible, otherwise curl functions
- * @param $url
+ * @param string $url
+ * @param bool $allowInsecure
  * @return mixed|string
  */
-function qa_retrieve_url($url)
+function qa_retrieve_url($url, $allowInsecure = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1830,13 +1831,24 @@ function qa_retrieve_url($url)
 		return '';
 	}
 
-	$contents = @file_get_contents($url);
+	$context = array(
+		'http' => array('ignore_errors' => true),
+	);
+	if ($allowInsecure) {
+		$context['ssl'] = array(
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+		);
+	}
+	$contents = file_get_contents($url, false, stream_context_create($context)) ?? '';
 
 	if (!strlen($contents) && function_exists('curl_exec')) { // try curl as a backup (if allow_url_fopen not set)
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		$contents = @curl_exec($curl);
+		if ($allowInsecure) {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		}
+		$contents = (string)curl_exec($curl);
 		curl_close($curl);
 	}
 
