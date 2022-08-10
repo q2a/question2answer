@@ -152,7 +152,7 @@ class qa_event_logger
 		elseif (qa_strlen((string)$value) > 40)
 			$text = qa_substr($value, 0, 38) . '...';
 		else
-			$text = $value;
+			$text = (string)$value;
 
 		return strtr($text, "\t\n\r", '   ');
 	}

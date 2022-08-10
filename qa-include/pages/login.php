@@ -76,7 +76,7 @@ if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 				$inuserid = $matchusers[0];
 				$userinfo = qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
-				$legacyPassOk = hash_equals(strtolower($userinfo['passcheck']), strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])));
+				$legacyPassOk = hash_equals(strtolower((string)$userinfo['passcheck']), strtolower(qa_db_calc_passcheck($inpassword, (string)$userinfo['passsalt'])));
 
 				if (QA_PASSWORD_HASH) {
 					$haspassword = isset($userinfo['passhash']);

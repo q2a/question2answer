@@ -106,8 +106,8 @@ if (strlen($emailHandle) > 0) {
 				$focusId = 'newpassword1';
 
 				if (qa_clicked('dochangepassword')) {
-					$newPassword = qa_post_text('newpassword1');
-					$repeatPassword = qa_post_text('newpassword2');
+					$newPassword = (string)qa_post_text('newpassword1');
+					$repeatPassword = (string)qa_post_text('newpassword2');
 
 					if (!qa_check_form_security_code('reset', qa_post_text('formcode'))) {
 						$errors['page'] = qa_lang_html('misc/form_security_again');
