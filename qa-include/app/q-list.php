@@ -159,6 +159,8 @@ function qa_q_list_page_content($questions, $pagesize, $start, $count, $sometitl
  */
 function qa_qs_sub_navigation($sort, $categoryslugs)
 {
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
 	$request = 'questions';
 
 	if (isset($categoryslugs)) {
@@ -167,17 +169,19 @@ function qa_qs_sub_navigation($sort, $categoryslugs)
 		}
 	}
 
-	$navigation = array(
-		'recent' => array(
-			'label' => qa_lang('main/nav_most_recent'),
-			'url' => qa_path_html($request),
-		),
+	$navigation['recent'] = array(
+		'label' => qa_lang('main/nav_most_recent'),
+		'url' => qa_path_html($request),
+	);
 
-		'hot' => array(
+	if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+		$navigation['hot'] = array(
 			'label' => qa_lang('main/nav_hot'),
 			'url' => qa_path_html($request, array('sort' => 'hot')),
-		),
+		);
+	}
 
+	$navigation += array(
 		'votes' => array(
 			'label' => qa_lang('main/nav_most_votes'),
 			'url' => qa_path_html($request, array('sort' => 'votes')),

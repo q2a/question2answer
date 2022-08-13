@@ -69,6 +69,7 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 	$categoryid = null, $extravalue = null, $queued = false, $name = null)
 {
 	require_once QA_INCLUDE_DIR . 'db/selects.php';
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
 
 	$postid = qa_db_post_create($queued ? 'Q_QUEUED' : 'Q', @$followanswer['postid'], $userid, isset($userid) ? null : $cookieid,
 		qa_remote_ip_address(), $title, $content, $format, $tagstring, qa_combine_notify_email($userid, $notify, $email),
@@ -80,7 +81,9 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 	}
 
 	qa_db_posts_calc_category_path($postid);
-	qa_db_hotness_update($postid);
+	if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+		qa_db_hotness_update($postid);
+	}
 
 	if ($queued) {
 		qa_db_queuedcount_update();
@@ -248,8 +251,12 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
  */
 function qa_update_q_counts_for_a($questionid)
 {
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
 	qa_db_post_acount_update($questionid);
-	qa_db_hotness_update($questionid);
+	if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+		qa_db_hotness_update($questionid);
+	}
 	qa_db_acount_update();
 	qa_db_unaqcount_update();
 	qa_db_unupaqcount_update();

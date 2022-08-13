@@ -386,7 +386,12 @@ function qa_question_set_status($oldquestion, $status, $userid, $handle, $cookie
 
 		else { // ... otherwise we're approving original created post
 			qa_db_post_set_created($oldquestion['postid'], null);
-			qa_db_hotness_update($oldquestion['postid']);
+
+			require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
+			if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+				qa_db_hotness_update($oldquestion['postid']);
+			}
 		}
 	}
 

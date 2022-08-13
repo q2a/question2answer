@@ -158,7 +158,7 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 
 	qa_db_points_update_ifuser($post['userid'], array($prefix . 'voteds', 'upvoteds', 'downvoteds'));
 
-	if ($prefix === 'q') {
+	if ($prefix === 'q' && (int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
 		qa_db_hotness_update($post['postid']);
 	}
 
