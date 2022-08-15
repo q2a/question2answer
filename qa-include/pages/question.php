@@ -73,12 +73,17 @@ list($question, $childposts, $achildposts, $parentquestion, $closepost, $duplica
 if (isset($question['basetype']) && $question['basetype'] != 'Q') // don't allow direct viewing of other types of post
 	$question = null;
 
+$showid = qa_get('show');
+
 if (isset($question)) {
 	$q_request = qa_q_request($questionid, $question['title']);
 
 	if (trim($q_request, '/') !== trim(qa_request(), '/')) {
-		// redirect if the current URL is incorrect
-		qa_redirect($q_request);
+		$type = $childposts[$showid]['basetype'] ?? $achildposts[$showid]['basetype'] ?? null;
+
+		$url = qa_q_path_html($questionid, $question['title'], false, $type, $showid);
+
+		qa_redirect_raw($url);
 	}
 
 	$question['extra'] = $extravalue;
@@ -175,7 +180,6 @@ $usecaptcha = ($captchareason != false);
 // This is in a separate file because it's a *lot* of logic, and will slow down ordinary page views
 
 $pagestart = qa_get_start();
-$showid = qa_get('show');
 $pageerror = null;
 $formtype = null;
 $formpostid = null;
