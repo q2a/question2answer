@@ -441,6 +441,10 @@ h1 {
 	.qam-footer-col {
 		float: right;
 	}
+	
+	li.qa-nav-main-item.qa-nav-main-ask, li.qa-nav-main-item.qa-nav-main-admin {
+		float: left;
+	}
 }
 
 .qa-vote-buttons {

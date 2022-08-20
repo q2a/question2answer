@@ -480,6 +480,11 @@ blockquote p {
 	.qa-nav-main-item-opp:last-child {
 		margin: 0 0 0 50px;
 	}
+	
+	li.qa-nav-main-item.qa-nav-main-ask, li.qa-nav-main-item.qa-nav-main-admin {
+		float: right;
+	}
+	
 }
 
 .qa-nav-main-list {

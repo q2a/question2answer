@@ -512,6 +512,25 @@ function qa_content_prepare($voting = false, $categoryids = array())
 		if ($page['nav'] == 'B')
 			qa_navigation_add_page($qa_content['navigation']['main'], $page);
 	}
+	
+	// Only the 'level' permission error prevents the menu option being shown - others reported on /qa-include/pages/ask.php
+
+	if (qa_opt('nav_ask') && qa_user_maximum_permit_error('permit_post_q') != 'level') {
+		$qa_content['navigation']['main']['ask'] = array(
+			'url' => qa_path_html('ask', (qa_using_categories() && strlen($lastcategoryid)) ? array('cat' => $lastcategoryid) : null),
+			'label' => qa_lang_html('main/nav_ask'),
+		);
+	}
+	
+	if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN || !qa_user_maximum_permit_error('permit_moderate') ||
+		!qa_user_maximum_permit_error('permit_hide_show') || !qa_user_maximum_permit_error('permit_delete_hidden')
+	) {
+		$qa_content['navigation']['main']['admin'] = array(
+			'url' => qa_path_html('admin'),
+			'label' => qa_lang_html('main/nav_admin'),
+			'selected_on' => array('admin/'),
+		);
+	}
 
 	if (qa_opt('nav_home') && qa_opt('show_custom_home')) {
 		$qa_content['navigation']['main']['$'] = array(
@@ -519,20 +538,20 @@ function qa_content_prepare($voting = false, $categoryids = array())
 			'label' => qa_lang_html('main/nav_home'),
 		);
 	}
-
-	if (qa_opt('nav_activity')) {
-		$qa_content['navigation']['main']['activity'] = array(
-			'url' => qa_path_html('activity'),
-			'label' => qa_lang_html('main/nav_activity'),
-		);
-	}
-
+	
 	$hascustomhome = qa_has_custom_home();
 
 	if (qa_opt($hascustomhome ? 'nav_qa_not_home' : 'nav_qa_is_home')) {
 		$qa_content['navigation']['main'][$hascustomhome ? 'qa' : '$'] = array(
 			'url' => qa_path_html($hascustomhome ? 'qa' : ''),
 			'label' => qa_lang_html('main/nav_qa'),
+		);
+	}
+
+	if (qa_opt('nav_activity')) {
+		$qa_content['navigation']['main']['activity'] = array(
+			'url' => qa_path_html('activity'),
+			'label' => qa_lang_html('main/nav_activity'),
 		);
 	}
 
@@ -578,26 +597,6 @@ function qa_content_prepare($voting = false, $categoryids = array())
 			'url' => qa_path_html('users'),
 			'label' => qa_lang_html('main/nav_users'),
 			'selected_on' => array('users$', 'users/', 'user/'),
-		);
-	}
-
-	// Only the 'level' permission error prevents the menu option being shown - others reported on /qa-include/pages/ask.php
-
-	if (qa_opt('nav_ask') && qa_user_maximum_permit_error('permit_post_q') != 'level') {
-		$qa_content['navigation']['main']['ask'] = array(
-			'url' => qa_path_html('ask', (qa_using_categories() && strlen($lastcategoryid)) ? array('cat' => $lastcategoryid) : null),
-			'label' => qa_lang_html('main/nav_ask'),
-		);
-	}
-
-
-	if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN || !qa_user_maximum_permit_error('permit_moderate') ||
-		!qa_user_maximum_permit_error('permit_hide_show') || !qa_user_maximum_permit_error('permit_delete_hidden')
-	) {
-		$qa_content['navigation']['main']['admin'] = array(
-			'url' => qa_path_html('admin'),
-			'label' => qa_lang_html('main/nav_admin'),
-			'selected_on' => array('admin/'),
 		);
 	}
 
