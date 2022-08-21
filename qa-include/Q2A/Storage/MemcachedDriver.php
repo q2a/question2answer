@@ -31,8 +31,8 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	private $error;
 	private $flushed = false;
 
-	const HOST = '127.0.0.1';
-	const PORT = 11211;
+	private $host = '127.0.0.1';
+	private $port = 11211;
 
 	/**
 	 * Creates a new Memcached instance and checks we can cache items.
@@ -51,8 +51,15 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 		}
 
 		if (extension_loaded('memcached')) {
+			if (defined('QA_MEMCACHED_HOST')) {
+				$this->host = QA_MEMCACHED_HOST;
+			}
+			if (defined('QA_MEMCACHED_PORT')) {
+				$this->port = QA_MEMCACHED_PORT;
+			}
+
 			$this->memcached = new Memcached;
-			$this->memcached->addServer(self::HOST, self::PORT);
+			$this->memcached->addServer($this->host, $this->port);
 			if ($this->memcached->set($this->keyPrefix . 'test', 'TEST')) {
 				$this->enabled = true;
 			} else {
@@ -196,7 +203,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 
 		if ($this->enabled) {
 			$stats = $this->memcached->getStats();
-			$key = self::HOST . ':' . self::PORT;
+			$key = $this->host . ':' . $this->port;
 
 			$totalFiles = isset($stats[$key]['curr_items']) ? $stats[$key]['curr_items'] : 0;
 			$totalBytes = isset($stats[$key]['bytes']) ? $stats[$key]['bytes'] : 0;
