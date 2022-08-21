@@ -1804,7 +1804,7 @@ switch ($adminsection) {
 
 	case 'caching':
 		$cacheDriver = Q2A_Storage_CacheFactory::getCacheDriver();
-		$qa_content['error'] = $cacheDriver->getError();
+		$qa_content['error'] = $cacheDriver->test();
 		$cacheStats = $cacheDriver->getStats();
 
 		$qa_content['form_2'] = array(
@@ -1818,7 +1818,7 @@ switch ($adminsection) {
 				'cache_files' => array(
 					'type' => 'static',
 					'label' => qa_lang_html('admin/caching_num_items'),
-					'value' => qa_html(qa_format_number($cacheStats['files'])),
+					'value' => qa_html(qa_format_number($cacheStats['items'])),
 				),
 				'cache_size' => array(
 					'type' => 'static',

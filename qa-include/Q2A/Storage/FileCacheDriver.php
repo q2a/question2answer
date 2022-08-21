@@ -27,7 +27,6 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 {
 	private $enabled = false;
 	private $keyPrefix = '';
-	private $error;
 	private $cacheDir;
 
 	private $phpProtect = '<?php header($_SERVER[\'SERVER_PROTOCOL\'].\' 404 Not Found\'); die; ?>';
@@ -46,16 +45,12 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 			$this->keyPrefix = $config['keyprefix'];
 		}
 
-		if (isset($config['dir'])) {
-			$this->cacheDir = realpath($config['dir']);
-			if (!is_writable($this->cacheDir)) {
-				$this->error = qa_lang_html_sub('admin/caching_dir_error', $config['dir']);
-			}
-		} else {
-			$this->error = qa_lang_html('admin/caching_dir_missing');
+		if (!isset($config['dir'])) {
+			return;
 		}
 
-		$this->enabled = empty($this->error);
+		$this->enabled = true;
+		$this->cacheDir = realpath($config['dir']);
 	}
 
 	/**
@@ -107,7 +102,7 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	public function set($key, $data, $ttl)
 	{
 		$success = false;
-		$ttl = (int) $ttl;
+		$ttl = (int)$ttl;
 		$fullKey = $this->keyPrefix . $key;
 
 		if ($this->enabled && $ttl > 0) {
@@ -171,7 +166,7 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 						$fp = fopen($file, 'r');
 						$skipLine = fgets($fp);
 						$key = fgets($fp);
-						$expiry = (int) trim(fgets($fp));
+						$expiry = (int)trim(fgets($fp));
 						if (time() > $expiry) {
 							$wasDeleted = $this->deleteFile($file);
 						}
@@ -206,16 +201,6 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	}
 
 	/**
-	 * Get the last error.
-	 *
-	 * @return string
-	 */
-	public function getError()
-	{
-		return $this->error;
-	}
-
-	/**
 	 * Get the prefix used for all cache keys.
 	 *
 	 * @return string
@@ -228,29 +213,32 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	/**
 	 * Get current statistics for the cache.
 	 *
-	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.
+	 * @return array Array of stats: 'items' => number of files, 'size' => total item size in bytes.
 	 */
 	public function getStats()
 	{
 		if (!$this->enabled) {
-			return array('files' => 0, 'size' => 0);
+			return array('items' => 0, 'size' => 0);
 		}
 
 		$totalFiles = 0;
 		$totalBytes = 0;
-		$dirIter = new RecursiveDirectoryIterator($this->cacheDir);
-		foreach (new RecursiveIteratorIterator($dirIter) as $file) {
-			if (strpos($file->getFilename(), '.') === 0) {
-				// TODO: use FilesystemIterator::SKIP_DOTS once we're on minimum PHP 5.3
-				continue;
-			}
+		try {
+			$dirIter = new RecursiveDirectoryIterator($this->cacheDir);
+			foreach (new RecursiveIteratorIterator($dirIter) as $file) {
+				if (strpos($file->getFilename(), '.') === 0) {
+					// TODO: use FilesystemIterator::SKIP_DOTS once we're on minimum PHP 5.3
+					continue;
+				}
 
-			$totalFiles++;
-			$totalBytes += $file->getSize();
+				$totalFiles++;
+				$totalBytes += $file->getSize();
+			}
+		} catch (Exception $e) {
 		}
 
 		return array(
-			'files' => $totalFiles,
+			'items' => $totalFiles,
 			'size' => $totalBytes,
 		);
 	}
@@ -280,5 +268,48 @@ class Q2A_Storage_FileCacheDriver implements Q2A_Storage_CacheDriver
 	{
 		$filename = sha1($fullKey);
 		return $this->cacheDir . '/' . substr($filename, 0, 1) . '/' . substr($filename, 1, 2) . '/' . $filename . '.php';
+	}
+
+	/**
+	 * Perform test operations and return an error string or null if no error was found
+	 *
+	 * @return string|null
+	 */
+	public function test()
+	{
+		if (!$this->enabled) {
+			return null;
+		}
+
+		if (!isset($this->cacheDir)) {
+			return qa_lang_html('admin/caching_dir_missing');
+		}
+
+		try {
+			if (!is_writable($this->cacheDir)) {
+				throw new Exception();
+			}
+
+			$dirIter = new RecursiveDirectoryIterator($this->cacheDir);
+			foreach (new RecursiveIteratorIterator($dirIter) as $file) {
+				if (strpos($file->getFilename(), '.') === 0) {
+					// TODO: use FilesystemIterator::SKIP_DOTS once we're on minimum PHP 5.3
+					continue;
+				}
+
+				break;
+			}
+
+			$result = $this->set('test', 'TEST', 1);
+			if (!$result) {
+				throw new Exception();
+			}
+		} catch (Exception $e) {
+			return qa_lang_html_sub('admin/caching_dir_error', $this->cacheDir);
+		} finally {
+			$this->delete('test');
+		}
+
+		return null;
 	}
 }
