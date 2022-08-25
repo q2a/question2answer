@@ -62,7 +62,7 @@ if (isset($editcategory)) {
 
 	elseif (qa_clicked('dosavecategory')) {
 		$parentid = qa_post_text('parent');
-		$editcategory = array('parentid' => $parentid ?? null);
+		$editcategory = array('parentid' => is_numeric($parentid) ? $parentid : null);
 	}
 }
 
