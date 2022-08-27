@@ -371,6 +371,19 @@ class qa_html_theme_base
 			}
 		}
 	}
+	
+	public function footer_script_container()
+	{
+		$this->output('<div id="footer-scripts">');
+			// Footer Scripts. New container to group Footer scripts. Right before BODY tag closure.
+			$this->footer_scripts();
+		$this->output('</div>');
+	}
+	
+	public function footer_scripts()
+	{
+		// Footer Scripts.
+	}
 
 	public function head_css()
 	{
@@ -421,6 +434,8 @@ class qa_html_theme_base
 		$this->body_content();
 		$this->body_footer();
 		$this->body_hidden();
+		
+		$this->footer_script_container();
 
 		$this->output('</body>');
 	}
