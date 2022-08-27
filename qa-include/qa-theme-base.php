@@ -382,7 +382,7 @@ class qa_html_theme_base
 	
 	public function footer_scripts()
 	{
-		// Footer Scripts.
+		// Footer Scripts
 	}
 
 	public function head_css()
@@ -402,6 +402,14 @@ class qa_html_theme_base
 				'</style>'
 			);
 		}
+		
+		$this->plugin_css();
+		
+	}
+	
+	public function plugin_css()
+	{
+		// Plugins CSS
 	}
 
 	public function css_name()
