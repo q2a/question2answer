@@ -387,6 +387,8 @@ class qa_html_theme_base
 
 	public function head_css()
 	{
+		$this->plugin_css();
+		
 		$this->output('<link rel="stylesheet" href="' . $this->rooturl . $this->css_name() . '"/>');
 
 		if (isset($this->content['css_src'])) {
@@ -402,8 +404,6 @@ class qa_html_theme_base
 				'</style>'
 			);
 		}
-		
-		$this->plugin_css();
 		
 	}
 	
