@@ -480,6 +480,11 @@ blockquote p {
 	.qa-nav-main-item-opp:last-child {
 		margin: 0 0 0 50px;
 	}
+	
+	li.qa-nav-main-item.qa-nav-main-ask, li.qa-nav-main-item.qa-nav-main-admin {
+		float: right;
+	}
+	
 }
 
 .qa-nav-main-list {
@@ -556,6 +561,16 @@ blockquote p {
 	font-family: "fontello";
 	font-size: 24px;
 	content: '\e80d';
+}
+
+.qa-needs-moderation {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background-color: #f83052;
+    border-radius: 50%;
+    vertical-align: text-top;
+    margin-left: 8px;
 }
 
 @media (max-width: 979px) {

@@ -510,6 +510,17 @@ div.header-banner {
 	border-left: none;
 }
 
+.qa-needs-moderation {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background-color: #f83052;
+    border-radius: 50%;
+    vertical-align: text-top;
+    margin: 0 8px;
+	margin-inline-end:0; /* Quick fix for modern browsers / Lack of RTL file */
+}
+
 .qa-nav-sub {
 	background: #f4f4f4; /* Old browsers */
 	background: -webkit-linear-gradient(top, #f4f4f4 0%, #e6e6e6 100%); /* Chrome10+,Safari5.1+ */

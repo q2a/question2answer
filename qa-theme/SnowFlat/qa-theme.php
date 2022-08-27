@@ -700,4 +700,10 @@ class qa_html_theme extends qa_html_theme_base
 			'</div>' .
 			'</div>';
 	}
+	
+	public function footer_scripts()
+	{
+		// Footer Scripts. Add scripts to a container located right before BODY tag closure.
+	}
+	
 }

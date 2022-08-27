@@ -371,9 +371,24 @@ class qa_html_theme_base
 			}
 		}
 	}
+	
+	public function footer_script_container()
+	{
+		$this->output('<div id="footer-scripts">');
+			// Footer Scripts. New container to group Footer scripts. Right before BODY tag closure.
+			$this->footer_scripts();
+		$this->output('</div>');
+	}
+	
+	public function footer_scripts()
+	{
+		// Footer Scripts
+	}
 
 	public function head_css()
 	{
+		$this->plugin_css();
+		
 		$this->output('<link rel="stylesheet" href="' . $this->rooturl . $this->css_name() . '"/>');
 
 		if (isset($this->content['css_src'])) {
@@ -389,6 +404,12 @@ class qa_html_theme_base
 				'</style>'
 			);
 		}
+		
+	}
+	
+	public function plugin_css()
+	{
+		// Plugins CSS
 	}
 
 	public function css_name()
@@ -421,6 +442,8 @@ class qa_html_theme_base
 		$this->body_content();
 		$this->body_footer();
 		$this->body_hidden();
+		
+		$this->footer_script_container();
 
 		$this->output('</body>');
 	}

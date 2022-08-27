@@ -114,6 +114,8 @@ h2 {font-size:22px; color:#c659ab; padding-top:12px; clear:both;}
 .qa-nav-main-link:hover,.qa-nav-main-selected {background: url(nav-main-sel-bg.png) repeat-x left top; border-left:1px solid #e9e697; border-right:1px solid #e9e697; color:#8d006a; padding:14px 9px; text-decoration:none;}
 .qa-nav-main-hot .qa-nav-main-link {color:#c33;}
 
+.qa-needs-moderation {display:inline-block; width:7px; height:7px; background-color:#f83052; border-radius:50%; vertical-align:text-top; margin:0 8px; margin-inline-end:0;}
+
 .qa-nav-sub {clear:both; background:url(nav-sub-bg.png) repeat-x left top;}
 * html .qa-nav-sub {background:none;} /* IE6 since z-order goes wrong */
 .qa-nav-sub-list {font-size:12px; list-style:none; padding:0; margin:0;}
