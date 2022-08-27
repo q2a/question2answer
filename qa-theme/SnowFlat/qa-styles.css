@@ -563,6 +563,16 @@ blockquote p {
 	content: '\e80d';
 }
 
+.qa-needs-moderation {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background-color: #f83052;
+    border-radius: 50%;
+    vertical-align: text-top;
+    margin-left: 8px;
+}
+
 @media (max-width: 979px) {
 	.qa-nav-main-link {
 		padding: 5px 10px;

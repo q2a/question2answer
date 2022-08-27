@@ -525,9 +525,16 @@ function qa_content_prepare($voting = false, $categoryids = array())
 	if (qa_get_logged_in_level() >= QA_USER_LEVEL_ADMIN || !qa_user_maximum_permit_error('permit_moderate') ||
 		!qa_user_maximum_permit_error('permit_hide_show') || !qa_user_maximum_permit_error('permit_delete_hidden')
 	) {
+		// Check moderation queue, if needs moderation, outputs a Red Dot as a reminder for Moderators
+		$qa_needs_mod = '';
+		
+		if (!empty(qa_opt('cache_queuedcount')) || !empty(qa_opt('cache_flaggedcount')) ){
+			$qa_needs_mod = '<span class="qa-needs-moderation"></span>';
+		}
+		
 		$qa_content['navigation']['main']['admin'] = array(
 			'url' => qa_path_html('admin'),
-			'label' => qa_lang_html('main/nav_admin'),
+			'label' => qa_lang_html('main/nav_admin'). $qa_needs_mod,
 			'selected_on' => array('admin/'),
 		);
 	}

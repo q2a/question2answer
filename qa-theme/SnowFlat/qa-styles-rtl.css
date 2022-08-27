@@ -53,6 +53,11 @@ h1 {
 	margin: 0 0 0 1px;
 }
 
+.qa-needs-moderation {
+    margin-left: initial;
+	margin-right: 8px;
+}
+
 @media (max-width: 979px) {
 	.qam-search-mobile {
 		border-left: 0;
