@@ -78,6 +78,7 @@ return array(
 	'send_private_message' => ' - ^1send private message^2',
 	'set_bonus_button' => 'Update bonus',
 	'title' => 'Title:',
+	'user_profile' => 'Profile',
 	'user_x' => 'User ^',
 	'user_x_disabled_pms' => 'User ^ has disabled private messages.',
 	'voted_on' => 'Voted on:',

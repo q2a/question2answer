@@ -1461,7 +1461,7 @@ function qa_user_sub_navigation($handle, $selected, $ismyuser = false)
 {
 	$navigation = array(
 		'profile' => array(
-			'label' => qa_lang_html_sub('profile/user_x', qa_html($handle)),
+			'label' => qa_lang_html_sub('profile/user_profile', qa_html($handle)),
 			'url' => qa_path_html('user/' . $handle),
 		),
 
