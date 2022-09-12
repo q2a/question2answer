@@ -1776,7 +1776,7 @@ function qa_path_form_html($request, $params = null, $rooturl = null, $neaturls 
 
 		foreach ($params as $param)
 			if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-				$formhtml .= '<input type="hidden" name="' . qa_html(urldecode($matches[1])) . '" value="' . qa_html(urldecode(@$matches[3])) . '"/>';
+				$formhtml .= '<input type="hidden" name="' . qa_html(rawurldecode($matches[1])) . '" value="' . qa_html(rawurldecode(@$matches[3])) . '"/>';
 	}
 
 	return $formhtml;
