@@ -275,7 +275,7 @@ class qa_joomla_default_integration
 	public static function onGetURLs()
 	{
 		$login = 'index.php?option=com_users&view=login';
-		$logout = 'index.php?option=com_users&task=user.logout&' . JSession::getFormToken() . '=1&return=' . urlencode(base64_encode('index.php'));
+		$logout = 'index.php?option=com_users&task=user.logout&' . JSession::getFormToken() . '=1&return=' . rawurlencode(base64_encode('index.php'));
 		$reg = 'index.php?option=com_users&view=registration';
 
 		return array(

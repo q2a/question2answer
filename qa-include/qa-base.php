@@ -1581,7 +1581,7 @@ function qa_path($request, $params = null, $rooturl = null, $neaturls = null, $a
 	}
 
 	foreach ($requestparts as $index => $requestpart) {
-		$requestparts[$index] = urlencode($requestpart);
+		$requestparts[$index] = rawurlencode($requestpart);
 	}
 	$requestpath = implode('/', $requestparts);
 
@@ -1614,11 +1614,11 @@ function qa_path($request, $params = null, $rooturl = null, $neaturls = null, $a
 	if (is_array($params)) {
 		foreach ($params as $key => $value) {
 			$value = is_array($value) ? '' : (string) $value;
-			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . urlencode($key) . '=' . urlencode($value);
+			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . rawurlencode($key) . '=' . rawurlencode($value);
 		}
 	}
 
-	return $url . $paramsextra . (empty($anchor) ? '' : '#' . urlencode($anchor));
+	return $url . $paramsextra . (empty($anchor) ? '' : '#' . rawurlencode($anchor));
 }
 
 
