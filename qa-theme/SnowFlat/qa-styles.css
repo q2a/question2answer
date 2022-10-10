@@ -667,6 +667,7 @@ blockquote p {
 	right: 0;
 	top: 60px;
 	width: 230px;
+	height: 300px;
 	padding: 10px;
 	z-index: 1100;
 }
