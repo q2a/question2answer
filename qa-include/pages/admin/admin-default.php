@@ -1120,6 +1120,14 @@ foreach ($showoptions as $optionname) {
 				), $value, '');
 				break;
 
+			case 'smtp_username':
+				$optionfield['tags'] .= ' autocomplete="off"';
+				break;
+
+			case 'smtp_password':
+				$optionfield['tags'] .= ' autocomplete="new-password"';
+				break;
+
 			case 'custom_sidebar':
 			case 'custom_sidepanel':
 			case 'custom_header':
