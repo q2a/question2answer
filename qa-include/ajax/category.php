@@ -33,7 +33,7 @@ list($fullcategory, $categories) = qa_db_select_with_pending(
 
 echo "QA_AJAX_RESPONSE\n1\n";
 
-echo qa_html(strtr(@$fullcategory['content'], "\r\n", '  ')); // category description
+echo qa_html(strtr($fullcategory['content'] ?? '', "\r\n", '  ')); // category description
 
 foreach ($categories as $category) {
 	// subcategory information
