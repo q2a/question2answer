@@ -118,7 +118,7 @@ class qa_filter_basic
 		foreach (array_keys($profile) as $field) {
 			// ensure fields are not NULL
 			$profile[$field] = (string)$profile[$field];
-			$this->validate_field_length($errors, $profile, $field, 0, QA_DB_MAX_CONTENT_LENGTH);
+			$this->validate_field_length($errors, $profile, $field, 0, QA_DB_MAX_PROFILE_CONTENT_LENGTH);
 		}
 	}
 
