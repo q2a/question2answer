@@ -774,7 +774,7 @@ class qa_html_theme_base
 			if (isset($favorite))
 				$this->output('<form ' . $favorite['form_tags'] . '>');
 
-			$this->output('<div class="qa-main-heading">');
+			$this->output('<div class="qa-main-heading" dir="auto">');
 			$this->favorite();
 			$this->output('<h1>');
 			$this->title();
@@ -1753,7 +1753,7 @@ class qa_html_theme_base
 	public function q_item_title($q_item)
 	{
 		$this->output(
-			'<div class="qa-q-item-title">',
+			'<div class="qa-q-item-title" dir="auto">',
 			'<a href="' . $q_item['url'] . '">' . $q_item['title'] . '</a>',
 			// add closed note in title
 			empty($q_item['closed']['state']) ? '' : ' [' . $q_item['closed']['state'] . ']',
@@ -2238,7 +2238,7 @@ class qa_html_theme_base
 	{
 		$content = isset($q_view['content']) ? $q_view['content'] : '';
 
-		$this->output('<div class="qa-q-view-content qa-post-content">');
+		$this->output('<div class="qa-q-view-content qa-post-content" dir="auto">');
 		$this->output_raw($content);
 		$this->output('</div>');
 	}
@@ -2401,7 +2401,7 @@ class qa_html_theme_base
 			$a_item['content'] = '';
 		}
 
-		$this->output('<div class="qa-a-item-content qa-post-content">');
+		$this->output('<div class="qa-a-item-content qa-post-content" dir="auto">');
 		$this->output_raw($a_item['content']);
 		$this->output('</div>');
 	}
