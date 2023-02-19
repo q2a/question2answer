@@ -2650,3 +2650,7 @@ a.qa-browse-cat-link:visited {
 	0% { background-color: #ffffaa; }
 	100% { background-color: #fff; }
 }
+
+[dir="auto"] code {
+    float: left;
+}

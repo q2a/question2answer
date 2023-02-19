@@ -449,3 +449,11 @@ h1 {
 .qa-netvote-count-data {
 	direction: ltr;
 }
+
+[dir="auto"] code {
+    float: left;
+}
+
+[dir="rtl"] code {
+    float: left;
+}
