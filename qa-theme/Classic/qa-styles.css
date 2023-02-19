@@ -474,3 +474,7 @@ h2 {font-size:16px; padding-top:12px; clear:both;}
 	0% { background-color: #ffffaa; }
 	100% { background-color: #fff; }
 }
+
+[dir="auto"] code {
+    float: left;
+}

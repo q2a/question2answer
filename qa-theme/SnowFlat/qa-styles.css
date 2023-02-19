@@ -3495,3 +3495,7 @@ input[type="submit"], button {
 .icon-reply:before { content: '\e823'; }
 .icon-power:before { content: '\e824'; }
 .icon-link:before { content: '\e825'; }
+
+[dir="auto"] code {
+    float: left;
+}
