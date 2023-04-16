@@ -59,7 +59,7 @@ function qa_db_generic_cache_update($cacheKey, $countQuery, $increment = null)
 		'ON DUPLICATE KEY UPDATE content = VALUES(content)';
 
 	if (isset($increment)) {
-		$sql .= ' + content';
+		$sql .= ' + CAST(content AS INT)';
 	} else {
 		$increment = qa_db_read_one_value(qa_db_query_sub($countQuery));
 	}
