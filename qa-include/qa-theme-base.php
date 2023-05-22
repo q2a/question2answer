@@ -808,7 +808,7 @@ class qa_html_theme_base
 
 	public function error($error)
 	{
-		if (strlen($error)) {
+		if (strlen($error ?? '')) {
 			$this->output(
 				'<div class="qa-error">',
 				$error,
