@@ -470,7 +470,7 @@ function qa_page_q_edit_q_submit($question, $answers, $commentsfollows, $closepo
 				qa_update_post_text($in, $oldin);
 		}
 
-		if (array_key_exists('categoryid', $in) && strcmp($in['categoryid'], $question['categoryid'])) {
+		if (array_key_exists('categoryid', $in) && strcmp($in['categoryid'] ?? '', $question['categoryid'] ?? '')) {
 			if (qa_user_permit_error('permit_post_q', null, $userlevel))
 				$errors['categoryid'] = qa_lang_html('question/category_ask_not_allowed');
 		}
@@ -505,7 +505,7 @@ function qa_page_q_edit_q_submit($question, $answers, $commentsfollows, $closepo
 			qa_question_set_content($question, $in['title'], $in['content'], $in['format'], $in['text'], qa_tags_to_tagstring($in['tags']),
 				$setnotify, $userid, $handle, $cookieid, $in['extra'], @$in['name'], $in['queued'], $in['silent']);
 
-			if (qa_using_categories() && strcmp($in['categoryid'], $question['categoryid'])) {
+			if (qa_using_categories() && strcmp($in['categoryid'] ?? '', $question['categoryid'] ?? '')) {
 				qa_question_set_category($question, $in['categoryid'], $userid, $handle, $cookieid,
 					$answers, $commentsfollows, $closepost, $in['silent']);
 			}
@@ -572,7 +572,7 @@ function qa_page_q_close_q_form(&$qa_content, $question, $id, $in, $errors)
 function qa_page_q_close_q_submit($question, $closepost, &$in, &$errors)
 {
 	$in = array(
-		'details' => trim(qa_post_text('q_close_details')),
+		'details' => trim((string)qa_post_text('q_close_details')),
 	);
 
 	$userid = qa_get_logged_in_userid();

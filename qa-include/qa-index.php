@@ -73,9 +73,9 @@ else {
 					$params = explode('&', substr($origpath, $questionpos + 1));
 
 					foreach ($params as $param) {
-						if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches)) {
+						if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches) && isset($matches[3])) {
 							$argument = strtr(urldecode($matches[1]), '.', '_'); // simulate PHP's $_GET behavior
-							$_GET[$argument] = qa_string_to_gpc(urldecode(@$matches[3]));
+							$_GET[$argument] = qa_string_to_gpc(urldecode($matches[3]));
 						}
 					}
 

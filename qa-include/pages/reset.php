@@ -35,18 +35,12 @@ if (qa_is_logged_in()) {
 }
 
 // Fetch the email or handle from POST or GET
-$emailHandle = qa_post_text('emailhandle');
-if (!isset($emailHandle)) {
-	$emailHandle = qa_get('e');
-}
-$emailHandle = trim($emailHandle); // if $emailHandle is null, trim returns an empty string
+$emailHandle = qa_post_text('emailhandle') ?? (string)qa_get('e');
+$emailHandle = trim($emailHandle);
 
 // Fetch the code from POST or GET
-$code = qa_post_text('code');
-if (!isset($code)) {
-	$code = qa_get('c');
-}
-$code = trim($code); // if $code is null, trim returns an empty string
+$code = qa_post_text('code') ?? (string)qa_get('c');
+$code = trim($code);
 
 $forgotPath = strlen($emailHandle) > 0 ? qa_path('forgot', array('e' => $emailHandle)) : qa_path('forgot');
 
@@ -112,8 +106,8 @@ if (strlen($emailHandle) > 0) {
 				$focusId = 'newpassword1';
 
 				if (qa_clicked('dochangepassword')) {
-					$newPassword = qa_post_text('newpassword1');
-					$repeatPassword = qa_post_text('newpassword2');
+					$newPassword = (string)qa_post_text('newpassword1');
+					$repeatPassword = (string)qa_post_text('newpassword2');
 
 					if (!qa_check_form_security_code('reset', qa_post_text('formcode'))) {
 						$errors['page'] = qa_lang_html('misc/form_security_again');

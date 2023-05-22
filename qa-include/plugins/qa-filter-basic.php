@@ -172,7 +172,7 @@ class qa_filter_basic
 	 */
 	private function validate_post_email(&$errors, $post)
 	{
-		if (@$post['notify'] && strlen(@$post['email'])) {
+		if (@$post['notify'] && strlen($post['email'] ?? '')) {
 			$error = $this->filter_email($post['email'], null);
 			if (isset($error)) {
 				$errors['email'] = $error;

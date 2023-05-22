@@ -553,7 +553,7 @@ function qa_db_single_select($selectspec)
 	}
 
 	$results = qa_db_read_all_assoc(qa_db_query_raw(qa_db_apply_sub(
-			substr($query, 0, -2) . (strlen(@$selectspec['source']) ? (' FROM ' . $selectspec['source']) : ''),
+			substr($query, 0, -2) . (strlen($selectspec['source'] ?? '') ? (' FROM ' . $selectspec['source']) : ''),
 			@$selectspec['arguments'])
 	), @$selectspec['arraykey']); // arrayvalue is applied in qa_db_post_select()
 
@@ -639,7 +639,7 @@ function qa_db_multi_select($selectspecs)
 				$subquery .= ' AS ' . $columnas;
 		}
 
-		if (strlen(@$selectspec['source']))
+		if (strlen($selectspec['source'] ?? ''))
 			$subquery .= ' FROM ' . $selectspec['source'];
 
 		$subquery .= ')';
