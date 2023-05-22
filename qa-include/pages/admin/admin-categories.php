@@ -480,7 +480,8 @@ if ($setmissing) {
 
 		else {
 			$positionvalue = isset($previous) ? qa_lang_html_sub('admin/after_x', qa_html($previous['title'])) : qa_lang_html('admin/first');
-			$positionoptions[1 + @max(array_keys($positionoptions))] = $positionvalue;
+			$index = empty($positionoptions) ? 0 : max(array_keys($positionoptions));
+			$positionoptions[1 + $index] = $positionvalue;
 		}
 
 		$qa_content['form']['fields']['position'] = array(
