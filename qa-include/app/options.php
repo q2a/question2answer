@@ -203,6 +203,8 @@ function qa_default_option($name)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
 	$fixed_defaults = array(
 		'allow_anonymous_naming' => 1,
 		'allow_change_usernames' => 1,
@@ -353,7 +355,7 @@ function qa_default_option($name)
 		'points_q_voted_max_loss' => 3,
 		'points_select_a' => 3,
 		'q_urls_title_length' => 50,
-		'recalc_hotness_q_view' => 1,
+		'recalc_hotness_frequency' => QA_HOTNESS_RECALC_ALWAYS,
 		'show_a_c_links' => 1,
 		'show_a_form_immediate' => 'if_no_as',
 		'show_c_reply_buttons' => 1,

@@ -25,6 +25,11 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 }
 
 
+define('QA_HOTNESS_RECALC_NEVER', 0);
+define('QA_HOTNESS_RECALC_NO_Q_VIEW', 1);
+define('QA_HOTNESS_RECALC_ALWAYS', 2);
+
+
 /**
  * Increment the views counter for the post (if different IP from last view).
  * @param  int $postid The ID of the post

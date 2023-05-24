@@ -205,7 +205,10 @@ return array(
 	'recalc_categories_note' => ' - for post categories and category counts',
 	'recalc_categories_recounting' => 'Recounting questions for ^1 of ^2 categories...',
 	'recalc_categories_updated' => 'Recalculated for ^1 of ^2 posts...',
-	'recalc_hotness_q_view_note' => 'May slightly improve page speed if disabled, but hotness values will become out of date if views are included in hotness settings',
+	'recalc_hotness_q_view_note' => 'May slightly improve page speed if disabled, but hotness values will become out of date if views are included in hotness settings', // @deprecated
+	'recalc_hotness_never_note' => 'Hotness is never recalculated or even used. Removes the hotness submenu in questions list. No performance impact.',
+	'recalc_hotness_no_q_view_note' => 'Hotness is recalculated in several events (e.g. post creation) with the exception of question views. Medium performance impact.',
+	'recalc_hotness_always_note' => 'Hotness is recalculated in all possible events, including question views. High performance impact.',
 	'recalc_points' => 'Recalculate user points',
 	'recalc_points_complete' => 'All user points were successfully recalculated.',
 	'recalc_points_note' => ' - for user ranking and points displays',

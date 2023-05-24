@@ -213,12 +213,16 @@ function qa_db_posts_get_for_recounting($startpostid, $count)
  */
 function qa_db_posts_votes_recount($firstpostid, $lastpostid)
 {
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
 	qa_db_query_sub(
 		'UPDATE ^posts AS x, (SELECT ^posts.postid, COALESCE(SUM(GREATEST(0,^uservotes.vote)),0) AS upvotes, -COALESCE(SUM(LEAST(0,^uservotes.vote)),0) AS downvotes, COALESCE(SUM(IF(^uservotes.flag, 1, 0)),0) AS flagcount FROM ^posts LEFT JOIN ^uservotes ON ^uservotes.postid=^posts.postid WHERE ^posts.postid>=# AND ^posts.postid<=# GROUP BY postid) AS a SET x.upvotes=a.upvotes, x.downvotes=a.downvotes, x.netvotes=a.upvotes-a.downvotes, x.flagcount=a.flagcount WHERE x.postid=a.postid',
 		$firstpostid, $lastpostid
 	);
 
-	qa_db_hotness_update($firstpostid, $lastpostid);
+	if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+		qa_db_hotness_update($firstpostid, $lastpostid);
+	}
 }
 
 
@@ -236,7 +240,9 @@ function qa_db_posts_answers_recount($firstpostid, $lastpostid)
 		$firstpostid, $lastpostid
 	);
 
-	qa_db_hotness_update($firstpostid, $lastpostid);
+	if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+		qa_db_hotness_update($firstpostid, $lastpostid);
+	}
 }
 
 

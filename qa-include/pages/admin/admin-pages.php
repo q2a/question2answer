@@ -26,6 +26,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 
 require_once QA_INCLUDE_DIR . 'app/admin.php';
 require_once QA_INCLUDE_DIR . 'app/format.php';
+require_once QA_INCLUDE_DIR . 'db/hotness.php';
 require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
@@ -63,12 +64,6 @@ $navoptions = array(
 	'nav_activity' => 'main/nav_activity',
 	$hascustomhome ? 'nav_qa_not_home' : 'nav_qa_is_home' => $hascustomhome ? 'main/nav_qa' : 'admin/nav_qa_is_home',
 	'nav_questions' => 'main/nav_qs',
-	'nav_hot' => 'main/nav_hot',
-	'nav_unanswered' => 'main/nav_unanswered',
-	'nav_tags' => 'main/nav_tags',
-	'nav_categories' => 'main/nav_categories',
-	'nav_users' => 'main/nav_users',
-	'nav_ask' => 'main/nav_ask',
 );
 
 $navpaths = array(
@@ -77,7 +72,22 @@ $navpaths = array(
 	'nav_qa_not_home' => 'qa',
 	'nav_qa_is_home' => '',
 	'nav_questions' => 'questions',
-	'nav_hot' => 'hot',
+);
+
+if ((int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
+	$navoptions['nav_hot'] = 'main/nav_hot';
+	$navpaths['nav_hot'] = 'hot';
+}
+
+$navoptions += array(
+	'nav_unanswered' => 'main/nav_unanswered',
+	'nav_tags' => 'main/nav_tags',
+	'nav_categories' => 'main/nav_categories',
+	'nav_users' => 'main/nav_users',
+	'nav_ask' => 'main/nav_ask',
+);
+
+$navpaths += array(
 	'nav_unanswered' => 'unanswered',
 	'nav_tags' => 'tags',
 	'nav_categories' => 'categories',

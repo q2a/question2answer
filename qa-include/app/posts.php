@@ -303,9 +303,15 @@ function qa_post_set_status($postid, $status, $byuserid = null)
  */
 function qa_post_set_created($postid, $created)
 {
-	$oldpost = qa_post_get_full($postid);
-
 	qa_db_post_set_created($postid, $created);
+
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
+
+	if ((int)qa_opt('recalc_hotness_frequency') === QA_HOTNESS_RECALC_NEVER) {
+		return;
+	}
+
+	$oldpost = qa_post_get_full($postid);
 
 	switch ($oldpost['basetype']) {
 		case 'Q':

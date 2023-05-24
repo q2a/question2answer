@@ -376,7 +376,7 @@ function qa_do_content_stats($qa_content)
 
 	$viewsIncremented = qa_db_increment_views($qa_content['inc_views_postid']);
 
-	if ($viewsIncremented && qa_opt('recalc_hotness_q_view')) {
+	if ($viewsIncremented && (int)qa_opt('recalc_hotness_frequency') === QA_HOTNESS_RECALC_ALWAYS) {
 		qa_db_hotness_update($qa_content['inc_views_postid']);
 	}
 
@@ -469,6 +469,8 @@ function qa_content_prepare($voting = false, $categoryids = array())
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	global $qa_template, $qa_page_error_html;
+
+	require_once QA_INCLUDE_DIR . 'db/hotness.php';
 
 	if (QA_DEBUG_PERFORMANCE) {
 		global $qa_usage;
@@ -579,7 +581,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 		);
 	}
 
-	if (qa_opt('nav_hot')) {
+	if (qa_opt('nav_hot') && (int)qa_opt('recalc_hotness_frequency') > QA_HOTNESS_RECALC_NEVER) {
 		$qa_content['navigation']['main']['hot'] = array(
 			'url' => qa_path_html('hot'),
 			'label' => qa_lang_html('main/nav_hot'),
