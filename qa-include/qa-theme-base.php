@@ -95,7 +95,8 @@ class qa_html_theme_base
 	public function output_array($elements)
 	{
 		foreach ($elements as $element) {
-			$line = str_replace('/>', '>', (string)$element);
+			$element = (string)$element;
+			$line = str_replace('/>', '>', $element);
 
 			if ($this->minifyHtml) {
 				if (strlen($line))
