@@ -46,18 +46,22 @@ Q2A also features an extensive plugin system:
 ----------
 
 
-All development is now taking place through GitHub. The collaborative development process is being managed by [Scott Vivian][1]. (Note that official releases are still distributed via the [Q2A website][Q2A].)
+All development is now taking place through GitHub. The collaborative development process is being managed by [Scott Vivian][1]. (Note that official releases are still distributed via the [Q2A website][Q2A].) See also:
 
-Please read the [contributing page][2] for more information on how to get involved.
+- The [Q2A docs][2] for how to get started installing and using Q2A.
+- The [Changelog][3] for what's new in each version.
+- The [contributing file][4] for more information on how to get involved.
 
 
 Thanks and enjoy!
 
-Gideon
+Gideon & Scott
 
 
 [Q2A]: http://www.question2answer.org/
 [1]: http://www.question2answer.org/qa/user/Scott
-[2]: https://github.com/q2a/question2answer/blob/master/CONTRIBUTING.md
+[2]: https://docs.question2answer.org/
+[3]: https://docs.question2answer.org/install/versions/
+[4]: https://github.com/q2a/question2answer/blob/master/CONTRIBUTING.md
 [releases]: https://github.com/q2a/question2answer/releases
 [sites]: http://www.question2answer.org/sites.php
