@@ -1565,16 +1565,35 @@ function qa_db_newest_users_selectspec($start, $count = null)
 /**
  * Return the selectspec to get information about users at a certain privilege level or higher
  * @param $level
+ * @param $start
+ * @param $count
  * @return array
  */
-function qa_db_users_from_level_selectspec($level)
+function qa_db_users_from_level_selectspec($level, $start = 0, $count = null)
 {
+	$count = isset($count) ? min($count, QA_DB_RETRIEVE_USERS) : QA_DB_RETRIEVE_USERS;
+
 	return array(
 		'columns' => array('^users.userid', 'handle', 'level'),
-		'source' => '^users WHERE level>=# ORDER BY level DESC',
-		'arguments' => array($level),
+		'source' => '^users WHERE level >= # ORDER BY level DESC, handle LIMIT #, #',
+		'arguments' => array($level, $start, $count),
 		'sortdesc' => 'level',
 	);
+}
+
+/**
+ * Return the selectspec to count the amount of users at a certain privilege level or higher
+ * @param $level
+ * @return array
+ */
+function qa_db_users_from_level_count_selectspec($level)
+{
+	$selectSpec = array(
+		'source' => '^users WHERE level >= #',
+		'arguments' => array($level),
+	);
+
+	return qa_db_selectspec_count($selectSpec);
 }
 
 
