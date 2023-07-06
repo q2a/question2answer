@@ -1224,16 +1224,28 @@ function qa_insert_login_links($htmlmessage, $topage = null, $params = null)
  * @param $count
  * @param $prevnext
  * @param array $params
- * @param bool $hasmore
+ * @param bool|int|null $startLimit
  * @param null $anchor
  * @return array|null
  */
-function qa_html_page_links($request, $start, $pagesize, $count, $prevnext, $params = array(), $hasmore = false, $anchor = null)
+function qa_html_page_links($request, $start, $pagesize, $count, $prevnext, $params = array(), $startLimit = QA_MAX_LIMIT_START, $anchor = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
+	// Backwards compatibility. Changed from boolean to int in v1.8.7
+	if (is_bool($startLimit)) {
+		$startLimit = QA_MAX_LIMIT_START;
+	}
+
+	if (is_int($startLimit)) {
+		$hasmore = $count > $startLimit;
+		$count = min((int)$count, 1 + $startLimit);
+	} else { // if $startLimit is null
+		$hasmore = false;
+	}
+
 	$thispage = 1 + floor($start / $pagesize);
-	$lastpage = ceil(min((int)$count, 1 + QA_MAX_LIMIT_START) / $pagesize);
+	$lastpage = ceil((int)$count / $pagesize);
 
 	if ($thispage > 1 || $lastpage > $thispage) {
 		$links = array('label' => qa_lang_html('main/page_label'), 'items' => array());
