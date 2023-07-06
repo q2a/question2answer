@@ -93,7 +93,7 @@ function qa_image_constrain_data($imagedata, &$width, &$height, $maxwidth, $maxh
 {
 	$inimage = @imagecreatefromstring($imagedata);
 
-	if (is_resource($inimage)) {
+	if ($inimage !== false) {
 		$width = imagesx($inimage);
 		$height = imagesy($inimage);
 
@@ -102,7 +102,7 @@ function qa_image_constrain_data($imagedata, &$width, &$height, $maxwidth, $maxh
 		qa_gd_image_resize($inimage, $width, $height);
 	}
 
-	if (is_resource($inimage)) {
+	if ($inimage !== false) {
 		$imagedata = qa_gd_image_jpeg($inimage);
 		imagedestroy($inimage);
 		return $imagedata;
@@ -152,9 +152,10 @@ function qa_gd_image_resize(&$image, $width, $height)
 
 	$newimage = imagecreatetruecolor($width, $height);
 	$white = imagecolorallocate($newimage, 255, 255, 255); // fill with white first in case we have a transparent PNG
+
 	imagefill($newimage, 0, 0, $white);
 
-	if (is_resource($newimage)) {
+	if ($newimage !== false) {
 		if (imagecopyresampled($newimage, $oldimage, 0, 0, 0, 0, $width, $height, imagesx($oldimage), imagesy($oldimage)))
 			$image = $newimage;
 		else
