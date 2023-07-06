@@ -52,7 +52,7 @@ function qa_handle_email_filter(&$handle, &$email, $olduser = null)
 	$errors = array();
 
 	// sanitize 4-byte Unicode and invisible characters
-	$handle = qa_remove_utf8mb4($handle);
+	$handle = qa_remove_utf8mb4((string)$handle);
 	$handle = preg_replace('/\p{C}+/u', '', $handle);
 
 	$filtermodules = qa_load_modules_with('filter', 'filter_handle');
@@ -103,7 +103,7 @@ function qa_handle_make_valid($handle)
 	require_once QA_INCLUDE_DIR . 'db/maxima.php';
 	require_once QA_INCLUDE_DIR . 'db/users.php';
 
-	if (!strlen($handle))
+	if (!strlen((string)$handle))
 		$handle = qa_lang('users/registered_user');
 
 	$handle = preg_replace('/[\\@\\+\\/]/', ' ', $handle);
@@ -157,7 +157,7 @@ function qa_password_validate($password, $olduser = null)
 
 	if (!isset($error)) {
 		$minpasslen = max(QA_MIN_PASSWORD_LEN, 1);
-		if (qa_strlen($password) < $minpasslen)
+		if (qa_strlen((string)$password) < $minpasslen)
 			$error = qa_lang_sub('users/password_min', $minpasslen);
 	}
 

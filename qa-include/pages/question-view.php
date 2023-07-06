@@ -198,7 +198,7 @@ function qa_page_q_post_rules($post, $parentpost = null, $siblingposts = null, $
 		($rules['reshowimmed'] || ($nothiddenbyother && !$post['flagcount']));
 
 	$rules['deleteable'] = $post['hidden'] && !qa_user_permit_error('permit_delete_hidden', null, $userlevel, true, $userfields);
-	$rules['claimable'] = !isset($post['userid']) && isset($userid) && strlen(@$post['cookieid']) && (strcmp(@$post['cookieid'], $cookieid) == 0)
+	$rules['claimable'] = !isset($post['userid']) && isset($userid) && isset($post['cookieid']) && $post['cookieid'] === $cookieid
 		&& !($post['basetype'] == 'Q' ? $permiterror_post_q : ($post['basetype'] == 'A' ? $permiterror_post_a : $permiterror_post_c));
 	$rules['followable'] = $post['type'] == 'A' ? qa_opt('follow_on_as') : false;
 
@@ -470,7 +470,7 @@ function qa_page_q_question_view($question, $parentquestion, $closepost, $usersh
 
 	// Extra value display
 
-	if (strlen(@$question['extra']) && qa_opt('extra_field_active') && qa_opt('extra_field_display')) {
+	if (strlen($question['extra'] ?? '') && qa_opt('extra_field_active') && qa_opt('extra_field_display')) {
 		$q_view['extra'] = array(
 			'label' => qa_html(qa_opt('extra_field_label')),
 			'content' => qa_html(qa_block_words_replace($question['extra'], qa_get_block_words_preg())),

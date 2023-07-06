@@ -529,7 +529,7 @@ function qa_default_option($name)
 
 			foreach ($modules as $module) {
 				$value = $module->option_default($name);
-				if (strlen($value))
+				if (strlen((string)$value))
 					return $value;
 			}
 

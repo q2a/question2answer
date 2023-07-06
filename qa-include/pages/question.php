@@ -182,7 +182,7 @@ $formpostid = null;
 $jumptoanchor = null;
 $commentsall = null;
 
-if (substr($pagestate, 0, 13) == 'showcomments-') {
+if (substr((string)$pagestate, 0, 13) == 'showcomments-') {
 	$commentsall = substr($pagestate, 13);
 	$pagestate = null;
 
@@ -195,7 +195,7 @@ if (substr($pagestate, 0, 13) == 'showcomments-') {
 	}
 }
 
-if (qa_is_http_post() || strlen($pagestate))
+if (qa_is_http_post() || strlen((string)$pagestate))
 	require QA_INCLUDE_DIR . 'pages/question-post.php';
 
 $formrequested = isset($formtype);
@@ -248,7 +248,7 @@ if ($formtype == 'q_edit') { // ...in edit mode
 
 	$qa_content['description'] = qa_html(qa_shorten_string_line(qa_viewer_text($question['content'], $question['format']), 150));
 
-	$categorykeyword = @$categories[$question['categoryid']]['title'];
+	$categorykeyword = $categories[$question['categoryid']]['title'] ?? '';
 
 	$qa_content['keywords'] = qa_html(implode(',', array_merge(
 		(qa_using_categories() && strlen($categorykeyword)) ? array($categorykeyword) : array(),
@@ -276,7 +276,7 @@ if ($formtype == 'a_edit') {
 	$jumptoanchor = 'a' . $formpostid;
 
 } elseif ($formtype == 'a_add' || ($question['answerbutton'] && !$formrequested)) {
-	$qa_content['a_form'] = qa_page_q_add_a_form($qa_content, 'anew', $captchareason, $question, @$anewin, @$anewerrors, $formtype == 'a_add', $formrequested);
+	$qa_content['a_form'] = qa_page_q_add_a_form($qa_content, 'anew', $captchareason, $question, @$anewin, $anewerrors ?? [], $formtype == 'a_add', $formrequested);
 
 	if ($formrequested) {
 		$jumptoanchor = 'anew';
@@ -291,12 +291,12 @@ if ($formtype == 'a_edit') {
 // Prepare content for comments on the question, plus add or edit comment forms
 
 if ($formtype == 'q_close') {
-	$qa_content['q_view']['c_form'] = qa_page_q_close_q_form($qa_content, $question, 'close', @$closein, @$closeerrors);
+	$qa_content['q_view']['c_form'] = qa_page_q_close_q_form($qa_content, $question, 'close', @$closein, $closeerrors ?? []);
 	$jumptoanchor = 'close';
 
 } elseif (($formtype == 'c_add' && $formpostid == $questionid) || ($question['commentbutton'] && !$formrequested)) { // ...to be added
 	$qa_content['q_view']['c_form'] = qa_page_q_add_c_form($qa_content, $question, $question, 'c' . $questionid,
-		$captchareason, @$cnewin[$questionid], @$cnewerrors[$questionid], $formtype == 'c_add');
+		$captchareason, @$cnewin[$questionid], $cnewerrors[$questionid] ?? [], $formtype == 'c_add');
 
 	if ($formtype == 'c_add' && $formpostid == $questionid) {
 		$jumptoanchor = 'c' . $questionid;
@@ -305,7 +305,7 @@ if ($formtype == 'q_close') {
 
 } elseif ($formtype == 'c_edit' && @$commentsfollows[$formpostid]['parentid'] == $questionid) { // ...being edited
 	$qa_content['q_view']['c_form'] = qa_page_q_edit_c_form($qa_content, 'c' . $formpostid, $commentsfollows[$formpostid],
-		@$ceditin[$formpostid], @$cediterrors[$formpostid]);
+		@$ceditin[$formpostid], $cediterrors[$formpostid] ?? []);
 
 	$jumptoanchor = 'c' . $formpostid;
 	$commentsall = $questionid;

@@ -309,7 +309,7 @@ function qa_db_categoryslugs_sql_args($categoryslugs, &$arguments)
 {
 	if (!is_array($categoryslugs)) {
 		// accept old-style string arguments for one category deep
-		$categoryslugs = strlen($categoryslugs) ? array($categoryslugs) : array();
+		$categoryslugs = strlen((string)$categoryslugs) ? array($categoryslugs) : array();
 	}
 
 	$levels = count($categoryslugs);
@@ -951,7 +951,7 @@ function qa_db_search_posts_selectspec($voteuserid, $titlewords, $contentwords, 
 		}
 	}
 
-	if (strlen($handle)) { // to allow searching for multi-word usernames (only works if search query contains full username and nothing else)
+	if (strlen((string)$handle)) { // to allow searching for multi-word usernames (only works if search query contains full username and nothing else)
 		if (QA_FINAL_EXTERNAL_USERS) {
 			$userids = qa_get_userids_from_public(array($handle));
 

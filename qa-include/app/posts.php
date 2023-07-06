@@ -423,7 +423,7 @@ function qa_post_tags_to_tagstring($tags)
 	if (is_array($tags))
 		$tags = implode(',', $tags);
 
-	return qa_tags_to_tagstring(array_unique(preg_split('/\s*,\s*/', qa_strtolower(strtr($tags, '/', ' ')), -1, PREG_SPLIT_NO_EMPTY)));
+	return qa_tags_to_tagstring(array_unique(preg_split('/\s*,\s*/', qa_strtolower(strtr((string)$tags, '/', ' ')), -1, PREG_SPLIT_NO_EMPTY)));
 }
 
 

@@ -27,7 +27,7 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 
 // Collect the information we need from the database
 
-$intitle = qa_post_text('title');
+$intitle = (string)qa_post_text('title');
 $doaskcheck = qa_opt('do_ask_check_qs');
 $doexampletags = qa_using_tags() && qa_opt('do_example_tags');
 

@@ -43,18 +43,25 @@ if (qa_clicked('doaccount'))
 
 
 $loginuserid = qa_get_logged_in_userid();
-$identifier = QA_FINAL_EXTERNAL_USERS ? $userid : $handle;
 
-list($useraccount, $userprofile, $userfields, $usermessages, $userpoints, $userlevels, $navcategories, $userrank) =
+if (!QA_FINAL_EXTERNAL_USERS) {
+	$useraccount = qa_db_single_select(qa_db_user_account_selectspec($handle, false));
+	if ($useraccount === null) {
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
+
+	$userid = $useraccount['userid'];
+}
+
+list($userprofile, $userfields, $usermessages, $userpoints, $userlevels, $navcategories, $userrank) =
 	qa_db_select_with_pending(
-		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_account_selectspec($handle, false),
-		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_profile_selectspec($handle, false),
+		QA_FINAL_EXTERNAL_USERS ? null : qa_db_user_profile_selectspec($userid, true),
 		QA_FINAL_EXTERNAL_USERS ? null : qa_db_userfields_selectspec(),
-		QA_FINAL_EXTERNAL_USERS ? null : qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall')),
-		qa_db_user_points_selectspec($identifier),
-		qa_db_user_levels_selectspec($identifier, QA_FINAL_EXTERNAL_USERS, true),
+		QA_FINAL_EXTERNAL_USERS ? null : qa_db_recent_messages_selectspec(null, null, $userid, true, qa_opt_if_loaded('page_size_wall')),
+		qa_db_user_points_selectspec($userid, true),
+		qa_db_user_levels_selectspec($userid, true, true),
 		qa_db_category_nav_selectspec(null, true),
-		qa_db_user_rank_selectspec($identifier)
+		qa_db_user_rank_selectspec($userid, true)
 	);
 
 if (!QA_FINAL_EXTERNAL_USERS && $handle !== qa_get_logged_in_handle()) {
@@ -74,10 +81,9 @@ $loginlevel = qa_get_logged_in_level();
 if (!QA_FINAL_EXTERNAL_USERS) { // if we're using integrated user management, we can know and show more
 	require_once QA_INCLUDE_DIR . 'app/messages.php';
 
-	if (!is_array($userpoints) && !is_array($useraccount))
+	if (!is_array($userpoints))
 		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
-	$userid = $useraccount['userid'];
 	$fieldseditable = false;
 	$maxlevelassign = null;
 
@@ -219,7 +225,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 
 							$categoryid = qa_get_category_field_value('uc_' . $index . '_cat');
 
-							if (strlen($categoryid) && strlen($inlevel)) {
+							if (strlen((string)$categoryid) && strlen($inlevel)) {
 								$inuserlevels[] = array(
 									'entitytype' => QA_ENTITY_CATEGORY,
 									'entityid' => $categoryid,
@@ -307,7 +313,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	if (qa_clicked('dowallpost')) {
 		$inmessage = qa_post_text('message');
 
-		if (!strlen($inmessage)) {
+		if (!strlen((string)$inmessage)) {
 			$errors['message'] = qa_lang('profile/post_wall_empty');
 		} elseif (!qa_check_form_security_code('wall-' . $useraccount['handle'], qa_post_text('code'))) {
 			$errors['message'] = qa_lang_html('misc/form_security_again');
@@ -436,7 +442,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 			// Category-specific levels
 
 			if (qa_using_categories()) {
-				$catleveladd = strlen(qa_get('catleveladd')) > 0;
+				$catleveladd = strlen((string)qa_get('catleveladd')) > 0;
 
 				if (!$catleveladd && !count($userlevels)) {
 					$qa_content['form_profile']['fields']['level']['suffix'] = strtr(qa_lang_html('users/category_level_add'), array(
@@ -608,7 +614,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 
 	foreach ($userfields as $userfield) {
 		if (($userfield['flags'] & QA_FIELD_FLAGS_LINK_URL) && !$fieldsediting) {
-			$valuehtml = qa_url_to_html_link(@$userprofile[$userfield['title']], qa_opt('links_in_new_window'));
+			$valuehtml = qa_url_to_html_link($userprofile[$userfield['title']] ?? '', qa_opt('links_in_new_window'));
 		} else {
 			$value = @$inprofile[$userfield['fieldid']];
 			if (!isset($value))

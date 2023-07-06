@@ -44,7 +44,7 @@ $errors = array();
 if (qa_clicked('doforgot')) {
 	require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 
-	$inemailhandle = qa_post_text('emailhandle');
+	$inemailhandle = (string)qa_post_text('emailhandle');
 
 	if (!qa_check_form_security_code('forgot', qa_post_text('code')))
 		$errors['page'] = qa_lang_html('misc/form_security_again');
@@ -72,7 +72,7 @@ if (qa_clicked('doforgot')) {
 	}
 
 } else
-	$inemailhandle = qa_get('e');
+	$inemailhandle = (string)qa_get('e');
 
 
 // Prepare content for theme

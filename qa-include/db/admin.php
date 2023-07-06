@@ -388,7 +388,7 @@ function qa_db_category_set_parent($categoryid, $newparentid)
 {
 	$oldparentid = qa_db_category_get_parent($categoryid);
 
-	if (strcmp($oldparentid, $newparentid)) { // if we're changing parent, move to end of old parent, then end of new parent
+	if (strcmp($oldparentid ?? '', $newparentid)) { // if we're changing parent, move to end of old parent, then end of new parent
 		$lastpos = qa_db_category_last_pos($oldparentid);
 
 		qa_db_ordered_move('categories', 'categoryid', $categoryid, $lastpos, qa_db_apply_sub('parentid<=>#', array($oldparentid)));

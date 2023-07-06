@@ -66,7 +66,7 @@ function qa_db_user_create($email, $password, $handle, $level, $ip)
 		qa_db_query_sub(
 			'INSERT INTO ^users (created, createip, email, passsalt, passcheck, level, handle, loggedin, loginip) ' .
 			'VALUES (NOW(), UNHEX($), $, $, UNHEX($), #, $, NOW(), UNHEX($))',
-			$ipHex, $email, $salt, isset($password) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ipHex
+			$ipHex, $email, $salt, isset($password, $salt) ? qa_db_calc_passcheck($password, $salt) : null, (int)$level, $handle, $ipHex
 		);
 	}
 

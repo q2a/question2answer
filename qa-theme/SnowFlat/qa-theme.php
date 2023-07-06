@@ -658,7 +658,7 @@ class qa_html_theme extends qa_html_theme_base
 				);
 			}
 
-			$avatar = strip_tags($tobar_avatar, '<img>');
+			$avatar = strip_tags($tobar_avatar ?? '', '<img>');
 			if (!empty($avatar))
 				$handle = '';
 		}
