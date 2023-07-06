@@ -1015,7 +1015,7 @@ foreach ($showoptions as $optionname) {
 					$neatoptions[$rawoption] =
 						'<iframe src="' . qa_path_html('url/test/' . QA_URL_TEST_STRING, array('dummy' => '', 'param' => QA_URL_TEST_STRING), null, $rawoption) . '" width="20" height="16" style="vertical-align:middle; border:0" scrolling="no"></iframe>&nbsp;' .
 						'<small>' .
-						qa_html(urldecode(qa_path('123/why-do-birds-sing', null, '/', $rawoption))) .
+						qa_html(rawurldecode(qa_path('123/why-do-birds-sing', null, '/', $rawoption))) .
 						(($rawoption == QA_URL_FORMAT_NEAT) ? strtr(qa_lang_html('admin/neat_urls_note'), array(
 							'^1' => '<a href="http://www.question2answer.org/htaccess.php" target="_blank">',
 							'^2' => '</a>',

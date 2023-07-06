@@ -311,7 +311,7 @@ function qa_post_html_fields($post, $userid, $cookieid, $usershtml, $dummy, $opt
 	$isanswer = $post['basetype'] == 'A';
 	$iscomment = $post['basetype'] == 'C';
 	$isbyuser = qa_post_is_by_user($post, $userid, $cookieid);
-	$anchor = urlencode(qa_anchor($post['basetype'], $postid));
+	$anchor = rawurlencode(qa_anchor($post['basetype'], $postid));
 	$elementid = isset($options['elementid']) ? $options['elementid'] : $anchor;
 	$microdata = qa_opt('use_microdata') && !empty($options['contentview']);
 	$isselected = @$options['isselected'];

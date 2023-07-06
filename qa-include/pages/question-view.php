@@ -838,7 +838,7 @@ function qa_page_q_comment_follow_list($question, $parent, $commentsfollows, $al
 
 	if ($skipfirst > 0) {
 		$commentlist['cs'][$parentid] = array(
-			'url' => qa_html('?state=showcomments-' . $parentid . '&show=' . $parentid . '#' . urlencode(qa_anchor($parent['basetype'], $parentid))),
+			'url' => qa_html('?state=showcomments-' . $parentid . '&show=' . $parentid . '#' . rawurlencode(qa_anchor($parent['basetype'], $parentid))),
 
 			'expand_tags' => 'onclick="return qa_show_comments(' . qa_js($question['postid']) . ', ' . qa_js($parentid) . ', this);"',
 
