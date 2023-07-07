@@ -167,7 +167,7 @@ if ($saveCache) {
 
 // Determine if captchas will be required
 
-$captchareason = qa_user_captcha_reason(qa_user_level_for_post($question));
+$captchareason = qa_user_captcha_reason(qa_user_level_for_post($question), qa_opt('captcha_on_anon_post'));
 $usecaptcha = ($captchareason != false);
 
 

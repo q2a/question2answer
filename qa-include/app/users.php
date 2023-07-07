@@ -1155,9 +1155,10 @@ function qa_permit_value_error($permit, $userid, $userlevel, $userflags)
  * 'confirm' => captcha required because the user has not confirmed their email address
  * false => captcha is not required
  * @param $userlevel
+ * @param bool $showCaptchaIfAnonymous
  * @return bool|mixed|string
  */
-function qa_user_captcha_reason($userlevel = null)
+function qa_user_captcha_reason($userlevel = null, $showCaptchaIfAnonymous = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1168,7 +1169,7 @@ function qa_user_captcha_reason($userlevel = null)
 	if ($userlevel < QA_USER_LEVEL_APPROVED) { // approved users and above aren't shown captchas
 		$userid = qa_get_logged_in_userid();
 
-		if (qa_opt('captcha_on_anon_post') && !isset($userid))
+		if ($showCaptchaIfAnonymous && !isset($userid))
 			$reason = 'login';
 		elseif (qa_opt('moderate_users') && qa_opt('captcha_on_unapproved'))
 			$reason = 'approve';
@@ -1179,18 +1180,18 @@ function qa_user_captcha_reason($userlevel = null)
 	return $reason;
 }
 
-
 /**
  * Return whether a captcha should be presented to the logged in user for writing posts. You can pass in a
  * QA_USER_LEVEL_* constant in $userlevel to consider the user at a different level to usual.
  * @param $userlevel
+ * @param bool $showCaptchaIfAnonymous
  * @return bool|mixed
  */
-function qa_user_use_captcha($userlevel = null)
+function qa_user_use_captcha($userlevel = null, $showCaptchaIfAnonymous = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return qa_user_captcha_reason($userlevel) != false;
+	return qa_user_captcha_reason($userlevel, $showCaptchaIfAnonymous) != false;
 }
 
 

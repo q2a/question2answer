@@ -95,7 +95,7 @@ if ($permiterror) {
 
 // Process input
 
-$captchareason = qa_user_captcha_reason();
+$captchareason = qa_user_captcha_reason(null, qa_opt('captcha_on_anon_post'));
 
 $in['title'] = qa_get_post_title('title'); // allow title and tags to be posted by an external form
 $in['extra'] = qa_opt('extra_field_active') ? qa_post_text('extra') : null;
