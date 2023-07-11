@@ -415,18 +415,16 @@ function qa_db_posts_get_userids($postids)
 	return array();
 }
 
-
 /**
  * Update the cached count of the number of flagged posts in the database
+ * @param int|null $increment
  */
-function qa_db_flaggedcount_update()
+function qa_db_flaggedcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_flaggedcount', COUNT(*) FROM ^posts " .
-			"WHERE flagcount > 0 AND type IN ('Q', 'A', 'C') " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_flaggedcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE flagcount > 0 AND type IN ("Q", "A", "C")',
+		$increment
+	);
 }

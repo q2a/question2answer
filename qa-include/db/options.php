@@ -38,3 +38,31 @@ function qa_db_set_option($name, $value)
 		$name, $value
 	);
 }
+
+/**
+ * Update a cached count in the ^options table for a given $cacheKey, using $countQuery SQL. The $increment
+ * is optional and allows to perform and increment/decrement of the given value rather than a full recalc.
+ *
+ * @param string $cacheKey
+ * @param string $countQuery
+ * @param int|null $increment
+ */
+function qa_db_generic_cache_update($cacheKey, $countQuery, $increment = null)
+{
+	if (!qa_should_update_counts()) {
+		return;
+	}
+
+	$sql =
+		'INSERT INTO ^options (title, content) ' .
+		sprintf('VALUES ("%s", #) ', $cacheKey) .
+		'ON DUPLICATE KEY UPDATE content = VALUES(content)';
+
+	if (isset($increment)) {
+		$sql .= ' + CAST(content AS INT)';
+	} else {
+		$increment = qa_db_read_one_value(qa_db_query_sub($countQuery));
+	}
+
+	qa_db_query_sub($sql, $increment);
+}

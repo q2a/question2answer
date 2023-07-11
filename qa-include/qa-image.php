@@ -31,6 +31,7 @@ function qa_image_db_fail_handler()
 
 // Load the Q2A base file which sets up a bunch of crucial stuff
 
+global $qa_autoconnect;
 $qa_autoconnect = false;
 require 'qa-base.php';
 

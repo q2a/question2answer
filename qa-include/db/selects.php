@@ -156,8 +156,9 @@ function qa_db_posts_basic_selectspec($voteuserid = null, $full = false, $user =
 		'columns' => array(
 			'^posts.postid', '^posts.categoryid', '^posts.type', 'basetype' => 'LEFT(^posts.type, 1)',
 			'hidden' => "INSTR(^posts.type, '_HIDDEN')>0", 'queued' => "INSTR(^posts.type, '_QUEUED')>0",
-			'^posts.acount', '^posts.selchildid', '^posts.closedbyid', '^posts.upvotes', '^posts.downvotes', '^posts.netvotes', '^posts.views', '^posts.hotness',
-			'^posts.flagcount', '^posts.title', '^posts.tags', 'created' => 'UNIX_TIMESTAMP(^posts.created)', '^posts.name',
+			'^posts.acount', '^posts.amaxvote', '^posts.selchildid', '^posts.closedbyid', '^posts.upvotes',
+			'^posts.downvotes', '^posts.netvotes', '^posts.views', '^posts.hotness', '^posts.flagcount',
+			'^posts.title', '^posts.tags', 'created' => 'UNIX_TIMESTAMP(^posts.created)', '^posts.name',
 			'categoryname' => '^categories.title', 'categorybackpath' => "^categories.backpath",
 			'categoryids' => "CONCAT_WS(',', ^posts.catidpath1, ^posts.catidpath2, ^posts.catidpath3, ^posts.categoryid)",
 		),

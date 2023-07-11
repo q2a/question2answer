@@ -296,7 +296,7 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 						'handle' => $useraccount['handle'],
 					));
 
-					qa_delete_user($userid);
+					qa_delete_user($userid, $useraccount);
 
 					qa_report_event('u_delete', $loginuserid, qa_get_logged_in_handle(), qa_cookie_get(), array(
 						'userid' => $userid,

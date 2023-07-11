@@ -2,7 +2,7 @@
 require_once QA_INCLUDE_DIR.'app/format.php';
 require_once QA_INCLUDE_DIR.'app/options.php';
 
-class AppOptionsTest extends PHPUnit_Framework_TestCase
+class AppOptionsTest extends \PHPUnit\Framework\TestCase
 {
 	private $voteviewOpts = array(
 		'voting_on_qs' => 1,
