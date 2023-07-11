@@ -42,7 +42,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 		'confirmed' => true,
 	);
 
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		$handlesToUserIds = qa_handles_to_userids(array(
 			self::$user1['handle'],
