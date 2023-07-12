@@ -1,7 +1,7 @@
 <?php
 require_once QA_INCLUDE_DIR.'app/limits.php';
 
-class AppLimitsTest extends PHPUnit_Framework_TestCase
+class AppLimitsTest extends \PHPUnit\Framework\TestCase
 {
 	private $ipv4_wildcard1 = '88.77.66.*';
 	private $ipv4_wildcard2 = '88.77.55.*';

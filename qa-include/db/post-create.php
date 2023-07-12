@@ -91,15 +91,84 @@ function qa_db_post_get_category_path($postid)
 /**
  * Update the cached number of answers for $questionid in the database, along with the highest netvotes of any of its answers
  * @param $questionid
+ * @deprecated Use qa_db_post_acount_update_for_q() or qa_db_post_amaxvote_update_for_q()
  */
 function qa_db_post_acount_update($questionid)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"UPDATE ^posts AS x, (SELECT COUNT(*) AS acount, COALESCE(GREATEST(MAX(netvotes), 0), 0) AS amaxvote FROM ^posts WHERE parentid=# AND type='A') AS a SET x.acount=a.acount, x.amaxvote=a.amaxvote WHERE x.postid=#",
-			$questionid, $questionid
-		);
+	qa_db_acount_update_for_q($questionid);
+	qa_db_amaxvote_update_for_q($questionid);
+}
+
+/**
+ * Update a cached count in the ^posts table for a given $postId and $field, using $countQuery SQL. The $value
+ * is optional and depends on the $relative variable. If $relative is true, $value is interpreted as an increment or
+ * decremnt on the original value. If $relative is false, $value is interpreted as a fixed value to assign to the field
+ *
+ * @param int $postId
+ * @param string $field
+ * @param string $countQuery
+ * @param int|null $value
+ * @param bool $relative
+ */
+function qa_db_generic_cache_update_for_q($postId, $field, $countQuery, $value = null, $relative = true)
+{
+	if (!qa_should_update_counts()) {
+		return;
 	}
+
+	if (isset($value)) {
+		$sqlValue = $relative
+			? sprintf('+ %s ', $field)
+			: '';
+		$newValue = $value;
+	} else {
+		$sqlValue = '';
+		$newValue = qa_db_read_one_value(qa_db_query_sub($countQuery, $postId));
+	}
+
+	$sql = sprintf(
+		'UPDATE ^posts SET %s = # %s' .
+		'WHERE postid = #',
+		$field, $sqlValue
+	);
+
+	qa_db_query_sub($sql, $newValue, $postId);
+}
+
+
+/**
+ * Update the cached number of answers for $questionid in the database
+ * @param int $questionid
+ * @param int|null $increment
+ */
+function qa_db_acount_update_for_q($questionid, $increment = null)
+{
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'acount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$increment
+	);
+}
+
+
+/**
+ * Update the cached number of highest netvotes of $questionid in the database
+ * @param int $questionid
+ * @param int|null $value
+ * @param bool $relative
+ */
+function qa_db_amaxvote_update_for_q($questionid, $value = null, $relative = true)
+{
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'amaxvote',
+		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$value,
+		$relative
+	);
 }
 
 
@@ -113,6 +182,34 @@ function qa_db_category_path_qcount_update($path)
 	qa_db_ifcategory_qcount_update($path['catidpath1']);
 	qa_db_ifcategory_qcount_update($path['catidpath2']);
 	qa_db_ifcategory_qcount_update($path['catidpath3']);
+}
+
+
+/**
+ * Update the cached number of answers for $questionid in the database, along with the highest netvotes of any of its answers
+ * @param $questionid
+ * @param int|null $increment
+ */
+function qa_db_post_update_acount($questionid, $increment = null)
+{
+	if (!qa_should_update_counts()) {
+		return;
+	}
+
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'acount',
+		'SELECT COUNT(*) acount FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$increment
+	);
+	qa_db_generic_cache_update_for_q(
+		$questionid,
+		'amaxvote',
+		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) amaxvote FROM ^posts ' .
+		'WHERE parentid = # AND type = "A"',
+		$increment
+	);
 }
 
 
@@ -330,52 +427,48 @@ function qa_db_word_tagcount_update($wordids)
 	}
 }
 
-
 /**
  * Update the cached count in the database of the number of questions (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_qcount_update()
+function qa_db_qcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_qcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_qcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q"',
+		$increment
+	);
 }
 
 
 /**
  * Update the cached count in the database of the number of answers (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_acount_update()
+function qa_db_acount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_acount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'A' " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_acount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "A"',
+		$increment
+	);
 }
 
 
 /**
  * Update the cached count in the database of the number of comments (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_ccount_update()
+function qa_db_ccount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_ccount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'C' " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_ccount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "C"',
+		$increment
+	);
 }
 
 
@@ -385,75 +478,69 @@ function qa_db_ccount_update()
 function qa_db_tagcount_update()
 {
 	if (qa_should_update_counts()) {
+		$cachedValue = qa_db_read_one_value(qa_db_query_sub('SELECT COUNT(*) FROM ^words WHERE tagcount > 0'));
 		qa_db_query_sub(
 			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_tagcount', COUNT(*) FROM ^words " .
-			"WHERE tagcount > 0 " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
+			"VALUES ('cache_tagcount', #) " .
+			"ON DUPLICATE KEY UPDATE content = VALUES(content)",
+			$cachedValue
 		);
 	}
 }
-
 
 /**
  * Update the cached count in the database of the number of unanswered questions (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_unaqcount_update()
+function qa_db_unaqcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_unaqcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' AND acount = 0 AND closedbyid IS NULL " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_unaqcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q" AND acount = 0 AND closedbyid IS NULL',
+		$increment
+	);
 }
-
 
 /**
  * Update the cached count in the database of the number of questions with no answer selected (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_unselqcount_update()
+function qa_db_unselqcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_unselqcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' AND selchildid IS NULL AND closedbyid IS NULL " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_unselqcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q" AND selchildid IS NULL AND closedbyid IS NULL',
+		$increment
+	);
 }
-
 
 /**
  * Update the cached count in the database of the number of questions with no upvoted answers (excluding hidden/queued)
+ * @param int|null $increment
  */
-function qa_db_unupaqcount_update()
+function qa_db_unupaqcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_unupaqcount', COUNT(*) FROM ^posts " .
-			"WHERE type = 'Q' AND amaxvote = 0 AND closedbyid IS NULL " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_unupaqcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type = "Q" AND amaxvote = 0 AND closedbyid IS NULL',
+		$increment
+	);
 }
 
 
 /**
  * Update the cached count in the database of the number of posts which are queued for moderation
+ * @param int|null $increment
  */
-function qa_db_queuedcount_update()
+function qa_db_queuedcount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_queuedcount', COUNT(*) FROM ^posts " .
-			"WHERE type IN ('Q_QUEUED', 'A_QUEUED', 'C_QUEUED') " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_queuedcount',
+		'SELECT COUNT(*) FROM ^posts ' .
+		'WHERE type IN ("Q_QUEUED", "A_QUEUED", "C_QUEUED")',
+		$increment
+	);
 }

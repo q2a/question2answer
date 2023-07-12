@@ -197,7 +197,7 @@ function qa_favorite_categories_view($categories)
 		$cat_anchor = $category['qcount'] == 1
 			? qa_lang_html_sub('main/1_question', '1', '1')
 			: qa_lang_html_sub('main/x_questions', qa_format_number($category['qcount'], 0, true));
-		$cat_descr = strlen($category['content']) ? qa_html(' - ' . $category['content']) : '';
+		$cat_descr = strlen((string)$category['content']) ? qa_html(' - ' . $category['content']) : '';
 
 		$nav_list_categories['nav'][$category['categoryid']] = array(
 			'label' => qa_html($category['title']),

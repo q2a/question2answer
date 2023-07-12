@@ -50,14 +50,14 @@ if ($isCore) {
 	$metadataUtil = new Q2A_Util_Metadata();
 	$metadata = $metadataUtil->fetchFromUrl($uri);
 
-	if (strlen(@$metadata['version']) > 0) {
+	if (strlen($metadata['version'] ?? '') > 0) {
 		if (version_compare($currentVersion, $metadata['version']) < 0) {
-			if (qa_qa_version_below(@$metadata['min_q2a'])) {
+			if (qa_qa_version_below($metadata['min_q2a'] ?? '')) {
 				$response = strtr(qa_lang_html('admin/version_requires_q2a'), array(
 					'^1' => qa_html('v' . $metadata['version']),
 					'^2' => qa_html($metadata['min_q2a']),
 				));
-			} elseif (qa_php_version_below(@$metadata['min_php'])) {
+			} elseif (qa_php_version_below($metadata['min_php'] ?? '')) {
 				$response = strtr(qa_lang_html('admin/version_requires_php'), array(
 					'^1' => qa_html('v' . $metadata['version']),
 					'^2' => qa_html($metadata['min_php']),
@@ -65,7 +65,7 @@ if ($isCore) {
 			} else {
 				$response = qa_lang_html_sub('admin/version_get_x', qa_html('v' . $metadata['version']));
 
-				if (strlen(@$metadata['uri'])) {
+				if (strlen($metadata['uri'] ?? '')) {
 					$response = '<a href="' . qa_html($metadata['uri']) . '" style="color:#d00;">' . $response . '</a>';
 				}
 			}

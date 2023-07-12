@@ -95,7 +95,7 @@ if ($permiterror) {
 
 // Process input
 
-$captchareason = qa_user_captcha_reason();
+$captchareason = qa_user_captcha_reason(null, qa_opt('captcha_on_anon_post'));
 
 $in['title'] = qa_get_post_title('title'); // allow title and tags to be posted by an external form
 $in['extra'] = qa_opt('extra_field_active') ? qa_post_text('extra') : null;
@@ -114,7 +114,7 @@ if (qa_clicked('doask')) {
 	$userlevel = qa_user_level_for_categories($categoryids);
 
 	$in['name'] = qa_opt('allow_anonymous_naming') ? qa_post_text('name') : null;
-	$in['notify'] = strlen(qa_post_text('notify')) > 0;
+	$in['notify'] = strlen((string)qa_post_text('notify')) > 0;
 	$in['email'] = qa_post_text('email');
 	$in['queued'] = qa_user_moderation_reason($userlevel) !== false;
 
@@ -241,7 +241,7 @@ if (!strlen($custom)) {
 if (qa_opt('do_ask_check_qs') || qa_opt('do_example_tags')) {
 	$qa_content['form']['fields']['title']['tags'] .= ' onchange="qa_title_change(this.value);"';
 
-	if (strlen(@$in['title'])) {
+	if (strlen($in['title'] ?? '')) {
 		$qa_content['script_onloads'][] = 'qa_title_change('.qa_js($in['title']).');';
 	}
 }

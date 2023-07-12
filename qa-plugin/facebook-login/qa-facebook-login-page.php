@@ -40,7 +40,7 @@ class qa_facebook_login_page
 			$app_id = qa_opt('facebook_app_id');
 			$app_secret = qa_opt('facebook_app_secret');
 			$tourl = qa_get('to');
-			if (!strlen($tourl))
+			if (!strlen((string)$tourl))
 				$tourl = qa_path_absolute('');
 
 			if (strlen($app_id) && strlen($app_secret)) {
@@ -67,7 +67,7 @@ class qa_facebook_login_page
 								'location' => @$user['location']['name'],
 								'website' => @$user['website'],
 								'about' => @$user['bio'],
-								'avatar' => strlen(@$user['picture']['data']['url']) ? qa_retrieve_url($user['picture']['data']['url']) : null,
+								'avatar' => strlen($user['picture']['data']['url'] ?? '') ? qa_retrieve_url($user['picture']['data']['url']) : null,
 							));
 
 					} catch (FacebookApiException $e) {

@@ -204,9 +204,9 @@ else {
 	// Process change password if clicked
 
 	if (qa_clicked('dochangepassword')) {
-		$inoldpassword = qa_post_text('oldpassword');
-		$innewpassword1 = qa_post_text('newpassword1');
-		$innewpassword2 = qa_post_text('newpassword2');
+		$inoldpassword = (string)qa_post_text('oldpassword');
+		$innewpassword1 = (string)qa_post_text('newpassword1');
+		$innewpassword2 = (string)qa_post_text('newpassword2');
 
 		if (!qa_check_form_security_code('password', qa_post_text('code')))
 			$errors['page'] = qa_lang_html('misc/form_security_again');

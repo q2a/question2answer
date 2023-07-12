@@ -350,7 +350,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 			} else {
 				$handle = qa_handle_make_valid(@$fields['handle']);
 
-				if (strlen(@$fields['email'])) { // remove email address if it will cause a duplicate
+				if (strlen($fields['email'] ?? '')) { // remove email address if it will cause a duplicate
 					$emailusers = qa_db_user_find_by_email($fields['email']);
 					if (count($emailusers)) {
 						qa_redirect('login', array('e' => $fields['email'], 'ee' => '1'));
@@ -368,11 +368,11 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				$profilefields = array('name', 'location', 'website', 'about');
 
 				foreach ($profilefields as $fieldname) {
-					if (strlen(@$fields[$fieldname]))
+					if (strlen($fields[$fieldname] ?? ''))
 						qa_db_user_profile_set($userid, $fieldname, $fields[$fieldname]);
 				}
 
-				if (strlen(@$fields['avatar']))
+				if (strlen($fields['avatar'] ?? ''))
 					qa_set_user_avatar($userid, $fields['avatar']);
 
 				qa_set_logged_in_user($userid, $handle, false, $source);
@@ -407,7 +407,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				if ($remember)
 					qa_set_session_cookie($handle, $sessioncode, $remember); // extend 'remember me' cookies each time
 
-				$sessioncode = trim($sessioncode); // trim to prevent passing in blank values to match uninitiated DB rows
+				$sessioncode = trim($sessioncode ?? ''); // trim to prevent passing in blank values to match uninitiated DB rows
 
 				// Try to recover session from the database if PHP session has timed out
 				if (!isset($_SESSION['qa_session_userid_' . $suffix]) && !empty($handle) && !empty($sessioncode)) {
@@ -415,7 +415,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 					$userinfo = qa_db_single_select(qa_db_user_account_selectspec($handle, false)); // don't get any pending
 
-					if (!empty($userinfo) && strtolower(trim($userinfo['sessioncode'])) == strtolower($sessioncode))
+					if (!empty($userinfo) && strtolower(trim($userinfo['sessioncode'] ?? '')) == strtolower($sessioncode))
 						qa_set_session_user($userinfo['userid'], $userinfo['sessionsource']);
 					else
 						qa_clear_session_cookie(); // if cookie not valid, remove it to save future checks
@@ -462,10 +462,9 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				// ^userpoints table so this creates it
 				if (empty($qa_cached_logged_in_user) || $qa_cached_logged_in_user['points'] === null) {
 					require_once QA_INCLUDE_DIR . 'db/points.php';
-					require_once QA_INCLUDE_DIR . 'db/users.php';
 
 					qa_db_points_update_ifuser($userid, null);
-					qa_db_uapprovecount_update();
+
 					$qa_cached_logged_in_user = qa_db_single_select(qa_db_user_account_selectspec($userid, true));
 				}
 
@@ -533,7 +532,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 
 		require_once QA_INCLUDE_DIR . 'util/image.php';
 
-		if (strlen($blobId) == 0 || (isset($size) && (int)$size <= 0)) {
+		if (strlen((string)$blobId) == 0 || (isset($size) && (int)$size <= 0)) {
 			return null;
 		}
 
@@ -560,7 +559,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	{
 		if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-		if (strlen($handle) === 0) {
+		if (strlen((string)$handle) === 0) {
 			return qa_lang('main/anonymous');
 		}
 
@@ -666,7 +665,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 				break;
 			case 'local-default':
 				$html = qa_get_avatar_blob_html(qa_opt('avatar_default_blobid'), qa_opt('avatar_default_width'), qa_opt('avatar_default_height'), $size, $padding);
-				if (strlen($handle) == 0) {
+				if (strlen((string)$handle) == 0) {
 					return $html;
 				}
 				break;
@@ -950,7 +949,7 @@ function qa_user_level_for_post($post)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	if (strlen(@$post['categoryids']))
+	if (strlen($post['categoryids'] ?? ''))
 		return qa_user_level_for_categories(explode(',', $post['categoryids']));
 
 	return null;
@@ -1155,9 +1154,10 @@ function qa_permit_value_error($permit, $userid, $userlevel, $userflags)
  * 'confirm' => captcha required because the user has not confirmed their email address
  * false => captcha is not required
  * @param $userlevel
+ * @param bool $showCaptchaIfAnonymous
  * @return bool|mixed|string
  */
-function qa_user_captcha_reason($userlevel = null)
+function qa_user_captcha_reason($userlevel = null, $showCaptchaIfAnonymous = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -1168,7 +1168,7 @@ function qa_user_captcha_reason($userlevel = null)
 	if ($userlevel < QA_USER_LEVEL_APPROVED) { // approved users and above aren't shown captchas
 		$userid = qa_get_logged_in_userid();
 
-		if (qa_opt('captcha_on_anon_post') && !isset($userid))
+		if ($showCaptchaIfAnonymous && !isset($userid))
 			$reason = 'login';
 		elseif (qa_opt('moderate_users') && qa_opt('captcha_on_unapproved'))
 			$reason = 'approve';
@@ -1179,18 +1179,18 @@ function qa_user_captcha_reason($userlevel = null)
 	return $reason;
 }
 
-
 /**
  * Return whether a captcha should be presented to the logged in user for writing posts. You can pass in a
  * QA_USER_LEVEL_* constant in $userlevel to consider the user at a different level to usual.
  * @param $userlevel
+ * @param bool $showCaptchaIfAnonymous
  * @return bool|mixed
  */
-function qa_user_use_captcha($userlevel = null)
+function qa_user_use_captcha($userlevel = null, $showCaptchaIfAnonymous = true)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	return qa_user_captcha_reason($userlevel) != false;
+	return qa_user_captcha_reason($userlevel, $showCaptchaIfAnonymous) != false;
 }
 
 
@@ -1274,7 +1274,7 @@ function qa_set_form_security_key()
 	if (!qa_is_logged_in() && !@$qa_form_key_cookie_set) {
 		$qa_form_key_cookie_set = true;
 
-		if (strlen(@$_COOKIE['qa_key']) != QA_FORM_KEY_LENGTH) {
+		if (strlen($_COOKIE['qa_key'] ?? '') != QA_FORM_KEY_LENGTH) {
 			require_once QA_INCLUDE_DIR . 'util/string.php';
 			$_COOKIE['qa_key'] = qa_random_alphanum(QA_FORM_KEY_LENGTH);
 		}
@@ -1365,7 +1365,7 @@ function qa_check_form_security_code($action, $value)
 				if ($loggedin) {
 					$silentproblems[] = 'now logged out';
 				} else {
-					$key = @$_COOKIE['qa_key'];
+					$key = $_COOKIE['qa_key'] ?? null;
 
 					if (!isset($key)) {
 						$silentproblems[] = 'key cookie missing';

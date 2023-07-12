@@ -19,7 +19,6 @@
 	More about this license: http://www.question2answer.org/license.php
 */
 
-
 // Ensure no PHP errors are shown in the image data
 
 @ini_set('display_errors', 0);
@@ -30,14 +29,13 @@ function qa_image_db_fail_handler()
 	qa_exit('error');
 }
 
-
 // Load the Q2A base file which sets up a bunch of crucial stuff
 
+global $qa_autoconnect;
 $qa_autoconnect = false;
 require 'qa-base.php';
 
 qa_report_process_stage('init_image');
-
 
 // Retrieve the scaled image from the cache if available
 
@@ -47,46 +45,58 @@ qa_db_connect('qa_image_db_fail_handler');
 qa_initialize_postdb_plugins();
 
 $blobid = qa_get('qa_blobid');
-$size = (int)qa_get('qa_size');
-$cachetype = 'i_' . $size;
+try {
+	if (!ctype_digit($blobid)) {
+		throw new Exception('Invalid blob ID');
+	}
 
-$content = qa_db_cache_get($cachetype, $blobid); // see if we've cached the scaled down version
+	$size = (int)qa_get('qa_size');
+	$cachetype = 'i_' . $size;
 
-header('Cache-Control: max-age=2592000, public'); // allows browsers and proxies to cache images too
+	$content = qa_db_cache_get($cachetype, $blobid); // see if we've cached the scaled down version
 
-if (isset($content)) {
-	header('Content-Type: image/jpeg');
-	echo $content;
+	header('Cache-Control: max-age=2592000, public'); // allows browsers and proxies to cache images too
 
-} else {
-	require_once QA_INCLUDE_DIR . 'app/options.php';
-	require_once QA_INCLUDE_DIR . 'app/blobs.php';
-	require_once QA_INCLUDE_DIR . 'util/image.php';
+	if (isset($content)) {
+		header('Content-Type: image/jpeg');
+		echo $content;
+	} else {
+		require_once QA_INCLUDE_DIR . 'app/options.php';
+		require_once QA_INCLUDE_DIR . 'app/blobs.php';
+		require_once QA_INCLUDE_DIR . 'util/image.php';
 
+		// Otherwise retrieve the raw image and scale as appropriate
 
-	// Otherwise retrieve the raw image and scale as appropriate
+		$blob = qa_read_blob($blobid);
 
-	$blob = qa_read_blob($blobid);
+		if (!isset($blob)) {
+			throw new Exception('Invalid blob ID');
+		}
 
-	if (isset($blob)) {
-		if ($size > 0)
+		if ($size > 0) {
 			$content = qa_image_constrain_data($blob['content'], $width, $height, $size);
-		else
+		} else {
 			$content = $blob['content'];
+		}
 
-		if (isset($content)) {
-			header('Content-Type: image/jpeg');
-			echo $content;
+		if (!isset($content)) {
+			throw new Exception('Invalid blob ID');
+		}
 
-			if (strlen($content) && ($size > 0)) {
-				// to prevent cache being filled with inappropriate sizes
-				$cachesizes = qa_get_options(array('avatar_profile_size', 'avatar_users_size', 'avatar_q_page_q_size', 'avatar_q_page_a_size', 'avatar_q_page_c_size', 'avatar_q_list_size'));
+		header('Content-Type: image/jpeg');
+		echo $content;
 
-				if (array_search($size, $cachesizes))
-					qa_db_cache_set($cachetype, $blobid, $content);
+		if (strlen($content) && ($size > 0)) {
+			// to prevent cache being filled with inappropriate sizes
+			$cachesizes = qa_get_options(array('avatar_profile_size', 'avatar_users_size', 'avatar_q_page_q_size', 'avatar_q_page_a_size', 'avatar_q_page_c_size', 'avatar_q_list_size'));
+
+			if (array_search($size, $cachesizes)) {
+				qa_db_cache_set($cachetype, $blobid, $content);
 			}
 		}
 	}
+} catch (Exception $e) {
+	header('HTTP/1.0 404 Not Found');
 }
 
 qa_db_disconnect();

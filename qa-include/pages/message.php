@@ -44,7 +44,7 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	qa_exit();
 }
 
-if (!strlen($handle))
+if (!strlen((string)$handle))
 	qa_redirect('users');
 
 if (!isset($loginuserid)) {
