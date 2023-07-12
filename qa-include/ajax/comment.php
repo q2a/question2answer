@@ -53,7 +53,7 @@ if (@$question['basetype'] == 'Q' && (@$parent['basetype'] == 'Q' || @$parent['b
 
 	// Try to create the new comment
 
-	$usecaptcha = qa_user_use_captcha(qa_user_level_for_post($question));
+	$usecaptcha = qa_user_use_captcha(qa_user_level_for_post($question), qa_opt('captcha_on_anon_post'));
 	$commentid = qa_page_q_add_c_submit($question, $parent, $children, $usecaptcha, $in, $errors);
 
 

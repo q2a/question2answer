@@ -20,8 +20,8 @@
 */
 
 
-define('QA_VERSION', '1.8.6'); // also used as suffix for .js and .css requests
-define('QA_BUILD_DATE', '2021-04-20');
+define('QA_VERSION', '1.8.7'); // also used as suffix for .js and .css requests
+define('QA_BUILD_DATE', '2023-07-05');
 
 
 /**
@@ -62,13 +62,13 @@ if (defined('QA_WORDPRESS_LOAD_FILE')) {
 qa_initialize_constants_2();
 qa_initialize_modularity();
 qa_register_core_modules();
-
 qa_initialize_predb_plugins();
 require_once QA_INCLUDE_DIR . 'qa-db.php';
 qa_db_allow_connect();
 
 // $qa_autoconnect defaults to true so that optional plugins will load for external code. Q2A core
 // code sets $qa_autoconnect to false so that we can use custom fail handlers.
+global $qa_autoconnect;
 if (!isset($qa_autoconnect) || $qa_autoconnect !== false) {
 	qa_db_connect('qa_page_db_fail_handler');
 	qa_initialize_postdb_plugins();
@@ -211,11 +211,11 @@ function qa_initialize_constants_1()
 		require_once QA_INCLUDE_DIR . 'vendor/password_compat.php';
 	}
 
-	// http://php.net/manual/en/function.hash-equals.php#115635
+	// https://php.net/manual/en/function.hash-equals.php#115635
 	if (!function_exists('hash_equals')) {
 		function hash_equals($str1, $str2)
 		{
-			if (strlen($str1) != strlen($str2)) {
+			if (strlen((string)$str1) != strlen((string)$str2)) {
 				return false;
 			} else {
 				$res = $str1 ^ $str2;
@@ -719,8 +719,8 @@ function qa_eval_from_file($eval, $filename)
 
 	eval('?' . '>' . $eval);
 
-	if (strlen($php_errormsg)) {
-		switch (strtolower(@ini_get('display_errors'))) {
+	if (isset($php_errormsg)) {
+		switch (strtolower(ini_get('display_errors') ?? '')) {
 			case 'on':
 			case '1':
 			case 'yes':
@@ -846,10 +846,10 @@ function qa_fatal_error($message)
 
 	$backtrace = array_reverse(array_slice(debug_backtrace(), 1));
 	foreach ($backtrace as $trace) {
-		$color = strpos(@$trace['file'], '/qa-plugin/') !== false ? 'red' : '#999';
+		$color = strpos($trace['file'] ?? '', '/qa-plugin/') !== false ? 'red' : '#999';
 		echo sprintf(
 			'<code style="color: %s">%s() in %s:%s</code><br>',
-			$color, qa_html(@$trace['function']), basename(@$trace['file']), @$trace['line']
+			$color, qa_html($trace['function'] ?? ''), basename($trace['file'] ?? ''), $trace['line'] ?? ''
 		);
 	}
 
@@ -915,10 +915,10 @@ function qa_load_module($type, $name)
 		if (isset($module['object']))
 			return $module['object'];
 
-		if (strlen(@$module['include']))
+		if (strlen($module['include'] ?? ''))
 			require_once $module['directory'] . $module['include'];
 
-		if (strlen(@$module['class'])) {
+		if (strlen($module['class'] ?? '')) {
 			$object = new $module['class'];
 
 			if (method_exists($object, 'load_module'))
@@ -1029,6 +1029,7 @@ function qa_sanitize_html($html, $linksnewwindow = false, $storage = false)
 		'keep_bad' => 0,
 		'anti_link_spam' => array('/.*/', ''),
 		'hook_tag' => 'qa_sanitize_html_hook_tag',
+		'deny_attribute' => 'itemprop, itemscope, itemtype, itemid, itemref',
 	));
 
 	return $safe;
@@ -1048,7 +1049,7 @@ function qa_sanitize_html_hook_tag($element, $attributes = null)
 	if (!isset($attributes)) // it's a closing tag
 		return '</' . $element . '>';
 
-	if ($element == 'param' && trim(strtolower(@$attributes['name'])) == 'allowscriptaccess')
+	if ($element == 'param' && trim(strtolower($attributes['name'] ?? '')) == 'allowscriptaccess')
 		$attributes['name'] = 'allowscriptaccess_denied';
 
 	if ($element == 'embed')
@@ -1085,6 +1086,9 @@ function qa_xml($string)
  */
 function qa_js($value, $forcequotes = false)
 {
+	if (!isset($value)) {
+		return 'null';
+	}
 	$boolean = is_bool($value);
 	if ($boolean)
 		$value = $value ? 'true' : 'false';
@@ -1356,7 +1360,7 @@ function qa_is_human_probably()
 
 	$useragent = @$_SERVER['HTTP_USER_AGENT'];
 
-	return (strlen($useragent) == 0) || qa_string_matches_one($useragent, array(
+	return (strlen((string)$useragent) == 0) || qa_string_matches_one($useragent, array(
 		'MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera', 'Gecko', 'MIDP', 'PLAYSTATION', 'Teleca',
 		'BlackBerry', 'UP.Browser', 'Polaris', 'MAUI_WAP_Browser', 'iPad', 'iPhone', 'iPod',
 	));
@@ -1374,7 +1378,7 @@ function qa_is_mobile_probably()
 
 	// inspired by: http://dangerousprototypes.com/docs/PhpBB3_MOD:_Replacement_mobile_browser_detection_for_mobile_themes
 
-	$loweragent = strtolower(@$_SERVER['HTTP_USER_AGENT']);
+	$loweragent = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
 
 	if (strpos($loweragent, 'ipad') !== false) // consider iPad as desktop
 		return false;
@@ -1392,7 +1396,7 @@ function qa_is_mobile_probably()
 	)))
 		return true;
 
-	return qa_string_matches_one(strtolower(@$_SERVER['HTTP_ACCEPT']), array(
+	return qa_string_matches_one(strtolower($_SERVER['HTTP_ACCEPT'] ?? ''), array(
 		'application/vnd.wap.xhtml+xml', 'text/vnd.wap.wml',
 	));
 }
@@ -1581,7 +1585,7 @@ function qa_path($request, $params = null, $rooturl = null, $neaturls = null, $a
 	}
 
 	foreach ($requestparts as $index => $requestpart) {
-		$requestparts[$index] = urlencode($requestpart);
+		$requestparts[$index] = rawurlencode($requestpart);
 	}
 	$requestpath = implode('/', $requestparts);
 
@@ -1614,11 +1618,11 @@ function qa_path($request, $params = null, $rooturl = null, $neaturls = null, $a
 	if (is_array($params)) {
 		foreach ($params as $key => $value) {
 			$value = is_array($value) ? '' : (string) $value;
-			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . urlencode($key) . '=' . urlencode($value);
+			$paramsextra .= (strlen($paramsextra) ? '&' : '?') . rawurlencode($key) . '=' . rawurlencode($value);
 		}
 	}
 
-	return $url . $paramsextra . (empty($anchor) ? '' : '#' . urlencode($anchor));
+	return $url . $paramsextra . (empty($anchor) ? '' : '#' . rawurlencode($anchor));
 }
 
 
@@ -1776,7 +1780,7 @@ function qa_path_form_html($request, $params = null, $rooturl = null, $neaturls 
 
 		foreach ($params as $param)
 			if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches))
-				$formhtml .= '<input type="hidden" name="' . qa_html(urldecode($matches[1])) . '" value="' . qa_html(urldecode(@$matches[3])) . '"/>';
+				$formhtml .= '<input type="hidden" name="' . qa_html(rawurldecode($matches[1])) . '" value="' . qa_html(rawurldecode(@$matches[3])) . '"/>';
 	}
 
 	return $formhtml;
@@ -1830,13 +1834,13 @@ function qa_retrieve_url($url)
 		return '';
 	}
 
-	$contents = @file_get_contents($url);
+	$contents = file_get_contents($url) ?? '';
 
 	if (!strlen($contents) && function_exists('curl_exec')) { // try curl as a backup (if allow_url_fopen not set)
 		$curl = curl_init($url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		$contents = @curl_exec($curl);
+		$contents = (string)curl_exec($curl);
 		curl_close($curl);
 	}
 

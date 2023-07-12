@@ -220,7 +220,7 @@ class qa_wysiwyg_editor
 	{
 		if (qa_post_text($fieldname.'_ckeditor_ok')) {
 			// CKEditor was loaded successfully
-			$html = qa_post_text($fieldname);
+			$html = (string)qa_post_text($fieldname);
 
 			// remove <p>, <br>, etc... since those are OK in text
 			$htmlformatting = preg_replace('/<\s*\/?\s*(br|p)\s*\/?\s*>/i', '', $html);
@@ -246,7 +246,7 @@ class qa_wysiwyg_editor
 			// CKEditor was not loaded so treat it as plain text
 			return array(
 				'format' => '',
-				'content' => qa_post_text($fieldname),
+				'content' => (string)qa_post_text($fieldname),
 			);
 		}
 	}

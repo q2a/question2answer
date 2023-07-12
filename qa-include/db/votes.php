@@ -50,8 +50,8 @@ function qa_db_uservote_set($postid, $userid, $vote)
  */
 function qa_db_uservote_get($postid, $userid)
 {
-	return qa_db_read_one_value(qa_db_query_sub(
-		'SELECT vote FROM ^uservotes WHERE postid=# AND userid=#',
+	return qa_db_read_one_assoc(qa_db_query_sub(
+		'SELECT postid, userid, vote, flag, votecreated, voteupdated FROM ^uservotes WHERE postid=# AND userid=#',
 		$postid, $userid
 	), true);
 }
@@ -65,11 +65,9 @@ function qa_db_uservote_get($postid, $userid)
  */
 function qa_db_userflag_set($postid, $userid, $flag)
 {
-	$flag = $flag ? 1 : 0;
-
 	qa_db_query_sub(
 		'INSERT INTO ^uservotes (postid, userid, vote, flag) VALUES (#, #, 0, #) ON DUPLICATE KEY UPDATE flag=#',
-		$postid, $userid, $flag, $flag
+		$postid, $userid, (int)$flag, (int)$flag
 	);
 }
 
@@ -101,17 +99,41 @@ function qa_db_post_recount_votes($postid)
 	}
 }
 
-
 /**
  * Recalculate the cached count of flags for $postid in the database
  * @param $postid
+ * @param int|null $increment
  */
-function qa_db_post_recount_flags($postid)
+function qa_db_post_recount_flags($postid, $increment = null)
+{
+	if (!qa_should_update_counts()) {
+		return;
+	}
+
+	if (isset($increment)) {
+		qa_db_query_sub(
+			'UPDATE ^posts SET flagcount = flagcount + # WHERE postid = #',
+			$increment, $postid
+		);
+	} else {
+		qa_db_query_sub(
+			'UPDATE ^posts AS x, (SELECT COALESCE(SUM(IF(flag, 1, 0)), 0) AS flagcount FROM ^uservotes WHERE postid = #) AS a ' .
+			'SET x.flagcount = a.flagcount WHERE x.postid = #',
+			$postid, $postid
+		);
+	}
+}
+
+/**
+ * Set flag count of given post to zero
+ * @param $postid
+ */
+function qa_db_post_reset_flags($postid)
 {
 	if (qa_should_update_counts()) {
 		qa_db_query_sub(
-			'UPDATE ^posts AS x, (SELECT COALESCE(SUM(IF(flag, 1, 0)),0) AS flagcount FROM ^uservotes WHERE postid=#) AS a SET x.flagcount=a.flagcount WHERE x.postid=#',
-			$postid, $postid
+			'UPDATE ^posts SET flagcount = 0 WHERE postid = #',
+			$postid
 		);
 	}
 }

@@ -49,11 +49,11 @@ class Q2A_Plugin_PluginManager
 			}
 
 			// skip plugin which requires a later version of Q2A
-			if (isset($metadata['min_q2a']) && qa_qa_version_below($metadata['min_q2a'])) {
+			if (qa_qa_version_below($metadata['min_q2a'] ?? '')) {
 				continue;
 			}
 			// skip plugin which requires a later version of PHP
-			if (isset($metadata['min_php']) && qa_php_version_below($metadata['min_php'])) {
+			if (qa_php_version_below($metadata['min_php'] ?? '')) {
 				continue;
 			}
 

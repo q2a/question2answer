@@ -77,6 +77,9 @@ function qa_db_connect($failhandler = null)
 	if (QA_PERSISTENT_CONN_DB)
 		$host = 'p:' . $host;
 
+	// Avoid throwing exceptions (needed as of PHP 8.1)
+	mysqli_report(MYSQLI_REPORT_OFF);
+
 	// in mysqli we connect and select database in constructor
 	if ($port !== null)
 		$db = new mysqli($host, QA_FINAL_MYSQL_USERNAME, QA_FINAL_MYSQL_PASSWORD, QA_FINAL_MYSQL_DATABASE, $port);
@@ -553,7 +556,7 @@ function qa_db_single_select($selectspec)
 	}
 
 	$results = qa_db_read_all_assoc(qa_db_query_raw(qa_db_apply_sub(
-			substr($query, 0, -2) . (strlen(@$selectspec['source']) ? (' FROM ' . $selectspec['source']) : ''),
+			substr($query, 0, -2) . (strlen($selectspec['source'] ?? '') ? (' FROM ' . $selectspec['source']) : ''),
 			@$selectspec['arguments'])
 	), @$selectspec['arraykey']); // arrayvalue is applied in qa_db_post_select()
 
@@ -639,7 +642,7 @@ function qa_db_multi_select($selectspecs)
 				$subquery .= ' AS ' . $columnas;
 		}
 
-		if (strlen(@$selectspec['source']))
+		if (strlen($selectspec['source'] ?? ''))
 			$subquery .= ' FROM ' . $selectspec['source'];
 
 		$subquery .= ')';

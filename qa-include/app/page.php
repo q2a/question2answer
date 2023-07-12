@@ -621,7 +621,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 
 	if (qa_opt('nav_ask') && qa_user_maximum_permit_error('permit_post_q') != 'level') {
 		$qa_content['navigation']['main']['ask'] = array(
-			'url' => qa_path_html('ask', (qa_using_categories() && strlen($lastcategoryid)) ? array('cat' => $lastcategoryid) : null),
+			'url' => qa_path_html('ask', (qa_using_categories() && strlen((string)$lastcategoryid)) ? array('cat' => $lastcategoryid) : null),
 			'label' => qa_lang_html('main/nav_ask'),
 		);
 	}
@@ -737,7 +737,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 		if (!QA_FINAL_EXTERNAL_USERS) {
 			$source = qa_get_logged_in_source();
 
-			if (strlen($source)) {
+			if (strlen((string)$source)) {
 				$loginmodules = qa_load_modules_with('login', 'match_source');
 
 				foreach ($loginmodules as $module) {
@@ -765,7 +765,7 @@ function qa_content_prepare($voting = false, $categoryids = array())
 				$module->login_html(isset($topath) ? (qa_opt('site_url') . $topath) : qa_path($request, $_GET, qa_opt('site_url')), 'menu');
 				$label = ob_get_clean();
 
-				if (strlen($label))
+				if (strlen((string)$label))
 					$qa_content['navigation']['user'][implode('-', qa_string_to_words($tryname))] = array('label' => $label);
 			}
 		}

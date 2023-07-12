@@ -209,7 +209,7 @@ function qa_db_points_update_ifuser($userid, $columns)
 		qa_db_query_raw(str_replace('~', "='" . qa_db_escape_string($userid) . "'", qa_db_apply_sub($query, array($userid))));
 
 		if (qa_db_insert_on_duplicate_inserted()) {
-			qa_db_userpointscount_update();
+			qa_db_userpointscount_update(1);
 		}
 	}
 }
@@ -228,17 +228,15 @@ function qa_db_points_set_bonus($userid, $bonus)
 	);
 }
 
-
 /**
  * Update the cached count in the database of the number of rows in the userpoints table
+ * @param int|null $increment
  */
-function qa_db_userpointscount_update()
+function qa_db_userpointscount_update($increment = null)
 {
-	if (qa_should_update_counts()) {
-		qa_db_query_sub(
-			"INSERT INTO ^options (title, content) " .
-			"SELECT 'cache_userpointscount', COUNT(*) FROM ^userpoints " .
-			"ON DUPLICATE KEY UPDATE content = VALUES(content)"
-		);
-	}
+	qa_db_generic_cache_update(
+		'cache_userpointscount',
+		'SELECT COUNT(*) FROM ^userpoints',
+		$increment
+	);
 }

@@ -1,14 +1,7 @@
 <?php
 
-class BaseTest extends PHPUnit_Framework_TestCase
+class BaseTest extends \PHPUnit\Framework\TestCase
 {
-	public function test__qa_version_to_float()
-	{
-		$this->assertSame(1.006, qa_version_to_float('1.6'));
-		$this->assertSame(1.007004, qa_version_to_float('1.7.4'));
-		$this->assertSame(1.008, qa_version_to_float('1.8.0-beta1'));
-	}
-
 	public function test__qa_qa_version_below()
 	{
 		// as we cannot change the QA_VERSION constant, we test an appended version against the set constant

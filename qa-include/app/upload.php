@@ -34,7 +34,7 @@ function qa_get_max_upload_size()
 
 	$mindb = 16777215; // from MEDIUMBLOB column type
 
-	$minphp = trim(ini_get('upload_max_filesize'));
+	$minphp = trim(ini_get('upload_max_filesize') ?? '');
 	$minphp = convert_to_bytes(substr($minphp, -1), $minphp);
 
 	return min($mindb, $minphp);
@@ -104,7 +104,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 	// Find out what type of source file was uploaded and if appropriate, check it's an image and get preliminary size measure
 
 	$pathinfo = pathinfo($sourcefilename);
-	$format = strtolower(@$pathinfo['extension']);
+	$format = strtolower($pathinfo['extension'] ?? '');
 	$isimage = in_array($format, array('png', 'gif', 'jpeg', 'jpg')); // allowed image extensions
 
 	if ($isimage) {
@@ -150,7 +150,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 	if ($isimage && qa_has_gd_image()) {
 		$image = @imagecreatefromstring($content);
 
-		if (is_resource($image)) {
+		if ($image !== false) {
 			$result['width'] = $width = imagesx($image);
 			$result['height'] = $height = imagesy($image);
 
@@ -162,7 +162,7 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 				)) {
 					qa_gd_image_resize($image, $width, $height);
 
-					if (is_resource($image)) {
+					if ($image !== null) {
 						$content = qa_gd_image_jpeg($image);
 						$result['format'] = $format = 'jpg';
 						$result['width'] = $width;
@@ -171,8 +171,9 @@ function qa_upload_file($localfilename, $sourcefilename, $maxfilesize = null, $o
 				}
 			}
 
-			if (is_resource($image)) // might have been lost
+			if ($image !== null && $image !== false) { // might have been lost
 				imagedestroy($image);
+			}
 		}
 	}
 

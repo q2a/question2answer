@@ -151,14 +151,14 @@ switch ($feedtype) {
 		break;
 
 	case 'tag':
-		if (strlen(@$feedparams[0])) {
+		if (strlen($feedparams[0] ?? '')) {
 			$feedoption = 'feed_for_tag_qs';
 			$categoryslugs = null;
 		}
 		break;
 
 	case 'search':
-		if (strlen(@$feedparams[0])) {
+		if (strlen($feedparams[0] ?? '')) {
 			$feedoption = 'feed_for_search';
 			$categoryslugs = null;
 		}

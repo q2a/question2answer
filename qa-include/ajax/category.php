@@ -23,7 +23,7 @@ require_once QA_INCLUDE_DIR . 'db/selects.php';
 
 
 $categoryid = qa_post_text('categoryid');
-if (!strlen($categoryid))
+if (!strlen((string)$categoryid))
 	$categoryid = null;
 
 list($fullcategory, $categories) = qa_db_select_with_pending(
@@ -33,7 +33,7 @@ list($fullcategory, $categories) = qa_db_select_with_pending(
 
 echo "QA_AJAX_RESPONSE\n1\n";
 
-echo qa_html(strtr(@$fullcategory['content'], "\r\n", '  ')); // category description
+echo qa_html(strtr($fullcategory['content'] ?? '', "\r\n", '  ')); // category description
 
 foreach ($categories as $category) {
 	// subcategory information
