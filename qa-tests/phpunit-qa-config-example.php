@@ -7,5 +7,5 @@ define('QA_MYSQL_USERNAME', 'your-test-mysql-username');
 define('QA_MYSQL_PASSWORD', 'your-test-mysql-password');
 define('QA_MYSQL_DATABASE', 'your-test-mysql-db-name');
 
-define('QA_MYSQL_TABLE_PREFIX', 'qa_');
+define('QA_MYSQL_TABLE_PREFIX', 'qa_test_');
 define('QA_EXTERNAL_USERS', false);

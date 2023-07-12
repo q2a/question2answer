@@ -114,7 +114,8 @@ class Q2A_TestsSetup
 		qa_db_query_sub(
 			'SELECT GROUP_CONCAT("`", table_name, "`") INTO @tables ' .
 			'FROM information_schema.tables ' .
-			'WHERE table_schema = (SELECT DATABASE())'
+			'WHERE table_schema = (SELECT DATABASE()) ' .
+			'AND table_name LIKE "' . QA_MYSQL_TABLE_PREFIX . '%"'
 		);
 		qa_db_query_sub('SELECT IFNULL(@tables, "dummy") INTO @tables');
 
