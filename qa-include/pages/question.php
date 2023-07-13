@@ -78,7 +78,7 @@ if (isset($question)) {
 
 	if (trim($q_request, '/') !== trim(qa_request(), '/')) {
 		// redirect if the current URL is incorrect
-		qa_redirect($q_request);
+		qa_redirect($q_request, $_GET);
 	}
 
 	$question['extra'] = $extravalue;
