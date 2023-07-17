@@ -987,7 +987,7 @@ function qa_load_modules_with($type, $method)
  */
 function qa_html($string, $multiline = false)
 {
-	$html = htmlspecialchars($string);
+	$html = htmlspecialchars((string)$string);
 
 	if ($multiline) {
 		$html = preg_replace('/\r\n?/', "\n", $html);

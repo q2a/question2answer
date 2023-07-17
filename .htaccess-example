@@ -12,5 +12,5 @@ DirectoryIndex index.php
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^.*$ index.php?qa-rewrite=$0&%{QUERY_STRING} [L]
+    RewriteRule ^.*$ index.php?qa-rewrite=$0&%{QUERY_STRING} [B,L]
 </IfModule>
