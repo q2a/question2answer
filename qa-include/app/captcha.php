@@ -82,20 +82,22 @@ function qa_set_up_captcha_field(&$qa_content, &$fields, $errors, $note = null)
 	// workaround for reCAPTCHA, to load multiple instances via JS
 	$count = @++$qa_content['qa_captcha_count'];
 
+	$hasCapatchaError = array_key_exists('captcha', $errors);
+
 	if ($count > 1) {
 		// use blank captcha in order to load via JS
 		$html = '';
 	} else {
 		// first captcha is always loaded explicitly
 		$qa_content['script_var']['qa_captcha_in'] = 'qa_captcha_div_1';
-		$html = $captcha->form_html($qa_content, @$errors['captcha']);
+		$html = $captcha->form_html($qa_content, $hasCapatchaError ? $errors['captcha'] : null);
 	}
 
 	$fields['captcha'] = array(
 		'type' => 'custom',
 		'label' => qa_lang_html('misc/captcha_label'),
 		'html' => '<div id="qa_captcha_div_' . $count . '">' . $html . '</div>',
-		'error' => @array_key_exists('captcha', $errors) ? qa_lang_html('misc/captcha_error') : null,
+		'error' => $hasCapatchaError ? qa_lang_html('misc/captcha_error') : null,
 		'note' => $note,
 	);
 

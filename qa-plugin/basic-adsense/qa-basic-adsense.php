@@ -41,8 +41,8 @@ class qa_basic_adsense
 		if (qa_clicked('adsense_save_button')) {
 			// prevent common errors by copying and pasting from Javascript
 			$trimchars = "=;\"\' \t\r\n";
-			qa_opt('adsense_publisher_id', trim(qa_post_text('adsense_publisher_id_field'), $trimchars));
-			qa_opt('adsense_adunit_id', trim(qa_post_text('adsense_adunit_id_field'), $trimchars));
+			qa_opt('adsense_publisher_id', trim((string)qa_post_text('adsense_publisher_id_field'), $trimchars));
+			qa_opt('adsense_adunit_id', trim((string)qa_post_text('adsense_adunit_id_field'), $trimchars));
 
 			$saved = true;
 		}

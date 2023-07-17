@@ -2,7 +2,7 @@
 require_once QA_INCLUDE_DIR.'app/format.php';
 require_once QA_INCLUDE_DIR.'app/options.php';
 
-class AppFormatTest extends PHPUnit_Framework_TestCase
+class AppFormatTest extends \PHPUnit\Framework\TestCase
 {
 	/**
 	 * Test basic number formatting (no compact numbers)

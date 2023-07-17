@@ -77,7 +77,7 @@ class UserFields extends BaseController
 					qa_db_userfield_delete($editfield['fieldid']);
 					qa_redirect('admin/users');
 				} else {
-					$inname = qa_post_text('name');
+					$inname = (string)qa_post_text('name');
 					$intype = qa_post_text('type');
 					$inonregister = (int)qa_post_text('onregister');
 					$inflags = $intype | ($inonregister ? QA_FIELD_FLAGS_ON_REGISTER : 0);

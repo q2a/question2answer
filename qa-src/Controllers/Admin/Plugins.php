@@ -158,19 +158,19 @@ class Plugins extends BaseController
 
 				$namehtml = $metadata['name'];
 
-				if (isset($metadata['uri']) && strlen($metadata['uri']))
+				if (strlen($metadata['uri'] ?? ''))
 					$namehtml = '<a href="' . qa_html($metadata['uri']) . '">' . $namehtml . '</a>';
 
 				$namehtml = '<b>' . $namehtml . '</b>';
 
-				$metaver = isset($metadata['version']) && strlen($metadata['version']);
+				$metaver = strlen($metadata['version'] ?? '');
 				if ($metaver)
 					$namehtml .= ' v' . qa_html($metadata['version']);
 
-				if (isset($metadata['author']) && strlen($metadata['author'])) {
+				if (strlen($metadata['author'] ?? '')) {
 					$authorhtml = qa_html($metadata['author']);
 
-					if (isset($metadata['author_uri']) && strlen($metadata['author_uri']))
+					if (strlen($metadata['author_uri'] ?? ''))
 						$authorhtml = '<a href="' . qa_html($metadata['author_uri']) . '">' . $authorhtml . '</a>';
 
 					$authorhtml = qa_lang_html_sub('main/by_x', $authorhtml);
@@ -178,7 +178,7 @@ class Plugins extends BaseController
 					$authorhtml = '';
 				}
 
-				if ($shouldCheckForUpdate && $metaver && isset($metadata['update_uri']) && strlen($metadata['update_uri'])) {
+				if ($shouldCheckForUpdate && $metaver && strlen($metadata['update_uri'] ?? '')) {
 					$elementid = 'version_check_' . md5($pluginDirectory);
 
 					$versionChecks[] = array(
@@ -192,10 +192,9 @@ class Plugins extends BaseController
 					$updatehtml = '';
 				}
 
-				if (isset($metadata['description']))
-					$deschtml = qa_html($metadata['description']);
-				else
-					$deschtml = '';
+				$deschtml = isset($metadata['description'])
+					? qa_html($metadata['description'])
+					: '';
 
 				if (isset($pluginoptionmodules[$pluginDirectoryPath]) && !$showthisform) {
 					$deschtml .= (strlen($deschtml) ? ' - ' : '') . '<a href="' . qa_admin_plugin_options_path($pluginDirectory) . '">' .
@@ -210,10 +209,10 @@ class Plugins extends BaseController
 				$pluginhtml .= $deschtml . (strlen($deschtml) > 0 ? '<br>' : '');
 				$pluginhtml .= '<small style="color:#666">' . qa_html($pluginDirectoryPath) . '/</small>';
 
-				if (qa_qa_version_below(@$metadata['min_q2a'])) {
+				if (qa_qa_version_below($metadata['min_q2a'] ?? '')) {
 					$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
 						qa_lang_html_sub('admin/requires_q2a_version', qa_html($metadata['min_q2a'])).'</span>';
-				} elseif (qa_php_version_below(@$metadata['min_php'])) {
+				} elseif (qa_php_version_below($metadata['min_php'] ?? '')) {
 					$pluginhtml = '<s style="color:#999">'.$pluginhtml.'</s><br><span style="color:#f00">'.
 						qa_lang_html_sub('admin/requires_php_version', qa_html($metadata['min_php'])).'</span>';
 				}

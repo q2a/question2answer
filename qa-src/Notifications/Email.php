@@ -20,7 +20,7 @@
 
 namespace Q2A\Notifications;
 
-use PHPMailer;
+use PHPMailer\PHPMailer\PHPMailer;
 use Q2A\Exceptions\FatalErrorException;
 use Q2A\Notifications\Mailer;
 

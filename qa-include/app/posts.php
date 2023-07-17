@@ -229,9 +229,9 @@ function qa_post_set_closed($questionid, $closed = true, $originalpostid = null,
 			qa_question_close_other($oldquestion, $oldclosepost, $note, $byuserid, $byhandle, null);
 		else
 			qa_fatal_error('Question must be closed as a duplicate or with a note');
-
-	} else
+	} else {
 		qa_question_close_clear($oldquestion, $oldclosepost, $byuserid, $byhandle, null);
+	}
 }
 
 /**
@@ -423,7 +423,7 @@ function qa_post_tags_to_tagstring($tags)
 	if (is_array($tags))
 		$tags = implode(',', $tags);
 
-	return qa_tags_to_tagstring(array_unique(preg_split('/\s*,\s*/', qa_strtolower(strtr($tags, '/', ' ')), -1, PREG_SPLIT_NO_EMPTY)));
+	return qa_tags_to_tagstring(array_unique(preg_split('/\s*,\s*/', qa_strtolower(strtr((string)$tags, '/', ' ')), -1, PREG_SPLIT_NO_EMPTY)));
 }
 
 

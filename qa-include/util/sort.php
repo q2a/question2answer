@@ -67,7 +67,7 @@ function qa_sort_by_fn($a, $b)
 	if (is_numeric($av) && is_numeric($bv)) // straight subtraction won't work for floating bits
 		return $av == $bv ? 0 : ($av < $bv ? -1 : 1);
 	else
-		return strcasecmp($av, $bv); // doesn't do UTF-8 right but it will do for now
+		return strcasecmp((string)$av, (string)$bv); // doesn't do UTF-8 right but it will do for now
 }
 
 /**
@@ -82,7 +82,7 @@ function qa_sort_cmp($a, $b)
 	if (is_numeric($a) && is_numeric($b)) // straight subtraction won't work for floating bits
 		return $a == $b ? 0 : ($a < $b ? -1 : 1);
 	else
-		return strcasecmp($a, $b); // doesn't do UTF-8 right but it will do for now
+		return strcasecmp((string)$a, (string)$b); // doesn't do UTF-8 right but it will do for now
 }
 
 

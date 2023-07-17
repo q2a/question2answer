@@ -60,7 +60,7 @@ class Categories extends BaseController
 
 		// Work out the appropriate state for the page
 
-		$editcategory = @$categories[$editcategoryid];
+		$editcategory = $categories[$editcategoryid] ?? null;
 
 		if (isset($editcategory)) {
 			$parentid = qa_get('addsub');
@@ -71,7 +71,7 @@ class Categories extends BaseController
 				$editcategory = array();
 			} elseif (qa_clicked('dosavecategory')) {
 				$parentid = qa_post_text('parent');
-				$editcategory = array('parentid' => strlen($parentid) ? $parentid : null);
+				$editcategory = array('parentid' => $parentid ?? null);
 			}
 		}
 
@@ -81,7 +81,7 @@ class Categories extends BaseController
 
 		$hassubcategory = false;
 		foreach ($categories as $category) {
-			if (!strcmp($category['parentid'], $editcategoryid))
+			if (!strcmp($category['parentid'] ?? '', $editcategoryid ?? ''))
 				$hassubcategory = true;
 		}
 
@@ -132,7 +132,7 @@ class Categories extends BaseController
 			} else {
 				require_once QA_INCLUDE_DIR . 'util/string.php';
 
-				$inname = qa_post_text('name');
+				$inname = (string)qa_post_text('name');
 				$incontent = qa_post_text('content');
 				$inparentid = $setparent ? qa_get_category_field_value('parent') : $editcategory['parentid'];
 				$inposition = qa_post_text('position');
@@ -150,8 +150,8 @@ class Categories extends BaseController
 					$errors['name'] = qa_lang_sub('main/max_length_x', QA_DB_MAX_CAT_PAGE_TITLE_LENGTH);
 				} else {
 					foreach ($incategories as $category) {
-						if (!strcmp($category['parentid'], $inparentid) &&
-							strcmp($category['categoryid'], @$editcategory['categoryid']) &&
+						if (!strcmp($category['parentid'] ?? '', $inparentid) &&
+							strcmp($category['categoryid'], $editcategory['categoryid'] ?? '') &&
 							qa_strtolower($category['title']) == qa_strtolower($inname)
 						) {
 							$errors['name'] = qa_lang('admin/category_already_used');
@@ -193,7 +193,7 @@ class Categories extends BaseController
 						$errors['slug'] = qa_lang_sub('admin/slug_bad_chars', '+ /');
 					elseif (!isset($inparentid) && qa_admin_is_slug_reserved($inslug)) // only top level is a problem
 						$errors['slug'] = qa_lang('admin/slug_reserved');
-					elseif (isset($matchcategoryid) && strcmp($matchcategoryid, @$editcategory['categoryid']))
+					elseif (isset($matchcategoryid) && strcmp($matchcategoryid, $editcategory['categoryid'] ?? ''))
 						$errors['slug'] = qa_lang('admin/category_already_used');
 					elseif (isset($matchpage))
 						$errors['slug'] = qa_lang('admin/page_already_used');
@@ -500,7 +500,7 @@ class Categories extends BaseController
 				$passedself = false;
 
 				foreach ($categories as $key => $category) {
-					if (!strcmp($category['parentid'], @$editcategory['parentid'])) {
+					if (!strcmp($category['parentid'] ?? '', $editcategory['parentid'] ?? '')) {
 						if (isset($previous))
 							$positionhtml = qa_lang_html_sub('admin/after_x', qa_html($passedself ? $category['title'] : $previous['title']));
 						else
@@ -508,7 +508,7 @@ class Categories extends BaseController
 
 						$positionoptions[$category['position']] = $positionhtml;
 
-						if (!strcmp($category['categoryid'], @$editcategory['categoryid']))
+						if (!strcmp($category['categoryid'], $editcategory['categoryid'] ?? ''))
 							$passedself = true;
 
 						$previous = $category;
@@ -538,7 +538,7 @@ class Categories extends BaseController
 						$childrenhtml = '';
 
 						foreach ($categories as $category) {
-							if (!strcmp($category['parentid'], $editcategory['categoryid'])) {
+							if (!strcmp($category['parentid'] ?? '', $editcategory['categoryid'])) {
 								$childrenhtml .= (strlen($childrenhtml) ? ', ' : '') .
 									'<a href="' . qa_path_html(qa_request(), array('edit' => $category['categoryid'])) . '">' . qa_html($category['title']) . '</a>' .
 									' (' . $category['qcount'] . ')';

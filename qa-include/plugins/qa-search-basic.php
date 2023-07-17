@@ -27,9 +27,9 @@ class qa_search_basic
 
 		// Get words from each textual element
 
-		$titlewords = array_unique(qa_string_to_words($title));
+		$titlewords = array_unique(qa_string_to_words((string)$title));
 		$contentcount = array_count_values(qa_string_to_words($text));
-		$tagwords = array_unique(qa_string_to_words($tagstring));
+		$tagwords = array_unique(qa_string_to_words((string)$tagstring));
 		$wholetags = array_unique(qa_tagstring_to_tags($tagstring));
 
 		// Map all words to their word IDs

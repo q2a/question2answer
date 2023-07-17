@@ -20,7 +20,7 @@
 
 namespace Q2A\Notifications;
 
-use PHPMailer;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer extends PHPMailer
 {

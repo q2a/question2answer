@@ -368,6 +368,13 @@ class qa_html_theme extends qa_html_theme_base
 		}
 	}
 
+	public function favorite_button($tags, $class)
+	{
+		if (isset($tags)) {
+			$this->output('<button ' . $tags . ' class="' . $class . '-button"/></button>');
+		}
+	}
+
 	/**
 	 * Add closed icon for closed questions
 	 */
@@ -464,6 +471,12 @@ class qa_html_theme extends qa_html_theme_base
 		$this->c_form(isset($q_view['c_form']) ? $q_view['c_form'] : null);
 
 		$this->output('</div> <!-- END qa-q-view-main -->');
+	}
+
+	public function post_tag_item($taghtml, $class)
+	{
+		$isFavorited = is_numeric(strpos($taghtml, 'qa-tag-favorited'));
+		$this->output(sprintf('<li class="%s-tag-item%s">%s</li>', $class, $isFavorited ? ' qa-tag-favorited' : '', $taghtml));
 	}
 
 	/**
@@ -621,7 +634,7 @@ class qa_html_theme extends qa_html_theme_base
 				);
 			}
 
-			$avatar = strip_tags($tobar_avatar, '<img>');
+			$avatar = strip_tags($tobar_avatar ?? '', '<img>');
 			if (!empty($avatar))
 				$handle = '';
 		}

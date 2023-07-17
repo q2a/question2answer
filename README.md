@@ -5,14 +5,15 @@
 </p>
 
 <p align="center">
-	<a href="https://travis-ci.org/q2a/question2answer/branches"><img src="https://img.shields.io/travis/q2a/question2answer/dev.svg" alt="Build Status"></a>
 	<a href="https://github.com/q2a/question2answer/issues"><img src="https://img.shields.io/github/issues/q2a/question2answer.svg" alt="Open Issues"></a>
 	<a href="https://github.com/q2a/question2answer/releases"><img src="https://img.shields.io/github/release/q2a/question2answer.svg" alt="Current Release"></a>
 	<a href="https://docs.question2answer.org/install/"><img src="https://img.shields.io/travis/php-v/q2a/question2answer/dev.svg" alt="PHP version"></a>
 	<a href="https://www.question2answer.org/license.php"><img src="https://img.shields.io/badge/License-GPL-green.svg" alt="License"></a>
 </p>
 
-[Question2Answer][Q2A] (Q2A) is a popular free open source Q&A platform for PHP/MySQL, used by over [22,000 sites in 40 languages][3].
+[Question2Answer][Q2A] (Q2A) is a popular free open source Q&A platform for PHP/MySQL, used by over [22,000 sites in 40 languages][sites].
+
+**Note:** if you're using Q2A directly from git, make sure to use the [master branch][master] as that is the latest stable version. If you're unsure, use the official downloads from the Q2A website or the Releases tab on GitHub.
 
 
 ## Key features
@@ -23,8 +24,8 @@
 - Create experts, editors, moderators and admins.
 - Fast integrated search engine, plus checking for similar questions when asking.
 - Categories (up to 4 levels deep) and/or tagging.
-- Easy styling with [CSS themes][6].
-- Supports [translation][7] into any language.
+- Easy styling with [CSS themes][themes].
+- Supports [translation][trans] into any language.
 - Custom sidebar, widgets, pages and links.
 - SEO features such as neat URLs, microformats and XML Sitemaps.
 - RSS, email notifications and personal news feeds.
@@ -42,7 +43,7 @@
 
 ## Plugins
 
-Q2A also features an extensive [plugin system][5]:
+Q2A also features an extensive [plugin system][plugins]:
 
 - Modify the HTML output for a page with *layers*.
 - Add custom pages to a Q2A site with *page modules*.
@@ -55,22 +56,27 @@ Q2A also features an extensive [plugin system][5]:
 - Add extra spam protection with *captcha modules*.
 - Extend many core Q2A functions using *function overrides*.
 
-Q2A themes, plugins and language files created by other members are [available here][8].
+Q2A themes, plugins and language files created by other members are [available here][addons]. Also see [Changelog][changes] for what's new in each version.
 
 
 ## Development
 
-Question2Answer is open source and we welcome contributions! The collaborative development process is being managed by [Scott Vivian][1]. Please read the [contributing page][2] for more information on how to get involved. We also have an [active community][4] where you can ask for help and discuss Q2A with other members.
+Question2Answer is open source and we welcome contributions! The collaborative development process is being managed by [Scott Vivian][scott]. Please read the [contributing page][contrib] for more information on how to get involved. We also have an [active community][forum] where you can ask for help and discuss Q2A with other members.
 
-Official releases can be found either on the [Q2A website][Q2A] or via the Releases tab on GitHub.
+
+Thanks and enjoy!
+
+Gideon & Scott
 
 
 [Q2A]: https://www.question2answer.org/
-[1]: https://www.question2answer.org/qa/user/Scott
-[2]: https://github.com/q2a/question2answer/blob/master/CONTRIBUTING.md
-[3]: https://www.question2answer.org/sites.php
-[4]: https://www.question2answer.org/qa/
-[5]: https://docs.question2answer.org/plugins/
-[6]: https://docs.question2answer.org/themes/
-[7]: https://docs.question2answer.org/translate/
-[8]: https://docs.question2answer.org/addons/
+[scott]: https://www.question2answer.org/qa/user/Scott
+[contrib]: https://github.com/q2a/question2answer/blob/master/CONTRIBUTING.md
+[sites]: https://www.question2answer.org/sites.php
+[master]: https://github.com/q2a/question2answer/tree/master
+[forum]: https://www.question2answer.org/qa/
+[plugins]: https://docs.question2answer.org/plugins/
+[themes]: https://docs.question2answer.org/themes/
+[trans]: https://docs.question2answer.org/translate/
+[addons]: https://docs.question2answer.org/addons/
+[changes]: https://docs.question2answer.org/install/versions/

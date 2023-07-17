@@ -147,9 +147,9 @@ function qa_get_login_links($relative_url_prefix, $redirect_back_to_url)
 		parameter once they have successfully logged in, registered or logged out.
 
 		return array(
-			'login' => $relative_url_prefix.'../login.php?redirect='.urlencode('qa/'.$redirect_back_to_url),
-			'register' => $relative_url_prefix.'../register.php?redirect='.urlencode('qa/'.$redirect_back_to_url),
-			'logout' => $relative_url_prefix.'../logout.php?redirect='.urlencode('qa/'.$redirect_back_to_url),
+			'login' => $relative_url_prefix.'../login.php?redirect='.rawurlencode('qa/'.$redirect_back_to_url),
+			'register' => $relative_url_prefix.'../register.php?redirect='.rawurlencode('qa/'.$redirect_back_to_url),
+			'logout' => $relative_url_prefix.'../logout.php?redirect='.rawurlencode('qa/'.$redirect_back_to_url),
 		);
 	*/
 }
@@ -424,7 +424,7 @@ function qa_get_public_from_userids($userids)
  *
  * You should return HTML code which identifies the logged in user, to be displayed next to the
  * logout link on the Q2A pages. This HTML will only be shown to the logged in user themselves.
- * Note: the username MUST be escaped with htmlspecialchars() for general output, or urlencode()
+ * Note: the username MUST be escaped with htmlspecialchars() for general output, or rawurlencode()
  * for link URLs.
  *
  * $logged_in_user is the array that you returned from qa_get_logged_in_user(). Hopefully this
@@ -454,7 +454,7 @@ function qa_get_logged_in_user_html($logged_in_user, $relative_url_prefix)
 
 		$publicusername = $logged_in_user['publicusername'];
 
-		return '<a href="' . htmlspecialchars($relative_url_prefix . '../user/' . urlencode($publicusername)) .
+		return '<a href="' . htmlspecialchars($relative_url_prefix . '../user/' . rawurlencode($publicusername)) .
 			'" class="qa-user-link">' . htmlspecialchars($publicusername) . '</a>';
 	*/
 
@@ -467,8 +467,8 @@ function qa_get_logged_in_user_html($logged_in_user, $relative_url_prefix)
 
 		$publicusername = $logged_in_user['publicusername'];
 
-		return '<a href="http://www.mysite.com/' . htmlspecialchars(urlencode($publicusername)) . '/" class="qa-user-link">' .
-			'<img src="http://www.mysite.com/' . htmlspecialchars(urlencode($publicusername)) . '/photo-small.jpg" ' .
+		return '<a href="http://www.mysite.com/' . htmlspecialchars(rawurlencode($publicusername)) . '/" class="qa-user-link">' .
+			'<img src="http://www.mysite.com/' . htmlspecialchars(rawurlencode($publicusername)) . '/photo-small.jpg" ' .
 			'style="width:16px; height:16px; border:none; margin-right:4px;">' . htmlspecialchars($publicusername) . '</a>';
 	*/
 }
@@ -483,7 +483,7 @@ function qa_get_logged_in_user_html($logged_in_user, $relative_url_prefix)
  *
  * You should return an array of HTML to display for each user in $userids. For each element of
  * this array, the userid should be in the key, with the corresponding HTML in the value.
- * Note: the username MUST be escaped with htmlspecialchars() for general output, or urlencode()
+ * Note: the username MUST be escaped with htmlspecialchars() for general output, or rawurlencode()
  * for link URLs.
  *
  * Call qa_db_connection() to get the connection to the Q2A database. If your database is shared with
@@ -533,7 +533,7 @@ function qa_get_users_html($userids, $should_include_link, $relative_url_prefix)
 			$usershtml[$userid] = htmlspecialchars($publicusername);
 
 			if ($should_include_link) {
-				$usershtml[$userid] = '<a href="' . htmlspecialchars($relative_url_prefix . '../user/' . urlencode($publicusername)) .
+				$usershtml[$userid] = '<a href="' . htmlspecialchars($relative_url_prefix . '../user/' . rawurlencode($publicusername)) .
 					'" class="qa-user-link">' . $usershtml[$userid] . '</a>';
 			}
 		}
@@ -553,11 +553,11 @@ function qa_get_users_html($userids, $should_include_link, $relative_url_prefix)
 		foreach ($userids as $userid) {
 			$publicusername = $useridtopublic[$userid];
 
-			$usershtml[$userid] = '<img src="http://www.mysite.com/' . htmlspecialchars(urlencode($publicusername)) . '/photo-small.jpg" ' .
+			$usershtml[$userid] = '<img src="http://www.mysite.com/' . htmlspecialchars(rawurlencode($publicusername)) . '/photo-small.jpg" ' .
 				'style="width:16px; height:16px; border:0; margin-right:4px;">' . htmlspecialchars($publicusername);
 
 			if ($should_include_link) {
-				$usershtml[$userid] = '<a href="http://www.mysite.com/' . htmlspecialchars(urlencode($publicusername)) .
+				$usershtml[$userid] = '<a href="http://www.mysite.com/' . htmlspecialchars(rawurlencode($publicusername)) .
 					'/" class="qa-user-link">' . $usershtml[$userid] . '</a>';
 			}
 		}
@@ -581,7 +581,7 @@ function qa_get_users_html($userids, $should_include_link, $relative_url_prefix)
  *
  * If $padding is true, the HTML you return should render to a square of $size x $size pixels,
  * even if the avatar is not square. This can be achieved using CSS padding - see function
- * qa_get_avatar_blob_html(...) in qa-app-format.php for an example. If $padding is false,
+ * qa_get_avatar_blob_html(...) in app/format.php for an example. If $padding is false,
  * the HTML can render to anything which would fit inside a square of $size x $size pixels.
  *
  * Note that this function may be called many times to render an individual page, so it is not

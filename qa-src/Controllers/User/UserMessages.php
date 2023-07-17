@@ -87,7 +87,7 @@ class UserMessages extends BaseController
 		if (qa_clicked('dowallpost')) {
 			$inmessage = qa_post_text('message');
 
-			if (!strlen($inmessage)) {
+			if (!strlen((string)$inmessage)) {
 				$errors['message'] = qa_lang('profile/post_wall_empty');
 			} elseif (!qa_check_form_security_code('wall-' . $useraccount['handle'], qa_post_text('code'))) {
 				$errors['message'] = qa_lang_html('misc/form_security_again');

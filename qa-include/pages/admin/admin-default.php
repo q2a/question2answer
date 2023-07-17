@@ -33,7 +33,7 @@ require_once QA_INCLUDE_DIR . 'app/admin.php';
 
 // Pages handled by this controller: general, emails, users, layout, viewing, lists, posting, permissions, feeds, spam, caching, mailing
 
-$adminsection = strtolower(qa_request_part(1));
+$adminsection = strtolower(qa_request_part(1) ?? '');
 
 
 // Get list of categories and all options
@@ -716,7 +716,7 @@ else {
 				$optionvalue = qa_post_text('option_' . $optionname);
 
 				if (@$optiontype[$optionname] == 'number' || @$optiontype[$optionname] == 'checkbox' ||
-					(@$optiontype[$optionname] == 'number-blank' && strlen($optionvalue))
+					(@$optiontype[$optionname] == 'number-blank' && strlen((string)$optionvalue))
 				)
 					$optionvalue = (int)$optionvalue;
 
@@ -976,7 +976,7 @@ foreach ($showoptions as $optionname) {
 			'tags' => 'name="option_' . $optionname . '" id="option_' . $optionname . '"',
 			'value' => qa_html($value),
 			'type' => $type,
-			'error' => qa_html(@$errors[$optionname]),
+			'error' => qa_html(isset($errors[$optionname]) ? $errors[$optionname] : null),
 		);
 
 		if (isset($optionmaximum[$optionname]))
@@ -1015,7 +1015,7 @@ foreach ($showoptions as $optionname) {
 					$neatoptions[$rawoption] =
 						'<iframe src="' . qa_path_html('url/test/' . QA_URL_TEST_STRING, array('dummy' => '', 'param' => QA_URL_TEST_STRING), null, $rawoption) . '" width="20" height="16" style="vertical-align:middle; border:0" scrolling="no"></iframe>&nbsp;' .
 						'<small>' .
-						qa_html(urldecode(qa_path('123/why-do-birds-sing', null, '/', $rawoption))) .
+						qa_html(rawurldecode(qa_path('123/why-do-birds-sing', null, '/', $rawoption))) .
 						(($rawoption == QA_URL_FORMAT_NEAT) ? strtr(qa_lang_html('admin/neat_urls_note'), array(
 							'^1' => '<a href="http://www.question2answer.org/htaccess.php" target="_blank">',
 							'^2' => '</a>',
@@ -1046,12 +1046,12 @@ foreach ($showoptions as $optionname) {
 					$metadata = qa_addon_metadata($contents, 'Theme');
 				}
 
-				if (strlen(@$metadata['version']))
+				if (strlen($metadata['version'] ?? ''))
 					$namehtml = 'v' . qa_html($metadata['version']);
 				else
 					$namehtml = '';
 
-				if (strlen(@$metadata['uri'])) {
+				if (strlen($metadata['uri'] ?? '')) {
 					if (!strlen($namehtml))
 						$namehtml = qa_html($value);
 
@@ -1059,10 +1059,10 @@ foreach ($showoptions as $optionname) {
 				}
 
 				$authorhtml = '';
-				if (strlen(@$metadata['author'])) {
+				if (strlen($metadata['author'] ?? '')) {
 					$authorhtml = qa_html($metadata['author']);
 
-					if (strlen(@$metadata['author_uri']))
+					if (strlen($metadata['author_uri'] ?? ''))
 						$authorhtml = '<a href="' . qa_html($metadata['author_uri']) . '">' . $authorhtml . '</a>';
 
 					$authorhtml = qa_lang_html_sub('main/by_x', $authorhtml);
@@ -1070,7 +1070,7 @@ foreach ($showoptions as $optionname) {
 				}
 
 				$updatehtml = '';
-				if (strlen(@$metadata['version']) && strlen(@$metadata['update_uri'])) {
+				if (strlen($metadata['version'] ?? '') && strlen($metadata['update_uri'] ?? '')) {
 					$elementid = 'version_check_' . $optionname;
 
 					$updatehtml = '(<span id="' . $elementid . '">...</span>)';
@@ -1118,6 +1118,14 @@ foreach ($showoptions as $optionname) {
 					'ssl' => 'SSL',
 					'tls' => 'TLS',
 				), $value, '');
+				break;
+
+			case 'smtp_username':
+				$optionfield['tags'] .= ' autocomplete="off"';
+				break;
+
+			case 'smtp_password':
+				$optionfield['tags'] .= ' autocomplete="new-password"';
 				break;
 
 			case 'custom_sidebar':

@@ -1,6 +1,7 @@
 # Ignore Q2A config file and .htaccess in development
 /qa-config.php
 /.htaccess
+/qa-tests/phpunit-qa-config.php
 
 # Ignore cached files
 /qa-cache/*/

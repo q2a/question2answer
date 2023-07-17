@@ -698,7 +698,7 @@ function qa_block_words_replace($string, $wordspreg, $character = '*')
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	if (strlen($wordspreg)) {
+	if (strlen((string)$wordspreg)) {
 		$matches = qa_block_words_match_all($string, $wordspreg);
 		krsort($matches, SORT_NUMERIC);
 

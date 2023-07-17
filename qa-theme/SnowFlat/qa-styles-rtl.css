@@ -17,10 +17,10 @@ blockquote {
 	border-right: 11px solid #3498db;
 }
 
-h1 {
-	padding: 8px 20px 8px 52px;
+.qa-main-heading {
+	padding-right: 20px;
+	padding-left: 0;
 }
-
 
 .qa-search-field {
 	margin: 0 0 0 -40px;
@@ -35,18 +35,13 @@ h1 {
 	float: left;
 }
 
-.qa-post-content th, .qa-post-content td {
+.entry-content th, .entry-content td, .qa-c-item-content th, .qa-c-item-content td {
 	text-align: right;
 }
 .qa-post-content ul,
 .qa-post-content ol {
 	margin-left: 0;
 	margin-right: 20px;
-}
-
-.qa-favoriting {
-	right: auto;
-	left: 10px;
 }
 
 .qa-logo {
@@ -143,6 +138,11 @@ h1 {
 	border-right: 1px solid #8e44ad;
 }
 
+.qa-favoriting .qa-waiting {
+	margin-left: 0;
+	margin-right: -37px;
+}
+
 .qa-q-item-stats {
 	float: right;
 }
@@ -201,15 +201,7 @@ h1 {
 	right: 0;
 }
 
-.qa-tag-link.qa-tag-favorited, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited {
-	padding-right: 25px;
-}
-.qa-tag-link.qa-tag-favorited:before, .qa-widget-side .qa-q-view-tag-item.qa-tag-favorited:before {
-	left: auto;
-	right: 0;
-}
-
-.qa-top-users-label .qa-avatar-link {
+.qa-top-users-avatar .qa-avatar-link {
 	float: right;
 	margin-left: 1em;
 }
@@ -217,16 +209,23 @@ h1 {
 	float: right;
 }
 
-.qa-top-users-label .qa-user-link:before {
-	left: auto;
-	right: -5px;
-	border-left: 5px solid #e74c3c;
+.qa-ranking-users-points .qa-top-users-score {
+	float: left;
+	padding-left: 6px;
+	padding-right: 1.8em;
 }
+
+.qa-top-users-score:before {
+	left: initial;
+	right: 0;
+}
+
 @media (min-width: 980px) {
 	.qa-top-users-label .qa-user-link:after {
-		right: auto;
+		right: initial;
 		left: 0;
 		border-right: 7px solid #e74c3c;
+		border-left: initial;
 	}
 
 	.qa-top-users-label .qa-user-link:hover:after, .qa-top-users-label .qa-user-link:focus:after {
@@ -236,7 +235,8 @@ h1 {
 	}
 }
 .qa-top-users-label .qa-user-link.qa-user-favorited {
-	padding-right: 22px;
+	padding-left: 10px;
+	padding-right: 5px;
 }
 
 .qam-user-score-icon {
@@ -287,6 +287,7 @@ h1 {
 
 .qa-form-light-button-comment {
 	float: right;
+	margin: 0;
 }
 
 .qa-q-view-stats {
@@ -299,8 +300,7 @@ h1 {
 }
 
 .qa-q-view-avatar {
-	right: auto;
-	left: 20px;
+	float: left;
 }
 
 @media (max-width: 979px) {
@@ -339,8 +339,7 @@ h1 {
 }
 
 .qa-a-item-avatar {
-	right: auto;
-	left: 20px;
+	float: left;
 }
 
 .qa-a-selection {
@@ -350,6 +349,9 @@ h1 {
 	.qa-a-selection {
 		left: auto;
 		right: 100px;
+	}
+	.qa-a-item-meta {
+		clear: right;
 	}
 }
 @media (min-width: 980px) {
@@ -375,9 +377,25 @@ h1 {
 	float: right;
 }
 
+.qa-c-list-item .qa-vote-buttons {
+	margin-right: initial;
+	margin-left: 4px;
+}
+.qa-c-list-item .qa-vote-count {
+	float: right;
+	margin-left: 8px;
+}
+
 .qa-c-item-avatar {
 	right: auto;
 	left: 10px;
+}
+
+@media (max-width: 767px) {
+	.qa-c-item-meta {
+		padding-left: 24px;
+		padding-right: initial;
+	}
 }
 
 .qa-activity-count-item {
@@ -410,7 +428,6 @@ h1 {
 	.qa-nav-footer {
 		float: right;
 	}
-
 	.qa-attribution {
 		float: left;
 		border-left: 1px solid rgba(255, 255, 255, 0.5);
@@ -437,7 +454,6 @@ h1 {
 	.qa-sidepanel {
 		float: left;
 	}
-
 	.qam-footer-col {
 		float: right;
 	}
@@ -446,6 +462,23 @@ h1 {
 .qa-vote-buttons {
 	float: right;
 }
+
 .qa-netvote-count-data {
 	direction: ltr;
+}
+
+.qa-vote-up-button, .qa-vote-down-button, .qa-voted-up-button,
+.qa-voted-down-button, .qa-vote-up-disabled, .qa-vote-down-disabled {
+	left: initial;
+	right: 4px;
+}
+
+.qa-c-list-item .qa-vote-up-button,
+.qa-c-list-item .qa-vote-down-button,
+.qa-c-list-item .qa-voted-up-button,
+.qa-c-list-item .qa-voted-down-button,
+.qa-c-list-item .qa-vote-up-disabled,
+.qa-c-list-item .qa-vote-down-disabled {
+	left: initial;
+	right: 0;
 }

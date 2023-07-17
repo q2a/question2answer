@@ -31,6 +31,7 @@ header('Content-Type: text/plain; charset=utf-8');
 
 // Load the Q2A base file which sets up a bunch of crucial functions
 
+global $qa_autoconnect;
 $qa_autoconnect = false;
 require 'qa-base.php';
 

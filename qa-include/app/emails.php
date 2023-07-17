@@ -24,7 +24,6 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-use Q2A\Exceptions\FatalErrorException;
 use Q2A\Notifications\Email;
 use Q2A\Notifications\Mailer;
 use Q2A\Notifications\Status as NotifyStatus;

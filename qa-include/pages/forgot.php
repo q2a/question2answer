@@ -39,12 +39,12 @@ if (qa_is_logged_in())
 
 // Start the 'I forgot my password' process, sending email if appropriate
 
+$errors = array();
+
 if (qa_clicked('doforgot')) {
 	require_once QA_INCLUDE_DIR . 'app/users-edit.php';
 
-	$inemailhandle = qa_post_text('emailhandle');
-
-	$errors = array();
+	$inemailhandle = (string)qa_post_text('emailhandle');
 
 	if (!qa_check_form_security_code('forgot', qa_post_text('code')))
 		$errors['page'] = qa_lang_html('misc/form_security_again');
@@ -72,7 +72,7 @@ if (qa_clicked('doforgot')) {
 	}
 
 } else
-	$inemailhandle = qa_get('e');
+	$inemailhandle = (string)qa_get('e');
 
 
 // Prepare content for theme
@@ -80,7 +80,7 @@ if (qa_clicked('doforgot')) {
 $qa_content = qa_content_prepare();
 
 $qa_content['title'] = qa_lang_html('users/reset_title');
-$qa_content['error'] = @$errors['page'];
+$qa_content['error'] = isset($errors['page']) ? $errors['page'] : null;
 
 $qa_content['form'] = array(
 	'tags' => 'method="post" action="' . qa_self_html() . '"',
@@ -93,7 +93,7 @@ $qa_content['form'] = array(
 			'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
 			'tags' => 'name="emailhandle" id="emailhandle"',
 			'value' => qa_html(@$inemailhandle),
-			'error' => qa_html(@$errors['emailhandle']),
+			'error' => qa_html(isset($errors['emailhandle']) ? $errors['emailhandle'] : null),
 			'note' => qa_lang_html('users/send_reset_note'),
 		),
 	),
@@ -111,7 +111,7 @@ $qa_content['form'] = array(
 );
 
 if (qa_opt('captcha_on_reset_password'))
-	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
+	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], $errors);
 
 $qa_content['focusid'] = 'emailhandle';
 

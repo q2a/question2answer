@@ -47,9 +47,11 @@ if (QA_FINAL_EXTERNAL_USERS) {
 $passwordsent = qa_get('ps');
 $emailexists = qa_get('ee');
 
-$inemailhandle = qa_post_text('emailhandle');
-$inpassword = qa_post_text('password');
+$inemailhandle = (string)qa_post_text('emailhandle');
+$inpassword = (string)qa_post_text('password');
 $inremember = qa_post_text('remember');
+
+$errors = array();
 
 if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
@@ -64,8 +66,6 @@ if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 		else {
 			qa_limits_increment(null, QA_LIMIT_LOGINS);
 
-			$errors = array();
-
 			if (qa_opt('allow_login_email_only') || strpos($inemailhandle, '@') !== false) { // handles can't contain @ symbols
 				$matchusers = qa_db_user_find_by_email($inemailhandle);
 			} else {
@@ -76,7 +76,7 @@ if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 				$inuserid = $matchusers[0];
 				$userinfo = qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
-				$legacyPassOk = hash_equals(strtolower($userinfo['passcheck']), strtolower(qa_db_calc_passcheck($inpassword, $userinfo['passsalt'])));
+				$legacyPassOk = hash_equals(strtolower((string)$userinfo['passcheck']), strtolower(qa_db_calc_passcheck($inpassword, (string)$userinfo['passsalt'])));
 
 				if (QA_PASSWORD_HASH) {
 					$haspassword = isset($userinfo['passhash']);
@@ -154,7 +154,7 @@ $qa_content['form'] = array(
 			'label' => qa_opt('allow_login_email_only') ? qa_lang_html('users/email_label') : qa_lang_html('users/email_handle_label'),
 			'tags' => 'name="emailhandle" id="emailhandle" dir="auto"',
 			'value' => qa_html(@$inemailhandle),
-			'error' => qa_html(@$errors['emailhandle']),
+			'error' => qa_html(isset($errors['emailhandle']) ? $errors['emailhandle'] : null),
 		),
 
 		'password' => array(
@@ -162,7 +162,7 @@ $qa_content['form'] = array(
 			'label' => qa_lang_html('users/password_label'),
 			'tags' => 'name="password" id="password" dir="auto"',
 			'value' => qa_html(@$inpassword),
-			'error' => empty($errors['password']) ? '' : (qa_html(@$errors['password']) . ' - ' . $forgothtml),
+			'error' => empty($errors['password']) ? '' : (qa_html(isset($errors['password']) ? $errors['password'] : null) . ' - ' . $forgothtml),
 			'note' => $passwordsent ? qa_lang_html('users/password_sent') : $forgothtml,
 		),
 
@@ -191,7 +191,7 @@ $loginmodules = qa_load_modules_with('login', 'login_html');
 foreach ($loginmodules as $module) {
 	ob_start();
 	$module->login_html(qa_opt('site_url') . qa_get('to'), 'login');
-	$html = ob_get_clean();
+	$html = (string)ob_get_clean();
 
 	if (strlen($html))
 		@$qa_content['custom'] .= '<br>' . $html . '<br>';

@@ -54,7 +54,7 @@ function qa_handle_email_filter(&$handle, &$email, $olduser = null)
 	$errors = array();
 
 	// sanitize 4-byte Unicode and invisible characters
-	$handle = qa_remove_utf8mb4($handle);
+	$handle = qa_remove_utf8mb4((string)$handle);
 	$handle = preg_replace('/\p{C}+/u', '', $handle);
 
 	$filtermodules = qa_load_modules_with('filter', 'filter_handle');
@@ -105,7 +105,7 @@ function qa_handle_make_valid($handle)
 	require_once QA_INCLUDE_DIR . 'db/maxima.php';
 	require_once QA_INCLUDE_DIR . 'db/users.php';
 
-	if (!strlen($handle))
+	if (!strlen((string)$handle))
 		$handle = qa_lang('users/registered_user');
 
 	$handle = preg_replace('/[\\@\\+\\/]/', ' ', $handle);
@@ -159,7 +159,7 @@ function qa_password_validate($password, $olduser = null)
 
 	if (!isset($error)) {
 		$minpasslen = max(QA_MIN_PASSWORD_LEN, 1);
-		if (qa_strlen($password) < $minpasslen)
+		if (qa_strlen((string)$password) < $minpasslen)
 			$error = qa_lang_sub('users/password_min', $minpasslen);
 	}
 
@@ -193,7 +193,9 @@ function qa_create_new_user($email, $password, $handle, $level = QA_USER_LEVEL_B
 
 	$userid = qa_db_user_create($email, $password, $handle, $level, qa_remote_ip_address());
 	qa_db_points_update_ifuser($userid, null);
-	qa_db_uapprovecount_update();
+	if ($level < QA_USER_LEVEL_APPROVED) {
+		qa_db_uapprovecount_update(1);
+	}
 
 	if ($confirmed)
 		qa_db_user_set_flag($userid, QA_USER_FLAGS_EMAIL_CONFIRMED, true);
@@ -236,9 +238,10 @@ function qa_create_new_user($email, $password, $handle, $level = QA_USER_LEVEL_B
  * Delete $userid and all their votes and flags. Their posts will become anonymous.
  * Handles recalculations of votes and flags for posts this user has affected.
  * @param mixed $userid
+ * @param array|null $userAccount If present, some queries will be more efficient
  * @return mixed
  */
-function qa_delete_user($userid)
+function qa_delete_user($userid, array $userAccount = null)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
@@ -249,9 +252,21 @@ function qa_delete_user($userid)
 
 	$postids = qa_db_uservoteflag_user_get($userid); // posts this user has flagged or voted on, whose counts need updating
 
+	// Avoid having having to recount a lot of rows to update uapprovecount and userpointscount
+	if ($userAccount === null) {
+		$userAccount = qa_db_single_select(qa_db_user_account_selectspec($userid, true));
+	}
+
 	qa_db_user_delete($userid);
-	qa_db_uapprovecount_update();
-	qa_db_userpointscount_update();
+
+	if (isset($userAccount['points'])) {
+		qa_db_userpointscount_update(-1);
+	}
+
+	$isBlocked = (int)$userAccount['flags'] & QA_USER_FLAGS_USER_BLOCKED;
+	if (!$isBlocked && $userAccount['level'] < QA_USER_LEVEL_APPROVED) {
+		qa_db_uapprovecount_update(-1);
+	}
 
 	foreach ($postids as $postid) { // hoping there aren't many of these - saves a lot of new SQL code...
 		qa_db_post_recount_votes($postid);
@@ -338,21 +353,41 @@ function qa_complete_confirm($userid, $email, $handle)
 	));
 }
 
-
 /**
  * Set the user level of user $userid with $handle to $level (one of the QA_USER_LEVEL_* constraints in /qa-include/app/users.php)
  * Pass the previous user level in $oldlevel. Reports the appropriate event, assumes change performed by the logged in user.
  * @param mixed $userid
  * @param string $handle
  * @param int $level
- * @param int $oldlevel
+ * @param int|array $userAccount
  */
-function qa_set_user_level($userid, $handle, $level, $oldlevel)
+function qa_set_user_level($userid, $handle, $level, $userAccount)
 {
 	require_once QA_INCLUDE_DIR . 'db/users.php';
 
 	qa_db_user_set($userid, 'level', $level);
-	qa_db_uapprovecount_update();
+
+	// Backwards compatibility check. Up to v1.8.6 (inclusive) $userAccount was the previous level of the user
+	if (is_array($userAccount)) {
+		$oldLevel = $userAccount['level'];
+		$isBlocked = (int)$userAccount['flags'] & QA_USER_FLAGS_USER_BLOCKED;
+	} else {
+		$oldLevel = $userAccount;
+		// Up to v1.8.6, there was no way to know if user was blocked or not
+		$isBlocked = null;
+	}
+
+	if ($oldLevel < QA_USER_LEVEL_APPROVED && $level >= QA_USER_LEVEL_APPROVED) {
+		$difference = -1;
+	} elseif ($oldLevel >= QA_USER_LEVEL_APPROVED && $level < QA_USER_LEVEL_APPROVED) {
+		$difference = 1;
+	} else {
+		$difference = 0;
+	}
+
+	if ($difference !== 0 && !$isBlocked) {
+		qa_db_uapprovecount_update($isBlocked === null ? null : $difference);
+	}
 
 	if ($level >= QA_USER_LEVEL_APPROVED) {
 		// no longer necessary as QA_USER_FLAGS_MUST_APPROVE is deprecated, but kept for posterity
@@ -363,24 +398,45 @@ function qa_set_user_level($userid, $handle, $level, $oldlevel)
 		'userid' => $userid,
 		'handle' => $handle,
 		'level' => $level,
-		'oldlevel' => $oldlevel,
+		'oldlevel' => $oldLevel,
 	));
 }
-
 
 /**
  * Set the status of user $userid with $handle to blocked if $blocked is true, otherwise to unblocked. Reports the appropriate
  * event, assumes change performed by the logged in user.
  * @param mixed $userid
- * @param string $handle
+ * @param string|array $userAccount
  * @param string $blocked
  */
-function qa_set_user_blocked($userid, $handle, $blocked)
+function qa_set_user_blocked($userid, $userAccount, $blocked)
 {
 	require_once QA_INCLUDE_DIR . 'db/users.php';
 
 	qa_db_user_set_flag($userid, QA_USER_FLAGS_USER_BLOCKED, $blocked);
-	qa_db_uapprovecount_update();
+
+	// Backwards compatibility check. Up to v1.8.6 (inclusive) $userAccount was the user handle
+	if (is_string($userAccount)) {
+		$handle = $userAccount;
+		qa_db_user_set_flag($userid, QA_USER_FLAGS_USER_BLOCKED, $blocked);
+		qa_db_uapprovecount_update();
+
+		$blockStatusChanged = true;
+	} else { // is_array()
+		$handle = $userAccount['handle'];
+
+		$blockStatusChanged = (bool)((int)$userAccount['flags'] & QA_USER_FLAGS_USER_BLOCKED) !== $blocked;
+		if ($blockStatusChanged) {
+			qa_db_user_set_flag($userid, QA_USER_FLAGS_USER_BLOCKED, $blocked);
+			if ($userAccount['level'] < QA_USER_LEVEL_APPROVED) {
+				qa_db_uapprovecount_update($blocked ? -1 : 1);
+			}
+		}
+	}
+
+	if (!$blockStatusChanged) {
+		return;
+	}
 
 	qa_report_event($blocked ? 'u_block' : 'u_unblock', qa_get_logged_in_userid(), qa_get_logged_in_handle(), qa_cookie_get(), array(
 		'userid' => $userid,

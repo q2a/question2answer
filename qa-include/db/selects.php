@@ -112,8 +112,9 @@ function qa_db_posts_basic_selectspec($voteuserid = null, $full = false, $user =
 		'columns' => array(
 			'^posts.postid', '^posts.categoryid', '^posts.type', 'basetype' => 'LEFT(^posts.type, 1)',
 			'hidden' => "INSTR(^posts.type, '_HIDDEN')>0", 'queued' => "INSTR(^posts.type, '_QUEUED')>0",
-			'^posts.acount', '^posts.selchildid', '^posts.closedbyid', '^posts.upvotes', '^posts.downvotes', '^posts.netvotes', '^posts.views', '^posts.hotness',
-			'^posts.flagcount', '^posts.title', '^posts.tags', 'created' => 'UNIX_TIMESTAMP(^posts.created)', '^posts.name',
+			'^posts.acount', '^posts.amaxvote', '^posts.selchildid', '^posts.closedbyid', '^posts.upvotes',
+			'^posts.downvotes', '^posts.netvotes', '^posts.views', '^posts.hotness', '^posts.flagcount',
+			'^posts.title', '^posts.tags', 'created' => 'UNIX_TIMESTAMP(^posts.created)', '^posts.name',
 			'categoryname' => '^categories.title', 'categorybackpath' => "^categories.backpath",
 			'categoryids' => "CONCAT_WS(',', ^posts.catidpath1, ^posts.catidpath2, ^posts.catidpath3, ^posts.categoryid)",
 		),
@@ -265,7 +266,7 @@ function qa_db_categoryslugs_sql_args($categoryslugs, &$arguments)
 {
 	if (!is_array($categoryslugs)) {
 		// accept old-style string arguments for one category deep
-		$categoryslugs = strlen($categoryslugs) ? array($categoryslugs) : array();
+		$categoryslugs = strlen((string)$categoryslugs) ? array($categoryslugs) : array();
 	}
 
 	$levels = count($categoryslugs);
@@ -908,7 +909,7 @@ function qa_db_search_posts_selectspec($voteuserid, $titlewords, $contentwords, 
 		}
 	}
 
-	if (strlen($handle)) { // to allow searching for multi-word usernames (only works if search query contains full username and nothing else)
+	if (strlen((string)$handle)) { // to allow searching for multi-word usernames (only works if search query contains full username and nothing else)
 		if (QA_FINAL_EXTERNAL_USERS) {
 			$userids = qa_get_userids_from_public(array($handle));
 
@@ -1520,16 +1521,35 @@ function qa_db_newest_users_selectspec($start, $count = null)
 /**
  * Return the selectspec to get information about users at a certain privilege level or higher
  * @param int $level
+ * @param int $start
+ * @param int|null $count
  * @return array
  */
-function qa_db_users_from_level_selectspec($level)
+function qa_db_users_from_level_selectspec($level, $start = 0, $count = null)
 {
+	$count = isset($count) ? min($count, QA_DB_RETRIEVE_USERS) : QA_DB_RETRIEVE_USERS;
+
 	return array(
 		'columns' => array('^users.userid', 'handle', 'flags', 'level', 'email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
-		'source' => '^users WHERE level>=# ORDER BY level DESC',
-		'arguments' => array($level),
+		'source' => '^users WHERE level >= # ORDER BY level DESC, handle LIMIT #, #',
+		'arguments' => array($level, $start, $count),
 		'sortdesc' => 'level',
 	);
+}
+
+/**
+ * Return the selectspec to count the amount of users at a certain privilege level or higher
+ * @param $level
+ * @return array
+ */
+function qa_db_users_from_level_count_selectspec($level)
+{
+	$selectSpec = array(
+		'source' => '^users WHERE level >= #',
+		'arguments' => array($level),
+	);
+
+	return qa_db_selectspec_count($selectSpec);
 }
 
 

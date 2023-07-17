@@ -34,7 +34,7 @@ $loginuserid = qa_get_logged_in_userid();
 
 $errorhtml = qa_wall_error_html($loginuserid, $touseraccount['userid'], $touseraccount['flags']);
 
-if ($errorhtml || !strlen($message) || !qa_check_form_security_code('wall-' . $tohandle, qa_post_text('code'))) {
+if ($errorhtml || !strlen((string)$message) || !qa_check_form_security_code('wall-' . $tohandle, qa_post_text('code'))) {
 	echo "QA_AJAX_RESPONSE\n0"; // if there's an error, process in non-Ajax way
 } else {
 	$messageid = qa_wall_add_post($loginuserid, qa_get_logged_in_handle(), qa_cookie_get(),

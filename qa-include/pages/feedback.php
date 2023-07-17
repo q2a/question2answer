@@ -41,7 +41,6 @@ if (isset($userid) && !QA_FINAL_EXTERNAL_USERS) {
 
 $usecaptcha = qa_opt('captcha_on_feedback') && qa_user_use_captcha();
 
-
 // Check feedback is enabled and the person isn't blocked
 
 if (!qa_opt('feedback_enabled'))
@@ -58,6 +57,8 @@ if (qa_user_permit_error()) {
 
 
 $feedbacksent = false;
+
+$errors = array();
 
 if (qa_clicked('dofeedback')) {
 	require_once QA_INCLUDE_DIR . 'app/emails.php';
@@ -137,7 +138,7 @@ $qa_content['form'] = array(
 			'tags' => 'name="message" id="message"',
 			'value' => qa_html(@$inmessage),
 			'rows' => 8,
-			'error' => qa_html(@$errors['message']),
+			'error' => qa_html(isset($errors['message']) ? $errors['message'] : null),
 		),
 
 		'name' => array(
@@ -170,7 +171,7 @@ $qa_content['form'] = array(
 );
 
 if ($usecaptcha && !$feedbacksent)
-	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], @$errors);
+	qa_set_up_captcha_field($qa_content, $qa_content['form']['fields'], $errors);
 
 
 $qa_content['focusid'] = 'message';

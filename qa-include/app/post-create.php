@@ -29,6 +29,7 @@ require_once QA_INCLUDE_DIR . 'db/post-create.php';
 require_once QA_INCLUDE_DIR . 'db/points.php';
 require_once QA_INCLUDE_DIR . 'db/hotness.php';
 require_once QA_INCLUDE_DIR . 'util/string.php';
+require_once QA_INCLUDE_DIR . 'app/post-update.php';
 
 
 /**
@@ -83,11 +84,10 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 	qa_db_hotness_update($postid);
 
 	if ($queued) {
-		qa_db_queuedcount_update();
-
+		qa_db_queuedcount_update(1);
 	} else {
 		qa_post_index($postid, 'Q', $postid, @$followanswer['postid'], $title, $content, $format, $text, $tagstring, $categoryid);
-		qa_update_counts_for_q($postid);
+		qa_update_counts_for_q($postid, 1);
 		qa_db_points_update_ifuser($userid, 'qposts');
 	}
 
@@ -110,20 +110,24 @@ function qa_question_create($followanswer, $userid, $handle, $cookieid, $title, 
 	return $postid;
 }
 
-
 /**
- * Perform various common cached count updating operations to reflect changes in the question whose id is $postid
- * @param int|null $postid
+ * Perform various common cached count updating operations to reflect changes in the question whose id is $postid. The $difference
+ * representes the amount of change (positive or negative) that the cache value will experience. If the $difference is null then a
+ * full recalculation of the cache value is executed.
+ * @param int $postid
+ * @param int|null $difference
  */
-function qa_update_counts_for_q($postid)
+function qa_update_counts_for_q($postid, $difference = null)
 {
-	if (isset($postid)) // post might no longer exist
+	if (isset($postid)) { // post might no longer exist
 		qa_db_category_path_qcount_update(qa_db_post_get_category_path($postid));
+	}
 
-	qa_db_qcount_update();
-	qa_db_unaqcount_update();
-	qa_db_unselqcount_update();
-	qa_db_unupaqcount_update();
+	qa_db_qcount_update($difference);
+	qa_db_unaqcount_update($difference);
+	qa_db_unselqcount_update($difference);
+	qa_db_unupaqcount_update($difference);
+
 	qa_db_tagcount_update();
 }
 
@@ -215,15 +219,23 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 	qa_db_posts_calc_category_path($postid);
 
 	if ($queued) {
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 
 	} else {
 		if ($question['type'] == 'Q') // don't index answer if parent question is hidden or queued
 			qa_post_index($postid, 'A', $question['postid'], $question['postid'], null, $content, $format, $text, null, $question['categoryid']);
 
-		qa_update_q_counts_for_a($question['postid']);
+		qa_db_acount_update_for_q($question['postid'], 1);
+		qa_db_hotness_update($question['postid']);
+		qa_db_acount_update(1);
+		if ((int)$question['acount'] === 0) {
+			qa_db_unaqcount_update(-1);
+		}
+
 		qa_db_points_update_ifuser($userid, 'aposts');
 	}
+
+	qa_question_uncache($question['postid']);
 
 	qa_report_event($queued ? 'a_queue' : 'a_post', $userid, $handle, $cookieid, array(
 		'postid' => $postid,
@@ -243,16 +255,20 @@ function qa_answer_create($userid, $handle, $cookieid, $content, $format, $text,
 
 
 /**
- * Perform various common cached count updating operations to reflect changes in an answer of question $questionid
+ * Perform various common cached count updating operations to reflect changes in an answer of question $questionid. The $difference
+ * representes the amount of change (positive or negative) that the cache value will experience. If the $difference is null then a
+ * full recalculation of the cache value is executed.
  * @param int $questionid
+ * @param int|null $difference
  */
-function qa_update_q_counts_for_a($questionid)
+function qa_update_q_counts_for_a($questionid, $difference = null)
 {
-	qa_db_post_acount_update($questionid);
+	qa_db_acount_update_for_q($questionid);
+	qa_db_amaxvote_update_for_q($questionid);
 	qa_db_hotness_update($questionid);
-	qa_db_acount_update();
-	qa_db_unaqcount_update();
-	qa_db_unupaqcount_update();
+	qa_db_acount_update($difference);
+	qa_db_unaqcount_update($difference);
+	qa_db_unupaqcount_update($difference);
 }
 
 
@@ -295,7 +311,7 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 	qa_db_posts_calc_category_path($postid);
 
 	if ($queued) {
-		qa_db_queuedcount_update();
+		qa_db_queuedcount_update(1);
 
 	} else {
 		if ($question['type'] == 'Q' && ($parent['type'] == 'Q' || $parent['type'] == 'A')) { // only index if antecedents fully visible
@@ -303,7 +319,7 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 		}
 
 		qa_db_points_update_ifuser($userid, 'cposts');
-		qa_db_ccount_update();
+		qa_db_ccount_update(1);
 	}
 
 	$thread = array();
@@ -312,6 +328,8 @@ function qa_comment_create($userid, $handle, $cookieid, $content, $format, $text
 		if ($comment['type'] == 'C' && $comment['parentid'] == $parent['postid']) // find just those for this parent, fully visible
 			$thread[] = $comment;
 	}
+
+	qa_question_uncache($question['postid']);
 
 	qa_report_event($queued ? 'c_queue' : 'c_post', $userid, $handle, $cookieid, array(
 		'postid' => $postid,

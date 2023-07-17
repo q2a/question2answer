@@ -31,7 +31,7 @@ require_once QA_INCLUDE_DIR . 'app/q-list.php';
 // Get list of hottest questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php
 
 $categoryslugs = QA_ALLOW_UNINDEXED_QUERIES ? qa_request_parts(1) : null;
-$countslugs = @count($categoryslugs);
+$countslugs = $categoryslugs === null ? null : count($categoryslugs);
 
 $start = qa_get_start();
 $userid = qa_get_logged_in_userid();

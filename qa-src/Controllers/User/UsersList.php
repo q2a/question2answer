@@ -118,9 +118,12 @@ class UsersList extends BaseController
 
 		// callables to fetch user data
 		$fetchUsers = function ($start, $pageSize) {
-			// here we fetch *all* users to get the total instead of a separate query; there are unlikely to be many special users
-			$users = qa_db_select_with_pending(qa_db_users_from_level_selectspec(QA_USER_LEVEL_EXPERT));
-			return array(count($users), $users);
+			list($totalUsers, $users) = qa_db_select_with_pending(
+				qa_db_users_from_level_count_selectspec(QA_USER_LEVEL_EXPERT),
+				qa_db_users_from_level_selectspec(QA_USER_LEVEL_EXPERT, $start, $pageSize)
+			);
+
+			return array($totalUsers['count'], $users);
 		};
 		$userLevel = function ($user) {
 			return qa_html(qa_user_level_string($user['level']));

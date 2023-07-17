@@ -55,7 +55,7 @@ class qa_editor_basic
 	{
 		return array(
 			'format' => '',
-			'content' => qa_post_text($fieldname),
+			'content' => (string)qa_post_text($fieldname),
 		);
 	}
 }

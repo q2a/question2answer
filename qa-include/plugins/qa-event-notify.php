@@ -31,7 +31,7 @@ class qa_event_notify
 		switch ($event) {
 			case 'q_post':
 				$followanswer = @$params['followanswer'];
-				$sendhandle = isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] : qa_lang('main/anonymous'));
+				$sendhandle = $handle ?? (strlen((string)$params['name']) ? $params['name'] : qa_lang('main/anonymous'));
 
 				if (isset($followanswer['notify']) && !qa_post_is_by_user($followanswer, $userid, $cookieid)) {
 					$blockwordspreg = qa_get_block_words_preg();
@@ -61,7 +61,7 @@ class qa_event_notify
 
 				if (isset($question['notify']) && !qa_post_is_by_user($question, $userid, $cookieid))
 					qa_send_notification($question['userid'], $question['notify'], @$question['handle'], qa_lang('emails/q_answered_subject'), qa_lang('emails/q_answered_body'), array(
-						'^a_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] : qa_lang('main/anonymous')),
+						'^a_handle' => $handle ?? (strlen((string)$params['name']) ? $params['name'] : qa_lang('main/anonymous')),
 						'^q_title' => $question['title'],
 						'^a_content' => qa_block_words_replace($params['text'], qa_get_block_words_preg()),
 						'^url' => qa_q_path($question['postid'], $question['title'], true, 'A', $params['postid']),
@@ -91,7 +91,7 @@ class qa_event_notify
 				}
 
 				$blockwordspreg = qa_get_block_words_preg();
-				$sendhandle = isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] : qa_lang('main/anonymous'));
+				$sendhandle = $handle ?? (strlen((string)$params['name']) ? $params['name'] : qa_lang('main/anonymous'));
 				$sendcontext = qa_block_words_replace($context, $blockwordspreg);
 				$sendtext = qa_block_words_replace($params['text'], $blockwordspreg);
 				$sendurl = qa_q_path($question['postid'], $question['title'], true, 'C', $params['postid']);
@@ -149,9 +149,9 @@ class qa_event_notify
 						($event == 'q_requeue') ? qa_lang('emails/remoderate_subject') : qa_lang('emails/moderate_subject'),
 						($event == 'q_requeue') ? qa_lang('emails/remoderate_body') : qa_lang('emails/moderate_body'),
 						array(
-							'^p_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] :
-								(strlen(@$oldquestion['name']) ? $oldquestion['name'] : qa_lang('main/anonymous'))),
-							'^p_context' => trim(@$params['title'] . "\n\n" . $params['text']), // don't censor for admin
+							'^p_handle' => $handle ?? (strlen($params['name']) ? $params['name'] :
+									(strlen($oldquestion['name'] ?? '') ? $oldquestion['name'] : qa_lang('main/anonymous'))),
+							'^p_context' => trim(($params['title'] ?? '') . "\n\n" . $params['text']), // don't censor for admin
 							'^url' => qa_q_path($params['postid'], $params['title'], true),
 							'^a_url' => qa_path_absolute('admin/moderate'),
 						)
@@ -168,7 +168,7 @@ class qa_event_notify
 						($event == 'a_requeue') ? qa_lang('emails/remoderate_body') : qa_lang('emails/moderate_body'),
 						array(
 							'^p_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] :
-								(strlen(@$oldanswer['name']) ? $oldanswer['name'] : qa_lang('main/anonymous'))),
+								(strlen($oldanswer['name'] ?? '') ? $oldanswer['name'] : qa_lang('main/anonymous'))),
 							'^p_context' => $params['text'], // don't censor for admin
 							'^url' => qa_q_path($params['parentid'], $params['parent']['title'], true, 'A', $params['postid']),
 							'^a_url' => qa_path_absolute('admin/moderate'),
@@ -186,8 +186,8 @@ class qa_event_notify
 						($event == 'c_requeue') ? qa_lang('emails/remoderate_body') : qa_lang('emails/moderate_body'),
 						array(
 							'^p_handle' => isset($handle) ? $handle : (strlen($params['name']) ? $params['name'] :
-								(strlen(@$oldcomment['name']) ? $oldcomment['name'] : // could also be after answer converted to comment
-									(strlen(@$oldanswer['name']) ? $oldanswer['name'] : qa_lang('main/anonymous')))),
+								(strlen($oldcomment['name'] ?? '') ? $oldcomment['name'] : // could also be after answer converted to comment
+									(strlen($oldanswer['name'] ?? '') ? $oldanswer['name'] : qa_lang('main/anonymous')))),
 							'^p_context' => $params['text'], // don't censor for admin
 							'^url' => qa_q_path($params['questionid'], $params['question']['title'], true, 'C', $params['postid']),
 							'^a_url' => qa_path_absolute('admin/moderate'),
@@ -209,7 +209,7 @@ class qa_event_notify
 						'^p_handle' => isset($oldpost['handle']) ? $oldpost['handle'] :
 							(strlen($oldpost['name']) ? $oldpost['name'] : qa_lang('main/anonymous')),
 						'^flags' => ($flagcount == 1) ? qa_lang_html_sub('main/1_flag', '1', '1') : qa_lang_html_sub('main/x_flags', $flagcount),
-						'^p_context' => trim(@$oldpost['title'] . "\n\n" . qa_viewer_text($oldpost['content'], $oldpost['format'])), // don't censor for admin
+						'^p_context' => trim(($oldpost['title'] ?? '') . "\n\n" . qa_viewer_text($oldpost['content'], $oldpost['format'])), // don't censor for admin
 						'^url' => qa_q_path($params['questionid'], $params['question']['title'], true, $oldpost['basetype'], $oldpost['postid']),
 						'^a_url' => qa_path_absolute('admin/flagged'),
 					));

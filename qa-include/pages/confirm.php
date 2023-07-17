@@ -33,18 +33,12 @@ if (QA_FINAL_EXTERNAL_USERS) {
 // Check if we've been asked to send a new link or have a successful email confirmation
 
 // Fetch the handle from POST or GET
-$handle = qa_post_text('username');
-if (!isset($handle)) {
-	$handle = qa_get('u');
-}
-$handle = trim($handle); // if $handle is null, trim returns an empty string
+$handle = qa_post_text('username') ?? (string)qa_get('u');
+$handle = trim($handle);
 
 // Fetch the code from POST or GET
-$code = qa_post_text('code');
-if (!isset($code)) {
-	$code = qa_get('c');
-}
-$code = trim($code); // if $code is null, trim returns an empty string
+$code = qa_post_text('code') ?? (string)qa_get('c');
+$code = trim($code);
 
 $loggedInUserId = qa_get_logged_in_userid();
 $emailConfirmationSent = false;
@@ -72,7 +66,7 @@ if (isset($loggedInUserId) && qa_clicked('dosendconfirm')) { // A logged in user
 	if (strlen($handle) > 0) { // If there is a handle present in the URL
 		$userInfo = qa_db_select_with_pending(qa_db_user_account_selectspec($handle, false));
 
-		if (strtolower(trim($userInfo['emailcode'])) == strtolower($code)) {
+		if ($userInfo !== null && strtolower(trim($userInfo['emailcode'])) == strtolower($code)) {
 			qa_complete_confirm($userInfo['userid'], $userInfo['email'], $userInfo['handle']);
 			$userConfirmed = true;
 		}

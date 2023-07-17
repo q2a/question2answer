@@ -114,7 +114,7 @@ function qa_write_blob_file($blobid, $content, $format)
 
 		$file = fopen($filename, 'xb');
 		if (is_resource($file)) {
-			if (fwrite($file, $content) >= strlen($content))
+			if (fwrite($file, $content) >= strlen((string)$content))
 				$written = true;
 
 			fclose($file);

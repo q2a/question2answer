@@ -126,6 +126,7 @@ class qa_html_theme_base
 	public function output_array($elements)
 	{
 		foreach ($elements as $element) {
+			$element = (string)$element;
 			$line = str_replace('/>', '>', $element);
 
 			if ($this->minifyHtml) {
@@ -167,7 +168,7 @@ class qa_html_theme_base
 	 */
 	public function output_raw($html)
 	{
-		if (strlen($html))
+		if (strlen((string)$html))
 			echo str_repeat("\t", max(0, $this->indent)) . $html . "\n";
 	}
 
@@ -188,9 +189,9 @@ class qa_html_theme_base
 
 		$this->output(
 			'<' . $outertag . ' class="' . $class . (isset($extraclass) ? (' ' . $extraclass) : '') . '">',
-			(strlen(@$parts['prefix']) ? ('<' . $innertag . ' class="' . $class . '-pad">' . $parts['prefix'] . '</' . $innertag . '>') : '') .
-			(strlen(@$parts['data']) ? ('<' . $innertag . ' class="' . $class . '-data">' . $parts['data'] . '</' . $innertag . '>') : '') .
-			(strlen(@$parts['suffix']) ? ('<' . $innertag . ' class="' . $class . '-pad">' . $parts['suffix'] . '</' . $innertag . '>') : ''),
+			(strlen($parts['prefix'] ?? '') ? ('<' . $innertag . ' class="' . $class . '-pad">' . $parts['prefix'] . '</' . $innertag . '>') : '') .
+			(strlen($parts['data'] ?? '') ? ('<' . $innertag . ' class="' . $class . '-data">' . $parts['data'] . '</' . $innertag . '>') : '') .
+			(strlen($parts['suffix'] ?? '') ? ('<' . $innertag . ' class="' . $class . '-pad">' . $parts['suffix'] . '</' . $innertag . '>') : ''),
 			'</' . $outertag . '>'
 		);
 	}
@@ -326,7 +327,7 @@ class qa_html_theme_base
 
 	public function head_title()
 	{
-		$pagetitle = strlen($this->request) ? strip_tags(@$this->content['title']) : '';
+		$pagetitle = strlen($this->request) ? strip_tags($this->content['title'] ?? '') : '';
 		$headtitle = (strlen($pagetitle) ? "$pagetitle - " : '') . $this->content['site_title'];
 
 		$this->output('<title>' . $headtitle . '</title>');
@@ -334,11 +335,11 @@ class qa_html_theme_base
 
 	public function head_metas()
 	{
-		if (strlen(@$this->content['description'])) {
+		if (strlen($this->content['description'] ?? '')) {
 			$this->output('<meta name="description" content="' . $this->content['description'] . '"/>');
 		}
 
-		if (strlen(@$this->content['keywords'])) {
+		if (strlen($this->content['keywords'] ?? '')) {
 			// as far as I know, meta keywords have zero effect on search rankings or listings
 			$this->output('<meta name="keywords" content="' . $this->content['keywords'] . '"/>');
 		}
@@ -676,7 +677,7 @@ class qa_html_theme_base
 				'<a href="' . $navlink['url'] . '" class="qa-' . $class . '-link' .
 				(@$navlink['selected'] ? (' qa-' . $class . '-selected') : '') .
 				(@$navlink['favorited'] ? (' qa-' . $class . '-favorited') : '') .
-				'"' . (strlen(@$navlink['popup']) ? (' title="' . $navlink['popup'] . '"') : '') .
+				'"' . (strlen($navlink['popup'] ?? '') ? (' title="' . $navlink['popup'] . '"') : '') .
 				(isset($navlink['target']) ? (' target="' . $navlink['target'] . '"') : '') . '>' . $navlink['label'] .
 				'</a>'
 			);
@@ -684,12 +685,12 @@ class qa_html_theme_base
 			$this->output(
 				'<span class="qa-' . $class . '-nolink' . (@$navlink['selected'] ? (' qa-' . $class . '-selected') : '') .
 				(@$navlink['favorited'] ? (' qa-' . $class . '-favorited') : '') . '"' .
-				(strlen(@$navlink['popup']) ? (' title="' . $navlink['popup'] . '"') : '') .
+				(strlen($navlink['popup'] ?? '') ? (' title="' . $navlink['popup'] . '"') : '') .
 				'>' . $navlink['label'] . '</span>'
 			);
 		}
 
-		if (strlen(@$navlink['note']))
+		if (strlen($navlink['note'] ?? ''))
 			$this->output('<span class="qa-' . $class . '-note">' . $navlink['note'] . '</span>');
 	}
 
@@ -839,7 +840,7 @@ class qa_html_theme_base
 
 	public function error($error)
 	{
-		if (strlen($error)) {
+		if (strlen($error ?? '')) {
 			$this->output(
 				'<div class="qa-error">',
 				$error,
@@ -963,8 +964,8 @@ class qa_html_theme_base
 
 	public function part_title($part)
 	{
-		if (strlen(@$part['title']) || strlen(@$part['title_tags']))
-			$this->output('<h2' . rtrim(' ' . @$part['title_tags']) . '>' . @$part['title'] . '</h2>');
+		if (strlen($part['title'] ?? '') || strlen($part['title_tags'] ?? ''))
+			$this->output('<h2' . rtrim(' ' . ($part['title_tags'] ?? '')) . '>' . ($part['title'] ?? '') . '</h2>');
 	}
 
 	public function part_footer($part)
@@ -1287,7 +1288,7 @@ class qa_html_theme_base
 	{
 		$baseclass = 'qa-form-' . $style . '-button qa-form-' . $style . '-button-' . $key;
 
-		$this->output('<input' . rtrim(' ' . @$button['tags']) . ' value="' . @$button['label'] . '" title="' . @$button['popup'] . '" type="submit"' .
+		$this->output('<input' . rtrim(' ' . ($button['tags'] ?? '')) . ' value="' . ($button['label'] ?? '') . '" title="' . ($button['popup'] ?? '') . '" type="submit"' .
 			(isset($style) ? (' class="' . $baseclass . '"') : '') . '/>');
 	}
 
@@ -1708,7 +1709,7 @@ class qa_html_theme_base
 
 	public function q_list_item($q_item)
 	{
-		$this->output('<div class="qa-q-list-item' . rtrim(' ' . @$q_item['classes']) . '" ' . @$q_item['tags'] . '>');
+		$this->output('<div class="qa-q-list-item' . rtrim(' ' . ($q_item['classes'] ?? '')) . '" ' . ($q_item['tags'] ?? '') . '>');
 
 		$this->q_item_stats($q_item);
 		$this->q_item_main($q_item);
@@ -1944,7 +1945,7 @@ class qa_html_theme_base
 		if (isset($prefix))
 			$this->output($prefix);
 
-		$order = explode('^', @$post['meta_order']);
+		$order = explode('^', $post['meta_order'] ?? '');
 
 		foreach ($order as $element) {
 			switch ($element) {
@@ -2023,7 +2024,7 @@ class qa_html_theme_base
 		if (isset($post['who'])) {
 			$this->output('<span class="' . $class . '-who">');
 
-			if (strlen(@$post['who']['prefix']))
+			if (strlen($post['who']['prefix'] ?? ''))
 				$this->output('<span class="' . $class . '-who-pad">' . $post['who']['prefix'] . '</span>');
 
 			if (isset($post['who']['data']))
@@ -2040,7 +2041,7 @@ class qa_html_theme_base
 				$this->output_split($post['who']['points'], $class . '-who-points');
 			}
 
-			if (strlen(@$post['who']['suffix']))
+			if (strlen($post['who']['suffix'] ?? ''))
 				$this->output('<span class="' . $class . '-who-pad">' . $post['who']['suffix'] . '</span>');
 
 			$this->output('</span>');
@@ -2176,7 +2177,7 @@ class qa_html_theme_base
 	public function q_view($q_view)
 	{
 		if (!empty($q_view)) {
-			$this->output('<div class="qa-q-view' . (@$q_view['hidden'] ? ' qa-q-view-hidden' : '') . rtrim(' ' . @$q_view['classes']) . '"' . rtrim(' ' . @$q_view['tags']) . '>');
+			$this->output('<div class="qa-q-view' . (@$q_view['hidden'] ? ' qa-q-view-hidden' : '') . rtrim(' ' . ($q_view['classes'] ?? '')) . '"' . rtrim(' ' . ($q_view['tags'] ?? '')) . '>');
 
 			if (isset($q_view['main_form_tags'])) {
 				$this->output('<form ' . $q_view['main_form_tags'] . '>'); // form for question voting buttons

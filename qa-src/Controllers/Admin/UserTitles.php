@@ -76,7 +76,7 @@ class UserTitles extends BaseController
 
 					// Verify the title and points are legitimate
 
-					if (!strlen($intitle))
+					if (!strlen((string)$intitle))
 						$errors['title'] = qa_lang('main/field_required');
 
 					if (!is_numeric($inpoints)) {
@@ -84,7 +84,7 @@ class UserTitles extends BaseController
 					} else {
 						$inpoints = (int)$inpoints;
 
-						if (isset($pointstitle[$inpoints]) && ((!strlen(@$oldpoints)) || ($inpoints != $oldpoints)))
+						if (isset($pointstitle[$inpoints]) && ((!strlen($oldpoints ?? '')) || ($inpoints != $oldpoints)))
 							$errors['points'] = qa_lang('admin/title_already_used');
 					}
 

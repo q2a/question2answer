@@ -42,7 +42,7 @@ class Widgets extends BaseController
 		// Get current list of widgets and determine the state of this admin page
 
 		$widgetid = qa_post_text('edit');
-		if (!strlen($widgetid))
+		if (!strlen((string)$widgetid))
 			$widgetid = qa_get('edit');
 
 		list($widgets, $pages) = qa_db_select_with_pending(
@@ -310,7 +310,7 @@ class Widgets extends BaseController
 		foreach ($templateoptions as $template => $optionhtml) {
 			$qa_content['form']['fields']['templates']['html'] .=
 				'<input type="checkbox" name="template_' . qa_html($template) . '"' .
-				(is_numeric(strpos(',' . @$editwidget['tags'] . ',', ',' . $template . ',')) ? ' checked' : '') .
+				(is_numeric(strpos(',' . ($editwidget['tags'] ?? '') . ',', ',' . $template . ',')) ? ' checked' : '') .
 				'/> ' . $optionhtml . '<br/>';
 		}
 

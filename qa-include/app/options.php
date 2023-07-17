@@ -213,6 +213,16 @@ function qa_default_option($name)
 		'avatar_q_page_q_size' => 50,
 		'avatar_store_size' => 400,
 		'avatar_users_size' => 30,
+		'cache_acount' => 0,
+		'cache_ccount' => 0,
+		'cache_flaggedcount' => 0,
+		'cache_qcount' => 0,
+		'cache_queuedcount' => 0,
+		'cache_uapprovecount' => 0,
+		'cache_unaqcount' => 0,
+		'cache_unselqcount' => 0,
+		'cache_unupaqcount' => 0,
+		'cache_userpointscount' => 0,
 		'caching_catwidget_time' => 30,
 		'caching_driver' => 'filesystem',
 		'caching_enabled' => 0,
@@ -519,7 +529,7 @@ function qa_default_option($name)
 
 			foreach ($modules as $module) {
 				$value = $module->option_default($name);
-				if (strlen($value))
+				if (strlen((string)$value))
 					return $value;
 			}
 
