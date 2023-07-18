@@ -199,7 +199,6 @@ function qa_initialize_constants_1()
 		}
 	}
 
-	require_once QA_INCLUDE_DIR . 'vendor/PHPMailer/PHPMailerAutoload.php';
 
 	// Polyfills
 
@@ -224,6 +223,7 @@ function qa_initialize_constants_1()
 			}
 		}
 	}
+	require_once QA_INCLUDE_DIR . 'vendor/PHPMailer6/PHPMailerAutoload.php';
 }
 
 

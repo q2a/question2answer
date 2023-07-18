@@ -8,7 +8,7 @@ function PHPMailerAutoload($classname)
 	if (strpos($classname, 'PHPMailer\\PHPMailer\\') !== 0)
 		return;
 
-	$filename = __DIR__ . str_replace('PHPMailer\\PHPMailer\\', '', $classname) . '.php';
+	$filename = __DIR__ . '/' . str_replace('PHPMailer\\PHPMailer\\', '', $classname) . '.php';
 	if (is_readable($filename)) {
 		require $filename;
 	}
