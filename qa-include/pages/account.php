@@ -59,11 +59,8 @@ $doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_L
 $isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
 
 $haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
-if (QA_PASSWORD_HASH) {
-	$haspassword = isset($useraccount['passhash']);
-} else {
-	$haspassword = $haspasswordold;
-}
+$haspassword = isset($useraccount['passhash']);
+
 $permit_error = qa_user_permit_error();
 $isblocked = $permit_error !== false;
 $pending_confirmation = $doconfirms && !$isconfirmed;
@@ -213,16 +210,9 @@ else {
 		else {
 			$errors = array();
 			$legacyPassError = !hash_equals(strtolower($useraccount['passcheck']), strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])));
-
-			if (QA_PASSWORD_HASH) {
-				$passError = !password_verify($inoldpassword, $useraccount['passhash']);
-				if (($haspasswordold && $legacyPassError) || (!$haspasswordold && $haspassword && $passError)) {
-					$errors['oldpassword'] = qa_lang('users/password_wrong');
-				}
-			} else {
-				if ($haspassword && $legacyPassError) {
-					$errors['oldpassword'] = qa_lang('users/password_wrong');
-				}
+			$passError = !$haspassword || !password_verify($inoldpassword, $useraccount['passhash']);
+			if (($haspasswordold && $legacyPassError) || (!$haspasswordold && $haspassword && $passError)) {
+				$errors['oldpassword'] = qa_lang('users/password_wrong');
 			}
 
 			$useraccount['password'] = $inoldpassword;

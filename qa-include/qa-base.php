@@ -199,30 +199,6 @@ function qa_initialize_constants_1()
 		}
 	}
 
-
-	// Polyfills
-
-	// password_hash compatibility for 5.3-5.4
-	define('QA_PASSWORD_HASH', !qa_php_version_below('5.3.7'));
-	if (QA_PASSWORD_HASH) {
-		require_once QA_INCLUDE_DIR . 'vendor/password_compat.php';
-	}
-
-	// https://php.net/manual/en/function.hash-equals.php#115635
-	if (!function_exists('hash_equals')) {
-		function hash_equals($str1, $str2)
-		{
-			if (strlen((string)$str1) != strlen((string)$str2)) {
-				return false;
-			} else {
-				$res = $str1 ^ $str2;
-				$ret = 0;
-				for ($i = strlen($res) - 1; $i >= 0; $i--)
-					$ret |= ord($res[$i]);
-				return !$ret;
-			}
-		}
-	}
 	require_once QA_INCLUDE_DIR . 'vendor/PHPMailer6/PHPMailerAutoload.php';
 }
 

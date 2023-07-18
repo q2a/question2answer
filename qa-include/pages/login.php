@@ -76,25 +76,18 @@ if (qa_clicked('dologin') && (strlen($inemailhandle) || strlen($inpassword))) {
 				$inuserid = $matchusers[0];
 				$userinfo = qa_db_select_with_pending(qa_db_user_account_selectspec($inuserid, true));
 
+				$haspassword = isset($userinfo['passhash']);
+				$passOk = $haspassword && password_verify($inpassword, $userinfo['passhash']);
+				$haspasswordold = isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
 				$legacyPassOk = hash_equals(strtolower((string)$userinfo['passcheck']), strtolower(qa_db_calc_passcheck($inpassword, (string)$userinfo['passsalt'])));
 
-				if (QA_PASSWORD_HASH) {
-					$haspassword = isset($userinfo['passhash']);
-					$haspasswordold = isset($userinfo['passsalt']) && isset($userinfo['passcheck']);
-					$passOk = password_verify($inpassword, $userinfo['passhash']);
-
-					if (($haspasswordold && $legacyPassOk) || ($haspassword && $passOk)) {
-						// upgrade password or rehash, when options like the cost parameter changed
-						if ($haspasswordold || password_needs_rehash($userinfo['passhash'], PASSWORD_BCRYPT)) {
-							qa_db_user_set_password($inuserid, $inpassword);
-						}
-					} else {
-						$errors['password'] = qa_lang('users/password_wrong');
+				if (($haspasswordold && $legacyPassOk) || ($haspassword && $passOk)) {
+					// upgrade password or rehash, when options like the cost parameter changed
+					if ($haspasswordold || password_needs_rehash($userinfo['passhash'], PASSWORD_BCRYPT)) {
+						qa_db_user_set_password($inuserid, $inpassword);
 					}
 				} else {
-					if (!$legacyPassOk) {
-						$errors['password'] = qa_lang('users/password_wrong');
-					}
+					$errors['password'] = qa_lang('users/password_wrong');
 				}
 
 				if (!isset($errors['password'])) {
