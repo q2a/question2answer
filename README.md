@@ -7,7 +7,7 @@
 <p align="center">
 	<a href="https://github.com/q2a/question2answer/issues"><img src="https://img.shields.io/github/issues/q2a/question2answer.svg" alt="Open Issues"></a>
 	<a href="https://github.com/q2a/question2answer/releases"><img src="https://img.shields.io/github/release/q2a/question2answer.svg" alt="Current Release"></a>
-	<a href="https://docs.question2answer.org/install/"><img src="https://img.shields.io/travis/php-v/q2a/question2answer/dev.svg" alt="PHP version"></a>
+	<a href="https://docs.question2answer.org/install/"><img src="https://img.shields.io/badge/php-7.1+-8993be" alt="PHP version"></a>
 	<a href="https://www.question2answer.org/license.php"><img src="https://img.shields.io/badge/License-GPL-green.svg" alt="License"></a>
 </p>
 
