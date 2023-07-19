@@ -1345,11 +1345,11 @@ function qa_check_form_security_code($action, $value)
 	} else {
 		$parts = explode('-', $value);
 
-		if (count($parts) == 3) {
-			$loggedin = $parts[0];
-			$timestamp = $parts[1];
+		if (count($parts) === 3) {
+			$loggedin = (int) $parts[0];
+			$timestamp = (int) $parts[1];
 			$hash = $parts[2];
-			$timenow = qa_opt('db_time');
+			$timenow = (int) qa_opt('db_time');
 
 			if ($timestamp > $timenow) {
 				$reportproblems[] = 'time ' . ($timestamp - $timenow) . 's in future';
