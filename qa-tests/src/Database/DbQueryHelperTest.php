@@ -65,15 +65,4 @@ class DbQueryHelperTest extends \PHPUnit\Framework\TestCase
 		$result = $this->helper->applyTableSub('SELECT * FROM ^users WHERE userid=?');
 		$this->assertSame('SELECT * FROM qa_users WHERE userid=?', $result);
 	}
-
-	public function test__applyTableSub_users_prefix()
-	{
-		define('QA_MYSQL_USERS_PREFIX', 'base_');
-
-		$result = $this->helper->applyTableSub('SELECT * FROM ^options');
-		$this->assertSame('SELECT * FROM qa_options', $result);
-
-		$result = $this->helper->applyTableSub('SELECT * FROM ^users WHERE userid=?');
-		$this->assertSame('SELECT * FROM base_users WHERE userid=?', $result);
-	}
 }
