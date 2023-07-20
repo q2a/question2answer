@@ -2,12 +2,12 @@
 
 use Q2A\Database\DbQueryHelper;
 
-class DbQueryHelperTest extends PHPUnit_Framework_TestCase
+class DbQueryHelperTest extends \PHPUnit\Framework\TestCase
 {
 	/** @var DbQueryHelper */
 	private $helper;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->helper = new DbQueryHelper();
 	}
@@ -53,7 +53,7 @@ class DbQueryHelperTest extends PHPUnit_Framework_TestCase
 
 	public function test__expandParameters_incorrect_groups_error()
 	{
-		$this->setExpectedException('Q2A\Database\Exceptions\SelectSpecException');
+		$this->expectException('Q2A\Database\Exceptions\SelectSpecException');
 		$this->helper->expandParameters('INSERT INTO table(field1, field2) VALUES ?', [[ [1, 2], [3] ]]);
 	}
 
