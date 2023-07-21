@@ -628,10 +628,12 @@ function qa_db_check_tables()
 {
 	qa_db_query_raw('UNLOCK TABLES'); // we could be inside a lock tables block
 
-	$version = qa_db_read_one_value(qa_db_query_raw('SELECT VERSION()'));
-
-	if (((float)$version) < 4.1)
-		qa_fatal_error('MySQL version 4.1 or later is required - you appear to be running MySQL ' . $version);
+	require_once QA_INCLUDE_DIR . 'db/admin.php';
+	$mysqlVersion = qa_db_mysql_version();
+	$minMysqlVersion = '5.5.3';
+	if (version_compare($mysqlVersion, $minMysqlVersion) < 0) {
+		qa_fatal_error("MySQL version $minMysqlVersion or later is required - you appear to be running MySQL $mysqlVersion");
+	}
 
 	$definitions = qa_db_table_definitions();
 	$missing = qa_db_missing_tables($definitions);

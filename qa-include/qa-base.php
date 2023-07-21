@@ -74,9 +74,8 @@ if (!isset($qa_autoconnect) || $qa_autoconnect !== false) {
 // Version comparison functions
 
 /**
- * Converts the $version string (e.g. 1.6.2.2) to a floating point that can be used for greater/lesser comparisons
- * (PHP's version_compare() function is not quite suitable for our needs)
- * @deprecated 1.8.2 no longer used
+ * Converts the $version string (e.g. 1.6.2.2) to a floating point that can be used for greater/lesser comparisons.
+ * @deprecated 1.8.2 no longer used as PHP's version_compare() works fine
  * @param string $version
  * @return float
  */
