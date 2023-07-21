@@ -77,13 +77,16 @@ function qa_db_userflag_set($postid, $userid, $flag)
 /**
  * Clear all flags for $postid in the database
  * @param int $postid
+ * @return int Number of affected rows
  */
 function qa_db_userflags_clear_all($postid)
 {
-	qa_db_query_sub(
-		'UPDATE ^uservotes SET flag=0 WHERE postid=#',
-		$postid
+	$result = qa_service('database')->query(
+		'UPDATE ^uservotes SET flag=0 WHERE postid=?',
+		[$postid]
 	);
+
+	return $result->affectedRows();
 }
 
 

@@ -109,10 +109,12 @@ function qa_db_post_acount_update($questionid)
  * @param string $countQuery
  * @param int|null $value
  * @param bool $relative
+ * @return int Number of affected rows
  */
 function qa_db_generic_cache_update_for_q($postId, $field, $countQuery, $value = null, $relative = true)
 {
-	if (!qa_should_update_counts()) {
+	$db = qa_service('database');
+	if (!$db->shouldUpdateCounts()) {
 		return;
 	}
 
@@ -123,7 +125,7 @@ function qa_db_generic_cache_update_for_q($postId, $field, $countQuery, $value =
 		$newValue = $value;
 	} else {
 		$sqlValue = '';
-		$newValue = qa_db_read_one_value(qa_db_query_sub($countQuery, $postId));
+		$newValue = $db->query($countQuery, [$postId])->fetchOneValueOrFail();
 	}
 
 	$sql = sprintf(
@@ -132,7 +134,9 @@ function qa_db_generic_cache_update_for_q($postId, $field, $countQuery, $value =
 		$field, $sqlValue
 	);
 
-	qa_db_query_sub($sql, $newValue, $postId);
+	$result = $db->query($sql, [$newValue, $postId]);
+
+	return $result->affectedRows();
 }
 
 
@@ -158,10 +162,11 @@ function qa_db_acount_update_for_q($questionid, $increment = null)
  * @param int $questionid
  * @param int|null $value
  * @param bool $relative
+ * @return int Number of affected rows
  */
 function qa_db_amaxvote_update_for_q($questionid, $value = null, $relative = true)
 {
-	qa_db_generic_cache_update_for_q(
+	return qa_db_generic_cache_update_for_q(
 		$questionid,
 		'amaxvote',
 		'SELECT COALESCE(GREATEST(MAX(netvotes), 0), 0) FROM ^posts ' .

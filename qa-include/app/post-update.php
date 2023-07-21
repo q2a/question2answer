@@ -966,9 +966,9 @@ function qa_private_disable_answer_recalc($question, $netvotes)
 				qa_db_unupaqcount_update(1);
 			}
 		} else {
-			qa_db_amaxvote_update_for_q($question['postid']);
+			$affectedRows = qa_db_amaxvote_update_for_q($question['postid']);
 
-			if (qa_db_affected_rows() > 0 && $question['closedbyid'] === null) {
+			if ($affectedRows > 0 && $question['closedbyid'] === null) {
 				$tempQuestion = qa_db_single_select(qa_db_posts_selectspec(null, array($question['postid'])))[$question['postid']];
 
 				if ((int)$tempQuestion['amaxvote'] === 0) {

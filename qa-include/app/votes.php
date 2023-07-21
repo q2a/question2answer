@@ -171,11 +171,11 @@ function qa_vote_set($post, $userid, $handle, $cookieid, $vote)
 					}
 				} else {
 					// Unavoidable full `amaxvote` recalc
-					qa_db_amaxvote_update_for_q($questionId);
+					$affectedRows = qa_db_amaxvote_update_for_q($questionId);
 					// If the `amaxvote` has actually been updated by the recalc, then this answer was the one
 					// that defined the `amaxvote` value and, if the new `amaxvote` is zero, then it decreased
 					// from non-zero to zero
-					if (qa_db_affected_rows() > 0 && $potentialPostNewAmaxvote === 0 && $question['closedbyid'] === null) {
+					if ($affectedRows > 0 && $potentialPostNewAmaxvote === 0 && $question['closedbyid'] === null) {
 						qa_db_unupaqcount_update(1);
 					}
 				}
@@ -391,8 +391,7 @@ function qa_flags_clear_all($oldpost, $userid, $handle, $cookieid)
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 	require_once QA_INCLUDE_DIR . 'db/post-update.php';
 
-	qa_db_userflags_clear_all($oldpost['postid']);
-	$affectedRows = qa_db_affected_rows();
+	$affectedRows = qa_db_userflags_clear_all($oldpost['postid']);
 	qa_db_flaggedcount_update(-$affectedRows);
 	qa_db_post_reset_flags($oldpost['postid']);
 
