@@ -720,7 +720,7 @@ function qa_db_create_table_sql($rawname, $definition)
 		if (isset($coldef))
 			$querycols .= (strlen($querycols) ? ', ' : '') . (is_int($colname) ? $coldef : ($colname . ' ' . $coldef));
 
-	return 'CREATE TABLE ^' . $rawname . ' (' . $querycols . ') ENGINE=InnoDB CHARSET=utf8';
+	return 'CREATE TABLE ^' . $rawname . ' (' . $querycols . ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
 }
 
 

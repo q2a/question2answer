@@ -44,7 +44,7 @@ class qa_event_logger
 					'KEY ipaddress (ipaddress),' .
 					'KEY userid (userid),' .
 					'KEY event (event)' .
-					') ENGINE=MyISAM DEFAULT CHARSET=utf8';
+					') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
 			} else {
 				// table exists: check it has the correct schema
 				$column = qa_service('database')->query('SHOW COLUMNS FROM ^eventlog WHERE Field="ipaddress"')->fetchNextAssocOrFail();

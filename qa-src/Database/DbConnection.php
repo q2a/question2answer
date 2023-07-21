@@ -113,7 +113,7 @@ class DbConnection
 			return;
 		}
 
-		$dsn = sprintf('%s:host=%s;dbname=%s;charset=utf8', $this->config['driver'], $this->config['host'], $this->config['database']);
+		$dsn = sprintf('%s:host=%s;dbname=%s;charset=utf8mb4', $this->config['driver'], $this->config['host'], $this->config['database']);
 		if (isset($this->config['port'])) {
 			$dsn .= ';port=' . $this->config['port'];
 		}
