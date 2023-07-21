@@ -213,7 +213,7 @@ function qa_db_points_update_ifuser($userid, $columns)
 
 		$result = $db->query($query, $insertparams);
 
-		if ($result->affectedRows() > 0) {
+		if ($result->affectedRows() == 1) {
 			qa_db_userpointscount_update(1);
 		}
 	}
