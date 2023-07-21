@@ -1262,7 +1262,7 @@ class DbCachedOptionsTest extends \PHPUnit\Framework\TestCase
 
 	public function test__qa_answer_set_status_normal_to_hidden_two_answers_with_two_upvoted_answers()
 	{
-		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_normal_to_hidden_two_answers_with_selected_and_upvoted_answer', 'Dummy post content');
+		$questionId = qa_post_create('Q', null, 'Question title: answer_set_status_normal_to_hidden_two_answers_with_two_upvoted_answers', 'Dummy post content');
 		$answer1Id = qa_post_create('A', $questionId, null, 'This is the content of the first answer');
 		$answer2Id = qa_post_create('A', $questionId, null, 'This is the content of the second answer');
 
