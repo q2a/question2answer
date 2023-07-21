@@ -310,7 +310,7 @@ function qa_db_users_recalc_points($firstuserid, $lastuserid)
 
 	foreach ($qa_userpoints_calculations as $field => $calculation) {
 		qa_db_query_sub(
-			'UPDATE ^userpoints, (SELECT userid_src.userid, ' . str_replace('~', ' BETWEEN # AND #', $calculation['formula']) . ' GROUP BY userid) AS results ' .
+			'UPDATE ^userpoints, (SELECT userid_src.userid, ' . str_replace('userid=?', 'userid BETWEEN # AND #', $calculation['formula']) . ' GROUP BY userid) AS results ' .
 			'SET ^userpoints.' . $field . '=results.' . $field . ' WHERE ^userpoints.userid=results.userid',
 			$firstuserid, $lastuserid
 		);
