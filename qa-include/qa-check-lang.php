@@ -238,6 +238,7 @@ foreach ($languages as $code => $language) {
 function output_lang_issue($prefix, $key, $issue, $error = true)
 {
 	$colorClass = $error ? 'severe' : 'warning';
+	$key = (string) $key;
 
 	$htmlKey = strlen($key) > 0 ? "'<strong>" . qa_html($key) . "</strong>'" : '';
 
