@@ -24,7 +24,7 @@ if (!defined('QA_VERSION')) { // don't allow this page to be requested directly 
 	exit;
 }
 
-define('QA_DB_VERSION_CURRENT', 68);
+define('QA_DB_VERSION_CURRENT', 71);
 
 
 /**
@@ -164,7 +164,7 @@ function qa_db_table_definitions()
 
 		'messages' => array(
 			'messageid' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
-			'type' => "ENUM('PUBLIC', 'PRIVATE') NOT NULL DEFAULT 'PRIVATE'",
+			'type' => "ENUM('PUBLIC', 'PRIVATE') CHARACTER SET ascii NOT NULL DEFAULT 'PRIVATE'",
 			'fromuserid' => $useridcoltype,
 			'touserid' => $useridcoltype,
 			'fromhidden' => 'TINYINT(1) UNSIGNED NOT NULL DEFAULT 0',
@@ -280,7 +280,7 @@ function qa_db_table_definitions()
 
 		'posts' => array(
 			'postid' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
-			'type' => "ENUM('Q', 'A', 'C', 'Q_HIDDEN', 'A_HIDDEN', 'C_HIDDEN', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED', 'NOTE') NOT NULL",
+			'type' => "ENUM('Q', 'A', 'C', 'Q_HIDDEN', 'A_HIDDEN', 'C_HIDDEN', 'Q_QUEUED', 'A_QUEUED', 'C_QUEUED', 'NOTE') CHARACTER SET ascii NOT NULL",
 			'parentid' => 'INT UNSIGNED', // for follow on questions, all answers and comments
 			'categoryid' => 'INT UNSIGNED', // this is the canonical final category id
 			'catidpath1' => 'INT UNSIGNED', // the catidpath* columns are calculated from categoryid, for the full hierarchy of that category
@@ -379,7 +379,7 @@ function qa_db_table_definitions()
 			'postid' => 'INT UNSIGNED NOT NULL',
 			'wordid' => 'INT UNSIGNED NOT NULL',
 			'count' => 'TINYINT UNSIGNED NOT NULL', // how many times word appears in the post - anything over 255 can be ignored
-			'type' => "ENUM('Q', 'A', 'C', 'NOTE') NOT NULL", // the post's type (copied here for quick searching)
+			'type' => "ENUM('Q', 'A', 'C', 'NOTE') CHARACTER SET ascii NOT NULL", // the post's type (copied here for quick searching)
 			'questionid' => 'INT UNSIGNED NOT NULL', // the id of the post's antecedent parent (here for quick searching)
 			'KEY postid (postid)',
 			'KEY wordid (wordid)',
@@ -1071,6 +1071,61 @@ function qa_db_upgrade_tables()
 			case 68:
 				// remove favorites of deleted users
 				qa_db_upgrade_query('DELETE FROM ^userfavorites WHERE entitytype="U" AND entityid NOT IN (SELECT userid FROM ^users)');
+				break;
+
+			case 69:
+				// convert each table to utf8mb4
+				foreach (array_keys($definitions) as $table) {
+					qa_db_upgrade_query("ALTER TABLE ^{$table} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+				}
+				qa_db_upgrade_query($locktablesquery);
+				break;
+
+			case 70:
+				// convert all text fields to utf8mb4
+				$tableFieldsToModify = [
+					'users' => ['handle', 'email'],
+					'userprofile' => ['title', 'content'],
+					'userfields' => ['title', 'content'],
+					'messages' => ['content'],
+					'usernotices' => ['content', 'tags'],
+					'categories' => ['title', 'tags', 'content', 'backpath'],
+					'pages' => ['title', 'tags', 'heading', 'content'],
+					'widgets' => ['title'],
+					'posts' => ['title', 'content', 'tags', 'name', 'notify'],
+					'blobs' => ['filename'],
+					'words' => ['word'],
+					'options' => ['title', 'content'],
+					'usermetas' => ['title', 'content'],
+					'postmetas' => ['title', 'content'],
+					'categorymetas' => ['title', 'content'],
+					'tagmetas' => ['tag', 'title', 'content'],
+				];
+				$charsetCollation = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+
+				foreach ($tableFieldsToModify as $table => $fields) {
+					foreach ($fields as $field) {
+						// collation must be inserted before NOT NULL
+						$oldFieldDefinition = $definitions[$table][$field];
+						$notNullPos = strpos($oldFieldDefinition, 'NOT NULL');
+						$newFieldDefinition = $notNullPos === false
+							? "{$oldFieldDefinition} $charsetCollation"
+							: substr($oldFieldDefinition, 0, $notNullPos) . "$charsetCollation " . substr($oldFieldDefinition, $notNullPos);
+
+						qa_db_upgrade_query("ALTER TABLE ^{$table} MODIFY $field $newFieldDefinition");
+					}
+				}
+
+				qa_db_upgrade_query($locktablesquery);
+				break;
+
+			case 71:
+				// convert ENUM fields to ascii
+				qa_db_upgrade_query("ALTER TABLE ^messages MODIFY type {$definitions['messages']['type']}");
+				qa_db_upgrade_query("ALTER TABLE ^posts MODIFY type {$definitions['posts']['type']}");
+				qa_db_upgrade_query("ALTER TABLE ^contentwords MODIFY type {$definitions['contentwords']['type']}");
+
+				qa_db_upgrade_query($locktablesquery);
 				break;
 
 			// Up to here: Version 1.9

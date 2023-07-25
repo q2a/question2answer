@@ -38,7 +38,7 @@ class DbConnection
 	protected $allowConnect = false;
 
 	/** @var string */
-	protected $failHandler;
+	protected $failHandler = '';
 
 	/** @var int */
 	protected $updateCountsSuspended = 0;
