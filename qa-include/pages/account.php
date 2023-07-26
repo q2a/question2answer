@@ -212,10 +212,10 @@ else {
 			$errors['page'] = qa_lang_html('misc/form_security_again');
 		else {
 			$errors = array();
-			$legacyPassError = !hash_equals(strtolower($useraccount['passcheck']), strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'])));
+			$legacyPassError = !hash_equals(strtolower($useraccount['passcheck'] ?? ''), strtolower(qa_db_calc_passcheck($inoldpassword, $useraccount['passsalt'] ?? '')));
 
 			if (QA_PASSWORD_HASH) {
-				$passError = !password_verify($inoldpassword, $useraccount['passhash']);
+				$passError = !password_verify($inoldpassword, $useraccount['passhash'] ?? '');
 				if (($haspasswordold && $legacyPassError) || (!$haspasswordold && $haspassword && $passError)) {
 					$errors['oldpassword'] = qa_lang('users/password_wrong');
 				}
