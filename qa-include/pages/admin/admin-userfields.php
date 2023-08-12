@@ -153,7 +153,8 @@ if (isset($editfield['position']))
 	$positionvalue = $positionoptions[$editfield['position']];
 else {
 	$positionvalue = isset($previous) ? qa_lang_html_sub('admin/after_x', qa_html(qa_user_userfield_label($previous))) : qa_lang_html('admin/first');
-	$positionoptions[1 + @max(array_keys($positionoptions))] = $positionvalue;
+	$newPosition = empty($positionoptions) ? 1 : max(array_keys($positionoptions)) + 1;
+	$positionoptions[$newPosition] = $positionvalue;
 }
 
 $typeoptions = array(
