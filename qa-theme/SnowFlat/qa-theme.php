@@ -177,8 +177,6 @@ class qa_html_theme extends qa_html_theme_base
 	public function nav_user_search()
 	{
 		// outputs login form if user not logged in
-		$this->output('<div class="qam-account-items-wrapper">');
-
 		$this->qam_user_account();
 
 		$this->output('<div class="qam-account-items clearfix">');
@@ -204,7 +202,6 @@ class qa_html_theme extends qa_html_theme_base
 
 		$this->nav('user');
 		$this->output('</div> <!-- END qam-account-items -->');
-		$this->output('</div> <!-- END qam-account-items-wrapper -->');
 	}
 
 	/**
@@ -216,7 +213,11 @@ class qa_html_theme extends qa_html_theme_base
 	{
 		$this->output('<div class="qam-main-nav-wrapper clearfix">');
 		$this->output('<div class="sb-toggle-left qam-menu-toggle"><i class="icon-th-list"></i></div>');
-		$this->nav_user_search();
+		
+		$this->output('<div class="qam-account-items-wrapper">');
+			$this->nav_user_search();
+		$this->output('</div>');
+		
 		$this->logo();
 		$this->nav('main');
 		$this->output('</div> <!-- END qam-main-nav-wrapper -->');
