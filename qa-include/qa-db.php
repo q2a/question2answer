@@ -198,18 +198,6 @@ function qa_db_add_table_prefix($rawname)
 
 
 /**
- * Callback function to add table prefixes, as used in qa_db_apply_sub().
- * @deprecated 1.9.0 No longer needed.
- * @param array $matches
- * @return string
- */
-function qa_db_prefix_callback($matches)
-{
-	return qa_db_add_table_prefix($matches[1]);
-}
-
-
-/**
  * Substitute ^, $ and # symbols in $query. ^ symbols are replaced with the table prefix set in qa-config.php.
  * $ and # symbols are replaced in order by the corresponding element in $arguments (if the element is an array,
  * it is converted recursively into comma-separated list). Each element in $arguments is escaped.
@@ -222,9 +210,9 @@ function qa_db_prefix_callback($matches)
  */
 function qa_db_apply_sub($query, $arguments)
 {
-	// function left intact as some code calls this directly
+	// function left mostly intact as some code calls this directly
 
-	$query = preg_replace_callback('/\^([A-Za-z_0-9]+)/', 'qa_db_prefix_callback', $query);
+	$query = (new \Q2A\Database\DbQueryHelper)->applyTableSub($query);
 
 	if (!is_array($arguments))
 		return $query;

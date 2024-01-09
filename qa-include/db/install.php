@@ -561,9 +561,11 @@ function qa_db_missing_tables($definitions)
 
 	$missing = array();
 
-	foreach ($definitions as $rawname => $definition)
-		if (!isset($keydbtables[qa_db_add_table_prefix($rawname)]))
+	foreach ($definitions as $rawname => $definition) {
+		$tableName = (new \Q2A\Database\DbQueryHelper)->addTablePrefix($rawname);
+		if (!isset($keydbtables[$tableName]))
 			$missing[$rawname] = $definition;
+	}
 
 	return $missing;
 }
