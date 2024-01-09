@@ -62,7 +62,7 @@ return array(
 	'comment_moved' => 'comment moved',
 	'comment_reshown' => 'comment reshown',
 	'commented' => 'commented',
-	'date_day_min_digits' => 1, // 1 or 2
+	'date_day_min_digits' => '1', // 1 or 2
 	'date_format_other_years' => '^month ^day, ^year',
 	'date_format_this_year' => '^month ^day',
 	'date_month_1' => 'Jan',
@@ -77,7 +77,7 @@ return array(
 	'date_month_10' => 'Oct',
 	'date_month_11' => 'Nov',
 	'date_month_12' => 'Dec',
-	'date_year_digits' => 4, // 2 or 4
+	'date_year_digits' => '4', // 2 or 4
 	'edited' => 'edited',
 	'email_error' => 'An error occurred trying to send the email.',
 	'field_required' => 'Please enter something in this field',
