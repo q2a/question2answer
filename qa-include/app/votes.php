@@ -44,15 +44,15 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 	require_once QA_INCLUDE_DIR . 'app/limits.php';
 
-	if ($post['hidden']) {
+	if (isset($post['hidden']) && $post['hidden']) {
 		return qa_lang_html('main/vote_disabled_hidden');
 	}
-	if ($post['queued']) {
+	if (isset($post['queued']) && $post['queued']) {
 		return qa_lang_html('main/vote_disabled_queued');
 	}
 
-	switch($post['basetype'])
-	{
+	$baseType = isset($post['basetype']) ? $post['basetype'] : null;
+	switch($baseType) {
 		case 'Q':
 			$allowVoting = qa_opt('voting_on_qs');
 			break;
@@ -72,7 +72,7 @@ function qa_vote_error_html($post, $vote, $userid, $topage)
 		return qa_lang_html('main/vote_not_allowed');
 	}
 
-	$permiterror = qa_user_post_permit_error(($post['basetype'] == 'Q') ? 'permit_vote_q' : 'permit_vote_a', $post, QA_LIMIT_VOTES);
+	$permiterror = qa_user_post_permit_error(($baseType == 'Q' ? 'permit_vote_q' : 'permit_vote_a'), $post, QA_LIMIT_VOTES);
 
 	$errordownonly = !$permiterror && $vote < 0;
 	if ($errordownonly) {
