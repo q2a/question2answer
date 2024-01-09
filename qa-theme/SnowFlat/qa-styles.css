@@ -47,8 +47,8 @@
 		url("fonts/fontello.woff?7704297") format("woff"),
 		url("fonts/fontello.ttf?7704297") format("truetype"),
 		url("fonts/fontello.svg?7704297#fontello") format("svg");
-  font-weight: normal;
-  font-style: normal;
+	font-weight: normal;
+	font-style: normal;
 }
 
 /*------[ base css ]------*/
@@ -213,7 +213,7 @@ pre code {
 
 code, samp, kbd {
 	color: #34495e;
-	font-family: "Courier New",Courier,monospace,sans-serif;
+	font-family: "Courier New", Courier, monospace, sans-serif;
 	text-align: left;
 }
 
@@ -1692,8 +1692,6 @@ li.qa-q-item-tag-item.qa-tag-favorited:before {
 }
 
 
-
-
 .qa-part-form-message .qam-pm-message {
 	padding: 10px;
 	background: #27ae60;
@@ -2162,13 +2160,9 @@ input[type="submit"], button {
 }
 
 .qa-form-light-button-answer {
-	background-color: #27ae60;
 	background-image: url('images/icons/answer-white.png');
 	float: left;
 	margin: 0 5px 0 0;
-}
-.qa-form-light-button-answer:hover, .qa-form-light-button-answer:focus {
-	background-color: #2ecc71;
 }
 
 .qa-form-light-button-comment {
@@ -2397,9 +2391,9 @@ input[type="submit"], button {
 	min-height: 190px;
 }
 /* highlight selected answer */
-.qa-a-list-item:target{
-    -webkit-animation: answer-highlight 2s ease-in-out;
-    animation: answer-highlight 2s ease-in-out;
+.qa-a-list-item:target {
+	-webkit-animation: answer-highlight 2s ease-in-out;
+	animation: answer-highlight 2s ease-in-out;
 }
 
 .qa-a-item-avatar-meta {
@@ -2541,8 +2535,8 @@ input[type="submit"], button {
 }
 /* highlight selected comment */
 .qa-c-list-item:target {
-    -webkit-animation: comment-highlight 2s ease-in-out;
-    animation: comment-highlight 2s ease-in-out;
+	-webkit-animation: comment-highlight 2s ease-in-out;
+	animation: comment-highlight 2s ease-in-out;
 }
 
 /* voting styles for comments */
@@ -2772,18 +2766,6 @@ input[type="submit"], button {
 }
 
 /*------[ sidebar ]------*/
-#qam-overlay {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.85);
-	z-index: 9;
-	box-shadow: 0 0 300px 50px rgba(0, 0, 0, 0.3) inset;
-	display: none;
-}
-
 #qam-sidepanel-toggle {
 	display: none;
 }
@@ -2840,16 +2822,10 @@ input[type="submit"], button {
 	}
 	.qa-sidepanel.open {
 		right: 0 !important;
-		transition: all 0.15s ease;
 		box-shadow: -5px 0 15px 0 rgba(0, 0, 0, 0.5);
 	}
 }
 
-
-.stick {
-	top: 10px !important;
-	transition: all 0.15s ease;
-}
 
 .qa-sidepanel {
 	word-wrap: break-word;
@@ -2933,14 +2909,14 @@ input[type="submit"], button {
 	top: 5px;
 	left: 10px;
 	opacity: 0.2;
+	transition: all .2s ease-in-out;
 }
 .qa-activity-count-item:hover {
 	cursor: help;
 }
 .qa-activity-count-item:hover:before {
-	opacity: 1;
-	-webkit-animation: shake 0.25s;
-	animation: shake 0.25s;
+	opacity: .6;
+	transform: scale(1.2);
 }
 .qa-activity-count-item:nth-child(1) {
 	background: #1abc9c;
@@ -3325,41 +3301,22 @@ input[type="submit"], button {
 	}
 }
 
-@-webkit-keyframes shake {
-	0% { transform: scale(1); }
-	17% { transform: scale(1.5); }
-	34% { transform: scale(0.8); }
-	51% { transform: scale(1.1); }
-	68% { transform: scale(0.9); }
-	85% { transform: scale(1.05); }
-	100% { transform: scale(1); }
-}
-@keyframes shake {
-	0% { transform: scale(1); }
-	17% { transform: scale(1.5); }
-	34% { transform: scale(0.8); }
-	51% { transform: scale(1.1); }
-	68% { transform: scale(0.9); }
-	85% { transform: scale(1.05); }
-	100% { transform: scale(1); }
-}
-
 @-webkit-keyframes answer-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #fff; }
+	0% { background-color: #ffa; }
+	100% { background-color: #fff; }
 }
 @keyframes answer-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #fff; }
+	0% { background-color: #ffa; }
+	100% { background-color: #fff; }
 }
 
 @-webkit-keyframes comment-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #f4f4f4; }
+	0% { background-color: #ffa; }
+	100% { background-color: #f4f4f4; }
 }
 @keyframes comment-highlight {
-    0% { background-color: #ffffaa; }
-    100% { background-color: #f4f4f4; }
+	0% { background-color: #ffa; }
+	100% { background-color: #f4f4f4; }
 }
 
 

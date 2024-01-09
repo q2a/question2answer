@@ -56,7 +56,7 @@ list($useraccount, $userprofile, $userpoints, $userfields) = qa_db_select_with_p
 
 $changehandle = qa_opt('allow_change_usernames') || (!$userpoints['qposts'] && !$userpoints['aposts'] && !$userpoints['cposts']);
 $doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
-$isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
+$isconfirmed = (bool)($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED);
 
 $haspasswordold = isset($useraccount['passsalt']) && isset($useraccount['passcheck']);
 $haspassword = isset($useraccount['passhash']);
