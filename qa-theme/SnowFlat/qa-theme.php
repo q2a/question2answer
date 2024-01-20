@@ -345,7 +345,7 @@ class qa_html_theme extends qa_html_theme_base
 			: '<img src="' . $this->rooturl . $this->icon_url . '/closed-q-list.png" class="qam-q-list-close-icon" alt="' . $closedText . '" title="' . $closedText . '"/>';
 
 		$this->output(
-			'<div class="qa-q-item-title">',
+			'<div class="qa-q-item-title" dir="auto">',
 			// add closed note in title
 			$imgHtml,
 			'<a href="' . $q_item['url'] . '">' . $q_item['title'] . '</a>',
