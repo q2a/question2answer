@@ -122,7 +122,7 @@ class qa_tag_cloud
 
 		$themeobject->output(sprintf('<h2 style="margin-top: 0; padding-top: 0;">%s</h2>', qa_lang_html('main/popular_tags')));
 
-		$themeobject->output('<div style="font-size: 10px;">');
+		$themeobject->output('<div class="tag-cloud">');
 
 		$maxsize = qa_opt('tag_cloud_font_size');
 		$minsize = qa_opt('tag_cloud_minimal_font_size');
