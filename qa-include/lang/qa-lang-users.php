@@ -113,7 +113,7 @@ return array(
 	'registered_label' => 'Registered:',
 	'registered_user' => 'Registered user',
 	'remember' => 'Remember',
-	'remember_label' => 'Remember me on this computer',
+	'remember_label' => 'Remember me on this device',
 	'remove_avatar' => 'Remove avatar:',
 	'reset_title' => 'Reset Forgotten Password',
 	'save_profile' => 'Save Profile',
