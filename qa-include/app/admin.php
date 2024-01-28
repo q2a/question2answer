@@ -85,6 +85,7 @@ function qa_admin_language_options()
 		'fi' => 'Finnish - Suomi',
 		'fr' => 'French - Français',
 		'he' => 'Hebrew - עברית',
+		'hi' => 'हिन्दी (Hindi) ',
 		'hr' => 'Croatian - Hrvatski',
 		'hu' => 'Hungarian - Magyar',
 		'id' => 'Indonesian - Bahasa Indonesia',
