@@ -195,7 +195,7 @@ $regioncodes = array(
 foreach ($placeoptionhtml as $place => $optionhtml) {
 	$region = $regioncodes[substr($place, 0, 1)];
 
-	$widgetallowed = method_exists($module, 'allow_region') && $module->allow_region($region);
+	$widgetallowed = isset($module) && method_exists($module, 'allow_region') && $module->allow_region($region);
 
 	if ($widgetallowed) {
 		foreach ($widgets as $widget) {
