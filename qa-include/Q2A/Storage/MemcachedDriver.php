@@ -28,11 +28,10 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	private $memcached;
 	private $enabled = false;
 	private $keyPrefix = '';
-	private $error;
 	private $flushed = false;
 
-	const HOST = '127.0.0.1';
-	const PORT = 11211;
+	private $host = '127.0.0.1';
+	private $port = 11211;
 
 	/**
 	 * Creates a new Memcached instance and checks we can cache items.
@@ -50,17 +49,21 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 			$this->keyPrefix = $config['keyprefix'];
 		}
 
-		if (extension_loaded('memcached')) {
-			$this->memcached = new Memcached;
-			$this->memcached->addServer(self::HOST, self::PORT);
-			if ($this->memcached->set($this->keyPrefix . 'test', 'TEST')) {
-				$this->enabled = true;
-			} else {
-				$this->setMemcachedError();
-			}
-		} else {
-			$this->error = qa_lang_html('admin/no_memcached');
+		if (!extension_loaded('memcached')) {
+			return;
 		}
+
+		if (defined('QA_MEMCACHED_HOST')) {
+			$this->host = QA_MEMCACHED_HOST;
+		}
+		if (defined('QA_MEMCACHED_PORT')) {
+			$this->port = QA_MEMCACHED_PORT;
+		}
+
+		$this->memcached = new Memcached;
+		$this->memcached->addServer($this->host, $this->port);
+
+		$this->enabled = true;
 	}
 
 	/**
@@ -77,12 +80,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 
 		$result = $this->memcached->get($this->keyPrefix . $key);
 
-		if ($result === false) {
-			$this->setMemcachedError();
-			return null;
-		}
-
-		return $result;
+		return $this->memcached->getResultCode() === Memcached::RES_SUCCESS ? $result : null;
 	}
 
 	/**
@@ -91,7 +89,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	 * @param mixed $data The data to cache (in core Q2A this is usually an array).
 	 * @param int $ttl Number of minutes for which to cache the data.
 	 *
-	 * @return bool Whether the file was successfully cached.
+	 * @return bool Whether the item was successfully cached.
 	 */
 	public function set($key, $data, $ttl)
 	{
@@ -99,15 +97,9 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 			return false;
 		}
 
-		$ttl = (int) $ttl;
-		$expiry = time() + ($ttl * 60);
-		$success = $this->memcached->set($this->keyPrefix . $key, $data, $expiry);
+		$expiry = time() + ((int)$ttl * 60);
 
-		if (!$success) {
-			$this->setMemcachedError();
-		}
-
-		return $success;
+		return $this->memcached->set($this->keyPrefix . $key, $data, $expiry);
 	}
 
 	/**
@@ -122,13 +114,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 			return false;
 		}
 
-		$success = $this->memcached->delete($this->keyPrefix . $key);
-
-		if (!$success) {
-			$this->setMemcachedError();
-		}
-
-		return $success;
+		return $this->memcached->delete($this->keyPrefix . $key);
 	}
 
 	/**
@@ -137,18 +123,14 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	 * @param int $start Offset from which to start (used for 'batching' deletes).
 	 * @param bool $expiredOnly This parameter is ignored because Memcached automatically clears expired items.
 	 *
-	 * @return int Number of files deleted. For Memcached we return 0
+	 * @return int Number of elements deleted. For Memcached we return 0
 	 */
 	public function clear($limit = 0, $start = 0, $expiredOnly = false)
 	{
 		if ($this->enabled && !$expiredOnly && !$this->flushed) {
-			$success = $this->memcached->flush();
 			// avoid multiple calls to flush()
 			$this->flushed = true;
-
-			if (!$success) {
-				$this->setMemcachedError();
-			}
+			$this->memcached->flush();
 		}
 
 		return 0;
@@ -165,16 +147,6 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	}
 
 	/**
-	 * Get the last error.
-	 *
-	 * @return string
-	 */
-	public function getError()
-	{
-		return $this->error;
-	}
-
-	/**
 	 * Get the prefix used for all cache keys.
 	 *
 	 * @return string
@@ -187,7 +159,7 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 	/**
 	 * Get current statistics for the cache.
 	 *
-	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.
+	 * @return array Array of stats: 'items' => number of files, 'size' => total item size in bytes.
 	 */
 	public function getStats()
 	{
@@ -196,25 +168,53 @@ class Q2A_Storage_MemcachedDriver implements Q2A_Storage_CacheDriver
 
 		if ($this->enabled) {
 			$stats = $this->memcached->getStats();
-			$key = self::HOST . ':' . self::PORT;
+			$key = $this->host . ':' . $this->port;
 
 			$totalFiles = isset($stats[$key]['curr_items']) ? $stats[$key]['curr_items'] : 0;
 			$totalBytes = isset($stats[$key]['bytes']) ? $stats[$key]['bytes'] : 0;
 		}
 
 		return array(
-			'files' => $totalFiles,
+			'items' => $totalFiles,
 			'size' => $totalBytes,
 		);
 	}
 
 	/**
-	 * Set current error to Memcached result message
-	 *
-	 * @return void
+	 * Return result code from Memcached instance
 	 */
-	private function setMemcachedError()
+	public function getResultCode()
 	{
-		$this->error = qa_lang_html_sub('admin/memcached_error', $this->memcached->getResultMessage());
+		return isset($this->memcached) ? $this->memcached->getResultCode() : null;
+	}
+
+	/**
+	 * Return result message from Memcached instance
+	 */
+	public function getResultMessage()
+	{
+		return isset($this->memcached) ? $this->memcached->getResultMessage() : null;
+	}
+
+	/**
+	 * Perform test operations and return an error string or null if no error was found
+	 *
+	 * @return string|null
+	 */
+	public function test()
+	{
+		if (!extension_loaded('memcached')) {
+			return qa_lang_html('admin/no_memcached');
+		}
+
+		if (!$this->enabled) {
+			return null;
+		}
+
+		if (!$this->memcached->set($this->keyPrefix . 'test', 'TEST')) {
+			return qa_lang_html_sub('admin/memcached_error', $this->memcached->getResultMessage());
+		}
+
+		return null;
 	}
 }

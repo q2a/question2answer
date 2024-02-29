@@ -57,7 +57,7 @@ interface Q2A_Storage_CacheDriver
 	 * @param int $start Offset from which to start (used for 'batching' deletes).
 	 * @param bool $expiredOnly Delete cache only if it has expired.
 	 *
-	 * @return int Number of files deleted.
+	 * @return int Number of items deleted.
 	 */
 	public function clear($limit = 0, $start = 0, $expiredOnly = false);
 
@@ -69,13 +69,6 @@ interface Q2A_Storage_CacheDriver
 	public function isEnabled();
 
 	/**
-	 * Get the last error.
-	 *
-	 * @return string
-	 */
-	public function getError();
-
-	/**
 	 * Get the prefix used for all cache keys.
 	 *
 	 * @return string
@@ -85,7 +78,14 @@ interface Q2A_Storage_CacheDriver
 	/**
 	 * Get current statistics for the cache.
 	 *
-	 * @return array Array of stats: 'files' => number of files, 'size' => total file size in bytes.
+	 * @return array Array of stats: 'items' => number of items, 'size' => total item size in bytes.
 	 */
 	public function getStats();
+
+	/**
+	 * Perform test operations and return an error string or null if no error was found
+	 *
+	 * @return string|null
+	 */
+	public function test();
 }

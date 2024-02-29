@@ -99,6 +99,15 @@
 */
 
 /*
+	If you wish to use memcached-based caching, you can define the host and port in which the
+	memcached server resides. Default values are 127.0.0.1 and 11211, respectively. You only need
+	to define the constats below if you want to use different values for them.
+
+	define('QA_MEMCACHED_HOST', '123.123.123.123');
+	define('QA_MEMCACHED_PORT', 12345);
+*/
+
+/*
 	If you wish, you can define QA_COOKIE_DOMAIN so that any cookies created by Q2A are assigned
 	to a specific domain name, instead of the full domain name of the request by default. This is
 	useful if you're running multiple Q2A sites on subdomains with a shared user base.
