@@ -705,10 +705,13 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 				);
 
 				if (!qa_user_permit_error('permit_hide_show')) {
-					$qa_content['form_profile']['buttons']['hideall'] = array(
-						'tags' => 'name="dohideall" onclick="qa_show_waiting_after(this, false);"',
-						'label' => qa_lang_html('users/hide_all_user_button'),
-					);
+					$has_vpost = qa_db_has_user_visible_postids($useraccount['userid']);
+					if( $has_vpost ){
+						$qa_content['form_profile']['buttons']['hideall'] = array(
+							'tags' => 'name="dohideall" onclick="qa_show_waiting_after(this, false);"',
+							'label' => qa_lang_html('users/hide_all_user_button'),
+						);
+					}	
 				}
 
 				if ($loginlevel >= QA_USER_LEVEL_ADMIN) {
