@@ -75,8 +75,8 @@ else {
 
 					foreach ($params as $param) {
 						if (preg_match('/^([^\=]*)(\=(.*))?$/', $param, $matches) && isset($matches[3])) {
-							$argument = strtr(rawurldecode($matches[1]), '.', '_'); // simulate PHP's $_GET behavior
-							$_GET[$argument] = qa_string_to_gpc(rawurldecode($matches[3]));
+							$argument = strtr(urldecode($matches[1]), '.', '_'); // simulate PHP's $_GET behavior
+							$_GET[$argument] = qa_string_to_gpc(urldecode($matches[3]));
 						}
 					}
 
@@ -86,10 +86,10 @@ else {
 				// Generally we assume that $_GET['qa-rewrite'] has the right path depth, but this won't be the case if there's
 				// a & or # somewhere in the middle of the path, due to Apache unescaping. So we make a special case for that.
 				// If 'REQUEST_URI' and 'qa-rewrite' already match (as on Nginx), we can skip this.
-				$normalizedpath = rawurldecode($origpath);
+				$normalizedpath = urldecode($origpath);
 				if (substr($normalizedpath, -strlen($qa_rewrite)) !== $qa_rewrite) {
 					$keepparts = count($requestparts);
-					$requestparts = explode('/', rawurldecode($origpath)); // new request calculated from $_SERVER['REQUEST_URI']
+					$requestparts = explode('/', urldecode($origpath)); // new request calculated from $_SERVER['REQUEST_URI']
 
 					// loop forwards so we capture all parts
 					for ($part = 0, $max = count($requestparts); $part < $max; $part++) {
@@ -134,7 +134,7 @@ else {
 					$origpath = substr($origpath, 0, $questionpos);
 				}
 
-				$normalizedpath = rawurldecode($origpath);
+				$normalizedpath = urldecode($origpath);
 				$indexpos = strpos($normalizedpath, $indexpath);
 			}
 
