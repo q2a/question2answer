@@ -2220,6 +2220,10 @@ function qa_get_post_content($editorfield, $contentfield, &$ineditor, &$inconten
 
 	$ineditor = qa_post_text($editorfield);
 	$editor = qa_load_module('editor', $ineditor);
+	if ($editor === null) {
+		$editor = qa_load_module('editor', '');
+	}
+
 	$readdata = $editor->read_post($contentfield);
 
 	// sanitise 4-byte Unicode
