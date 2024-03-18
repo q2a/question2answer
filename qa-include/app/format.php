@@ -165,7 +165,7 @@ function qa_get_favorite_non_qs_map()
 						break;
 
 					case QA_ENTITY_TAG:
-						$qa_favorite_non_qs_map['tag'][qa_strtolower($favorite['tags'])] = true;
+						$qa_favorite_non_qs_map['tag'][qa_strtolower($favorite['tags'] ?? '')] = true;
 						break;
 
 					case QA_ENTITY_CATEGORY:
