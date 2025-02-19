@@ -44,9 +44,18 @@ list($useraccount, $questions, $answerqs, $commentqs, $editqs) = qa_db_select_wi
 	qa_db_user_recent_edit_qs_selectspec($loginuserid, $identifier)
 );
 
-if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
-	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+if (!QA_FINAL_EXTERNAL_USERS) {
+	if ($useraccount === null) { // check the user exists
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
+	if ($handle !== $useraccount['handle']) {
+		qa_redirect('user/' . $useraccount['handle'] . '/activity');
+	}
+}
 
+if ($handle !== $useraccount['handle']) {
+	qa_redirect('user/' . $useraccount['handle'] . '/activity');
+}
 
 // Get information on user references
 

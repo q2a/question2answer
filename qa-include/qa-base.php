@@ -1803,17 +1803,17 @@ function qa_redirect($request, $params = null, $rooturl = null, $neaturls = null
 	qa_redirect_raw(qa_path($request, $params, $rooturl, $neaturls, $anchor));
 }
 
-
 /**
  * Redirect the user's web browser to page $path which is already a URL
- * @param $url
+ * @param string $url
+ * @param int $statusCode
  * @return mixed
  */
-function qa_redirect_raw($url)
+function qa_redirect_raw($url, $statusCode = 301)
 {
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
-	header('Location: ' . $url);
+	header('Location: ' . $url, true, $statusCode);
 	qa_exit('redirect');
 }
 

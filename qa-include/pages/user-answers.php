@@ -44,9 +44,14 @@ list($useraccount, $userpoints, $questions) = qa_db_select_with_pending(
 	qa_db_user_recent_a_qs_selectspec($loginuserid, $identifier, qa_opt_if_loaded('page_size_activity'), $start)
 );
 
-if (!QA_FINAL_EXTERNAL_USERS && !is_array($useraccount)) // check the user exists
-	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
-
+if (!QA_FINAL_EXTERNAL_USERS) {
+	if ($useraccount === null) { // check the user exists
+		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
+	}
+	if ($handle !== $useraccount['handle']) {
+		qa_redirect('user/' . $useraccount['handle'] . '/answers');
+	}
+}
 
 // Get information on user questions
 

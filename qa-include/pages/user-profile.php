@@ -51,6 +51,9 @@ if (!QA_FINAL_EXTERNAL_USERS) {
 	}
 
 	$userid = $useraccount['userid'];
+	if ($handle !== $useraccount['handle']) {
+		qa_redirect('user/' . $useraccount['handle']);
+	}
 }
 
 list($userprofile, $userfields, $usermessages, $userpoints, $userlevels, $navcategories, $userrank) =

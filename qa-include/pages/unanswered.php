@@ -31,12 +31,12 @@ require_once QA_INCLUDE_DIR . 'app/q-list.php';
 
 // Get list of unanswered questions, allow per-category if QA_ALLOW_UNINDEXED_QUERIES set in qa-config.php
 
-if (QA_ALLOW_UNINDEXED_QUERIES)
-	$categoryslugs = qa_request_parts(1);
-else
-	$categoryslugs = null;
+$categoryslugs = qa_request_parts(1);
+$hasSlugs = !empty($categoryslugs);
+if (!QA_ALLOW_UNINDEXED_QUERIES && $hasSlugs) {
+	qa_redirect('unanswered');
+}
 
-$countslugs = $categoryslugs === null ? null : count($categoryslugs);
 $by = qa_get('by');
 $start = qa_get_start();
 $userid = qa_get_logged_in_userid();
@@ -57,15 +57,20 @@ switch ($by) {
 
 list($questions, $categories, $categoryid) = qa_db_select_with_pending(
 	qa_db_unanswered_qs_selectspec($userid, $selectby, $start, $categoryslugs, false, false, qa_opt_if_loaded('page_size_una_qs')),
-	QA_ALLOW_UNINDEXED_QUERIES ? qa_db_category_nav_selectspec($categoryslugs, false, false, true) : null,
-	$countslugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
+	qa_db_category_nav_selectspec($categoryslugs, false, false, true),
+	$hasSlugs ? qa_db_slugs_to_category_id_selectspec($categoryslugs) : null
 );
 
-if ($countslugs) {
+if ($hasSlugs) {
 	if (!isset($categoryid))
 		return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
 	$categorytitlehtml = qa_html($categories[$categoryid]['title']);
+}
+
+if (isset($categoryid) && $categories[$categoryid]['backpath'] !== qa_db_slugs_to_backpath($categoryslugs)) {
+	$expectedPathInUrl = implode('/', array_reverse(explode('/', $categories[$categoryid]['backpath'])));
+	qa_redirect('unanswered/' . $expectedPathInUrl);
 }
 
 $feedpathprefix = null;
@@ -73,7 +78,7 @@ $linkparams = array('by' => $by);
 
 switch ($by) {
 	case 'selected':
-		if ($countslugs) {
+		if ($hasSlugs) {
 			$sometitle = qa_lang_html_sub('main/unselected_qs_in_x', $categorytitlehtml);
 			$nonetitle = qa_lang_html_sub('main/no_una_questions_in_x', $categorytitlehtml);
 
@@ -85,7 +90,7 @@ switch ($by) {
 		break;
 
 	case 'upvotes':
-		if ($countslugs) {
+		if ($hasSlugs) {
 			$sometitle = qa_lang_html_sub('main/unupvoteda_qs_in_x', $categorytitlehtml);
 			$nonetitle = qa_lang_html_sub('main/no_una_questions_in_x', $categorytitlehtml);
 
@@ -100,7 +105,7 @@ switch ($by) {
 		$feedpathprefix = qa_opt('feed_for_unanswered') ? 'unanswered' : null;
 		$linkparams = array();
 
-		if ($countslugs) {
+		if ($hasSlugs) {
 			$sometitle = qa_lang_html_sub('main/unanswered_qs_in_x', $categorytitlehtml);
 			$nonetitle = qa_lang_html_sub('main/no_una_questions_in_x', $categorytitlehtml);
 
@@ -122,10 +127,10 @@ $qa_content = qa_q_list_page_content(
 	@$count, // total count
 	$sometitle, // title if some questions
 	$nonetitle, // title if no questions
-	QA_ALLOW_UNINDEXED_QUERIES ? $categories : array(), // categories for navigation (null if not shown on this page)
-	QA_ALLOW_UNINDEXED_QUERIES ? $categoryid : null, // selected category id (null if not relevant)
+	$categories, // categories for navigation
+	$categoryid, // selected category id
 	false, // show question counts in category navigation
-	QA_ALLOW_UNINDEXED_QUERIES ? 'unanswered/' : null, // prefix for links in category navigation (null if no navigation)
+	QA_ALLOW_UNINDEXED_QUERIES ? 'unanswered/' : null, // prefix for links in category navigation
 	$feedpathprefix, // prefix for RSS feed paths (null to hide)
 	qa_html_suggest_qs_tags(qa_using_tags()), // suggest what to do next
 	$linkparams, // extra parameters for page links

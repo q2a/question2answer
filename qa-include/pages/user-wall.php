@@ -36,7 +36,6 @@ if (QA_FINAL_EXTERNAL_USERS) {
 	qa_exit();
 }
 
-
 // $handle, $userhtml are already set by /qa-include/page/user.php
 
 $start = qa_get_start();
@@ -49,9 +48,12 @@ list($useraccount, $usermessages) = qa_db_select_with_pending(
 	qa_db_recent_messages_selectspec(null, null, $handle, false, qa_opt_if_loaded('page_size_wall'), $start)
 );
 
-if (!is_array($useraccount)) // check the user exists
+if ($useraccount === null) // check the user exists
 	return include QA_INCLUDE_DIR . 'qa-page-not-found.php';
 
+if ($handle !== $useraccount['handle']) {
+	qa_redirect('user/' . $useraccount['handle'] . '/wall');
+}
 
 // Perform pagination
 
