@@ -767,7 +767,12 @@ function qa_who_to_html($isbyuser, $postuserid, $usershtml, $ip = null, $microda
 
 		if ($microdata) {
 			// duplicate HTML from qa_get_one_user_html()
-			$whohtml = '<span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">' . $whohtml . '</span></span>';
+			$whohtml =
+				'<span itemprop="author" itemscope itemtype="https://schema.org/Person">' .
+					'<span itemprop="name">' . $whohtml . '</span>' .
+					// anonymous authors need an URL field to satisfy Google
+					'<meta itemprop="url" content="' . qa_path_html('users/') . '" />' .
+				'</span>';
 		}
 
 		if (isset($ip))
