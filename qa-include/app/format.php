@@ -1518,6 +1518,11 @@ function qa_user_sub_navigation($handle, $selected, $ismyuser = false)
 			'label' => qa_lang_html('misc/nav_user_as'),
 			'url' => qa_path_html('user/' . $handle . '/answers'),
 		),
+		
+		'comments' => array(
+			'label' => qa_lang_html('misc/nav_user_cs'),
+			'url' => qa_path_html('user/' . $handle . '/comments'),
+		),
 	);
 
 	if (isset($navigation[$selected]))

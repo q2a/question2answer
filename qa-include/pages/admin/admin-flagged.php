@@ -32,9 +32,11 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 // Find most flagged questions, answers, comments
 
 $userid = qa_get_logged_in_userid();
+$start = qa_get_start();
+$pageSize = (int)qa_opt('page_size_qs');
 
 $questions = qa_db_select_with_pending(
-	qa_db_flagged_post_qs_selectspec($userid, 0, true)
+	qa_db_flagged_post_qs_selectspec($userid, $start, true, $pageSize)
 );
 
 
@@ -125,6 +127,21 @@ if (count($questions)) {
 
 		$qa_content['q_list']['qs'][] = $htmlfields;
 	}
+	// Manual count query
+	$totalflaged = qa_opt('cache_flaggedcount'); // Fetching total flagged value from cache; may be used for better performance
+	//$totalflaged = qa_db_read_one_value(qa_db_query_sub("SELECT COUNT(*) FROM qa_posts WHERE flagcount > 0"),true); // Fetching total flagged value from the db through a complete run
+
+	// Add page links
+	$qa_content['page_links'] = qa_html_page_links(
+										qa_request(),     // Current request
+										$start,           // Current start offset
+										$pageSize,        // how many posts per page
+										$totalflaged,     // Total number of items
+										2,             // number of page links before and after current
+										array(),          // Extra query params
+										''                // Anchor
+									);
+
 
 } else
 	$qa_content['title'] = qa_lang_html('admin/no_flagged_found');

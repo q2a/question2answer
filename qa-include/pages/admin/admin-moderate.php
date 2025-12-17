@@ -32,11 +32,15 @@ require_once QA_INCLUDE_DIR . 'app/format.php';
 // Find queued questions, answers, comments
 
 $userid = qa_get_logged_in_userid();
+$start = qa_get_start();
+$pageSize = (int)qa_opt('page_size_qs');
+
+
 
 list($queuedquestions, $queuedanswers, $queuedcomments) = qa_db_select_with_pending(
-	qa_db_qs_selectspec($userid, 'created', 0, null, null, 'Q_QUEUED', true),
-	qa_db_recent_a_qs_selectspec($userid, 0, null, null, 'A_QUEUED', true),
-	qa_db_recent_c_qs_selectspec($userid, 0, null, null, 'C_QUEUED', true)
+	qa_db_qs_selectspec($userid, 'created', $start, null, null, 'Q_QUEUED', true, $pageSize),
+	qa_db_recent_a_qs_selectspec($userid, $start, null, null, 'A_QUEUED', true, $pageSize),
+	qa_db_recent_c_qs_selectspec($userid, $start, null, null, 'C_QUEUED', true, $pageSize)
 );
 
 
@@ -54,7 +58,7 @@ if (qa_user_maximum_permit_error('permit_moderate')) {
 $pageerror = qa_admin_check_clicks();
 
 
-// Combine sets of questions and remove those this user has no permission to moderate
+// Combine sets of questions and remove those this user has no permission to moderate. Please note that we are not slicing the posts to $pageSize. So, we may have maximum of 3*$pageSize posts per page.
 
 $questions = qa_any_sort_by_date(array_merge($queuedquestions, $queuedanswers, $queuedcomments));
 
@@ -147,6 +151,41 @@ if (count($questions)) {
 
 		$qa_content['q_list']['qs'][] = $htmlfields;
 	}
+
+
+	// Manual count query - the following two methods will not work if we have 35 questions, 15 answer and 19 comments are there for moderation
+		//$totalQueued = qa_opt('cache_queuedcount');
+		//$totalQueued = qa_db_read_one_value(qa_db_query_sub("SELECT COUNT(*) FROM ^posts WHERE type IN ('Q_QUEUED', 'A_QUEUED', 'C_QUEUED')"),true);
+
+	// The workable solution is
+	$countQ = qa_db_read_one_value(
+		qa_db_query_sub("SELECT COUNT(*) FROM ^posts WHERE type = 'Q_QUEUED'"),
+		true
+	);
+	$countA = qa_db_read_one_value(
+		qa_db_query_sub("SELECT COUNT(*) FROM ^posts WHERE type = 'A_QUEUED'"),
+		true
+	);
+	$countC = qa_db_read_one_value(
+		qa_db_query_sub("SELECT COUNT(*) FROM ^posts WHERE type = 'C_QUEUED'"),
+		true
+	);
+
+	// the page list should be driven by the largest queue
+	$Max_posts = max($countQ, $countA, $countC);
+
+
+
+	// Add page links
+	$qa_content['page_links'] = qa_html_page_links(
+										qa_request(),     // Current request
+										$start,           // Current start offset
+										$pageSize,        // It doesn't exactly reflect the no.of posts per page. It is used to calculate the number of page links.
+										$Max_posts,     // Maximum posts of one type
+										2,             // number of page links before and after current
+										array(),          // Extra query params
+										''                // Anchor
+									);
 
 } else
 	$qa_content['title'] = qa_lang_html('admin/no_approve_found');

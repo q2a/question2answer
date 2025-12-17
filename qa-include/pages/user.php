@@ -71,6 +71,10 @@ switch (qa_request_part(2)) {
 		qa_set_template('user-answers');
 		$qa_content = include QA_INCLUDE_DIR . 'pages/user-answers.php';
 		break;
+	case 'comments':
+		qa_set_template('user-comments');
+		$qa_content = include QA_INCLUDE_DIR . 'pages/user-comments.php';
+		break;
 
 	case null:
 		$qa_content = include QA_INCLUDE_DIR . 'pages/user-profile.php';
