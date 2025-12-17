@@ -26,8 +26,8 @@ class Q2A_Plugin_PluginManager
 	const PLUGIN_DELIMITER = ';';
 	const OPT_ENABLED_PLUGINS = 'enabled_plugins';
 
-	private $loadBeforeDbInit = array();
-	private $loadAfterDbInit = array();
+	private $loadBeforeDbInit = array(); //New structure: [dependency_level => [pluginKey => pluginInfo]]
+	private $loadAfterDbInit = array(); //New structure: [dependency_level => [pluginKey => pluginInfo]]
 
 	public function readAllPluginMetadatas()
 	{
@@ -49,13 +49,20 @@ class Q2A_Plugin_PluginManager
 			}
 
 			// skip plugin which requires a later version of Q2A
-			if (qa_qa_version_below($metadata['min_q2a'] ?? '')) {
+			if (qa_qa_version_below(isset($metadata['min_q2a']) ? $metadata['min_q2a'] : '')) {
 				continue;
 			}
 			// skip plugin which requires a later version of PHP
-			if (qa_php_version_below($metadata['min_php'] ?? '')) {
+			if (qa_php_version_below(isset($metadata['min_php']) ? $metadata['min_php'] : '')) {
 				continue;
 			}
+			
+			//Dependency level of the plugin useful while loading it. Lower the dependency number, loads earlier.
+			$dependencyLevel = 1;
+			if (isset($metadata['dependency_level']) && ctype_digit((string)$metadata['dependency_level'])) {
+				$dependencyLevel = (int)$metadata['dependency_level'];
+			}
+
 
 			$pluginInfoKey = basename($pluginDirectory);
 			$pluginInfo = array(
@@ -67,19 +74,22 @@ class Q2A_Plugin_PluginManager
 			if (isset($metadata['load_order'])) {
 				switch ($metadata['load_order']) {
 					case 'after_db_init':
-						$this->loadAfterDbInit[$pluginInfoKey] = $pluginInfo;
+						//$this->loadAfterDbInit[$pluginInfoKey] = $pluginInfo;
+						$this->loadAfterDbInit[$dependencyLevel][$pluginInfoKey] = $pluginInfo;
 						break;
 					case 'before_db_init':
-						$this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
+						//$this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
+						$this->loadBeforeDbInit[$dependencyLevel][$pluginInfoKey] = $pluginInfo;
 						break;
 					default:
 				}
 			} else {
-				$this->loadBeforeDbInit[$pluginInfoKey] = $pluginInfo;
+				$this->loadBeforeDbInit[$dependencyLevel][$pluginInfoKey] = $pluginInfo;
 			}
 		}
 	}
 
+	//This function is not useful anymore
 	private function loadPlugins($pluginInfos)
 	{
 		global $qa_plugin_directory, $qa_plugin_urltoroot;
@@ -94,15 +104,55 @@ class Q2A_Plugin_PluginManager
 		$qa_plugin_directory = null;
 		$qa_plugin_urltoroot = null;
 	}
+	
+	//New function to load plugins 
+	private function loadPluginsByDependency(array $groupedPlugins)
+	{
+		global $qa_plugin_directory, $qa_plugin_urltoroot;
+
+		if (empty($groupedPlugins)) {
+			return;
+		}
+
+		ksort($groupedPlugins, SORT_NUMERIC);
+
+		foreach ($groupedPlugins as $level => $pluginsAtLevel) {
+
+			//SAFETY: level may accidentally contain flat array
+			if (!is_array($pluginsAtLevel)) {
+				continue;
+			}
+
+			foreach ($pluginsAtLevel as $pluginKey => $pluginInfo) {
+
+				//SAFETY: pluginInfo must be an array
+				if (!is_array($pluginInfo) || !isset($pluginInfo['pluginfile'])) {
+					continue;
+				}
+
+				$qa_plugin_directory = $pluginInfo['directory'];
+				$qa_plugin_urltoroot = $pluginInfo['urltoroot'];
+
+				require_once $pluginInfo['pluginfile'];
+			}
+		}
+
+		$qa_plugin_directory = null;
+		$qa_plugin_urltoroot = null;
+	}
+
+
 
 	public function loadPluginsBeforeDbInit()
 	{
-		$this->loadPlugins($this->loadBeforeDbInit);
+		//$this->loadPlugins($this->loadBeforeDbInit);
+		$this->loadPluginsByDependency($this->loadBeforeDbInit);
 	}
 
 	public function loadPluginsAfterDbInit()
 	{
 		$enabledPlugins = $this->getEnabledPlugins(false);
+		/* Old way
 		$enabledForAfterDbInit = array();
 
 		foreach ($enabledPlugins as $enabledPluginDirectory) {
@@ -112,6 +162,17 @@ class Q2A_Plugin_PluginManager
 		}
 
 		$this->loadPlugins($enabledForAfterDbInit);
+		*/
+		
+		$enabledGrouped = array();
+		foreach ($this->loadAfterDbInit as $level => $pluginsAtLevel) {
+			foreach ($pluginsAtLevel as $pluginKey => $pluginInfo) {
+				if (in_array($pluginKey, $enabledPlugins, true)) {
+					$enabledGrouped[$level][$pluginKey] = $pluginInfo;
+				}
+			}
+		}
+		$this->loadPluginsByDependency($enabledGrouped);
 	}
 
 	public function getEnabledPlugins($fullPath = false)

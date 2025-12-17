@@ -1321,6 +1321,12 @@ function qa_db_user_recent_c_qs_selectspec($voteuserid, $identifier, $count = nu
 
 	qa_db_add_selectspec_opost($selectspec, 'cposts');
 
+	$selectspec['columns']['oupvotes'] = 'cposts.upvotes';
+	$selectspec['columns']['odownvotes'] = 'cposts.downvotes';
+	$selectspec['columns']['onetvotes'] = 'cposts.netvotes';
+
+
+
 	$selectspec['source'] .=
 		" JOIN ^posts AS parentposts ON" .
 		" ^posts.postid=(CASE parentposts.type WHEN 'A' THEN parentposts.parentid ELSE parentposts.postid END)" .
