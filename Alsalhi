@@ -1,0 +1,248 @@
+
+https://github.com/q2a/question2answer/blob/4344721c138e7f6845a8129278c9d3374daee085/qa-include/pages/login.php
+#L174
+
+This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<rss version="2.0">
+<channel>
+<title>Question2Answer Q&A - Recent questions and answers</title>
+<link>https://www.question2answer.org/qa/qa</link>
+<description>Powered by Question2Answer</description>
+<item>
+<title>Why is it still in the database when I delete a question with an image?</title>
+<link>https://www.question2answer.org/qa/90261/why-is-it-still-the-database-when-delete-question-with-image</link>
+<description>The image remains when the question is deleted</description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90261/why-is-it-still-the-database-when-delete-question-with-image</guid>
+<pubDate>Sun, 10 Jan 2021 12:25:49 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Is there any way to set  SnowFlat  theme support widescreen( 16:9)</title>
+<link>https://www.question2answer.org/qa/90192/is-there-any-way-to-set-snowflat-theme-support-widescreen-16?show=90254#a90254</link>
+<description>make it by modify &nbsp;as follow<br /> qa-styles.css<br /> <br /> @media (min-width: 1044px) {<br /> &nbsp; &nbsp; .qa-body-wrapper {<br /> &nbsp; &nbsp; &nbsp; &nbsp; width: 84%;<br /> &nbsp; &nbsp; }<br /> }</description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90192/is-there-any-way-to-set-snowflat-theme-support-widescreen-16?show=90254#a90254</guid>
+<pubDate>Sat, 09 Jan 2021 12:06:37 +0000</pubDate>
+</item>
+<item>
+<title>Answered: How do you change the voting icons on the snowflat theme</title>
+<link>https://www.question2answer.org/qa/90251/how-do-you-change-the-voting-icons-on-the-snowflat-theme?show=90253#a90253</link>
+<description> <p>voting icons are input fields, so they don t support ::before or ::after pseudo-elements</p> <p>you can use one of these</p> <ul> <li>use background image in css(as SnowFlat)</li> <li>or add &lt;i&gt; elements in php with voting buttons(as my&nbsp;<a rel="nofollow" href="https://github.com/MominRaza/Mayro">Mayro Theme</a>)</li></ul></description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90251/how-do-you-change-the-voting-icons-on-the-snowflat-theme?show=90253#a90253</guid>
+<pubDate>Sat, 09 Jan 2021 10:47:16 +0000</pubDate>
+</item>
+<item>
+<title>Answered: I made a material-design version of the snowflat theme</title>
+<link>https://www.question2answer.org/qa/90241/i-made-a-material-design-version-of-the-snowflat-theme?show=90248#a90248</link>
+<description> <p>Nice Work @PUMPKIN</p> <p><img alt="" src="https://www.question2answer.org/qa/?qa=blob&amp;qa_blobid=3582342527417747794" style="height:197px; width:238px"></p> <p>login icon missing</p> <p><img alt="" src="https://www.question2answer.org/qa/?qa=blob&amp;qa_blobid=5442788084597352075" style="height:288px; width:492px"></p> <p>feed icon missing</p></description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90241/i-made-a-material-design-version-of-the-snowflat-theme?show=90248#a90248</guid>
+<pubDate>Sat, 09 Jan 2021 09:37:14 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Question for theme developers</title>
+<link>https://www.question2answer.org/qa/90229/question-for-theme-developers?show=90246#a90246</link>
+<description> <p>My experience developing the <a rel="nofollow" href="https://github.com/MominRaza/Mayro">Mayro - Google Material Design Theme</a>.</p> <p>I first tried to change the snowflat Theme css but changing only the css of any theme is not giving&nbsp;me complete control over the design as i want.</p> <p>Then I started from scratch, but for help I looked at the snowflat and&nbsp;donut theme php.</p> <p>And based on Mayro Theme i developed <a rel="nofollow" href="https://www.question2answer.org/qa/89985/paypal-payment-discount-mayro-version-google-material-design">Mayro Pro Theme</a>.</p></description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90229/question-for-theme-developers?show=90246#a90246</guid>
+<pubDate>Sat, 09 Jan 2021 09:20:22 +0000</pubDate>
+</item>
+<item>
+<title>Images are not loaded</title>
+<link>https://www.question2answer.org/qa/90243/images-are-not-loaded</link>
+<description>Included image upload plugin but images are not loading. It gives an error that the file is more than 1 mb, although I upload a file of 80 kb. I changed the maximum 16 MB in the plugin settings, but the image still does not load, writes cannot be loaded, since the limit is 16 MB, but I will repeat, I have an image of only 80 kilobytes. What is the problem? Where can I fix this?</description>
+<category>Plugins</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90243/images-are-not-loaded</guid>
+<pubDate>Sat, 09 Jan 2021 08:42:00 +0000</pubDate>
+</item>
+<item>
+<title>Answered: How do I make my website automatically save a login cookie when a user signs in?</title>
+<link>https://www.question2answer.org/qa/90205/make-website-automatically-save-login-cookie-when-user-signs?show=90224#a90224</link>
+<description> <p>I think changing&nbsp;<a rel="nofollow" href="https://github.com/q2a/question2answer/blob/4344721c138e7f6845a8129278c9d3374daee085/qa-include/pages/login.php#L52">this</a>&nbsp;line with following code will be enough for this..</p> <blockquote> <p>$inremember = 1;</p></blockquote> <p>Sorry, I couldn t test it myself..But if it doesn t work, let me know..</p> <p></p></description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90205/make-website-automatically-save-login-cookie-when-user-signs?show=90224#a90224</guid>
+<pubDate>Fri, 08 Jan 2021 13:54:20 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Is there any editor plugin to support insert code in question content?</title>
+<link>https://www.question2answer.org/qa/90177/there-any-editor-plugin-support-insert-code-question-content?show=90222#a90222</link>
+<description> <p>With the Markdown editor you can format text as code by indenting it with 4 spaces. Alternatively you can also put text in <span style="font-family:Courier New,Courier,monospace">&lt;pre&gt;</span> tags to have it rendered as a code block.</p> <blockquote> <p><span style="font-family:Courier New,Courier,monospace">This would be rendered as regular text.</span></p> <p><span style="font-family:Courier New,Courier,monospace">&nbsp;&nbsp;&nbsp; This would be rendered as code.</span></p> <p><span style="font-family:Courier New,Courier,monospace">&lt;pre&gt; <br>This would also be rendered as code. <br>&lt;/pre&gt;</span></p></blockquote></description>
+<category>Plugins</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90177/there-any-editor-plugin-support-insert-code-question-content?show=90222#a90222</guid>
+<pubDate>Fri, 08 Jan 2021 11:10:55 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Can I ask Q2A support for mobile devices or not?</title>
+<link>https://www.question2answer.org/qa/90162/can-i-ask-q2a-support-for-mobile-devices-or-not?show=90221#a90221</link>
+<description>FTR, Q&amp;A forums are not social networks.<br /> <br /> With that said, Q2A is a web application, so it can be used with any browser. How good or bad that works on mobile devices depends on what theme the owner of the forum chose and how good that theme is optimized for mobile devices.</description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90162/can-i-ask-q2a-support-for-mobile-devices-or-not?show=90221#a90221</guid>
+<pubDate>Fri, 08 Jan 2021 11:06:45 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Is there a language switch plugin?</title>
+<link>https://www.question2answer.org/qa/73888/is-there-a-language-switch-plugin?show=90217#a90217</link>
+<description>With categories for different languages, it looks better than subdomains. multilanguage somehow needs to be implemented, everyone wants it, but no one can do it, unfortunately ...</description>
+<category>Plugins</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/73888/is-there-a-language-switch-plugin?show=90217#a90217</guid>
+<pubDate>Fri, 08 Jan 2021 09:08:50 +0000</pubDate>
+</item>
+<item>
+<title>Use in multiple languages</title>
+<link>https://www.question2answer.org/qa/90216/use-in-multiple-languages</link>
+<description>Do you plan to make the script multilingual in the future?<br /> <br /> Our main site has several languages, but q2a can only use one main language without additional installations. Please make the script multilingual so that one installation can be used in different languages. That would be amazing. On one installation, the script can be used from different countries, speaking different languages, it should be very convenient for everyone. Will you do this in future updates?</description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90216/use-in-multiple-languages</guid>
+<pubDate>Fri, 08 Jan 2021 09:05:54 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Change the theme name from  snowflat </title>
+<link>https://www.question2answer.org/qa/90206/change-the-theme-name-from-snowflat?show=90210#a90210</link>
+<description> <p>change theme folder name.</p> <p><span style="font-family:monospace; font-size:13px">in </span><span style="color:#339933; font-family:monospace; font-size:13px">qa-styles.css</span><span style="font-family:monospace; font-size:13px">&nbsp;change these fields if you want.&nbsp;</span><span style="font-family:monospace"><span style="font-size:13px">all fields are optional.</span></span></p> <pre class="highlight" style="margin-left: 2em; line-height: 1.3; font-size: 14px;"><code style="color: inherit; font-size: 13px; tab-size: 4;"> <span style="color:#808080" class="cm">/* Theme URI: _Web address for your theme_ Theme Version: _Your theme version number_ Theme Date: _Build date of your theme in YYYY-MM-DD_ Theme Author: _Human-readable name of theme author_ Theme Author URI: _Web address for plugin author_ Theme License: _Short name of plugin license, e.g. GPLv2/3_ Theme Update Check URI: _Web address for Q2A to check for updates_ */</span></code> </pre></description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90206/change-the-theme-name-from-snowflat?show=90210#a90210</guid>
+<pubDate>Fri, 08 Jan 2021 04:25:47 +0000</pubDate>
+</item>
+<item>
+<title>i have a proplem in cache</title>
+<link>https://www.question2answer.org/qa/90201/i-have-a-proplem-in-cache</link>
+<description>my website that use q2a have alot of php request so after a few hours my server have been cached, i make a test in many servers proplem stay</description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90201/i-have-a-proplem-in-cache</guid>
+<pubDate>Thu, 07 Jan 2021 12:24:26 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Is there any way to set url not conatins question titles, If in chinese it is not helpful for seo</title>
+<link>https://www.question2answer.org/qa/90193/there-conatins-question-titles-chinese-not-helpful-for-seo?show=90194#a90194</link>
+<description>use view-&gt;title length in url &nbsp;make it <br /> <br /> close this question</description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90193/there-conatins-question-titles-chinese-not-helpful-for-seo?show=90194#a90194</guid>
+<pubDate>Thu, 07 Jan 2021 07:47:35 +0000</pubDate>
+</item>
+<item>
+<title>Title Length Counter Plugin</title>
+<link>https://www.question2answer.org/qa/90173/title-length-counter-plugin</link>
+<description> <h1>Title Length Counter</h1> <p>It shows the length of title below title text field.</p> <p><a target="_blank" rel="nofollow" href="https://raw.githubusercontent.com/MominRaza/assets/main/images/title-length-counter.jpg"><img alt="image" src="https://raw.githubusercontent.com/MominRaza/assets/main/images/title-length-counter.jpg"></a></p> <p></p> <p>Download:&nbsp;<a rel="nofollow" href="https://github.com/MominRaza/title-length-counter">https://github.com/MominRaza/title-length-counter</a></p> <p>Thnx... @pupi1985 for help</p></description>
+<category>Plugins</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90173/title-length-counter-plugin</guid>
+<pubDate>Wed, 06 Jan 2021 12:33:14 +0000</pubDate>
+</item>
+<item>
+<title>How can I create a placeholder for textboxes?</title>
+<link>https://www.question2answer.org/qa/90171/how-can-i-create-a-placeholder-for-textboxes</link>
+<description>I want to add text using the placeholder attribute inside textboxes like &quot;type your question here&quot; for question title textbox, &quot;enter your password here&quot; in the Password box and so on...<br /> <br /> So, which files do I need to modify to add placeholders to the textboxes</description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90171/how-can-i-create-a-placeholder-for-textboxes</guid>
+<pubDate>Wed, 06 Jan 2021 12:11:32 +0000</pubDate>
+</item>
+<item>
+<title>Answered: [Paypal Payment + Discount] Mayro Pro - Paid version of Mayro: Google Material Design Theme - v3.0</title>
+<link>https://www.question2answer.org/qa/89985/paypal-payment-discount-mayro-version-google-material-design?show=90163#a90163</link>
+<description> <h2><strong><span style="color:#24292e; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;">Price</span></strong></h2> <p><span style="color:#24292e; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;"><span style="text-decoration: line-through;">41$</span> <strong>35$</strong> or <span style="text-decoration: line-through;">3000₹</span>&nbsp;</span><strong><span style="color:#24292e; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;">2500₹</span></strong><span style="color:#24292e; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;">&nbsp;(INR)</span></p> <h2><strong><span style="color:#24292e; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;">How to buy</span></strong></h2> <p><span style="color:#24292e; font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;"><strong>Only for Indian:</strong>&nbsp;I will&nbsp;accept any UPI payment(GPay/PhonePay/PaytmUPI). Sent me a private message with your&nbsp;<strong>email id</strong>&nbsp;(include in message).&nbsp;I will send my UPI details and Mayro Pro theme on email.&nbsp;</span></p> <p><span style="color:#000000"><strong>For International:</strong>&nbsp;I will accept PayPal payment. In <strong>Add a note</strong> field enter&nbsp;your email id</span></p> <p><a rel="nofollow" href="https://paypal.me/mominr082">https://paypal.me/mominr082</a></p></description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/89985/paypal-payment-discount-mayro-version-google-material-design?show=90163#a90163</guid>
+<pubDate>Wed, 06 Jan 2021 06:52:35 +0000</pubDate>
+</item>
+<item>
+<title>Answered: A fake user registration attack spiked on my Q2A site.</title>
+<link>https://www.question2answer.org/qa/90027/a-fake-user-registration-attack-spiked-on-my-q2a-site?show=90141#a90141</link>
+<description> <p><span id="docs-internal-guid-27a2d885-7fff-d6f7-98ff-48df52310390"><span style="color:#323232; font-family:Arial; font-size:12pt; font-variant-east-asian:normal; font-variant-numeric:normal; vertical-align:baseline; white-space:pre-wrap">User Email Activation is an optional security measure. If you’d like an even more secure method of user registration, you can opt for Manual Approval. The approval method will require you to review each user registration request before the new user can join your website.&nbsp; You’ll receive an email notice for each request, and the option to approve or deny the new member.</span></span></p></description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90027/a-fake-user-registration-attack-spiked-on-my-q2a-site?show=90141#a90141</guid>
+<pubDate>Wed, 06 Jan 2021 04:48:11 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Crowdfunding for Q2A Development</title>
+<link>https://www.question2answer.org/qa/90113/crowdfunding-for-q2a-development?show=90161#a90161</link>
+<description> <p>We can give $100 from our site <a rel="nofollow" href="https://mathsgee.com/qna">https://mathsgee.com/qna</a>&nbsp; for 1.9 as well</p></description>
+<category>Q2A Core</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/90113/crowdfunding-for-q2a-development?show=90161#a90161</guid>
+<pubDate>Wed, 06 Jan 2021 04:27:58 +0000</pubDate>
+</item>
+<item>
+<title>Answered: Muffin Theme - HUGE Discount</title>
+<link>https://www.question2answer.org/qa/59835/muffin-theme-huge-discount?show=90159#a90159</link>
+<description>this discount available ?</description>
+<category>Themes</category>
+<guid isPermaLink="true">https://www.question2answer.org/qa/59835/muffin-theme-huge-discount?show=90159#a90159</guid>
+<pubDate>Tue, 05 Jan 2021 23:57:32 +0000</pubDate>
+</item>
+</channel>
+</rss>
+
+## GitHub Docs <!-- omit in toc -->
+
+This repository contains the documentation website code and Markdown source files for [docs.github.com](https://docs.github.com).
+
+GitHub s Docs team works on pre-production content in a private repo that regularly syncs with this public repo.
+
+In this article:
+
+- [Contributing](#contributing)
+- [READMEs](#readmes)
+- [License](#license)
+
+## Contributing
+
+### Start contributing right now:
+
+We accept a lot of [different contributions](CONTRIBUTING.md/#types-of-contributions-memo), including some that don t require you to write a single line of code.
+
+#### Click **make a contribution** from docs
+
+As you re using the GitHub Docs, you may find something in an article that you d like to add to, update, or change. Click on **make a contribution** to navigate directly to that article in the codebase, so that you can begin making your contribution.
+
+<img src="./assets/images/contribution_cta.png" width="400">
+
+#### Open an issue
+
+If you ve found a problem, you can open an issue using a [template](https://github.com/github/docs/issues/new/choose).
+
+#### Solve an issue
+
+If you have a solution to one of the open issues, you will need to fork the repository and submit a pull request using the [template](https://github.com/github/docs/blob/main/CONTRIBUTING.md#pull-request-template) that is visible automatically in the pull request body. For more details about this process, please check out [Getting Started with Contributing](/CONTRIBUTING.md).
+
+#### Join us in discussions
+
+We use GitHub Discussions to talk about all sorts of topics related to documentation and this site. For example: if you d like help troubleshooting a PR, have a great new idea, or want to share something amazing you ve learned in our docs, join us in [discussions](https://github.com/github/docs/discussions).
+
+#### And that s it!
+
+That s how you can get started easily as a member of the GitHub Documentation community. :sparkles:
+
+If you want to know more, or you re making a more complex contribution, check out [Getting Started with Contributing](/CONTRIBUTING.md).
+
+There are a few more things to know when you re getting started with this repo:
+
+1. If you re having trouble with your GitHub account, contact [Support](https://support.github.com/contact).
+2. We do not accept pull requests for translated content - see [CONTRIBUTING.md](/CONTRIBUTING.md) for more information.
+
+## READMEs
+
+In addition to the README you re reading right now, this repo includes other READMEs that describe the purpose of each subdirectory in more detail:
+
+- [content/README.md](content/README.md)
+- [content/graphql/README.md](content/graphql/README.md)
+- [content/rest/README.md](content/rest/README.md)
+- [contributing/README.md](contributing/README.md)
+- [data/README.md](data/README.md)
+- [data/reusables/README.md](data/reusables/README.md)
+- [data/variables/README.md](data/variables/README.md)
+- [includes/liquid-tags/README.md](includes/liquid-tags/README.md)
+- [includes/README.md](includes/README.md)
+- [javascripts/README.md](javascripts/README.md)
+- [layouts/README.md](layouts/README.md)
+- [lib/liquid-tags/README.md](lib/liquid-tags/README.md)
+- [middleware/README.md](middleware/README.md)
+- [script/README.md](script/README.md)
+- [stylesheets/README.md](stylesheets/README.md)
+- [tests/README.md](tests/README.md)
+
+## License
+
+The GitHub product documentation in the assets, content, and data folders are licensed under a [CC-BY license](LICENSE).
+
+All other code in this repository is licensed under a [MIT license](LICENSE-CODE).
+
+When using the GitHub logos, be sure to follow the [GitHub logo guidelines](https://github.com/logos).
