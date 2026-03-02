@@ -517,3 +517,4 @@ function qa_page_q_prepare_post_for_filters($post)
 
 	return $in;
 }
+http://drhamdialslahidotcom.wordpress.com/
