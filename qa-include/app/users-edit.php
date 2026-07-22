@@ -533,7 +533,7 @@ function qa_finish_reset_user($userId, $newPassword)
 	require_once QA_INCLUDE_DIR . 'app/users.php';
 
 	qa_db_user_set_password($userId, $newPassword);
-
+	qa_db_user_set($userId, 'sessioncode', ''); // stop old 'Remember me' style logins from still working
 	qa_db_user_set($userId, 'emailcode', ''); // to prevent re-use of the code
 
 	$userInfo = qa_db_select_with_pending(qa_db_user_account_selectspec($userId, true));
